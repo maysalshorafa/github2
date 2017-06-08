@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cashActivity_TVRequired"
+        android:textSize="36sp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/secondaryColor"
+        android:textStyle="normal|bold" />
+
+
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/bill_20_front"
+        android:id="@+id/cashActivity_Bill20"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/cashActivity_TVRequired"
+        app:layout_constraintRight_toLeftOf="@+id/ca_gl1"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/ca_gl5"
+        android:layout_marginBottom="8dp" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/bill_50_front"
+        android:id="@+id/cashActivity_Bill50"
+        app:layout_constraintLeft_toLeftOf="@+id/ca_gl1"
+        app:layout_constraintTop_toTopOf="@+id/cashActivity_Bill20"
+
+        app:layout_constraintRight_toLeftOf="@+id/ca_gl2"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cashActivity_Bill20" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/bill_100_front"
+        android:id="@+id/cashActivity_Bill100"
+        app:layout_constraintTop_toTopOf="@+id/cashActivity_Bill50"
+        app:layout_constraintRight_toLeftOf="@+id/ca_gl3"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/ca_gl2"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cashActivity_Bill50" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/bill_200_front"
+        android:id="@+id/cashActivity_Bill200"
+        app:layout_constraintLeft_toLeftOf="@+id/ca_gl3"
+        app:layout_constraintTop_toTopOf="@+id/cashActivity_Bill100"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintRight_toLeftOf="@+id/ca_gl4"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cashActivity_Bill100" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="0dp"
+        android:layout_height="888dp"
+        android:id="@+id/ca_gl1"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.12520514"
+        tools:layout_editor_absoluteX="171dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="0dp"
+        android:layout_height="888dp"
+        android:id="@+id/ca_gl2"
+        android:orientation="vertical"
+
+        app:layout_constraintGuide_percent="0.25014287"
+        tools:layout_editor_absoluteX="341dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="0dp"
+        android:layout_height="888dp"
+        android:id="@+id/ca_gl3"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3749524"
+        tools:layout_editor_absoluteX="512dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="0dp"
+        android:layout_height="888dp"
+        android:id="@+id/ca_gl4"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="691dp"
+        app:layout_constraintGuide_percent="0.50622714" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="0dp"
+        android:layout_height="888dp"
+        android:id="@+id/ca_gl6"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="1024dp"
+        app:layout_constraintGuide_percent="0.7500271" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="1365dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/ca_gl7"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteY="265dp"
+        tools:layout_editor_absoluteX="0dp"
+        app:layout_constraintGuide_percent="0.2984234" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="1365dp"
+        android:layout_height="0dp"
+        android:id="@+id/ca_gl5"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteY="487dp"
+        tools:layout_editor_absoluteX="0dp"
+        app:layout_constraintGuide_percent="0.5484234" />
+    <android.support.constraint.Guideline
+        android:layout_width="1365dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/ca_gl8"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteY="707dp"
+        tools:layout_editor_absoluteX="0dp"
+        app:layout_constraintGuide_percent="0.7961712" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/a10cent"
+        android:id="@+id/cashActivity_Cent10"
+        app:layout_constraintBottom_toTopOf="@+id/cashActivity_Cent100"
+        app:layout_constraintRight_toRightOf="@+id/cashActivity_Cent100"
+        app:layout_constraintLeft_toLeftOf="@+id/ca_gl4"
+        app:layout_constraintTop_toTopOf="@+id/cashActivity_Bill200"
+        android:layout_marginTop="32dp" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/a05sheqel"
+        android:id="@+id/cashActivity_Cent50"
+        app:layout_constraintLeft_toLeftOf="@+id/ca_gl6"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ca_gl7"
+        app:layout_constraintTop_toTopOf="@+id/cashActivity_Bill20"
+        android:layout_marginTop="32dp" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/a1sheqel"
+        android:id="@+id/cashActivity_Cent100"
+        app:layout_constraintBottom_toTopOf="@+id/ca_gl5"
+        app:layout_constraintRight_toLeftOf="@+id/cashActivity_Cent200"
+        app:layout_constraintTop_toTopOf="@+id/ca_gl7"
+        app:layout_constraintLeft_toLeftOf="@+id/ca_gl4" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/a2sheqel"
+        android:id="@+id/cashActivity_Cent200"
+        app:layout_constraintLeft_toLeftOf="@+id/ca_gl6"
+        app:layout_constraintTop_toTopOf="@+id/ca_gl7"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ca_gl5" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/a5sheqel"
+        android:id="@+id/cashActivity_Cent500"
+        app:layout_constraintBottom_toTopOf="@+id/ca_gl8"
+        app:layout_constraintRight_toLeftOf="@+id/ca_gl6"
+        app:layout_constraintLeft_toLeftOf="@+id/ca_gl4"
+        app:layout_constraintTop_toTopOf="@+id/ca_gl5" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/a10sheqel"
+        android:id="@+id/cashActivity_Cent1000"
+        app:layout_constraintLeft_toRightOf="@+id/cashActivity_Cent500"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cashActivity_Cent200"
+        app:layout_constraintBottom_toTopOf="@+id/ca_gl8" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cashActivity_TVDB20"
+        app:layout_constraintLeft_toLeftOf="@+id/cashActivity_Bill20"
+        app:layout_constraintRight_toRightOf="@+id/cashActivity_Bill20"
+        app:layout_constraintTop_toBottomOf="@+id/cashActivity_Bill20"
+        android:textColor="@color/black"
+        android:text="0" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cashActivity_TVDB50"
+        app:layout_constraintLeft_toLeftOf="@+id/cashActivity_Bill50"
+        app:layout_constraintRight_toRightOf="@+id/cashActivity_Bill50"
+        app:layout_constraintTop_toBottomOf="@+id/cashActivity_Bill50"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cashActivity_TVDB100"
+        app:layout_constraintLeft_toLeftOf="@+id/cashActivity_Bill100"
+        app:layout_constraintRight_toRightOf="@+id/cashActivity_Bill100"
+        app:layout_constraintTop_toBottomOf="@+id/cashActivity_Bill100"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cashActivity_TVDB200"
+        app:layout_constraintLeft_toLeftOf="@+id/cashActivity_Bill200"
+        app:layout_constraintRight_toRightOf="@+id/cashActivity_Bill200"
+        app:layout_constraintTop_toBottomOf="@+id/cashActivity_Bill200"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cashActivity_TVTotalInserted"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/ca_gl4"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintTop_toTopOf="@+id/ca_gl8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:textSize="36sp"
+        android:textStyle="normal|bold"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cashActivity_TVExcess"
+        app:layout_constraintLeft_toLeftOf="@+id/ca_gl4"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintTop_toTopOf="@+id/ca_gl8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:textSize="36sp"
+        android:textStyle="normal|bold" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cashActivity_TVDC10"
+        app:layout_constraintLeft_toLeftOf="@+id/cashActivity_Cent10"
+        app:layout_constraintRight_toRightOf="@+id/cashActivity_Cent10"
+        app:layout_constraintBottom_toTopOf="@+id/ca_gl7"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cashActivity_TVDC50"
+        app:layout_constraintLeft_toLeftOf="@+id/ca_gl6"
+        app:layout_constraintRight_toRightOf="@+id/cashActivity_Cent50"
+        app:layout_constraintBottom_toTopOf="@+id/ca_gl7"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cashActivity_TVDC100"
+        app:layout_constraintLeft_toLeftOf="@+id/cashActivity_Cent100"
+        app:layout_constraintRight_toRightOf="@+id/cashActivity_Cent100"
+        app:layout_constraintBottom_toBottomOf="@+id/cashActivity_Cent100"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cashActivity_TVDC200"
+        app:layout_constraintLeft_toLeftOf="@+id/ca_gl6"
+        app:layout_constraintRight_toRightOf="@+id/cashActivity_Cent200"
+        app:layout_constraintBottom_toBottomOf="@+id/cashActivity_Cent200"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cashActivity_TVDC500"
+        app:layout_constraintLeft_toLeftOf="@+id/cashActivity_Cent500"
+        app:layout_constraintRight_toLeftOf="@+id/ca_gl6"
+        app:layout_constraintBottom_toTopOf="@+id/ca_gl8"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cashActivity_TVDC1000"
+        app:layout_constraintLeft_toLeftOf="@+id/ca_gl6"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ca_gl8"
+        android:textColor="@color/black" />
+
+    <Button
+        android:text="@string/done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cashActivity_BTNDone"
+        android:background="@drawable/btn_primary"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="24sp"
+        android:textStyle="normal|bold"
+        style="@style/TextAppearance" />
+
+
+</android.support.constraint.ConstraintLayout>

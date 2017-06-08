@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    android:padding="8dp">
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/offerProductsCatalog_ETSearch"
+        android:hint="@android:string/search_go"
+        android:background="@drawable/edit_text_search"
+        android:drawableLeft="@drawable/search_icon"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline10"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:id="@+id/view"
+        app:layout_constraintRight_toLeftOf="@+id/guideline10"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/offerProductsCatalog_ETSearch" />
+
+    <HorizontalScrollView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/offerProductsCatalog_svDepartment1"
+        android:background="@color/secondaryColor"
+        android:layoutDirection="rtl"
+        app:layout_constraintRight_toLeftOf="@+id/guideline10"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:fillViewport="false"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/offerProductsCatalog_LLDepartment"
+            android:layoutDirection="rtl"
+            android:layout_gravity="end"
+            >
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <Button
+        android:text="@android:string/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/offerProductsCatalog_BTCancel"
+        android:background="@drawable/btn_secondary"
+        android:textColor="@color/white"
+        android:onClick="CancelClickButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <Button
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/offerProductsCatalog_BTDepartmentProduct"
+        android:text="@string/select_all_Department_products"
+        android:background="@drawable/btn_primary"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toRightOf="@+id/offerProductsCatalog_BTCancel"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <Button
+        android:text="@string/done"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/offerProductsCatalog_BTDone"
+        android:background="@drawable/btn_primary"
+        android:textColor="@color/white"
+        android:textStyle="normal|bold"
+        app:layout_constraintRight_toLeftOf="@+id/guideline10"
+        app:layout_constraintLeft_toRightOf="@+id/offerProductsCatalog_BTDepartmentProduct"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="872dp"
+        android:id="@+id/guideline10"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="957dp"
+        app:layout_constraintGuide_percent="0.70941436" />
+
+    <GridView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/offerProductsCatalog_GVProducts"
+        android:numColumns="5"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:gravity="center"
+        android:layoutDirection="ltr"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintRight_toLeftOf="@+id/guideline10"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/offerProductsCatalog_BTDone"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/offerProductsCatalog_svDepartment1" />
+
+    <ListView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline10"
+        android:id="@+id/offerProductsCatalog_LVProducts"
+        android:paddingLeft="8dp"
+        android:transcriptMode="alwaysScroll"
+        app:layout_constraintTop_toBottomOf="@+id/offerProductsCatalog_BTRest"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/offerProductsCatalog_GVProducts" />
+
+    <Button
+        android:text="@string/delete_all_selected_products"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/offerProductsCatalog_BTRest"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/offerProductsCatalog_ETSearch"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/btn_danger"
+        android:layout_marginRight="8dp"
+        android:textColor="@color/white"
+        android:layout_marginEnd="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/offerProductsCatalog_TVCount"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline10"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/offerProductsCatalog_LVProducts" />
+
+
+</android.support.constraint.ConstraintLayout>

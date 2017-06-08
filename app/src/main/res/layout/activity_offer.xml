@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:orientation="vertical"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    android:padding="8dp">
+
+    <android.support.constraint.Guideline
+        android:layout_width="0dp"
+        android:layout_height="872dp"
+        android:id="@+id/guideline20"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.52234435"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="705dp"/>
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="872dp"
+        android:id="@+id/guideline21"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.48131868"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="649dp"/>
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="872dp"
+        android:id="@+id/guideline27"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="675dp"/>
+
+    <TextView
+        android:text="@string/offer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/offer_TVName"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="14sp"
+        tools:layout_constraintRight_creator="1"
+        android:textColor="@color/black"
+        android:textDirection="rtl"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/offer_ETName"
+        android:hint="Offer Name"
+        android:background="@drawable/edit_text_search"
+        app:layout_constraintRight_toLeftOf="@+id/offer_TVName"
+        android:layout_marginRight="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline20"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="8dp" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="datetime"
+        android:ems="10"
+        android:id="@+id/offer_ETStartAt"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/offer_ETName"
+        app:layout_constraintLeft_toLeftOf="@+id/offer_ETName"
+        app:layout_constraintRight_toRightOf="@+id/offer_ETName"
+        android:hint="Offer start at"
+        android:background="@drawable/edit_text_search" />
+
+    <TextView
+        android:text="@string/start_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/offer_TVStartDate"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:textDirection="rtl"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/offer_ETStartAt" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="datetime"
+        android:ems="10"
+        android:id="@+id/offer_ETEndAt"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/offer_ETStartAt"
+        app:layout_constraintLeft_toLeftOf="@+id/offer_ETStartAt"
+        app:layout_constraintRight_toRightOf="@+id/offer_ETStartAt"
+        android:hint="Offer end at"
+        android:background="@drawable/edit_text_search" />
+
+    <TextView
+        android:text="@string/end_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/offer_TVEndDate"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/offer_ETEndAt"
+        android:textSize="14sp"
+        tools:layout_constraintRight_creator="1"
+        android:textColor="@color/black"
+        android:textDirection="rtl" />
+
+    <Spinner
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:id="@+id/offer_SPINNERRule"
+        app:layout_constraintLeft_toLeftOf="@+id/offer_ETEndAt"
+        app:layout_constraintRight_toRightOf="@+id/offer_ETEndAt"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/offer_ETEndAt"
+        android:background="@drawable/edit_text_search" />
+
+    <TextView
+        android:text="@string/rule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/offer_TVRule"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/offer_SPINNERRule"
+        android:textSize="14sp"
+        tools:layout_constraintRight_creator="1"
+        android:textColor="@color/black"
+        android:textDirection="rtl" />
+
+    <Button
+        android:text="@string/save"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/offer_BTAdd"
+        android:background="@drawable/btn_primary"
+        android:textColor="@color/white"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/offer_BTCancel"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="8dp" />
+
+    <Button
+        android:text="@android:string/cancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/offer_BTCancel"
+        app:layout_constraintHorizontal_bias="0.37"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/white"
+        android:background="@drawable/btn_secondary" />
+
+    <TextView
+        android:text="X"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView30"
+        app:layout_constraintTop_toTopOf="@+id/offer_ETX"
+        app:layout_constraintBottom_toBottomOf="@+id/offer_ETX"
+        app:layout_constraintVertical_bias="0.63"
+        app:layout_constraintRight_toLeftOf="@+id/guideline21"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:text="y"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView31"
+        app:layout_constraintTop_toTopOf="@+id/offer_ETY"
+        app:layout_constraintRight_toRightOf="@+id/textView30"
+        app:layout_constraintBottom_toBottomOf="@+id/offer_ETY"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:text="p"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView32"
+        app:layout_constraintTop_toTopOf="@+id/offer_ETP"
+        android:textColor="@color/black"
+        app:layout_constraintRight_toRightOf="@+id/textView31" />
+
+    <TextView
+        android:text="Y"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView33"
+        app:layout_constraintTop_toTopOf="@+id/offer_ETY2"
+        android:textColor="@color/black"
+        app:layout_constraintRight_toRightOf="@+id/textView32" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/offer_ETX"
+        app:layout_constraintRight_toLeftOf="@+id/textView30"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/edit_text_search"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginEnd="8dp" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/offer_ETY"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/offer_ETX"
+        app:layout_constraintRight_toRightOf="@+id/offer_ETX"
+        app:layout_constraintLeft_toLeftOf="@+id/offer_ETX"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        android:background="@drawable/edit_text_search" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/offer_ETP"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@drawable/edit_text_search"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/offer_ETY"
+        app:layout_constraintRight_toRightOf="@+id/offer_ETY" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/offer_ETY2"
+        app:layout_constraintLeft_toLeftOf="@+id/offer_ETP"
+        app:layout_constraintRight_toRightOf="@+id/offer_ETP"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/offer_ETP"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        android:background="@drawable/edit_text_search" />
+
+    <Button
+        android:text="@string/select_products"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/offer_BTSelectProducts"
+        android:background="@drawable/btn_primary"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline21"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/offer_ETY2" />
+
+</android.support.constraint.ConstraintLayout>

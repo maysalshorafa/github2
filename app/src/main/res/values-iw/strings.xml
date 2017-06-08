@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="_new">חדש</string>
+    <string name="edit">ערוך</string>
+    <string name="change_password">שנה סיסמא</string>
+    <string name="delete">הסרה</string>
+    <string name="report">דווח</string>
+    <string name="make_your_selection">בחר את הרצוי</string>
+    <string name="view">צפה</string>
+
+    <!--menu-->
+    <string name="products">פרטים</string>
+    <string name="departments">מחלקות</string>
+    <string name="users">משתמשים</string>
+    <string name="offers">מבצעים</string>
+    <string name="reports">דִווחות</string>
+    <string name="setting">הגדרות</string>
+    <string name="backup">גיבוי</string>
+
+
+    <!--main-->
+    <string name="open">פתח</string>
+    <string name="close">סגור</string>
+    <string name="credit_card">אשראי</string>
+    <string name="other_ways">אחר</string>
+    <string name="cash">מזומן</string>
+
+    <string-array name="credit_card_type">
+        <item>רגיל</item>
+        <item>ישרא/אמקס קרדיט  ויזה/דיינרס עדיף \n\r    פלוס30 </item>
+        <item>חיוב מיידי</item>
+        <item> מועדון אשראי</item>
+        <item>סופר קרדיט</item>
+        <item>קרדיט/קרדיט בתשלומים קבועים</item>
+        <item>תשלומים</item>
+        <item>עסקת מועדון בתשלומים</item>
+    </string-array>
+
+
+    <!--Invoice-->
+    <string name="source_invoice">- מקור -</string>
+    <string name="copy_invoice">- עותק -</string>
+    <string name="private_company">ח.פ</string>
+    <!--\u0190-->
+    <string name="invoice_with_tax">חש\' מס-קבלה</string>
+    <string name="credit_invoice">חש\' זיכוי</string>
+    <string name="replacement_invoice">פתק החלפה</string>
+
+
+    <!--Z Report-->
+    <string name="z_number">מספר Z:</string>
+    <string name="product">פריט</string>
+    <string name="product_id">מק\'\'ט</string>
+    <string name="qty">כמות</string>
+    <string name="refresh">רענון</string>
+    <string name="returned">עודף</string>
+    <string name="total_price">סה\'\'כ מחיר</string>
+    <string name="total_saved">חסכת</string>
+    <string name="transfer_credit_card">תעביר כרטיס אשראי</string>
+    <string name="try_again">נסה שוב</string>
+    <string name="with_tax">חייב למע\'\'מ</string>
+    <string name="without_tax">לא חייב מע\'\'מ</string>
+    <string name="payment">תשלום</string>
+    <string name="total">סה\'\'כ</string>
+    <string name="given">שולם</string>
+    <string name="cashier">קופאי</string>
+    <string name="date">תאריך</string>
+    <string name="price">מחיר</string>
+    <string name="done">סיום</string>
+    <string name="all">הכל</string>
+    <string name="amount">סכום</string>
+    <string name="app_name">Lead POS</string>
+    <string name="bank">בנק</string>
+    <string name="barcode">מק\'\'ט</string>
+    <string name="branch">מס\' סניף</string>
+    <string name="browser">עין</string>
+    <string name="by_card">דרך כרטיס</string>
+    <string name="by_phone">ידני</string>
+    <string name="cancel">ביטול</string>
+    <string name="cant_do_this_function_discount"></string>
+    <string name="card_expiry">תאריך הכרטיס</string>
+    <string name="check_number"></string>
+    <string name="tax">מע\'\'מ</string>
+    <string name="checks">המחאות</string>
+    <string name="general">כללי</string>
+    <string name="extracting_files">הפקת קבצים</string>
+
+</resources>

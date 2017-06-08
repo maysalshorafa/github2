@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_setup_new_pos"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pos.leaders.leaderspossystem.SetupNewPOSActivity"
+    android:background="@color/backgroundColor"
+    android:padding="8dp">
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberSigned"
+        android:ems="10"
+        android:id="@+id/setupNewPOS_etPC"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline19"
+        app:layout_constraintRight_toLeftOf="@+id/textView42"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/edit_text_search"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp" />
+
+    <TextView
+        android:text="@string/private_company"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView42"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/setupNewPOS_etPC"
+        app:layout_constraintBottom_toBottomOf="@+id/setupNewPOS_etPC"
+        android:textSize="18sp"
+        android:textColor="@color/black" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="872dp"
+        android:id="@+id/guideline19"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="685dp"
+        app:layout_constraintGuide_percent="0.50778353" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/setupNewPOS_etName"
+        android:background="@drawable/edit_text_search"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline19"
+        app:layout_constraintRight_toLeftOf="@+id/textView43"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/setupNewPOS_etPC"
+        android:hint="@string/company_name" />
+
+    <TextView
+        android:text="@string/company_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView43"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/setupNewPOS_etName"
+        app:layout_constraintBottom_toBottomOf="@+id/setupNewPOS_etName"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView44"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/setupNewPOS_etPOSID"
+        app:layout_constraintBottom_toBottomOf="@+id/setupNewPOS_etPOSID"
+        android:text="@string/POS_ID" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberSigned"
+        android:ems="10"
+        android:id="@+id/setupNewPOS_etPOSID"
+        android:background="@drawable/edit_text_search"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline19"
+        app:layout_constraintRight_toLeftOf="@+id/textView44"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/setupNewPOS_etName" />
+
+    <TextView
+        android:text="@string/credit_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView45"
+        app:layout_constraintRight_toLeftOf="@+id/guideline19"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/setupNewPOS_etCCUN"
+        android:background="@drawable/edit_text_search"
+        app:layout_constraintRight_toLeftOf="@+id/guideline19"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView45"
+        android:hint="@string/user_name" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/setupNewPOS_etCCPAS"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintRight_toLeftOf="@+id/guideline19"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/setupNewPOS_etCCUN"
+        android:background="@drawable/edit_text_search"
+        android:hint="@string/password"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/setupNewPOS_etTax"
+        android:hint="@string/tax"
+        android:inputType="numberDecimal"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline19"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintRight_toLeftOf="@+id/textView46"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/setupNewPOS_etPOSID"
+        android:background="@drawable/edit_text_search"
+        android:text="17"
+        android:layout_marginTop="16dp"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:text="@string/tax"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView46"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/setupNewPOS_etTax"
+        app:layout_constraintBottom_toBottomOf="@+id/setupNewPOS_etTax" />
+
+    <TextView
+        android:text="@string/invoice_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView47"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/setupNewPOS_etInvoiceNote"
+        app:layout_constraintBottom_toBottomOf="@+id/setupNewPOS_etInvoiceNote"
+        app:layout_constraintVertical_bias="0.100000024" />
+
+    <TextView
+        android:text="@string/replacement_expiration_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView48"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="@+id/setupNewPOS_etInvoiceED"
+        app:layout_constraintBottom_toBottomOf="@+id/setupNewPOS_etInvoiceED"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/setupNewPOS_etInvoiceNote"
+        android:background="@drawable/edit_text_search"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/setupNewPOS_etTax"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline19"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintRight_toLeftOf="@+id/textView47"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:maxLines="10"
+        android:minLines="5" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberSigned"
+        android:ems="10"
+        android:id="@+id/setupNewPOS_etInvoiceED"
+        android:background="@drawable/edit_text_search"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline19"
+        app:layout_constraintRight_toLeftOf="@+id/textView48"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/setupNewPOS_etInvoiceNote" />
+
+    <Button
+        android:text="@string/save"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/btn_primary"
+        android:textColor="@color/white"
+        android:id="@+id/setupNewPOS_btSave" />
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="pressed_color">#3fb5ad</color>
+    <color name="list_background_color">#f1f1f1</color>
+    <color name="default_color">#ffffff</color>
+    <color name="transparent">#00000000</color>
+    
+    
+    <color name="secondaryColor">#343d46</color>
+    <color name="secondaryDarkColor">#2b333a</color>
+
+    <color name="primaryColor">#98bf0e</color>
+    <color name="primaryDarkColor">#769607</color>
+
+    <color name="dangerColor">#B3353A</color>
+    <color name="dangerDarkColor">#922a2e</color>
+    <color name="backgroundColor">#e5e5e5</color>
+
+    <color name="white">#ffffff</color>
+    <color name="white70">#B3ffffff</color>
+    <color name="white50">#80ffffff</color>
+
+    <color name="black">#000</color>
+    <color name="black70">#B3000000</color>
+    <color name="black50">#80000000</color>
+
+    <color name="credit_card_bg">#D5FFFB</color>
+    <color name="credit_card">#0989B2</color>
+
+    <color name="check_bg">#D3FFBE</color>
+
+    <color name="sale_bg">#FCFFE3</color>
+
+</resources>
+<!--
+Hex transparency in colors
+E.g. for 50% white you'd use #80FFFFFF.
+
+    100% — FF
+    95% — F2
+    90% — E6
+    85% — D9
+    80% — CC
+    75% — BF
+    70% — B3
+    65% — A6
+    60% — 99
+    55% — 8C
+    50% — 80
+    45% — 73
+    40% — 66
+    35% — 59
+    30% — 4D
+    25% — 40
+    20% — 33
+    15% — 26
+    10% — 1A
+    5% — 0D
+    0% — 00
+
+
+
+-->

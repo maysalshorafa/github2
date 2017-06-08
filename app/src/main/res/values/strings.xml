@@ -1,0 +1,314 @@
+<resources>
+    <string name="app_name">Lead POS</string>
+    <string name="payment">Payment</string>
+    <string name="show_products">show products</string>
+    <string name="x">x</string>
+    <string name="title_activity_product_catalog">ProductCatalogActivity</string>
+    <string name="add_to_cart">Add to cart</string>
+
+    <string name="ins">₪</string>
+    <string name="refresh">Refresh</string>
+    <string name="add">Add</string>
+    <string name="user_name">User Name</string>
+
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="hourly_wage">Hourly Wage</string>
+    <string name="present">Present</string>
+    <string name="log_out">Log Out</string>
+    <string name="department_management">Department Management</string>
+    <string name="product_management">Product Management</string>
+    <string name="offer_name">Offer Name</string>
+    <string name="start_at">Start At</string>
+    <string name="end_at">End At</string>
+    <string name="rule">Rule</string>
+    <string name="product">Product</string>
+    <string name="offer_management">Offer Management</string>
+    <string name="rule_name">Rule Name</string>
+    <string name="offer_rule_management">Offer Rule Management</string>
+    <string name="go_back">Go Back</string>
+    <string name="worker_management">Worker Management</string>
+    <string name="edit">Edit</string>
+    <string name="change_password">Change Password</string>
+    <string name="delete">Delete</string>
+    <string name="report">Report</string>
+    <string name="pay_cash">Pay Cash</string>
+    <string name="checks">Checks</string>
+    <string name="pay_by_credit_card">Pay By Credit Card</string>
+    <string name="integrated_payment">Integrated Payment</string>
+    <string name="sales_management">Sales Management</string>
+    <string name="sales_history">Sales History</string>
+    <string name="clear_cart">Clear Cart</string>
+    <string name="_new">New</string>
+
+    <!--Product Management-->
+    <string name="edit_product">Edit Product</string>
+    <string name="add_product">Add Product</string>
+    <string name="add_department">Add Department</string>
+    <string name="edit_department">Edit Department</string>
+    <string name="permissions">Permissions</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="save">Save</string>
+    <string name="_return">Return</string>
+    <string name="view">View</string>
+    <string name="amount">Amount</string>
+    <string name="check_number">Check Number</string>
+    <string name="date">Date</string>
+    <string name="bank">Bank</string>
+    <string name="branch">Branch</string>
+    <string name="account">Account</string>
+    <string name="import_product">Import Products</string>
+    <string name="create_new_product">Create New Product</string>
+    <string name="make_your_selection">Make your selection</string>
+    <!--Splash Screen-->
+
+    <!--Log In Screen-->
+    <string name="log_in">Log In</string>
+    <string name="password">Password</string>
+    <string name="TouchPad_0">0</string>
+    <string name="TouchPad_1">1</string>
+    <string name="TouchPad_2">2</string>
+    <string name="TouchPad_3">3</string>
+    <string name="TouchPad_4">4</string>
+    <string name="TouchPad_5">5</string>
+    <string name="TouchPad_6">6</string>
+    <string name="TouchPad_7">7</string>
+    <string name="TouchPad_8">8</string>
+    <string name="TouchPad_9">9</string>
+    <string name="empty_password">Please insert your password</string>
+    <string name="wrong_password">Please insert your a true password</string>
+
+    <!--menu-->
+    <string name="products">Products</string>
+    <string name="departments">Departments</string>
+    <string name="users">Users</string>
+    <string name="offers">Offers</string>
+    <string name="reports">Reports</string>
+    <string name="setting">Setting</string>
+    <string name="backup">Backup</string>
+
+    <!--Main Activity-->
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="other_ways">Other Ways</string>
+    <string name="cash">Cash Payment</string>
+    <string name="done">Done</string>
+    <string name="total_price">Total Price</string>
+    <string name="total">Total</string>
+    <string name="given">Given</string>
+    <string name="returned">Returned</string>
+    <string name="cashier">Cashier</string>
+    <string name="total_saved">Total Saved</string>
+    <string name="all">All</string>
+    <string name="general">General</string>
+    <string name="general_product">General Product</string>
+    <string name="price">Price</string>
+
+    <string name="clearCartAlertTitle">Clear Cart</string>
+    <string name="clearCartAlertMessage">Do you want to delete all the items on the cart?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="count">Count</string>
+    <string name="multi_count">Please set product count.</string>
+
+    <string name="by_card">By Card</string>
+    <string name="by_phone">By Phone</string>
+
+    <string name="number_of_payments">Number Of Payments</string>
+    <string name="first_payment">First Payment</string>
+    <string name="credit_type">Credit Type</string>
+    <string name="transfer_credit_card">Transfer credit card</string>
+    <string-array name="credit_card_type">
+        <item>רגיל</item>
+        <item>ישרא/אמקס קרדיט  ויזה/דיינרס עדיף \n\r    פלוס30 </item>
+        <item>חיוב מיידי</item>
+        <item> מועדון אשראי</item>
+        <item>סופר קרדיט</item>
+        <item>קרדיט/קרדיט בתשלומים קבועים</item>
+        <item>תשלומים</item>
+        <item>עסקת מועדון בתשלומים</item>
+    </string-array>
+    <string name="wait_for_accept">Wait for accept</string>
+    <string name="please_select_item">Please Select Item From The Cart</string>
+    <string name="please_add_item">Please Add Item To Cart</string>
+    <string name="please_select_discount_offer">Please set discount value</string>
+    <string name="pause">Pause</string>
+    <string name="list_of_pause_sales">List of pause sales</string>
+    <string name="there_is_no_sale_on_pause">Empty</string>
+    <string name="deal_number">Deal Number</string>
+    <string name="resume_deal_number">Resume Deal Number</string>
+    <string name="set_price">Set Price</string>
+    <string name="opening_report">Opening Report</string>
+
+    <!--Cash Activity-->
+    <string name="cancel">Cancel</string>
+    <string name="tendered">Tendered</string>
+    <!--Checks Activity pop-up-->
+    <string name="add_check">Add Check</string>
+    <string name="check_pid_error">The total checks amount does not get the total price</string>
+    <string name="not_inserted_checks">There is no checks inserted</string>
+    <!--Products -->
+    <string name="name">Name</string>
+    <string name="barcode">Barcode</string>
+    <string name="description">Description</string>
+    <string name="cost_price">Cost Price</string>
+    <string name="with_tax">With Tax</string>
+    <string name="without_tax">Without Tax</string>
+    <string name="weighable">Weighable</string>
+    <string name="department_name">Department Name</string>
+    <string name="success_to_update_product">Product has been updated!</string>
+    <string name="error_to_update_product">Filed to update this product.</string>
+
+    <string name="wait_for_finish">Wait for finish...</string>
+    <string name="browser">Browser</string>
+
+    <string name="import_wait">Reading the file</string>
+    <string name="saving_data">Saving Data</string>
+    <string name="department_not_selected">Please select Department.</string>
+    <string name="select_products">Select Products</string>
+
+    <!--Offers-->
+    <string name="not_valid_date">Please Insert Valid Dates</string>
+    <string name="not_selected_products">Please Select Products</string>
+    <string name="delete_all_selected_products">Delete All Selected Products</string>
+    <string name="selected">Selected</string>
+    <string name="select_all_Department_products">Select All Department Products</string>
+
+    <!--Invoice-->
+    <string name="source_invoice">- Source -</string>
+    <string name="copy_invoice">- Copy -</string>
+    <string name="private_company">P.C</string>
+    <string name="invoice_with_tax">Invoice</string>
+    <string name="credit_invoice">Credit Invoice</string>
+    <string name="replacement_invoice">Replacement Invoice</string>
+
+    <!--Credit Card-->
+    <string name="credit_card_number">Credit Card Number</string>
+    <string name="card_expiry">Card Expiry</string>
+    <string name="ccv">CCV</string>
+    <string name="id">Identification Number</string>
+    <string name="expired_card">The card is expired</string>
+    <string name="valid_expired_card">Please insert valid card expiry 4 digit</string>
+    <string name="valid_ID">Please insert valid identification number</string>
+    <string name="valid_CCV">Please insert valid CCV 3 digit</string>
+    <string name="error">Error</string>
+
+    <!--Printer-->
+    <string name="wait_for_finish_printing">Wait For Finish Printing</string>
+
+    <!--Z Report-->
+    <string name="z_number">Z Number</string>
+    <string name="print">Print</string>
+
+    <!--Backup-->
+    <string name="backup_products_by_department">Backup Products By Departments</string>
+    <string name="backup_department">Backup Departments</string>
+    <string name="backup_all_system">Backup System</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="there_is_no_disk_on_key">There is no disk on key mounted.</string>
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="terminal_number">Terminal Number</string>
+    <string name="terminal_password">Terminal Password</string>
+    <string name="general_settings">General Settings</string>
+    <string name="pref_header_general">General</string>
+    <string name="settings">Settings</string>
+    <string name="success_to_save_settings">Success to save settings.</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="setup_new_pos">Setup New POS</string>
+    <string name="restore">Restore</string>
+    <string name="file_does_not_valid">File does not valid</string>
+    <string name="error_on_restore_the_system">Error on restore the system</string>
+    <string name="success_to_restore">Success to restore the system</string>
+    <string name="please_wait">Please wait</string>
+    <string name="do_you_want_to_restore_the_system">Do You Want To Restore The System.</string>
+    <string name="company_name">Company Name</string>
+    <string name="POS_ID">POS Id</string>
+    <string name="tax">Tax</string>
+    <string name="invoice_note">Invoice Note</string>
+    <string name="qty">Qty</string>
+    <string name="product_id">Product ID</string>
+    <string name="replacement_expiration_date">Replacement Expiration Date</string>
+    <string name="try_again">Please Try Again!!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="proportion">Proportion</string>
+    <string name="cant_do_this_function_discount">Can not do this discount</string>
+    <string name="cant_finish_this_action">Can not finish this action</string>
+    <string name="fail">Fail</string>
+    <string name="extracting_files">Extracting Files</string>
+
+</resources>

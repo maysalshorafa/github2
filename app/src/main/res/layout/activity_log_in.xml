@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:background="@drawable/login_frame"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="numberPassword"
+            android:ems="10"
+            android:id="@+id/touchPad_et"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/edit_text_style"
+            android:hint="@string/password" />
+
+        <TableLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/touchPad_et"
+            app:layout_constraintBottom_toTopOf="@+id/mainActivity_btnCreditCard"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layoutDirection="ltr">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    tools:ignore="UselessParent">
+
+                    <Button
+                        android:text="@string/TouchPad_1"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/touchPad_bt1"
+                        android:background="@drawable/btn_secondary"
+                        android:layout_width="45dp"
+                        android:layout_margin="10dp"
+                        style="@style/TouchPad"/>
+
+                    <Button
+                        android:text="@string/TouchPad_2"
+                        android:layout_width="45dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/touchPad_bt2"
+                        android:background="@drawable/btn_secondary"
+                        android:layout_margin="10dp"
+                        style="@style/TouchPad"/>
+
+                    <Button
+                        android:text="@string/TouchPad_3"
+                        android:layout_width="45dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/touchPad_bt3"
+                        android:background="@drawable/btn_secondary"
+                        style="@style/TouchPad"
+                        android:layout_margin="10dp" />
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    tools:ignore="UselessParent">
+
+                    <Button
+                        android:text="@string/TouchPad_4"
+                        android:layout_width="45dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/touchPad_bt4"
+                        android:background="@drawable/btn_secondary"
+                        android:layout_margin="10dp"
+                        style="@style/TouchPad"/>
+
+                    <Button
+                        android:text="@string/TouchPad_5"
+                        android:layout_width="45dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/touchPad_bt5"
+                        android:background="@drawable/btn_secondary"
+                        android:layout_margin="10dp"
+                        style="@style/TouchPad"
+                    />
+
+                    <Button
+                        android:text="@string/TouchPad_6"
+                        android:layout_width="45dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/touchPad_bt6"
+                        android:background="@drawable/btn_secondary"
+                        android:layout_margin="10dp"
+                        style="@style/TouchPad"
+                       />
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    tools:ignore="UselessParent">
+
+                    <Button
+                        android:text="@string/TouchPad_7"
+                        android:layout_width="45dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/touchPad_bt7"
+                        android:background="@drawable/btn_secondary"
+                        android:layout_margin="10dp"
+                        style="@style/TouchPad"/>
+
+                    <Button
+                        android:text="@string/TouchPad_8"
+                        android:layout_width="45dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/touchPad_bt8"
+                        android:background="@drawable/btn_secondary"
+                        android:layout_margin="10dp"
+                        style="@style/TouchPad"/>
+
+                    <Button
+                        android:text="@string/TouchPad_9"
+                        android:layout_width="45dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/touchPad_bt9"
+                        android:background="@drawable/btn_secondary"
+                        android:layout_margin="10dp"
+                        style="@style/TouchPad"/>
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    tools:ignore="UselessParent">
+
+                    <Button
+                        android:text="@string/TouchPad_0"
+                        android:layout_width="45dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/touchPad_bt0"
+                        android:background="@drawable/btn_secondary"
+                        android:layout_margin="10dp"
+                        style="@style/TouchPad"/>
+                </LinearLayout>
+            </TableRow>
+
+        </TableLayout>
+
+        <Button
+            android:text="@string/log_in"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/loginActivity_btnLogin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/btn_primary"
+            android:textColor="@color/white"
+            />
+
+    </android.support.constraint.ConstraintLayout>
+</RelativeLayout>

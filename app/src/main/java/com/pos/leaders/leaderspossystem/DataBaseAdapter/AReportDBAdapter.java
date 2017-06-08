@@ -1,0 +1,177 @@
+package com.pos.leaders.leaderspossystem.DataBaseAdapter;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.Models.AReport;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by KARAM on 12/04/2017.
+ */
+
+public class AReportDBAdapter {
+    // Table Name
+    protected static final String A_REPORT_TABLE_NAME = "a_report";
+    // Column Names
+    protected static final String A_REPORT_COLUMN_ID = "id";
+    protected static final String A_REPORT_COLUMN_CREATEDATE = "createDate";
+    protected static final String A_REPORT_COLUMN_BYUSER = "byUser";
+    protected static final String A_REPORT_COLUMN_AMOUNT = "amount";
+    protected static final String A_REPORT_COLUMN_LASTSALEID = "lastSaleID";
+    protected static final String A_REPORT_COLUMN_LASTZREPORTID = "lastZReportID";
+
+
+    public static final String DATABASE_CREATE = "CREATE TABLE "+ A_REPORT_TABLE_NAME
+            +" ( `"+ A_REPORT_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ A_REPORT_COLUMN_CREATEDATE +"` TEXT DEFAULT current_timestamp,  `"
+            + A_REPORT_COLUMN_BYUSER +"` INTEGER, " +
+            " `"+ A_REPORT_COLUMN_AMOUNT +"` REAL,  `"+ A_REPORT_COLUMN_LASTSALEID +"` INTEGER , " +
+              "`"+ A_REPORT_COLUMN_LASTZREPORTID +"` INTEGER , " +
+            "FOREIGN KEY(`"+ A_REPORT_COLUMN_BYUSER +"`) REFERENCES `users.id` )";
+    // Variable to hold the database instance
+    private SQLiteDatabase db;
+    // Context of the application using the database.
+    private final Context context;
+    // Database open/upgrade helper
+    private DbHelper dbHelper;
+
+    public AReportDBAdapter(Context context) {
+        this.context = context;
+        this.dbHelper = new DbHelper(context);
+    }
+
+    public AReportDBAdapter open() throws SQLException {
+        this.db = dbHelper.getWritableDatabase();
+        return this;
+    }
+
+    public void close() {
+        db.close();
+    }
+
+    public SQLiteDatabase getDatabaseInstance() {
+        return db;
+    }
+
+    public long insertEntry(long createDate, int byUser, double amount, int lastSaleID,int lastZReport) {
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(A_REPORT_COLUMN_CREATEDATE, createDate);
+        val.put(A_REPORT_COLUMN_BYUSER, byUser);
+        val.put(A_REPORT_COLUMN_AMOUNT, amount);
+        val.put(A_REPORT_COLUMN_LASTSALEID, lastSaleID);
+        val.put(A_REPORT_COLUMN_LASTZREPORTID, lastZReport);
+        try {
+            return db.insert(A_REPORT_TABLE_NAME, null, val);
+        } catch (SQLException ex) {
+            Log.e(A_REPORT_TABLE_NAME +" DB insert", "inserting Entry at " + A_REPORT_TABLE_NAME + ": " + ex.getMessage());
+            return -1;
+        }
+    }
+
+    public long insertEntry(AReport aReport) {
+        return insertEntry(aReport.getCreationDate(),aReport.getByUserID(),aReport.getAmount(),aReport.getLastSaleID(),aReport.getLastZReportID());
+    }
+
+    public AReport getByLastZReport(int lastZReportID){
+        AReport aReport;
+        Cursor cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME + " where " + A_REPORT_COLUMN_LASTZREPORTID + "='" + (lastZReportID - 1) + "'", null);
+        if (cursor.getCount() < 1) {
+            cursor.close();
+            return null;
+        }
+        cursor.moveToFirst();
+        aReport = makeAReport(cursor);
+        return aReport;
+    }
+
+    public AReport getByID(int id) {
+        AReport aReport = null;
+        Cursor cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME + " where " + A_REPORT_COLUMN_ID + "='" + id + "'", null);
+        if (cursor.getCount() < 1) // aReport Not Exist
+        {
+            cursor.close();
+            return aReport;
+        }
+        cursor.moveToFirst();
+        aReport = makeAReport(cursor);
+        cursor.close();
+
+        return aReport;
+    }
+
+    public List<AReport> getAll() {
+        List<AReport> aReports = new ArrayList<AReport>();
+
+        Cursor cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME + " order by " + A_REPORT_COLUMN_ID + " desc", null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            aReports.add(makeAReport(cursor));
+            cursor.moveToNext();
+        }
+
+        return aReports;
+    }
+
+    public List<AReport> getAllUserID(long userId) {
+        List<AReport> aReports = new ArrayList<AReport>();
+
+        Cursor cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME + " where " + A_REPORT_COLUMN_ID + "='" + userId + "' order by " + A_REPORT_COLUMN_ID + " desc", null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            aReports.add(makeAReport(cursor));
+            cursor.moveToNext();
+        }
+
+        return aReports;
+    }
+
+    public List<AReport> getBetween(Date fromDate,Date toDate){
+        List<AReport> aReports = new ArrayList<AReport>();
+
+        Cursor cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME + " where " + A_REPORT_COLUMN_CREATEDATE + "<='" + toDate.getTime() + "' and " + A_REPORT_COLUMN_CREATEDATE +
+                ">='" + fromDate.getTime() + "'" + " order by " + A_REPORT_COLUMN_ID + " desc", null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            aReports.add(makeAReport(cursor));
+            cursor.moveToNext();
+        }
+
+        return aReports;
+    }
+
+    public AReport getLastRow() throws Exception {
+        AReport aReport = null;
+        Cursor cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME + " order by id desc", null);
+        if (cursor.getCount() < 1) // zReport Not Exist
+        {
+            cursor.close();
+            throw new Exception("there is no rows on Z Report Table");
+        }
+        cursor.moveToFirst();
+        aReport = makeAReport(cursor);
+        cursor.close();
+
+        return aReport;
+    }
+
+    private AReport makeAReport(Cursor c){
+        return new AReport(c.getInt(c.getColumnIndex(A_REPORT_COLUMN_ID)),
+                c.getLong(c.getColumnIndex(A_REPORT_COLUMN_CREATEDATE)),
+                c.getInt(c.getColumnIndex(A_REPORT_COLUMN_BYUSER)),
+                c.getDouble(c.getColumnIndex(A_REPORT_COLUMN_AMOUNT)),
+                c.getInt(c.getColumnIndex(A_REPORT_COLUMN_LASTSALEID)),
+                c.getInt(c.getColumnIndex(A_REPORT_COLUMN_LASTZREPORTID)));
+    }
+}

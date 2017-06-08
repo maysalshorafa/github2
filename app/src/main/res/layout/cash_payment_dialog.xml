@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:layoutDirection="ltr">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:id="@+id/cashPaymentDialog_TECash"
+            android:layout_margin="5dp"
+            android:inputType="numberDecimal"
+            android:layout_weight="1" />
+
+        <Switch
+            android:text="@string/proportion"
+            android:layout_height="wrap_content"
+            android:id="@+id/cashPaymentDialog_SwitchProportion"
+            android:layout_width="240dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:text="@android:string/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cashPaymentDialog_BTCancel"
+            android:layout_weight="1"
+            android:layout_margin="5dp"/>
+
+        <Button
+            android:text="@android:string/ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cashPaymentDialog_BTOk"
+            android:layout_weight="1"
+            android:layout_margin="5dp"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.pos.leaders.leaderspossystem">
+
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.usb.host" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher__pos"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".SplashScreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".DepartmentActivity" />
+        <activity android:name=".ProductsActivity" />
+        <activity
+            android:name=".ProductCatalogActivity"
+            android:label="@string/title_activity_product_catalog"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MainScreenActivity" />
+        <activity android:name=".AddUserActivity" />
+        <activity android:name=".OfferActivity" />
+        <activity android:name=".OfferRuleActivity" />
+        <activity android:name=".WorkerManagementActivity" />
+        <activity android:name=".SalesManagementActivity" />
+        <activity android:name=".Reports.UserAttendanceReport" />
+        <activity android:name="." />
+        <activity android:name=".AddOfferActivity" />
+        <activity android:name=".LogInActivity" />
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".Tools.CashActivity"
+            android:theme="@style/AppTheme.PopUp" />
+        <activity
+            android:name=".CreditCard.CreditCardActivity"
+            android:theme="@style/AppTheme.PopUp" />
+        <activity
+            android:name=".ChecksActivity"
+            android:theme="@style/AppTheme.PopUp" />
+        <activity android:name=".ImportProductsActivity" />
+        <activity
+            android:name=".OfferProductCartActivity"
+            android:theme="@style/AppTheme.PopUp" />
+        <activity android:name=".ReportsActivity" />
+        <activity android:name=".ZReportActivity" />
+        <activity android:name=".ReportsManagementActivity" />
+        <activity android:name=".ReportZDetailsActivity" />
+        <activity android:name=".BackupActivity" />
+        <activity android:name=".InitActivity" />
+        <activity android:name=".SetupNewPOSActivity" />
+        <activity android:name=".Invoice" />
+        <activity android:name=".CreditCard.CreditCardByPhone" />
+        <activity
+            android:name=".SettingActivity"
+            android:label="@string/settings" />
+        <activity android:name=".DashboardActivity"></activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,34 @@
+<resources>
+
+    <string-array name="offers_list">
+        <item>x on price y</item>
+        <item>buy x and get the least price with p</item>
+        <item>p on every invoice</item>
+        <item>buy x and get the least price with y</item>
+        <item>gift on x on price y</item>
+        <item>gift on total price y</item>
+        <item>product special price y</item>
+        <item>p to product</item>
+        <item>multilevel discount</item>
+        <item>multilevel price</item>
+        <item>Buy Y Pay y</item>
+    </string-array>
+
+    <string-array name="permissions_list">
+        <item>root</item>
+        <item>Admin</item>
+        <item>Pos</item>
+        <item>Add Product</item>
+        <item>Edit and Delete Product</item>
+        <item>product reports</item>
+        <item>Add Department</item>
+        <item>Edit and delete departments</item>
+        <item>department report</item>
+        <item>Add Worker</item>
+        <item>Edit and delete Worker</item>
+        <item>worker reports</item>
+        <item>offers</item>
+        <item>manager</item>
+    </string-array>
+
+</resources>
