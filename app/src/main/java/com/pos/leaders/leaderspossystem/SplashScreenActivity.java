@@ -56,6 +56,7 @@ public class SplashScreenActivity extends Activity {
         setContentView(R.layout.splash_screen);
         ImageView iv=(ImageView)findViewById(R.id.splashScreen_iv);
 
+
         iv.setImageResource(R.drawable.white_color_logo);
 /*
         try {
