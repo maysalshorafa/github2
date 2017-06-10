@@ -36,7 +36,7 @@ public class DbHelper extends SQLiteOpenHelper {
     //19
     public DbHelper(Context context)
     {
-        super(context, DATABASE_NAME ,null,1);
+        super(context, DATABASE_NAME ,null,19);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
        // db.execSQL(ChecksDBAdapter.DATABASE_CREATE);
 
-
+/*
         db.execSQL(SaleDBAdapter.DATABASE_CREATE);
 
         db.execSQL(ChecksDBAdapter.DATABASE_CREATE);
