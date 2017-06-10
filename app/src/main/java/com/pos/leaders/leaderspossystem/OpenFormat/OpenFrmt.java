@@ -83,4 +83,8 @@ public class OpenFrmt {
         return file2dot6;
     }
 
+    public String getOpenFormatDir(){
+        return openFormatDir.getPath();
+    }
+
 }
