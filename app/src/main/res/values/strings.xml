@@ -310,5 +310,8 @@
     <string name="cant_finish_this_action">Can not finish this action</string>
     <string name="fail">Fail</string>
     <string name="extracting_files">Extracting Files</string>
+    <string name="title_activity_open_format">OpenFormatActivity</string>
+
+    <string name="create_report">Create Report</string>
 
 </resources>
