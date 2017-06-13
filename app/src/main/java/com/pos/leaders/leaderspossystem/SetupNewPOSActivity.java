@@ -65,7 +65,7 @@ public class SetupNewPOSActivity extends AppCompatActivity {
                 finish();
             }
             else{
-                Toast.makeText(this, getString(R.string.try_again), Toast.LENGTH_SHORT);
+                Toast.makeText(this, getString(R.string.try_again), Toast.LENGTH_SHORT).show();
             }
         }
     }
