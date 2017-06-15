@@ -78,11 +78,18 @@
         <activity
             android:name=".SettingActivity"
             android:label="@string/settings" />
-        <activity android:name=".DashboardActivity" />
+
         <activity
             android:name=".OpenFormatActivity"
             android:label="@string/title_activity_open_format"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".DashBoard">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
