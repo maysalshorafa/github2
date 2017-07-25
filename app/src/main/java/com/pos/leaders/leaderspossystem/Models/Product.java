@@ -24,15 +24,42 @@ public class Product {
     private boolean hide;
     private int departmentId;
     private int byUser;
+    private int with_pos;
+    private int with_point_system;
+
+    public Product(int i, String string) {
+
+    }
 
 
     //Product with -1 value on id this is a general product
 
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setWith_pos(int with_pos) {
+        this.with_pos = with_pos;
+    }
+
+    public void setWith_point_system(int with_point_system) {
+        this.with_point_system = with_point_system;
+    }
+
+    public int getWith_pos() {
+        return with_pos;
+
+    }
+
+    public int getWith_point_system() {
+        return with_point_system;
+    }
+
     // region Constructor
     public Product(int id, String name, String barCode, String description,
                    double price, double costPrice, boolean withTax, boolean weighable,
-                   Date creatingDate, boolean hide, int departmentId, int byUser) {
+                   Date creatingDate, boolean hide, int departmentId, int byUser , int with_pos, int with_point_system) {
         this.id = id;
         this.name = name;
         this.barCode = barCode;
@@ -45,6 +72,9 @@ public class Product {
         this.hide = hide;
         this.departmentId = departmentId;
         this.byUser = byUser;
+        this.with_pos=with_pos;
+        this.with_point_system=with_point_system;
+
     }
     public Product(int id, String name,double price, int byUser) {
         this.id = id;
@@ -65,10 +95,10 @@ public class Product {
     public Product(Product product){
         this(product.getId(),product.getName(),product.getBarCode(),product.getDescription(),
                 product.getPrice(),product.getCostPrice(),product.isWithTax(),product.isWeighable(),
-                product.getCreatingDate(),product.isHide(),product.getDepartmentId(),product.getByUser());
+                product.getCreatingDate(),product.isHide(),product.getDepartmentId(),product.getByUser(),product.getWith_pos(),product.getWith_point_system());
     }
 
-    public Product(int id, String name) {
+    public Product(int id, String cursorString, String string, String name, double parseDouble, double v, boolean aBoolean, boolean parseBoolean, Date date, boolean b, int anInt, int parseInt, int i) {
         this.id = id;
         this.name = name;
     }
@@ -97,8 +127,8 @@ public class Product {
         return costPrice;
     }
 
-    public String getDescription() {
-        return description;
+     public String getDescription() {
+       return description;
     }
 
     public boolean isWithTax() {
@@ -178,6 +208,9 @@ public class Product {
                 ", hide=" + hide +
                 ", departmentId=" + departmentId +
                 ", byUser=" + byUser +
+                ", with_pos=" + with_pos +
+                ", with_point_system=" + with_point_system +
+
                 '}';
     }
 

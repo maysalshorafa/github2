@@ -79,5 +79,15 @@
         android:gravity="end"
         android:layout_gravity="end"/>
     </group>
+    <group android:checkableBehavior="single"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <item android:id="@+id/menuItem_Custmer_Club"
+            android:title="CustmerClub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_gravity="end"/>
+    </group>
 
 </menu>

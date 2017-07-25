@@ -175,9 +175,14 @@ public class InvoiceImg {
 
         Block subTitle = new Block("\u200E" + line + newLineL + context.getString(R.string.private_company) +
                 " " + SETTINGS.companyID + newLineL + line, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+
+        Block third_part= new Block("\u200E" + line + newLineL + "Custmer Name" +
+                " " + SETTINGS.custmer_name + newLineL + line, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        third_part.Left();
         subTitle.Left();
         blocks.add(Title);
         blocks.add(subTitle);
+        blocks.add(third_part);
         return blocks;
     }
 

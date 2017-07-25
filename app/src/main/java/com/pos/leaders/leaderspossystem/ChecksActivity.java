@@ -39,13 +39,14 @@ public class ChecksActivity extends AppCompatActivity {
     public static final String LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY = "LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY";
 	Button btAdd;
 	Button btDone,btCancel;
-    TextView tv;
+    TextView tv ,cheack_custmer_tv;
 	ListView lvChecks;
 	static List<Check> checkList = new ArrayList<Check>();
 	ChecksListViewAdapter adapter;
 	float historicX = Float.NaN, historicY = Float.NaN;
 	static final int DELTA = 50;
     private double totalPrice;
+	String custmer_name;
 
 	enum Direction {LEFT, RIGHT;}
 
@@ -71,12 +72,15 @@ public class ChecksActivity extends AppCompatActivity {
 		getWindow().setLayout((int) (width * 0.9), (int) (height * 0.95));
 
         tv = (TextView) findViewById(R.id.checksActivity_TVPrice);
+		cheack_custmer_tv = (TextView) findViewById(R.id.custmer_name);
 
-        Bundle extras = getIntent().getExtras();
+
+		Bundle extras = getIntent().getExtras();
         if (extras != null) {
             totalPrice = (double) extras.get("_Price");
+			custmer_name=(String)extras.get("_custmer");
             tv.setText(totalPrice + " " + getResources().getText(R.string.ins));
-
+cheack_custmer_tv.setText(custmer_name);
         } else {
             finish();
         }

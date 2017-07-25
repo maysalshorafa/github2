@@ -50,6 +50,8 @@ public class WorkerManagementActivity extends Activity {
 
 
 		setContentView(R.layout.activity_worker_management);
+	//	Bundle bundle = getIntent().getExtras();
+	//	final String permissions_name = bundle.getString("permissions_name");
 
 		gvUsers = (GridView) findViewById(R.id.workerManagement_GVWorkers);
 		btAddUser = (Button) findViewById(R.id.workerManagement_BTNewUser);
@@ -68,7 +70,8 @@ public class WorkerManagementActivity extends Activity {
 		btCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(WorkerManagementActivity.this, MainScreenActivity.class);
+				Intent intent = new Intent(WorkerManagementActivity.this, MainActivity.class);
+			//	intent.putExtra("permissions_name",permissions_name);
 				startActivity(intent);
 			}
 		});

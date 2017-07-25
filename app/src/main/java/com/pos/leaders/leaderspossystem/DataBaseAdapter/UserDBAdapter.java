@@ -32,13 +32,15 @@ public class UserDBAdapter {
     protected static final String USERS_COLUMN_PHONENUMBER = "phoneNumber";
     protected static final String USERS_COLUMN_DISCOUNTINPERCENTAGE = "present";
     protected static final String USERS_COLUMN_HOURLYWAGE = "hourlyWage";
+    protected static final String USERS_COLUMN_PermmionName = "permissions_name";
+
 
     // TODO: Create public field for each column in your table.
     // SQL Statement to create a new database.
     public static final String DATABASE_CREATE="CREATE TABLE IF NOT EXISTS users "+
             "( `id` INTEGER PRIMARY KEY AUTOINCREMENT,`userName` TEXT UNIQUE, "+
             "`firstName` TEXT NOT NULL, `lastName` TEXT, `visitDate` TEXT NOT NULL DEFAULT current_timestamp, "+
-            "`pwd` TEXT UNIQUE, `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, "+
+            "`pwd` TEXT UNIQUE, `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, 'permissions_name' TEXT, "+
             "`hourlyWage` REAL DEFAULT 0.0 )";
     // Variable to hold the database instance
     public SQLiteDatabase db;
@@ -66,7 +68,7 @@ public class UserDBAdapter {
         return db;
     }
 
-    public int insertEntry(String userName,String password,String firstName,String lastName,String phoneNumber,Double persent,Double hourlyWag) {
+    public int insertEntry(String userName,String password,String firstName,String lastName,String phoneNumber,Double persent,Double hourlyWag,String permissions_name ) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(USERS_COLUMN_USERNAME, userName);
@@ -76,6 +78,8 @@ public class UserDBAdapter {
         val.put(USERS_COLUMN_PHONENUMBER, phoneNumber);
         val.put(USERS_COLUMN_DISCOUNTINPERCENTAGE, persent);
         val.put(USERS_COLUMN_HOURLYWAGE, hourlyWag);
+        val.put(USERS_COLUMN_PermmionName, permissions_name);
+
         try {
             db.insert(USERS_TABLE_NAME, null, val);
             return 1;
@@ -95,6 +99,7 @@ public class UserDBAdapter {
         val.put(USERS_COLUMN_PHONENUMBER, user.getPhoneNumber());
         val.put(USERS_COLUMN_DISCOUNTINPERCENTAGE, user.getPresent());
         val.put(USERS_COLUMN_HOURLYWAGE, user.getHourlyWage());
+        val.put(USERS_COLUMN_PermmionName,user.getPermtionName());
         try {
             db.insert(USERS_TABLE_NAME, null, val);
             return 1;
@@ -180,6 +185,7 @@ public class UserDBAdapter {
         val.put(USERS_COLUMN_PHONENUMBER, user.getPhoneNumber());
         val.put(USERS_COLUMN_DISCOUNTINPERCENTAGE, user.getPresent());
         val.put(USERS_COLUMN_HOURLYWAGE, user.getHourlyWage());
+        val.put(USERS_COLUMN_PermmionName,user.getPermtionName());
 
         String where = USERS_COLUMN_ID + " = ?";
         db.update(USERS_TABLE_NAME, val, where, new String[]{user.getId() + ""});
@@ -215,6 +221,6 @@ public class UserDBAdapter {
 				, Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISENABLED)))
 				, cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PHONENUMBER))
 				, Double.parseDouble(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISCOUNTINPERCENTAGE)))
-				, Double.parseDouble(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_HOURLYWAGE))));
+				, Double.parseDouble(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_HOURLYWAGE))),cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PermmionName)));
 	}
 }

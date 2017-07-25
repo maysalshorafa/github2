@@ -34,11 +34,15 @@ public class HomeActivity extends Activity {
 	EditText etUserName, etPassword;
 	UserDBAdapter userDBAdapter;
 	ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
-
+	String str ;
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+		 str = extras.getString(LogInActivity.LEADPOS_MAKE_A_REPORT);
 
+		}
 		if (prefs.getBoolean("firstrun", true)) {
 			// Do first run stuff here then set 'firstrun' as false
 			Toast.makeText(getApplicationContext(),"this is a first run",Toast.LENGTH_LONG);
@@ -50,6 +54,7 @@ public class HomeActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 
 		// Remove title bar
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -87,8 +92,11 @@ public class HomeActivity extends Activity {
 				if (u != null) {
 					SESSION._USER = new User(u);
 					Toast.makeText(getApplicationContext(), "Hello " + u.getFullName() + " !!", Toast.LENGTH_SHORT).show();
-					Intent intent = new Intent(getApplicationContext(), MainScreenActivity.class);
+					Intent intent = new Intent(getApplicationContext(), DashBoard.class);
+
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+					intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, str);
+					intent.putExtra("permissions_name",u.getPermtionName());
 					int scheduleID = scheduleWorkersDBAdapter.insertEntry(u.getId());
 					SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, u.getId(), new Date(), new Date());
 					/*
@@ -102,4 +110,5 @@ public class HomeActivity extends Activity {
 			}
 		});
 	}
+
 }

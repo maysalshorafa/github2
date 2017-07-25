@@ -68,13 +68,11 @@
         android:background="@drawable/edit_text_search" />
 
     <android.support.constraint.Guideline
+        android:id="@+id/guideline18"
         android:layout_width="wrap_content"
         android:layout_height="872dp"
-        android:id="@+id/guideline18"
         android:orientation="vertical"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="675dp"
-        app:layout_constraintGuide_percent="0.5"/>
+        app:layout_constraintGuide_begin="192dp" />
 
     <Button
         android:text="@string/add"

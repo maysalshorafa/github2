@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
@@ -47,7 +48,7 @@ import POSSDK.POSSDK;
  * Editing by KARAM on 10/04/2016.
  */
 public class SalesManagementActivity extends Activity {
-
+TextView custmer;
     ListView lvSales;
     EditText etFrom, etTo;
     SaleDBAdapter saleDBAdapter;
@@ -56,7 +57,7 @@ public class SalesManagementActivity extends Activity {
     private static final int DIALOG_FROM_DATE = 825;
     private static final int DIALOG_TO_DATE = 324;
     Date from, to;
-
+String custmer_name;
     SaleManagementListViewAdapter adapter;
     View previousView = null;
 
@@ -68,7 +69,14 @@ public class SalesManagementActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_management);
-
+custmer = (TextView) findViewById(R.id.sales_custmer_name);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+custmer_name=(String)extras.get("_custmer");
+            custmer.setText(custmer_name);
+        } else {
+            finish();
+        }
         lvSales = (ListView) findViewById(R.id.saleManagement_LVSales);
         etFrom = (EditText) findViewById(R.id.saleManagement_ETFrom);
         etFrom.setFocusable(false);
@@ -225,7 +233,7 @@ public class SalesManagementActivity extends Activity {
                         else
                             print(invoiceImg.cancelingInvoice(sale, false, null));
                         sale.setPayment(new Payment(payments.get(0)));
-                        int sID = saleDBAdapter.insertEntry(SESSION._USER.getId(), new Date(), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaid() * -1);
+                        int sID = saleDBAdapter.insertEntry(SESSION._USER.getId(), new Date(), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaid() * -1,sale.getCustmer_id(),sale.getCustmer_name());
 
                         saleDBAdapter.close();
                         PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(SalesManagementActivity.this);

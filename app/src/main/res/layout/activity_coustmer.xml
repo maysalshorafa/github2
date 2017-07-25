@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pos.leaders.leaderspossystem.Coustmer">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="90dp"
+        tools:layout_editor_absoluteY="123dp"
+        tools:layout_editor_absoluteX="0dp">
+
+        <Button
+            android:id="@+id/add_new_coustmer"
+            android:layout_width="300dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/primaryColor"
+            android:text="Add New Coustmer"
+            tools:layout_editor_absoluteX="42dp"
+            tools:layout_editor_absoluteY="66dp" />
+
+        <Button
+            android:id="@+id/show_coustmer"
+            android:layout_width="300dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/primaryColor"
+            android:text="Show All Coustmer"
+            tools:layout_editor_absoluteX="42dp"
+            tools:layout_editor_absoluteY="178dp" />
+
+        <Button
+            android:id="@+id/new_group"
+            android:layout_width="300dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/primaryColor"
+            android:text="Add New Club"
+            tools:layout_editor_absoluteX="42dp"
+            tools:layout_editor_absoluteY="307dp" />
+
+        <Button
+            android:id="@+id/show_group"
+            android:layout_width="300dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/primaryColor"
+            android:text="Show Exist Club"
+            android:textColor="@color/black"
+            tools:layout_editor_absoluteX="42dp"
+            tools:layout_editor_absoluteY="307dp" />
+
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

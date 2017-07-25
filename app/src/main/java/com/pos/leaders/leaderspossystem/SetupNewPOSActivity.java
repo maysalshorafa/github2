@@ -42,21 +42,21 @@ public class SetupNewPOSActivity extends AppCompatActivity {
 
     public void save(View view){
         if(etPC.getText().equals("")){
-            Toast.makeText(this, "", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "please insert company pc", Toast.LENGTH_LONG).show();
         } else if(etName.getText().equals("")){
-            Toast.makeText(this, "", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "please insert company name", Toast.LENGTH_LONG).show();
         } else if(etPOSID.getText().equals("")){
-            Toast.makeText(this, "", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "please insert PosId", Toast.LENGTH_LONG).show();
         } else if ((etTax.getText().equals("")) || (Float.parseFloat(etTax.getText().toString())) < 1) {
-            Toast.makeText(this, "", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "please insert Tax", Toast.LENGTH_LONG).show();
         } else if(etINote.getText().equals("")){
-            Toast.makeText(this, "", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "please insert Note", Toast.LENGTH_LONG).show();
         } else if(etED.getText().equals("")){
-            Toast.makeText(this, "", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "please insert company pc", Toast.LENGTH_LONG).show();
         } else{
             SettingsDBAdapter settingsDBAdapter=new SettingsDBAdapter(this);
             settingsDBAdapter.open();
-            int i = settingsDBAdapter.updateEntry(etName.getText().toString(),etName.getText().toString(),etPOSID.getText().toString(),
+            int i = settingsDBAdapter.updateEntry(etPC.getText().toString(),etName.getText().toString(),etPOSID.getText().toString(),
                     Float.parseFloat(etTax.getText().toString()),etINote.getText().toString(),Integer.parseInt(etED.getText().toString()),
                     etCCUN.getText().toString(),etCCPASS.getText().toString());
             settingsDBAdapter.close();

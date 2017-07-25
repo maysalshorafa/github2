@@ -168,7 +168,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public User getUserByID(int id){
+   /** public User getUserByID(int id){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery("select * from users where id='"+id+"'", null );
         res.moveToFirst();
@@ -176,9 +176,9 @@ public class DbHelper extends SQLiteOpenHelper {
         user=new User(getColumnValueInt("id",res),getColumnValue("userName",res),getColumnValue("pwd",res)
                 ,getColumnValue("firstName",res),getColumnValue("lastName",res), DateConverter.stringToDate(getColumnValue("visitDate",res))
                 ,getColumnValueBoolean("hide",res),getColumnValue("phoneNumber",res)
-                ,Double.parseDouble(getColumnValue("present",res)),Double.parseDouble(getColumnValue("hourlyWage",res)));
+                ,Double.parseDouble(getColumnValue("present",res)),Double.parseDouble(getColumnValue("hourlyWage",res),getColumnValue("")));
         return user;
-    }
+    }**/
 
     private boolean getColumnValueBoolean(String Column, Cursor cr) {
         int b=cr.getInt(cr.getColumnIndex(Column));

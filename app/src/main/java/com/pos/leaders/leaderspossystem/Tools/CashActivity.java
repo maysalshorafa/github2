@@ -28,10 +28,12 @@ public class CashActivity extends AppCompatActivity implements View.OnTouchListe
     public static final String LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY = "LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY";
     ImageView iv_20, iv_50, iv_100, iv_200;
     TextView tvB20, tvB50, tvB100, tvB200;
+    TextView custmer_name;
 
     ImageView cent10, cent50, cent100, cent200, cent500, cent1000;
     TextView tvC10, tvC50, tvC100, tvC200, tvC500, tvC1000;
     TextView tv, tvTotalInserted, tvExcess;
+    String custmer_nameS;
 
     Button btnDone;
 
@@ -41,6 +43,7 @@ public class CashActivity extends AppCompatActivity implements View.OnTouchListe
     private float x1, x2;
     private float y1, y2;
     static final int MIN_DISTANCE = 50;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +69,8 @@ public class CashActivity extends AppCompatActivity implements View.OnTouchListe
         int height = dm.heightPixels;
 
         getWindow().setLayout((int) (width * 0.9), (int) (height * 0.95));
+        custmer_name=(TextView)findViewById(R.id.custmer_name);
+
         iv_20 = (ImageView) findViewById(R.id.cashActivity_Bill20);
         iv_20.setOnTouchListener(this);
         tvB20 = (TextView) findViewById(R.id.cashActivity_TVDB20);
@@ -122,11 +127,16 @@ public class CashActivity extends AppCompatActivity implements View.OnTouchListe
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             totalPrice = (double) extras.get("_Price");
+            custmer_nameS= (String) extras.get("_custmer");
             tv.setText(totalPrice + " " + getResources().getText(R.string.ins));
 
+
+            custmer_name.setText(custmer_nameS);
+            custmer_nameS="";
         } else {
             finish();
         }
+
         calcTotalInserted();
 
 

@@ -50,8 +50,10 @@ public class PermissionsDBAdapter {
 		return db;
 	}
 
+
 	public int insertEntry(String name) {
 		ContentValues val = new ContentValues();
+
 		//Assign values for each row.
 		val.put(PERMISSIONS_TABLE_NAME, name);
 		try {

@@ -30,9 +30,12 @@ public class SaleDBAdapter {
 	protected static final String SALES_COLUMN_CANCELED = "canceled";
 	protected static final String SALES_COLUMN_TOTALPRICE = "totalPrice";
 	protected static final String SALES_COLUMN_TOTALPAID = "totalPaid";
+	protected static final String SALES_COLUMN__custmer_id = "custmer_id";
+	protected static final String SALES_COLUMN__custmer_name = "custmer_name";
+
 
 	public static final String DATABASE_CREATE = "CREATE TABLE sales ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byUser` INTEGER, `saleDate` TEXT DEFAULT current_timestamp, " +
-			"`replacementNote` INTEGER DEFAULT 0, `canceled` INTEGER DEFAULT 0, totalPrice REAL, totalPaid REAL, " +
+			"`replacementNote` INTEGER DEFAULT 0, `canceled` INTEGER DEFAULT 0, totalPrice REAL, totalPaid REAL, custmer_id  INTEGER DEFAULT 0 ,custmer_name  TEXT " +
 			"FOREIGN KEY(`byUser`) REFERENCES `users.id`)";
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
@@ -59,7 +62,7 @@ public class SaleDBAdapter {
 		return db;
 	}
 
-	public int insertEntry(int byUser, Date saleDate, int replacementNote, boolean canceled, double totalPrice,double totalPaid) {
+	public int insertEntry(int byUser, Date saleDate, int replacementNote, boolean canceled, double totalPrice,double totalPaid,int custmer_id,String custmer_name) {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 		val.put(SALES_COLUMN_BYUSER, byUser);
@@ -68,6 +71,9 @@ public class SaleDBAdapter {
 		val.put(SALES_COLUMN_CANCELED, canceled);
 		val.put(SALES_COLUMN_TOTALPRICE, totalPrice);
 		val.put(SALES_COLUMN_TOTALPAID, totalPaid);
+		val.put(SALES_COLUMN__custmer_id, custmer_id);
+		val.put(SALES_COLUMN__custmer_name, custmer_name);
+
 		try {
 			return (int) db.insert(SALES_TABLE_NAME, null, val);
 		} catch (SQLException ex) {
@@ -76,8 +82,8 @@ public class SaleDBAdapter {
 		}
 	}
 
-	public int insertEntry(Sale sale) {
-		return insertEntry(sale.getByUser(), sale.getSaleDate(), sale.getReplacementNote(), sale.isCancelling(), sale.getTotalPrice(),sale.getTotalPaid());
+	public int insertEntry(Sale sale ,int _custmer_id,String custmer_name) {
+		return insertEntry(sale.getByUser(), sale.getSaleDate(), sale.getReplacementNote(), sale.isCancelling(), sale.getTotalPrice(),sale.getTotalPaid(),_custmer_id,custmer_name);
 	}
 
 	public Sale getSaleByID(int id) {
@@ -199,6 +205,7 @@ public class SaleDBAdapter {
 				cursor.getInt(cursor.getColumnIndex(SALES_COLUMN_REPLACEMENTNOTE)),
 				Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CANCELED))),
 				cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPRICE)),
-				cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPAID)));
+				cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPAID)),
+				Integer.parseInt(cursor.getString(cursor.getColumnIndex(SALES_COLUMN__custmer_id))),cursor.getString(cursor.getColumnIndex(SALES_COLUMN__custmer_name)));
 	}
 }
