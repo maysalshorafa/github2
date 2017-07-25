@@ -22,10 +22,13 @@ public class PermissionsGridViewAdapter extends BaseAdapter {
 	private Context context;
 	private List<Permissions> permissionses;
 	private LayoutInflater inflater;
+	///Permissions permissionsObject;
 
 	public PermissionsGridViewAdapter(Context context, List<Permissions> permissionses) {
 		this.context = context;
 		this.permissionses = permissionses;
+	//	permissionsObject = new Permissions();
+
 	}
 
 	/**
@@ -91,6 +94,9 @@ public class PermissionsGridViewAdapter extends BaseAdapter {
 		sw.setText(permissionses.get(position).getName());
 		sw.setChecked(permissionses.get(position).isChecked());
 
-		return gridView;
+		//set id for the adapter row here.
+	//	sw.setId(permissionsObject.getId());
+
+			return gridView;
 	}
 }

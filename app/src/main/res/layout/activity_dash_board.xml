@@ -6,19 +6,34 @@
     android:layout_height="match_parent"
     tools:context="com.pos.leaders.leaderspossystem.DashBoard">
 
-    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    <GridView
         android:id="@+id/grid"
-        android:layout_width="fill_parent"
-        android:layout_height="871dp"
+        android:layout_width="876dp"
+        android:layout_height="457dp"
         android:columnWidth="70dp"
-        android:numColumns="5"
-        android:verticalSpacing="30dp"
-        android:horizontalSpacing="30dp"
         android:gravity="center"
-        android:paddingTop="40dp"
+        android:horizontalSpacing="30dp"
+        android:numColumns="5"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp" />
+        android:paddingTop="40dp"
+        android:verticalSpacing="30dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="25dp" />
+
+
+
+    <Button
+        android:text="Log Out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/log_out"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/btn_primary"
+        android:textColor="@color/white" />
 
 </android.support.constraint.ConstraintLayout>

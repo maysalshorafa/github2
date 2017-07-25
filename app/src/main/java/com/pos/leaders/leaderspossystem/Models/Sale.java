@@ -22,10 +22,31 @@ public class Sale {
 	private boolean cancelling;
 	private double totalPrice;
 	private double totalPaid;
+	private int custmer_id;
+
+	public int getCustmer_id() {
+		return custmer_id;
+	}
+
+	public void setCustmer_id(int custmer_id) {
+		this.custmer_id = custmer_id;
+	}
+
+	public String getCustmer_name() {
+		return custmer_name;
+	}
+
+	public void setCustmer_name(String custmer_name) {
+		this.custmer_name = custmer_name;
+	}
+
+	private String custmer_name;
+
 
 	private List<Order> orders;
 	private User user;
 	private Payment payment;
+
 
 
     private Locale locale = new Locale("en");
@@ -43,7 +64,7 @@ public class Sale {
 
 	// region Constructors
 
-	public Sale(int id, int byUser, Date saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid) {
+	public Sale(int id, int byUser, Date saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid,int custmer_id,String custmer_name) {
 		this.id = id;
 		this.byUser = byUser;
 		this.saleDate=saleDate;
@@ -51,6 +72,8 @@ public class Sale {
 		this.cancelling = cancelling;
 		this.totalPrice = totalPrice;
 		this.totalPaid=totalPaid;
+		this.custmer_id=custmer_id;
+		this.custmer_name=custmer_name;
 	}
 
 	public Sale(int byUser, Date saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid) {
@@ -75,11 +98,11 @@ public class Sale {
 	}
 
 	public Sale(Sale s) {
-		this(s.getId(),s.getByUser(),s.getSaleDate(),s.getReplacementNote(),s.isCancelling(),s.getTotalPrice(),s.getTotalPaid());
+		this(s.getId(),s.getByUser(),s.getSaleDate(),s.getReplacementNote(),s.isCancelling(),s.getTotalPrice(),s.getTotalPaid(),s.getCustmer_id(),s.getCustmer_name());
 	}
 
 	public static Sale newInstance(Sale s){
-		return new Sale(s.getId(),s.getByUser(),s.getSaleDate(),s.getReplacementNote(),s.isCancelling(),s.getTotalPrice(),s.getTotalPaid());
+		return new Sale(s.getId(),s.getByUser(),s.getSaleDate(),s.getReplacementNote(),s.isCancelling(),s.getTotalPrice(),s.getTotalPaid(),s.getCustmer_id(),s.getCustmer_name());
 	}
 
     //endregion

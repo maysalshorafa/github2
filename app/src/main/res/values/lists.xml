@@ -14,7 +14,7 @@
         <item>Buy Y Pay y</item>
     </string-array>
 
-    <string-array name="permissions_list">
+    <string-array name="permissions_list1">
         <item>root</item>
         <item>Admin</item>
         <item>Pos</item>
@@ -29,6 +29,30 @@
         <item>worker reports</item>
         <item>offers</item>
         <item>manager</item>
+
+        <item>add customer</item>
     </string-array>
+    <string-array name="permissions_list">
+    <item>main screen</item>
+        <item>report</item>
+        <item>product</item>
+        <item>department</item>
+        <item>users</item>
+        <item>offers</item>
+        <item>back up</item>
+        <item>tax</item>
+        <item>Hours of work</item>
+        <item>customer club</item>
+
+    </string-array>
+    <string-array name="club_list">
+        <item>genral</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+
+
+    </string-array>
+
 
 </resources>

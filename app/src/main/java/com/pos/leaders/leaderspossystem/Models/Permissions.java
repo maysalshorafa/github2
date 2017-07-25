@@ -34,6 +34,7 @@ public class Permissions {
 
 	//region Constructors
 
+
 	public Permissions(int id, String name) {
 		this.id = id;
 		this.name = name;

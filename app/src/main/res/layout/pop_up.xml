@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+    android:gravity="center"
+    android:background="#f5f5f4" >
+    <RelativeLayout android:id="@+id/searchPersonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        >
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/customer_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="65dp"
+            android:ems="10"
+            android:textColor="@color/black"/>
+
+
+
+        <ListView
+            android:id="@+id/custmer_list_view"
+            android:layout_width="fill_parent"
+            android:layout_height="450dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           >
+
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="60dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:layout_margin="12dp"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:text="Add" />
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="60dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:layout_margin="12dp"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:text="Cancel" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

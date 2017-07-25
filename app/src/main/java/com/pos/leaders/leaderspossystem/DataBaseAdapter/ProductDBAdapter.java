@@ -7,12 +7,17 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.pos.leaders.leaderspossystem.Config;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.Product;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,8 +25,9 @@ import java.util.List;
  */
 
 public class ProductDBAdapter {
-    //Table name
-    protected static final String PRODUCTS_TABLE_NAME = "products";
+
+      //Table name
+    public static final String PRODUCTS_TABLE_NAME = "products";
     //column names
     protected static final String PRODUCTS_COLUMN_ID = "id";
     protected static final String PRODUCTS_COLUMN_NAME = "name";
@@ -35,6 +41,10 @@ public class ProductDBAdapter {
     protected static final String PRODUCTS_COLUMN_DISENABLED = "hide";
     protected static final String PRODUCTS_COLUMN_DEPARTMENTID = "depId";
     protected static final String PRODUCTS_COLUMN_BYUSER = "byUser";
+    protected static final String PRODUCTS_COLUMN_status = "status";
+    protected static final String PRODUCTS_COLUMN_with_pos = "with_pos";
+    protected static final String PRODUCTS_COLUMN_with_point_system = "with_point_system";
+
 
     // TODO: Create public field for each column in your table.
     // SQL Statement to create a new database.
@@ -42,7 +52,7 @@ public class ProductDBAdapter {
             "`name` TEXT NOT NULL, `barcode` INTEGER NOT NULL, `description` TEXT,"+
             "`price` REAL NOT NULL, `costPrice` REAL, `withTax` INTEGER NOT NULL DEFAULT 1, "+
             "`weighable` INTEGER NOT NULL DEFAULT 0, `creatingDate` TEXT NOT NULL DEFAULT current_timestamp, "+
-            "`hide` INTEGER DEFAULT 0, `depId` INTEGER NOT NULL, `byUser` INTEGER NOT NULL, "+
+            "`hide` INTEGER DEFAULT 0, `depId` INTEGER NOT NULL, `byUser` INTEGER NOT NULL, ' `status` INTEGER NOT NULL , ' `with_pos` INTEGER NOT NULL DEFAULT 1, ' `with_point_system` INTEGER NOT NULL DEFAULT 1"+
             "FOREIGN KEY(`depId`) REFERENCES `departments.id`, FOREIGN KEY(`byUser`) REFERENCES `users.id` )";
     // Variable to hold the database instance
     public SQLiteDatabase db;
@@ -71,7 +81,7 @@ public class ProductDBAdapter {
     }
 
     public int insertEntry(String name,String barCode,String description,double price,double costPrice,
-                           boolean withTax,boolean weighable,int depId,int byUser) {
+                           boolean withTax,boolean weighable,int depId,int byUser ,int pos,int point_system) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(PRODUCTS_COLUMN_NAME, name);
@@ -83,11 +93,14 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_WEIGHABLE, weighable);
         val.put(PRODUCTS_COLUMN_DEPARTMENTID, depId);
         val.put(PRODUCTS_COLUMN_BYUSER, byUser);
+      //  val.put(PRODUCTS_COLUMN_status, status);
+val.put(PRODUCTS_COLUMN_with_pos,pos);
+        val.put(PRODUCTS_COLUMN_with_point_system,point_system);
         try {
             db.insert(PRODUCTS_TABLE_NAME, null, val);
             return 1;
         } catch (SQLException ex) {
-            Log.e("UserDB insertEntry", "inserting Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("ProductDB insertEntry", "inserting Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
@@ -105,11 +118,14 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_WEIGHABLE, p.isWeighable());
         val.put(PRODUCTS_COLUMN_DEPARTMENTID, p.getDepartmentId());
         val.put(PRODUCTS_COLUMN_BYUSER, p.getByUser());
+        val.put(PRODUCTS_COLUMN_with_pos,p.getWith_pos());
+        val.put(PRODUCTS_COLUMN_with_point_system,p.getWith_point_system());
+
         try {
             db.insert(PRODUCTS_TABLE_NAME, null, val);
             return 1;
         } catch (SQLException ex) {
-            Log.e("UserDB insertEntry", "inserting Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("ProductDB insertEntry", "inserting Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
@@ -148,7 +164,9 @@ public class ProductDBAdapter {
                 DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED))),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))));
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))) ,
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_pos))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_point_system))));
         cursor.close();
 
         return product;
@@ -174,7 +192,8 @@ public class ProductDBAdapter {
                 DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED))),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))));
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_pos))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_point_system))));
         cursor.close();
 
         return product;
@@ -219,6 +238,7 @@ public class ProductDBAdapter {
         Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME +" where "+PRODUCTS_COLUMN_DISENABLED+"=0 order by id desc", null );
         cursor.moveToFirst();
 
+
         while(!cursor.isAfterLast()){
             productsList.add(new Product(Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_ID))),
                     cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_NAME)),
@@ -231,8 +251,9 @@ public class ProductDBAdapter {
                     DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
                     Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED))),
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID))),
-                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER)))));
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))),  Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_pos))),  Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_point_system)))));
             cursor.moveToNext();
+
         }
 
         return productsList;
@@ -266,7 +287,7 @@ public class ProductDBAdapter {
 					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
 					Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED))),
 					Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID))),
-					Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER)))));
+					Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))) ,  Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_pos))),  Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_point_system)))));
 			cursor.moveToNext();
 		}
 
@@ -314,7 +335,7 @@ public class ProductDBAdapter {
                 DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED))),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))));
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))),  Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_pos))),  Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_point_system))));
         if(p.getDescription()==null){
             p.setDescription("");
         }
@@ -323,4 +344,35 @@ public class ProductDBAdapter {
         }
         return p;
     }
+
+    //mays
+    public HashMap getProductByStatus(String status){
+        Product product = null;
+        Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where status='" + status + "'", null);
+        if (cursor.getCount() < 1) // UserName Not Exist
+        {
+            cursor.close();
+        }
+        cursor.moveToFirst();
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put(Config.PRODUCTS_NAME,cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_NAME)));
+        hashMap.put(Config.PRODUCTS_BARCODE,cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BARCODE)));
+        hashMap.put(Config.PRODUCTS_DESCRIPTION, cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DESCRIPTION)));
+        hashMap.put(Config.PRODUCTS_PRICE, String.valueOf(Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE)))));
+        hashMap.put(Config.PRODUCTS_COSTPRICE, String.valueOf(Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_COSTPRICE)))));
+        hashMap.put(Config.PRODUCTS_WITHTAX, String.valueOf(Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WITHTAX)))));
+        hashMap.put(Config.PRODUCTS_WEIGHABLE, String.valueOf(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHABLE)))));
+        hashMap.put(Config.PRODUCTS_DISENABLED, String.valueOf(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED)))));
+        hashMap.put(Config.PRODUCTS_CREATINGDATE, String.valueOf(DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE)))));
+        hashMap.put(Config.PRODUCTS_DEPARTMENTID, String.valueOf(Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID)))));
+        hashMap.put(Config.PRODUCTS_BYUSER, String.valueOf(Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER)))));
+
+
+        cursor.close();
+
+        return hashMap;
+    }
+
+
+
 }

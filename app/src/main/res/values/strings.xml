@@ -88,6 +88,7 @@
     <string name="reports">Reports</string>
     <string name="setting">Setting</string>
     <string name="backup">Backup</string>
+    <string name="custmer_club">CustmerClub</string>
 
     <!--Main Activity-->
     <string name="open">Open</string>
@@ -313,5 +314,6 @@
     <string name="title_activity_open_format">OpenFormatActivity</string>
 
     <string name="create_report">Create Report</string>
+    <string name="title_activity_notify_service">NotifyService</string>
 
 </resources>

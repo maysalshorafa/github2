@@ -133,8 +133,10 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 Toast.makeText(getApplicationContext(), "Hello " + user.getFullName() + " !!", Toast.LENGTH_SHORT).show();
                 //open main screen
                 //// TODO: 01/06/2017 open dashboard screen
-                Intent intent = new Intent(getApplicationContext(), DashBoard.class);
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, LogInActivity.LEADPOS_MAKE_A_REPORT);
+
                 int scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getId());
                 SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, user.getId(), new Date(), new Date());
                 userDBAdapter.close();

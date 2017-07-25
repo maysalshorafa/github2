@@ -37,11 +37,12 @@ import org.ksoap2.serialization.SoapObject;
 
 public class CreditCardActivity extends AppCompatActivity {
     EditText etNumberOfPayments;
-    TextView tvTotalPrice;
+    TextView tvTotalPrice ,custmer_name;
     Button btOK, btCancel;
     Spinner sCreditType;
 
     double totalPrice;
+    String custmer_nameS;
 
     String creditCardNumber = "";
     boolean nextStep = false;
@@ -91,7 +92,7 @@ public class CreditCardActivity extends AppCompatActivity {
         sCreditType = (Spinner) findViewById(R.id.creditCardActivity_sCreditType);
 
         tvTotalPrice = (TextView) findViewById(R.id.creditCardActivity_tvTotalPrice);
-
+custmer_name=(TextView)findViewById(R.id.custmer_name);
         btOK = (Button) findViewById(R.id.creditCardActivity_btnOK);
         btCancel = (Button) findViewById(R.id.creditCardActivity_btnCancel);
         btCancel.setOnClickListener(new View.OnClickListener() {
@@ -104,12 +105,17 @@ public class CreditCardActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             totalPrice = (double) extras.get("_Price");
+            custmer_nameS= (String) extras.get("_custmer");
+
+
             tvTotalPrice.setText(totalPrice + " " + getResources().getText(R.string.ins));
+            custmer_name.setText(custmer_nameS);
         } else {
             finish();
         }
 
         if (extras.getString(LEADERS_POS_CREDIT_CARD_TYPE).equals(LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PHONE)) {
+
             isByPhone = true;
             CreditCardByPhone fTP = new CreditCardByPhone();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -127,6 +133,7 @@ public class CreditCardActivity extends AppCompatActivity {
                     TextView ccv = (TextView) findViewById(R.id.creditCardByPhone_tvCCV);
                     TextView ce = (TextView) findViewById(R.id.creditCardByPhone_tvCE);
                     TextView id = (TextView) findViewById(R.id.creditCardByPhone_tvID);
+
 
                     long CCNum;
                     String CCV, CE, ID;

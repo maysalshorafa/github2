@@ -16,6 +16,14 @@
         android:textColor="@android:color/black"
         android:textStyle="normal|bold"
         android:layout_marginBottom="16dp" />
+    <TextView
+        android:id="@+id/custmer_name"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Custmer name"
+        android:textColor="@color/black"
+        android:textSize="30dp"
+        android:gravity="bottom"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -83,7 +91,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/byPhoneFragment_fl">
 
+
     </FrameLayout>
+
 
     <LinearLayout
         android:orientation="horizontal"

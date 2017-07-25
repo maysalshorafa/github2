@@ -37,6 +37,10 @@ public class AddUserActivity extends Activity {
 	UserDBAdapter userDBAdapter;
 	User user;
 	final List<View> selectedViews=new ArrayList<View>();
+	String selectedFromList ;
+
+
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +86,7 @@ public class AddUserActivity extends Activity {
 			etPresent.setText(user.getPresent() + "");
 			etHourlyWage.setText(user.getHourlyWage() + "");
 			btAdd.setText(getResources().getText(R.string.edit));
+
 			//The key argument here must match that used in the other activity
 		}
 
@@ -106,11 +111,14 @@ public class AddUserActivity extends Activity {
 							} else {
 								int i = userDBAdapter.insertEntry(etUserName.getText().toString(), etPassword.getText().toString(), etFirstName.getText().toString()
 										, etLastName.getText().toString(), etPhoneNumber.getText().toString()
-										, Double.parseDouble(etPresent.getText().toString()), Double.parseDouble(etHourlyWage.getText().toString()));
+										, Double.parseDouble(etPresent.getText().toString()), Double.parseDouble(etHourlyWage.getText().toString()),selectedFromList );
 								if (i == 1) {
+									Toast.makeText(getApplicationContext(), "success dding new user", Toast.LENGTH_LONG).show();
+
 									Log.i("success", "adding new user");
-									intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
-									startActivity(intent);
+							/**		intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
+									intent.putExtra("permissions_name",selectedFromList);
+									startActivity(intent);**/
 									//// TODO: 17/10/2016 sucess to add entity
 								} else {
 									Log.e("error", "can`t add user");
@@ -125,6 +133,7 @@ public class AddUserActivity extends Activity {
 				} else {
 					// Edit mode
 					if (_userName != "") {
+
 						if ((userDBAdapter.availableUserName(_userName)) || _userName == user.getUserName()) {
 							if (etFirstName.getText().toString().equals("")) {
 								Toast.makeText(getApplicationContext(), "Please insert first name", Toast.LENGTH_LONG).show();
@@ -134,15 +143,20 @@ public class AddUserActivity extends Activity {
 								Toast.makeText(getApplicationContext(), "Please insert hourly wage", Toast.LENGTH_LONG).show();
 							} else {
 								try {
+
 									user.setUserName(etUserName.getText().toString());
 									user.setFirstName(etFirstName.getText().toString());
 									user.setLastName(etLastName.getText().toString());
 									user.setPhoneNumber(etPhoneNumber.getText().toString());
 									user.setHourlyWage(Double.parseDouble(etHourlyWage.getText().toString()));
 									user.setPresent(Double.parseDouble(etPresent.getText().toString()));
+									user.setPermissions_name(selectedFromList);
+
 									userDBAdapter.updateEntry(user);
 									Log.i("success Edit", user.toString());
 									intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
+									intent.putExtra("permissions_name",user.getPermtionName());
+
 									startActivity(intent);
 								} catch (Exception ex) {
 									Log.e("error can`t edit 0user", ex.getMessage().toString());
@@ -161,7 +175,9 @@ public class AddUserActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				//// TODO: 22/10/2016 cancel and return to previous activity
-				Intent intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
+				Intent intent = new Intent(AddUserActivity.this, HomeActivity.class);
+			//	intent.putExtra("permissions_name",user.getPermtionName());
+
 				//userDBAdapter.close();
 				startActivity(intent);
 			}
@@ -179,20 +195,31 @@ public class AddUserActivity extends Activity {
 
 
 		ArrayAdapter arrayAdapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,perList);
+
 		PermissionsGridViewAdapter adapter = new PermissionsGridViewAdapter(this, permissionsList);
 		lvPermissions.setAdapter(arrayAdapter);
 		lvPermissions.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		lvPermissions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+		 selectedFromList = (String) lvPermissions.getItemAtPosition(position);
+
+
+
+
 				if(selectedViews.contains(view)){
 					selectedViews.remove(view);
 					view.setBackgroundColor(getResources().getColor(R.color.transparent));
+
+
 				}
 				else
 				{
 					selectedViews.add(view);
 					view.setBackgroundColor(getResources().getColor(R.color.pressed_color));
+
 				}
 				for (int i = 0; i < lvPermissions.getChildCount(); i++) {
 					if(selectedViews.contains(lvPermissions.getChildAt(i))){
@@ -201,6 +228,7 @@ public class AddUserActivity extends Activity {
 					else
 					{
 						lvPermissions.getChildAt(i).setBackgroundColor(getResources().getColor(R.color.transparent));
+
 					}
 				}
 			}

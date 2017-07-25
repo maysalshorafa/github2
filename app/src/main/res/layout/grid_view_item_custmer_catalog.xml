@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/catalogproduct_item_bg"
+    android:orientation="vertical"
+    android:padding="4dp"
+    android:focusable="false">
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemCustmerCatalog_TVName"
+        android:textSize="18sp"
+        android:textDirection="anyRtl"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:focusable="false"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemCustmerCatalog_TVPhoneNo"
+        android:textSize="14sp"
+        android:layout_marginTop="3dp"
+        android:textColor="@color/black"
+        android:focusable="false"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemProductCatalog_TVAddreess"
+        android:textDirection="anyRtl"
+        android:textSize="12sp"
+        android:layout_marginTop="3dp"
+        android:textColor="@color/black"
+        android:focusable="false"/>
+
+</LinearLayout>

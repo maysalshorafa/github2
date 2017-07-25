@@ -29,11 +29,7 @@ public class SettingsDBAdapter {
     protected static final String SETTINGS_COLUMN_CREDIT_CARD_USERNAME = "cc_un";
     protected static final String SETTINGS_COLUMN_CREDIT_CARD_PASSWORD = "cc_pw";
 
-    public static final String DATABASE_CREATE = "CREATE TABLE " + SETTINGS_TABLE_NAME + " ( `" + SETTINGS_COLUMN_COMPANY_ID + "` TEXT, " +
-            " `" + SETTINGS_COLUMN_COMPANY_NAME + "` TEXT ,  `" + SETTINGS_COLUMN_POS_NUMBER + "` TEXT, " +
-            " `" + SETTINGS_COLUMN_TAX + "` REAL,  `" + SETTINGS_COLUMN_RETURN_NOTE + "` TEXT, " +
-            " `" + SETTINGS_COLUMN_END_OF_REPLACEMENT_NOTE + "` INT, `" + SETTINGS_COLUMN_CREDIT_CARD_USERNAME + "` TEXT, " +
-            " `" + SETTINGS_COLUMN_CREDIT_CARD_PASSWORD + "` TEXT )";
+    public static final String DATABASE_CREATE= "CREATE TABLE tbl_settings ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+"`company_id` TEXT NOT NULL,"+"`company_name` TEXT NOT NULL,"+" `pos_number` TEXT,"+"`tax` REAL NOT NULL,"+" `return_note` TEXT NOT NULL,"+" `eorn` TEXT NOT NULL,"+" `cc_un` TEXT NOT NULL,"+"`cc_pw` TEXT NOT NULL  )";
 
 
     // Variable to hold the database instance
@@ -91,7 +87,9 @@ public class SettingsDBAdapter {
         val.put(SETTINGS_COLUMN_CREDIT_CARD_USERNAME, ccUserName);
         val.put(SETTINGS_COLUMN_CREDIT_CARD_PASSWORD, ccPass);
         try {
-            return (int)db.insert(SETTINGS_TABLE_NAME, null, val);
+
+                    db.insert(SETTINGS_TABLE_NAME, null, val);
+            return 1;
         } catch (SQLException ex) {
             Log.e("Settings insertEntry", "inserting Entry at " + SETTINGS_TABLE_NAME + ": " + ex.getMessage());
             return 0;
@@ -110,7 +108,8 @@ public class SettingsDBAdapter {
         val.put(SETTINGS_COLUMN_CREDIT_CARD_USERNAME, ccUserName);
         val.put(SETTINGS_COLUMN_CREDIT_CARD_PASSWORD, ccPass);
         try {
-            return db.update(SETTINGS_TABLE_NAME,val,null,null);
+            db.update(SETTINGS_TABLE_NAME,val,null,null);
+            return 1;
         } catch (SQLException ex) {
             Log.e("Settings insertEntry", "inserting Entry at " + SETTINGS_TABLE_NAME + ": " + ex.getMessage());
             return 0;

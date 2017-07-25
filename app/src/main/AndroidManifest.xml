@@ -14,6 +14,7 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -78,18 +79,19 @@
         <activity
             android:name=".SettingActivity"
             android:label="@string/settings" />
-
         <activity
             android:name=".OpenFormatActivity"
             android:label="@string/title_activity_open_format"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DashBoard">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!-- Main Activity -->
         </activity>
+        <activity android:name=".Coustmer" />
+        <activity android:name=".AddNewCoustmer" />
+        <activity android:name=".Coustmer_Group" />
+        <activity android:name=".TestPHPandAndroid" />
+        <activity android:name=".CustmerMangmentActivity" />
     </application>
 
 </manifest>
