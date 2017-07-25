@@ -48,6 +48,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     private ZReport lastZReport;
     public static final String LEADPOS_MAKE_A_REPORT = "LEADPOS_make_a_report";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
