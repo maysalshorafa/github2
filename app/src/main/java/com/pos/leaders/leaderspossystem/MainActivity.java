@@ -62,6 +62,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Check;
@@ -77,12 +78,14 @@ import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CashActivity;
 import com.pos.leaders.leaderspossystem.Tools.Group;
+import com.pos.leaders.leaderspossystem.Tools.Point;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustmerCatalogGridViewAdapter;
 
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.Tools.ValueOfPoint;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -111,6 +114,7 @@ public class MainActivity extends AppCompatActivity{
     String transID="";
     String a ="";
 
+    TextView custmer_name, club_name,information;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;//
     private NavigationView navigationView;
@@ -143,9 +147,12 @@ public class MainActivity extends AppCompatActivity{
     GroupAdapter groupDbAdapter;
     Group group=new Group(this);
     Sum_PointDbAdapter sum_pointDbAdapter;
-int amount;
+    ValueOfPointDB valueOfPointDB;
+
+    int amount;
     int type;
     int point ;
+    String cInformation;
     double parcent;
     List<Offer> offersList;
     int _custmer_id;
@@ -171,11 +178,11 @@ int amount;
     int productCountLoad=60;
 
     POSSDK pos;
-Button btn_cancel;
+    Button btn_cancel;
     LinearLayout ll;
     ImageView imv;
-int club_id;
-
+    int club_id;
+Button used_point;
     private String touchPadPressed = "";
     private boolean enableBackButton = true;
 
@@ -183,7 +190,7 @@ int club_id;
     EditText custmer_id;
     //Drw drw=null;
     //String devicePath="/dev/ttySAC1";
-EditText custmername_EditText;
+    EditText custmername_EditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,6 +204,10 @@ EditText custmername_EditText;
 
 
         setContentView(R.layout.activity_main);
+        used_point=(Button)findViewById(R.id.usedPoint);
+        custmer_name=(TextView)findViewById(R.id.cName);
+        club_name=(TextView)findViewById(R.id.cClubName);
+        information=(TextView)findViewById(R.id.cInformation);
         custmername_EditText=(EditText) findViewById(R.id.custmer_textview);
         a=custmername_EditText.getText().toString();
 
@@ -222,7 +233,7 @@ EditText custmername_EditText;
         gvProducts = (GridView) findViewById(R.id.mainActivity_gvProducts);
         lvProducts = (ListView) findViewById(R.id.mainActivity_lvProducts);
         lvProducts.setVisibility(View.GONE);
-     //   lvcustmer.setVisibility(View.GONE);
+        //   lvcustmer.setVisibility(View.GONE);
         btnGrid = (ImageButton) findViewById(R.id.mainActivity_btnGrid);
         btnList = (ImageButton) findViewById(R.id.mainActivity_btnList);
 
@@ -244,7 +255,7 @@ EditText custmername_EditText;
 
 
         showTouchPad(false);
-        showQuickPricePad();
+        //    showQuickPricePad();
 
         //region Orders Frame
 
@@ -263,12 +274,14 @@ EditText custmername_EditText;
         productDBAdapter = new ProductDBAdapter(this);
         customerDBAdapter=new CustomerDBAdapter(this);
         groupDbAdapter=new GroupAdapter(this);
+        valueOfPointDB =new ValueOfPointDB(this);
         sum_pointDbAdapter=new Sum_PointDbAdapter(this);
         sum_pointDbAdapter.open();
         customerDBAdapter.open();
         productDBAdapter.open();
         departmentDBAdapter.open();
         groupDbAdapter.open();
+valueOfPointDB.open();
 
         offerDBAdapter = new OfferDBAdapter(this);
         productOfferDBAdapter = new ProductOfferDBAdapter(this);
@@ -810,6 +823,16 @@ EditText custmername_EditText;
             }
         });
 
+        used_point.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ValueOfPoint valueOfPoint=valueOfPointDB.getValue();
+int value= valueOfPoint.getValue();
+              int newPrice=point*value;
+                saleTotalPrice=saleTotalPrice-newPrice;
+                tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
+            }
+        });
         //endregion
 
 
@@ -1254,13 +1277,14 @@ EditText custmername_EditText;
         if(Double.parseDouble(str)!=0)
             addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._USER.getId()));
     }
+    /**
 
-    private void showQuickPricePad(){
-        QuickPricePadFragment fTP = new QuickPricePadFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.mainActivity_fragmentQuickPricePad, fTP);
-        transaction.commit();
-    }
+     private void showQuickPricePad(){
+     QuickPricePadFragment fTP = new QuickPricePadFragment();
+     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+     transaction.add(R.id.mainActivity_fragmentQuickPricePad, fTP);
+     transaction.commit();
+     }**/
 
     private void showTouchPad(boolean b) {
         if(!b) {
@@ -1406,7 +1430,7 @@ EditText custmername_EditText;
                 tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
 
 
-              //  point=  ( (int)(sale/amount)*point);
+                //  point=  ( (int)(sale/amount)*point);
 
                 SESSION._SALE.setTotalPrice(saleTotalPrice);
 
@@ -1415,7 +1439,7 @@ EditText custmername_EditText;
 
 
 
-   }
+    }
 
     private void removeFromCart(int index) {
         SESSION._ORDERS.remove(index);
@@ -1580,10 +1604,13 @@ EditText custmername_EditText;
                 point=  ( (int)(SESSION._SALE.getTotalPrice()/amount)*point);
 
 
+
                 int   saleID = saleDBAdapter.insertEntry(SESSION._SALE,_custmer_id,a);
-                sum_pointDbAdapter.insertEntry(saleID,point);
+                sum_pointDbAdapter.insertEntry(saleID,point,_custmer_id);
 
-
+              /**  Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
+                cInformation= String.valueOf(Ppoint.getPoint());
+                information.setText(cInformation);**/
 
                 saleDBAdapter.close();
 
@@ -1642,9 +1669,12 @@ EditText custmername_EditText;
 
 
                 int saleID=saleDBAdapter.insertEntry(SESSION._SALE,_custmer_id,a);
-                sum_pointDbAdapter.insertEntry(saleID,point);
+                sum_pointDbAdapter.insertEntry(saleID,point,_custmer_id);
+           /**     Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
+                cInformation= String.valueOf(Ppoint.getPoint());
 
-
+                information.setText(cInformation);
+*/
 
                 saleDBAdapter.close();
 
@@ -1692,8 +1722,11 @@ EditText custmername_EditText;
 
 
                 int saleID=saleDBAdapter.insertEntry(SESSION._SALE,_custmer_id,a);
-                sum_pointDbAdapter.insertEntry(saleID,point);
+                sum_pointDbAdapter.insertEntry(saleID,point,_custmer_id);
+               /** Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
+                cInformation= String.valueOf(Ppoint.getPoint());
 
+                information.setText(cInformation);**/
                 saleDBAdapter.close();
 
 
@@ -1782,7 +1815,7 @@ EditText custmername_EditText;
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
                     public void onClick(View arg0) {
                         Toast.makeText(getApplicationContext(),
-                               custmername_EditText.getText().toString(), Toast.LENGTH_LONG).show();
+                                custmername_EditText.getText().toString(), Toast.LENGTH_LONG).show();
 
                         popupWindow.dismiss();
 
@@ -1862,24 +1895,37 @@ EditText custmername_EditText;
                             custmer_List.add(c);
                             a= c.getName();
                             custmername_EditText.setText(a);
-_custmer_id=c.getId();
+                            custmer_name.setText(a);
+
+                            _custmer_id=c.getId();
                             club_id=c.getClub();
 
                             if(club_id!=0){
                                 Group group    = groupDbAdapter.getGroupInfo(club_id);
+
                                 type=group.getType();
 
                                 if(type==1){
                                     parcent=  group.getParcent();
-
+                                    club_name.setText(group.getname());
+                                    information.setText(parcent+"");
                                 }
                                 else if(type==2)
                                 {
-
+                                    club_name.setText(group.getname());
                                     amount=group.getAmount();
                                     point=group.getPoint();
 
+                                   int Ppoint=sum_pointDbAdapter.getPointInfo(_custmer_id);
 
+                                    cInformation= String.valueOf(Ppoint);
+
+                                    information.setText(Ppoint+"");
+
+                                }
+                                else {
+                                    club_name.setText(group.getname());
+                                    information.setText("general");
 
                                 }
 
