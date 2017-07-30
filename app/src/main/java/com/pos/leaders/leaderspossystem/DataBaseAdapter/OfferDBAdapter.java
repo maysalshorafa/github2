@@ -9,7 +9,10 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Models.OfferRule;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.Rule3;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,28 +24,27 @@ import java.util.List;
 public class OfferDBAdapter {
 	// Table Name
 	protected static final String OFFER_TABLE_NAME = "offers";
+
 	// Column Names
 	protected static final String OFFER_COLUMN_ID = "id";
 	protected static final String OFFER_COLUMN_NAME = "name";
 	protected static final String OFFER_COLUMN_STARTDATE = "startDate";
 	protected static final String OFFER_COLUMN_ENDDATE = "endDate";
 	protected static final String OFFER_COLUMN_CREATINGDATE = "creatingDate";
-	protected static final String OFFER_COLUMN_ENABLE = "enable";
-	protected static final String OFFER_COLUMN_BYUSER = "userId";
-	protected static final String OFFER_COLUMN_RULEID = "ruleId";
+	protected static final String OFFER_COLUMN_ENABLE = "status";
+	protected static final String OFFER_COLUMN_ClubId = "club_offer";
+////offer rule table
+protected static final String Rule_OFFER_TABLE_NAME = "offerRule";
+	protected static final String Rule_OFFER_COLUMN_ID = "id";
 
-	protected static final String OFFER_COLUMN_A = "a";
-	protected static final String OFFER_COLUMN_B = "b";
-	protected static final String OFFER_COLUMN_C = "c";
-	protected static final String OFFER_COLUMN_D = "d";
-	protected static final String OFFER_COLUMN_E = "e";
-	protected static final String OFFER_COLUMN_F = "f";
-	protected static final String OFFER_COLUMN_G = "g";
-	protected static final String OFFER_COLUMN_H = "h";
-	protected static final String OFFER_COLUMN_X = "x";
-	protected static final String OFFER_COLUMN_Y = "y";
-	protected static final String OFFER_COLUMN_Z = "z";
-	protected static final String OFFER_COLUMN_P = "p";
+	protected static final String OFFER_Rule_COLUMN_Rule_ID = "rule_id";
+	protected static final String OFFER_Rule_COLUMN_Product = "product_id";
+
+//////rule1 tabel
+protected static final String Rule3_TABLE_NAME = "rule3";
+	protected static final String Rule3_COLUMN_ID = "id";
+	protected static final String Rule3_COLUMN_Parcent = "parcent";
+	protected static final String Rule3_Offer_id = "offer_id";
 
 
 
@@ -77,7 +79,7 @@ public class OfferDBAdapter {
 		return db;
 	}
 
-	public int insertEntry(String name, Date startDate, Date endDate, Date creatingDate, boolean enable, int byUser, int ruleId) {
+	/**public int insertEntry(String name, Date startDate, Date endDate, Date creatingDate, boolean enable, int byUser, int ruleId) {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 		val.put(OFFER_COLUMN_NAME, name);
@@ -111,8 +113,8 @@ public class OfferDBAdapter {
 			return 0;
 		}
 	}
-
-	public int insertEntry(String name, Date endDate, int byUser, int ruleId,double x,double y,double z,double p) {
+*/
+	/**public int insertEntry(String name, Date endDate, int byUser, int ruleId,double x,double y,double z,double p) {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 		val.put(OFFER_COLUMN_NAME, name);
@@ -153,7 +155,7 @@ public class OfferDBAdapter {
             return 0;
         }
     }
-
+	 **/
 	public void disableOffer(int id) {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
@@ -163,7 +165,7 @@ public class OfferDBAdapter {
 		db.update(OFFER_TABLE_NAME, val, where, new String[]{id + ""});
 	}
 
-	public Offer getOfferById(int id){
+	/**public Offer getOfferById(int id){
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where id='" + id + "'", null);
 		if (cursor.getCount() < 1) // Offer Not Exist
 		{
@@ -173,8 +175,8 @@ public class OfferDBAdapter {
 		cursor.moveToFirst();
 		return createOfferObject(cursor);
 	}
-
-	public List<Offer> getAllOffers() {
+**/
+	/**public List<Offer> getAllOffers() {
 		List<Offer> offerList = new ArrayList<Offer>();
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_ENABLE + "=1 order by id desc", null);
 		cursor.moveToFirst();
@@ -185,23 +187,92 @@ public class OfferDBAdapter {
 		}
 		return offerList;
 	}
+**/
+	public int getAllValidOffers() {
+		int offer_id=0;
+		Offer offer =null;
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_ENABLE +"="+1, null);
+		cursor.moveToFirst();
+if(cursor.getCount()<0){
+	return  0;
+}
+		offer= new Offer(Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))),
+				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_NAME)),
+				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STARTDATE))),
+				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ENDDATE))),
+				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_CREATINGDATE))),
+				Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ENABLE))),
+				Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ClubId))));
+		offer_id = offer.getId();
+return offer_id;
+	}
 
-	public List<Offer> getAllValidOffers() {
-		List<Offer> offerList = new ArrayList<Offer>();
-		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_ENABLE + "=1 and "+OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by id desc", null);
+
+
+	public OfferRule getRuleNo() {
+		int offer_id=getAllValidOffers();
+		OfferRule offer =null;
+		Cursor cursor = db.rawQuery("select * from " + Rule_OFFER_TABLE_NAME+ " where id='" + offer_id + "'" , null);
 		cursor.moveToFirst();
 
-		while(!cursor.isAfterLast()){
-			offerList.add(createOfferObject(cursor));
-			cursor.moveToNext();
+
+		if (cursor.getCount() < 1) // UserName Not Exist
+		{
+			cursor.close();
+		return  offer;
 		}
-		return offerList;
+		cursor.moveToFirst();
+			offer= new OfferRule(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Rule_OFFER_COLUMN_ID))),
+					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_Rule_COLUMN_Rule_ID))),
+					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_Rule_COLUMN_Product))));
+			cursor.close();
+
+
+
+		return offer;
 	}
+	public Boolean getProductStatus(int order) {
+		int offer_id=getAllValidOffers();
+		OfferRule offer =getRuleNo();
+		Cursor cursor = db.rawQuery("select * from " + Rule_OFFER_TABLE_NAME+ " where product_id='" + order + "'" , null);
+		cursor.moveToFirst();
+
+
+		if (cursor.getCount() < 1) // UserName Not Exist
+		{
+			cursor.close();
+			return  true;
+		}
+		cursor.moveToFirst();
+
+
+		return false;
+	}
+
+	public double getParcentForRule3() {
+		int id=getAllValidOffers();
+			Rule3 rule3=null;
+			Cursor cursor1 = db.rawQuery("select * from " + Rule3_TABLE_NAME+ " where id='" + id + "'" , null);
+			cursor1.moveToFirst();
+
+
+			if (cursor1.getCount() < 1) // UserName Not Exist
+			{
+				cursor1.close();
+				return 0;
+			}
+			cursor1.moveToFirst();
+			rule3= new Rule3(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_Offer_id))),
+					Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))),
+					Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_ID))));
+			cursor1.close();
+			return  rule3.getParcent();
+		}
+
 
 	//int id, String name, Date startDate, Date endDate, Date creatingDate,boolean enable, int byUser,
 	// int ruleId,double x,double y,double z,double p,double a, double b, double c, double d, double e, double f, double g, double h
-
-	public Offer createOfferObject(Cursor cursor){
+/**	public Offer createOfferObject(Cursor cursor){
 		return new Offer(Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))),
 				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_NAME)),
 				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STARTDATE))),
@@ -222,5 +293,5 @@ public class OfferDBAdapter {
 				(cursor.getDouble(cursor.getColumnIndex(OFFER_COLUMN_F))),
 				(cursor.getDouble(cursor.getColumnIndex(OFFER_COLUMN_G))),
 				(cursor.getDouble(cursor.getColumnIndex(OFFER_COLUMN_H))));
-	}
+	}**/
 }

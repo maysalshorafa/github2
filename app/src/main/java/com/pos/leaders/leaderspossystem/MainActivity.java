@@ -69,6 +69,7 @@ import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Customer_M;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Models.OfferRule;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
@@ -171,7 +172,7 @@ public class MainActivity extends AppCompatActivity{
     private boolean isGrid = true;
     double saleTotalPrice = 0.0;
     double totalSaved = 0.0;
-
+    double secondPrice= 0.0;
 
     boolean userScrolled=false;
     int productLoadItemOffset=0;
@@ -204,6 +205,9 @@ Button used_point;
 
 
         setContentView(R.layout.activity_main);
+
+
+
         used_point=(Button)findViewById(R.id.usedPoint);
         custmer_name=(TextView)findViewById(R.id.cName);
         club_name=(TextView)findViewById(R.id.cClubName);
@@ -609,7 +613,15 @@ valueOfPointDB.open();
 
         if (SESSION._ORDERS != null) {
             lvOrder.setFocusable(false);
-            calculateTotalPrice();
+            offerDBAdapter=new OfferDBAdapter(this);
+            offerDBAdapter.open();
+            int offer_id=offerDBAdapter.getAllValidOffers();
+
+            OfferRule offerRule1=offerDBAdapter.getRuleNo();
+            int offerRule=offerRule1.getRule();            if(offer_id!=0){
+                calculateTotalPriceWithOffers(offer_id,offerRule,offerRule1.getProduct_id());
+            }
+           else{ calculateTotalPrice();}
         } else {
             SESSION._ORDERS = new ArrayList<Order>();
         }
@@ -803,8 +815,17 @@ valueOfPointDB.open();
 
         //endregion
 
-        calculateTotalPrice();
+        offerDBAdapter=new OfferDBAdapter(this);
+        offerDBAdapter.open();
+        int offer_id=offerDBAdapter.getAllValidOffers();
+OfferRule offerRule1=offerDBAdapter.getRuleNo();
+        int offerRule=offerRule1.getRule();
+        if(offer_id!=0){
+            Toast.makeText(MainActivity.this, "mmm"+offerRule1.getProduct_id(), Toast.LENGTH_SHORT);
 
+            calculateTotalPriceWithOffers(offer_id,offerRule,offerRule1.getProduct_id());
+        }
+        else{ calculateTotalPrice();}
         //region Payment
 
         //region Cash
@@ -1079,7 +1100,7 @@ int value= valueOfPoint.getValue();
                         break;
                     case R.id.menuItem_Offers:
                         SESSION._TEMPOFFERPRODUCTS = null;
-                        intent = new Intent(MainActivity.this, OfferActivity.class);
+                    //    intent = new Intent(MainActivity.this, OfferActivity.class);
                         break;
                     case R.id.menuItem_Reports:
                         intent = new Intent(MainActivity.this, ReportsManagementActivity.class);
@@ -1373,7 +1394,16 @@ int value= valueOfPoint.getValue();
         SESSION._Rest();
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
-        calculateTotalPrice();
+        offerDBAdapter=new OfferDBAdapter(this);
+        offerDBAdapter.open();
+        int offer_id=offerDBAdapter.getAllValidOffers();
+
+        OfferRule offerRule1=offerDBAdapter.getRuleNo();
+        int offerRule=offerRule1.getRule();
+        if(offer_id!=0){
+            calculateTotalPriceWithOffers(offer_id,offerRule,offerRule1.getProduct_id());
+        }
+        else{ calculateTotalPrice();}
     }
 
     public void resumeSale(Sale s){
@@ -1393,8 +1423,42 @@ int value= valueOfPoint.getValue();
         lvOrder.setAdapter(saleDetailsListViewAdapter);
         refreshCart();
     }
+    protected void calculateTotalPriceWithOffers(int offer_id,int offerRule,int product_id) {
+        saleTotalPrice = 0;
+secondPrice=0;
+        double SaleOriginalityPrice1=0;
+        for (Order o : SESSION._ORDERS) {
+Boolean product=offerDBAdapter.getProductStatus(o.getProductId());
+            if(!product){
+            secondPrice+=o.getItemTotalPrice() ;
+                SaleOriginalityPrice1 += (o.getOriginal_price() * o.getCount());
 
+            }else {
+                saleTotalPrice += o.getItemTotalPrice();
+                SaleOriginalityPrice1 += (o.getOriginal_price() * o.getCount());
+            }
+        }
+        Toast.makeText(MainActivity.this, "secondPrice: " + secondPrice, Toast.LENGTH_LONG).show();
+
+
+        if(offerRule==3){
+                double parcent=   offerDBAdapter.getParcentForRule3();
+
+                saleTotalPrice=saleTotalPrice-(int)saleTotalPrice*parcent;
+saleTotalPrice=saleTotalPrice+secondPrice;
+                totalSaved =(SaleOriginalityPrice1-saleTotalPrice);
+
+                tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
+                tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
+
+                SESSION._SALE.setTotalPrice(saleTotalPrice);
+
+            }
+
+
+    }
     protected void calculateTotalPrice() {
+
         if(club_id==0){
             saleTotalPrice = 0;
             double SaleOriginalityPrice=0;
@@ -1402,10 +1466,11 @@ int value= valueOfPoint.getValue();
                 saleTotalPrice += o.getItemTotalPrice();
                 SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
             }
+
             totalSaved =(SaleOriginalityPrice-saleTotalPrice);
             tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
             tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
-            SESSION._SALE.setTotalPrice(saleTotalPrice);
+        SESSION._SALE.setTotalPrice(saleTotalPrice);
 
         }
         else {
@@ -1467,10 +1532,19 @@ int value= valueOfPoint.getValue();
         // getOffers();
         saleDetailsListViewAdapter.notifyDataSetChanged();
         //lvOrder.setAdapter(saleDetailsListViewAdapter);
-        calculateTotalPrice();
+        offerDBAdapter=new OfferDBAdapter(this);
+        offerDBAdapter.open();
+        int offer_id=offerDBAdapter.getAllValidOffers();
+
+        OfferRule offerRule1=offerDBAdapter.getRuleNo();
+        int offerRule=offerRule1.getRule();
+        if(offer_id!=0){
+            calculateTotalPriceWithOffers(offer_id,offerRule,offerRule1.getProduct_id());
+        }
+        else{ calculateTotalPrice();}
     }
 
-    private boolean getOffers(){
+ /**   private boolean getOffers(){
         for (Offer o : offersList) {//offer list
             if (o.getRuleId() == 0) {//offer type x on price y
                 for (Order or : SESSION._ORDERS) {//loop into all product at cart
@@ -1483,7 +1557,8 @@ int value= valueOfPoint.getValue();
             }
         }
         return false;
-    }
+    }**/
+
 
     private void enterKeyPressed() {
         Product product = productDBAdapter.getProductByBarCode(barcodeScanned);

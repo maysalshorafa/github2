@@ -412,10 +412,10 @@ public class MainScreenActivity extends Activity {
 			}
 		});
 
-		btOfferManagement.setOnClickListener(new View.OnClickListener() {
+	/**	btOfferManagement.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent=new Intent(MainScreenActivity.this, OfferActivity.class);
+		Intent intent=new Intent(MainScreenActivity.this, OfferActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -426,7 +426,7 @@ public class MainScreenActivity extends Activity {
 				Intent intent=new Intent(MainScreenActivity.this,OfferRuleActivity.class);
 				startActivity(intent);
 			}
-		});
+		});**/
 
 		btWorkerManagement.setOnClickListener(new View.OnClickListener() {
 			@Override
