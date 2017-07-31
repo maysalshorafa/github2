@@ -19,12 +19,15 @@ import java.util.List;
 
 public class OfferRuleDBAdapter {
     // Table Name
-    protected static final String OFFERROLL_TABLE_NAME = "offerRule";
-    // Column Names
-    protected static final String OFFERROLL_COLUMN_ID = "id";
-    protected static final String OFFERROLL_COLUMN_NAME = "name";
+    ////offer rule table
+    protected static final String Rule_OFFER_TABLE_NAME = "offerRule";
+    protected static final String Rule_OFFER_COLUMN_ID = "id";
 
-    public static final String DATABASE_CREATE="CREATE TABLE offerRule ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT )";
+    protected static final String OFFER_Rule_COLUMN_Rule_ID = "rule_id";
+    protected static final String OFFER_Rule_COLUMN_Product = "product_id";
+
+
+    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS offerRule ( `id` INTEGER ,"+" 'rule_id'  INTEGER  ,"+" 'product_id' INTEGER , FOREIGN KEY(`id`) REFERENCES `offers.id`)";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -51,18 +54,66 @@ public class OfferRuleDBAdapter {
         return db;
     }
 
-    public int insertEntry(String name) {
+    public int insertEntry(int id, int rule,int product_id) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(OFFERROLL_COLUMN_NAME, name);
+        val.put(Rule_OFFER_COLUMN_ID, id);
+        val.put(OFFER_Rule_COLUMN_Rule_ID, rule);
+        val.put(OFFER_Rule_COLUMN_Product, product_id);
+
         try {
-            db.insert(OFFERROLL_TABLE_NAME, null, val);
+            db.insert(Rule_OFFER_TABLE_NAME, null, val);
             return 1;
         } catch (SQLException ex) {
-            Log.e("OfferRuleDB insert", "insatring Entry at " + OFFERROLL_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("RuleOffer insert", "insatring Entry at " + Rule_OFFER_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
+
+    public OfferRule getRuleNo() {
+        OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
+        offerDBAdapter.open();
+        int offer_id=offerDBAdapter.getAllValidOffers();
+        OfferRule offer =null;
+        Cursor cursor = db.rawQuery("select * from " + Rule_OFFER_TABLE_NAME+ " where id='" + offer_id + "'" , null);
+        cursor.moveToFirst();
+
+
+        if (cursor.getCount() < 1) // UserName Not Exist
+        {
+            cursor.close();
+            return  offer;
+        }
+        cursor.moveToFirst();
+        offer= new OfferRule(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Rule_OFFER_COLUMN_ID))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_Rule_COLUMN_Rule_ID))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_Rule_COLUMN_Product))));
+        cursor.close();
+
+
+
+        return offer;
+    }
+    public Boolean getProductStatus(int order) {
+        OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
+        offerDBAdapter.open();
+        int offer_id=offerDBAdapter.getAllValidOffers();
+        OfferRule offer =getRuleNo();
+        Cursor cursor = db.rawQuery("select * from " + Rule_OFFER_TABLE_NAME+ " where product_id='" + order + "'" , null);
+        cursor.moveToFirst();
+
+
+        if (cursor.getCount() < 1) // UserName Not Exist
+        {
+            cursor.close();
+            return  true;
+        }
+        cursor.moveToFirst();
+
+
+        return false;
+    }
+
 
     /**public OfferRule getOfferRuleByID(int id) {
         OfferRule offerRule = null;

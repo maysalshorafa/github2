@@ -5,41 +5,39 @@ package com.pos.leaders.leaderspossystem.Tools;
  */
 
 public class Rule3 {
-    public static int id ;
-    public static int offer_id;
-    public static  double parcent;
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getOffer_id() {
+        return offer_id;
+    }
+
+    public void setOffer_id(int offer_id) {
+        this.offer_id = offer_id;
+    }
+
+    public double getParcent() {
+        return parcent;
+    }
+
+    public void setParcent(double parcent) {
+        this.parcent = parcent;
+    }
+
+    private   int id ;
+    private   int offer_id;
+    private   double parcent;
     public Rule3(int offer_id,double parcent,int id) {
         this.id=id;
         this.offer_id=offer_id;
         this.parcent=parcent;
     }
 
-
-    public static int getId() {
-        return id;
-    }
-
-    public static void setId(int id) {
-        Rule3.id = id;
-    }
-
-    public static int getOffer_id() {
-        return offer_id;
-    }
-
-    public static void setOffer_id(int offer_id) {
-        Rule3.offer_id = offer_id;
-    }
-
-
-
-    public static double getParcent() {
-        return parcent;
-    }
-
-    public static void setParcent(int parcent) {
-        Rule3.parcent = parcent;
-    }
 
 
 }
