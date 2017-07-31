@@ -64,7 +64,7 @@ public class OfferRuleDBAdapter {
         }
     }
 
-    public OfferRule getOfferRuleByID(int id) {
+    /**public OfferRule getOfferRuleByID(int id) {
         OfferRule offerRule = null;
         Cursor cursor = db.rawQuery("select * from " + OFFERROLL_TABLE_NAME + " where id='" + id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
@@ -78,7 +78,7 @@ public class OfferRuleDBAdapter {
         cursor.close();
 
         return offerRule;
-    }
+    }*
 
     public void updateEntry(OfferRule offerRule) {
         ContentValues val = new ContentValues();
@@ -102,5 +102,5 @@ public class OfferRuleDBAdapter {
         }
 
         return offerRuleList;
-    }
+    }*/
 }
