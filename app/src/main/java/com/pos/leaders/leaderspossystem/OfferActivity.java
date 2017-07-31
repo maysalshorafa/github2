@@ -44,7 +44,7 @@ import java.util.List;
 /**
  * Created by KARAM on 24/10/2016.
  */
-
+/**
 public class OfferActivity extends Activity {
 
 	private static final int DIALOG_ID = 99;
@@ -342,4 +342,4 @@ public class OfferActivity extends Activity {
         Log.i("Offer for add",offer.toString());
         return offer;
 	}
-}
+}**/

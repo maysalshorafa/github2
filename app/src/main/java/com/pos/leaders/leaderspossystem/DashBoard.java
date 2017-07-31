@@ -278,9 +278,9 @@ public class DashBoard extends AppCompatActivity {
 
                 } else {
 
-                    i = new Intent(getApplicationContext(), OfferActivity.class);
+                 /**   i = new Intent(getApplicationContext(), OfferActivity.class);
                     startActivity(i);
-                }
+                **/}
                 break;
             case 6:
                 if (!(permissions_name.toLowerCase().contains("back up"))) {

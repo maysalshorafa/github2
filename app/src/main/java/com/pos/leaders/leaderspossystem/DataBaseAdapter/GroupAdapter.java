@@ -148,10 +148,10 @@ public  Group getGroupInfo(int club_id){
         Group group = null;
         Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME + " where id='" + club_id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
-        {
-            cursor.close();
-            return group;
-        }
+    {
+        cursor.close();
+        return group;
+    }
         cursor.moveToFirst();
         group =new Group(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN__ID))),
                 cursor.getString(cursor.getColumnIndex(Group_COLUMN_Name)),
