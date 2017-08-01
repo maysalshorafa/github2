@@ -18,8 +18,10 @@ public abstract class Rule {
     public static final String RULE10 = "RULE10";
     public static final String RULE11 = "RULE11";
     public static final String RULE12 = "RULE12";
-    public static final String OPEN = "OPEN";
-
+    public static final String OPEN = "open";
+    public static final String CLOSE = "close";
+    public static final String BENDING = "bending";
+    public static final String STOP = "stop";
 
     int id;
     String type;
