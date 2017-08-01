@@ -25,4 +25,19 @@ public class Rule1 extends Rule {
         super(RULE1);
     }
 
+    public int getCount() {
+        return count;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }

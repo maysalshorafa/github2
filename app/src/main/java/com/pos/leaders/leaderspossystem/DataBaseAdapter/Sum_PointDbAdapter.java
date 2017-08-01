@@ -8,8 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Tools.Group;
-import com.pos.leaders.leaderspossystem.Tools.Point;
 
 /**
  * Created by Win8.1 on 7/19/2017.

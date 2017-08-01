@@ -19,7 +19,8 @@ import java.util.List;
  */
 
 public class ProductOfferDBAdapter {
-	// Table Name
+    private static final String LOG_TAG = "ProductOffer";
+    // Table Name
 	protected static final String PRODUCTOFFER_TABLE_NAME = "productOffer";
 	// Column Names
 	protected static final String PRODUCTOFFER_COLUMN_ID = "id";
@@ -62,7 +63,7 @@ public class ProductOfferDBAdapter {
 		try {
 			return (int) db.insert(PRODUCTOFFER_TABLE_NAME, null, val);
 		} catch (SQLException ex) {
-			Log.e("insert into DataBase", "inserting Entry at " + PRODUCTOFFER_TABLE_NAME + ": " + ex.getMessage());
+			Log.e(LOG_TAG, "inserting Entry at " + PRODUCTOFFER_TABLE_NAME + ": " + ex.getMessage());
 			return 0;
 		}
 	}
@@ -103,6 +104,16 @@ public class ProductOfferDBAdapter {
 
 		return products;
 	}
+
+    public Boolean checkProductIntoOffers(int productID,int offerID) {
+        Cursor cursor = db.rawQuery("select * from " + PRODUCTOFFER_TABLE_NAME + " where " + PRODUCTOFFER_COLUMN_OFFERID + "='" + offerID + "' and "+PRODUCTOFFER_COLUMN_PRODUCTID+" = '"+productID+"'", null);
+        if (cursor.getCount() < 1){
+            cursor.close();
+            return false;
+        }
+        return true;
+    }
+
 
 	public boolean deleteEntry(int id) {
 		return db.delete(PRODUCTOFFER_TABLE_NAME, PRODUCTOFFER_COLUMN_ID + "=?", new String[]{id + ""}) > 0;

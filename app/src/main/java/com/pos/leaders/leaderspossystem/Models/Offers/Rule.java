@@ -4,7 +4,7 @@ package com.pos.leaders.leaderspossystem.Models.Offers;
  * Created by KARAM on 31/07/2017.
  */
 
-abstract class Rule {
+public abstract class Rule {
 
     public static final String RULE1 = "RULE1";
     public static final String RULE2 = "RULE2";

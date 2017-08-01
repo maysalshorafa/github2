@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Tools.Group;
 import com.pos.leaders.leaderspossystem.Tools.ValueOfPoint;
 
 /**

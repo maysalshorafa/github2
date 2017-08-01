@@ -1,11 +1,14 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by KARAM on 23/10/2016.
+ * Updated by KARAM on 01/08/2017.
  */
 
 public class Offer {
@@ -16,51 +19,49 @@ public class Offer {
 	private Date startDate;
 	private Date endDate;
 	private Date creatingDate;
-	private int clubId;
 	private int status;
+	private int byUser;
+    private String ruleName;
+    private int ruleID;
 
-	//region Attribute Objects
-		private List<Product> products;
-		private User user;
-		private OfferRule rule;
+    //region Attribute Objects
+    private List<Product> products;
+    private List<Group> clubs;
+    private User user;
+    private Rule rule;
 	//endregion
 
 	//endregion
 
 	//region Constructors
 
+    public Offer(){
 
+    }
 
-	public Offer(int id, String name, Date startDate, Date endDate, Date creatingDate, int status, int clubId) {
+	public Offer(int id, String name, Date startDate, Date endDate, Date creatingDate, int status, int byUser,String ruleName,int ruleID) {
 		this.id=id;
 		this.name = name;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.creatingDate = creatingDate;
 		this.status=status;
-		this.clubId = clubId;
-	}
+        this.byUser = byUser;
+        this.ruleName = ruleName;
+        this.ruleID = ruleID;
+    }
 
-	public Offer(int id, String name, Date startDate, Date endDate, Date creatingDate, List<Product> products, User user, OfferRule rule){
-		this.id = id;
-		this.name = name;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.creatingDate = creatingDate;
+    public Offer(String name, Date startDate, Date endDate, Date creatingDate, int status, int byUser,String ruleName,int ruleID) {
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.creatingDate = creatingDate;
+        this.status=status;
+        this.byUser = byUser;
+        this.ruleName = ruleName;
+        this.ruleID = ruleID;
+    }
 
-		this.products=products;
-		this.user=user;
-		this.rule=rule;
-;
-	}
-	public Offer(int id, String name, Date startDate, Date endDate, Date creatingDate,boolean enable, int byUser, int ruleId,double x,double y,double z,double p,double a, double b, double c, double d, double e, double f, double g, double h) {
-		this.id = id;
-		this.name = name;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.creatingDate = creatingDate;
-
-	}
 
 	//endregion
 
@@ -84,9 +85,6 @@ public class Offer {
 		    products.add(p);
         }
 	}
-
-
-
 
 	//endregion
 
@@ -112,36 +110,25 @@ public class Offer {
 		return creatingDate;
 	}
 
-
-	public int getClubId() {
-		return clubId;
-	}
-
 	public int getStatus() {
 		return status;
 	}
 
-	public List<Product> getProducts()
-	{
-		return  this.products;
-	}
+    public int getByUser() {
+        return byUser;
+    }
 
-	public User getUser()
-	{
-		return user;
-	}
+    public String getRuleName() {
+        return ruleName;
+    }
 
-	public OfferRule getRule(){
-		return rule;
-	}
+    public int getRuleID() {
+        return ruleID;
+    }
 
-
-
-	//endregion
+    //endregion
 
 	//region Setters
-
-
 
 	public void setStatus(int status) {
 		this.status = status;
@@ -151,35 +138,38 @@ public class Offer {
 		this.endDate = endDate;
 	}
 
-
 	public void setName(String name) {
 		this.name = name;
 	}
 
+    public void setByUser(int byUser) {
+        this.byUser = byUser;
+    }
 
-	public void setProducts(List<Product> products) {
+    public void setProducts(List<Product> products) {
 		this.products = products;
-	}
-
-	public void setRule(OfferRule rule) {
-		this.rule = rule;
-	}
-
-	public void setClubId(int clubId) {
-		this.clubId = clubId;
 	}
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
+    public void setCreatingDate(Date creatingDate) {
+        this.creatingDate = creatingDate;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
+    }
 
+    public void setRuleID(int ruleID) {
+        this.ruleID = ruleID;
+    }
 
-	//endregion
+    //endregion
 
 }

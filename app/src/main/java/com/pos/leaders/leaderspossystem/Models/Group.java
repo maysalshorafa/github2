@@ -1,8 +1,6 @@
-package com.pos.leaders.leaderspossystem.Tools;
+package com.pos.leaders.leaderspossystem.Models;
 
 import android.content.Context;
-
-import com.pos.leaders.leaderspossystem.MainActivity;
 
 /**
  * Created by Win8.1 on 6/21/2017.

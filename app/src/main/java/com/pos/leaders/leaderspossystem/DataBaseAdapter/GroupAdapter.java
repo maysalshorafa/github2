@@ -7,13 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.Coustmer_Group;
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Customer_M;
-import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.Group;
-import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Models.Group;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,26 +139,26 @@ public class GroupAdapter {
 
         cursor.close();
     }
-public  Group getGroupInfo(int club_id){
-        Group group = null;
-        Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME + " where id='" + club_id + "'", null);
-        if (cursor.getCount() < 1) // UserName Not Exist
-    {
-        cursor.close();
-        return group;
+    public  Group getGroupInfo(int club_id){
+            Group group = null;
+            Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME + " where id='" + club_id + "'", null);
+            if (cursor.getCount() < 1) // UserName Not Exist
+        {
+            cursor.close();
+            return group;
+        }
+            cursor.moveToFirst();
+            group =new Group(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN__ID))),
+                    cursor.getString(cursor.getColumnIndex(Group_COLUMN_Name)),
+                    cursor.getString(cursor.getColumnIndex(Group_COLUMN__Descrption)),
+
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Type)))
+             , (float) Double.parseDouble(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Parcent))),       Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Amount))),Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Point))));
+            cursor.close();
+
+            return group;
+
     }
-        cursor.moveToFirst();
-        group =new Group(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN__ID))),
-                cursor.getString(cursor.getColumnIndex(Group_COLUMN_Name)),
-                cursor.getString(cursor.getColumnIndex(Group_COLUMN__Descrption)),
-
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Type)))
-         , (float) Double.parseDouble(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Parcent))),       Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Amount))),Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Point))));
-        cursor.close();
-
-        return group;
-
-}
 
 
 }
