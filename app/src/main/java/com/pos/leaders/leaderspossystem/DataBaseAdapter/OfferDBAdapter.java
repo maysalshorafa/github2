@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 
 import java.util.ArrayList;
@@ -136,5 +137,29 @@ public class OfferDBAdapter {
 				cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_BYUSER)),
 				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)),
 				cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_RULEID)));
+	}
+	public Offer getAllValidOffers() {
+		int offer_id=0;
+		Offer offer =null;
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS +"="+ Rule.OPEN, null);
+		cursor.moveToFirst();
+		if(cursor.getCount()<0){
+			offer_id=0;
+			return  offer;
+		}
+		else	if( cursor != null && cursor.moveToFirst() ){
+			offer= new Offer(Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))),
+					cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_NAME)),
+					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STARTDATE))),
+					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ENDDATE))),
+					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_CREATINGDATE))),
+					Integer.parseInt(	cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STATUS))),
+					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_BYUSER))),cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)),
+					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULEID))));
+			offer_id = offer.getId();
+			cursor.close();
+		}
+
+		return offer;
 	}
 }

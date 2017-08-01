@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
 
 /**
@@ -67,12 +68,11 @@ public class Rule3DbAdapter {
     }
 
 
-    public double getParcentForRule3() {
+    public double getParcentForRule3(int rule_id) {
         OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
         offerDBAdapter.open();
-        int id=offerDBAdapter.getAllValidOffers();
         Rule3 rule3=null;
-        Cursor cursor1 = db.rawQuery("select * from " + Rule3_TABLE_NAME+ " where id='" + id + "'" , null);
+        Cursor cursor1 = db.rawQuery("select * from " + Rule3_TABLE_NAME+ " where id='" + rule_id + "'" , null);
         cursor1.moveToFirst();
 
 
@@ -82,11 +82,8 @@ public class Rule3DbAdapter {
             return 0;
         }
         cursor1.moveToFirst();
-        rule3= new Rule3(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_Offer_id))),
-                Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))),
-                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_ID))));
+        rule3= new Rule3(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_ID))),Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))));
         cursor1.close();
-        return  rule3.getParcent();
-    }
+        return  rule3.getParcent();}
 
 }

@@ -71,6 +71,7 @@ import com.pos.leaders.leaderspossystem.Models.Customer_M;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OfferRule;
+import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
@@ -617,13 +618,12 @@ valueOfPointDB.open();
             lvOrder.setFocusable(false);
             offerDBAdapter=new OfferDBAdapter(this);
             offerDBAdapter.open();
-            int offer_id=offerDBAdapter.getAllValidOffers();
+           Offer offer=offerDBAdapter.getAllValidOffers();
 
 
-            if(offer_id!=0){
-                OfferRule offerRule1=offerDBAdapter.getRuleNo();
-                int offerRule=offerRule1.getRule();
-                calculateTotalPriceWithOffers(offer_id,offerRule,offerRule1.getProduct_id());
+            if(offer!=null){
+
+                calculateTotalPriceWithOffers(offer);
             }
 
            else{ calculateTotalPrice();}
@@ -822,14 +822,11 @@ valueOfPointDB.open();
 
         offerDBAdapter=new OfferDBAdapter(this);
         offerDBAdapter.open();
-        int offer_id=offerDBAdapter.getAllValidOffers();
+        Offer offer=offerDBAdapter.getAllValidOffers();
 
-        if(offer_id!=0){
-            OfferRule offerRule1=offerDBAdapter.getRuleNo();
-            int offerRule=offerRule1.getRule();
-            Toast.makeText(MainActivity.this, "mmm"+offerRule1.getProduct_id(), Toast.LENGTH_SHORT);
+        if(offer!=null){
 
-            calculateTotalPriceWithOffers(offer_id,offerRule,offerRule1.getProduct_id());
+            calculateTotalPriceWithOffers(offer);
         }
         else{ calculateTotalPrice();}
         //region Payment
@@ -1402,13 +1399,12 @@ valueOfPointDB.open();
         lvOrder.setAdapter(saleDetailsListViewAdapter);
         offerDBAdapter=new OfferDBAdapter(this);
         offerDBAdapter.open();
-        int offer_id=offerDBAdapter.getAllValidOffers();
+        Offer offer=offerDBAdapter.getAllValidOffers();
 
 
-        if(offer_id!=0){
-            OfferRule offerRule1=offerDBAdapter.getRuleNo();
-            int offerRule=offerRule1.getRule();
-            calculateTotalPriceWithOffers(offer_id,offerRule,offerRule1.getProduct_id());
+        if(offer!=null){
+
+            calculateTotalPriceWithOffers(offer);
         }
         else{ calculateTotalPrice();}
     }
@@ -1430,77 +1426,62 @@ valueOfPointDB.open();
         lvOrder.setAdapter(saleDetailsListViewAdapter);
         refreshCart();
     }
-    protected void calculateTotalPriceWithOffers(int offer_id,int offerRule,int product_id) {
+    protected void calculateTotalPriceWithOffers(Offer offer) {
         Rule3DbAdapter rule3DbAdapter=new Rule3DbAdapter(this);
         Rule7DbAdapter rule7DbAdapter=new Rule7DbAdapter(this);
         rule3DbAdapter.open();
         rule7DbAdapter.open();
-        if(offerRule==3){
+        if(offer.getRuleName()== Rule.RULE3){
             saleTotalPrice = 0;
             secondPrice=0;
             double SaleOriginalityPrice1=0;
             for (Order o : SESSION._ORDERS) {
-                Boolean product=offerDBAdapter.getProductStatus(o.getProductId());
-                if(!product){
-                    secondPrice+=o.getItemTotalPrice() ;
-                    SaleOriginalityPrice1 += (o.getOriginal_price() * o.getCount());
 
-                }else {
+                saleTotalPrice += o.getItemTotalPrice();
+                SaleOriginalityPrice1 += (o.getOriginal_price() * o.getCount());
+
+            }
+            double parcent=   rule3DbAdapter.getParcentForRule3(offer.getRuleID());
+
+            saleTotalPrice=saleTotalPrice-(int)saleTotalPrice*parcent;
+            totalSaved =(SaleOriginalityPrice1-saleTotalPrice);
+
+            tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
+            tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
+
+            SESSION._SALE.setTotalPrice(saleTotalPrice);
+
+        }
+        else    if(offer.getRuleName()== Rule.RULE7){
+
+            saleTotalPrice = 0;
+            secondPrice=0;
+            double SaleOriginalityPrice1=0;;
+            ProductOfferDBAdapter offersProducts=new ProductOfferDBAdapter(this);
+            offersProducts.open();
+            for (Order o : SESSION._ORDERS) {
+                if(offersProducts.checkProductIntoOffers(o.getProduct().getId(),offer.getId())){
+                    Rule7 rule7=rule7DbAdapter.getPriceForRule7(offer.getRuleID());
+
+                    Toast.makeText(MainActivity.this, "New Price: " +  rule7.getPrice(), Toast.LENGTH_LONG).show();
+                    saleTotalPrice+=rule7.getPrice();
+                    SaleOriginalityPrice1 += (o.getPrice() * o.getCount());
+                }
+                // Boolean product=offerDBAdapter.getProductStatus(o.getProductId());
+
+                else {
                     saleTotalPrice += o.getItemTotalPrice();
                     SaleOriginalityPrice1 += (o.getOriginal_price() * o.getCount());
                 }
             }
-            Toast.makeText(MainActivity.this, "secondPrice: " + secondPrice, Toast.LENGTH_LONG).show();
-                double parcent=   rule3DbAdapter.getParcentForRule3();
+            // Toast.makeText(MainActivity.this, "secondPrice: " + secondPrice, Toast.LENGTH_LONG).show();
+            tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
+            tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
 
-                saleTotalPrice=saleTotalPrice-(int)saleTotalPrice*parcent;
-saleTotalPrice=saleTotalPrice+secondPrice;
-                totalSaved =(SaleOriginalityPrice1-saleTotalPrice);
+            SESSION._SALE.setTotalPrice(saleTotalPrice);
 
-                tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
-                tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
+        }
 
-                SESSION._SALE.setTotalPrice(saleTotalPrice);
-
-            }
-            if(offerRule==7){
-                Rule7 rule7=rule7DbAdapter.getPriceForRule7();
-
-                saleTotalPrice = 0;
-                secondPrice=0;
-                double SaleOriginalityPrice1=0;
-                for (Order o : SESSION._ORDERS) {
-                   // Boolean product=offerDBAdapter.getProductStatus(o.getProductId());
-                    if(rule7.getProduct_id()==o.getProduct().getId()){
-                        o.getProduct().setPrice(rule7.getPrice());
-
-
-                        Toast.makeText(MainActivity.this, "New Price: " +  rule7.getPrice(), Toast.LENGTH_LONG).show();
-saleTotalPrice+=rule7.getPrice();
-                    }
-else {
-
-
-                        saleTotalPrice += o.getItemTotalPrice();
-                        SaleOriginalityPrice1 += (o.getOriginal_price() * o.getCount());
-                    }
-/**}
-                    if(!product){
-                        secondPrice+=o.getItemTotalPrice() ;
-                        SaleOriginalityPrice1 += (o.getOriginal_price() * o.getCount());
-
-                    }else {
-                        saleTotalPrice += o.getItemTotalPrice();
-                        SaleOriginalityPrice1 += (o.getOriginal_price() * o.getCount());
-                    }**/
-                }
-               // Toast.makeText(MainActivity.this, "secondPrice: " + secondPrice, Toast.LENGTH_LONG).show();
-                tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
-                tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
-
-                SESSION._SALE.setTotalPrice(saleTotalPrice);
-
-            }
 
 
     }
@@ -1581,13 +1562,12 @@ else {
         //lvOrder.setAdapter(saleDetailsListViewAdapter);
         offerDBAdapter=new OfferDBAdapter(this);
         offerDBAdapter.open();
-        int offer_id=offerDBAdapter.getAllValidOffers();
+        Offer offer=offerDBAdapter.getAllValidOffers();
 
 
-        if(offer_id!=0){
-            OfferRule offerRule1=offerDBAdapter.getRuleNo();
-            int offerRule=offerRule1.getRule();
-            calculateTotalPriceWithOffers(offer_id,offerRule,offerRule1.getProduct_id());
+        if(offer!=null){
+
+            calculateTotalPriceWithOffers(offer);
         }
         else{ calculateTotalPrice();}
     }

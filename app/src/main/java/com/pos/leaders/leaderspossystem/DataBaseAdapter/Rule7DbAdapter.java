@@ -68,14 +68,9 @@ public class Rule7DbAdapter {
         }
     }
 
-    public Rule7 getPriceForRule7() {
-        OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
-        offerDBAdapter.open();
-        OfferRule offerRule=offerDBAdapter.getRuleNo();
-        int id=offerRule.getId();
-        int product_id=offerRule.getProduct_id();
+    public Rule7 getPriceForRule7(int rule_id) {
         Rule7 rule7=null;
-        Cursor cursor1 = db.rawQuery("select * from " + Rule7_TABLE_NAME+ " where offer_id='" + id + "'" +" and "+"product_id='"+product_id+"'", null);
+        Cursor cursor1 = db.rawQuery("select * from " + Rule7_TABLE_NAME+ " where id='" + rule_id + "'" , null);
         cursor1.moveToFirst();
 
 
@@ -87,7 +82,6 @@ public class Rule7DbAdapter {
         cursor1.moveToFirst();
         rule7= new Rule7(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule7_COLUMN_ID))),
                 Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule7_COLUMN_Price))),
-                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule7_Offer_id))),
                 Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule7_Product_id))));
         cursor1.close();
         return  rule7;

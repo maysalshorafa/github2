@@ -41,9 +41,8 @@ public class Rule7 {
     private  int offer_id;
     private  double price;
     private  int product_id;
-    public Rule7(int id, double price, int offer_id, int product_id) {
+    public Rule7(int id, double price,  int product_id) {
         this.id = id;
-        this.offer_id = offer_id;
         this.price = price;
         this.product_id = product_id;
     }
