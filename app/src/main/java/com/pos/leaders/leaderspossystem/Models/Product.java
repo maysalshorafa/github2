@@ -214,6 +214,30 @@ public class Product {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Product product = (Product) o;
+
+        if (!name.equals(product.name))
+            return false;
+
+        return barCode.equals(product.barCode);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + barCode.hashCode();
+        return result;
+    }
+
     public String BKMVDATA(int rowNumber, String companyID) {
         String OP = "+";
         if(name.length()>49)

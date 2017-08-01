@@ -1,5 +1,10 @@
 package com.pos.leaders.leaderspossystem.Models.Offers;
 
+import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Models.Order;
+
+import java.util.List;
+
 /**
  * Created by KARAM on 31/07/2017.
  */
@@ -30,4 +35,6 @@ public abstract class Rule {
     public Rule(String type){
         this.type = type;
     }
+
+    public abstract void execute(List<Order> orders,Offer offer);
 }
