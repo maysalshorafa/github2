@@ -31,8 +31,6 @@ public class Rule3 {
         Rule3.offer_id = offer_id;
     }
 
-
-
     public static double getParcent() {
         return parcent;
     }

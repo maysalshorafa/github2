@@ -5,18 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OfferRule;
-import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Rule3;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by KARAM on 23/10/2016.
@@ -33,15 +27,16 @@ public class OfferDBAdapter {
 	protected static final String OFFER_COLUMN_CREATINGDATE = "creatingDate";
 	protected static final String OFFER_COLUMN_ENABLE = "status";
 	protected static final String OFFER_COLUMN_ClubId = "club_offer";
-////offer rule table
-protected static final String Rule_OFFER_TABLE_NAME = "offerRule";
+
+	////offer rule table
+	protected static final String Rule_OFFER_TABLE_NAME = "offerRule";
 	protected static final String Rule_OFFER_COLUMN_ID = "id";
 
 	protected static final String OFFER_Rule_COLUMN_Rule_ID = "rule_id";
 	protected static final String OFFER_Rule_COLUMN_Product = "product_id";
 
-//////rule1 tabel
-protected static final String Rule3_TABLE_NAME = "rule3";
+	//////rule1 tabel
+	protected static final String Rule3_TABLE_NAME = "rule3";
 	protected static final String Rule3_COLUMN_ID = "id";
 	protected static final String Rule3_COLUMN_Parcent = "parcent";
 	protected static final String Rule3_Offer_id = "offer_id";

@@ -848,8 +848,8 @@ OfferRule offerRule1=offerDBAdapter.getRuleNo();
             @Override
             public void onClick(View v) {
                 ValueOfPoint valueOfPoint=valueOfPointDB.getValue();
-int value= valueOfPoint.getValue();
-              int newPrice=point*value;
+                int value= valueOfPoint.getValue();
+                int newPrice=point*value;
                 saleTotalPrice=saleTotalPrice-newPrice;
                 tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
             }
