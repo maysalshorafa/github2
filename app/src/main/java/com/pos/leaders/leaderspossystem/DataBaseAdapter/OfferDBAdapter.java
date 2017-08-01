@@ -11,6 +11,8 @@ import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OfferRule;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Rule3;
+import com.pos.leaders.leaderspossystem.Tools.Rule7;
+import com.pos.leaders.leaderspossystem.Tools.Rule7DbAdapter;
 
 /**
  * Created by KARAM on 23/10/2016.
@@ -27,19 +29,24 @@ public class OfferDBAdapter {
 	protected static final String OFFER_COLUMN_CREATINGDATE = "creatingDate";
 	protected static final String OFFER_COLUMN_ENABLE = "status";
 	protected static final String OFFER_COLUMN_ClubId = "club_offer";
+<<<<<<< HEAD
 
 	////offer rule table
 	protected static final String Rule_OFFER_TABLE_NAME = "offerRule";
 	protected static final String Rule_OFFER_COLUMN_ID = "id";
+=======
+>>>>>>> mays-alshorafa
 
-	protected static final String OFFER_Rule_COLUMN_Rule_ID = "rule_id";
-	protected static final String OFFER_Rule_COLUMN_Product = "product_id";
 
+<<<<<<< HEAD
 	//////rule1 tabel
 	protected static final String Rule3_TABLE_NAME = "rule3";
 	protected static final String Rule3_COLUMN_ID = "id";
 	protected static final String Rule3_COLUMN_Parcent = "parcent";
 	protected static final String Rule3_Offer_id = "offer_id";
+=======
+
+>>>>>>> mays-alshorafa
 
 
 
@@ -60,6 +67,8 @@ public class OfferDBAdapter {
 		this.context = context;
 		this.dbHelper = new DbHelper(context);
 	}
+
+
 
 	public OfferDBAdapter open() throws SQLException {
 		this.db = dbHelper.getWritableDatabase();
@@ -189,80 +198,33 @@ public class OfferDBAdapter {
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_ENABLE +"="+1, null);
 		cursor.moveToFirst();
 if(cursor.getCount()<0){
-	return  0;
+    offer_id=0;
+	return  offer_id;
 }
-		offer= new Offer(Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))),
-				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_NAME)),
-				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STARTDATE))),
-				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ENDDATE))),
-				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_CREATINGDATE))),
-				Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ENABLE))),
-				Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ClubId))));
-		offer_id = offer.getId();
+	else	if( cursor != null && cursor.moveToFirst() ){
+			offer= new Offer(Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))),
+					cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_NAME)),
+					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STARTDATE))),
+					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ENDDATE))),
+					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_CREATINGDATE))),
+					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ENABLE))),
+					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ClubId))));
+			offer_id = offer.getId();
+			cursor.close();
+		}
+
 return offer_id;
 	}
 
 
 
-	public OfferRule getRuleNo() {
-		int offer_id=getAllValidOffers();
-		OfferRule offer =null;
-		Cursor cursor = db.rawQuery("select * from " + Rule_OFFER_TABLE_NAME+ " where id='" + offer_id + "'" , null);
-		cursor.moveToFirst();
-
-
-		if (cursor.getCount() < 1) // UserName Not Exist
-		{
-			cursor.close();
-		return  offer;
-		}
-		cursor.moveToFirst();
-			offer= new OfferRule(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Rule_OFFER_COLUMN_ID))),
-					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_Rule_COLUMN_Rule_ID))),
-					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_Rule_COLUMN_Product))));
-			cursor.close();
 
 
 
-		return offer;
-	}
-	public Boolean getProductStatus(int order) {
-		int offer_id=getAllValidOffers();
-		OfferRule offer =getRuleNo();
-		Cursor cursor = db.rawQuery("select * from " + Rule_OFFER_TABLE_NAME+ " where product_id='" + order + "'" , null);
-		cursor.moveToFirst();
 
 
-		if (cursor.getCount() < 1) // UserName Not Exist
-		{
-			cursor.close();
-			return  true;
-		}
-		cursor.moveToFirst();
 
 
-		return false;
-	}
-
-	public double getParcentForRule3() {
-		int id=getAllValidOffers();
-			Rule3 rule3=null;
-			Cursor cursor1 = db.rawQuery("select * from " + Rule3_TABLE_NAME+ " where id='" + id + "'" , null);
-			cursor1.moveToFirst();
-
-
-			if (cursor1.getCount() < 1) // UserName Not Exist
-			{
-				cursor1.close();
-				return 0;
-			}
-			cursor1.moveToFirst();
-			rule3= new Rule3(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_Offer_id))),
-					Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))),
-					Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_ID))));
-			cursor1.close();
-			return  rule3.getParcent();
-		}
 
 
 	//int id, String name, Date startDate, Date endDate, Date creatingDate,boolean enable, int byUser,
