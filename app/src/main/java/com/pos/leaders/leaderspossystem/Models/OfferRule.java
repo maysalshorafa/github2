@@ -9,9 +9,9 @@ import com.pos.leaders.leaderspossystem.MainActivity;
  */
 
 public class OfferRule {
+
     public OfferRule(Context context) {
     }
-
 
     public void setId(int id) {
         this.id = id;
@@ -23,8 +23,6 @@ public class OfferRule {
 
     private int id;
     private int  rule;
-
-
 
     public void setProduct_id(int product_id) {
         this.product_id = product_id;
@@ -47,8 +45,8 @@ public class OfferRule {
     public int getRule() {
         return rule;
     }
+
     public int getProduct_id() {
         return product_id;
     }
-
 }

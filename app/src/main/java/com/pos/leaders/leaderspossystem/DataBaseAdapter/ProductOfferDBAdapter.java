@@ -114,7 +114,6 @@ public class ProductOfferDBAdapter {
         return true;
     }
 
-
 	public boolean deleteEntry(int id) {
 		return db.delete(PRODUCTOFFER_TABLE_NAME, PRODUCTOFFER_COLUMN_ID + "=?", new String[]{id + ""}) > 0;
 	}

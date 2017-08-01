@@ -154,6 +154,7 @@ public class Order {
 		this.price = (original_price * (discount / 100));
 	}
 
+
 	//endregion Setters
 
 	//region Methods

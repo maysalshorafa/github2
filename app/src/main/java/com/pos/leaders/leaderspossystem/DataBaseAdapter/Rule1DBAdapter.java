@@ -8,11 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule1;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by KARAM on 01/08/2017.
@@ -24,11 +21,11 @@ public class Rule1DBAdapter {
     public static final String RULE1_TABLE_NAME = "Rule1";
     // Column Names
     protected static final String RULE1_COLUMN_ID = "id";
-    protected static final String RULE1_COLUMN_COUNT = "count";
+    protected static final String RULE1_COLUMN_QUANTITY = "quantity";
     protected static final String RULE1_COLUMN_PRICE = "price";
 
     public static final String DATABASE_CREATE = "CREATE TABLE `"+RULE1_TABLE_NAME+"` ( `"+RULE1_COLUMN_ID+"` INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "`"+RULE1_COLUMN_COUNT+"` INTEGER NOT NULL, `"+RULE1_COLUMN_PRICE+"` REAL NOT NULL)";
+            "`"+ RULE1_COLUMN_QUANTITY +"` INTEGER NOT NULL, `"+RULE1_COLUMN_PRICE+"` REAL NOT NULL)";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -55,11 +52,11 @@ public class Rule1DBAdapter {
     }
 
 
-    public int insertEntry(int count,double price) {
+    public int insertEntry(int quantity,double price) {
         ContentValues val = new ContentValues();
 
         //Assign values for each row.
-        val.put(RULE1_COLUMN_COUNT, count);
+        val.put(RULE1_COLUMN_QUANTITY, quantity);
         val.put(RULE1_COLUMN_PRICE, price);
         try {
             db.insert(RULE1_TABLE_NAME, null, val);
@@ -80,7 +77,7 @@ public class Rule1DBAdapter {
             return null;
         }
         cursor.moveToFirst();
-        rule = new Rule1(id, Integer.parseInt(cursor.getString(cursor.getColumnIndex(RULE1_COLUMN_COUNT))),
+        rule = new Rule1(id, Integer.parseInt(cursor.getString(cursor.getColumnIndex(RULE1_COLUMN_QUANTITY))),
                 cursor.getDouble(cursor.getColumnIndex(RULE1_COLUMN_PRICE)));
         cursor.close();
 

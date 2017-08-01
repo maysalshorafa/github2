@@ -126,6 +126,10 @@ public class Offer {
         return ruleID;
     }
 
+    public List<Product> getProducts() {
+        return products;
+    }
+
     //endregion
 
 	//region Setters
@@ -169,6 +173,7 @@ public class Offer {
     public void setRuleID(int ruleID) {
         this.ruleID = ruleID;
     }
+    
 
     //endregion
 
