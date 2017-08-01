@@ -71,7 +71,7 @@ public class Rule1DBAdapter {
     }
 
     public Rule1 getByID(int id) {
-        Rule1 rule1=null;
+        Rule1 rule=null;
 
         Cursor cursor = db.rawQuery("select * from " + RULE1_TABLE_NAME+" where id="+id, null);
         if (cursor.getCount() < 1) // zReport Not Exist
@@ -80,11 +80,11 @@ public class Rule1DBAdapter {
             return null;
         }
         cursor.moveToFirst();
-        rule1 = new Rule1(id, Integer.parseInt(cursor.getString(cursor.getColumnIndex(RULE1_COLUMN_COUNT))),
+        rule = new Rule1(id, Integer.parseInt(cursor.getString(cursor.getColumnIndex(RULE1_COLUMN_COUNT))),
                 cursor.getDouble(cursor.getColumnIndex(RULE1_COLUMN_PRICE)));
         cursor.close();
 
-        return rule1;
+        return rule;
     }
 
 }
