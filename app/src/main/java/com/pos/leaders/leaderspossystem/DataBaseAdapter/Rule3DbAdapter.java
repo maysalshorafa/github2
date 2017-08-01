@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Tools.Rule3;
+import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
 
 /**
  * Created by Win8.1 on 7/31/2017.

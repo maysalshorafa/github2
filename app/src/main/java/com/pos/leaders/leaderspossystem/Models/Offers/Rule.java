@@ -1,4 +1,4 @@
-package com.pos.leaders.leaderspossystem.Models;
+package com.pos.leaders.leaderspossystem.Models.Offers;
 
 /**
  * Created by KARAM on 31/07/2017.

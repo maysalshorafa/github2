@@ -1,4 +1,4 @@
-package com.pos.leaders.leaderspossystem.Tools;
+package com.pos.leaders.leaderspossystem.Models.Offers;
 
 /**
  * Created by Win8.1 on 7/27/2017.

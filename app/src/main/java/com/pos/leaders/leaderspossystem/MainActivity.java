@@ -80,12 +80,11 @@ import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CashActivity;
 import com.pos.leaders.leaderspossystem.Tools.Group;
-import com.pos.leaders.leaderspossystem.Tools.Point;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustmerCatalogGridViewAdapter;
 
-import com.pos.leaders.leaderspossystem.Tools.Rule7;
-import com.pos.leaders.leaderspossystem.Tools.Rule7DbAdapter;
+import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.Util;

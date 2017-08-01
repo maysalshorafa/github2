@@ -1,4 +1,4 @@
-package com.pos.leaders.leaderspossystem.Tools;
+package com.pos.leaders.leaderspossystem.DataBaseAdapter;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,10 +7,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.OfferRule;
+import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
 
 /**
  * Created by Win8.1 on 7/31/2017.

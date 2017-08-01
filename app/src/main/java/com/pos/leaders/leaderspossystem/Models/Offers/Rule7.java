@@ -1,4 +1,4 @@
-package com.pos.leaders.leaderspossystem.Tools;
+package com.pos.leaders.leaderspossystem.Models.Offers;
 
 /**
  * Created by Win8.1 on 7/31/2017.
@@ -41,8 +41,7 @@ public class Rule7 {
     private  int offer_id;
     private  double price;
     private  int product_id;
-    public Rule7(int id, double price, int offer_id, int product_id
-    ) {
+    public Rule7(int id, double price, int offer_id, int product_id) {
         this.id = id;
         this.offer_id = offer_id;
         this.price = price;

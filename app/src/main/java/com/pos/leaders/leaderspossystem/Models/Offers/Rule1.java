@@ -1,4 +1,4 @@
-package com.pos.leaders.leaderspossystem.Models;
+package com.pos.leaders.leaderspossystem.Models.Offers;
 
 /**
  * Created by KARAM on 31/07/2017.
@@ -11,6 +11,12 @@ public class Rule1 extends Rule {
 
     public Rule1(int id, int count, double price) {
         super(id, RULE1);
+        this.count = count;
+        this.price = price;
+    }
+
+    public Rule1(int count, double price) {
+        super(RULE1);
         this.count = count;
         this.price = price;
     }

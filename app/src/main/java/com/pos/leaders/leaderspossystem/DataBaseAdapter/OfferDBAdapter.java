@@ -8,11 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offer;
-import com.pos.leaders.leaderspossystem.Models.OfferRule;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.Rule3;
-import com.pos.leaders.leaderspossystem.Tools.Rule7;
-import com.pos.leaders.leaderspossystem.Tools.Rule7DbAdapter;
 
 /**
  * Created by KARAM on 23/10/2016.
