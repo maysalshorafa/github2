@@ -27,8 +27,7 @@ public class Rule3 {
     }
 
 
-    public Rule3(int id,double parcent) {
-        this.id=id;
+    public Rule3(double parcent) {
         this.parcent=parcent;
     }
 

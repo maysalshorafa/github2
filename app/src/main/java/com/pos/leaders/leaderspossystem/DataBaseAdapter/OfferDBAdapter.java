@@ -13,6 +13,7 @@ import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -72,7 +73,7 @@ public class OfferDBAdapter {
 		return insertEntry(offer.getName(), offer.getStartDate().getTime(), offer.getEndDate().getTime(), offer.getCreatingDate().getTime(), offer.getStatus(), offer.getByUser(), offer.getRuleName(), offer.getRuleID());
 	}
 
-	public int insertEntry(String name,long startDate,long endDate,long createDate,int status,int byUser,int ruleName,int ruleID){
+	public int insertEntry(String name,long startDate,long endDate,long createDate,int status,int byUser,String ruleName,int ruleID){
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 		val.put(OFFER_COLUMN_NAME, name);
@@ -116,7 +117,7 @@ public class OfferDBAdapter {
 
 	public List<Offer> getAllOffersByStatus(int Status) {
 		List<Offer> offerList = new ArrayList<Offer>();
-		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS + "=" + Status, null);
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS + "=" + Status+ OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by id desc", null);
 		cursor.moveToFirst();
 
 		while(!cursor.isAfterLast()){
@@ -135,9 +136,11 @@ public class OfferDBAdapter {
 				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_CREATINGDATE))),
 				cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_STATUS)),
 				cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_BYUSER)),
-				Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME))),
+				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)),
 				cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_RULEID)));
 	}
+	// "=1 and "+OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by id desc"
+
 	public Offer getAllValidOffers() {
 		Offer offer =null;
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS +"="+1, null);
@@ -152,7 +155,7 @@ public class OfferDBAdapter {
 					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ENDDATE))),
 					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_CREATINGDATE))),
 					Integer.parseInt(	cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STATUS))),
-					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_BYUSER))),Integer.parseInt((cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)))),
+					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_BYUSER))),cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)),
 					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULEID))));
 			cursor.close();
 		}

@@ -21,7 +21,7 @@ public class Offer {
 	private Date creatingDate;
 	private int status;
 	private int byUser;
-    private int ruleName;
+    private String ruleName;
     private int ruleID;
 
     //region Attribute Objects
@@ -39,7 +39,7 @@ public class Offer {
 
     }
 
-	public Offer(int id, String name, Date startDate, Date endDate, Date creatingDate, int status, int byUser,int ruleName,int ruleID) {
+	public Offer(int id, String name, Date startDate, Date endDate, Date creatingDate, int status, int byUser,String ruleName,int ruleID) {
 		this.id=id;
 		this.name = name;
 		this.startDate = startDate;
@@ -51,7 +51,7 @@ public class Offer {
         this.ruleID = ruleID;
     }
 
-    public Offer(String name, Date startDate, Date endDate, Date creatingDate, int status, int byUser,int ruleName,int ruleID) {
+    public Offer(String name, Date startDate, Date endDate, Date creatingDate, int status, int byUser,String ruleName,int ruleID) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -118,7 +118,7 @@ public class Offer {
         return byUser;
     }
 
-    public int getRuleName() {
+    public String getRuleName() {
         return ruleName;
     }
 
@@ -162,7 +162,7 @@ public class Offer {
         this.creatingDate = creatingDate;
     }
 
-    public void setRuleName(int ruleName) {
+    public void setRuleName(String ruleName) {
         this.ruleName = ruleName;
     }
 

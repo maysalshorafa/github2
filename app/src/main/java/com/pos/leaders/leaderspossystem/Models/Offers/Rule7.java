@@ -34,8 +34,7 @@ public class Rule7 {
     private   int id;
     private  double price;
     private  int product_id;
-    public Rule7(int id, double price,  int product_id) {
-        this.id = id;
+    public Rule7( double price,  int product_id) {
         this.price = price;
         this.product_id = product_id;
     }

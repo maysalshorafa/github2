@@ -20,7 +20,7 @@ public class Rule3DbAdapter {
     protected static final String Rule3_TABLE_NAME = "Rule3";
     protected static final String Rule3_COLUMN_ID = "id";
     protected static final String Rule3_COLUMN_Parcent = "parcent";
-    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS rule3 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'parcent'  REAL  , FOREIGN KEY(`offer_id`) REFERENCES `offers.id`)";
+    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule3 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'parcent'  REAL  )";
     private SQLiteDatabase db;
 
     // Context of the application using the database.
@@ -81,7 +81,7 @@ public class Rule3DbAdapter {
             return 0;
         }
         cursor1.moveToFirst();
-        rule3= new Rule3(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_ID))),Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))));
+        rule3= new Rule3(Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))));
         cursor1.close();
         return  rule3.getParcent();}
 
