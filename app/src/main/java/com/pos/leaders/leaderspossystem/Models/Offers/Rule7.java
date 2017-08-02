@@ -13,13 +13,7 @@ public class Rule7 {
         this.id = id;
     }
 
-    public int getOffer_id() {
-        return offer_id;
-    }
 
-    public void setOffer_id(int offer_id) {
-        this.offer_id = offer_id;
-    }
 
     public double getPrice() {
         return price;
@@ -38,7 +32,6 @@ public class Rule7 {
     }
 
     private   int id;
-    private  int offer_id;
     private  double price;
     private  int product_id;
     public Rule7(int id, double price,  int product_id) {

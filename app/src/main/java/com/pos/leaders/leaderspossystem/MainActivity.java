@@ -1427,24 +1427,47 @@ valueOfPointDB.open();
         refreshCart();
     }
     protected void calculateTotalPriceWithOffers(Offer offer) {
+
         Rule3DbAdapter rule3DbAdapter=new Rule3DbAdapter(this);
         Rule7DbAdapter rule7DbAdapter=new Rule7DbAdapter(this);
         rule3DbAdapter.open();
         rule7DbAdapter.open();
-        if(offer.getRuleName()== Rule.RULE3){
+        Toast.makeText(MainActivity.this, "New offer: ", Toast.LENGTH_SHORT).show();
+        if(offer.getRuleName()==3){
+        saleTotalPrice = 0;
+        double SaleOriginalityPrice=0;
+        for (Order o : SESSION._ORDERS) {
+            saleTotalPrice += o.getItemTotalPrice();
+            SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+        }
+
+        totalSaved =(SaleOriginalityPrice-saleTotalPrice);
+        tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
+        tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
+        double parcent=   rule3DbAdapter.getParcentForRule3(offer.getRuleID());
+
+        saleTotalPrice=saleTotalPrice-(int)saleTotalPrice*parcent;
+
+        tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
+        tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
+
+        SESSION._SALE.setTotalPrice(saleTotalPrice);}
+  /**      if(offer.getRuleName()== "RULE3"){
+            Toast.makeText(MainActivity.this, "New offer: ", Toast.LENGTH_SHORT).show();
+
             saleTotalPrice = 0;
-            secondPrice=0;
-            double SaleOriginalityPrice1=0;
+            double SaleOriginalityPrice=0;
             for (Order o : SESSION._ORDERS) {
-
                 saleTotalPrice += o.getItemTotalPrice();
-                SaleOriginalityPrice1 += (o.getOriginal_price() * o.getCount());
-
+                SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
             }
+
+            totalSaved =(SaleOriginalityPrice-saleTotalPrice);
+            tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
+            tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
             double parcent=   rule3DbAdapter.getParcentForRule3(offer.getRuleID());
 
             saleTotalPrice=saleTotalPrice-(int)saleTotalPrice*parcent;
-            totalSaved =(SaleOriginalityPrice1-saleTotalPrice);
 
             tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
             tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
@@ -1455,7 +1478,6 @@ valueOfPointDB.open();
         else    if(offer.getRuleName()== Rule.RULE7){
 
             saleTotalPrice = 0;
-            secondPrice=0;
             double SaleOriginalityPrice1=0;;
             ProductOfferDBAdapter offersProducts=new ProductOfferDBAdapter(this);
             offersProducts.open();
@@ -1480,7 +1502,7 @@ valueOfPointDB.open();
 
             SESSION._SALE.setTotalPrice(saleTotalPrice);
 
-        }
+        }**/
 
 
 

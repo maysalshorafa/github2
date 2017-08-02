@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OfferRule;
 
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class OfferRuleDBAdapter {
     public OfferRule getRuleNo() {
         OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
         offerDBAdapter.open();
-        int offer_id=offerDBAdapter.getAllValidOffers();
+        Offer offer_id=offerDBAdapter.getAllValidOffers();
         OfferRule offer =null;
         Cursor cursor = db.rawQuery("select * from " + Rule_OFFER_TABLE_NAME+ " where id='" + offer_id + "'" , null);
         cursor.moveToFirst();
@@ -97,7 +98,7 @@ public class OfferRuleDBAdapter {
     public Boolean getProductStatus(int order) {
         OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
         offerDBAdapter.open();
-        int offer_id=offerDBAdapter.getAllValidOffers();
+        Offer offer_id=offerDBAdapter.getAllValidOffers();
         OfferRule offer =getRuleNo();
         Cursor cursor = db.rawQuery("select * from " + Rule_OFFER_TABLE_NAME+ " where product_id='" + order + "'" , null);
         cursor.moveToFirst();

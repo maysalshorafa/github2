@@ -72,7 +72,7 @@ public class OfferDBAdapter {
 		return insertEntry(offer.getName(), offer.getStartDate().getTime(), offer.getEndDate().getTime(), offer.getCreatingDate().getTime(), offer.getStatus(), offer.getByUser(), offer.getRuleName(), offer.getRuleID());
 	}
 
-	public int insertEntry(String name,long startDate,long endDate,long createDate,int status,int byUser,String ruleName,int ruleID){
+	public int insertEntry(String name,long startDate,long endDate,long createDate,int status,int byUser,int ruleName,int ruleID){
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 		val.put(OFFER_COLUMN_NAME, name);
@@ -135,16 +135,14 @@ public class OfferDBAdapter {
 				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_CREATINGDATE))),
 				cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_STATUS)),
 				cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_BYUSER)),
-				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)),
+				Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME))),
 				cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_RULEID)));
 	}
 	public Offer getAllValidOffers() {
-		int offer_id=0;
 		Offer offer =null;
-		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS +"="+ Rule.OPEN, null);
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS +"="+1, null);
 		cursor.moveToFirst();
 		if(cursor.getCount()<0){
-			offer_id=0;
 			return  offer;
 		}
 		else	if( cursor != null && cursor.moveToFirst() ){
@@ -154,9 +152,8 @@ public class OfferDBAdapter {
 					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ENDDATE))),
 					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_CREATINGDATE))),
 					Integer.parseInt(	cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STATUS))),
-					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_BYUSER))),cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)),
+					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_BYUSER))),Integer.parseInt((cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)))),
 					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULEID))));
-			offer_id = offer.getId();
 			cursor.close();
 		}
 

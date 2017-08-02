@@ -17,11 +17,10 @@ import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
 
 public class Rule3DbAdapter {
     //////rule3 tabel
-    protected static final String Rule3_TABLE_NAME = "rule3";
+    protected static final String Rule3_TABLE_NAME = "Rule3";
     protected static final String Rule3_COLUMN_ID = "id";
     protected static final String Rule3_COLUMN_Parcent = "parcent";
-    protected static final String Rule3_Offer_id = "offer_id";
-    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS rule3 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'parcent'  REAL  ,"+" 'offer_id' INTEGER , FOREIGN KEY(`offer_id`) REFERENCES `offers.id`)";
+    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS rule3 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'parcent'  REAL  , FOREIGN KEY(`offer_id`) REFERENCES `offers.id`)";
     private SQLiteDatabase db;
 
     // Context of the application using the database.
@@ -47,12 +46,12 @@ public class Rule3DbAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(int offer_id,double parcent,int id){
+    public int insertEntry(int id,double parcent){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Rule3_Offer_id,offer_id);
-        val.put(Rule3_COLUMN_Parcent,parcent);
         val.put(Rule3_COLUMN_ID,id);
+
+        val.put(Rule3_COLUMN_Parcent,parcent);
 
 
 
