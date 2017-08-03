@@ -36,5 +36,7 @@ public abstract class Rule {
         this.type = type;
     }
 
-    public abstract void execute(List<Order> orders,Offer offer);
+    public abstract void execute(List<Order> orders,Offer offer) throws Exception;
+
+    public abstract boolean precondition(List<Order> orders);
 }

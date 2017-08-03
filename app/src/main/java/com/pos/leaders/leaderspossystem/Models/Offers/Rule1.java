@@ -63,4 +63,11 @@ public class Rule1 extends Rule {
             }
         }
     }
+
+    @Override
+    public boolean precondition(List<Order> orders) {
+        if(orders.size()>=quantity)
+            return true;
+        return false;
+    }
 }
