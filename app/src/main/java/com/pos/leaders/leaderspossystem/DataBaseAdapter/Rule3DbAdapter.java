@@ -81,7 +81,7 @@ public class Rule3DbAdapter {
             return 0;
         }
         cursor1.moveToFirst();
-        rule3= new Rule3(Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))));
+        rule3= new Rule3(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_ID))),Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))));
         cursor1.close();
         return  rule3.getParcent();}
 
