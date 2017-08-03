@@ -18,10 +18,9 @@ import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
 public class Rule7DbAdapter {
 
     ////rule7 tabel
-    protected static final String Rule7_TABLE_NAME = "rule7";
+    protected static final String Rule7_TABLE_NAME = "Rule7";
     protected static final String Rule7_COLUMN_ID = "id";
     protected static final String Rule7_COLUMN_Price = "price";
-    protected static final String Rule7_Offer_id = "offer_id";
     protected static final String Rule7_Product_id = "product_id";
     public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS rule7 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'price'  REAL  ,"+" 'offer_id' INTEGER ,"+" 'product_id' INTEGER , FOREIGN KEY(`offer_id`) REFERENCES `offers.id`)";
     private SQLiteDatabase db;
@@ -49,12 +48,11 @@ public class Rule7DbAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(int id, double price, int offer_id, int product_id){
+    public int insertEntry(int id, double price,  int product_id){
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Rule7_COLUMN_ID,id);
         val.put(Rule7_COLUMN_Price,price);
-        val.put(Rule7_Offer_id,offer_id);
 
         val.put(Rule7_Product_id,product_id);
 
@@ -68,14 +66,9 @@ public class Rule7DbAdapter {
         }
     }
 
-    public Rule7 getPriceForRule7() {
-        OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
-        offerDBAdapter.open();
-        OfferRule offerRule=offerDBAdapter.getRuleNo();
-        int id=offerRule.getId();
-        int product_id=offerRule.getProduct_id();
+    public Rule7 getPriceForRule7(int rule_id) {
         Rule7 rule7=null;
-        Cursor cursor1 = db.rawQuery("select * from " + Rule7_TABLE_NAME+ " where offer_id='" + id + "'" +" and "+"product_id='"+product_id+"'", null);
+        Cursor cursor1 = db.rawQuery("select * from " + Rule7_TABLE_NAME+ " where id='" + rule_id + "'" , null);
         cursor1.moveToFirst();
 
 
@@ -87,7 +80,6 @@ public class Rule7DbAdapter {
         cursor1.moveToFirst();
         rule7= new Rule7(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule7_COLUMN_ID))),
                 Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule7_COLUMN_Price))),
-                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule7_Offer_id))),
                 Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule7_Product_id))));
         cursor1.close();
         return  rule7;

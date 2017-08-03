@@ -5,6 +5,8 @@ package com.pos.leaders.leaderspossystem.Models.Offers;
  */
 
 public class Rule3 {
+    private   int id ;
+    private   double parcent;
     public int getId() {
         return id;
     }
@@ -13,17 +15,9 @@ public class Rule3 {
         this.id = id;
     }
 
-    public int getOffer_id() {
-        return offer_id;
-    }
 
-    public void setOffer_id(int offer_id) {
-        this.offer_id = offer_id;
-    }
 
-    public static double getParcent() {
-    }
-    
+
     public double getParcent() {
         return parcent;
     }
@@ -32,12 +26,9 @@ public class Rule3 {
         this.parcent = parcent;
     }
 
-    private   int id ;
-    private   int offer_id;
-    private   double parcent;
-    public Rule3(int offer_id,double parcent,int id) {
+
+    public Rule3(int id,double parcent) {
         this.id=id;
-        this.offer_id=offer_id;
         this.parcent=parcent;
     }
 

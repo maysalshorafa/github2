@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
 
 /**
@@ -16,11 +17,10 @@ import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
 
 public class Rule3DbAdapter {
     //////rule3 tabel
-    protected static final String Rule3_TABLE_NAME = "rule3";
+    protected static final String Rule3_TABLE_NAME = "Rule3";
     protected static final String Rule3_COLUMN_ID = "id";
     protected static final String Rule3_COLUMN_Parcent = "parcent";
-    protected static final String Rule3_Offer_id = "offer_id";
-    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS rule3 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'parcent'  REAL  ,"+" 'offer_id' INTEGER , FOREIGN KEY(`offer_id`) REFERENCES `offers.id`)";
+    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule3 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'parcent'  REAL  )";
     private SQLiteDatabase db;
 
     // Context of the application using the database.
@@ -46,12 +46,12 @@ public class Rule3DbAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(int offer_id,double parcent,int id){
+    public int insertEntry(int id,double parcent){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Rule3_Offer_id,offer_id);
-        val.put(Rule3_COLUMN_Parcent,parcent);
         val.put(Rule3_COLUMN_ID,id);
+
+        val.put(Rule3_COLUMN_Parcent,parcent);
 
 
 
@@ -67,12 +67,11 @@ public class Rule3DbAdapter {
     }
 
 
-    public double getParcentForRule3() {
+    public double getParcentForRule3(int rule_id) {
         OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
         offerDBAdapter.open();
-        int id=offerDBAdapter.getAllValidOffers();
         Rule3 rule3=null;
-        Cursor cursor1 = db.rawQuery("select * from " + Rule3_TABLE_NAME+ " where id='" + id + "'" , null);
+        Cursor cursor1 = db.rawQuery("select * from " + Rule3_TABLE_NAME+ " where id='" + rule_id + "'" , null);
         cursor1.moveToFirst();
 
 
@@ -82,11 +81,8 @@ public class Rule3DbAdapter {
             return 0;
         }
         cursor1.moveToFirst();
-        rule3= new Rule3(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_Offer_id))),
-                Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))),
-                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_ID))));
+        rule3= new Rule3(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_ID))),Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))));
         cursor1.close();
-        return  rule3.getParcent();
-    }
+        return  rule3.getParcent();}
 
 }

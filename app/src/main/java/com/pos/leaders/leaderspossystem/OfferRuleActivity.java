@@ -19,7 +19,7 @@ import com.pos.leaders.leaderspossystem.Models.OfferRule;
 /**
  * Created by KARAM on 24/10/2016.
  */
-
+/**
 public class OfferRuleActivity extends Activity {
 
 	Button btAdd,btCancel;
@@ -69,3 +69,4 @@ public class OfferRuleActivity extends Activity {
 		});
 	}
 }
+**/

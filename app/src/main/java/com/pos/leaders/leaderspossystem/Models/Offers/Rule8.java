@@ -1,10 +1,10 @@
 package com.pos.leaders.leaderspossystem.Models.Offers;
 
 /**
- * Created by Win8.1 on 7/31/2017.
+ * Created by Win8.1 on 8/2/2017.
  */
 
-public class Rule7 {
+public class Rule8 {
     public int getId() {
         return id;
     }
@@ -15,12 +15,12 @@ public class Rule7 {
 
 
 
-    public double getPrice() {
-        return price;
+    public double getParcent() {
+        return Parcent;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setParcent(double price) {
+        this.Parcent = price;
     }
 
     public int getProduct_id() {
@@ -32,11 +32,11 @@ public class Rule7 {
     }
 
     private   int id;
-    private  double price;
+    private  double Parcent;
     private  int product_id;
-    public Rule7(int id, double price,  int product_id) {
-        this.id = id;
-        this.price = price;
+    public Rule8(int id, double parcent,  int product_id) {
+        this.id=id;
+        this.Parcent = parcent;
         this.product_id = product_id;
     }
 
