@@ -13,6 +13,7 @@ import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -116,7 +117,7 @@ public class OfferDBAdapter {
 
 	public List<Offer> getAllOffersByStatus(int Status) {
 		List<Offer> offerList = new ArrayList<Offer>();
-		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS + "=" + Status, null);
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS + "=" + Status+ OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by id desc", null);
 		cursor.moveToFirst();
 
 		while(!cursor.isAfterLast()){
@@ -138,13 +139,13 @@ public class OfferDBAdapter {
 				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)),
 				cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_RULEID)));
 	}
+	// "=1 and "+OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by id desc"
+
 	public Offer getAllValidOffers() {
-		int offer_id=0;
 		Offer offer =null;
-		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS +"="+ Rule.OPEN, null);
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS +"="+1, null);
 		cursor.moveToFirst();
 		if(cursor.getCount()<0){
-			offer_id=0;
 			return  offer;
 		}
 		else	if( cursor != null && cursor.moveToFirst() ){
@@ -156,7 +157,6 @@ public class OfferDBAdapter {
 					Integer.parseInt(	cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STATUS))),
 					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_BYUSER))),cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)),
 					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULEID))));
-			offer_id = offer.getId();
 			cursor.close();
 		}
 
