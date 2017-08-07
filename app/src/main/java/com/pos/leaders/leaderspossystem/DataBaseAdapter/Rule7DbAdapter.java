@@ -22,7 +22,7 @@ public class Rule7DbAdapter {
     protected static final String Rule7_COLUMN_ID = "id";
     protected static final String Rule7_COLUMN_Price = "price";
     protected static final String Rule7_Product_id = "product_id";
-    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS rule7 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'price'  REAL  ,"+" 'offer_id' INTEGER ,"+" 'product_id' INTEGER , FOREIGN KEY(`offer_id`) REFERENCES `offers.id`)";
+    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule7 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'price'  REAL  ,"+"  'product_id' INTEGER )";
     private SQLiteDatabase db;
 
     // Context of the application using the database.
