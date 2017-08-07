@@ -20,6 +20,8 @@ public class Rule3DbAdapter {
     protected static final String Rule3_TABLE_NAME = "Rule3";
     protected static final String Rule3_COLUMN_ID = "id";
     protected static final String Rule3_COLUMN_Parcent = "parcent";
+    protected static final String Rule3_COLUMN_Contain = "contain";
+
     public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule3 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'parcent'  REAL  )";
     private SQLiteDatabase db;
 
@@ -67,7 +69,7 @@ public class Rule3DbAdapter {
     }
 
 
-    public double getParcentForRule3(int rule_id) {
+    public Rule3 getParcentForRule3(int rule_id) {
         OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
         offerDBAdapter.open();
         Rule3 rule3=null;
@@ -78,11 +80,11 @@ public class Rule3DbAdapter {
         if (cursor1.getCount() < 1) // UserName Not Exist
         {
             cursor1.close();
-            return 0;
+            return rule3;
         }
         cursor1.moveToFirst();
-        rule3= new Rule3(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_ID))),Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))));
+        rule3= new Rule3(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_ID))),Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))),Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Contain))));
         cursor1.close();
-        return  rule3.getParcent();}
+        return  rule3;}
 
 }
