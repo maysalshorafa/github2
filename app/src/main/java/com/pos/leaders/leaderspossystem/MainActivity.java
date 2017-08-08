@@ -205,7 +205,9 @@ Button used_point;
     //String devicePath="/dev/ttySAC1";
     EditText custmername_EditText;
 ////offer varible
-    int containForRule3;
+    boolean SumForRule3Status=false;
+    int SumForRule3=0;
+
     Boolean availableRule3=false;
     double parcentForRule3=0.0;
     double priceFoeRule7;
@@ -1496,8 +1498,13 @@ valueOfPointDB.open();
                 
                 Rule3 rule3= rule3DbAdapter.getParcentForRule3(offer.getRuleID());
                 if(rule3.getContain()==1){
+                    SumForRule3Status=true;
                     availableRule3=true;
                     parcentForRule3 =rule3.getParcent();
+                }else if (rule3.getContain()==0){
+                    availableRule3=true;
+                    parcentForRule3 =rule3.getParcent();
+
                 }
 
 
@@ -1542,12 +1549,24 @@ availableRule11=true;
         double SaleOriginalityPrice=0;
         for (Order o : SESSION._ORDERS) {
             if(o.getProductId()==productIDForRule7){
-                saleTotalPrice += priceFoeRule7;
+                if(SumForRule3Status){
+                    saleTotalPrice += priceFoeRule7;
 
+                }
+                else {
+                    SumForRule3+= priceFoeRule7;
+
+                }
             }
           else   if(o.getProductId()==productIDForRule8){
-                saleTotalPrice += o.getItemTotalPrice() - o.getItemTotalPrice() *ParcentForRule8;
+                if(SumForRule3Status) {
+                    saleTotalPrice += o.getItemTotalPrice() - o.getItemTotalPrice() * ParcentForRule8;
 
+                }else {
+                    SumForRule3+=o.getItemTotalPrice() - o.getItemTotalPrice() * ParcentForRule8;
+                    Toast.makeText(MainActivity.this,"price"+SumForRule3,Toast.LENGTH_LONG).show();
+
+                }
             }
             else   if(o.getProductId()==productIdForRule5) {
                 stausForRule5 = true;
@@ -1560,8 +1579,16 @@ availableRule11=true;
 
 
 
-        if(availableRule3){
+        if(SumForRule3Status){
             saleTotalPrice = saleTotalPrice - (int) saleTotalPrice * parcentForRule3;
+        }else if(!SumForRule3Status){
+
+            saleTotalPrice = saleTotalPrice - (int) saleTotalPrice * parcentForRule3;
+            Toast.makeText(MainActivity.this,"salebefore"+saleTotalPrice,Toast.LENGTH_LONG).show();
+            saleTotalPrice+=SumForRule3;
+            Toast.makeText(MainActivity.this,"after"+SumForRule3,Toast.LENGTH_LONG).show();
+
+
         }
 
         else if(availableRule11){

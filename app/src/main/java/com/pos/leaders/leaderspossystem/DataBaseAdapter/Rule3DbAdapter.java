@@ -22,7 +22,7 @@ public class Rule3DbAdapter {
     protected static final String Rule3_COLUMN_Parcent = "parcent";
     protected static final String Rule3_COLUMN_Contain = "contain";
 
-    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule3 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'parcent'  REAL  )";
+    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule3 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'parcent'  REAL ,"+" 'contain'  INTEGER  )";
     private SQLiteDatabase db;
 
     // Context of the application using the database.
