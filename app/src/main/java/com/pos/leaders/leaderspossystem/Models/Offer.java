@@ -12,6 +12,9 @@ import java.util.List;
  */
 
 public class Offer {
+    public static final int Active = 1;
+    public static final int Inactive = 0;
+
 
 	//region Attribute
 	private int id;
@@ -130,7 +133,15 @@ public class Offer {
         return products;
     }
 
-    //endregion
+	public List<Group> getClubs() {
+		return clubs;
+	}
+
+	public Rule getRule() {
+		return rule;
+	}
+
+	//endregion
 
 	//region Setters
 
@@ -173,8 +184,15 @@ public class Offer {
     public void setRuleID(int ruleID) {
         this.ruleID = ruleID;
     }
-    
 
-    //endregion
+	public void setRule(Rule rule) {
+		this.rule = rule;
+	}
+
+	public void setClubs(List<Group> clubs) {
+		this.clubs = clubs;
+	}
+
+	//endregion
 
 }

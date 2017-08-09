@@ -117,7 +117,7 @@ public class OfferDBAdapter {
 
 	public List<Offer> getAllOffersByStatus(int Status) {
 		List<Offer> offerList = new ArrayList<Offer>();
-		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS + "=" + Status+ OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by id desc", null);
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS + "=" + Status+" order by id desc", null);
 		cursor.moveToFirst();
 
 		while(!cursor.isAfterLast()){
@@ -127,6 +127,18 @@ public class OfferDBAdapter {
 
 		return offerList;
 	}
+    public List<Integer> getAllOffersIDsByStatus(int Status) {
+        List<Integer> offerIDsList = new ArrayList<Integer>();
+        Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS + "=" + Status+" order by id desc", null);
+        cursor.moveToFirst();
+
+        while(!cursor.isAfterLast()){
+            offerIDsList.add(Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))));
+            cursor.moveToNext();
+        }
+
+        return offerIDsList;
+    }
 
 	public Offer createOfferObject(Cursor cursor) {
 		return new Offer(Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))),

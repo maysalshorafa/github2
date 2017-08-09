@@ -99,6 +99,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import POSAPI.POSInterfaceAPI;
 import POSAPI.POSUSBAPI;
@@ -164,7 +165,8 @@ public class MainActivity extends AppCompatActivity{
 
     String cInformation;
     double parcent;
-    List<Offer> offersList;
+    static List<Offer> offersList;
+    static List<Integer> offersIDsList;
     int _custmer_id;
     ProductCatalogGridViewAdapter productCatalogGridViewAdapter;
     CustmerCatalogGridViewAdapter custmerCatalogGridViewAdapter;
@@ -294,7 +296,7 @@ Button used_point;
         productDBAdapter.open();
         departmentDBAdapter.open();
         groupDbAdapter.open();
-valueOfPointDB.open();
+        valueOfPointDB.open();
 
         offerDBAdapter = new OfferDBAdapter(this);
         productOfferDBAdapter = new ProductOfferDBAdapter(this);
@@ -319,13 +321,7 @@ valueOfPointDB.open();
 
             @Override
             protected Void doInBackground(Void... params) {
-              /*  offersList=offerDBAdapter.getAllOffers();
-                for(int i=0;i<offersList.size();i++){
-
-                    //vheck it
-                    //List<Product> lp=productOfferDBAdapter.getAllProductOffer(offersList.get(i));
-                    //offersList.get(i).setProducts(lp);
-                }*/
+                offersIDsList = offerDBAdapter.getAllOffersIDsByStatus(Offer.Active);
                 return null;
             }
         }.execute();
@@ -1570,8 +1566,23 @@ valueOfPointDB.open();
         rule8DbAdapter.close();
         rule11DbAdapter.close();
         offerDBAdapter.close();}
+
+
+    protected void scanOffers() throws Exception {
+        for (Order o : SESSION._ORDERS){
+            if(o.getProduct().getOffersIDs()!=null){
+                offersList.get(o.getProduct().getOffersIDs().get(0)).getRule().execute(SESSION._ORDERS,offersList.get(0));
+            }
+        }
+    }
+
+
     protected void calculateTotalPrice() {
         Toast.makeText(MainActivity.this, "with out offer", Toast.LENGTH_LONG).show();
+
+        scanOffers();
+
+
 
         if(club_id==0){
             saleTotalPrice = 0;
@@ -1584,7 +1595,7 @@ valueOfPointDB.open();
             totalSaved =(SaleOriginalityPrice-saleTotalPrice);
             tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
             tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
-        SESSION._SALE.setTotalPrice(saleTotalPrice);
+            SESSION._SALE.setTotalPrice(saleTotalPrice);
 
         }
         else {
@@ -1596,7 +1607,6 @@ valueOfPointDB.open();
             }
             totalSaved =(SaleOriginalityPrice-saleTotalPrice);
             tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
-
             tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
             if(type==1){
                 saleTotalPrice=saleTotalPrice-(int)saleTotalPrice*parcent;
@@ -1607,8 +1617,6 @@ valueOfPointDB.open();
             else if(type==2) {
 
                 tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
-
-
                 //  point=  ( (int)(sale/amount)*point);
 
                 SESSION._SALE.setTotalPrice(saleTotalPrice);
@@ -1627,6 +1635,11 @@ valueOfPointDB.open();
     }
 
     private void addToCart(Product p) {
+        if(p.getOffersIDs()==null){
+            ProductOfferDBAdapter productOfferDBAdapter = new ProductOfferDBAdapter(this);
+            productOfferDBAdapter.open();
+            p.setOffersIDs(productOfferDBAdapter.getProductOffers(p.getId(),offersIDsList));
+        }
         SESSION._ORDERS.add(new Order(1, 0, p, p.getPrice(), p.getPrice(), 0));
         removeOrderItemSelection();
         refreshCart();
@@ -1659,7 +1672,7 @@ valueOfPointDB.open();
         else{ calculateTotalPrice();}
     }
 
- /**   private boolean getOffers(){
+    /**   private boolean getOffers(){
         for (Offer o : offersList) {//offer list
             if (o.getRuleId() == 0) {//offer type x on price y
                 for (Order or : SESSION._ORDERS) {//loop into all product at cart

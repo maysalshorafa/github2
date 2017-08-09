@@ -12,7 +12,11 @@ import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by KARAM on 23/10/2016.
@@ -104,6 +108,49 @@ public class ProductOfferDBAdapter {
 
 		return products;
 	}
+
+	public ArrayList<Integer> getAllProductsIDs(Offer offerId){
+		ArrayList<Integer> ints = null;
+		Cursor cursor = db.rawQuery("select * from " + PRODUCTOFFER_TABLE_NAME + " where " + PRODUCTOFFER_COLUMN_OFFERID + "='" + offerId + "'", null);
+		if (cursor.getCount() < 1) // Not Exist
+		{
+			cursor.close();
+			return ints;
+		}
+		ints = new ArrayList<Integer>();
+		cursor.moveToFirst();
+
+		while (!cursor.isAfterLast()) {
+			ints.add(Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTOFFER_COLUMN_PRODUCTID))));
+			cursor.moveToNext();
+		}
+		cursor.close();
+
+		return ints;
+	}
+
+	public List<Integer> getProductOffers(int productID,List<Integer> offersID){
+        String whereCommand = "";
+        List<Integer> offersIDs = new ArrayList<>();
+        for(int i=0; i<offersID.size()-1;i++){
+            whereCommand += " ( `" + PRODUCTOFFER_COLUMN_PRODUCTID + "` = " + productID + " and `" + PRODUCTOFFER_COLUMN_OFFERID + "` = " + offersID.get(i) + " ) or";
+        }
+        whereCommand += " ( `" + PRODUCTOFFER_COLUMN_PRODUCTID + "` = " + productID + " and `" + PRODUCTOFFER_COLUMN_OFFERID + "` = " + offersID.get(offersID.size()-1) + " )";
+        Cursor cursor = db.rawQuery("select * from " + PRODUCTOFFER_TABLE_NAME + " where " +whereCommand, null);
+        if (cursor.getCount() < 1){
+            cursor.close();
+            return null;
+        }
+
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            offersIDs.add(cursor.getInt(cursor.getColumnIndex(PRODUCTOFFER_COLUMN_OFFERID)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return offersIDs;
+    }
 
     public Boolean checkProductIntoOffers(int productID,int offerID) {
         Cursor cursor = db.rawQuery("select * from " + PRODUCTOFFER_TABLE_NAME + " where " + PRODUCTOFFER_COLUMN_OFFERID + "='" + offerID + "' and "+PRODUCTOFFER_COLUMN_PRODUCTID+" = '"+productID+"'", null);

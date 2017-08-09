@@ -4,7 +4,9 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -26,6 +28,7 @@ public class Product {
     private int byUser;
     private int with_pos;
     private int with_point_system;
+    private List<Integer> offersIDs=new ArrayList<Integer>();
 
     public Product(int i, String string) {
 
@@ -155,6 +158,12 @@ public class Product {
         return byUser;
     }
 
+    public List<Integer> getOffersIDs() {
+        if(offersIDs.size()==0)
+            return null;
+        return offersIDs;
+    }
+
     //endregion
 
 	//region Setters
@@ -191,7 +200,11 @@ public class Product {
 		this.withTax = withTax;
 	}
 
-	//endregion
+    public void setOffersIDs(List<Integer> offersIDs) {
+        this.offersIDs = offersIDs;
+    }
+
+    //endregion
 
     @Override
     public String toString() {
