@@ -886,31 +886,34 @@ valueOfPointDB.open();
         used_point.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(MainActivity.this,"sale id"+SESSION._SALE.getId(),Toast.LENGTH_LONG).show();
 
-                double unusedPointMoney;
+                double unusedPointMoney=0.0;
                 int newPoint;
                 ValueOfPoint valueOfPoint=valueOfPointDB.getValue();
                 int value= valueOfPoint.getValue();
                 int unUsedPointForCustmer=usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
                 int a=Ppoint-unUsedPointForCustmer;
                 int newPrice=a*value;
-                Toast.makeText(MainActivity.this,"with point"+newPrice,Toast.LENGTH_LONG).show();
 
                 if(saleTotalPrice==newPrice){
 
                     saleTotalPrice=saleTotalPrice-newPrice;
+                    information.setText((int) unusedPointMoney);
 
-usedpointDbAdapter.insertEntry(SESSION._SALE.getId(),a,SESSION._SALE.getCustmer_id());
+usedpointDbAdapter.insertEntry(SESSION._SALE.getId(),a,_custmer_id);
                     Toast.makeText(MainActivity.this,"with point"+saleTotalPrice,Toast.LENGTH_LONG).show();
                     tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
                 }
                 if(saleTotalPrice<newPrice){
 
  unusedPointMoney=newPrice-saleTotalPrice;
+                    information.setText((int) unusedPointMoney);
+
                     Toast.makeText(MainActivity.this,"uou have money more than sale totale price"+unusedPointMoney,Toast.LENGTH_LONG).show();
 
                      newPoint= (int) (unusedPointMoney/value);
-                    usedpointDbAdapter.insertEntry(SESSION._SALE.getId(),newPoint,SESSION._SALE.getCustmer_id());
+                    usedpointDbAdapter.insertEntry(SESSION._SALE.getId(),newPoint,_custmer_id);
 
                     Toast.makeText(MainActivity.this,"with point"+newPoint,Toast.LENGTH_LONG).show();
                     tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
@@ -918,8 +921,9 @@ usedpointDbAdapter.insertEntry(SESSION._SALE.getId(),a,SESSION._SALE.getCustmer_
                 if(saleTotalPrice>newPrice){
 saleTotalPrice=saleTotalPrice-newPrice;
                     unusedPointMoney=newPrice-saleTotalPrice;
-                    Toast.makeText(MainActivity.this,"uou have money more than sale totale price"+unusedPointMoney,Toast.LENGTH_LONG).show();
+                    information.setText((int) unusedPointMoney);
 
+                    Toast.makeText(MainActivity.this,"uou have money more than sale totale price"+unusedPointMoney,Toast.LENGTH_LONG).show();
                     newPoint= (int) (unusedPointMoney/value);
                     usedpointDbAdapter.insertEntry(SESSION._SALE.getId(),newPoint,SESSION._SALE.getCustmer_id());
 
@@ -1215,7 +1219,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
         //check starting day report A
     }
-
+/**
     @Override
     protected void onResume() {
         super.onResume();
@@ -1328,7 +1332,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
         });
         discountDialog.show();
     }
-
+**/
 
     //region fragment Touch Pad
 

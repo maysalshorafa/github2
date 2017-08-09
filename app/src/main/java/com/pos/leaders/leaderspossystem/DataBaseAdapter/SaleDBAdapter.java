@@ -199,13 +199,26 @@ public class SaleDBAdapter {
     }
 
 	private Sale makeSale(Cursor cursor){
-		return new Sale(Integer.parseInt(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_ID))),
-				Integer.parseInt(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_BYUSER))),
-				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_SALEDATE))),
-				cursor.getInt(cursor.getColumnIndex(SALES_COLUMN_REPLACEMENTNOTE)),
-				Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CANCELED))),
-				cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPRICE)),
-				cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPAID)),
-				Integer.parseInt(cursor.getString(cursor.getColumnIndex(SALES_COLUMN__custmer_id))),cursor.getString(cursor.getColumnIndex(SALES_COLUMN__custmer_name)));
+		try {
+			return new Sale(Integer.parseInt(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_ID))),
+					Integer.parseInt(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_BYUSER))),
+					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_SALEDATE))),
+					cursor.getInt(cursor.getColumnIndex(SALES_COLUMN_REPLACEMENTNOTE)),
+					Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CANCELED))),
+					cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPRICE)),
+					cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPAID)),
+					Integer.parseInt(cursor.getString(cursor.getColumnIndex(SALES_COLUMN__custmer_id))),cursor.getString(cursor.getColumnIndex(SALES_COLUMN__custmer_name)));
+		}
+		catch (Exception ex){
+			return new Sale(Integer.parseInt(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_ID))),
+					Integer.parseInt(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_BYUSER))),
+					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_SALEDATE))),
+					cursor.getInt(cursor.getColumnIndex(SALES_COLUMN_REPLACEMENTNOTE)),
+					Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CANCELED))),
+					cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPRICE)),
+					cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPAID)),
+					0,"");
+		}
+
 	}
 }

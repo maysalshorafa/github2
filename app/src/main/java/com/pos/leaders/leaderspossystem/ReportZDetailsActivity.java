@@ -67,7 +67,7 @@ public class ReportZDetailsActivity extends Activity {
         });
     }
     private void goHome(){
-        Intent intent = new Intent(ReportZDetailsActivity.this, MainActivity.class);
+        Intent intent = new Intent(ReportZDetailsActivity.this, DashBoard.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, LogInActivity.LEADPOS_MAKE_A_REPORT);
         startActivity(intent);

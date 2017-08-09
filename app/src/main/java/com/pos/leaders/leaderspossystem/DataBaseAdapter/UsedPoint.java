@@ -32,7 +32,7 @@ public class UsedPoint {
 
     public int getUnusedPointInfo(int _custmer_id) {
 
-        Cursor cur = db.rawQuery("SELECT * from " +  UsedPoint_TabelName + "  where custmer_id='" + _custmer_id + "'", null);
+        Cursor cur = db.rawQuery("SELECT SUM(unUsedpoint_amount) from " +  UsedPoint_TabelName + "  where custmer_id='" + _custmer_id + "'", null);
 
         if (cur.moveToFirst()) {
             return cur.getInt(0);

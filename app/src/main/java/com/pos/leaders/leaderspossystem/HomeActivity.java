@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -91,6 +92,7 @@ public class HomeActivity extends Activity {
 				User u = userDBAdapter.logIn(etUserName.getText().toString(), etPassword.getText().toString());
 				if (u != null) {
 					SESSION._USER = new User(u);
+					Log.i("HomeActivity", u.toString());
 					Toast.makeText(getApplicationContext(), "Hello " + u.getFullName() + " !!", Toast.LENGTH_SHORT).show();
 					Intent intent = new Intent(getApplicationContext(), DashBoard.class);
 
