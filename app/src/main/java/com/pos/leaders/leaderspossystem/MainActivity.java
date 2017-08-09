@@ -891,9 +891,8 @@ valueOfPointDB.open();
                 int newPoint;
                 ValueOfPoint valueOfPoint=valueOfPointDB.getValue();
                 int value= valueOfPoint.getValue();
-                int unUsedPointForCustmer=usedpointDbAdapter.getUnusedPointInfo(SESSION._SALE.getCustmer_id());
+                int unUsedPointForCustmer=usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
                 int a=Ppoint-unUsedPointForCustmer;
-                information.setText(a);
                 int newPrice=a*value;
                 Toast.makeText(MainActivity.this,"with point"+newPrice,Toast.LENGTH_LONG).show();
 
@@ -1475,12 +1474,12 @@ saleTotalPrice=saleTotalPrice-newPrice;
        // Offer offer=offerDBAdapter.getAllValidOffers();
 
         List<Offer>offerList=offerDBAdapter.getAllOffersByStatus(1);
-
-        if(offerList!=null){
+  if(offerList!=null){
 
             calculateTotalPriceWithOffers(offerList);
         }
         else{ calculateTotalPrice();}
+
     }
 
     public void resumeSale(Sale s){
