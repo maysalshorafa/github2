@@ -209,6 +209,16 @@ Button used_point;
 ////offer varible
     boolean SumForRule3Status=false;
     int SumForRule3=0;
+    boolean clubStatusForRule3=false;
+    boolean clubStatusForRule7=false;
+    boolean clubStatusForRule8=false;
+    boolean clubStatusForRule11=false;
+
+    int SumClubForRule3=0;
+    int SumClubForRule7=0;
+    int SumClubForRule8=0;
+    int SumClubForRule11=0;
+
     boolean SumForRule11Status=false;
     int SumForRule11=0;
 
@@ -1555,6 +1565,10 @@ saleTotalPrice=saleTotalPrice-newPrice;
             Offer offer=offers.get(i);
             Toast.makeText(MainActivity.this, "offer name"+offer.getRuleName(), Toast.LENGTH_LONG).show();
 
+
+            ////////get rule3 information
+
+
             if (offer.getRuleName().equals(Rule.RULE3)) {
                 
                 Rule3 rule3= rule3DbAdapter.getParcentForRule3(offer.getRuleID());
@@ -1567,9 +1581,16 @@ saleTotalPrice=saleTotalPrice-newPrice;
                     parcentForRule3 =rule3.getParcent();
 
                 }
+                if(rule3.getClub_contain()==1){
+                    Toast.makeText(MainActivity.this,"club",Toast.LENGTH_LONG).show();
+                    clubStatusForRule3=true;
+                }
+                else {
+                    clubStatusForRule3=false;
+                }
 
 
-
+///get Rule7 information
             }
             else if (offer.getRuleName().equals(Rule.RULE7)) {
 
@@ -1578,7 +1599,12 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 Rule7 rule7 = rule7DbAdapter.getPriceForRule7(offer.getRuleID());
 priceFoeRule7=rule7.getPrice();
                 productIDForRule7=rule7.getProduct_id();
-            }
+
+       if(rule7.getContain_club()==1){
+           clubStatusForRule7=true;
+       }    else {clubStatusForRule7=false;}}
+
+            /////Get Rule11 information
 
             else if (offer.getRuleName().equals(Rule.RULE11)) {
                 Rule11 rule11 = rule11DbAdapter.getAmountForRule11(offer.getRuleID());
@@ -1593,14 +1619,28 @@ priceFoeRule7=rule7.getPrice();
                     amountForRule11=rule11.getAmount();
                     DiscountamountForRule11=rule11.getDiscountAmount();
                 }
+                if(rule11.getClub_contain()==1){
+                    clubStatusForRule11=true;
+                }
+                else {
+                    clubStatusForRule11=false;
+                }
 
             }
+            ///Get Rule8 information
             else if (offer.getRuleName().equals(Rule.RULE8)) {
                 ProductOfferDBAdapter offersProducts = new ProductOfferDBAdapter(this);
                 offersProducts.open();
                 Rule8 rule8 = rule8DbAdapter.getParcentForRule8(offer.getRuleID());
                 ParcentForRule8=rule8.getParcent();
-            productIDForRule8=rule8.getProduct_id();}
+            productIDForRule8=rule8.getProduct_id();
+
+            if(rule8.getContain_club()==1){
+                clubStatusForRule8=true;
+            }else {clubStatusForRule8=false;
+            }
+            }
+            //////Get Rule5 information
             else if (offer.getRuleName().equals(Rule.RULE5)) {
                 ProductOfferDBAdapter offersProducts = new ProductOfferDBAdapter(this);
                 offersProducts.open();
@@ -1613,34 +1653,38 @@ priceFoeRule7=rule7.getPrice();
             }
         }
 
+///end of offer list
+////start order calculation and excecute offer
+
+
         saleTotalPrice = 0;
         double SaleOriginalityPrice=0;
-        Toast.makeText(MainActivity.this, "sale"+saleTotalPrice, Toast.LENGTH_LONG).show();
 
         for (Order o : SESSION._ORDERS) {
             if(o.getProductId()==productIDForRule7){
-                if(SumForRule3Status||SumForRule11Status){
+                if(SumForRule3Status||SumForRule11Status||clubStatusForRule7){
                     saleTotalPrice += priceFoeRule7;
 
                 }
                 else {
                     SumForRule3+= priceFoeRule7;
                     SumForRule11+= priceFoeRule7;
-                    Toast.makeText(MainActivity.this, "Sum with rule 7"+SumForRule11, Toast.LENGTH_LONG).show();
+                    SumClubForRule7+=priceFoeRule7;
 
 
                 }
 
 
+
             }
           else   if(o.getProductId()==productIDForRule8){
-                if(SumForRule3Status||SumForRule11Status) {
+                if(SumForRule3Status||SumForRule11Status||clubStatusForRule8) {
                     saleTotalPrice += o.getItemTotalPrice() - o.getItemTotalPrice() * ParcentForRule8;
 
                 }else {
                     SumForRule3+=o.getItemTotalPrice() - o.getItemTotalPrice() * ParcentForRule8;
                     SumForRule11+=o.getItemTotalPrice() - o.getItemTotalPrice() * ParcentForRule8;
-
+SumClubForRule8+=o.getItemTotalPrice() - o.getItemTotalPrice() * ParcentForRule8;
                 }
 
             }
@@ -1665,11 +1709,12 @@ priceFoeRule7=rule7.getPrice();
 
 
         }
+
         if(SumForRule11Status){
             offerAmount = ((int) (saleTotalPrice / amountForRule11) * DiscountamountForRule11);
 
             saleTotalPrice = saleTotalPrice - offerAmount;        }
-        else if(!SumForRule3Status){
+        else if(!SumForRule11Status){
 
             offerAmount = ((int) (saleTotalPrice / amountForRule11) * DiscountamountForRule11);
 
@@ -1678,6 +1723,20 @@ priceFoeRule7=rule7.getPrice();
 
 
         }
+        if(clubStatusForRule7||clubStatusForRule8||clubStatusForRule3||clubStatusForRule11){
+            if(type==1){
+                Toast.makeText(MainActivity.this,"club parcent"+parcent,Toast.LENGTH_LONG).show();;
+                saleTotalPrice=saleTotalPrice-(int)saleTotalPrice*parcent;
+                Toast.makeText(MainActivity.this,"sale"+saleTotalPrice,Toast.LENGTH_LONG).show();;
+
+            }
+
+        }  else if(!clubStatusForRule7||!clubStatusForRule8){
+            saleTotalPrice=saleTotalPrice-(int)saleTotalPrice*parcent;
+saleTotalPrice+=SumClubForRule7+SumClubForRule8;
+        }
+
+
 
 
 
@@ -2319,5 +2378,5 @@ sum_pointDbAdapter.close();
         });
 
 
-    groupDbAdapter.close();}
+    }
 }

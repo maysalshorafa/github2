@@ -29,15 +29,26 @@ public class Rule11 {
         this.discountAmount = discountAmount;
     }
 
-    public Rule11( int amount, int discountAmount,int contain) {
+    public Rule11( int amount, int discountAmount,int contain,int club_contain) {
         this.amount = amount;
         this.discountAmount = discountAmount;
         this.contain=contain;
+        this.club_contain=club_contain;
     }
 
     private   int id ;
     private   int amount;
     private  int discountAmount;
+
+    public int getClub_contain() {
+        return club_contain;
+    }
+
+    public void setClub_contain(int club_contain) {
+        this.club_contain = club_contain;
+    }
+
+    private  int club_contain;
 
     public int getContain() {
         return contain;

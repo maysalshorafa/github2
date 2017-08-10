@@ -22,7 +22,10 @@ public class Rule7DbAdapter {
     protected static final String Rule7_COLUMN_ID = "id";
     protected static final String Rule7_COLUMN_Price = "price";
     protected static final String Rule7_Product_id = "product_id";
-    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule7 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'price'  REAL  ,"+"  'product_id' INTEGER )";
+    protected static final String Rule7_Product_Contain_club = "contain_club";
+
+
+    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule7 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'price'  REAL  ,"+"  'product_id' INTEGER"+"  'contain_club' INTEGER  )";
     private SQLiteDatabase db;
 
     // Context of the application using the database.
@@ -48,13 +51,14 @@ public class Rule7DbAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(int id, double price,  int product_id){
+    public int insertEntry(int id, double price,  int product_id,int contain_club){
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Rule7_COLUMN_ID,id);
         val.put(Rule7_COLUMN_Price,price);
 
         val.put(Rule7_Product_id,product_id);
+        val.put(Rule7_Product_Contain_club,contain_club);
 
         try {
 
@@ -80,7 +84,7 @@ public class Rule7DbAdapter {
         cursor1.moveToFirst();
         rule7= new Rule7(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule7_COLUMN_ID))),
                 Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule7_COLUMN_Price))),
-                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule7_Product_id))));
+                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule7_Product_id))), Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule7_Product_Contain_club))));
         cursor1.close();
         return  rule7;
     }

@@ -8,6 +8,15 @@ public class Rule3 {
     private   int id ;
     private   double parcent;
 
+    public int getClub_contain() {
+        return club_contain;
+    }
+
+    public void setClub_contain(int club_contain) {
+        this.club_contain = club_contain;
+    }
+
+    int club_contain;
     public int getContain() {
         return contain;
     }
@@ -37,10 +46,11 @@ public class Rule3 {
     }
 
 
-    public Rule3(int id,double parcent,int contain) {
+    public Rule3(int id,double parcent,int contain,int club_contain) {
         this.id=id;
         this.parcent=parcent;
         this.contain=contain;
+        this.club_contain=club_contain;
     }
 
 

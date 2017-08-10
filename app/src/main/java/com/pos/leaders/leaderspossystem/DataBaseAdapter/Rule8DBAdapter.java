@@ -20,7 +20,9 @@ public class Rule8DBAdapter {
     protected static final String Rule8_COLUMN_ID = "id";
     protected static final String Rule8_COLUMN_Parcent = "parcent";
     protected static final String Rule8_Product_id = "product_id";
-    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule8 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'parcent'  REAL  ,"+" 'offer_id' INTEGER ,"+" 'product_id' INTEGER , FOREIGN KEY(`offer_id`) REFERENCES `offers.id`)";
+    protected static final String Rule8_Contain_club = "contain_club";
+
+    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule8 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'parcent'  REAL  ,"+" 'offer_id' INTEGER ,"+" 'product_id' INTEGER ,"+" 'contain_club' INTEGER  , FOREIGN KEY(`offer_id`) REFERENCES `offers.id`)";
     private SQLiteDatabase db;
 
     // Context of the application using the database.
@@ -46,13 +48,14 @@ public class Rule8DBAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(int id, double parcent,  int product_id){
+    public int insertEntry(int id, double parcent,  int product_id,int contain_club){
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Rule8_COLUMN_ID,id);
         val.put(Rule8_COLUMN_Parcent,parcent);
 
         val.put(Rule8_Product_id,product_id);
+        val.put(Rule8_Contain_club,contain_club);
 
         try {
 
@@ -78,7 +81,7 @@ public class Rule8DBAdapter {
         cursor1.moveToFirst();
         rule8= new Rule8(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule8_COLUMN_ID))),
                 Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule8_COLUMN_Parcent))),
-                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule8_Product_id))));
+                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule8_Product_id))), Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule8_Contain_club))));
         cursor1.close();
         return  rule8;
     }
