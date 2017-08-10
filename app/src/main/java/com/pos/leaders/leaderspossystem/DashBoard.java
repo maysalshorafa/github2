@@ -140,7 +140,7 @@ public class DashBoard extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
+        }
 
 
   /**  public void alertdialoge() {
@@ -182,6 +182,7 @@ public class DashBoard extends AppCompatActivity {
 
                 } else {
                     i = new Intent(getApplicationContext(), MainActivity.class);
+                    i.putExtra("permissions_name",permissions_name);
                     startActivity(i);
  /**
   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -354,6 +355,7 @@ public class DashBoard extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String str = extras.getString(LogInActivity.LEADPOS_MAKE_A_REPORT);
@@ -390,7 +392,6 @@ public class DashBoard extends AppCompatActivity {
 
         try {
             aReport = aReportDBAdapter.getLastRow();
-            Toast.makeText(DashBoard.this, "1", Toast.LENGTH_LONG).show();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -402,24 +403,20 @@ public class DashBoard extends AppCompatActivity {
         if (aReport != null && zReport != null) {
             _aReport.setByUserID(SESSION._USER.getId());
             _aReport.setCreationDate(new Date().getTime());
-            Toast.makeText(DashBoard.this, "mays exsist", Toast.LENGTH_LONG).show();
 
 
             if (aReport.getLastZReportID() == (int) zReport.getId()) {
                 //its have a report
-                Toast.makeText(DashBoard.this, "mays 2", Toast.LENGTH_LONG).show();
 
             } else {
                 _aReport.setLastZReportID((int) zReport.getId());
                 _aReport.setLastSaleID((int)zReport.getEndSaleId());
-                Toast.makeText(DashBoard.this, "mays 3", Toast.LENGTH_LONG).show();
 
                 ShowAReportDialog(_aReport);
             }
         } else {
             _aReport.setLastZReportID(-1);
             _aReport.setLastSaleID(-1);
-            Toast.makeText(DashBoard.this, "mays not exsist", Toast.LENGTH_LONG).show();
 
             ShowAReportDialog(_aReport);
         }

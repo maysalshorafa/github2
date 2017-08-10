@@ -29,16 +29,25 @@ public class Rule11 {
         this.discountAmount = discountAmount;
     }
 
-    public Rule11( int amount, int discountAmount) {
+    public Rule11( int amount, int discountAmount,int contain) {
         this.amount = amount;
         this.discountAmount = discountAmount;
+        this.contain=contain;
     }
 
     private   int id ;
     private   int amount;
     private  int discountAmount;
 
+    public int getContain() {
+        return contain;
+    }
 
+    public void setContain(int contain) {
+        this.contain = contain;
+    }
+
+    private  int contain;
 
 
 

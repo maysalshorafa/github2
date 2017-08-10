@@ -25,6 +25,7 @@ public class ReportZDetailsActivity extends Activity {
     POSSDK pos;
     Bitmap p;
     PrintTools pt;
+    String str;
     long from=0,to=0,id=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +68,25 @@ public class ReportZDetailsActivity extends Activity {
         });
     }
     private void goHome(){
-        Intent intent = new Intent(ReportZDetailsActivity.this, DashBoard.class);
+        Intent intent = new Intent(ReportZDetailsActivity.this, LogInActivity.class);
+        intent.putExtra("permissions_name",str);
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, LogInActivity.LEADPOS_MAKE_A_REPORT);
         startActivity(intent);
         finish();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            str = extras.getString("permissions_name");
+
+
+        }
+
     }
 
     @Override
