@@ -114,10 +114,14 @@ public class OfferDBAdapter {
 		}
 		return offerList;
 	}
-
+//+ OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by id desc"
 	public List<Offer> getAllOffersByStatus(int Status) {
 		List<Offer> offerList = new ArrayList<Offer>();
+<<<<<<< HEAD
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS + "=" + Status+" order by id desc", null);
+=======
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS + "=" + Status, null);
+>>>>>>> master
 		cursor.moveToFirst();
 
 		while(!cursor.isAfterLast()){
