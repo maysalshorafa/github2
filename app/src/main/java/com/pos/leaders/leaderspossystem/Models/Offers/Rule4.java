@@ -1,5 +1,10 @@
 package com.pos.leaders.leaderspossystem.Models.Offers;
 
+import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Models.Order;
+
+import java.util.List;
+
 /**
  * Created by KARAM on 01/08/2017.
  */
@@ -39,5 +44,15 @@ public class Rule4 extends Rule {
 
     public void setDiscountPrice(double discountPrice) {
         this.discountPrice = discountPrice;
+    }
+
+    @Override
+    public void execute(List<Order> orders, Offer offer) throws Exception {
+
+    }
+
+    @Override
+    public boolean precondition(List<Order> orders) {
+        return false;
     }
 }

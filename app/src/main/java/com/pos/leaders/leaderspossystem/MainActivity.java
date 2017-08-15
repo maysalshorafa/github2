@@ -171,15 +171,15 @@ public class MainActivity extends AppCompatActivity{
 
     String cInformation;
     double parcent;
-<<<<<<< HEAD
-    static List<Offer> offersList;
+
+
     static List<Integer> offersIDsList;
-=======
+
     boolean equleUsedPoint=false;
     boolean biggerUsedPoint=false;
     boolean lessUsedPoint=false;
     List<Offer> offersList;
->>>>>>> master
+
     int _custmer_id;
     ProductCatalogGridViewAdapter productCatalogGridViewAdapter;
     CustmerCatalogGridViewAdapter custmerCatalogGridViewAdapter;
@@ -1838,7 +1838,6 @@ priceFoeRule7=rule7.getPrice();
         offerDBAdapter.close();}
 
 
-<<<<<<< HEAD
     protected void scanOffers() throws Exception {
         for (Order o : SESSION._ORDERS){
             if(o.getProduct().getOffersIDs()!=null){
@@ -1846,14 +1845,11 @@ priceFoeRule7=rule7.getPrice();
             }
         }
     }
-=======
-
->>>>>>> master
 
 
     protected void calculateTotalPrice() {
 
-        scanOffers();
+        //scanOffers();
 
 
 
@@ -1880,13 +1876,7 @@ priceFoeRule7=rule7.getPrice();
                 saleTotalPrice += o.getItemTotalPrice();
                 SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
             }
-<<<<<<< HEAD
-            totalSaved =(SaleOriginalityPrice-saleTotalPrice);
-            tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
-            tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
-=======
 
->>>>>>> master
             if(type==1){
 
                 saleTotalPrice=saleTotalPrice-(int)saleTotalPrice*parcent;
@@ -1902,12 +1892,10 @@ priceFoeRule7=rule7.getPrice();
             else if(type==2) {
 
                 tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
-<<<<<<< HEAD
-=======
+
 
                 totalSaved =(SaleOriginalityPrice-saleTotalPrice);
                 tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
->>>>>>> master
                 //  point=  ( (int)(sale/amount)*point);
 
                 SESSION._SALE.setTotalPrice(saleTotalPrice);

@@ -1,5 +1,10 @@
 package com.pos.leaders.leaderspossystem.Models.Offers;
 
+import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Models.Order;
+
+import java.util.List;
+
 /**
  * Created by Win8.1 on 8/3/2017.
  */
@@ -57,4 +62,13 @@ this.gift_id=gift_id;
     }
 
 
+    @Override
+    public void execute(List<Order> orders, Offer offer) throws Exception {
+
+    }
+
+    @Override
+    public boolean precondition(List<Order> orders) {
+        return false;
+    }
 }
