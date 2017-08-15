@@ -20,7 +20,7 @@ import java.util.List;
 
 public class DepartmentDBAdapter {
     // Table Name
-    protected static final String DEPARTMENTS_TABLE_NAME = "departments";
+    public static final String DEPARTMENTS_TABLE_NAME = "departments";
     // Column Names
     protected static final String DEPARTMENTS_COLUMN_ID = "id";
     protected static final String DEPARTMENTS_COLUMN_NAME = "name";

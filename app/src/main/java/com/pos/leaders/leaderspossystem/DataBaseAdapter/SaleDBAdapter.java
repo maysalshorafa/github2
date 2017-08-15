@@ -35,7 +35,7 @@ public class SaleDBAdapter {
 
 
 	public static final String DATABASE_CREATE = "CREATE TABLE sales ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byUser` INTEGER, `saleDate` TEXT DEFAULT current_timestamp, " +
-			"`replacementNote` INTEGER DEFAULT 0, `canceled` INTEGER DEFAULT 0, totalPrice REAL, totalPaid REAL, custmer_id  INTEGER DEFAULT 0 ,custmer_name  TEXT " +
+			"`replacementNote` INTEGER DEFAULT 0, `canceled` INTEGER DEFAULT 0, totalPrice REAL, totalPaid REAL, custmer_id  INTEGER DEFAULT 0 ,custmer_name  TEXT, " +
 			"FOREIGN KEY(`byUser`) REFERENCES `users.id`)";
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
