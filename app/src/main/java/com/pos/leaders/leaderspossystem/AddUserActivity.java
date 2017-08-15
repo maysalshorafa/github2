@@ -175,7 +175,7 @@ public class AddUserActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				//// TODO: 22/10/2016 cancel and return to previous activity
-				Intent intent = new Intent(AddUserActivity.this, HomeActivity.class);
+				Intent intent = new Intent(AddUserActivity.this, DashBoard.class);
 			//	intent.putExtra("permissions_name",user.getPermtionName());
 
 				//userDBAdapter.close();

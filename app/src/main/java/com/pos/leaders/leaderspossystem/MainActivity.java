@@ -161,7 +161,8 @@ public class MainActivity extends AppCompatActivity{
     Sum_PointDbAdapter sum_pointDbAdapter;
     UsedPoint usedpointDbAdapter;
     ValueOfPointDB valueOfPointDB;
-
+    int newPoint=0;
+    int aPoint=0;
     int amount;
     int type;
     int point ;
@@ -169,6 +170,9 @@ public class MainActivity extends AppCompatActivity{
 
     String cInformation;
     double parcent;
+    boolean equleUsedPoint=false;
+    boolean biggerUsedPoint=false;
+    boolean lessUsedPoint=false;
     List<Offer> offersList;
     int _custmer_id;
     ProductCatalogGridViewAdapter productCatalogGridViewAdapter;
@@ -209,10 +213,24 @@ Button used_point;
 ////offer varible
     boolean SumForRule3Status=false;
     int SumForRule3=0;
+    boolean clubStatusForRule3=false;
+    boolean clubStatusForRule7=false;
+    boolean clubStatusForRule8=false;
+    boolean clubStatusForRule11=false;
+
+    int SumClubForRule3=0;
+    int SumClubForRule7=0;
+    int SumClubForRule8=0;
+    int SumClubForRule11=0;
+double SumForClub=0.0;
+    boolean SumForRule11Status=false;
+    int SumForRule11=0;
 
     Boolean availableRule3=false;
     double parcentForRule3=0.0;
     double priceFoeRule7;
+    double priceFoeRule8;
+
     int productIDForRule7;
     Boolean availableRule11=false;
     int amountForRule11=0;
@@ -225,6 +243,7 @@ double ParcentForRule8=0.0;
     boolean stausForRule5=false;
     int Ppoint;
     double i=0.0;
+    String str;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -886,49 +905,52 @@ valueOfPointDB.open();
         used_point.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(MainActivity.this,"sale id"+SESSION._SALE.getId(),Toast.LENGTH_LONG).show();
 
-                double unusedPointMoney;
-                int newPoint;
+                double unusedPointMoney=0.0;
+
+
                 ValueOfPoint valueOfPoint=valueOfPointDB.getValue();
-                int value= valueOfPoint.getValue();
-                int unUsedPointForCustmer=usedpointDbAdapter.getUnusedPointInfo(SESSION._SALE.getCustmer_id());
-                int a=Ppoint-unUsedPointForCustmer;
-                information.setText(a);
-                int newPrice=a*value;
-                Toast.makeText(MainActivity.this,"with point"+newPrice,Toast.LENGTH_LONG).show();
+                double value= valueOfPoint.getValue();
+                /**
+                int unUsedPointForCustmer=usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
+                 aPoint=Ppoint-unUsedPointForCustmer;
+                information.setText(aPoint+" ");**/
+                double newPrice=aPoint*value;
 
                 if(saleTotalPrice==newPrice){
+                    saleTotalPrice=0.0;
+                   equleUsedPoint=true;
+                    newPoint= (int) (saleTotalPrice/value);
 
-                    saleTotalPrice=saleTotalPrice-newPrice;
-
-usedpointDbAdapter.insertEntry(SESSION._SALE.getId(),a,SESSION._SALE.getCustmer_id());
                     Toast.makeText(MainActivity.this,"with point"+saleTotalPrice,Toast.LENGTH_LONG).show();
-                    tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
+                    tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",0.0) + " " + getString(R.string.ins));
                 }
                 if(saleTotalPrice<newPrice){
-
+lessUsedPoint=true;
  unusedPointMoney=newPrice-saleTotalPrice;
+
                     Toast.makeText(MainActivity.this,"uou have money more than sale totale price"+unusedPointMoney,Toast.LENGTH_LONG).show();
 
-                     newPoint= (int) (unusedPointMoney/value);
-                    usedpointDbAdapter.insertEntry(SESSION._SALE.getId(),newPoint,SESSION._SALE.getCustmer_id());
+                     newPoint= (int) (saleTotalPrice/value);
+                 //   usedpointDbAdapter.insertEntry(SESSION._SALE.getId(),newPoint,_custmer_id);
 
                     Toast.makeText(MainActivity.this,"with point"+newPoint,Toast.LENGTH_LONG).show();
                     tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
                 }
                 if(saleTotalPrice>newPrice){
+                    biggerUsedPoint=true;
 saleTotalPrice=saleTotalPrice-newPrice;
                     unusedPointMoney=newPrice-saleTotalPrice;
+
                     Toast.makeText(MainActivity.this,"uou have money more than sale totale price"+unusedPointMoney,Toast.LENGTH_LONG).show();
+                 //   newPoint= (int) (unusedPointMoney/value);
+                 ///   usedpointDbAdapter.insertEntry(SESSION._SALE.getId(),newPoint,SESSION._SALE.getCustmer_id());
 
-                    newPoint= (int) (unusedPointMoney/value);
-                    usedpointDbAdapter.insertEntry(SESSION._SALE.getId(),newPoint,SESSION._SALE.getCustmer_id());
 
-                    Toast.makeText(MainActivity.this,"with point"+newPoint,Toast.LENGTH_LONG).show();
                     tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
                 }
-
-            }
+   }
         });
         //endregion
 
@@ -1180,6 +1202,8 @@ saleTotalPrice=saleTotalPrice-newPrice;
                         break;
                     case R.id.menuItem_Reports:
                         intent = new Intent(MainActivity.this, ReportsManagementActivity.class);
+                        intent.putExtra("permissions_name",str);
+
                         break;
                     case R.id.menuItem_Setting:
                         // TODO: 30/03/2017 Settings Activity
@@ -1216,7 +1240,19 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
         //check starting day report A
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+             str = extras.getString("permissions_name");
+
+
+        }
+
+    }
+/**
     @Override
     protected void onResume() {
         super.onResume();
@@ -1329,7 +1365,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
         });
         discountDialog.show();
     }
-
+**/
 
     //region fragment Touch Pad
 
@@ -1468,6 +1504,10 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
     public void clearCart() {
         SESSION._Rest();
+        club_name.setText("");
+        custmer_name.setText("");
+        information.setText("");
+        custmername_EditText.setText("");
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
         offerDBAdapter=new OfferDBAdapter(this);
@@ -1475,12 +1515,12 @@ saleTotalPrice=saleTotalPrice-newPrice;
        // Offer offer=offerDBAdapter.getAllValidOffers();
 
         List<Offer>offerList=offerDBAdapter.getAllOffersByStatus(1);
-
-        if(offerList!=null){
+  if(offerList!=null){
 
             calculateTotalPriceWithOffers(offerList);
         }
         else{ calculateTotalPrice();}
+
     }
 
     public void resumeSale(Sale s){
@@ -1534,6 +1574,10 @@ saleTotalPrice=saleTotalPrice-newPrice;
         for (int i = 0; i < offers.size(); i++) {
             Offer offer=offers.get(i);
 
+
+            ////////get rule3 information
+
+
             if (offer.getRuleName().equals(Rule.RULE3)) {
                 
                 Rule3 rule3= rule3DbAdapter.getParcentForRule3(offer.getRuleID());
@@ -1549,6 +1593,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
 
 
+///get Rule7 information
             }
             else if (offer.getRuleName().equals(Rule.RULE7)) {
 
@@ -1556,23 +1601,51 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 offersProducts.open();
                 Rule7 rule7 = rule7DbAdapter.getPriceForRule7(offer.getRuleID());
 priceFoeRule7=rule7.getPrice();
+
                 productIDForRule7=rule7.getProduct_id();
-            }
+
+       if(rule7.getContain_club()==1){
+           clubStatusForRule7=true;
+
+       }    else {clubStatusForRule7=false;}}
+
+            /////Get Rule11 information
 
             else if (offer.getRuleName().equals(Rule.RULE11)) {
                 Rule11 rule11 = rule11DbAdapter.getAmountForRule11(offer.getRuleID());
 
-availableRule11=true;
-                amountForRule11=rule11.getAmount();
-                DiscountamountForRule11=rule11.getDiscountAmount();
+                if(rule11.getContain()==1){
+                    SumForRule11Status=true;
+                    availableRule11=true;
+                    amountForRule11=rule11.getAmount();
+                    DiscountamountForRule11=rule11.getDiscountAmount();
+                }else if (rule11.getContain()==0){
+                    availableRule11=true;
+                    amountForRule11=rule11.getAmount();
+                    DiscountamountForRule11=rule11.getDiscountAmount();
+                }
+                if(rule11.getClub_contain()==1){
+                    clubStatusForRule11=true;
+                }
+                else {
+                    clubStatusForRule11=false;
+                }
 
             }
+            ///Get Rule8 information
             else if (offer.getRuleName().equals(Rule.RULE8)) {
                 ProductOfferDBAdapter offersProducts = new ProductOfferDBAdapter(this);
                 offersProducts.open();
                 Rule8 rule8 = rule8DbAdapter.getParcentForRule8(offer.getRuleID());
                 ParcentForRule8=rule8.getParcent();
-            productIDForRule8=rule8.getProduct_id();}
+            productIDForRule8=rule8.getProduct_id();
+
+            if(rule8.getContain_club()==1){
+                clubStatusForRule8=true;
+            }else {clubStatusForRule8=false;
+            }
+            }
+            //////Get Rule5 information
             else if (offer.getRuleName().equals(Rule.RULE5)) {
                 ProductOfferDBAdapter offersProducts = new ProductOfferDBAdapter(this);
                 offersProducts.open();
@@ -1585,83 +1658,171 @@ availableRule11=true;
             }
         }
 
+///end of offer list
+////start order calculation and excecute offer
+
+
         saleTotalPrice = 0;
+        SumForClub=0;
         double SaleOriginalityPrice=0;
+
         for (Order o : SESSION._ORDERS) {
             if(o.getProductId()==productIDForRule7){
-                if(SumForRule3Status){
-                    saleTotalPrice += priceFoeRule7;
+                if(SumForRule3Status||SumForRule11Status){
+                    saleTotalPrice += priceFoeRule7*o.getCount();
+                    SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                    totalSaved =(SaleOriginalityPrice-saleTotalPrice);
 
                 }
                 else {
                     SumForRule3+= priceFoeRule7;
+                    SumForRule11+= priceFoeRule7;
+
 
                 }
+                if(clubStatusForRule7){
+                    SumForClub+=priceFoeRule7;
+                }
+
+
+
+
             }
-          else   if(o.getProductId()==productIDForRule8){
-                if(SumForRule3Status) {
+            else   if(o.getProductId()==productIDForRule8){
+                if(SumForRule3Status||SumForRule11Status) {
                     saleTotalPrice += o.getItemTotalPrice() - o.getItemTotalPrice() * ParcentForRule8;
+                    SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                    totalSaved =(SaleOriginalityPrice-saleTotalPrice);
 
                 }else {
                     SumForRule3+=o.getItemTotalPrice() - o.getItemTotalPrice() * ParcentForRule8;
-
+                    SumForRule11+=o.getItemTotalPrice() - o.getItemTotalPrice() * ParcentForRule8;
                 }
+                if(clubStatusForRule8){
+                    SumForClub+=o.getItemTotalPrice() - o.getItemTotalPrice() * ParcentForRule8;
+                }
+
             }
             else   if(o.getProductId()==productIdForRule5) {
                 stausForRule5 = true;
-                 i=o.getItemTotalPrice();
+                i=o.getItemTotalPrice();
 
-            }else {
-            saleTotalPrice += o.getItemTotalPrice();
-            SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
-        }}
+            }
+            else {
+                saleTotalPrice += o.getItemTotalPrice();
+                SumForClub+=o.getItemTotalPrice();
+
+                SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+            }}
 
 
 
-        if(SumForRule3Status){
-            saleTotalPrice = saleTotalPrice - (int) saleTotalPrice * parcentForRule3;
-        }else if(!SumForRule3Status){
 
-            saleTotalPrice = saleTotalPrice - (int) saleTotalPrice * parcentForRule3;
-            saleTotalPrice+=SumForRule3;
+        if(club_id!=0){
+            if(type==1){
 
+                SumForClub=SumForClub*parcent;
+
+
+                saleTotalPrice=saleTotalPrice-SumForClub;
+                if(SumForRule3Status){
+                    saleTotalPrice = saleTotalPrice - (int) saleTotalPrice * parcentForRule3;
+                }else if(!SumForRule3Status){
+
+                    saleTotalPrice = saleTotalPrice - (int) saleTotalPrice * parcentForRule3;
+                    saleTotalPrice+=SumForRule3;
+
+
+                }
+
+                if(SumForRule11Status){
+                    offerAmount = ((int) (saleTotalPrice / amountForRule11) * DiscountamountForRule11);
+
+                    saleTotalPrice = saleTotalPrice - offerAmount;        }
+                else if(!SumForRule11Status){
+
+                    offerAmount = ((int) (saleTotalPrice / amountForRule11) * DiscountamountForRule11);
+
+                    saleTotalPrice = saleTotalPrice - offerAmount;
+                    saleTotalPrice+=SumForRule11;
+
+
+                }
+                totalSaved =(SaleOriginalityPrice-saleTotalPrice);
+                tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
+                tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
+                SESSION._SALE.setTotalPrice(saleTotalPrice);
+
+            }
 
         }
 
-        else if(availableRule11){
-            offerAmount = ((int) (saleTotalPrice / amountForRule11) * DiscountamountForRule11);
 
-            saleTotalPrice = saleTotalPrice - offerAmount;
+
+
+        else {
+            if(SumForRule3Status){
+                saleTotalPrice = saleTotalPrice - (int) saleTotalPrice * parcentForRule3;
+            }else if(!SumForRule3Status){
+
+                saleTotalPrice = saleTotalPrice - (int) saleTotalPrice * parcentForRule3;
+                saleTotalPrice+=SumForRule3;
+
+
+            }
+
+            if(SumForRule11Status){
+                offerAmount = ((int) (saleTotalPrice / amountForRule11) * DiscountamountForRule11);
+
+                saleTotalPrice = saleTotalPrice - offerAmount;        }
+            else if(!SumForRule11Status){
+
+                offerAmount = ((int) (saleTotalPrice / amountForRule11) * DiscountamountForRule11);
+
+                saleTotalPrice = saleTotalPrice - offerAmount;
+                saleTotalPrice+=SumForRule11;
+
+
+            }
+            totalSaved =(SaleOriginalityPrice-saleTotalPrice);
+            tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
+            tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
+            SESSION._SALE.setTotalPrice(saleTotalPrice);
         }
 
-if(stausForRule5){
-
-    AlertDialog alertDialog1 = new AlertDialog.Builder(MainActivity.this).create();
-    alertDialog1.setTitle("Alert");
-    alertDialog1.setMessage("Did you want to buy this product with offer and take gift");
-    alertDialog1.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
-            new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    saleTotalPrice += priceForRule5;
-                    dialog.dismiss();
-
-                    //   SaleOriginalityPrice += rule5.getPrice() * o.getCount();
-                }
-            });
-    alertDialog1.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
-            new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    saleTotalPrice += i;
-                    dialog.dismiss();
-
-                    //   SaleOriginalityPrice += rule5.getPrice() * o.getCount();
-                }
-            });
-    alertDialog1.show();
 
 
 
-}
+
+
+        if(stausForRule5){
+
+            AlertDialog alertDialog1 = new AlertDialog.Builder(MainActivity.this).create();
+            alertDialog1.setTitle("Alert");
+            alertDialog1.setMessage("Did you want to buy this product with offer and take gift");
+            alertDialog1.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            saleTotalPrice += priceForRule5;
+                            dialog.dismiss();
+
+                            //   SaleOriginalityPrice += rule5.getPrice() * o.getCount();
+                        }
+                    });
+            alertDialog1.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            saleTotalPrice += i;
+                            dialog.dismiss();
+
+                            //   SaleOriginalityPrice += rule5.getPrice() * o.getCount();
+                        }
+                    });
+            alertDialog1.show();
+
+
+
+        }
 
         totalSaved =(SaleOriginalityPrice-saleTotalPrice);
         tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
@@ -1669,7 +1830,7 @@ if(stausForRule5){
         SESSION._SALE.setTotalPrice(saleTotalPrice);
 
 
-    rule3DbAdapter.close();
+        rule3DbAdapter.close();
         rule7DbAdapter.close();
         rule8DbAdapter.close();
         rule11DbAdapter.close();
@@ -1687,7 +1848,6 @@ if(stausForRule5){
             double SaleOriginalityPrice=0;
             for (Order o : SESSION._ORDERS) {
                 saleTotalPrice += o.getItemTotalPrice();
-                Toast.makeText(MainActivity.this, "with out club"+saleTotalPrice, Toast.LENGTH_LONG).show();
 
                 SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
             }
@@ -1699,7 +1859,6 @@ if(stausForRule5){
 
         }
         else {
-            Toast.makeText(MainActivity.this, "with club ", Toast.LENGTH_LONG).show();
 
             saleTotalPrice = 0;
             double SaleOriginalityPrice=0;
@@ -1713,7 +1872,6 @@ if(stausForRule5){
                 saleTotalPrice=saleTotalPrice-(int)saleTotalPrice*parcent;
                 totalSaved =(SaleOriginalityPrice-saleTotalPrice);
 
-                Toast.makeText(MainActivity.this, "with parcent"+saleTotalPrice, Toast.LENGTH_LONG).show();
 
                 tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
                 tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
@@ -1722,7 +1880,6 @@ if(stausForRule5){
             }
 
             else if(type==2) {
-                Toast.makeText(MainActivity.this, "with point"+saleTotalPrice, Toast.LENGTH_LONG).show();
 
                 tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
 
@@ -1772,13 +1929,11 @@ if(stausForRule5){
 
 
         if(offerList!=null){
-            Toast.makeText(MainActivity.this, "with offer", Toast.LENGTH_LONG).show();
 
             calculateTotalPriceWithOffers(offerList);
         }
         else{
 
-            Toast.makeText(MainActivity.this, "with parcent", Toast.LENGTH_LONG).show();
 
             calculateTotalPrice();}
 
@@ -1824,7 +1979,6 @@ if(stausForRule5){
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }
-        Toast.makeText(MainActivity.this, "scanned code is: " + barcodeScanned, Toast.LENGTH_LONG).show();
         barcodeScanned = "";
     }
 
@@ -1926,7 +2080,6 @@ if(stausForRule5){
               /**  Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
                 cInformation= String.valueOf(Ppoint.getPoint());
                 information.setText(cInformation);**/
-
                 saleDBAdapter.close();
 
                 orderDBAdapter = new OrderDBAdapter(MainActivity.this);
@@ -1990,7 +2143,6 @@ if(stausForRule5){
 
                 information.setText(cInformation);
 */
-
                 saleDBAdapter.close();
 
                 orderDBAdapter=new OrderDBAdapter(MainActivity.this);
@@ -2038,6 +2190,22 @@ if(stausForRule5){
 
                 int saleID=saleDBAdapter.insertEntry(SESSION._SALE,_custmer_id,a);
                 sum_pointDbAdapter.insertEntry(saleID,point,_custmer_id);
+                if(equleUsedPoint){
+saleTotalPrice=0.0;
+
+                    SESSION._SALE.setTotalPaid(0.0);
+                    saleDBAdapter.updateEntry(SESSION._SALE);
+                    usedpointDbAdapter.insertEntry(saleID,newPoint,_custmer_id);
+                }
+                else if(biggerUsedPoint){
+                    usedpointDbAdapter.insertEntry(saleID,aPoint,_custmer_id);
+                }
+                else if(lessUsedPoint) {
+                    SESSION._SALE.setTotalPaid(0.0);
+                    saleDBAdapter.updateEntry(SESSION._SALE);
+                    usedpointDbAdapter.insertEntry(saleID,newPoint,_custmer_id);
+
+                }
                /** Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
                 cInformation= String.valueOf(Ppoint.getPoint());
 
@@ -2129,8 +2297,7 @@ if(stausForRule5){
 
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
                     public void onClick(View arg0) {
-                        Toast.makeText(getApplicationContext(),
-                                custmername_EditText.getText().toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), custmername_EditText.getText().toString(), Toast.LENGTH_LONG).show();
 
                         popupWindow.dismiss();
 
@@ -2198,15 +2365,19 @@ if(stausForRule5){
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+        }
+
+            @Override
+            public void afterTextChanged(Editable s) {
                 custmer_List = new ArrayList<Customer_M>();
                 String word = custmer_id.getText().toString();
 
                 if (!word.equals("")) {
                     for (Customer_M c : All_custmerList) {
 
-                        if (c.getName().toLowerCase().equals(word.toLowerCase()) ||
-                                c.getPhoneNumber().toLowerCase().equals(word.toLowerCase()) ||
-                                c.getAddress().toLowerCase().equals(word.toLowerCase())) {
+                        if (c.getName().toLowerCase().contains(word.toLowerCase()) ||
+                                c.getPhoneNumber().toLowerCase().contains(word.toLowerCase()) ||
+                                c.getAddress().toLowerCase().contains(word.toLowerCase())) {
                             custmer_List.add(c);
                             a= c.getName();
                             custmername_EditText.setText(a);
@@ -2218,11 +2389,11 @@ if(stausForRule5){
                             if(club_id!=0){
                                 Group group    = groupDbAdapter.getGroupInfo(club_id);
 
+
                                 type=group.getType();
 
                                 if(type==1){
                                     parcent=  group.getParcent();
-                                    Toast.makeText(MainActivity.this, "with out offer"+parcent, Toast.LENGTH_LONG).show();
 
                                     club_name.setText(group.getname());
                                     information.setText(parcent+"");
@@ -2233,12 +2404,13 @@ if(stausForRule5){
                                     amount=group.getAmount();
                                     point=group.getPoint();
 
-                                   Ppoint=sum_pointDbAdapter.getPointInfo(_custmer_id);
+                                    Ppoint=sum_pointDbAdapter.getPointInfo(_custmer_id);
 
                                     cInformation= String.valueOf(Ppoint);
 
-                                    information.setText(Ppoint+"");
-
+                                    int unUsedPointForCustmer=usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
+                                    aPoint=Ppoint-unUsedPointForCustmer;
+                                    information.setText(aPoint+" ");
                                 }
                                 else {
                                     club_name.setText(group.getname());
@@ -2255,11 +2427,9 @@ if(stausForRule5){
                 }
                 else {
                     custmer_List=All_custmerList;
-                }}
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
+                }
+                CustmerCatalogGridViewAdapter adapter = new CustmerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
+                lvcustmer.setAdapter(adapter);
                 // Log.i("products", productList.toString());
 
 

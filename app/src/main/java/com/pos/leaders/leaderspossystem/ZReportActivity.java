@@ -33,6 +33,7 @@ public class ZReportActivity extends AppCompatActivity {
     ListView lvReports;
     Button btCancel,btOk;
     DatePicker dpFrom,dpTo;
+    String str;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +73,8 @@ public class ZReportActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i=new Intent(ZReportActivity.this,ReportZDetailsActivity.class);
+                i.putExtra("permissions_name",str);
+
                 i.putExtra(COM_LEADPOS_ZREPORT_ID,zReportList.get(position).getId());
                 i.putExtra(COM_LEADPOS_ZREPORT_FORM,zReportList.get(position).getStartSaleId());
                 i.putExtra(COM_LEADPOS_ZREPORT_TO,zReportList.get(position).getEndSaleId());
@@ -90,5 +93,17 @@ public class ZReportActivity extends AppCompatActivity {
         zReportDBAdapter.close();
         userDBAdapter.close();
         super.onDestroy();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            str = extras.getString("permissions_name");
+
+
+        }
+
     }
 }

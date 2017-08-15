@@ -7,7 +7,12 @@ package com.pos.leaders.leaderspossystem.Models.Offers;
 public class Rule3 {
     private   int id ;
     private   double parcent;
+    private  int contain;
 
+
+
+
+    int club_contain;
     public int getContain() {
         return contain;
     }
@@ -16,7 +21,6 @@ public class Rule3 {
         this.contain = contain;
     }
 
-    private  int contain;
     public int getId() {
         return id;
     }
