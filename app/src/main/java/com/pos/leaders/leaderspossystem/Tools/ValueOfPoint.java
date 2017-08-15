@@ -15,7 +15,7 @@ public class ValueOfPoint {
         ValueOfPoint.id = id;
     }
 
-    public static int getValue() {
+    public static double getValue() {
         return value;
     }
 
@@ -32,9 +32,9 @@ public class ValueOfPoint {
     }
 
     public static int id ;
-    public static int value;
+    public static double value;
     public static String create_Date ;
-    public ValueOfPoint(int id, int value, String create_Date) {
+    public ValueOfPoint(int id, double value, String create_Date) {
         this.id=id;
         this.value=value;
         this.create_Date=create_Date;

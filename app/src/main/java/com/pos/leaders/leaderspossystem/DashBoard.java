@@ -106,6 +106,7 @@ public class DashBoard extends AppCompatActivity {
         grid.setAdapter(adapter);
         Bundle bundle = getIntent().getExtras();
         permissions_name = bundle.getString("permissions_name");
+        Toast.makeText(DashBoard.this,permissions_name,Toast.LENGTH_LONG).show();
 
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent,
@@ -126,7 +127,7 @@ public class DashBoard extends AppCompatActivity {
         btLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DashBoard.this, HomeActivity.class);
+                Intent intent = new Intent(DashBoard.this, LogInActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 try {

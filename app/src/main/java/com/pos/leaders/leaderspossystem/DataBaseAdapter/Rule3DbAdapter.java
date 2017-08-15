@@ -21,10 +21,10 @@ public class Rule3DbAdapter {
     protected static final String Rule3_COLUMN_ID = "id";
     protected static final String Rule3_COLUMN_Parcent = "parcent";
     protected static final String Rule3_COLUMN_Contain = "contain";
-    protected static final String Rule3_COLUMN_CLub_Contain = "club_contain";
+  //  protected static final String Rule3_COLUMN_CLub_Contain = "club_contain";
 
 
-    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule3 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'parcent'  REAL ,"+" 'contain'  INTEGER"+" 'club_contain'  INTEGER   )";
+    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule3 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'parcent'  REAL ,"+" 'contain'  INTEGER   )";
     private SQLiteDatabase db;
 
     // Context of the application using the database.
@@ -57,7 +57,7 @@ public class Rule3DbAdapter {
 
         val.put(Rule3_COLUMN_Parcent,parcent);
         val.put(Rule3_COLUMN_Contain,contain);
-        val.put(Rule3_COLUMN_CLub_Contain,club_contain);
+       // val.put(Rule3_COLUMN_CLub_Contain,club_contain);
 
 
 
@@ -87,7 +87,7 @@ public class Rule3DbAdapter {
             return rule3;
         }
         cursor1.moveToFirst();
-        rule3= new Rule3(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_ID))),Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))),Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Contain))),Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_CLub_Contain))));
+        rule3= new Rule3(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_ID))),Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))),Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Contain))));
         cursor1.close();
         return  rule3;}
 

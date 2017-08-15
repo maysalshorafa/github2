@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
@@ -127,6 +128,7 @@ public class CashActivity extends AppCompatActivity implements View.OnTouchListe
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             totalPrice = (double) extras.get("_Price");
+            Toast.makeText(CashActivity.this,"total price"+totalPrice,Toast.LENGTH_LONG).show();
             custmer_nameS= (String) extras.get("_custmer");
             tv.setText(totalPrice + " " + getResources().getText(R.string.ins));
 
