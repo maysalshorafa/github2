@@ -55,7 +55,7 @@ public class ReportsManagementActivity extends Activity {
 
     ZReport lastZReport=null;
     Sale lastSale;
-
+String str;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,6 +146,8 @@ public class ReportsManagementActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(ReportsManagementActivity.this,ZReportActivity.class);
+                intent.putExtra("permissions_name",str);
+
                 startActivity(intent);
             }
         });
@@ -165,6 +167,18 @@ public class ReportsManagementActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            str = extras.getString("permissions_name");
+
+
+        }
+
     }
 
     @Override

@@ -34,10 +34,21 @@ public class Rule7 {
     private   int id;
     private  double price;
     private  int product_id;
-    public Rule7(int id, double price,  int product_id) {
+
+    public int getContain_club() {
+        return contain_club;
+    }
+
+    public void setContain_club(int contain_club) {
+        this.contain_club = contain_club;
+    }
+
+    private  int contain_club;
+    public Rule7(int id, double price,  int product_id, int contain_club) {
         this.id = id;
         this.price = price;
         this.product_id = product_id;
+        this.contain_club=contain_club;
     }
 
 }

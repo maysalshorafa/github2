@@ -34,10 +34,21 @@ public class Rule8 {
     private   int id;
     private  double Parcent;
     private  int product_id;
-    public Rule8(int id, double parcent,  int product_id) {
+
+    public int getContain_club() {
+        return contain_club;
+    }
+
+    public void setContain_club(int contain_club) {
+        this.contain_club = contain_club;
+    }
+
+    private  int contain_club;
+    public Rule8(int id, double parcent,  int product_id, int contain_club) {
         this.id=id;
         this.Parcent = parcent;
         this.product_id = product_id;
+    this.contain_club=contain_club;
     }
 
 }

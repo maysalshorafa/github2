@@ -71,7 +71,7 @@ Context context;
         }        cursor.moveToLast();
 
 
-        valueOfPoint =new ValueOfPoint(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Value_COLUMN_Id))),Integer.parseInt(
+        valueOfPoint =new ValueOfPoint(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Value_COLUMN_Id))),Double.parseDouble(
                 cursor.getString(cursor.getColumnIndex(Value_COLUMN))),
                 cursor.getString(cursor.getColumnIndex(CreateDate_Value_COLUMN_Point)));
   return valueOfPoint;
