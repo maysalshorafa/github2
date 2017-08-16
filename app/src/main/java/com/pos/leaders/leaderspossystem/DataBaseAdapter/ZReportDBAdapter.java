@@ -11,6 +11,7 @@ import com.pos.leaders.leaderspossystem.DbHelper;
 
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,6 +42,8 @@ public class ZReportDBAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
+    private static boolean isEmpty = true;
+
     public ZReportDBAdapter(Context context) {
         this.context = context;
         this.dbHelper = new DbHelper(context);
@@ -62,6 +65,12 @@ public class ZReportDBAdapter {
     public long insertEntry(Date createDate, long byUser, long startSaleID, long endSaleID) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
+
+        if(isEmpty){
+            val.put(Z_REPORT_COLUMN_ID, Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID));
+            isEmpty = false;
+        }
+
         val.put(Z_REPORT_COLUMN_CREATEDATE, createDate.getTime());
         val.put(Z_REPORT_COLUMN_BYUSER, (int)byUser);
         val.put(Z_REPORT_COLUMN_STARTSALEID, startSaleID);
@@ -154,9 +163,9 @@ public class ZReportDBAdapter {
     private ZReport makeZReport(Cursor c){
         return new ZReport(c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_ID)),
                 DateConverter.stringToDate(c.getString(c.getColumnIndex(Z_REPORT_COLUMN_CREATEDATE))),
-                c.getInt(c.getColumnIndex(Z_REPORT_COLUMN_BYUSER)),
-                c.getInt(c.getColumnIndex(Z_REPORT_COLUMN_STARTSALEID)),
-                c.getInt(c.getColumnIndex(Z_REPORT_COLUMN_ENDSALEID)));
+                c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_BYUSER)),
+                c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_STARTSALEID)),
+                c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_ENDSALEID)));
     }
 
 }

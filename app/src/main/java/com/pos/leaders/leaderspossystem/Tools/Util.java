@@ -1,6 +1,8 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.util.Log;
 
@@ -71,20 +73,14 @@ public class Util {
     /* Checks if external storage is available for read and write */
     public static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     /* Checks if external storage is available to at least read */
     public static boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 
     public static File getStorageDir(String dirName) {
@@ -165,4 +161,42 @@ public class Util {
 
         return null;
     }
+
+    private static boolean checkID(long id) {
+        String sID = String.format(new Locale("en"),"%19d",id);
+        String idPrefix = sID.substring(0, sID.length() - 16);
+        return Long.parseLong(idPrefix) == SESSION.POS_ID_NUMBER;
+    }
+
+    private static long getCurrentLastID(SQLiteDatabase db, String tableName, String idField){
+        Cursor cursor = db.rawQuery("select * from " + tableName + " order by id desc", null);
+        if (cursor.getCount() < 1) // don`t have any sale yet
+        {
+            cursor.close();
+            return 0;
+        }
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            long id = cursor.getLong(cursor.getColumnIndex(idField));
+            if(Util.checkID(id))
+                return id;
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        return 0;
+    }
+
+    public static long idHealth(SQLiteDatabase db, String tableName, String idField){
+        long lastId = getCurrentLastID(db,tableName,idField);
+        long newID = 0;
+        if(lastId==0){
+            newID = SESSION.POS_ID_NUMBER * SESSION.firstIDOffset;
+        }
+        else{
+            newID = lastId + 1;
+        }
+        return newID;
+    }
+
 }

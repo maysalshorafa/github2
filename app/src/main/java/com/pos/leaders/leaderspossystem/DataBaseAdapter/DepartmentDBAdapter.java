@@ -10,6 +10,8 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,8 @@ public class DepartmentDBAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
+    private static boolean isEmpty = true;
+
     public DepartmentDBAdapter(Context context) {
         this.context = context;
         this.dbHelper=new DbHelper(context);
@@ -57,9 +61,18 @@ public class DepartmentDBAdapter {
         return db;
     }
 
-    public int insertEntry(String name,int byUser) {
+
+
+    public int insertEntry(String name,long byUser) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
+
+        if(isEmpty){
+                val.put(DEPARTMENTS_COLUMN_ID, Util.idHealth(this.db,DEPARTMENTS_TABLE_NAME,DEPARTMENTS_COLUMN_ID));
+            isEmpty = false;
+        }
+
+
         val.put(DEPARTMENTS_COLUMN_NAME, name);
         val.put(DEPARTMENTS_COLUMN_BYUSER, byUser);
         try {
@@ -71,7 +84,7 @@ public class DepartmentDBAdapter {
         }
     }
 
-    public Department getDepartmentByID(int id) {
+    public Department getDepartmentByID(long id) {
         Department department = null;
         Cursor cursor = db.rawQuery("select * from " + DEPARTMENTS_TABLE_NAME + " where id='" + id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
@@ -88,7 +101,7 @@ public class DepartmentDBAdapter {
         return department;
     }
 
-    public int deleteEntry(int id) {
+    public int deleteEntry(long id) {
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -123,17 +136,17 @@ public class DepartmentDBAdapter {
         cursor.moveToFirst();
 
         while(!cursor.isAfterLast()){
-            departmentList.add(new Department(Integer.parseInt(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_ID))),
+            departmentList.add(new Department(Long.parseLong(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_ID))),
                     cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_NAME)),
                     DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_CREATINGDATE))),
-                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_BYUSER))),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_BYUSER))),
                     Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_DISENABLED)))));
             cursor.moveToNext();
         }
 
         return departmentList;
     }
-    public List<Department> getAllUserDepartments(int  userId){
+    public List<Department> getAllUserDepartments(long userId){
         List<Department> userDepartmentList=new ArrayList<Department>();
         List<Department> departmentList=getAllDepartments();
         for (Department d:departmentList) {

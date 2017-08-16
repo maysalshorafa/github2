@@ -10,6 +10,7 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule11;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 /**
  * Created by Win8.1 on 8/2/2017.
@@ -32,11 +33,12 @@ public class Rule11DBAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
+    private static boolean isEmpty = true;
+
     public Rule11DBAdapter(Context context) {
         this.context = context;
         this.dbHelper = new DbHelper(context);
     }
-
 
     public Rule11DBAdapter open() throws SQLException {
         this.db = dbHelper.getWritableDatabase();
@@ -50,31 +52,29 @@ public class Rule11DBAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(int id,int amount, int discountAmount,int contain,int club_contain){
+
+    public long insertEntry(int amount, int discountAmount,int contain,int club_contain){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Rule11_COLUMN_ID,id);
-
+        if(isEmpty){
+            val.put(Rule11_COLUMN_ID,Util.idHealth(this.db, Rule11_TABLE_NAME, Rule11_COLUMN_ID));
+            isEmpty = false;
+        }
         val.put(Rule11_COLUMN_Amount,amount);
         val.put(Rule11_COLUMN_DiscountAmount,discountAmount);
 
-val.put(Rule11_COLUMN_Contain,contain);
+        val.put(Rule11_COLUMN_Contain,contain);
         val.put(Rule11_COLUMN_Club_Contain,club_contain);
 
-
-
         try {
-
-            db.insert(Rule11_TABLE_NAME, null, val);
-            return 1;
+            return db.insert(Rule11_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e("Rule11 insertEntry", "inserting Entry at " + Rule11_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
 
-
-    public Rule11 getAmountForRule11(int rule_id) {
+    public Rule11 getAmountForRule11(long rule_id) {
         OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
         offerDBAdapter.open();
         Rule11 rule11=null;
@@ -88,7 +88,10 @@ val.put(Rule11_COLUMN_Contain,contain);
             return rule11;
         }
         cursor1.moveToFirst();
-        rule11= new Rule11(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule11_COLUMN_Amount))),Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule11_COLUMN_DiscountAmount))),Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule11_COLUMN_Contain))),Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule11_COLUMN_Club_Contain))));
+        rule11= new Rule11(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule11_COLUMN_Amount))),
+                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule11_COLUMN_DiscountAmount))),
+                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule11_COLUMN_Contain))),
+                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule11_COLUMN_Club_Contain))));
         cursor1.close();
         return  rule11;}
 

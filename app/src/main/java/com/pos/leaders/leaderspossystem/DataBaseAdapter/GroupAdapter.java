@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Group;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,8 @@ public class GroupAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
+    private static boolean isEmpty = true;
+
     public GroupAdapter(Context context) {
         this.context = context;
         this.dbHelper = new DbHelper(context);
@@ -68,7 +71,7 @@ public class GroupAdapter {
 
 
         while(!cursor.isAfterLast()){
-            groupList.add(new Group(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN__ID))),
+            groupList.add(new Group(Long.parseLong(cursor.getString(cursor.getColumnIndex(Group_COLUMN__ID))),
                     cursor.getString(cursor.getColumnIndex(Group_COLUMN_Name)),
                     cursor.getString(cursor.getColumnIndex(Group_COLUMN__Descrption)),
 
@@ -89,6 +92,12 @@ public class GroupAdapter {
     }
     public int insertEntry(String name,String description, String type, String parcent, String amount, String point){
         ContentValues val = new ContentValues();
+
+        if(isEmpty){
+            val.put(Group_COLUMN__ID, Util.idHealth(this.db, Group_TABLE_NAME, Group_COLUMN__ID));
+            isEmpty = false;
+        }
+
         //Assign values for each row.
         val.put(Group_COLUMN_Name,name);
         val.put(Group_COLUMN__Descrption,description);
@@ -128,6 +137,7 @@ public class GroupAdapter {
 
     }
 
+    /*
     public void read(Cursor cursor) {
         cursor.moveToFirst();
         Group.name= cursor.getString(cursor.getColumnIndex(Group_COLUMN_Name));
@@ -138,7 +148,8 @@ public class GroupAdapter {
 
 
         cursor.close();
-    }
+    }*/
+
     public  Group getGroupInfo(int club_id){
             Group group = null;
             Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME + " where id='" + club_id + "'", null);
@@ -148,12 +159,13 @@ public class GroupAdapter {
             return group;
         }
             cursor.moveToFirst();
-            group =new Group(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN__ID))),
+            group = new Group(Long.parseLong(cursor.getString(cursor.getColumnIndex(Group_COLUMN__ID))),
                     cursor.getString(cursor.getColumnIndex(Group_COLUMN_Name)),
                     cursor.getString(cursor.getColumnIndex(Group_COLUMN__Descrption)),
-
-                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Type)))
-             , (float) Double.parseDouble(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Parcent))),       Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Amount))),Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Point))));
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Type))),
+                    (float) Double.parseDouble(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Parcent))),
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Amount))),
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Point))));
             cursor.close();
 
             return group;

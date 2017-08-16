@@ -55,7 +55,7 @@ public class OfferRuleDBAdapter {
         return db;
     }
 
-    public int insertEntry(int id, int rule,int product_id) {
+    public int insertEntry(int id, int rule,long product_id) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Rule_OFFER_COLUMN_ID, id);
@@ -66,7 +66,7 @@ public class OfferRuleDBAdapter {
             db.insert(Rule_OFFER_TABLE_NAME, null, val);
             return 1;
         } catch (SQLException ex) {
-            Log.e("RuleOffer insert", "insatring Entry at " + Rule_OFFER_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("RuleOffer insert", "inserting Entry at " + Rule_OFFER_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }

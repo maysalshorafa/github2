@@ -9,7 +9,10 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,9 @@ public class ChecksDBAdapter {
 	// Database open/upgrade helper
 	private DbHelper dbHelper;
 
+	private static boolean isEmpty = true;
+
+
 	public ChecksDBAdapter(Context context) {
 		this.context = context;
 		this.dbHelper = new DbHelper(context);
@@ -61,8 +67,17 @@ public class ChecksDBAdapter {
 		return db;
 	}
 
-	public int insertEntry(int checkNum,int bankNum,int branchNum,int accountNum,double amount, int saleId) {
+
+
+	public int insertEntry(int checkNum,int bankNum,int branchNum,int accountNum,double amount, long saleId) {
 		ContentValues val = new ContentValues();
+
+
+		if(isEmpty){
+			val.put(CHECKS_COLUMN_ID, Util.idHealth(this.db,CHECKS_TABLE_NAME, CHECKS_COLUMN_ID) );
+			isEmpty = false;
+		}
+
 		//Assign values for each row.
 		val.put(CHECKS_COLUMN_CHECKNUMBER, checkNum);
 		val.put(CHECKS_COLUMN_BANKNUMBER, bankNum);
@@ -93,7 +108,7 @@ public class ChecksDBAdapter {
 		return checksList;
 	}
 
-	public List<Check> getPaymentBySaleID(int saleID) {
+	public List<Check> getPaymentBySaleID(long saleID) {
 		List<Check> checksList = new ArrayList<Check>();
 
 		Cursor cursor = db.rawQuery("select * from " + CHECKS_TABLE_NAME + " where " + CHECKS_COLUMN_SALEID + "=" + saleID, null);
@@ -107,7 +122,7 @@ public class ChecksDBAdapter {
 
 	private Check newCheck(Cursor cursor){
 		////int id, int checkNum, int bankNum, int branchNum, int accountNum, double amount, Date date, boolean isDeleted, int saleId
-		return new Check(Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_ID))),
+		return new Check(Long.parseLong(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_ID))),
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_CHECKNUMBER))),
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_BANKNUMBER))),
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_BRANCHNUMBER))),
@@ -115,10 +130,10 @@ public class ChecksDBAdapter {
 				Double.parseDouble(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_AMOUNT))),
 				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_DATE))),
 				Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_ISDELETED))),
-				Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_SALEID))));
+				Long.parseLong(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_SALEID))));
 	}
 
-	public int deleteEntry(int id) {
+	public int deleteEntry(long id) {
 		// Define the updated row content.
 		ContentValues updatedValues = new ContentValues();
 		// Assign values for each row.

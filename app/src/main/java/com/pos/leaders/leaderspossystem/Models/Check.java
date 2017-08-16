@@ -10,7 +10,7 @@ import java.util.Date;
  */
 
 public class Check {
-	private int id;
+	private long id;
 	private int checkNum;
 	private int bankNum;
 	private int branchNum;
@@ -18,11 +18,11 @@ public class Check {
 	private double amount;
 	private Date date;
 	private boolean isDeleted;
-	private int saleId;
+	private long saleId;
 
 	// region Constructors
 
-	public Check(int id, int checkNum, int bankNum, int branchNum, int accountNum, double amount, Date date, boolean isDeleted, int saleId) {
+	public Check(long id, int checkNum, int bankNum, int branchNum, int accountNum, double amount, Date date, boolean isDeleted, long saleId) {
 		this.accountNum = accountNum;
 		this.amount = amount;
 		this.bankNum = bankNum;
@@ -80,11 +80,11 @@ public class Check {
 		return date;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public int getSaleId() {
+	public long getSaleId() {
 		return saleId;
 	}
 
@@ -96,7 +96,7 @@ public class Check {
 
 	//region Setters
 
-	public void setSaleId(int saleId) {
+	public void setSaleId(long saleId) {
 		this.saleId = saleId;
 	}
 
@@ -142,7 +142,7 @@ public class Check {
 				'}';
 	}
 
-    public String BKMVDATA(int rowNumber, String companyID, Date date,int parentNumber) {
+    public String BKMVDATA(int rowNumber, String companyID, Date date,long parentNumber) {
 
 		String s = "320",OP="+",paymentType="2",cardType="0";
 

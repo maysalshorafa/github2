@@ -7,7 +7,7 @@ import java.util.Date;
  */
 
 public class User {
-    private int id;
+    private long id;
     private String userName;
     private String password;
     private String firstName;
@@ -19,7 +19,7 @@ public class User {
     private double hourlyWage;
     private String permissions_name;
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -27,7 +27,7 @@ public class User {
         this.permissions_name = permissions_name;
     }
 
-    public User(int id, String userName, String password, String firstName, String lastName, Date creatingDate, boolean hide, String phoneNumber, double present, double hourlyWage , String permissions_name) {
+    public User(long id, String userName, String password, String firstName, String lastName, Date creatingDate, boolean hide, String phoneNumber, double present, double hourlyWage , String permissions_name) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -67,7 +67,7 @@ public class User {
         return firstName;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

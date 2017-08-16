@@ -186,7 +186,7 @@ public class InvoiceImg {
         return blocks;
     }
 
-    public Bitmap normalInvoice(int id, List<Order> orders, Sale sale, boolean isCopy, User user, List<Check> checks){
+    public Bitmap normalInvoice(long id, List<Order> orders, Sale sale, boolean isCopy, User user, List<Check> checks){
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head());
         String status=context.getString(R.string.source_invoice);

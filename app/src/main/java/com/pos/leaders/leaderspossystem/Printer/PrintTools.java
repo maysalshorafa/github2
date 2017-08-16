@@ -155,7 +155,7 @@ public class PrintTools {
     }
 
 
-    public Bitmap createXReport(long endSaleId, int id, User user, Date date) {
+    public Bitmap createXReport(long endSaleId, long id, User user, Date date) {
         SaleDBAdapter saleDBAdapter=new SaleDBAdapter(context);
         saleDBAdapter.open();
         List<Sale> sales=saleDBAdapter.getBetween(endSaleId,id);

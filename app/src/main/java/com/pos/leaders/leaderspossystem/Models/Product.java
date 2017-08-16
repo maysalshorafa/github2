@@ -14,7 +14,7 @@ import java.util.Locale;
  */
 
 public class Product {
-    private int id;
+    private long id;
     private String name;
     private String barCode;
     private String description;
@@ -24,8 +24,8 @@ public class Product {
     private boolean weighable;
     private Date creatingDate;
     private boolean hide;
-    private int departmentId;
-    private int byUser;
+    private long departmentId;
+    private long byUser;
     private int with_pos;
     private int with_point_system;
     private List<Integer> offersIDs=new ArrayList<Integer>();
@@ -38,7 +38,7 @@ public class Product {
     //Product with -1 value on id this is a general product
 
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -60,9 +60,9 @@ public class Product {
     }
 
     // region Constructor
-    public Product(int id, String name, String barCode, String description,
+    public Product(long id, String name, String barCode, String description,
                    double price, double costPrice, boolean withTax, boolean weighable,
-                   Date creatingDate, boolean hide, int departmentId, int byUser , int with_pos, int with_point_system) {
+                   Date creatingDate, boolean hide, long departmentId, long byUser , int with_pos, int with_point_system) {
         this.id = id;
         this.name = name;
         this.barCode = barCode;
@@ -79,13 +79,13 @@ public class Product {
         this.with_point_system=with_point_system;
 
     }
-    public Product(int id, String name,double price, int byUser) {
+    public Product(long id, String name,double price, long byUser) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.byUser = byUser;
     }
-    public Product(int id, String name,double price,String barCode,int departmentID,int byUser) {
+    public Product(long id, String name,double price,String barCode,long departmentID,long byUser) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -101,16 +101,11 @@ public class Product {
                 product.getCreatingDate(),product.isHide(),product.getDepartmentId(),product.getByUser(),product.getWith_pos(),product.getWith_point_system());
     }
 
-    public Product(int id, String cursorString, String string, String name, double parseDouble, double v, boolean aBoolean, boolean parseBoolean, Date date, boolean b, int anInt, int parseInt, int i) {
-        this.id = id;
-        this.name = name;
-    }
-
     //endregion
 
     // region Getters
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -150,11 +145,11 @@ public class Product {
         return hide;
     }
 
-    public int getDepartmentId() {
+    public long getDepartmentId() {
         return departmentId;
     }
 
-    public int getByUser() {
+    public long getByUser() {
         return byUser;
     }
 
@@ -176,7 +171,7 @@ public class Product {
 		this.costPrice = costPrice;
 	}
 
-	public void setDepartmentId(int departmentId) {
+	public void setDepartmentId(long departmentId) {
 		this.departmentId = departmentId;
 	}
 

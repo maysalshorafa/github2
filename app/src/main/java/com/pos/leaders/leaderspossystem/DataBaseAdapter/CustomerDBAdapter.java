@@ -14,6 +14,7 @@ import com.pos.leaders.leaderspossystem.Models.Customer_M;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,8 @@ public class CustomerDBAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
+    private static boolean isEmpty = true;
+
     public CustomerDBAdapter(Context context) {
         this.context = context;
         this.dbHelper=new DbHelper(context);
@@ -80,14 +83,6 @@ public class CustomerDBAdapter {
     {
         return db;
     }
-
-
-
-
-
-
-
-
 
     public Customer_M getCustmerByname(String name){
         Customer_M customer_m = null;
@@ -115,8 +110,7 @@ public class CustomerDBAdapter {
         return customer_m;
     }
 
-
-    public  int insertEntry(String id , String name, String birthday, String gender, String email, String job,
+    public int insertEntry(String id , String name, String birthday, String gender, String email, String job,
                             String phoneNumber, String address  , int select_city_id , int select_club_id) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -143,7 +137,7 @@ public class CustomerDBAdapter {
         }
     }
 
-    public Customer_M getCustmerByID(int id) {
+    public Customer_M getCustmerByID(long id) {
         Customer_M customer = null;
         Cursor cursor = db.query(CUSTOMER_TABLE_NAME, null, CUSTOMER_COLUMN_ID + "=? ", new String[]{id + ""}, null, null, null);
         //Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where id='" + id + "'", null);
@@ -277,7 +271,7 @@ public class CustomerDBAdapter {
 
 
 
-    public int deleteEntry(int id) {
+    public int deleteEntry(long id) {
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.

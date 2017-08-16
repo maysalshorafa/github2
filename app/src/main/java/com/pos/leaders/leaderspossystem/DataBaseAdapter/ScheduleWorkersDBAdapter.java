@@ -10,6 +10,7 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +39,8 @@ public class ScheduleWorkersDBAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
+    private static boolean isEmpty = true;
+
     public ScheduleWorkersDBAdapter(Context context) {
         this.context = context;
         this.dbHelper=new DbHelper(context);
@@ -57,9 +60,15 @@ public class ScheduleWorkersDBAdapter {
         return db;
     }
 
-    public int insertEntry(int userId) {
+    public int insertEntry(long userId) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
+
+        if(isEmpty){
+            val.put(SCHEDULEWORKERS_COLUMN_ID, Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID));
+            isEmpty = false;
+        }
+
         val.put(SCHEDULEWORKERS_COLUMN_USERID, userId);
         try {
             int lastID = (int) db.insert(SCHEDULEWORKERS_TABLE_NAME, null, val);
@@ -70,7 +79,7 @@ public class ScheduleWorkersDBAdapter {
         }
     }
 
-    public ScheduleWorkers getScheduleWorkersByID(int id) {
+    public ScheduleWorkers getScheduleWorkersByID(long id) {
         ScheduleWorkers scheduleWorkers = null;
         Cursor cursor = db.rawQuery("select * from " + SCHEDULEWORKERS_TABLE_NAME + " where id='" + id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
@@ -79,7 +88,7 @@ public class ScheduleWorkersDBAdapter {
             return scheduleWorkers;
         }
         cursor.moveToFirst();
-        scheduleWorkers =new ScheduleWorkers(id,Integer.parseInt(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_ID))),
+        scheduleWorkers = new ScheduleWorkers(id,Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_USERID))),
                 DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_DATE))),
                 DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_STARTTIME))),
                 DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_EXITTIME))));
@@ -88,7 +97,6 @@ public class ScheduleWorkersDBAdapter {
 
         return scheduleWorkers;
     }
-
 
     public void updateEntry(ScheduleWorkers scheduleWorkers) {
         ContentValues val = new ContentValues();
@@ -102,7 +110,7 @@ public class ScheduleWorkersDBAdapter {
         db.update(SCHEDULEWORKERS_TABLE_NAME, val, where, new String[]{scheduleWorkers.getId() + ""});
     }
 
-    public void updateEntry(int id,Date exitTime) {
+    public void updateEntry(long id,Date exitTime) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -112,7 +120,6 @@ public class ScheduleWorkersDBAdapter {
         db.update(SCHEDULEWORKERS_TABLE_NAME, val, where, new String[]{id + ""});
     }
 
-
     public List<ScheduleWorkers> getAllScheduleWorkers(){
         List<ScheduleWorkers> scheduleWorkersList =new ArrayList<ScheduleWorkers>();
 
@@ -121,8 +128,8 @@ public class ScheduleWorkersDBAdapter {
 
         while(!cursor.isAfterLast()){
             if(!cursor.isNull(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_EXITTIME)))
-            scheduleWorkersList.add(new ScheduleWorkers(Integer.parseInt(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_ID))),
-                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_USERID))),
+            scheduleWorkersList.add(new ScheduleWorkers(Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_ID))),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_USERID))),
                     DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_DATE))),
                     DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_STARTTIME))),
                     DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_EXITTIME)))));
@@ -131,7 +138,8 @@ public class ScheduleWorkersDBAdapter {
 
         return scheduleWorkersList;
     }
-    public List<ScheduleWorkers> getAllUserScheduleWork(int  userId){
+
+    public List<ScheduleWorkers> getAllUserScheduleWork(int userId){
         List<ScheduleWorkers> userScheduleWorkerstList=new ArrayList<ScheduleWorkers>();
         List<ScheduleWorkers> scheduleWorkersList=getAllScheduleWorkers();
         for (ScheduleWorkers item:scheduleWorkersList) {

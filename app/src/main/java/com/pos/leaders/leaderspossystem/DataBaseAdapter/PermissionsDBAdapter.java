@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Permissions;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,8 @@ public class PermissionsDBAdapter {
 	// Database open/upgrade helper
 	private DbHelper dbHelper;
 
+    private static boolean isEmpty = true;
+
 	public PermissionsDBAdapter(Context context) {
 		this.context = context;
 		this.dbHelper = new DbHelper(context);
@@ -53,6 +56,11 @@ public class PermissionsDBAdapter {
 
 	public int insertEntry(String name) {
 		ContentValues val = new ContentValues();
+
+        if(isEmpty){
+            val.put(PERMISSIONS_COLUMN_ID, Util.idHealth(this.db, PERMISSIONS_TABLE_NAME, PERMISSIONS_COLUMN_ID));
+            isEmpty = false;
+        }
 
 		//Assign values for each row.
 		val.put(PERMISSIONS_TABLE_NAME, name);

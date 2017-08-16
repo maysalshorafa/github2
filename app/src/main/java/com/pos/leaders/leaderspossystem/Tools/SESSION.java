@@ -22,6 +22,8 @@ public class SESSION {
 	public static List<Pair<Integer, Sale>> _SALES;
 	public static List<Check> _CHECKS_HOLDER;
     public static int TEMP_NUMBER = 0;
+	public static int POS_ID_NUMBER = 0;
+	public static long firstIDOffset = 10000000000000000L;
 
 	public static void _LogOut() {
 		SESSION._USER = null;

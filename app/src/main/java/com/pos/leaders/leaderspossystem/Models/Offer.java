@@ -17,7 +17,7 @@ public class Offer {
 
 
 	//region Attribute
-	private int id;
+	private long id;
 	private String name;
 	private Date startDate;
 	private Date endDate;
@@ -25,7 +25,7 @@ public class Offer {
 	private int status;
 	private int byUser;
     private String ruleName;
-    private int ruleID;
+    private long ruleID;
 
     //region Attribute Objects
     private List<Product> products;
@@ -42,7 +42,7 @@ public class Offer {
 
     }
 
-	public Offer(int id, String name, Date startDate, Date endDate, Date creatingDate, int status, int byUser,String ruleName,int ruleID) {
+	public Offer(long id, String name, Date startDate, Date endDate, Date creatingDate, int status, int byUser,String ruleName,long ruleID) {
 		this.id=id;
 		this.name = name;
 		this.startDate = startDate;
@@ -54,7 +54,7 @@ public class Offer {
         this.ruleID = ruleID;
     }
 
-    public Offer(String name, Date startDate, Date endDate, Date creatingDate, int status, int byUser,String ruleName,int ruleID) {
+    public Offer(String name, Date startDate, Date endDate, Date creatingDate, int status, int byUser,String ruleName,long ruleID) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -93,7 +93,7 @@ public class Offer {
 
 	//region Getters
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -125,7 +125,7 @@ public class Offer {
         return ruleName;
     }
 
-    public int getRuleID() {
+    public long getRuleID() {
         return ruleID;
     }
 
@@ -169,7 +169,7 @@ public class Offer {
 		this.startDate = startDate;
 	}
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -181,7 +181,7 @@ public class Offer {
         this.ruleName = ruleName;
     }
 
-    public void setRuleID(int ruleID) {
+    public void setRuleID(long ruleID) {
         this.ruleID = ruleID;
     }
 

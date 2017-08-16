@@ -6,22 +6,53 @@ package com.pos.leaders.leaderspossystem.Models;
 
 public class Customer_M {
 
-    int id;
-    String name;
-    String birthday;
-    String gender;
-    String email;
-    String job;
-    String phoneNumber;
-    String address;
+    private long id;
+    private String name;
+    private String birthday;
+    private String gender;
+    private String email;
+    private String job;
+    private String phoneNumber;
+    private String address;
     private boolean hide;
-    String city;
-    int club;
+    private String city;
+    private int club;
 
+    public Customer_M(long id, String name, String birthday, String gender, String email, String job, String phoneNumber, String address, boolean hide , String city, int club) {
+        this.id = id;
+        this.name = name;
+        this.birthday = birthday;
+        this.gender = gender;
+        this.email = email;
+        this.job = job;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.hide = hide;
+        this.city=city;
+        this.club=club;
+    }
+
+    public Customer_M(Customer_M customer){
+        this(customer.getId(),customer.getName(),customer.getBirthday(),customer.getGender(),
+                customer.getEmail(),customer.getJob(),customer.getPhoneNumber(),customer.getAddress(),customer.getHide(),customer.getCity(),customer.getClub());
+    }
+
+
+    /**   public Customer_M(int id, String name, String birthday, String gender, String email, String job, String phoneNumber, String address, boolean hide) {
+        this.id = id;
+        this.name = name;
+        this.birthday = birthday;
+        this.gender = gender;
+        this.email = email;
+        this.job = job;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.hide = hide;
+    }**/
 
     public boolean isHide() {
-        return hide;
-    }
+     return hide;
+ }
 
     public void setHide(boolean hide) {
         this.hide = hide;
@@ -43,41 +74,10 @@ public class Customer_M {
         this.club = club;
     }
 
-    public Customer_M(int id, String name, String birthday, String gender, String email, String job, String phoneNumber, String address, boolean hide , String city, int club) {
-        this.id = id;
-        this.name = name;
-        this.birthday = birthday;
-        this.gender = gender;
-        this.email = email;
-        this.job = job;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.hide = hide;
-        this.city=city;
-        this.club=club;
-    }
-
-    public Customer_M(Customer_M customer){
-        this(customer.getId(),customer.getName(),customer.getBirthday(),customer.getGender(),
-                customer.getEmail(),customer.getJob(),customer.getPhoneNumber(),customer.getAddress(),customer.getHide(),customer.getCity(),customer.getClub());
-    }
-
-
- /**   public Customer_M(int id, String name, String birthday, String gender, String email, String job, String phoneNumber, String address, boolean hide) {
-        this.id = id;
-        this.name = name;
-        this.birthday = birthday;
-        this.gender = gender;
-        this.email = email;
-        this.job = job;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.hide = hide;
-    }**/
-
- public int getId() {
+    public long getId() {
      return id;
  }
+
     public String getName() {
         return name;
     }
@@ -110,9 +110,7 @@ public class Customer_M {
         return hide;
     }
 
-
-
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -144,11 +142,8 @@ public class Customer_M {
         this.address = address;
     }
 
-
     public String getCustmerName(){
         return this.name;
     }
-
-
 
 }

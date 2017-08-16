@@ -73,7 +73,7 @@ public class Rule3DbAdapter {
     }
 
 
-    public Rule3 getParcentForRule3(int rule_id) {
+    public Rule3 getParcentForRule3(long rule_id) {
         OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
         offerDBAdapter.open();
         Rule3 rule3=null;

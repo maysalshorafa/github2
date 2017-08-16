@@ -5,6 +5,13 @@ package com.pos.leaders.leaderspossystem.Models.Offers;
  */
 
 public class Rule11 {
+
+    private int id ;
+    private int amount;
+    private int discountAmount;
+    private int club_contain;
+    private int contain;
+
     public int getId() {
         return id;
     }
@@ -36,10 +43,6 @@ public class Rule11 {
         this.club_contain=club_contain;
     }
 
-    private   int id ;
-    private   int amount;
-    private  int discountAmount;
-
     public int getClub_contain() {
         return club_contain;
     }
@@ -48,8 +51,6 @@ public class Rule11 {
         this.club_contain = club_contain;
     }
 
-    private  int club_contain;
-
     public int getContain() {
         return contain;
     }
@@ -57,12 +58,4 @@ public class Rule11 {
     public void setContain(int contain) {
         this.contain = contain;
     }
-
-    private  int contain;
-
-
-
-
-
-
 }

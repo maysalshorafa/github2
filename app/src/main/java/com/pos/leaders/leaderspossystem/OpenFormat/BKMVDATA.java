@@ -387,7 +387,7 @@ public class BKMVDATA {
         return firstDate;
     }
 
-    private boolean checkProductNonEX(int id) {
+    private boolean checkProductNonEX(long id) {
         for (Product p : productNonRep) {
             if (p.getId() == id)
                 return false;

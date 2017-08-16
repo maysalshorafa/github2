@@ -10,6 +10,12 @@ import java.util.List;
  */
 
 public class Rule5 extends Rule {
+
+    private int id;
+    private int gift_id;
+    private int price;
+    private int productID;
+
     public int getId() {
         return id;
     }
@@ -25,9 +31,6 @@ public class Rule5 extends Rule {
     public void setGift_id(int gift_id) {
         this.gift_id = gift_id;
     }
-
-    int id;
-    int gift_id;
 
     public int getPrice() {
         return price;
@@ -45,28 +48,22 @@ public class Rule5 extends Rule {
         this.productID = productID;
     }
 
-    int price;
-    int productID;
     public Rule5(int id, int gift_id,int productID ,int price ) {
         super(id, RULE5);
-this.id=id;
-this.gift_id=gift_id;
-    this.price=price;
-    this.productID=productID;
+        this.id=id;
+        this.gift_id=gift_id;
+        this.price=price;
+        this.productID=productID;
     }
-
-
 
     public Rule5(){
         super(RULE5);
     }
 
-
     @Override
     public void execute(List<Order> orders, Offer offer) throws Exception {
 
     }
-
     @Override
     public boolean precondition(List<Order> orders) {
         return false;

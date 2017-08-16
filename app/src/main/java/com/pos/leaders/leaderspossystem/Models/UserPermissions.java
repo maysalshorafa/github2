@@ -10,8 +10,8 @@ public class UserPermissions {
 
 	//region Attribute
 
-	private int userId;
-	private int permissionId;
+	private long userId;
+	private long permissionId;
 
 	private User user;
 	private List<Permissions> permissions;
@@ -20,7 +20,7 @@ public class UserPermissions {
 
 	//region Constructors
 
-	public UserPermissions(int permissionId, int userId) {
+	public UserPermissions(long permissionId, long userId) {
 		this.permissionId = permissionId;
 		this.userId = userId;
 	}
@@ -35,7 +35,7 @@ public class UserPermissions {
 
 	//region Getters
 
-	public int getPermissionId() {
+	public long getPermissionId() {
 		return permissionId;
 	}
 
@@ -47,7 +47,7 @@ public class UserPermissions {
 		return user;
 	}
 
-	public int getUserId() {
+	public long getUserId() {
 		return userId;
 	}
 

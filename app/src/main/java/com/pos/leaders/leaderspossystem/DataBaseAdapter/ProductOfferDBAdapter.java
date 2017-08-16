@@ -10,6 +10,8 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +42,8 @@ public class ProductOfferDBAdapter {
 	// Database open/upgrade helper
 	private DbHelper dbHelper;
 
+	private static boolean isEmpty = true;
+
 	public ProductOfferDBAdapter(Context context) {
 		this.context = context;
 		this.dbHelper = new DbHelper(context);
@@ -58,9 +62,16 @@ public class ProductOfferDBAdapter {
 		return db;
 	}
 
-	public int insertEntry(int productId, int offerId) {
+
+	public int insertEntry(long productId, int offerId) {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
+
+		if(isEmpty){
+            val.put(PRODUCTOFFER_COLUMN_ID, Util.idHealth(this.db, PRODUCTOFFER_TABLE_NAME, PRODUCTOFFER_COLUMN_ID) );
+			isEmpty = false;
+		}
+
 		val.put(PRODUCTOFFER_COLUMN_PRODUCTID, productId);
 		val.put(PRODUCTOFFER_COLUMN_OFFERID, offerId);
 
@@ -129,7 +140,7 @@ public class ProductOfferDBAdapter {
 		return ints;
 	}
 
-	public List<Integer> getProductOffers(int productID,List<Integer> offersID){
+	public List<Integer> getProductOffers(long productID,List<Integer> offersID){
         String whereCommand = "";
         List<Integer> offersIDs = new ArrayList<>();
         for(int i=0; i<offersID.size()-1;i++){
@@ -152,7 +163,7 @@ public class ProductOfferDBAdapter {
         return offersIDs;
     }
 
-    public Boolean checkProductIntoOffers(int productID,int offerID) {
+    public Boolean checkProductIntoOffers(long productID,int offerID) {
         Cursor cursor = db.rawQuery("select * from " + PRODUCTOFFER_TABLE_NAME + " where " + PRODUCTOFFER_COLUMN_OFFERID + "='" + offerID + "' and "+PRODUCTOFFER_COLUMN_PRODUCTID+" = '"+productID+"'", null);
         if (cursor.getCount() < 1){
             cursor.close();
@@ -165,7 +176,7 @@ public class ProductOfferDBAdapter {
 		return db.delete(PRODUCTOFFER_TABLE_NAME, PRODUCTOFFER_COLUMN_ID + "=?", new String[]{id + ""}) > 0;
 	}
 
-	public boolean deleteEntry(int productId,int offerId) {
+	public boolean deleteEntry(long productId,int offerId) {
 		return db.delete(PRODUCTOFFER_TABLE_NAME , PRODUCTOFFER_COLUMN_PRODUCTID + "=? and " + PRODUCTOFFER_COLUMN_OFFERID + "=? ", new String[]{productId + "", offerId + ""}) > 0;
 	}
 }

@@ -7,16 +7,17 @@ import android.content.Context;
  */
 
 public class Group {
-    public static String name ;
-    public static int id;
 
-    public static  String description;
-    public static  int type;
-    public static  float parcent;
-    public static  int amount;
+    private long id;
+    private String name ;
+    private String description;
+    private int type;
+    private float parcent;
+    private int amount;
+    private int point;
 
-    public Group(int id, String name, String description, int type, float parcent, int amount, int point) {
-    this.id=id;
+    public Group(long id, String name, String description, int type, float parcent, int amount, int point) {
+        this.id=id;
         this.name=name;
         this.description=description;
         this.type=type;
@@ -33,66 +34,61 @@ public class Group {
     }
 
 
-    public static void setname(String groupname) {
-        Group.name = groupname;
+    public void setname(String groupname) {
+        this.name = groupname;
     }
 
-    public static void setId(int id) {
-        Group.id = id;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public static void setDescription(String description) {
-        Group.description = description;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public static void setType(int type) {
-        Group.type = type;
+    public void setType(int type) {
+        this.type = type;
     }
 
-    public static void setParcent(float parcent) {
-        Group.parcent = parcent;
+    public void setParcent(float parcent) {
+        this.parcent = parcent;
     }
 
-    public static void setAmount(int amount) {
-        Group.amount = amount;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
-    public static void setPoint(int point) {
-        Group.point = point;
+    public void setPoint(int point) {
+        this.point = point;
     }
 
 
-    public static String getname() {
+    public String getname() {
         return name;
     }
 
-    public static int getId() {
+    public long getId() {
         return id;
     }
 
-    public static String getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public static int getType() {
+    public int getType() {
         return type;
     }
 
-    public static float getParcent() {
+    public float getParcent() {
         return parcent;
     }
 
-    public static int getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public static int getPoint() {
+    public int getPoint() {
         return point;
     }
-
-    public static  int point;
-
-
-
 
 }
