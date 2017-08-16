@@ -69,14 +69,13 @@ public class SaleDBAdapter {
 
 
 
-	public int insertEntry(long byUser, Date saleDate, int replacementNote, boolean canceled, double totalPrice,double totalPaid,int custmer_id,String custmer_name) {
+	public int insertEntry(long byUser, Date saleDate, int replacementNote, boolean canceled, double totalPrice,double totalPaid,long custmer_id,String custmer_name) {
 		ContentValues val = new ContentValues();
 
 		if(isEmpty){
             val.put(SALES_COLUMN_ID, Util.idHealth(this.db, SALES_TABLE_NAME, SALES_COLUMN_ID));
             isEmpty = false;
 		}
-
 		//Assign values for each row.
 		val.put(SALES_COLUMN_BYUSER, byUser);
 		val.put(SALES_COLUMN_SALEDATE, new Date().getTime());
@@ -95,7 +94,7 @@ public class SaleDBAdapter {
 		}
 	}
 
-	public int insertEntry(Sale sale ,int _custmer_id,String custmer_name) {
+	public long insertEntry(Sale sale ,long _custmer_id,String custmer_name) {
 		return insertEntry(sale.getByUser(), sale.getSaleDate(), sale.getReplacementNote(), sale.isCancelling(), sale.getTotalPrice(),sale.getTotalPaid(),_custmer_id,custmer_name);
 	}
 
@@ -114,7 +113,7 @@ public class SaleDBAdapter {
 		return sale;
 	}
 
-	public int deleteEntry(long id) {
+	public long deleteEntry(long id) {
 		// Define the updated row content.
 		ContentValues updatedValues = new ContentValues();
 		// Assign values for each row.
@@ -122,8 +121,7 @@ public class SaleDBAdapter {
 
 		String where = SALES_COLUMN_ID + " = ?";
 		try {
-			db.update(SALES_TABLE_NAME, updatedValues, where, new String[]{id + ""});
-			return 1;
+			return db.update(SALES_TABLE_NAME, updatedValues, where, new String[]{id + ""});
 		} catch (SQLException ex) {
 			Log.e("sales DB deleteEntry", "enable hide Entry at " + SALES_TABLE_NAME + ": " + ex.getMessage());
 			return 0;

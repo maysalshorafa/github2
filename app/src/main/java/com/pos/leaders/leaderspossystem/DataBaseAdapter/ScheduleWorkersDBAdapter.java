@@ -60,7 +60,7 @@ public class ScheduleWorkersDBAdapter {
         return db;
     }
 
-    public int insertEntry(long userId) {
+    public long insertEntry(long userId) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -71,7 +71,7 @@ public class ScheduleWorkersDBAdapter {
 
         val.put(SCHEDULEWORKERS_COLUMN_USERID, userId);
         try {
-            int lastID = (int) db.insert(SCHEDULEWORKERS_TABLE_NAME, null, val);
+            long lastID = db.insert(SCHEDULEWORKERS_TABLE_NAME, null, val);
             return lastID;
         } catch (SQLException ex) {
             Log.e("SchWorkersDB insert", "inserting Entry at " + SCHEDULEWORKERS_TABLE_NAME + ": " + ex.getMessage());

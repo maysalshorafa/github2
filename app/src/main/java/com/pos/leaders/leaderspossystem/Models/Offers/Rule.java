@@ -29,10 +29,10 @@ public abstract class Rule {
     public static final String BENDING = "bending";
     public static final String STOP = "stop";
 
-    int id;
-    String type;
+    private long id;
+    private String type;
 
-    public Rule(int id,String type){
+    public Rule(long id,String type){
         this.id = id;
         this.type = type;
     }

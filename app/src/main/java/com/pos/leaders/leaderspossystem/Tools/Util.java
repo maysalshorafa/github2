@@ -163,13 +163,13 @@ public class Util {
     }
 
     private static boolean checkID(long id) {
-        String sID = String.format(new Locale("en"),"%19d",id);
+        String sID = String.format(new Locale("en"),"%019d",id);
         String idPrefix = sID.substring(0, sID.length() - 16);
         return Long.parseLong(idPrefix) == SESSION.POS_ID_NUMBER;
     }
 
     private static long getCurrentLastID(SQLiteDatabase db, String tableName, String idField){
-        Cursor cursor = db.rawQuery("select * from " + tableName + " order by id desc", null);
+        Cursor cursor = db.rawQuery("select * from " + tableName + " where id like '"+SESSION.POS_ID_NUMBER+"________________' order by id desc limit 1", null);
         if (cursor.getCount() < 1) // don`t have any sale yet
         {
             cursor.close();

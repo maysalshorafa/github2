@@ -86,7 +86,7 @@ public class OrderDBAdapter {
 		}
 	}
 
-    public int insertEntry(int productId, int counter, double userOffer, int saleId, double price, double original_price, double discount) {
+    public int insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount) {
         ContentValues val = new ContentValues();
         if(isEmpty){
             val.put(ORDER_COLUMN_ID, Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID));

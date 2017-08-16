@@ -54,7 +54,7 @@ public class PaymentDBAdapter {
 		return db;
 	}
 
-	public int insertEntry(String paymentWay,double amount, int saleId) {
+	public int insertEntry(String paymentWay,double amount, long saleId) {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 

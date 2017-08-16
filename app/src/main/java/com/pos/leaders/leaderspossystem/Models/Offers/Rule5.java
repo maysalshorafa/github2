@@ -11,24 +11,24 @@ import java.util.List;
 
 public class Rule5 extends Rule {
 
-    private int id;
-    private int gift_id;
+    private long id;
+    private long gift_id;
     private int price;
-    private int productID;
+    private long productID;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getGift_id() {
+    public long getGift_id() {
         return gift_id;
     }
 
-    public void setGift_id(int gift_id) {
+    public void setGift_id(long gift_id) {
         this.gift_id = gift_id;
     }
 
@@ -40,15 +40,15 @@ public class Rule5 extends Rule {
         this.price = price;
     }
 
-    public int getProductID() {
+    public long getProductID() {
         return productID;
     }
 
-    public void setProductID(int productID) {
+    public void setProductID(long productID) {
         this.productID = productID;
     }
 
-    public Rule5(int id, int gift_id,int productID ,int price ) {
+    public Rule5(long id, long gift_id,long productID ,int price ) {
         super(id, RULE5);
         this.id=id;
         this.gift_id=gift_id;

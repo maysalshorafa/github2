@@ -48,7 +48,7 @@ public class Rule8DBAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(int id, double parcent,  int product_id,int contain_club){
+    public int insertEntry(long id, double parcent,  long product_id,int contain_club){
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Rule8_COLUMN_ID,id);
@@ -67,7 +67,7 @@ public class Rule8DBAdapter {
         }
     }
 
-    public Rule8 getParcentForRule8(int rule_id) {
+    public Rule8 getParcentForRule8(long rule_id) {
         Rule8 rule8=null;
         Cursor cursor1 = db.rawQuery("select * from " + Rule8_TABLE_NAME+ " where id='" + rule_id + "'" , null);
         cursor1.moveToFirst();
@@ -79,9 +79,10 @@ public class Rule8DBAdapter {
             return rule8;
         }
         cursor1.moveToFirst();
-        rule8= new Rule8(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule8_COLUMN_ID))),
+        rule8= new Rule8(Long.parseLong(cursor1.getString(cursor1.getColumnIndex(Rule8_COLUMN_ID))),
                 Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule8_COLUMN_Parcent))),
-                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule8_Product_id))), Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule8_Contain_club))));
+                Long.parseLong(cursor1.getString(cursor1.getColumnIndex(Rule8_Product_id))),
+                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule8_Contain_club))));
         cursor1.close();
         return  rule8;
     }

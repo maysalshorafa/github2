@@ -51,7 +51,7 @@ public class Rule7DbAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(int id, double price,  int product_id,int contain_club){
+    public int insertEntry(long id, double price,  long product_id,int contain_club){
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Rule7_COLUMN_ID,id);
@@ -70,7 +70,7 @@ public class Rule7DbAdapter {
         }
     }
 
-    public Rule7 getPriceForRule7(int rule_id) {
+    public Rule7 getPriceForRule7(long rule_id) {
         Rule7 rule7=null;
         Cursor cursor1 = db.rawQuery("select * from " + Rule7_TABLE_NAME+ " where id='" + rule_id + "'" , null);
         cursor1.moveToFirst();
@@ -82,9 +82,10 @@ public class Rule7DbAdapter {
             return rule7;
         }
         cursor1.moveToFirst();
-        rule7= new Rule7(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule7_COLUMN_ID))),
+        rule7= new Rule7(Long.parseLong(cursor1.getString(cursor1.getColumnIndex(Rule7_COLUMN_ID))),
                 Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule7_COLUMN_Price))),
-                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule7_Product_id))), Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule7_Product_Contain_club))));
+                Long.parseLong(cursor1.getString(cursor1.getColumnIndex(Rule7_Product_id))),
+                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule7_Product_Contain_club))));
         cursor1.close();
         return  rule7;
     }

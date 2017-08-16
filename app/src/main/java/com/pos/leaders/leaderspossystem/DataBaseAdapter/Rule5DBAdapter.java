@@ -22,7 +22,7 @@ public class Rule5DBAdapter {
     protected static final String Rule5_Product_id = "product_id";
     protected static final String Rule5_Product_Price = "price";
 
-    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule5 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'giftID'   INTEGER  ,"+" 'product_id' INTEGER ,"+" 'price' INTEGER )";
+    public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS Rule5 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT," + " 'giftID'   INTEGER  ," + " 'product_id' INTEGER ," + " 'price' INTEGER )";
     private SQLiteDatabase db;
 
     // Context of the application using the database.
@@ -48,7 +48,8 @@ public class Rule5DBAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(int id, int giftID,  int product_id,int price){
+
+    public int insertEntry(long id, long giftID,  long product_id,int price){
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Rule5_COLUMN_ID,id);
@@ -68,11 +69,10 @@ public class Rule5DBAdapter {
         }
     }
 
-    public Rule5 getGiftForRule5(int rule_id) {
+    public Rule5 getGiftForRule5(long rule_id) {
         Rule5 rule5=null;
         Cursor cursor1 = db.rawQuery("select * from " + Rule5_TABLE_NAME+ " where id='" + rule_id + "'" , null);
         cursor1.moveToFirst();
-
 
         if (cursor1.getCount() < 1) // UserName Not Exist
         {
@@ -80,9 +80,10 @@ public class Rule5DBAdapter {
             return rule5;
         }
         cursor1.moveToFirst();
-        rule5= new Rule5(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule5_COLUMN_ID))),
-                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule5_COLUMN_Gift))),
-                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule5_Product_id))), Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule5_Product_Price))));
+        rule5= new Rule5(Long.parseLong(cursor1.getString(cursor1.getColumnIndex(Rule5_COLUMN_ID))),
+                Long.parseLong(cursor1.getString(cursor1.getColumnIndex(Rule5_COLUMN_Gift))),
+                Long.parseLong(cursor1.getString(cursor1.getColumnIndex(Rule5_Product_id))),
+                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule5_Product_Price))));
         cursor1.close();
         return  rule5;
     }
