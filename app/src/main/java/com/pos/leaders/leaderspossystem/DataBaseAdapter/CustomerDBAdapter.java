@@ -61,7 +61,6 @@ public class CustomerDBAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
-    private static boolean isEmpty = true;
 
     public CustomerDBAdapter(Context context) {
         this.context = context;

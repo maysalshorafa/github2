@@ -35,7 +35,6 @@ public class PaymentDBAdapter {
 	// Database open/upgrade helper
 	private DbHelper dbHelper;
 
-    private static boolean isEmpty = true;
 
 	public PaymentDBAdapter(Context context) {
 		this.context = context;
@@ -58,10 +57,8 @@ public class PaymentDBAdapter {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 
-		if(isEmpty){
 			val.put(PAYMENT_COLUMN_ID, Util.idHealth(this.db, PAYMENT_TABLE_NAME, PAYMENT_COLUMN_ID));
-			isEmpty = false;
-		}
+
 
 		val.put(PAYMENT_COLUMN_PAYMENTWAY, paymentWay);
 		val.put(PAYMENT_COLUMN_AMOUNT,amount );

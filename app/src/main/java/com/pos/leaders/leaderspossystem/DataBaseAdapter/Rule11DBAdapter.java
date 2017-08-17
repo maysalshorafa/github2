@@ -33,8 +33,6 @@ public class Rule11DBAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
-    private static boolean isEmpty = true;
-
     public Rule11DBAdapter(Context context) {
         this.context = context;
         this.dbHelper = new DbHelper(context);
@@ -56,10 +54,9 @@ public class Rule11DBAdapter {
     public long insertEntry(int amount, int discountAmount,int contain,int club_contain){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        if(isEmpty){
-            val.put(Rule11_COLUMN_ID,Util.idHealth(this.db, Rule11_TABLE_NAME, Rule11_COLUMN_ID));
-            isEmpty = false;
-        }
+
+        val.put(Rule11_COLUMN_ID,Util.idHealth(this.db, Rule11_TABLE_NAME, Rule11_COLUMN_ID));
+
         val.put(Rule11_COLUMN_Amount,amount);
         val.put(Rule11_COLUMN_DiscountAmount,discountAmount);
 

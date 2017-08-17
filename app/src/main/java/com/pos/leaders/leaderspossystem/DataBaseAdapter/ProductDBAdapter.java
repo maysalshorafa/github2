@@ -63,8 +63,6 @@ public class ProductDBAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
-    private static boolean isEmpty = true;
-
     public ProductDBAdapter(Context context) {
         this.context = context;
         this.dbHelper=new DbHelper(context);
@@ -89,11 +87,7 @@ public class ProductDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        if(isEmpty){
-            val.put(PRODUCTS_COLUMN_ID, Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID));
-            isEmpty = false;
-        }
-
+        val.put(PRODUCTS_COLUMN_ID, Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID));
         val.put(PRODUCTS_COLUMN_NAME, name);
         val.put(PRODUCTS_COLUMN_BARCODE, barCode);
         val.put(PRODUCTS_COLUMN_DESCRIPTION, description);

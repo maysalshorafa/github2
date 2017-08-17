@@ -44,7 +44,7 @@ public class ValueOfPointDB {
         return db;
     }
 
-    public int insertEntry(int  id, int value,String create_date){
+    public int insertEntry(long id,int value,String create_date){
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -52,8 +52,6 @@ public class ValueOfPointDB {
         val.put(Value_COLUMN,value);
 
         val.put(CreateDate_Value_COLUMN_Point,create_date);
-
-
         try {
 
             db.insert(ValueOfPoint_TABLE_NAME, null, val);
@@ -72,8 +70,6 @@ public class ValueOfPointDB {
             cursor.close();
             return valueOfPoint;
         }        cursor.moveToLast();
-
-
         valueOfPoint =new ValueOfPoint(Long.parseLong(cursor.getString(cursor.getColumnIndex(Value_COLUMN_Id))),Double.parseDouble(
                 cursor.getString(cursor.getColumnIndex(Value_COLUMN))),
                 cursor.getString(cursor.getColumnIndex(CreateDate_Value_COLUMN_Point)));

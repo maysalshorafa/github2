@@ -42,8 +42,6 @@ public class ProductOfferDBAdapter {
 	// Database open/upgrade helper
 	private DbHelper dbHelper;
 
-	private static boolean isEmpty = true;
-
 	public ProductOfferDBAdapter(Context context) {
 		this.context = context;
 		this.dbHelper = new DbHelper(context);
@@ -67,11 +65,7 @@ public class ProductOfferDBAdapter {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 
-		if(isEmpty){
-            val.put(PRODUCTOFFER_COLUMN_ID, Util.idHealth(this.db, PRODUCTOFFER_TABLE_NAME, PRODUCTOFFER_COLUMN_ID) );
-			isEmpty = false;
-		}
-
+		val.put(PRODUCTOFFER_COLUMN_ID, Util.idHealth(this.db, PRODUCTOFFER_TABLE_NAME, PRODUCTOFFER_COLUMN_ID) );
 		val.put(PRODUCTOFFER_COLUMN_PRODUCTID, productId);
 		val.put(PRODUCTOFFER_COLUMN_OFFERID, offerId);
 

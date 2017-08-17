@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule1;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 
 /**
@@ -56,6 +58,7 @@ public class Rule1DBAdapter {
         ContentValues val = new ContentValues();
 
         //Assign values for each row.
+        val.put(RULE1_COLUMN_ID, Util.idHealth(this.db,RULE1_TABLE_NAME,RULE1_COLUMN_ID));
         val.put(RULE1_COLUMN_QUANTITY, quantity);
         val.put(RULE1_COLUMN_PRICE, price);
         try {

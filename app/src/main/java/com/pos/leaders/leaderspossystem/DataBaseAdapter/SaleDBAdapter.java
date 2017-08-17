@@ -46,9 +46,6 @@ public class SaleDBAdapter {
 	// Database open/upgrade helper
 	private DbHelper dbHelper;
 
-	private static boolean isEmpty = true;
-
-
 	public SaleDBAdapter(Context context) {
 		this.context = context;
 		this.dbHelper = new DbHelper(context);
@@ -71,11 +68,7 @@ public class SaleDBAdapter {
 
 	public int insertEntry(long byUser, Date saleDate, int replacementNote, boolean canceled, double totalPrice,double totalPaid,long custmer_id,String custmer_name) {
 		ContentValues val = new ContentValues();
-
-		if(isEmpty){
-            val.put(SALES_COLUMN_ID, Util.idHealth(this.db, SALES_TABLE_NAME, SALES_COLUMN_ID));
-            isEmpty = false;
-		}
+		val.put(SALES_COLUMN_ID, Util.idHealth(this.db, SALES_TABLE_NAME, SALES_COLUMN_ID));
 		//Assign values for each row.
 		val.put(SALES_COLUMN_BYUSER, byUser);
 		val.put(SALES_COLUMN_SALEDATE, new Date().getTime());

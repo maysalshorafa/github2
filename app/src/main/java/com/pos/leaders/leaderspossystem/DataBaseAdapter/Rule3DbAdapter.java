@@ -50,7 +50,7 @@ public class Rule3DbAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(int id,double parcent,int contain,int club_contain){
+    public int insertEntry(long id,double parcent,int contain,int club_contain){
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Rule3_COLUMN_ID,id);

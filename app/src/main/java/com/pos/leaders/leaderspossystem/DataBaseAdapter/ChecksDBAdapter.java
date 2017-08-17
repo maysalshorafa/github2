@@ -46,8 +46,6 @@ public class ChecksDBAdapter {
 	// Database open/upgrade helper
 	private DbHelper dbHelper;
 
-	private static boolean isEmpty = true;
-
 
 	public ChecksDBAdapter(Context context) {
 		this.context = context;
@@ -72,11 +70,8 @@ public class ChecksDBAdapter {
 	public int insertEntry(int checkNum,int bankNum,int branchNum,int accountNum,double amount, long saleId) {
 		ContentValues val = new ContentValues();
 
+		val.put(CHECKS_COLUMN_ID, Util.idHealth(this.db,CHECKS_TABLE_NAME, CHECKS_COLUMN_ID) );
 
-		if(isEmpty){
-			val.put(CHECKS_COLUMN_ID, Util.idHealth(this.db,CHECKS_TABLE_NAME, CHECKS_COLUMN_ID) );
-			isEmpty = false;
-		}
 
 		//Assign values for each row.
 		val.put(CHECKS_COLUMN_CHECKNUMBER, checkNum);

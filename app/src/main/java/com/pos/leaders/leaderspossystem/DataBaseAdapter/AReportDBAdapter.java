@@ -45,8 +45,6 @@ public class AReportDBAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
-    private static boolean isEmpty = true;
-
     public AReportDBAdapter(Context context) {
         this.context = context;
         this.dbHelper = new DbHelper(context);
@@ -69,10 +67,7 @@ public class AReportDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        if(isEmpty){
-            val.put(A_REPORT_COLUMN_ID, Util.idHealth(this.db, A_REPORT_TABLE_NAME, A_REPORT_COLUMN_ID));
-            isEmpty = false;
-        }
+        val.put(A_REPORT_COLUMN_ID, Util.idHealth(this.db, A_REPORT_TABLE_NAME, A_REPORT_COLUMN_ID));
 
         val.put(A_REPORT_COLUMN_CREATEDATE, createDate);
         val.put(A_REPORT_COLUMN_BYUSER, byUser);

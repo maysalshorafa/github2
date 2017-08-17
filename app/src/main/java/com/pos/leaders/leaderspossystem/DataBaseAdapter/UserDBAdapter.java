@@ -46,9 +46,6 @@ public class UserDBAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
-    private static boolean isEmpty = true;
-
-
     public UserDBAdapter(Context context) {
         this.context = context;
         this.dbHelper=new DbHelper(context);
@@ -71,12 +68,7 @@ public class UserDBAdapter {
     public int insertEntry(String userName,String password,String firstName,String lastName,String phoneNumber,Double persent,Double hourlyWag,String permissions_name ) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
-
-        if(isEmpty){
-            val.put(USERS_COLUMN_ID, Util.idHealth(this.db, USERS_TABLE_NAME, USERS_COLUMN_ID));
-            isEmpty = false;
-        }
-
+        val.put(USERS_COLUMN_ID, Util.idHealth(this.db, USERS_TABLE_NAME, USERS_COLUMN_ID));
         val.put(USERS_COLUMN_USERNAME, userName);
         val.put(USERS_COLUMN_PASSWORD, password);
         val.put(USERS_COLUMN_FIRSTNAME, firstName);

@@ -40,8 +40,6 @@ public class GroupAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
-    private static boolean isEmpty = true;
-
     public GroupAdapter(Context context) {
         this.context = context;
         this.dbHelper = new DbHelper(context);
@@ -92,11 +90,8 @@ public class GroupAdapter {
     }
     public int insertEntry(String name,String description, String type, String parcent, String amount, String point){
         ContentValues val = new ContentValues();
+        val.put(Group_COLUMN__ID, Util.idHealth(this.db, Group_TABLE_NAME, Group_COLUMN__ID));
 
-        if(isEmpty){
-            val.put(Group_COLUMN__ID, Util.idHealth(this.db, Group_TABLE_NAME, Group_COLUMN__ID));
-            isEmpty = false;
-        }
 
         //Assign values for each row.
         val.put(Group_COLUMN_Name,name);

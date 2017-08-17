@@ -42,7 +42,6 @@ public class ZReportDBAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
-    private static boolean isEmpty = true;
 
     public ZReportDBAdapter(Context context) {
         this.context = context;
@@ -66,10 +65,8 @@ public class ZReportDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        if(isEmpty){
-            val.put(Z_REPORT_COLUMN_ID, Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID));
-            isEmpty = false;
-        }
+        val.put(Z_REPORT_COLUMN_ID, Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID));
+
 
         val.put(Z_REPORT_COLUMN_CREATEDATE, createDate.getTime());
         val.put(Z_REPORT_COLUMN_BYUSER, (int)byUser);

@@ -39,8 +39,6 @@ public class ScheduleWorkersDBAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
-    private static boolean isEmpty = true;
-
     public ScheduleWorkersDBAdapter(Context context) {
         this.context = context;
         this.dbHelper=new DbHelper(context);
@@ -64,11 +62,7 @@ public class ScheduleWorkersDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        if(isEmpty){
-            val.put(SCHEDULEWORKERS_COLUMN_ID, Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID));
-            isEmpty = false;
-        }
-
+        val.put(SCHEDULEWORKERS_COLUMN_ID, Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID));
         val.put(SCHEDULEWORKERS_COLUMN_USERID, userId);
         try {
             long lastID = db.insert(SCHEDULEWORKERS_TABLE_NAME, null, val);

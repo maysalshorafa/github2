@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule2;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 /**
  * Created by KARAM on 01/08/2017.
@@ -53,7 +54,7 @@ public class Rule2DBAdapter {
 
     public int insertEntry(int quantity,float percent) {
         ContentValues val = new ContentValues();
-
+        val.put(RULE2_COLUMN_ID, Util.idHealth(this.db,RULE2_TABLE_NAME,RULE2_COLUMN_ID));
         //Assign values for each row.
         val.put(RULE2_COLUMN_QUANTITY, quantity);
         val.put(RULE2_COLUMN_PERCENT, percent);

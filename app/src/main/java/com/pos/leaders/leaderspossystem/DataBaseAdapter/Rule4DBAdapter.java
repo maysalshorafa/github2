@@ -9,22 +9,23 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule4;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 /**
  * Created by KARAM on 01/08/2017.
  */
 
 public class Rule4DBAdapter {
-    private static final String LOG_TAG = "Rule2DB";
+    private static final String LOG_TAG = "Rule4DB";
     // Table Name
-    public static final String RULE2_TABLE_NAME = "Rule2";
+    public static final String RULE4_TABLE_NAME = "Rule4";
     // Column Names
-    protected static final String RULE2_COLUMN_ID = "id";
-    protected static final String RULE2_COLUMN_QUANTITY = "quantity";
-    protected static final String RULE2_COLUMN_DISCOUNTPRICE = "discountPrice";
+    protected static final String RULE4_COLUMN_ID = "id";
+    protected static final String RULE4_COLUMN_QUANTITY = "quantity";
+    protected static final String RULE4_COLUMN_DISCOUNTPRICE = "discountPrice";
 
-    public static final String DATABASE_CREATE = "CREATE TABLE `"+ RULE2_TABLE_NAME +"` ( `"+ RULE2_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "`"+ RULE2_COLUMN_QUANTITY +"` INTEGER NOT NULL, `"+ RULE2_COLUMN_DISCOUNTPRICE +"` REAL NOT NULL)";
+    public static final String DATABASE_CREATE = "CREATE TABLE `"+ RULE4_TABLE_NAME +"` ( `"+ RULE4_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "`"+ RULE4_COLUMN_QUANTITY +"` INTEGER NOT NULL, `"+ RULE4_COLUMN_DISCOUNTPRICE +"` REAL NOT NULL)";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -53,15 +54,15 @@ public class Rule4DBAdapter {
 
     public int insertEntry(int quantity,double discountPrice) {
         ContentValues val = new ContentValues();
-
+        val.put(RULE4_COLUMN_ID, Util.idHealth(this.db,RULE4_TABLE_NAME,RULE4_COLUMN_ID));
         //Assign values for each row.
-        val.put(RULE2_COLUMN_QUANTITY, quantity);
-        val.put(RULE2_COLUMN_DISCOUNTPRICE, discountPrice);
+        val.put(RULE4_COLUMN_QUANTITY, quantity);
+        val.put(RULE4_COLUMN_DISCOUNTPRICE, discountPrice);
         try {
-            db.insert(RULE2_TABLE_NAME, null, val);
+            db.insert(RULE4_TABLE_NAME, null, val);
             return 1;
         } catch (SQLException ex) {
-            Log.e(LOG_TAG, "inserting Entry at " + RULE2_TABLE_NAME + ": " + ex.getMessage());
+            Log.e(LOG_TAG, "inserting Entry at " + RULE4_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
@@ -69,15 +70,15 @@ public class Rule4DBAdapter {
     public Rule4 getByID(int id) {
         Rule4 rule=null;
 
-        Cursor cursor = db.rawQuery("select * from " + RULE2_TABLE_NAME +" where id="+id, null);
+        Cursor cursor = db.rawQuery("select * from " + RULE4_TABLE_NAME +" where id="+id, null);
         if (cursor.getCount() < 1) // zReport Not Exist
         {
             cursor.close();
             return null;
         }
         cursor.moveToFirst();
-        rule = new Rule4(id, Integer.parseInt(cursor.getString(cursor.getColumnIndex(RULE2_COLUMN_QUANTITY))),
-                cursor.getFloat(cursor.getColumnIndex(RULE2_COLUMN_DISCOUNTPRICE)));
+        rule = new Rule4(id, Integer.parseInt(cursor.getString(cursor.getColumnIndex(RULE4_COLUMN_QUANTITY))),
+                cursor.getFloat(cursor.getColumnIndex(RULE4_COLUMN_DISCOUNTPRICE)));
         cursor.close();
 
         return rule;

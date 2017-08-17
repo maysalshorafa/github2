@@ -40,7 +40,6 @@ public class DepartmentDBAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
-    private static boolean isEmpty = true;
 
     public DepartmentDBAdapter(Context context) {
         this.context = context;
@@ -67,12 +66,7 @@ public class DepartmentDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        if(isEmpty){
-                val.put(DEPARTMENTS_COLUMN_ID, Util.idHealth(this.db,DEPARTMENTS_TABLE_NAME,DEPARTMENTS_COLUMN_ID));
-            isEmpty = false;
-        }
-
-
+        val.put(DEPARTMENTS_COLUMN_ID, Util.idHealth(this.db,DEPARTMENTS_TABLE_NAME,DEPARTMENTS_COLUMN_ID));
         val.put(DEPARTMENTS_COLUMN_NAME, name);
         val.put(DEPARTMENTS_COLUMN_BYUSER, byUser);
         try {

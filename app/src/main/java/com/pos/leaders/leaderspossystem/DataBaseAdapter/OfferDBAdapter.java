@@ -53,8 +53,6 @@ public class OfferDBAdapter {
 	// Database open/upgrade helper
 	private DbHelper dbHelper;
 
-	private static boolean isEmpty = true;
-
 	public OfferDBAdapter(Context context) {
 		this.context = context;
 		this.dbHelper = new DbHelper(context);
@@ -81,10 +79,7 @@ public class OfferDBAdapter {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 
-        if(isEmpty){
-            val.put(OFFER_COLUMN_ID, Util.idHealth(this.db, OFFER_TABLE_NAME, OFFER_COLUMN_ID));
-            isEmpty = false;
-        }
+		val.put(OFFER_COLUMN_ID, Util.idHealth(this.db, OFFER_TABLE_NAME, OFFER_COLUMN_ID));
 
 		val.put(OFFER_COLUMN_NAME, name);
 		val.put(OFFER_COLUMN_STARTDATE, startDate);
