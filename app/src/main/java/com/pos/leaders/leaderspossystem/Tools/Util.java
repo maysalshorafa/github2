@@ -1,10 +1,13 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.util.Log;
+
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -169,34 +174,35 @@ public class Util {
     }
 
     private static long getCurrentLastID(SQLiteDatabase db, String tableName, String idField){
-        Cursor cursor = db.rawQuery("select * from " + tableName + " where id like '"+SESSION.POS_ID_NUMBER+"________________' order by id desc limit 1", null);
+        long i = 0;
+
+        Cursor cursor = db.rawQuery("select  "+tableName+"  from  "+IdsCounterDBAdapter.IDS_COUNTER_TABLE_NAME+";", null);
+        Log.i("ids", cursor.toString());
         if (cursor.getCount() < 1) // don`t have any sale yet
         {
             cursor.close();
-            return 0;
+            i = (long) SESSION.POS_ID_NUMBER * SESSION.firstIDOffset;
         }
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            long id = cursor.getLong(cursor.getColumnIndex(idField));
-            if(Util.checkID(id))
-                return id;
-            cursor.moveToNext();
-        }
+        i=Long.parseLong(cursor.getString(0));
 
-        cursor.close();
-        return 0;
+        ContentValues values = new ContentValues();
+        if(i==0){
+            i = (long) SESSION.POS_ID_NUMBER * SESSION.firstIDOffset;
+            values.put(tableName,i);
+        }
+        else{
+            i = i + 1;
+            values.put(tableName,i);
+        }
+        db.update(IdsCounterDBAdapter.IDS_COUNTER_TABLE_NAME,values, null, null);
+        return i;
+
     }
 
     public static long idHealth(SQLiteDatabase db, String tableName, String idField){
-        long lastId = getCurrentLastID(db,tableName,idField);
-        long newID = 0;
-        if(lastId==0){
-            newID = SESSION.POS_ID_NUMBER * SESSION.firstIDOffset;
-        }
-        else{
-            newID = lastId + 1;
-        }
-        return newID;
+        return  getCurrentLastID(db,tableName,idField);
     }
+
 
 }
