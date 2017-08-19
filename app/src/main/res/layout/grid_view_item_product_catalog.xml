@@ -10,15 +10,15 @@
     android:focusable="false">
 
     <TextView
-        android:text="TextView"
+        android:id="@+id/itemProductCatalog_TVName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/itemProductCatalog_TVName"
-        android:textSize="18sp"
-        android:textDirection="anyRtl"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
+        android:focusable="false"
+        android:text="TextView"
         android:textColor="@color/black"
-        android:focusable="false"/>
+        android:textDirection="anyRtl"
+        android:textSize="18sp" />
 
     <TextView
         android:text="TextView"

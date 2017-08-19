@@ -40,4 +40,8 @@ public class SESSION {
 		SESSION._SALE = new Sale(SESSION._USER.getId(), new Date(), 0, false, 0, 0);
 		SESSION._CHECKS_HOLDER = new ArrayList<Check>();
 	}
+
+
+	public static String token = "";
 }
+
