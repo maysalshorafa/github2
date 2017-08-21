@@ -80,7 +80,7 @@ public class DashBoard extends Activity {
     };
     int[] imageId = {
             R.drawable.home,
-            R.drawable.reports,
+            R.drawable.dash_bord_report,
             R.drawable.products,
             R.drawable.departments,
             R.drawable.users,
