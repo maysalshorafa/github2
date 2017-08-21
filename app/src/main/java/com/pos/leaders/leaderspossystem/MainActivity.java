@@ -2185,12 +2185,18 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
                 sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
+
+                /** Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
+                 cInformation= String.valueOf(Ppoint.getPoint());
+
+                 information.setText(cInformation);**/
+                saleDBAdapter.close();
                 if (equleUsedPoint) {
                     saleTotalPrice = 0.0;
 
                     SESSION._SALE.setTotalPaid(0.0);
                     saleDBAdapter.updateEntry(SESSION._SALE);
-<<<<<<< HEAD
+
                     usedpointDbAdapter.insertEntry(saleID,newPoint,_custmer_id);
                 }
                 else if(biggerUsedPoint){
@@ -2198,22 +2204,16 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 }
                 else if(lessUsedPoint) {
                     saleTotalPrice=0.0;
-=======
+
                     usedpointDbAdapter.insertEntry(saleID, newPoint, _custmer_id);
                 } else if (biggerUsedPoint) {
                     usedpointDbAdapter.insertEntry(saleID, aPoint, _custmer_id);
                 } else if (lessUsedPoint) {
->>>>>>> master
-                    SESSION._SALE.setTotalPaid(0.0);
+   SESSION._SALE.setTotalPaid(0.0);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleID, newPoint, _custmer_id);
 
                 }
-                /** Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
-                 cInformation= String.valueOf(Ppoint.getPoint());
-
-                 information.setText(cInformation);**/
-                saleDBAdapter.close();
 
 
                 orderDBAdapter.open();
