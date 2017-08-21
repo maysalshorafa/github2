@@ -1,16 +1,15 @@
-package com.pos.leaders.leaderspossystem.Tools;
+package com.pos.leaders.leaderspossystem.Models;
 
 import android.content.Context;
 
-import com.pos.leaders.leaderspossystem.Models.Point;
-
 /**
- * Created by Win8.1 on 8/8/2017.
+ * Created by Win8.1 on 7/26/2017.
  */
 
-public class UNUsedPoint {
+public class Point {
     public int saleId ;
     public int point;
+    public int custmer_id;
 
     public int getCustmer_id() {
         return custmer_id;
@@ -19,8 +18,6 @@ public class UNUsedPoint {
     public void setCustmer_id(int custmer_id) {
         this.custmer_id = custmer_id;
     }
-
-    public int custmer_id;
 
     public int getSaleId() {
         return saleId;
@@ -38,14 +35,15 @@ public class UNUsedPoint {
         this.point = point;
     }
 
-    public UNUsedPoint(int saleId, int point,int custmer_id) {
-        this.saleId=saleId;
-        this.point=point;
-        this.custmer_id=custmer_id;
+    public Point(int saleId, int point,int custmer_id) {
+        this.saleId = saleId;
+        this.point = point;
+        this.custmer_id = custmer_id;
     }
 
-    public UNUsedPoint(Context context) {
+    public Point(Context context) {
     }
+
 
 
 

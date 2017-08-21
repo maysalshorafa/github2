@@ -69,7 +69,7 @@ public class ZReportDBAdapter {
 
 
         val.put(Z_REPORT_COLUMN_CREATEDATE, createDate.getTime());
-        val.put(Z_REPORT_COLUMN_BYUSER, (int)byUser);
+        val.put(Z_REPORT_COLUMN_BYUSER, byUser);
         val.put(Z_REPORT_COLUMN_STARTSALEID, startSaleID);
         val.put(Z_REPORT_COLUMN_ENDSALEID, endSaleID);
         try {
