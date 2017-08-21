@@ -38,7 +38,7 @@ public class BackupActivity extends Activity {
     ProductDBAdapter productDBAdapter;
     DepartmentDBAdapter departmentDBAdapter;
 
-    Map<String,Integer> departmentMap=new HashMap<String,Integer>();
+    Map<String,Long> departmentMap=new HashMap<String,Long>();
     List<String> departments;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class BackupActivity extends Activity {
 
 
 
-        departmentMap.put(getBaseContext().getString(R.string.all),0);
+        departmentMap.put(getBaseContext().getString(R.string.all),0L);
 
         departments.add(getBaseContext().getString(R.string.all));
         productDBAdapter=new ProductDBAdapter(this);

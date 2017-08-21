@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,8 @@ public class OrderDBAdapter {
 	// Database open/upgrade helper
 	private DbHelper dbHelper;
 
+	private static boolean isEmpty = true;
+
 	public OrderDBAdapter(Context context) {
 		this.context = context;
 		this.dbHelper = new DbHelper(context);
@@ -60,8 +64,15 @@ public class OrderDBAdapter {
 		return db;
 	}
 
-	public int insertEntry(int productId, int counter, double userOffer, int saleId) {
+
+
+
+	public int insertEntry(long productId, int counter, double userOffer, long saleId) {
 		ContentValues val = new ContentValues();
+		if(isEmpty){
+            val.put(ORDER_COLUMN_ID, Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID));
+			isEmpty = false;
+		}
 		//Assign values for each row.
 		val.put(ORDER_COLUMN_PRODUCTID, productId);
 		val.put(ORDER_COLUMN_COUNTER, counter);
@@ -75,8 +86,11 @@ public class OrderDBAdapter {
 		}
 	}
 
-    public int insertEntry(int productId, int counter, double userOffer, int saleId, double price, double original_price, double discount) {
+    public int insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount) {
         ContentValues val = new ContentValues();
+
+		val.put(ORDER_COLUMN_ID, Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID));
+
         //Assign values for each row.
         val.put(ORDER_COLUMN_PRODUCTID, productId);
         val.put(ORDER_COLUMN_COUNTER, counter);
@@ -93,7 +107,7 @@ public class OrderDBAdapter {
         }
     }
 
-	public Order getOrderByID(int id) {
+	public Order getOrderByID(long id) {
 		Order order = null;
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where id='" + id + "'", null);
 		if (cursor.getCount() < 1) // UserName Not Exist
@@ -102,8 +116,8 @@ public class OrderDBAdapter {
 			return order;
 		}
 		cursor.moveToFirst();
-		order =new Order(make(cursor));
-		cursor.close();
+        order = new Order(make(cursor));
+        cursor.close();
 
 		return order;
 	}
@@ -134,7 +148,7 @@ public class OrderDBAdapter {
 
 		return ordersList;
 	}
-	public List<Order> getOrderBySaleID(int  saleID){
+	public List<Order> getOrderBySaleID(long saleID){
 		List<Order> saleOrderList=new ArrayList<Order>();
 		Cursor cursor =  db.rawQuery( "select * from "+ORDER_TABLE_NAME+" where "+ORDER_COLUMN_SALEID+"="+saleID, null );
 		cursor.moveToFirst();
@@ -146,11 +160,11 @@ public class OrderDBAdapter {
 		return saleOrderList;
 	}
 	private Order make(Cursor cursor){
-		return new Order(Integer.parseInt(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_ID))),
-				Integer.parseInt(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_PRODUCTID))),
+		return new Order(Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_ID))),
+				Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_PRODUCTID))),
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_COUNTER))),
 				Double.parseDouble(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_USEROFFER))),
-				Integer.parseInt(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_SALEID))),
+				Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_SALEID))),
                 cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_PRICE)),
                 cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_ORIGINAL_PRICE)),
                 cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_DISCOUNT)));

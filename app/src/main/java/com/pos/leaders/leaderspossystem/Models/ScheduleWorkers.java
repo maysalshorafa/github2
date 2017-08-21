@@ -7,14 +7,14 @@ import java.util.Date;
  */
 
 public class ScheduleWorkers {
-    private int id;
-    private int userId;
+    private long id;
+    private long userId;
     private Date date;
     private Date startTime;
     private Date exitTime;
 
     // Constructors
-    public ScheduleWorkers(int id, int userId, Date date, Date startTime, Date exitTime) {
+    public ScheduleWorkers(long id, long userId, Date date, Date startTime, Date exitTime) {
         this.id = id;
         this.userId = userId;
         this.date = date;
@@ -22,14 +22,14 @@ public class ScheduleWorkers {
         this.exitTime = exitTime;
     }
 
-    public ScheduleWorkers(int id, int userId, Date date, Date startTime) {
+    public ScheduleWorkers(long id, long userId, Date date, Date startTime) {
         this.id = id;
         this.userId = userId;
         this.date = date;
         this.startTime = startTime;
     }
 
-    public ScheduleWorkers(int userId,Date date,Date startTime){
+    public ScheduleWorkers(long userId,Date date,Date startTime){
         this.userId=userId;
         this.date=date;
         this.startTime=startTime;
@@ -40,11 +40,11 @@ public class ScheduleWorkers {
     }
 
     // Getters
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
@@ -62,7 +62,6 @@ public class ScheduleWorkers {
 
 
     // Setters
-
     public void setExitTime(Date exitTime) {
         this.exitTime = exitTime;
     }

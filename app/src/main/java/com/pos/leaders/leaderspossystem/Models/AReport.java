@@ -8,14 +8,14 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
  */
 
 public class AReport {
-    private int id;
+    private long id;
     private long creationDate;
-    private int byUserID;
+    private long byUserID;
     private User byUser;
     private double amount;
-    private int lastSaleID;
+    private long lastSaleID;
     private Sale lastSale;
-    private int lastZReportID;
+    private long lastZReportID;
     private ZReport lastZReport;
 
 
@@ -23,7 +23,7 @@ public class AReport {
 
     public AReport() {}
 
-    public AReport(long creationDate, int byUserID, double amount, int lastSaleID, int lastZReportID) {
+    public AReport(long creationDate, int byUserID, double amount, long lastSaleID, long lastZReportID) {
         this.creationDate = creationDate;
         this.byUserID = byUserID;
         this.amount = amount;
@@ -39,7 +39,7 @@ public class AReport {
         this.amount = amount;
     }
 
-    public AReport(int id, long creationDate, int byUserID, double amount, int lastSaleID, int lastZReportID) {
+    public AReport(long id, long creationDate, long byUserID, double amount, long lastSaleID, long lastZReportID) {
         this.id = id;
         this.creationDate = creationDate;
         this.byUserID = byUserID;
@@ -51,7 +51,7 @@ public class AReport {
 
     //region Getter
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -59,7 +59,7 @@ public class AReport {
         return creationDate;
     }
 
-    public int getByUserID() {
+    public long getByUserID() {
         return byUserID;
     }
 
@@ -71,7 +71,7 @@ public class AReport {
         return amount;
     }
 
-    public int getLastSaleID() {
+    public long getLastSaleID() {
         return lastSaleID;
     }
 
@@ -79,7 +79,7 @@ public class AReport {
         return lastSale;
     }
 
-    public int getLastZReportID() {
+    public long getLastZReportID() {
         return lastZReportID;
     }
 
@@ -92,7 +92,7 @@ public class AReport {
 
     //region Setter
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -100,7 +100,7 @@ public class AReport {
         this.creationDate = creationDate;
     }
 
-    public void setByUserID(int byUserID) {
+    public void setByUserID(long byUserID) {
         this.byUserID = byUserID;
     }
 
@@ -112,7 +112,7 @@ public class AReport {
         this.amount = amount;
     }
 
-    public void setLastSaleID(int lastSaleID) {
+    public void setLastSaleID(long lastSaleID) {
         this.lastSaleID = lastSaleID;
     }
 
@@ -120,7 +120,7 @@ public class AReport {
         this.lastSale = lastSale;
     }
 
-    public void setLastZReportID(int lastZReportID) {
+    public void setLastZReportID(long lastZReportID) {
         this.lastZReportID = lastZReportID;
     }
 

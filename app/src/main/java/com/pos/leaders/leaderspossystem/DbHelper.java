@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,7 +16,9 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.*;
 import com.pos.leaders.leaderspossystem.Models.*;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 /**
  * Created by Karam on 16/10/2016.
@@ -33,10 +36,24 @@ public class DbHelper extends SQLiteOpenHelper {
     protected static final String CONTACTS_COLUMN_PHONE = "phone";
     private HashMap hp;
 
-    //19
+    private Context context;
+
+    //21
     public DbHelper(Context context)
     {
-        super(context, DATABASE_NAME ,null,19);
+        super(context, DATABASE_NAME ,null,21);
+        this.context = context;
+    }
+
+    public List<String> tablesName(SQLiteDatabase db){
+        Cursor c=db.rawQuery("SELECT name FROM sqlite_master WHERE type='table';", null);
+        List<String> tablesNames=new ArrayList<String>();
+        c.moveToFirst();
+        while (!c.isAfterLast()){
+            tablesNames.add(c.getString(0));
+            c.moveToNext();
+        }
+        return tablesNames;
     }
 
     @Override
@@ -44,9 +61,19 @@ public class DbHelper extends SQLiteOpenHelper {
         // TODO Auto-generated method stub
 
 
-      db.execSQL(AReportDBAdapter.DATABASE_CREATE);
+        List<String> tblNames = tablesName(db);
+        String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
+        db.execSQL(dbc);
+        db.execSQL(IdsCounterDBAdapter.INIT(tblNames));
 
+<<<<<<< HEAD
      /** db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
+=======
+       /**
+        *
+        db.execSQL(AReportDBAdapter.DATABASE_CREATE);
+        db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
+>>>>>>> master
         db.execSQL(UserDBAdapter.DATABASE_CREATE);
         db.execSQL(SaleDBAdapter.DATABASE_CREATE);
         db.execSQL(OrderDBAdapter.DATABASE_CREATE);

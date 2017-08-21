@@ -12,6 +12,8 @@ import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -81,9 +83,11 @@ public class ProductDBAdapter {
     }
 
     public int insertEntry(String name,String barCode,String description,double price,double costPrice,
-                           boolean withTax,boolean weighable,int depId,int byUser ,int pos,int point_system) {
+                           boolean withTax,boolean weighable,long depId,long byUser ,int pos,int point_system) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
+
+        val.put(PRODUCTS_COLUMN_ID, Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID));
         val.put(PRODUCTS_COLUMN_NAME, name);
         val.put(PRODUCTS_COLUMN_BARCODE, barCode);
         val.put(PRODUCTS_COLUMN_DESCRIPTION, description);
@@ -94,7 +98,7 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_DEPARTMENTID, depId);
         val.put(PRODUCTS_COLUMN_BYUSER, byUser);
       //  val.put(PRODUCTS_COLUMN_status, status);
-val.put(PRODUCTS_COLUMN_with_pos,pos);
+        val.put(PRODUCTS_COLUMN_with_pos,pos);
         val.put(PRODUCTS_COLUMN_with_point_system,point_system);
         try {
             db.insert(PRODUCTS_TABLE_NAME, null, val);
@@ -130,7 +134,7 @@ val.put(PRODUCTS_COLUMN_with_pos,pos);
         }
     }
 
-    public double getProductPrice(int id){
+    public double getProductPrice(long id){
         Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where id='" + id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
@@ -142,7 +146,7 @@ val.put(PRODUCTS_COLUMN_with_pos,pos);
     }
 
 
-    public Product getProductByID(int id) {
+    public Product getProductByID(long id) {
         if(id==-1){
             return new Product(-1, context.getResources().getString(R.string.general));
         }
@@ -154,19 +158,7 @@ val.put(PRODUCTS_COLUMN_with_pos,pos);
             return product;
         }
         cursor.moveToFirst();
-        product = new Product(id,cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_NAME)),
-                cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BARCODE)),
-                cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DESCRIPTION)),
-                Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE))),
-                Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_COSTPRICE))),
-                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WITHTAX))),
-                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHABLE))),
-                DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
-                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))) ,
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_pos))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_point_system))));
+        product = makeProduct(cursor);
         cursor.close();
 
         return product;
@@ -181,25 +173,13 @@ val.put(PRODUCTS_COLUMN_with_pos,pos);
             return product;
         }
         cursor.moveToFirst();
-        product =new Product(Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_ID))),
-                cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_NAME)),
-                cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BARCODE)),
-                cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DESCRIPTION)),
-                Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE))),
-                Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_COSTPRICE))),
-                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WITHTAX))),
-                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHABLE))),
-                DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
-                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_pos))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_point_system))));
+        product = makeProduct(cursor);
         cursor.close();
 
         return product;
     }
 
-    public int deleteEntry(int id) {
+    public int deleteEntry(long id) {
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -240,20 +220,8 @@ val.put(PRODUCTS_COLUMN_with_pos,pos);
 
 
         while(!cursor.isAfterLast()){
-            productsList.add(new Product(Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_ID))),
-                    cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_NAME)),
-                    cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BARCODE)),
-                    cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DESCRIPTION)),
-                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE))),
-                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_COSTPRICE))),
-                    Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WITHTAX))),
-                    Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHABLE))),
-                    DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
-                    Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED))),
-                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID))),
-                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))),  Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_pos))),  Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_point_system)))));
+            productsList.add(makeProduct(cursor));
             cursor.moveToNext();
-
         }
 
         return productsList;
@@ -269,26 +237,15 @@ val.put(PRODUCTS_COLUMN_with_pos,pos);
         return productsList;
     }
 
-	public List<Product> getAllProductsByDepartment(int departmentId){
+	public List<Product> getAllProductsByDepartment(long departmentId){
 		List<Product> productsList =new ArrayList<Product>();
 
 		Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+PRODUCTS_COLUMN_DEPARTMENTID+"="+departmentId+" and "+PRODUCTS_COLUMN_DISENABLED+"=0 order by id desc", null );
 		cursor.moveToFirst();
 
 		while(!cursor.isAfterLast()){
-			productsList.add(new Product(Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_ID))),
-					cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_NAME)),
-					cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BARCODE)),
-					cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DESCRIPTION)),
-					Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE))),
-					Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_COSTPRICE))),
-					Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WITHTAX))),
-					Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHABLE))),
-					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
-					Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED))),
-					Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID))),
-					Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))) ,  Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_pos))),  Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_point_system)))));
-			cursor.moveToNext();
+            productsList.add(makeProduct(cursor));
+            cursor.moveToNext();
 		}
 
 		return productsList;
@@ -324,7 +281,7 @@ val.put(PRODUCTS_COLUMN_with_pos,pos);
 
     private Product makeProduct(Cursor cursor){
         Product p=new Product(
-        Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_ID))),
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_NAME)),
                 cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BARCODE)),
                 cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DESCRIPTION)),
@@ -334,8 +291,10 @@ val.put(PRODUCTS_COLUMN_with_pos,pos);
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHABLE))),
                 DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))),  Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_pos))),  Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_point_system))));
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID))),
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_pos))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_point_system))));
         if(p.getDescription()==null){
             p.setDescription("");
         }
@@ -344,35 +303,4 @@ val.put(PRODUCTS_COLUMN_with_pos,pos);
         }
         return p;
     }
-
-    //mays
-    public HashMap getProductByStatus(String status){
-        Product product = null;
-        Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where status='" + status + "'", null);
-        if (cursor.getCount() < 1) // UserName Not Exist
-        {
-            cursor.close();
-        }
-        cursor.moveToFirst();
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put(Config.PRODUCTS_NAME,cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_NAME)));
-        hashMap.put(Config.PRODUCTS_BARCODE,cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BARCODE)));
-        hashMap.put(Config.PRODUCTS_DESCRIPTION, cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DESCRIPTION)));
-        hashMap.put(Config.PRODUCTS_PRICE, String.valueOf(Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE)))));
-        hashMap.put(Config.PRODUCTS_COSTPRICE, String.valueOf(Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_COSTPRICE)))));
-        hashMap.put(Config.PRODUCTS_WITHTAX, String.valueOf(Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WITHTAX)))));
-        hashMap.put(Config.PRODUCTS_WEIGHABLE, String.valueOf(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHABLE)))));
-        hashMap.put(Config.PRODUCTS_DISENABLED, String.valueOf(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED)))));
-        hashMap.put(Config.PRODUCTS_CREATINGDATE, String.valueOf(DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE)))));
-        hashMap.put(Config.PRODUCTS_DEPARTMENTID, String.valueOf(Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID)))));
-        hashMap.put(Config.PRODUCTS_BYUSER, String.valueOf(Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER)))));
-
-
-        cursor.close();
-
-        return hashMap;
-    }
-
-
-
 }

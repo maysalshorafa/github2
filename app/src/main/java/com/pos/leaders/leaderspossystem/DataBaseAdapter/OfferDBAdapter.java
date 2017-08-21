@@ -11,6 +11,8 @@ import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -73,9 +75,12 @@ public class OfferDBAdapter {
 		return insertEntry(offer.getName(), offer.getStartDate().getTime(), offer.getEndDate().getTime(), offer.getCreatingDate().getTime(), offer.getStatus(), offer.getByUser(), offer.getRuleName(), offer.getRuleID());
 	}
 
-	public int insertEntry(String name,long startDate,long endDate,long createDate,int status,int byUser,String ruleName,int ruleID){
+	public int insertEntry(String name,long startDate,long endDate,long createDate,int status,int byUser,String ruleName,long ruleID){
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
+
+		val.put(OFFER_COLUMN_ID, Util.idHealth(this.db, OFFER_TABLE_NAME, OFFER_COLUMN_ID));
+
 		val.put(OFFER_COLUMN_NAME, name);
 		val.put(OFFER_COLUMN_STARTDATE, startDate);
 		val.put(OFFER_COLUMN_ENDDATE, endDate);
@@ -92,7 +97,7 @@ public class OfferDBAdapter {
 		}
 	}
 
-	public Offer getOfferById(int id){
+	public Offer getOfferById(long id){
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where id='" + id + "'", null);
 		if (cursor.getCount() < 1) // Offer Not Exist
 		{
@@ -117,7 +122,7 @@ public class OfferDBAdapter {
 //+ OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by id desc"
 	public List<Offer> getAllOffersByStatus(int Status) {
 		List<Offer> offerList = new ArrayList<Offer>();
-		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS + "=" + Status, null);
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS + "=" + Status + " order by id desc", null);
 		cursor.moveToFirst();
 
 		while(!cursor.isAfterLast()){
@@ -128,8 +133,21 @@ public class OfferDBAdapter {
 		return offerList;
 	}
 
+    public List<Integer> getAllOffersIDsByStatus(int Status) {
+        List<Integer> offerIDsList = new ArrayList<Integer>();
+        Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS + "=" + Status+" order by id desc", null);
+        cursor.moveToFirst();
+
+        while(!cursor.isAfterLast()){
+            offerIDsList.add(Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))));
+            cursor.moveToNext();
+        }
+
+        return offerIDsList;
+    }
+
 	public Offer createOfferObject(Cursor cursor) {
-		return new Offer(Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))),
+		return new Offer(Long.parseLong(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))),
 				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_NAME)),
 				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STARTDATE))),
 				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ENDDATE))),
@@ -137,7 +155,7 @@ public class OfferDBAdapter {
 				cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_STATUS)),
 				cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_BYUSER)),
 				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)),
-				cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_RULEID)));
+				cursor.getLong(cursor.getColumnIndex(OFFER_COLUMN_RULEID)));
 	}
 	// "=1 and "+OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by id desc"
 
@@ -149,14 +167,14 @@ public class OfferDBAdapter {
 			return  offer;
 		}
 		else	if( cursor != null && cursor.moveToFirst() ){
-			offer= new Offer(Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))),
+			offer= new Offer(Long.parseLong(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))),
 					cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_NAME)),
 					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STARTDATE))),
 					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ENDDATE))),
 					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_CREATINGDATE))),
 					Integer.parseInt(	cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STATUS))),
 					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_BYUSER))),cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)),
-					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULEID))));
+					Long.parseLong(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULEID))));
 			cursor.close();
 		}
 

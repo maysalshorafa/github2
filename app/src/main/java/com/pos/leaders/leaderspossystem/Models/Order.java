@@ -11,11 +11,11 @@ import java.util.Date;
  */
 
 public class Order {
-	private int id;
-	private int productId;
+	private long id;
+	private long productId;
 	private int count;
 	private double userOffer;
-	private int saleId;
+	private long saleId;
 
 	private double original_price;
 	private double price;
@@ -24,7 +24,7 @@ public class Order {
 	private Product product;
 
 	//region Constructors
-	public Order(int id, int productId, int count, double userOffer, int saleId) {
+	public Order(long id, long productId, int count, double userOffer, long saleId) {
 		this.id = id;
 		this.productId = productId;
 		this.count = count;
@@ -32,7 +32,7 @@ public class Order {
 		this.saleId = saleId;
 	}
 
-    public Order(int id, int productId, int count, double userOffer, int saleId, double price, double original_price, double discount) {
+    public Order(long id, long productId, int count, double userOffer, long saleId, double price, double original_price, double discount) {
         this.id = id;
         this.productId = productId;
         this.count = count;
@@ -43,7 +43,7 @@ public class Order {
         this.discount = discount;
     }
 
-	public Order(int id, int productId, int count, double userOffer, int saleId, Product product) {
+	public Order(long id, long productId, int count, double userOffer, long saleId, Product product) {
 		this.id = id;
 		this.productId = productId;
 		this.count = count;
@@ -51,7 +51,7 @@ public class Order {
 		this.saleId = saleId;
 		this.product = product;
 	}
-	public Order(int productId, int count, double userOffer, int saleId, Product product) {
+	public Order(long productId, int count, double userOffer, long saleId, Product product) {
 		this.productId = productId;
 		this.count = count;
 		this.userOffer = userOffer;
@@ -90,11 +90,11 @@ public class Order {
 
     //region Getters
 
-	public int getProductId() {
+	public long getProductId() {
 		return productId;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -106,7 +106,7 @@ public class Order {
 		return userOffer;
 	}
 
-	public int getSaleId() {
+	public long getSaleId() {
 		return saleId;
 	}
 
@@ -153,6 +153,7 @@ public class Order {
 	public void setPrice(double price){
 		this.price = (original_price * (discount / 100));
 	}
+
 
 	//endregion Setters
 

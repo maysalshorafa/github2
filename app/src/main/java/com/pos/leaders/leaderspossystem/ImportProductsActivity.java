@@ -50,7 +50,7 @@ public class ImportProductsActivity extends Activity {
     View previouslySelectedItem = null;
     String selectedDepartment="";
 
-    Map<String,Integer> departmentMap=new HashMap<String,Integer>();
+    Map<String,Long> departmentMap=new HashMap<String,Long>();
 
     List<Product> lsProducts=new ArrayList<Product>();
     ArrayList<String> departmentsName;

@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Payment;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +35,11 @@ public class PaymentDBAdapter {
 	// Database open/upgrade helper
 	private DbHelper dbHelper;
 
+
 	public PaymentDBAdapter(Context context) {
 		this.context = context;
 		this.dbHelper = new DbHelper(context);
 	}
-
 	public PaymentDBAdapter open() throws SQLException {
 		this.db = dbHelper.getWritableDatabase();
 		return this;
@@ -52,9 +53,13 @@ public class PaymentDBAdapter {
 		return db;
 	}
 
-	public int insertEntry(String paymentWay,double amount, int saleId) {
+	public int insertEntry(String paymentWay,double amount, long saleId) {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
+
+			val.put(PAYMENT_COLUMN_ID, Util.idHealth(this.db, PAYMENT_TABLE_NAME, PAYMENT_COLUMN_ID));
+
+
 		val.put(PAYMENT_COLUMN_PAYMENTWAY, paymentWay);
 		val.put(PAYMENT_COLUMN_AMOUNT,amount );
 		val.put(PAYMENT_COLUMN_SALEID, saleId);
@@ -81,7 +86,7 @@ public class PaymentDBAdapter {
 		return paymentsList;
 	}
 
-	public List<Payment> getPaymentBySaleID(int saleID) {
+	public List<Payment> getPaymentBySaleID(long saleID) {
 		List<Payment> salePaymentList = new ArrayList<Payment>();
 
 		Cursor cursor = db.rawQuery("select * from " + PAYMENT_TABLE_NAME +" where "+PAYMENT_COLUMN_SALEID+"="+saleID, null);
@@ -96,10 +101,10 @@ public class PaymentDBAdapter {
 	}
 
     private Payment make(Cursor cursor){
-        return new Payment(Integer.parseInt(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_ID))),
+        return new Payment(Long.parseLong(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_PAYMENTWAY)),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_AMOUNT))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_SALEID))));
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_SALEID))));
     }
 
 }

@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,9 +63,12 @@ public class AReportDBAdapter {
         return db;
     }
 
-    public long insertEntry(long createDate, int byUser, double amount, int lastSaleID,int lastZReport) {
+    public long insertEntry(long createDate, long byUser, double amount, long lastSaleID,long lastZReport) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
+
+        val.put(A_REPORT_COLUMN_ID, Util.idHealth(this.db, A_REPORT_TABLE_NAME, A_REPORT_COLUMN_ID));
+
         val.put(A_REPORT_COLUMN_CREATEDATE, createDate);
         val.put(A_REPORT_COLUMN_BYUSER, byUser);
         val.put(A_REPORT_COLUMN_AMOUNT, amount);
@@ -81,7 +86,7 @@ public class AReportDBAdapter {
         return insertEntry(aReport.getCreationDate(),aReport.getByUserID(),aReport.getAmount(),aReport.getLastSaleID(),aReport.getLastZReportID());
     }
 
-    public AReport getByLastZReport(int lastZReportID){
+    public AReport getByLastZReport(long lastZReportID){
         AReport aReport;
         Cursor cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME + " where " + A_REPORT_COLUMN_LASTZREPORTID + "='" + (lastZReportID - 1) + "'", null);
         if (cursor.getCount() < 1) {
@@ -93,7 +98,7 @@ public class AReportDBAdapter {
         return aReport;
     }
 
-    public AReport getByID(int id) {
+    public AReport getByID(long id) {
         AReport aReport = null;
         Cursor cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME + " where " + A_REPORT_COLUMN_ID + "='" + id + "'", null);
         if (cursor.getCount() < 1) // aReport Not Exist
@@ -167,11 +172,11 @@ public class AReportDBAdapter {
     }
 
     private AReport makeAReport(Cursor c){
-        return new AReport(c.getInt(c.getColumnIndex(A_REPORT_COLUMN_ID)),
+        return new AReport(c.getLong(c.getColumnIndex(A_REPORT_COLUMN_ID)),
                 c.getLong(c.getColumnIndex(A_REPORT_COLUMN_CREATEDATE)),
-                c.getInt(c.getColumnIndex(A_REPORT_COLUMN_BYUSER)),
+                c.getLong(c.getColumnIndex(A_REPORT_COLUMN_BYUSER)),
                 c.getDouble(c.getColumnIndex(A_REPORT_COLUMN_AMOUNT)),
-                c.getInt(c.getColumnIndex(A_REPORT_COLUMN_LASTSALEID)),
-                c.getInt(c.getColumnIndex(A_REPORT_COLUMN_LASTZREPORTID)));
+                c.getLong(c.getColumnIndex(A_REPORT_COLUMN_LASTSALEID)),
+                c.getLong(c.getColumnIndex(A_REPORT_COLUMN_LASTZREPORTID)));
     }
 }

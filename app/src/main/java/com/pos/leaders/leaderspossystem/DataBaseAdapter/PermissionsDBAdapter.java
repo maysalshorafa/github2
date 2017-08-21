@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Permissions;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,8 @@ public class PermissionsDBAdapter {
 
 	public int insertEntry(String name) {
 		ContentValues val = new ContentValues();
+		val.put(PERMISSIONS_COLUMN_ID, Util.idHealth(this.db, PERMISSIONS_TABLE_NAME, PERMISSIONS_COLUMN_ID));
+
 
 		//Assign values for each row.
 		val.put(PERMISSIONS_TABLE_NAME, name);

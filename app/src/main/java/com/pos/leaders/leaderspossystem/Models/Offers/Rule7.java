@@ -5,11 +5,16 @@ package com.pos.leaders.leaderspossystem.Models.Offers;
  */
 
 public class Rule7 {
-    public int getId() {
+
+    private   long id;
+    private  double price;
+    private  long product_id;
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -23,17 +28,15 @@ public class Rule7 {
         this.price = price;
     }
 
-    public int getProduct_id() {
+    public long getProduct_id() {
         return product_id;
     }
 
-    public void setProduct_id(int product_id) {
+    public void setProduct_id(long product_id) {
         this.product_id = product_id;
     }
 
-    private   int id;
-    private  double price;
-    private  int product_id;
+
 
     public int getContain_club() {
         return contain_club;
@@ -44,7 +47,7 @@ public class Rule7 {
     }
 
     private  int contain_club;
-    public Rule7(int id, double price,  int product_id, int contain_club) {
+    public Rule7(long id, double price,  long product_id, int contain_club) {
         this.id = id;
         this.price = price;
         this.product_id = product_id;

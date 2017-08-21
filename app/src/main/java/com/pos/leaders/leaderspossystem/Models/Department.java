@@ -8,17 +8,17 @@ import java.util.List;
  */
 
 public class Department {
-    private int id;
+    private long id;
     private String name;
     private Date CreatingDate;
-    private int byUser;
+    private long byUser;
     private boolean hide;
 
     private List<Product> products;
 
     // region Constructor
 
-    public Department(int id, String name, Date creatingDate, int byUser, boolean hide) {
+    public Department(long id, String name, Date creatingDate, long byUser, boolean hide) {
         this.id = id;
         this.name = name;
         CreatingDate = creatingDate;
@@ -46,7 +46,7 @@ public class Department {
 
 	// region Getters
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -58,7 +58,7 @@ public class Department {
         return CreatingDate;
     }
 
-    public int getByUser() {
+    public long getByUser() {
         return byUser;
     }
 

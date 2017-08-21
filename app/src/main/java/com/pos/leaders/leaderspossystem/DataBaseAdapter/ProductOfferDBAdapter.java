@@ -10,9 +10,15 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by KARAM on 23/10/2016.
@@ -54,9 +60,12 @@ public class ProductOfferDBAdapter {
 		return db;
 	}
 
-	public int insertEntry(int productId, int offerId) {
+
+	public int insertEntry(long productId, int offerId) {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
+
+		val.put(PRODUCTOFFER_COLUMN_ID, Util.idHealth(this.db, PRODUCTOFFER_TABLE_NAME, PRODUCTOFFER_COLUMN_ID) );
 		val.put(PRODUCTOFFER_COLUMN_PRODUCTID, productId);
 		val.put(PRODUCTOFFER_COLUMN_OFFERID, offerId);
 
@@ -105,7 +114,50 @@ public class ProductOfferDBAdapter {
 		return products;
 	}
 
-    public Boolean checkProductIntoOffers(int productID,int offerID) {
+	public ArrayList<Integer> getAllProductsIDs(Offer offerId){
+		ArrayList<Integer> ints = null;
+		Cursor cursor = db.rawQuery("select * from " + PRODUCTOFFER_TABLE_NAME + " where " + PRODUCTOFFER_COLUMN_OFFERID + "='" + offerId + "'", null);
+		if (cursor.getCount() < 1) // Not Exist
+		{
+			cursor.close();
+			return ints;
+		}
+		ints = new ArrayList<Integer>();
+		cursor.moveToFirst();
+
+		while (!cursor.isAfterLast()) {
+			ints.add(Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTOFFER_COLUMN_PRODUCTID))));
+			cursor.moveToNext();
+		}
+		cursor.close();
+
+		return ints;
+	}
+
+	public List<Integer> getProductOffers(long productID,List<Integer> offersID){
+        String whereCommand = "";
+        List<Integer> offersIDs = new ArrayList<>();
+        for(int i=0; i<offersID.size()-1;i++){
+            whereCommand += " ( `" + PRODUCTOFFER_COLUMN_PRODUCTID + "` = " + productID + " and `" + PRODUCTOFFER_COLUMN_OFFERID + "` = " + offersID.get(i) + " ) or";
+        }
+        whereCommand += " ( `" + PRODUCTOFFER_COLUMN_PRODUCTID + "` = " + productID + " and `" + PRODUCTOFFER_COLUMN_OFFERID + "` = " + offersID.get(offersID.size()-1) + " )";
+        Cursor cursor = db.rawQuery("select * from " + PRODUCTOFFER_TABLE_NAME + " where " +whereCommand, null);
+        if (cursor.getCount() < 1){
+            cursor.close();
+            return null;
+        }
+
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            offersIDs.add(cursor.getInt(cursor.getColumnIndex(PRODUCTOFFER_COLUMN_OFFERID)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return offersIDs;
+    }
+
+    public Boolean checkProductIntoOffers(long productID,int offerID) {
         Cursor cursor = db.rawQuery("select * from " + PRODUCTOFFER_TABLE_NAME + " where " + PRODUCTOFFER_COLUMN_OFFERID + "='" + offerID + "' and "+PRODUCTOFFER_COLUMN_PRODUCTID+" = '"+productID+"'", null);
         if (cursor.getCount() < 1){
             cursor.close();
@@ -114,12 +166,11 @@ public class ProductOfferDBAdapter {
         return true;
     }
 
-
 	public boolean deleteEntry(int id) {
 		return db.delete(PRODUCTOFFER_TABLE_NAME, PRODUCTOFFER_COLUMN_ID + "=?", new String[]{id + ""}) > 0;
 	}
 
-	public boolean deleteEntry(int productId,int offerId) {
+	public boolean deleteEntry(long productId,int offerId) {
 		return db.delete(PRODUCTOFFER_TABLE_NAME , PRODUCTOFFER_COLUMN_PRODUCTID + "=? and " + PRODUCTOFFER_COLUMN_OFFERID + "=? ", new String[]{productId + "", offerId + ""}) > 0;
 	}
 }

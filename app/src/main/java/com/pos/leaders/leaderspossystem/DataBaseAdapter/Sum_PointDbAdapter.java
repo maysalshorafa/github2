@@ -25,7 +25,7 @@ public class Sum_PointDbAdapter {
     private final Context context;
     // Database open/upgrade helper
     private DbHelper dbHelper;
-    public int getPointInfo(int _custmer_id) {
+    public int getPointInfo(long _custmer_id) {
 
         Cursor cur = db.rawQuery("SELECT SUM(point_amount) from " + Sum_PointDbAdapter_TABLE_NAME + "  where custmer_id='" + _custmer_id + "'", null);
         if (cur.moveToFirst()) {
@@ -51,7 +51,7 @@ return  0;
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(int  sale_id, int point,int custmer_id){
+    public long insertEntry(long  sale_id, int point,long custmer_id){
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Sum_PointDbAdapter_COLUMN_Sale_Id,sale_id);
@@ -61,7 +61,6 @@ return  0;
 
 
         try {
-
             db.insert(Sum_PointDbAdapter_TABLE_NAME, null, val);
             return 1;
         } catch (SQLException ex) {

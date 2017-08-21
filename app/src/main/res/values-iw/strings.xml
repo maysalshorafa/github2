@@ -85,5 +85,7 @@
     <string name="checks">המחאות</string>
     <string name="general">כללי</string>
     <string name="extracting_files">הפקת קבצים</string>
+    <string name="credit">זיכוי</string>
+    <string name="confirmation">אישור</string>
 
 </resources>

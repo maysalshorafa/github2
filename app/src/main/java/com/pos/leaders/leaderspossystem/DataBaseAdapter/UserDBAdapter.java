@@ -10,6 +10,7 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class UserDBAdapter {
     protected static final String USERS_COLUMN_PHONENUMBER = "phoneNumber";
     protected static final String USERS_COLUMN_DISCOUNTINPERCENTAGE = "present";
     protected static final String USERS_COLUMN_HOURLYWAGE = "hourlyWage";
-    protected static final String USERS_COLUMN_PermmionName = "permissions_name";
+    protected static final String USERS_COLUMN_PERMISSIONS_NAME = "permissions_name";
 
 
     // TODO: Create public field for each column in your table.
@@ -67,6 +68,7 @@ public class UserDBAdapter {
     public int insertEntry(String userName,String password,String firstName,String lastName,String phoneNumber,Double persent,Double hourlyWag,String permissions_name ) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
+        val.put(USERS_COLUMN_ID, Util.idHealth(this.db, USERS_TABLE_NAME, USERS_COLUMN_ID));
         val.put(USERS_COLUMN_USERNAME, userName);
         val.put(USERS_COLUMN_PASSWORD, password);
         val.put(USERS_COLUMN_FIRSTNAME, firstName);
@@ -74,38 +76,24 @@ public class UserDBAdapter {
         val.put(USERS_COLUMN_PHONENUMBER, phoneNumber);
         val.put(USERS_COLUMN_DISCOUNTINPERCENTAGE, persent);
         val.put(USERS_COLUMN_HOURLYWAGE, hourlyWag);
-        val.put(USERS_COLUMN_PermmionName, permissions_name);
+        val.put(USERS_COLUMN_PERMISSIONS_NAME, permissions_name);
 
         try {
             db.insert(USERS_TABLE_NAME, null, val);
             return 1;
         } catch (SQLException ex) {
-            Log.e("UserDB insertEntry", "insatring Entry at " + USERS_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("UserDB insertEntry", "inserting Entry at " + USERS_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
 
     public int insertEntry(User user) {
-        ContentValues val = new ContentValues();
-        //Assign values for each row.
-        val.put(USERS_COLUMN_USERNAME, user.getUserName());
-        val.put(USERS_COLUMN_PASSWORD, user.getPassword());
-        val.put(USERS_COLUMN_FIRSTNAME, user.getFirstName());
-        val.put(USERS_COLUMN_LASTNAME, user.getLastName());
-        val.put(USERS_COLUMN_PHONENUMBER, user.getPhoneNumber());
-        val.put(USERS_COLUMN_DISCOUNTINPERCENTAGE, user.getPresent());
-        val.put(USERS_COLUMN_HOURLYWAGE, user.getHourlyWage());
-        val.put(USERS_COLUMN_PermmionName,user.getPermtionName());
-        try {
-            db.insert(USERS_TABLE_NAME, null, val);
-            return 1;
-        } catch (SQLException ex) {
-            Log.e("UserDB insertEntry", "insatring Entry at " + USERS_TABLE_NAME + ": " + ex.getMessage());
-            return 0;
-        }
+        return insertEntry(user.getUserName(), user.getPassword(), user.getFirstName(),
+                user.getLastName(), user.getPhoneNumber(), user.getPresent(),
+                user.getHourlyWage(), user.getPermtionName());
     }
 
-    public User getUserByID(int id) {
+    public User getUserByID(long id) {
 		User user = null;
 		Cursor cursor = db.query(USERS_TABLE_NAME, null, USERS_COLUMN_ID + "=? ", new String[]{id + ""}, null, null, null);
 		//Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where id='" + id + "'", null);
@@ -121,7 +109,7 @@ public class UserDBAdapter {
 	}
 
     public User logIn(String userName,String Passowrd) {
-        int userID = 0;
+        long userID = 0;
         Cursor cursor = db.query(USERS_TABLE_NAME, null, USERS_COLUMN_USERNAME + "=? and " + USERS_COLUMN_PASSWORD + "=?", new String[]{userName, Passowrd}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0 ) // UserName Not Exist
@@ -138,7 +126,7 @@ public class UserDBAdapter {
 		return null;
     }
     public User logIn(String Passowrd) {
-        int userID = 0;
+        long userID = 0;
         Cursor cursor = db.query(USERS_TABLE_NAME, null, USERS_COLUMN_PASSWORD + "=?", new String[]{Passowrd}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0 ) // UserName Not Exist
@@ -155,7 +143,7 @@ public class UserDBAdapter {
         return null;
     }
 
-    public int deleteEntry(int id) {
+    public int deleteEntry(long id) {
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -181,7 +169,7 @@ public class UserDBAdapter {
         val.put(USERS_COLUMN_PHONENUMBER, user.getPhoneNumber());
         val.put(USERS_COLUMN_DISCOUNTINPERCENTAGE, user.getPresent());
         val.put(USERS_COLUMN_HOURLYWAGE, user.getHourlyWage());
-        val.put(USERS_COLUMN_PermmionName,user.getPermtionName());
+        val.put(USERS_COLUMN_PERMISSIONS_NAME,user.getPermtionName());
 
         String where = USERS_COLUMN_ID + " = ?";
         db.update(USERS_TABLE_NAME, val, where, new String[]{user.getId() + ""});
@@ -210,7 +198,7 @@ public class UserDBAdapter {
 	}
 
 	private User createNewUser(Cursor cursor){
-		return new User(Integer.parseInt(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_ID)))
+		return new User(Long.parseLong(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_ID)))
 				, cursor.getString(cursor.getColumnIndex(USERS_COLUMN_USERNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PASSWORD))
 				, cursor.getString(cursor.getColumnIndex(USERS_COLUMN_FIRSTNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_LASTNAME))
 				, DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_CREATINGDATE)))
@@ -218,6 +206,6 @@ public class UserDBAdapter {
 				, cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PHONENUMBER))
 				, Double.parseDouble(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISCOUNTINPERCENTAGE)))
 				, Double.parseDouble(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_HOURLYWAGE)))
-                ,cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PermmionName)));
+                ,cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PERMISSIONS_NAME)));
 	}
 }

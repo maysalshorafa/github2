@@ -1,8 +1,13 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.util.Log;
+
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -71,20 +78,14 @@ public class Util {
     /* Checks if external storage is available for read and write */
     public static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     /* Checks if external storage is available to at least read */
     public static boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 
     public static File getStorageDir(String dirName) {
@@ -165,4 +166,43 @@ public class Util {
 
         return null;
     }
+
+    private static boolean checkID(long id) {
+        String sID = String.format(new Locale("en"),"%019d",id);
+        String idPrefix = sID.substring(0, sID.length() - 16);
+        return Long.parseLong(idPrefix) == SESSION.POS_ID_NUMBER;
+    }
+
+    private static long getCurrentLastID(SQLiteDatabase db, String tableName, String idField){
+        long i = 0;
+
+        Cursor cursor = db.rawQuery("select  "+tableName+"  from  "+IdsCounterDBAdapter.IDS_COUNTER_TABLE_NAME+";", null);
+        Log.i("ids", cursor.toString());
+        if (cursor.getCount() < 1) // don`t have any sale yet
+        {
+            cursor.close();
+            i = (long) SESSION.POS_ID_NUMBER * SESSION.firstIDOffset;
+        }
+        cursor.moveToFirst();
+        i=Long.parseLong(cursor.getString(0));
+
+        ContentValues values = new ContentValues();
+        if(i==0){
+            i = (long) SESSION.POS_ID_NUMBER * SESSION.firstIDOffset;
+            values.put(tableName,i);
+        }
+        else{
+            i = i + 1;
+            values.put(tableName,i);
+        }
+        db.update(IdsCounterDBAdapter.IDS_COUNTER_TABLE_NAME,values, null, null);
+        return i;
+
+    }
+
+    public static long idHealth(SQLiteDatabase db, String tableName, String idField){
+        return  getCurrentLastID(db,tableName,idField);
+    }
+
+
 }

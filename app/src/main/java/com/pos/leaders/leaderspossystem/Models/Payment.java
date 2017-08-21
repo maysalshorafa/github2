@@ -19,15 +19,15 @@ import java.util.Locale;
  */
 
 public class Payment {
-	private int id;
+	private long id;
 	private String paymentWay;
-	private int saleId;
+	private long saleId;
 	private double amount;
 
     private Locale locale = new Locale("en");
 
 	// Constructors
-	public Payment(int id, String paymentWay, double amount, int saleId) {
+	public Payment(long id, String paymentWay, double amount, long saleId) {
 		this.id = id;
 		this.paymentWay = paymentWay;
 		this.amount = amount;
@@ -39,7 +39,7 @@ public class Payment {
 	}
 
 	// Getters
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -47,7 +47,7 @@ public class Payment {
 		return paymentWay;
 	}
 
-	public int getSaleId() {
+	public long getSaleId() {
 		return saleId;
 	}
 

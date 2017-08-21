@@ -15,8 +15,8 @@ import java.util.Locale;
  */
 
 public class Sale {
-	private int id;
-	private int byUser;
+	private long id;
+	private long byUser;
 	private Date saleDate;
 	private int replacementNote;
 	private boolean cancelling;
@@ -64,7 +64,7 @@ public class Sale {
 
 	// region Constructors
 
-	public Sale(int id, int byUser, Date saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid,int custmer_id,String custmer_name) {
+	public Sale(long id, long byUser, Date saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid,int custmer_id,String custmer_name) {
 		this.id = id;
 		this.byUser = byUser;
 		this.saleDate=saleDate;
@@ -76,7 +76,7 @@ public class Sale {
 		this.custmer_name=custmer_name;
 	}
 
-	public Sale(int byUser, Date saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid) {
+	public Sale(long byUser, Date saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid) {
 		this.byUser = byUser;
 		this.saleDate=saleDate;
 		this.replacementNote = replacementNote;
@@ -85,7 +85,7 @@ public class Sale {
 		this.totalPaid=totalPaid;
 	}
 
-	public Sale(int id, Date saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid,User user) {
+	public Sale(long id, Date saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid,User user) {
 		this.id = id;
 		this.byUser = user.getId();
 		this.saleDate=saleDate;
@@ -109,11 +109,11 @@ public class Sale {
 
 	//region Getter
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public int getByUser() {
+	public long getByUser() {
 		return byUser;
 	}
 
@@ -154,7 +154,7 @@ public class Sale {
 	//region Setter
 
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

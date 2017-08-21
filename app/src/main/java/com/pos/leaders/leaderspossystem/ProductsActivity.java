@@ -68,7 +68,7 @@ public class ProductsActivity extends Activity {
     EditText etName,etBarcode,etDescription,etPrice,etCostPrice;
     Switch swWithTax,swWeighable;
 	static ListView lvDepatment;
-    Map<String,Integer> departmentMap=new HashMap<String,Integer>();
+    Map<String,Long> departmentMap=new HashMap<String,Long>();
 
 
 	String selectedProduct="";

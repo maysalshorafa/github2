@@ -50,7 +50,7 @@ public class Rule3DbAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(int id,double parcent,int contain,int club_contain){
+    public int insertEntry(long id,double parcent,int contain,int club_contain){
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Rule3_COLUMN_ID,id);
@@ -73,7 +73,7 @@ public class Rule3DbAdapter {
     }
 
 
-    public Rule3 getParcentForRule3(int rule_id) {
+    public Rule3 getParcentForRule3(long rule_id) {
         OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
         offerDBAdapter.open();
         Rule3 rule3=null;
