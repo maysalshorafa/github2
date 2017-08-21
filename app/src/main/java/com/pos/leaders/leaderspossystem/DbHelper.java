@@ -66,10 +66,14 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(dbc);
         db.execSQL(IdsCounterDBAdapter.INIT(tblNames));
 
+<<<<<<< HEAD
+     /** db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
+=======
        /**
         *
         db.execSQL(AReportDBAdapter.DATABASE_CREATE);
         db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
+>>>>>>> master
         db.execSQL(UserDBAdapter.DATABASE_CREATE);
         db.execSQL(SaleDBAdapter.DATABASE_CREATE);
         db.execSQL(OrderDBAdapter.DATABASE_CREATE);
@@ -77,12 +81,17 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CustomerDBAdapter.DATABASE_CREATE);
         db.execSQL(ProductDBAdapter.DATABASE_CREATE);
         db.execSQL(DepartmentDBAdapter.DATABASE_CREATE);
+        db.execSQL(OfferDBAdapter.DATABASE_CREATE);
 
+
+        db.execSQL(UsedPoint.DATABASE_CREATE);
 
         db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (2,'User','User','User','2017-07-10 07:49:30','1234','2.0','customer club',3,2,1);");
        db.execSQL("insert into "+ProductDBAdapter.PRODUCTS_TABLE_NAME+"  values (1,'User',555,'User',5.0,5.0,1,2,'2.0',1,3,2,1,5,6);");
         db.execSQL("insert into "+DepartmentDBAdapter.DEPARTMENTS_TABLE_NAME+"  values (1,'User','User',5,6);");
-**/
+        db.execSQL("insert into "+UsedPoint.UsedPoint_TabelName+"  values (1,5,6);");
+
+
         //   db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values ('','','',0,'',0,'','');");
 
 /*
@@ -108,7 +117,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("ALTER TABLE `offers` ADD COLUMN h REAL");
        // db.execSQL("ALTER TABLE `sales` ADD COLUMN totalPaid REAL");
 */
-  //     db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'User','User','User','2017-07-10 07:49:30',1234,0,'1234',2.0,5.0,'product');");
+//     db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'User','User','User','2017-07-10 07:49:30',1234,0,'1234',2.0,5.0,'main screen');");
 
        // db.execSQL(ChecksDBAdapter.DATABASE_CREATE);
 

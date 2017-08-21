@@ -920,6 +920,7 @@ usedpointDbAdapter.open();
                     tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",0.0) + " " + getString(R.string.ins));
                 }
                 if(saleTotalPrice<newPrice){
+                    saleTotalPrice=0.0;
 lessUsedPoint=true;
  unusedPointMoney=newPrice-saleTotalPrice;
 
@@ -2189,10 +2190,20 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
                     SESSION._SALE.setTotalPaid(0.0);
                     saleDBAdapter.updateEntry(SESSION._SALE);
+<<<<<<< HEAD
+                    usedpointDbAdapter.insertEntry(saleID,newPoint,_custmer_id);
+                }
+                else if(biggerUsedPoint){
+                    usedpointDbAdapter.insertEntry(saleID,aPoint,_custmer_id);
+                }
+                else if(lessUsedPoint) {
+                    saleTotalPrice=0.0;
+=======
                     usedpointDbAdapter.insertEntry(saleID, newPoint, _custmer_id);
                 } else if (biggerUsedPoint) {
                     usedpointDbAdapter.insertEntry(saleID, aPoint, _custmer_id);
                 } else if (lessUsedPoint) {
+>>>>>>> master
                     SESSION._SALE.setTotalPaid(0.0);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleID, newPoint, _custmer_id);
