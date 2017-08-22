@@ -1,22 +1,14 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.annotation.TargetApi;
-import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import java.text.SimpleDateFormat;
-import android.os.Build;
+
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -39,14 +31,9 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
-import com.pos.leaders.leaderspossystem.Reports.UserAttendanceReport;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
-
-import jxl.write.DateTime;
 
 public class DashBoard extends AppCompatActivity {
     public static final String PREFS_NAME = "Time_Pref";
@@ -57,7 +44,7 @@ public class DashBoard extends AppCompatActivity {
     String permissions_name;
     PopupWindow popupWindow;
     EditText custmer_id;
-    Button btLogOut;
+    TextView btLogOut;
     AReportDBAdapter aReportDBAdapter;
     User user=new User();
     UserDBAdapter userDBAdapter;
@@ -78,11 +65,11 @@ public class DashBoard extends AppCompatActivity {
 
     };
     int[] imageId = {
-            R.drawable.home,
-            R.drawable.dash_bord_report,
+            R.drawable.dashbord_home,
+            R.drawable.report,
             R.drawable.products,
             R.drawable.departments,
-            R.drawable.users,
+            R.drawable.dash_borsd_user,
             R.drawable.offers,
             R.drawable.backup,
             R.drawable.tax,
@@ -112,8 +99,9 @@ public class DashBoard extends AppCompatActivity {
         userDBAdapter=new UserDBAdapter(this);
         userDBAdapter.open();
         aReportDBAdapter.open();
-        btLogOut = (Button) findViewById(R.id.log_out);
-
+        btLogOut = (TextView) findViewById(R.id.log_out);
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "Rubik-Bold.ttf");
+        btLogOut.setTypeface(custom_font);
         grid = (GridView) findViewById(R.id.grid);
         grid.setAdapter(adapter);
         Bundle bundle = getIntent().getExtras();
