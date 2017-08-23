@@ -359,19 +359,20 @@
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/edit_text_search"
+            android:drawableLeft="@drawable/search_icon"
+            android:ems="10"
             android:inputType="textPersonName"
             android:text="Name"
-            android:ems="10"
-            android:id="@+id/mainActivity_etSearch"
-            app:layout_constraintTop_toTopOf="@+id/linearLayout"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            app:layout_constraintRight_toLeftOf="@+id/mainActivity_btnDone"
-            android:layout_marginRight="8dp"
-            android:drawableLeft="@drawable/search_icon"
-            android:background="@drawable/edit_text_search"
             app:layout_constraintLeft_toLeftOf="@+id/guideline42"
-            android:layout_marginEnd="8dp" />
+            app:layout_constraintRight_toLeftOf="@+id/mainActivity_btnDone"
+            app:layout_constraintTop_toTopOf="@+id/linearLayout"
+            android:layout_marginTop="12dp"
+            app:layout_constraintHorizontal_bias="0.0" />
 
         <GridView
             app:layout_constraintRight_toRightOf="@+id/mainActivity_btnList"
@@ -411,7 +412,9 @@
             android:layoutDirection="ltr"
             app:layout_constraintLeft_toLeftOf="@+id/guideline42"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="8dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="1.0" />
 
 
         <HorizontalScrollView
@@ -423,7 +426,6 @@
             app:layout_constraintRight_toRightOf="@+id/mainActivity_btnList"
             android:id="@+id/mainActivity_svDepartment"
             android:layout_marginStart="8dp"
-            android:elevation="1dp"
             android:background="@color/secondaryColor">
 
             <LinearLayout
@@ -506,20 +508,21 @@
                     tools:layout_editor_absoluteX="40dp"
                     android:layout_weight="1"
                     android:layout_margin="4dp" />
+
                 <Button
-                    android:text="used point"
+                    android:id="@+id/usedPoint"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:id="@+id/usedPoint"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_primary"
+                    android:onClick="quickPriceButtonClick"
+                    android:text="used point"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="normal|bold"
-                    android:background="@drawable/btn_primary"
-                    android:onClick="quickPriceButtonClick"
-                    tools:layout_editor_absoluteY="16dp"
                     tools:layout_editor_absoluteX="40dp"
-                    android:layout_weight="1"
-                    android:layout_margin="4dp" />
+                    tools:layout_editor_absoluteY="16dp" />
 
 
             </LinearLayout>

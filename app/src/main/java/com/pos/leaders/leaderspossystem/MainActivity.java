@@ -255,7 +255,7 @@ double SumForClub=0.0;
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_temp);
 
 
 
@@ -264,7 +264,7 @@ double SumForClub=0.0;
         club_name=(TextView)findViewById(R.id.cClubName);
         information=(TextView)findViewById(R.id.cInformation);
         custmername_EditText=(EditText) findViewById(R.id.custmer_textview);
-        a=custmername_EditText.getText().toString();
+        //a=custmername_EditText.getText().toString();
 
         search_person=(Button)findViewById(R.id.searchPerson);
         drawerLayout = (DrawerLayout) findViewById(R.id.mainActivity_drawerLayout);
@@ -310,7 +310,7 @@ double SumForClub=0.0;
 
 
         showTouchPad(false);
-        //    showQuickPricePad();
+        showQuickPricePad();
 
         //region Orders Frame
 
@@ -319,9 +319,9 @@ double SumForClub=0.0;
 
         //hshheot
         ll = (LinearLayout) findViewById(R.id.mainActivity_llButtonsSales);
-        ll.setVisibility(View.GONE);
+        //ll.setVisibility(View.GONE);
         imv = (ImageView) findViewById(R.id.imageView6);
-        imv.setVisibility(View.GONE);
+        //imv.setVisibility(View.GONE);
 
 
         llDepartments = (LinearLayout) findViewById(R.id.mainActivity_LLDepartment);
@@ -487,7 +487,7 @@ usedpointDbAdapter.open();
         productList = productDBAdapter.getTopProducts(0, 50);
         All_productsList = productList;
         productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(this, productList);
-        gvProducts.setNumColumns(5);
+        gvProducts.setNumColumns(2);
 
         gvProducts.setAdapter(productCatalogGridViewAdapter);
         lvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -1404,14 +1404,13 @@ saleTotalPrice=saleTotalPrice-newPrice;
         if(Double.parseDouble(str)!=0)
             addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._USER.getId()));
     }
-    /**
 
      private void showQuickPricePad(){
-     QuickPricePadFragment fTP = new QuickPricePadFragment();
-     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-     transaction.add(R.id.mainActivity_fragmentQuickPricePad, fTP);
-     transaction.commit();
-     }**/
+         QuickPricePadFragment fTP = new QuickPricePadFragment();
+         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+         transaction.add(R.id.mainActivity_fragmentQuickPricePad, fTP);
+         transaction.commit();
+     }
 
     private void showTouchPad(boolean b) {
         if(!b) {

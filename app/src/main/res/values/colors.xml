@@ -13,8 +13,9 @@
     <color name="secondaryColor">#343d46</color>
     <color name="secondaryDarkColor">#2b333a</color>
 
-    <color name="primaryColor">#98bf0e</color>
-    <color name="primaryDarkColor">#769607</color>
+    <color name="primaryColor2">#98bf0e</color>
+
+    <color name="primaryDarkColor2">#769607</color>
 
     <color name="dangerColor">#B3353A</color>
     <color name="dangerDarkColor">#922a2e</color>
@@ -183,9 +184,13 @@
     <!--General-->
     <color name="background">#efefef</color>
     <color name="form_background">#d8d8d8</color>
+    <color name="form_background_dark">#c8c8c8</color>
 
     <color name="text">#3b4151</color>
 
+
+    <color name="primaryColor">#3b4151</color>
+    <color name="primaryDarkColor">#0d0a11</color>
 
     <!--Buttons-->
 

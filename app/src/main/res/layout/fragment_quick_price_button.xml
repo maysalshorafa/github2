@@ -7,164 +7,54 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical">
 
-
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:scrollbarAlwaysDrawHorizontalTrack="false"
-        android:scrollbarAlwaysDrawVerticalTrack="false"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
         <Button
-            android:text="0"
-            android:layout_width="wrap_content"
+            android:id="@+id/fragmentQuickPriceButton_bt00"
+            style="@style/AppTheme.bt_dark"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/fragmentQuickPriceButton_bt20"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="normal|bold"
-            android:background="@drawable/btn_primary"
-            android:onClick="quickPriceButtonClick"
-            tools:layout_editor_absoluteY="16dp"
-            tools:layout_editor_absoluteX="40dp"
             android:layout_weight="1"
-            android:layout_margin="4dp" />
+            android:onClick="quickPriceButtonClick"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:text="1" />
 
         <Button
-            android:id="@+id/fragmentQuickPriceButton_bt21"
-            android:layout_width="wrap_content"
+            android:id="@+id/fragmentQuickPriceButton_bt01"
+            style="@style/AppTheme.bt_dark"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="4dp"
             android:layout_weight="1"
-            android:background="@drawable/btn_primary"
             android:onClick="quickPriceButtonClick"
-            android:text="0"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="normal|bold"
-            tools:layout_editor_absoluteX="432dp"
-            tools:layout_editor_absoluteY="4dp" />
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:text="3" />
 
         <Button
-            android:id="@+id/fragmentQuickPriceButton_bt22"
-            android:layout_width="wrap_content"
+            android:id="@+id/fragmentQuickPriceButton_bt02"
+            style="@style/AppTheme.bt_dark"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="4dp"
             android:layout_weight="1"
-            android:background="@drawable/btn_primary"
             android:onClick="quickPriceButtonClick"
-            android:text="0"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="normal|bold"
-            tools:layout_editor_absoluteX="959dp"
-            tools:layout_editor_absoluteY="0dp" />
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:text="5" />
+
+        <Button
+            android:id="@+id/fragmentQuickPriceButton_bt10"
+            style="@style/AppTheme.bt_dark"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="quickPriceButtonClick"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:text="10" />
     </LinearLayout>
 
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-        android:layout_weight="1">
-
-            <Button
-                android:text="0"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/fragmentQuickPriceButton_bt10"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="normal|bold"
-                android:background="@drawable/btn_primary"
-                android:onClick="quickPriceButtonClick"
-                tools:layout_editor_absoluteY="224dp"
-                tools:layout_editor_absoluteX="432dp"
-                android:layout_weight="1"
-                android:layout_margin="4dp"/>
-
-            <Button
-                android:text="0"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="normal|bold"
-                android:background="@drawable/btn_primary"
-                android:id="@+id/fragmentQuickPriceButton_bt11"
-                android:onClick="quickPriceButtonClick"
-                tools:layout_editor_absoluteY="144dp"
-                tools:layout_editor_absoluteX="423dp"
-                android:layout_weight="1"
-                android:layout_margin="4dp"/>
-
-            <Button
-                android:text="0"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="normal|bold"
-                android:background="@drawable/btn_primary"
-                android:id="@+id/fragmentQuickPriceButton_bt12"
-                android:onClick="quickPriceButtonClick"
-                tools:layout_editor_absoluteY="79dp"
-                tools:layout_editor_absoluteX="959dp"
-                android:layout_weight="1"
-                android:layout_margin="4dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            tools:layout_editor_absoluteY="8dp"
-            tools:layout_editor_absoluteX="8dp"
-            android:layout_weight="1">
-
-            <Button
-                android:text="5"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="normal|bold"
-                android:background="@drawable/btn_primary"
-                android:id="@+id/fragmentQuickPriceButton_bt00"
-                android:onClick="quickPriceButtonClick"
-                tools:layout_editor_absoluteY="239dp"
-                tools:layout_editor_absoluteX="48dp"
-                android:layout_weight="1"
-                android:layout_margin="4dp"/>
-
-            <Button
-                android:text="8"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="normal|bold"
-                android:background="@drawable/btn_primary"
-                android:id="@+id/fragmentQuickPriceButton_bt01"
-                android:onClick="quickPriceButtonClick"
-                tools:layout_editor_absoluteX="44dp"
-                tools:layout_editor_absoluteY="136dp"
-                android:layout_weight="1"
-                android:layout_margin="4dp"/>
-
-            <Button
-                android:text="20"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="normal|bold"
-                android:background="@drawable/btn_primary"
-                android:id="@+id/fragmentQuickPriceButton_bt02"
-                android:onClick="quickPriceButtonClick"
-                tools:layout_editor_absoluteY="180dp"
-                tools:layout_editor_absoluteX="959dp"
-                android:layout_weight="1"
-                android:layout_margin="4dp"/>
-        </LinearLayout>
  </LinearLayout>

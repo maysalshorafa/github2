@@ -37,8 +37,12 @@ public class QuickPricePadFragment extends Fragment implements View.OnLongClickL
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         int[] ids = {R.id.fragmentQuickPriceButton_bt00, R.id.fragmentQuickPriceButton_bt01, R.id.fragmentQuickPriceButton_bt02,
-                R.id.fragmentQuickPriceButton_bt10, R.id.fragmentQuickPriceButton_bt11, R.id.fragmentQuickPriceButton_bt12,
-                R.id.fragmentQuickPriceButton_bt20, R.id.fragmentQuickPriceButton_bt21, R.id.fragmentQuickPriceButton_bt22};
+                R.id.fragmentQuickPriceButton_bt10, };
+        /*
+        R.id.fragmentQuickPriceButton_bt11, R.id.fragmentQuickPriceButton_bt12,
+                R.id.fragmentQuickPriceButton_bt20, R.id.fragmentQuickPriceButton_bt21, R.id.fragmentQuickPriceButton_bt22
+         */
+
         for (int i:ids){
             Button b = (Button) view.findViewById(i);
 
