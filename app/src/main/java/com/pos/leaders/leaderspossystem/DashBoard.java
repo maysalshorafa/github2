@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,7 +36,7 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
 import java.util.Date;
 
-public class DashBoard extends AppCompatActivity {
+public class DashBoard extends Activity{
     public static final String PREFS_NAME = "Time_Pref";
     private boolean enableBackButton = true;
 
@@ -61,20 +62,22 @@ public class DashBoard extends AppCompatActivity {
             "BackUp",
             "Tax",
             "Hours Of Work",
-            "Coustmer Club"
+            "Coustmer Club",
+            "Log Out"
 
     };
     int[] imageId = {
-            R.drawable.dashbord_home,
-            R.drawable.report,
-            R.drawable.products,
-            R.drawable.departments,
-            R.drawable.dash_borsd_user,
-            R.drawable.offers,
-            R.drawable.backup,
-            R.drawable.tax,
-            R.drawable.hours,
-            R.drawable.coustmer
+            R.drawable.dash_bord_home,
+            R.drawable.dash_bord_report,
+            R.drawable.dash_bord_product,
+            R.drawable.dash_bord_department,
+            R.drawable.dash_bord_user,
+            R.drawable.dash_bord_offer,
+            R.drawable.dash_bord_backup,
+            R.drawable.dash_bord_tax,
+            R.drawable.dash_bord_hoursofwork,
+            R.drawable.dash_bord_custmer,
+            R.drawable.dash_bord_log_out
 
 
     };
@@ -83,25 +86,28 @@ public class DashBoard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Remove title bar
-      this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        this.getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,R.layout.title_bar);
+        // Remove notification bar
+      this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+
 
         // Remove notification bar
        // this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_dash_board);
-
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
         im = (ImageView) findViewById(R.id.home);
         Dash_bord_adapter adapter = new Dash_bord_adapter(DashBoard.this, dashbord_text, imageId);
         aReportDBAdapter=new AReportDBAdapter(this);
         userDBAdapter=new UserDBAdapter(this);
         userDBAdapter.open();
         aReportDBAdapter.open();
-        btLogOut = (TextView) findViewById(R.id.log_out);
+       // btLogOut = (TextView) findViewById(R.id.log_out);
         Typeface custom_font = Typeface.createFromAsset(getAssets(),  "Rubik-Bold.ttf");
-        btLogOut.setTypeface(custom_font);
+//        btLogOut.setTypeface(custom_font);
         grid = (GridView) findViewById(R.id.grid);
         grid.setAdapter(adapter);
         Bundle bundle = getIntent().getExtras();
@@ -122,7 +128,7 @@ public class DashBoard extends AppCompatActivity {
             }
         });
 
-
+/**
 
         btLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,7 +146,7 @@ public class DashBoard extends AppCompatActivity {
                 SESSION._LogOut();
                 startActivity(intent);
             }
-        });
+        });**/
         }
 
 
@@ -347,6 +353,21 @@ public class DashBoard extends AppCompatActivity {
                     android.app.AlertDialog alert = builder.create();
                     alert.show();
                 }
+      break;
+            case 10:
+                Intent intent = new Intent(DashBoard.this, LogInActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                try {
+                    scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getId(), new Date());
+                    SESSION._SCHEDULEWORKERS.setExitTime(new Date());
+                    Log.i("Worker get out", SESSION._SCHEDULEWORKERS.toString());
+                }
+                catch (Exception ex) {
+                }
+                SESSION._LogOut();
+                startActivity(intent);
+
         }
                 }
 

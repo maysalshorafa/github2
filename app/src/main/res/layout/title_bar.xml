@@ -3,6 +3,7 @@
     android:id="@+id/header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="top"
     >
 <LinearLayout
     android:layout_width="wrap_content"
@@ -13,46 +14,13 @@
     android:layout_alignParentTop="true"
     android:layout_alignParentLeft="true"
     android:layout_alignParentStart="true"
-    android:layout_weight="1"
     android:layout_marginRight="30dp"
     android:layout_marginLeft="30dp"
     >
-    <TextView
-        android:id="@+id/editText9"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        android:textColor="@color/white"
 
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
-        android:gravity="right"
-        android:textAlignment="gravity"    />
-    <TextView
-        android:id="@+id/editText9"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        android:textColor="@color/white"
-
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
-        android:gravity="right"
-        android:textAlignment="gravity"/>
-
-    <TextView
+    <EditText
         android:id="@+id/editText8"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="10"
@@ -65,11 +33,12 @@
         android:layout_marginRight="15dp"
         android:layout_marginLeft="15dp"
         android:gravity="right"
-        android:textAlignment="gravity"/>
+        android:textAlignment="gravity"
+        />
 
-    <TextView
+    <EditText
         android:id="@+id/editText8"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="10"
@@ -84,9 +53,9 @@
         android:gravity="right"
         android:textAlignment="gravity"/>
 
-    <TextView
+    <EditText
         android:id="@+id/editText9"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="10"
@@ -101,11 +70,11 @@
         android:gravity="right"
         android:textAlignment="gravity"/>
 
-    <TextView
+    <EditText
         android:id="@+id/editText10"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"

@@ -8,15 +8,15 @@
  >
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:orientation="horizontal"
-        android:gravity="right"
+        android:gravity="center"
         android:background="@color/text"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+
         android:layout_marginRight="30dp"
-       >
+        android:layout_marginLeft="30dp"
+
+        >
 
 
 
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
 
             android:background="@drawable/normal_edit_text"
-            android:text="Company Name"
+            android:text="Company"
             android:textColor="#ffffff"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"

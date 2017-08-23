@@ -20,7 +20,6 @@ public class Dash_bord_adapter  extends BaseAdapter{
     private Context mContext;
     private final String[] dash_bord_text;
     private final int[] Imageid;
-private  final  String  color="#000000";
     public Dash_bord_adapter(Context c,String[] web,int[] Imageid ) {
         mContext = c;
         this.Imageid = Imageid;
