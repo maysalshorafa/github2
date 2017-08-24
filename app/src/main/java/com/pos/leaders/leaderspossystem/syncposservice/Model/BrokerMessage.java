@@ -28,6 +28,18 @@ public class BrokerMessage {
         this(id, command, (isSynced!=0), new Date(createdDate), byUser);
     }
 
+    public BrokerMessage(int id, String command, boolean isSynced) {
+        this.id = id;
+        this.command = command;
+        this.isSynced = isSynced;
+    }
+    public BrokerMessage(String command) {
+        this.command = command;
+        this.isSynced = false;
+    }
+    public BrokerMessage(int id, String command, int isSynced) {
+        this(id, command, (isSynced!=0));
+    }
     public int getId() {
         return id;
     }

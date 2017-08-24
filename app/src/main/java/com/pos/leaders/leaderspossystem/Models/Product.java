@@ -77,8 +77,26 @@ public class Product {
         this.byUser = byUser;
         this.with_pos=with_pos;
         this.with_point_system=with_point_system;
-
     }
+
+    public Product(long id, String name, String barCode, String description,
+                   double price, double costPrice, boolean withTax, boolean weighable,
+                   Date creatingDate, long departmentId, long byUser , int with_pos, int with_point_system) {
+        this.id = id;
+        this.name = name;
+        this.barCode = barCode;
+        this.price = price;
+        this.costPrice = costPrice;
+        this.description = description;
+        this.withTax = withTax;
+        this.weighable = weighable;
+        this.creatingDate = creatingDate;
+        this.departmentId = departmentId;
+        this.byUser = byUser;
+        this.with_pos=with_pos;
+        this.with_point_system=with_point_system;
+    }
+
     public Product(long id, String name,double price, long byUser) {
         this.id = id;
         this.name = name;
@@ -100,6 +118,8 @@ public class Product {
                 product.getPrice(),product.getCostPrice(),product.isWithTax(),product.isWeighable(),
                 product.getCreatingDate(),product.isHide(),product.getDepartmentId(),product.getByUser(),product.getWith_pos(),product.getWith_point_system());
     }
+
+    public Product(){}
 
     //endregion
 

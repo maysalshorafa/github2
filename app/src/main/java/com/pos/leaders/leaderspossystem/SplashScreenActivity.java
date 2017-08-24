@@ -29,6 +29,7 @@ import com.pos.leaders.leaderspossystem.OpenFormat.OpenFrmt;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.SetupActivity;
 
 import org.joda.time.DateTime;
 
@@ -271,6 +272,9 @@ public class SplashScreenActivity extends Activity {
     private void firstRun(){
         Log.i("state", Util.isFirstLaunch(this, false) + "");
         if(Util.isFirstLaunch(this,false)){
+            //first launch
+
+            //Intent intent = new Intent(SplashScreenActivity.this, InitActivity.class);
             Intent intent = new Intent(SplashScreenActivity.this, InitActivity.class);
             startActivity(intent);
 

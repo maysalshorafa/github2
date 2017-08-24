@@ -1,6 +1,8 @@
 package com.pos.leaders.leaderspossystem.syncposservice;
 
 
+import android.util.Log;
+
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ public class MessageTransmit {
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final String AUTHORIZATION = "Authorization";
+    private static final String CONTENT_LENGTH = "content-length";
 
     private String domainURL;
     private OkHttpClient client;
@@ -43,7 +46,9 @@ public class MessageTransmit {
 
     public String authPost(String url, String json,String token) throws IOException {
         RequestBody body = RequestBody.create(JSON, json);
-        Request request = new Request.Builder().url(domainURL + url).post(body).addHeader(AUTHORIZATION, token).build();
+        Log.i("Message", body.toString());
+        Request request = new Request.Builder().url(domainURL + url).post(body).addHeader(AUTHORIZATION, token).addHeader(CONTENT_LENGTH,String.valueOf(body.contentLength()+body.contentType().toString().length())).build();
+        Log.i("Message req", request.toString());
         Response response = client.newCall(request).execute();
 
         return response.body().string();

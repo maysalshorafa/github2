@@ -8,6 +8,10 @@ import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -54,6 +58,8 @@ public class SyncMessage extends Service {
     private Broker broker;
     private MessageTransmit messageTransmit;
 
+    private long LOOP_TIME = 1 * 10 * 1000;
+
     private boolean isRunning = false;
 
     @Override
@@ -66,7 +72,9 @@ public class SyncMessage extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Log.i(TAG, "Service onStartCommand");
-        messageTransmit = new MessageTransmit(intent.getStringExtra(API_DOMAIN_SYNC_MESSAGE));
+        //messageTransmit = new MessageTransmit(intent.getStringExtra(API_DOMAIN_SYNC_MESSAGE));
+        messageTransmit = new MessageTransmit("http://192.168.252.11:8080/webapi/");
+
         if(!isRunning) {
             Log.i(TAG, "Create New Thread");
 
@@ -84,8 +92,11 @@ public class SyncMessage extends Service {
                         List<BrokerMessage> bms = broker.getAllNotSyncedCommand();
                         for (BrokerMessage bm : bms) {
                             try {
-                                if(!doSync(bm))
+                                if(doSync(bm)) {
+                                    broker.Synced(bm.getId());
+                                }else {
                                     break;
+                                }
                             } catch (IOException | JSONException e) {
                                 e.printStackTrace();
                             }
@@ -100,7 +111,7 @@ public class SyncMessage extends Service {
                         }
 
                         try {
-                            Thread.sleep(2 * 60 * 1000);//2 min thread sleep
+                            Thread.sleep(LOOP_TIME);//2 min thread sleep
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -122,13 +133,15 @@ public class SyncMessage extends Service {
             JSONObject jsonObject = new JSONObject(res);
 
             //todo: execute the command
-
-            String resp = messageTransmit.authPost(ApiURL.Sync, MessagesCreator.acknowledge(jsonObject.getInt(MessageKey.Ak)), token);
-            if (resp.equals(MessageResult.Invalid)) {
-                //stop
-                return;
-            }else if(resp.equals(MessageResult.OK)){
-                getSync();
+            if(executeMessage(jsonObject)) {
+                String resp = messageTransmit.authPost(ApiURL.Sync, MessagesCreator.acknowledge(jsonObject.getInt(MessageKey.Ak)), token);
+                Log.i(TAG, "getSync: " + resp);
+                if (resp.equals(MessageResult.Invalid)) {
+                    //stop
+                    return;
+                } else if (resp.equals(MessageResult.OK)) {
+                    getSync();
+                }
             }
         } else if(res.equals(MessageResult.Invalid)) {
             //todo: there is no update is coming
@@ -138,7 +151,8 @@ public class SyncMessage extends Service {
         }
     }
 
-    private boolean executeMessage(JSONObject jsonObject) throws JSONException {
+    private boolean executeMessage(JSONObject jsonObject) throws JSONException, IOException {
+        Log.i(TAG, jsonObject.toString());
         if(jsonObject.has(MessageKey.MessageType)) {
             String msgType = jsonObject.getString(MessageKey.MessageType);
             String msgData = jsonObject.getString(MessageKey.Data);
@@ -170,6 +184,16 @@ public class SyncMessage extends Service {
 
 
                 case MessageType.ADD_PRODUCT:
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    Product p = null;
+                        p = objectMapper.readValue(msgData, Product.class);
+
+
+                    ProductDBAdapter productDBAdapter = new ProductDBAdapter(this);
+                    productDBAdapter.open();
+                    productDBAdapter.insertEntry(p);
+                    productDBAdapter.close();
+
                     break;
                 case MessageType.UPDATE_PRODUCT:
                     break;
@@ -194,8 +218,9 @@ public class SyncMessage extends Service {
 
     private boolean doSync(BrokerMessage bm) throws IOException, JSONException {
 
-        if(!isConnected(this))
-            return false;
+        //if(!isConnected(this))
+           // return false;
+        // TODO: 24/08/2017 ladfjkgnk
 
         JSONObject jsonObject = new JSONObject(bm.getCommand());
         String res = "";

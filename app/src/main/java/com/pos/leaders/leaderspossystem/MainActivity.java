@@ -93,6 +93,7 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
+import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -628,6 +629,11 @@ usedpointDbAdapter.open();
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this, SyncMessage.class);
+                intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, "http://192.168.252.11:8080/webapi");
+                startService(intent);
+
                 barcodeScanned = etSearch.getText().toString();
                 if (!barcodeScanned.equals("")) {
                     enterKeyPressed();

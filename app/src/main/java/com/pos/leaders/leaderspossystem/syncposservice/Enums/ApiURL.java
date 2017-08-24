@@ -8,7 +8,7 @@ public interface ApiURL {
     String InitConnection = "initConnection";
     String Authentication = "authentication";
 
-    String Product = "product";
+    String Product = "Product";
     String Club = "club";
     String Customers = "Customers";
     String Users = "Users";

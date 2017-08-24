@@ -64,17 +64,18 @@ public class Broker {
 
 
     public long insertEntry(BrokerMessage bm) {
-        return insertEntry(bm.getCommand(), bm.isSynced(), bm.getCreatedDate().getTime(), bm.getByUser());
+        return insertEntry(bm.getCommand(), bm.isSynced());
     }
 
 
-    public synchronized long insertEntry(String command,boolean isSynced,long createDate,int byUser) {
+    public synchronized long insertEntry(String command,boolean isSynced) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
+        Log.i(LOG_TAG, command);
+        Log.i(LOG_TAG, "is "+isSynced);
+
         val.put(BROKER_COLUMN_COMMAND, command);
         val.put(BROKER_COLUMN_IS_SYNCED, (isSynced ? 1 : 0));
-        val.put(BROKER_COLUMN_CREATE_DATE, createDate);
-        val.put(BROKER_COLUMN_BY_USER, byUser);
         try {
             long index=db.insert(BROKER_TABLE_NAME, null, val);
             return index;
@@ -124,9 +125,7 @@ public class Broker {
     private BrokerMessage makeBrokerMessage(Cursor c){
         return new BrokerMessage(c.getInt(c.getColumnIndex(BROKER_COLUMN_ID)),
                 c.getString(c.getColumnIndex(BROKER_COLUMN_COMMAND)),
-                c.getInt(c.getColumnIndex(BROKER_COLUMN_IS_SYNCED)),
-                c.getLong(c.getColumnIndex(BROKER_COLUMN_CREATE_DATE)),
-                c.getInt(c.getColumnIndex(BROKER_COLUMN_BY_USER)));
+                c.getInt(c.getColumnIndex(BROKER_COLUMN_IS_SYNCED)));
     }
 
 }
