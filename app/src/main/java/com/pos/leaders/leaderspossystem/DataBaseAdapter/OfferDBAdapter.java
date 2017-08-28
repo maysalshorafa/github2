@@ -13,10 +13,13 @@ import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 23/10/2016.
@@ -71,30 +74,40 @@ public class OfferDBAdapter {
 		return db;
 	}
 
-	public int insertEntry(Offer offer){
-		return insertEntry(offer.getName(), offer.getStartDate().getTime(), offer.getEndDate().getTime(), offer.getCreatingDate().getTime(), offer.getStatus(), offer.getByUser(), offer.getRuleName(), offer.getRuleID());
+	public long insertEntry(Offer offer){
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+
+        val.put(OFFER_COLUMN_ID, offer.getId());
+
+        val.put(OFFER_COLUMN_NAME, offer.getName());
+        val.put(OFFER_COLUMN_STARTDATE, offer.getStartDate().getTime());
+        val.put(OFFER_COLUMN_ENDDATE, offer.getEndDate().getTime());
+        val.put(OFFER_COLUMN_CREATINGDATE, offer.getCreatingDate().getTime());
+        val.put(OFFER_COLUMN_STATUS, offer.getStatus());
+        val.put(OFFER_COLUMN_BYUSER, offer.getByUser());
+        val.put(OFFER_COLUMN_RULENAME, offer.getRuleName());
+        val.put(OFFER_COLUMN_RULEID, offer.getRuleID());
+
+        try {
+            return db.insert(OFFER_TABLE_NAME, null, val);
+        } catch (SQLException ex) {
+            Log.e(LOG_TAG, "inserting Entry in " + OFFER_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
 	}
 
-	public int insertEntry(String name,long startDate,long endDate,long createDate,int status,int byUser,String ruleName,long ruleID){
-		ContentValues val = new ContentValues();
-		//Assign values for each row.
+	public long insertEntry(String name,long startDate,long endDate,long createDate,int status,long byUser,String ruleName,long ruleID){
 
-		val.put(OFFER_COLUMN_ID, Util.idHealth(this.db, OFFER_TABLE_NAME, OFFER_COLUMN_ID));
+        Offer offer = new Offer(Util.idHealth(this.db, OFFER_TABLE_NAME, OFFER_COLUMN_ID), name, new Date(startDate), new Date(endDate), new Date(createDate), status, byUser, ruleName, ruleID);
+        sendToBroker(MessageType.ADD_OFFER, offer, this.context);
 
-		val.put(OFFER_COLUMN_NAME, name);
-		val.put(OFFER_COLUMN_STARTDATE, startDate);
-		val.put(OFFER_COLUMN_ENDDATE, endDate);
-		val.put(OFFER_COLUMN_CREATINGDATE, createDate);
-		val.put(OFFER_COLUMN_STATUS, status);
-		val.put(OFFER_COLUMN_BYUSER, byUser);
-		val.put(OFFER_COLUMN_RULENAME, ruleName);
-		val.put(OFFER_COLUMN_RULEID, ruleID);
-		try {
-			return (int)db.insert(OFFER_TABLE_NAME, null, val);
-		} catch (SQLException ex) {
-			Log.e(LOG_TAG, "inserting Entry in " + OFFER_TABLE_NAME + ": " + ex.getMessage());
-			return 0;
-		}
+        try {
+            return insertEntry(offer);
+        } catch (SQLException ex) {
+            Log.e(LOG_TAG, "inserting Entry in " + OFFER_TABLE_NAME + ": " + ex.getMessage());
+            return -1;
+        }
 	}
 
 	public Offer getOfferById(long id){

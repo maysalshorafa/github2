@@ -13,9 +13,13 @@ import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 02/11/2016.
@@ -67,22 +71,33 @@ public class ChecksDBAdapter {
 
 
 
-	public int insertEntry(int checkNum,int bankNum,int branchNum,int accountNum,double amount, long saleId) {
+	public long insertEntry(int checkNum,int bankNum,int branchNum,int accountNum,double amount,Date date, long saleId) {
+        Check check = new Check(Util.idHealth(this.db, CHECKS_TABLE_NAME, CHECKS_COLUMN_ID), checkNum, bankNum, branchNum, accountNum, amount, date, false, saleId);
+        sendToBroker(MessageType.ADD_CHECK, check, this.context);
+
+        try {
+            return insertEntry(check);
+        } catch (SQLException ex) {
+            Log.e("Checks DB insert", "inserting Entry at " + CHECKS_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+	}
+
+	public long insertEntry(Check check){
+
 		ContentValues val = new ContentValues();
-
-		val.put(CHECKS_COLUMN_ID, Util.idHealth(this.db,CHECKS_TABLE_NAME, CHECKS_COLUMN_ID) );
-
-
+		val.put(CHECKS_COLUMN_ID,check.getId());
 		//Assign values for each row.
-		val.put(CHECKS_COLUMN_CHECKNUMBER, checkNum);
-		val.put(CHECKS_COLUMN_BANKNUMBER, bankNum);
-		val.put(CHECKS_COLUMN_BRANCHNUMBER, branchNum);
-		val.put(CHECKS_COLUMN_ACCOUNTNUMBER, accountNum);
-		val.put(CHECKS_COLUMN_AMOUNT,amount );
-		val.put(CHECKS_COLUMN_SALEID, saleId);
+		val.put(CHECKS_COLUMN_CHECKNUMBER, check.getCheckNum());
+		val.put(CHECKS_COLUMN_BANKNUMBER, check.getBankNum());
+		val.put(CHECKS_COLUMN_BRANCHNUMBER, check.getBranchNum());
+		val.put(CHECKS_COLUMN_ACCOUNTNUMBER, check.getAccountNum());
+		val.put(CHECKS_COLUMN_AMOUNT,check.getAmount() );
+		val.put(CHECKS_COLUMN_DATE,DateConverter.DateToString(check.getDate()));
+        val.put(CHECKS_COLUMN_ISDELETED, check.isDeleted() ? 1 : 0);
+        val.put(CHECKS_COLUMN_SALEID, check.getSaleId());
 		try {
-			long i=db.insert(CHECKS_TABLE_NAME, null, val);
-			return (int)i;
+			return db.insert(CHECKS_TABLE_NAME, null, val);
 
 		} catch (SQLException ex) {
 			Log.e("Checks DB insert", "inserting Entry at " + CHECKS_TABLE_NAME + ": " + ex.getMessage());

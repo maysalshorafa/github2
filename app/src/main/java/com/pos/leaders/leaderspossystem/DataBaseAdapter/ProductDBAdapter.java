@@ -30,6 +30,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
+
 /**
  * Created by KARAM on 18/10/2016.
  */
@@ -92,35 +94,12 @@ public class ProductDBAdapter {
 
     public int insertEntry(String name,String barCode,String description,double price,double costPrice,
                            boolean withTax,boolean weighable,long depId,long byUser ,int pos,int point_system) {
-        ContentValues val = new ContentValues();
-        //Assign values for each row.
         Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price, costPrice, withTax, weighable, new Date(), depId, byUser, pos, point_system);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put(MessageKey.MessageType, MessageType.ADD_PRODUCT);
-            String jsonInString = objectMapper.writeValueAsString(p);
-            JSONObject data = new JSONObject(jsonInString);
-            jsonObject.put(MessageKey.Data, data);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-
+        sendToBroker(MessageType.ADD_PRODUCT, p, this.context);
 
         try {
             long insertResult = insertEntry(p);
-            Broker broker = new Broker(this.context);
-            broker.open();
-
-            BrokerMessage brokerMessage = new BrokerMessage(jsonObject.toString());
-            long res = broker.insertEntry(brokerMessage);
-            broker.close();
-
             return 1;
         } catch (SQLException ex) {
             Log.e("ProductDB insertEntry", "inserting Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());

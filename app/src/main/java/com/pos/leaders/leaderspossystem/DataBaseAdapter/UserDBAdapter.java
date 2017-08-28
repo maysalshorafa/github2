@@ -11,9 +11,13 @@ import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by Karam on 17/10/2016.
@@ -65,32 +69,41 @@ public class UserDBAdapter {
         return db;
     }
 
-    public int insertEntry(String userName,String password,String firstName,String lastName,String phoneNumber,Double persent,Double hourlyWag,String permissions_name ) {
-        ContentValues val = new ContentValues();
-        //Assign values for each row.
-        val.put(USERS_COLUMN_ID, Util.idHealth(this.db, USERS_TABLE_NAME, USERS_COLUMN_ID));
-        val.put(USERS_COLUMN_USERNAME, userName);
-        val.put(USERS_COLUMN_PASSWORD, password);
-        val.put(USERS_COLUMN_FIRSTNAME, firstName);
-        val.put(USERS_COLUMN_LASTNAME, lastName);
-        val.put(USERS_COLUMN_PHONENUMBER, phoneNumber);
-        val.put(USERS_COLUMN_DISCOUNTINPERCENTAGE, persent);
-        val.put(USERS_COLUMN_HOURLYWAGE, hourlyWag);
-        val.put(USERS_COLUMN_PERMISSIONS_NAME, permissions_name);
+    public long insertEntry(String userName, String password, String firstName, String lastName, String phoneNumber, Double persent, Double hourlyWag, String permissions_name ) {
+
+        User u = new User(Util.idHealth(this.db, USERS_TABLE_NAME, USERS_COLUMN_ID), userName, password, firstName, lastName, new Date(), false, phoneNumber, persent, hourlyWag, permissions_name);
+        sendToBroker(MessageType.ADD_USER, u, this.context);
 
         try {
-            db.insert(USERS_TABLE_NAME, null, val);
-            return 1;
+            long insertResult = insertEntry(u);
+            return insertResult;
         } catch (SQLException ex) {
             Log.e("UserDB insertEntry", "inserting Entry at " + USERS_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
 
-    public int insertEntry(User user) {
-        return insertEntry(user.getUserName(), user.getPassword(), user.getFirstName(),
-                user.getLastName(), user.getPhoneNumber(), user.getPresent(),
-                user.getHourlyWage(), user.getPermtionName());
+    public long insertEntry(User user) {
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(USERS_COLUMN_ID, user.getId());
+        val.put(USERS_COLUMN_USERNAME, user.getUserName());
+        val.put(USERS_COLUMN_PASSWORD, user.getPassword());
+        val.put(USERS_COLUMN_FIRSTNAME, user.getFirstName());
+        val.put(USERS_COLUMN_LASTNAME, user.getLastName());
+        val.put(USERS_COLUMN_CREATINGDATE, user.getCreatingDate().getTime());
+        val.put(USERS_COLUMN_DISENABLED, user.isHide()?1:0);
+        val.put(USERS_COLUMN_PHONENUMBER, user.getPhoneNumber());
+        val.put(USERS_COLUMN_DISCOUNTINPERCENTAGE, user.getPresent());
+        val.put(USERS_COLUMN_HOURLYWAGE, user.getHourlyWage());
+        val.put(USERS_COLUMN_PERMISSIONS_NAME, user.getPermtionName());
+
+        try {
+            return db.insert(USERS_TABLE_NAME, null, val);
+        } catch (SQLException ex) {
+            Log.e("UserDB insertEntry", "inserting Entry at " + USERS_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
     }
 
     public User getUserByID(long id) {

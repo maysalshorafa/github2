@@ -10,9 +10,12 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 19/10/2016.
@@ -53,22 +56,33 @@ public class PaymentDBAdapter {
 		return db;
 	}
 
-	public int insertEntry(String paymentWay,double amount, long saleId) {
+	public long insertEntry(String paymentWay,double amount, long saleId) {
+		Payment payment = new Payment(Util.idHealth(this.db, PAYMENT_TABLE_NAME, PAYMENT_COLUMN_ID), paymentWay, amount, saleId);
+		sendToBroker(MessageType.ADD_PAYMENT, payment, this.context);
+
+		try {
+			return insertEntry(payment);
+		} catch (SQLException ex) {
+			Log.e("Payment DB insert", "inserting Entry at " + PAYMENT_TABLE_NAME + ": " + ex.getMessage());
+			return -1;
+		}
+	}
+
+	public long insertEntry(Payment payment){
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 
-			val.put(PAYMENT_COLUMN_ID, Util.idHealth(this.db, PAYMENT_TABLE_NAME, PAYMENT_COLUMN_ID));
+		val.put(PAYMENT_COLUMN_ID, payment.getId());
 
 
-		val.put(PAYMENT_COLUMN_PAYMENTWAY, paymentWay);
-		val.put(PAYMENT_COLUMN_AMOUNT,amount );
-		val.put(PAYMENT_COLUMN_SALEID, saleId);
+		val.put(PAYMENT_COLUMN_PAYMENTWAY, payment.getPaymentWay());
+		val.put(PAYMENT_COLUMN_AMOUNT,payment.getAmount() );
+		val.put(PAYMENT_COLUMN_SALEID, payment.getSaleId());
 		try {
-			db.insert(PAYMENT_TABLE_NAME, null, val);
-			return 1;
+			return db.insert(PAYMENT_TABLE_NAME, null, val);
 		} catch (SQLException ex) {
 			Log.e("Payment DB insert", "inserting Entry at " + PAYMENT_TABLE_NAME + ": " + ex.getMessage());
-			return 0;
+			return -1;
 		}
 	}
 

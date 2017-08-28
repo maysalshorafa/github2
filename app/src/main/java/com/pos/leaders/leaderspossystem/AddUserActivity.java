@@ -109,10 +109,10 @@ public class AddUserActivity extends Activity {
 							} else if (etHourlyWage.getText().toString().equals("")) {
 								Toast.makeText(getApplicationContext(), "Please insert hourly wage", Toast.LENGTH_LONG).show();
 							} else {
-								int i = userDBAdapter.insertEntry(etUserName.getText().toString(), etPassword.getText().toString(), etFirstName.getText().toString()
+								long i = userDBAdapter.insertEntry(etUserName.getText().toString(), etPassword.getText().toString(), etFirstName.getText().toString()
 										, etLastName.getText().toString(), etPhoneNumber.getText().toString()
 										, Double.parseDouble(etPresent.getText().toString()), Double.parseDouble(etHourlyWage.getText().toString()),selectedFromList );
-								if (i == 1) {
+								if (i > 0) {
 									Toast.makeText(getApplicationContext(), "success dding new user", Toast.LENGTH_LONG).show();
 
 									Log.i("success", "adding new user");

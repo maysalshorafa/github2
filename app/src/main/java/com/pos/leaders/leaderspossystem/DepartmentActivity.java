@@ -126,8 +126,8 @@ public class DepartmentActivity extends Activity {
 
 	private void addDepartmentOnClick(View v) {
 		if (editableDepartment == null) {
-			int check = departmentDBAdapter.insertEntry(etDepartmentName.getText().toString(), SESSION._USER.getId());
-			if (check == 1) {
+			long check = departmentDBAdapter.insertEntry(etDepartmentName.getText().toString(), SESSION._USER.getId());
+			if (check > 0) {
 				Log.i("seccess", "added department");
 			} else {
 				Log.e("error", " addeing department");

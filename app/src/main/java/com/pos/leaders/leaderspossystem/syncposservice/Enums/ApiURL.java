@@ -10,9 +10,16 @@ public interface ApiURL {
 
     String Product = "Product";
     String Club = "club";
-    String Customers = "Customers";
+    String Customer = "Customer";
     String Users = "Users";
     String Order = "Order";
+    String AReport = "AReport";
+    String Check = "Check";
+    String Department = "Department";
+    String Offer = "Offer";
+    String Payment = "Payment";
+    String Permission = "Permission";
+    String Sale = "Sale";
 
 
     String Sync = "sync";

@@ -44,9 +44,8 @@ public class User {
         this(user.getId(),user.getUserName(),user.getPassword(),user.getFirstName(),
                 user.getLastName(),user.getCreatingDate(),user.isHide(),user.getPhoneNumber(),user.getPresent(),user.getHourlyWage(),user.getPermtionName());
     }
-    public User(){
-        this.id=1;
-    }
+    public User(){}
+
     public String getFullName(){
         return this.firstName+" "+this.lastName;
     }

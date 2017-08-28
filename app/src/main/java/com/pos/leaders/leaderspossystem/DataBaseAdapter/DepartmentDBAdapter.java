@@ -12,9 +12,13 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 18/10/2016.
@@ -62,20 +66,37 @@ public class DepartmentDBAdapter {
 
 
 
-    public int insertEntry(String name,long byUser) {
+    public long insertEntry(String name,long byUser) {
+        Department department = new Department(Util.idHealth(this.db, DEPARTMENTS_TABLE_NAME, DEPARTMENTS_COLUMN_ID), name, new Date(), byUser, false);
+
+        sendToBroker(MessageType.ADD_DEPARTMENT, department, this.context);
+
+        try {
+            return insertEntry(department);
+        } catch (SQLException ex) {
+            Log.e("DepartmentDB insert", "inserting Entry at " + DEPARTMENTS_TABLE_NAME + ": " + ex.getMessage());
+            return -1;
+        }
+    }
+
+    public long insertEntry(Department department){
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(DEPARTMENTS_COLUMN_ID, Util.idHealth(this.db,DEPARTMENTS_TABLE_NAME,DEPARTMENTS_COLUMN_ID));
-        val.put(DEPARTMENTS_COLUMN_NAME, name);
-        val.put(DEPARTMENTS_COLUMN_BYUSER, byUser);
+        val.put(DEPARTMENTS_COLUMN_ID, department.getId());
+        val.put(DEPARTMENTS_COLUMN_NAME, department.getName());
+        val.put(DEPARTMENTS_COLUMN_BYUSER, department.getByUser());
+        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, DateConverter.DateToString(department.getCreatingDate()));
+        val.put(DEPARTMENTS_COLUMN_DISENABLED, department.isHide() ? 1 : 0);
+
         try {
-            db.insert(DEPARTMENTS_TABLE_NAME, null, val);
-            return 1;
+
+            return db.insert(DEPARTMENTS_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e("DepartmentDB insert", "insatring Entry at " + DEPARTMENTS_TABLE_NAME + ": " + ex.getMessage());
-            return 0;
+            return -1;
         }
+
     }
 
     public Department getDepartmentByID(long id) {

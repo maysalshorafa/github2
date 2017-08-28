@@ -9,11 +9,13 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Order;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 19/10/2016.
@@ -64,9 +66,6 @@ public class OrderDBAdapter {
 		return db;
 	}
 
-
-
-
 	public int insertEntry(long productId, int counter, double userOffer, long saleId) {
 		ContentValues val = new ContentValues();
 		if(isEmpty){
@@ -86,23 +85,37 @@ public class OrderDBAdapter {
 		}
 	}
 
-    public int insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount) {
+
+
+
+	public long insertEntry(Order o){
         ContentValues val = new ContentValues();
-
-		val.put(ORDER_COLUMN_ID, Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID));
-
-        //Assign values for each row.
-        val.put(ORDER_COLUMN_PRODUCTID, productId);
-        val.put(ORDER_COLUMN_COUNTER, counter);
-        val.put(ORDER_COLUMN_USEROFFER, userOffer);
-        val.put(ORDER_COLUMN_SALEID, saleId);
-        val.put(ORDER_COLUMN_PRICE, price);
-        val.put(ORDER_COLUMN_ORIGINAL_PRICE, original_price);
-        val.put(ORDER_COLUMN_DISCOUNT, discount);
+        val.put(ORDER_COLUMN_ID, o.getId());
+        val.put(ORDER_COLUMN_PRODUCTID, o.getProductId());
+        val.put(ORDER_COLUMN_COUNTER, o.getCount());
+        val.put(ORDER_COLUMN_USEROFFER, o.getUserOffer());
+        val.put(ORDER_COLUMN_SALEID, o.getSaleId());
+        val.put(ORDER_COLUMN_PRICE, o.getPrice());
+        val.put(ORDER_COLUMN_ORIGINAL_PRICE, o.getOriginal_price());
+        val.put(ORDER_COLUMN_DISCOUNT, o.getDiscount());
         try {
             return (int) db.insert(ORDER_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e("Order DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+	}
+
+    public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount) {
+
+        Order o = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount);
+        sendToBroker(MessageType.ADD_ORDER, o, this.context);
+
+        try {
+            long insertResult = insertEntry(o);
+            return insertResult;
+        } catch (SQLException ex) {
+            Log.e("Order DB insertEntry", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }

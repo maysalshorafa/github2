@@ -2098,7 +2098,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(MainActivity.this);
                 paymentDBAdapter.open();
 
-                int paymentID = paymentDBAdapter.insertEntry(CREDIT_CARD, saleTotalPrice, saleID);
+                long paymentID = paymentDBAdapter.insertEntry(CREDIT_CARD, saleTotalPrice, saleID);
                 paymentDBAdapter.close();
 
                 Payment payment = new Payment(paymentID, CREDIT_CARD, saleTotalPrice, saleID);
@@ -2157,7 +2157,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
                 paymentDBAdapter.open();
 
-                int paymentID = paymentDBAdapter.insertEntry(CHECKS, saleTotalPrice, saleID);
+                long paymentID = paymentDBAdapter.insertEntry(CHECKS, saleTotalPrice, saleID);
                 paymentDBAdapter.close();
 
                 Payment payment = new Payment(paymentID, CHECKS, saleTotalPrice, saleID);
@@ -2166,7 +2166,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(this);
                 checksDBAdapter.open();
                 for (Check check : SESSION._CHECKS_HOLDER) {
-                    checksDBAdapter.insertEntry(check.getCheckNum(), check.getBankNum(), check.getBranchNum(), check.getAccountNum(), check.getAmount(), saleID);
+                    checksDBAdapter.insertEntry(check.getCheckNum(), check.getBankNum(), check.getBranchNum(), check.getAccountNum(), check.getAmount(),check.getDate(), saleID);
                 }
                 checksDBAdapter.close();
 
@@ -2232,7 +2232,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
                 paymentDBAdapter.open();
 
-                int paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleID);
+                long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleID);
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleID);
 
                 SESSION._SALE.setPayment(payment);
