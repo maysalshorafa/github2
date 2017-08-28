@@ -141,9 +141,20 @@ public class Sale {
         return customer_name;
     }
 
+
+
     //endregion
 
 	//region Setter
+
+
+    public void setSaleDate(Date saleDate) {
+        this.saleDate = saleDate;
+    }
+
+    public void setCancelling(boolean cancelling) {
+        this.cancelling = cancelling;
+    }
 
     public void setId(long id) {
         this.id = id;

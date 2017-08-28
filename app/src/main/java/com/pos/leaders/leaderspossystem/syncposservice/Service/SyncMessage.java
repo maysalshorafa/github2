@@ -45,7 +45,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class SyncMessage extends Service {
 
@@ -175,7 +177,11 @@ public class SyncMessage extends Service {
         if(jsonObject.has(MessageKey.MessageType)) {
             String msgType = jsonObject.getString(MessageKey.MessageType);
             String msgData = jsonObject.getString(MessageKey.Data);
+
             ObjectMapper objectMapper = new ObjectMapper();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            objectMapper.setDateFormat(dateFormat);
+
             switch (msgType) {
 
                 //region A REPORT

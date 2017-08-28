@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -11,11 +12,14 @@ public class AReport {
     private long id;
     private long creationDate;
     private long byUserID;
+    @JsonIgnore
     private User byUser;
     private double amount;
     private long lastSaleID;
+    @JsonIgnore
     private Sale lastSale;
     private long lastZReportID;
+    @JsonIgnore
     private ZReport lastZReport;
 
 

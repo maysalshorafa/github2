@@ -27,7 +27,7 @@ public class BrokerHelper {
         try {
             jsonObject.put(MessageKey.MessageType, msgType);
             ObjectMapper objectMapper = new ObjectMapper();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
             objectMapper.setDateFormat(dateFormat);
             String jsonInString = objectMapper.writeValueAsString(obj);
             JSONObject data = new JSONObject(jsonInString);
