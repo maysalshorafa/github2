@@ -11,10 +11,13 @@ import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 12/04/2017.
@@ -64,26 +67,37 @@ public class AReportDBAdapter {
     }
 
     public long insertEntry(long createDate, long byUser, double amount, long lastSaleID,long lastZReport) {
+        AReport aReport = new AReport(Util.idHealth(this.db, A_REPORT_TABLE_NAME, A_REPORT_COLUMN_ID), createDate, byUser, amount, lastSaleID, lastZReport);
+        sendToBroker(MessageType.ADD_A_REPORT, aReport, this.context);
+
+        try {
+            long insertResult = insertEntry(aReport);
+            return insertResult;
+        } catch (SQLException ex) {
+            Log.e(A_REPORT_TABLE_NAME +" DB insert", "inserting Entry at " + A_REPORT_TABLE_NAME + ": " + ex.getMessage());
+            return -1;
+        }
+
+    }
+
+    public long insertEntry(AReport aReport) {
+
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(A_REPORT_COLUMN_ID, Util.idHealth(this.db, A_REPORT_TABLE_NAME, A_REPORT_COLUMN_ID));
+        val.put(A_REPORT_COLUMN_ID, aReport.getId());
 
-        val.put(A_REPORT_COLUMN_CREATEDATE, createDate);
-        val.put(A_REPORT_COLUMN_BYUSER, byUser);
-        val.put(A_REPORT_COLUMN_AMOUNT, amount);
-        val.put(A_REPORT_COLUMN_LASTSALEID, lastSaleID);
-        val.put(A_REPORT_COLUMN_LASTZREPORTID, lastZReport);
+        val.put(A_REPORT_COLUMN_CREATEDATE, aReport.getCreationDate());
+        val.put(A_REPORT_COLUMN_BYUSER, aReport.getByUserID());
+        val.put(A_REPORT_COLUMN_AMOUNT, aReport.getAmount());
+        val.put(A_REPORT_COLUMN_LASTSALEID, aReport.getLastSaleID());
+        val.put(A_REPORT_COLUMN_LASTZREPORTID, aReport.getLastSaleID());
         try {
             return db.insert(A_REPORT_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e(A_REPORT_TABLE_NAME +" DB insert", "inserting Entry at " + A_REPORT_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
-    }
-
-    public long insertEntry(AReport aReport) {
-        return insertEntry(aReport.getCreationDate(),aReport.getByUserID(),aReport.getAmount(),aReport.getLastSaleID(),aReport.getLastZReportID());
     }
 
     public AReport getByLastZReport(long lastZReportID){

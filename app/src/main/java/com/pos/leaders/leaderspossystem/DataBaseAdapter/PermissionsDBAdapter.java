@@ -56,7 +56,6 @@ public class PermissionsDBAdapter {
 		ContentValues val = new ContentValues();
 		val.put(PERMISSIONS_COLUMN_ID, Util.idHealth(this.db, PERMISSIONS_TABLE_NAME, PERMISSIONS_COLUMN_ID));
 
-
 		//Assign values for each row.
 		val.put(PERMISSIONS_TABLE_NAME, name);
 		try {

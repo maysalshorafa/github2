@@ -93,6 +93,7 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
+import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -255,7 +256,7 @@ double SumForClub=0.0;
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_temp);
 
 
 
@@ -264,7 +265,7 @@ double SumForClub=0.0;
         club_name=(TextView)findViewById(R.id.cClubName);
         information=(TextView)findViewById(R.id.cInformation);
         custmername_EditText=(EditText) findViewById(R.id.custmer_textview);
-        a=custmername_EditText.getText().toString();
+        //a=custmername_EditText.getText().toString();
 
         search_person=(Button)findViewById(R.id.searchPerson);
         drawerLayout = (DrawerLayout) findViewById(R.id.mainActivity_drawerLayout);
@@ -310,7 +311,7 @@ double SumForClub=0.0;
 
 
         showTouchPad(false);
-        //    showQuickPricePad();
+        showQuickPricePad();
 
         //region Orders Frame
 
@@ -319,9 +320,9 @@ double SumForClub=0.0;
 
         //hshheot
         ll = (LinearLayout) findViewById(R.id.mainActivity_llButtonsSales);
-        ll.setVisibility(View.GONE);
+        //ll.setVisibility(View.GONE);
         imv = (ImageView) findViewById(R.id.imageView6);
-        imv.setVisibility(View.GONE);
+        //imv.setVisibility(View.GONE);
 
 
         llDepartments = (LinearLayout) findViewById(R.id.mainActivity_LLDepartment);
@@ -487,7 +488,7 @@ usedpointDbAdapter.open();
         productList = productDBAdapter.getTopProducts(0, 50);
         All_productsList = productList;
         productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(this, productList);
-        gvProducts.setNumColumns(5);
+        gvProducts.setNumColumns(2);
 
         gvProducts.setAdapter(productCatalogGridViewAdapter);
         lvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -628,6 +629,11 @@ usedpointDbAdapter.open();
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this, SyncMessage.class);
+                intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, "http://192.168.252.11:8080/webapi");
+                startService(intent);
+
                 barcodeScanned = etSearch.getText().toString();
                 if (!barcodeScanned.equals("")) {
                     enterKeyPressed();
@@ -1404,14 +1410,13 @@ saleTotalPrice=saleTotalPrice-newPrice;
         if(Double.parseDouble(str)!=0)
             addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._USER.getId()));
     }
-    /**
 
      private void showQuickPricePad(){
-     QuickPricePadFragment fTP = new QuickPricePadFragment();
-     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-     transaction.add(R.id.mainActivity_fragmentQuickPricePad, fTP);
-     transaction.commit();
-     }**/
+         QuickPricePadFragment fTP = new QuickPricePadFragment();
+         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+         transaction.add(R.id.mainActivity_fragmentQuickPricePad, fTP);
+         transaction.commit();
+     }
 
     private void showTouchPad(boolean b) {
         if(!b) {
@@ -2093,7 +2098,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(MainActivity.this);
                 paymentDBAdapter.open();
 
-                int paymentID = paymentDBAdapter.insertEntry(CREDIT_CARD, saleTotalPrice, saleID);
+                long paymentID = paymentDBAdapter.insertEntry(CREDIT_CARD, saleTotalPrice, saleID);
                 paymentDBAdapter.close();
 
                 Payment payment = new Payment(paymentID, CREDIT_CARD, saleTotalPrice, saleID);
@@ -2152,7 +2157,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
                 paymentDBAdapter.open();
 
-                int paymentID = paymentDBAdapter.insertEntry(CHECKS, saleTotalPrice, saleID);
+                long paymentID = paymentDBAdapter.insertEntry(CHECKS, saleTotalPrice, saleID);
                 paymentDBAdapter.close();
 
                 Payment payment = new Payment(paymentID, CHECKS, saleTotalPrice, saleID);
@@ -2161,7 +2166,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(this);
                 checksDBAdapter.open();
                 for (Check check : SESSION._CHECKS_HOLDER) {
-                    checksDBAdapter.insertEntry(check.getCheckNum(), check.getBankNum(), check.getBranchNum(), check.getAccountNum(), check.getAmount(), saleID);
+                    checksDBAdapter.insertEntry(check.getCheckNum(), check.getBankNum(), check.getBranchNum(), check.getAccountNum(), check.getAmount(),check.getDate(), saleID);
                 }
                 checksDBAdapter.close();
 
@@ -2227,7 +2232,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
                 paymentDBAdapter.open();
 
-                int paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleID);
+                long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleID);
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleID);
 
                 SESSION._SALE.setPayment(payment);

@@ -96,10 +96,10 @@ public class AddNewCoustmer extends AppCompatActivity  {
                             }
 
                             else {
-                                int i = customerDBAdapter.insertEntry(etCoustmerId.getText().toString() ,etCoustmerName.getText().toString(), dateOfbirtday.getText().toString(),
+                                long i = customerDBAdapter.insertEntry(Long.parseLong(etCoustmerId.getText().toString()) ,etCoustmerName.getText().toString(), dateOfbirtday.getText().toString(),
                                         etGender.getText().toString(),  etEmail.getText().toString(),
                                         etJob.getText().toString(),etPhoneNo.getText().toString(),etAddress.getText().toString() ,selectedCity,selectedClub);
-                                if (i == 1) {
+                                if (i > 0) {
                                     Log.i("success", "adding new custmer");
                                     intent = new Intent(AddNewCoustmer.this, CustmerMangmentActivity.class);
                                     startActivity(intent);

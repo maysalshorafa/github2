@@ -22,7 +22,7 @@ public class SESSION {
 	public static List<Pair<Integer, Sale>> _SALES;
 	public static List<Check> _CHECKS_HOLDER;
     public static int TEMP_NUMBER = 0;
-	public static int POS_ID_NUMBER = 14;
+	public static int POS_ID_NUMBER = 1;
 	public static long firstIDOffset = 10000000000000000L;
 
 	public static void _LogOut() {
@@ -42,6 +42,6 @@ public class SESSION {
 	}
 
 
-	public static String token = "";
+	public static String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrYXJhbSJ9.qU2JoZ74qnkiCzUYCnMq4viTY5Nk8HcE0vFMx0Famww";
 }
 

@@ -23,7 +23,7 @@ public class Offer {
 	private Date endDate;
 	private Date creatingDate;
 	private int status;
-	private int byUser;
+	private long byUser;
     private String ruleName;
     private long ruleID;
 
@@ -42,7 +42,7 @@ public class Offer {
 
     }
 
-	public Offer(long id, String name, Date startDate, Date endDate, Date creatingDate, int status, int byUser,String ruleName,long ruleID) {
+	public Offer(long id, String name, Date startDate, Date endDate, Date creatingDate, int status, long byUser,String ruleName,long ruleID) {
 		this.id=id;
 		this.name = name;
 		this.startDate = startDate;
@@ -54,7 +54,7 @@ public class Offer {
         this.ruleID = ruleID;
     }
 
-    public Offer(String name, Date startDate, Date endDate, Date creatingDate, int status, int byUser,String ruleName,long ruleID) {
+    public Offer(String name, Date startDate, Date endDate, Date creatingDate, int status, long byUser,String ruleName,long ruleID) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -117,7 +117,7 @@ public class Offer {
 		return status;
 	}
 
-    public int getByUser() {
+    public long getByUser() {
         return byUser;
     }
 
@@ -157,7 +157,7 @@ public class Offer {
 		this.name = name;
 	}
 
-    public void setByUser(int byUser) {
+    public void setByUser(long byUser) {
         this.byUser = byUser;
     }
 

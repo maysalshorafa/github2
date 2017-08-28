@@ -19,7 +19,8 @@ public class TouchPadFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_touch_pad, container, false);
+        //return inflater.inflate(R.layout.fragment_touch_pad, container, false);
+        return inflater.inflate(R.layout.calculator_pad, container, false);
     }
 
     public void click(View view){

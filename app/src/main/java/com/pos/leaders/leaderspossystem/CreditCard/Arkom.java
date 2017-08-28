@@ -270,12 +270,12 @@ public class Arkom {
         String TransactionID=GetTransactionID(SETTINGS.ccNumber,SETTINGS.ccPassword);
         String transactionAcknowledge = "";
 
-           /* String CreditCardNumber="4557440410014606",CardExpiry = "1216",Last4Digits="4606",CVV2="444",ID="890109629",ISO_Currency="ILS",ApprovalCode="",TransRef="",Z_Prm="",Q_Prm="",R_Prm="";
-                                double TransSum=200.990d,FirstPayment=200.99d,TransPoints =0,FixedPayment=0;
-                                int TransCurrency=1,CreditType=2,NumOfFixedPayments=0,J_Prm=0;
-                                Arkom.CCTransaction(SETTINGS.ccNumber,SETTINGS.ccPassword,transID,CreditCardNumber,CardExpiry,TransSum,
-                                        TransPoints,Last4Digits,CVV2,ID,TransCurrency,ISO_Currency,CreditType,ApprovalCode,FirstPayment,
-                                        FixedPayment,NumOfFixedPayments,TransRef,J_Prm,Z_Prm,Q_Prm,R_Prm);*/
+       /* String CreditCardNumber="4557440410014606",CardExpiry = "1216",Last4Digits="4606",CVV2="444",ID="890109629",ISO_Currency="ILS",ApprovalCode="",TransRef="",Z_Prm="",Q_Prm="",R_Prm="";
+                            double TransSum=200.990d,FirstPayment=200.99d,TransPoints =0,FixedPayment=0;
+                            int TransCurrency=1,CreditType=2,NumOfFixedPayments=0,J_Prm=0;
+                            Arkom.CCTransaction(SETTINGS.ccNumber,SETTINGS.ccPassword,transID,CreditCardNumber,CardExpiry,TransSum,
+                                    TransPoints,Last4Digits,CVV2,ID,TransCurrency,ISO_Currency,CreditType,ApprovalCode,FirstPayment,
+                                    FixedPayment,NumOfFixedPayments,TransRef,J_Prm,Z_Prm,Q_Prm,R_Prm);*/
 
         double fixedPayment=sumPrice/numberOfPay;
         try{

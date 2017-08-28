@@ -7,6 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.Config;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.R;
@@ -14,13 +16,21 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
+import com.pos.leaders.leaderspossystem.syncposservice.Model.BrokerMessage;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 18/10/2016.
@@ -84,24 +94,12 @@ public class ProductDBAdapter {
 
     public int insertEntry(String name,String barCode,String description,double price,double costPrice,
                            boolean withTax,boolean weighable,long depId,long byUser ,int pos,int point_system) {
-        ContentValues val = new ContentValues();
-        //Assign values for each row.
+        Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price, costPrice, withTax, weighable, new Date(), depId, byUser, pos, point_system);
 
-        val.put(PRODUCTS_COLUMN_ID, Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID));
-        val.put(PRODUCTS_COLUMN_NAME, name);
-        val.put(PRODUCTS_COLUMN_BARCODE, barCode);
-        val.put(PRODUCTS_COLUMN_DESCRIPTION, description);
-        val.put(PRODUCTS_COLUMN_PRICE, price);
-        val.put(PRODUCTS_COLUMN_COSTPRICE, costPrice);
-        val.put(PRODUCTS_COLUMN_WITHTAX, withTax);
-        val.put(PRODUCTS_COLUMN_WEIGHABLE, weighable);
-        val.put(PRODUCTS_COLUMN_DEPARTMENTID, depId);
-        val.put(PRODUCTS_COLUMN_BYUSER, byUser);
-      //  val.put(PRODUCTS_COLUMN_status, status);
-        val.put(PRODUCTS_COLUMN_with_pos,pos);
-        val.put(PRODUCTS_COLUMN_with_point_system,point_system);
+        sendToBroker(MessageType.ADD_PRODUCT, p, this.context);
+
         try {
-            db.insert(PRODUCTS_TABLE_NAME, null, val);
+            long insertResult = insertEntry(p);
             return 1;
         } catch (SQLException ex) {
             Log.e("ProductDB insertEntry", "inserting Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());

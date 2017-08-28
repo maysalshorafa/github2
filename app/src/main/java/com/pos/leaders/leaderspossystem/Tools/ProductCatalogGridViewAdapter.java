@@ -23,7 +23,7 @@ public class ProductCatalogGridViewAdapter extends BaseAdapter {
 	List<Product> products;
 	private LayoutInflater inflater;
 
-    private static final int MINCHARNUMBER = 15;
+    private static final int MINCHARNUMBER = 12;
 
 	public ProductCatalogGridViewAdapter(Context context,List<Product> products) {
 		this.context=context;

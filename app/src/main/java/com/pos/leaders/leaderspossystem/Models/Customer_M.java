@@ -37,6 +37,9 @@ public class Customer_M {
                 customer.getEmail(),customer.getJob(),customer.getPhoneNumber(),customer.getAddress(),customer.getHide(),customer.getCity(),customer.getClub());
     }
 
+    public Customer_M() {
+
+    }
 
     /**   public Customer_M(int id, String name, String birthday, String gender, String email, String job, String phoneNumber, String address, boolean hide) {
         this.id = id;

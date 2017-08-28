@@ -15,9 +15,12 @@ import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by Win8.1 on 7/3/2017.
@@ -109,33 +112,41 @@ public class CustomerDBAdapter {
         return customer_m;
     }
 
-    public int insertEntry(String id , String name, String birthday, String gender, String email, String job,
+    public long insertEntry(long id , String name, String birthday, String gender, String email, String job,
                             String phoneNumber, String address  , int select_city_id , int select_club_id) {
-        ContentValues val = new ContentValues();
-        //Assign values for each row.
-        val.put(CUSTOMER_COLUMN_NAME, name);
-        val.put(CUSTOMER_COLUMN_BIRTHDAY, birthday);
-        val.put(CUSTOMER_COLUMN_GENDER, gender);
-        val.put(CUSTOMER_COLUMN_EMAIL, email);
-        val.put(CUSTOMER_COLUMN_JOB, job);
-        val.put(CUSTOMER_COLUMN_PHONENUMBER, phoneNumber);
-
-        val.put(CUSTOMER_COLUMN_ADDRESS, address);
-        val.put(CUSTOMER_COLUMN_ID, id);
-        val.put(CUSTOMER_COLUMN_CITY, select_city_id);
-
-        val.put(CUSTOMER_COLUMN_Club, select_club_id);
-
+        Customer_M customer_m = new Customer_M(id, name, birthday, gender, email, job, phoneNumber, address, false, select_city_id + "", select_club_id);
+        sendToBroker(MessageType.ADD_CUSTOMER, customer_m, this.context);
 
         try {
-            db.insert(CUSTOMER_TABLE_NAME, null, val);
-            return 1;
+            return insertEntry(customer_m);
         } catch (SQLException ex) {
             Log.e("UserDB insertEntry", "inserting Entry at " + CUSTOMER_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
 
+    public long insertEntry(Customer_M customer){
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(CUSTOMER_COLUMN_ID, customer.getId());
+        val.put(CUSTOMER_COLUMN_NAME, customer.getName());
+        val.put(CUSTOMER_COLUMN_BIRTHDAY, customer.getBirthday());
+        val.put(CUSTOMER_COLUMN_GENDER, customer.getGender());
+        val.put(CUSTOMER_COLUMN_EMAIL, customer.getEmail());
+        val.put(CUSTOMER_COLUMN_JOB, customer.getJob());
+        val.put(CUSTOMER_COLUMN_PHONENUMBER, customer.getPhoneNumber());
+        val.put(CUSTOMER_COLUMN_DISENABLED, customer.isHide() ? 1 : 0);
+        val.put(CUSTOMER_COLUMN_ADDRESS, customer.getAddress());
+        val.put(CUSTOMER_COLUMN_CITY, customer.getCity());
+        val.put(CUSTOMER_COLUMN_Club, customer.getClub());
+
+        try {
+            return db.insert(CUSTOMER_TABLE_NAME, null, val);
+        } catch (SQLException ex) {
+            Log.e("UserDB insertEntry", "inserting Entry at " + CUSTOMER_TABLE_NAME + ": " + ex.getMessage());
+            return -1;
+        }
+    }
     public Customer_M getCustmerByID(long id) {
         Customer_M customer = null;
         Cursor cursor = db.query(CUSTOMER_TABLE_NAME, null, CUSTOMER_COLUMN_ID + "=? ", new String[]{id + ""}, null, null, null);
