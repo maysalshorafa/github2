@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Lead POS</string>
+    <string name="app_name">Lead Pos</string>
     <string name="payment">Payment</string>
     <string name="show_products">show products</string>
     <string name="x">x</string>
