@@ -1503,10 +1503,10 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
     public void clearCart() {
         SESSION._Rest();
-        club_name.setText("");
-        custmer_name.setText("");
-        information.setText("");
-        custmername_EditText.setText("");
+        //club_name.setText("");
+        //custmer_name.setText("");
+        //information.setText("");
+        //custmername_EditText.setText("");
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
         offerDBAdapter = new OfferDBAdapter(this);

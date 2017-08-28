@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -21,6 +22,7 @@ public class Order {
 	private double price;
 	private double discount;
 
+	@JsonIgnore
 	private Product product;
 
 	//region Constructors
@@ -118,11 +120,12 @@ public class Order {
 		return product;
 	}
 
+	@JsonIgnore
 	public double getItemTotalPrice() {
 
 		return (count * (original_price * (1-(discount / 100))));
 	}
-
+	@JsonIgnore
 	public double getOriginal_price() {
 		return original_price;
 	}
