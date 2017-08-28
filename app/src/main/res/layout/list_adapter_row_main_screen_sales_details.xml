@@ -147,6 +147,14 @@
             android:layout_toLeftOf="@+id/rowSaleDetails_MethodsEdit"
             android:layout_toStartOf="@+id/rowSaleDetails_MethodsEdit"
             android:layout_marginRight="2dp" />
-    </RelativeLayout>
 
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/saleMan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sales Man"
+        tools:layout_editor_absoluteX="350dp"
+        tools:layout_editor_absoluteY="554dp"
+        android:textSize="30sp"/>
 </android.support.constraint.ConstraintLayout>
