@@ -11,6 +11,7 @@
 
         <item name="actionMenuTextColor">@color/white</item>
         <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="toolbarStyle">@style/Widget.AppCompat.Toolbar</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
