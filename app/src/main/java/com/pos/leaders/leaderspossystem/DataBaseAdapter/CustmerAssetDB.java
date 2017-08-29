@@ -16,13 +16,13 @@ public class CustmerAssetDB {
 
     public static final String CustmerAsset_TabelName = "custmerAssest";
     // Column Names
-    protected static final String CustmerAssest_COLUMN_Sale_Id = "sale_id";
-    protected static final String CustmerAssest_COLUMN_ID = "id";
+    protected static final String CustmerAssest_COLUMN_Order_Id = "order_id";
+    protected static final String CustmerAssest_COLUMN_ID = "custmerAssestID";
     protected static final String CustmerAssest_COLUMN_amount= "amount";
     protected static final String CustmerAssest_COLUMN_type= "type";
 
-    public static final String DATABASE_CREATE = "CREATE TABLE `"+CustmerAsset_TabelName+"` ( `"+CustmerAssest_COLUMN_Sale_Id+"` INTEGER , " +
-            "`"+CustmerAssest_COLUMN_ID+"` INTEGER NOT NULL, `"+CustmerAssest_COLUMN_amount+"` INTEGER, `"+CustmerAssest_COLUMN_type+"` INTEGER DEFAULT 1 )";
+    public static final String DATABASE_CREATE = "CREATE TABLE `"+CustmerAsset_TabelName+"` ( `"+CustmerAssest_COLUMN_Order_Id+"` INTEGER , " +
+            "`"+CustmerAssest_COLUMN_ID+"` INTEGER NOT NULL, `"+CustmerAssest_COLUMN_amount+"` REAL, `"+CustmerAssest_COLUMN_type+"` INTEGER DEFAULT 0 )";
     private SQLiteDatabase db;
     private final Context context;
     // Database open/upgrade helper
@@ -49,10 +49,10 @@ public class CustmerAssetDB {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(long sale_id,long user_id,int amount,int type){
+    public int insertEntry(long sale_id,long user_id,double amount,int type){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(CustmerAssest_COLUMN_Sale_Id,sale_id);
+        val.put(CustmerAssest_COLUMN_Order_Id,sale_id);
         val.put(CustmerAssest_COLUMN_ID,user_id);
         val.put(CustmerAssest_COLUMN_amount,amount);
         val.put(CustmerAssest_COLUMN_type,type);

@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem.Tools;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
@@ -23,7 +24,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.AddUserActivity;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustmerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.MainActivity;
 import com.pos.leaders.leaderspossystem.Models.Customer_M;
 import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.Models.Order;
@@ -60,6 +64,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter {
 	private  EditText custmerAssest;
 	private  Button btn_cancel;
 	boolean userScrolled =false;
+	public  CustmerAssetDB custmerAssetDB ;
 	public CustmerAssestCatlogGridViewAdapter custmerCatalogGridViewAdapter;
 	/**
 	 * Constructor
@@ -91,7 +96,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter {
 			holder.saleMan=(TextView)convertView.findViewById(R.id.saleMan);
 			holder.llMethods=(RelativeLayout)convertView.findViewById(R.id.rowSaleDetails_LLMethods);
 			userDB=new UserDBAdapter(context);
-
+custmerAssetDB=new CustmerAssetDB(context);
 			convertView.setTag(holder);
 		}
 		else{
@@ -112,6 +117,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter {
 			}
 		});
 		userDB.open();
+		custmerAssetDB.open();
 		if(selected==position&&selected!=-1){
 			holder.llMethods.setVisibility(View.VISIBLE);
 			convertView.setBackgroundColor(context.getResources().getColor(R.color.list_background_color));
@@ -175,6 +181,8 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter {
 
 					@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 					public void onClick(View arg0) {
+						Intent intent = new Intent(getContext(), AddUserActivity.class);
+						context.startActivity(intent);
 
 						popupWindow.dismiss();
 
@@ -199,6 +207,8 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter {
 		lvcustmerAssest.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+				custmerAssetDB.insertEntry(SESSION._ORDER.getId(),custmerAssestList.get(position).getId(),SESSION._ORDER.getItemTotalPrice(),0);
 
 			}
 		});
