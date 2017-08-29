@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
 
 import java.util.ArrayList;
@@ -12,7 +13,9 @@ import java.util.List;
  */
 
 public class Offer {
+	@JsonIgnore
     public static final int Active = 1;
+	@JsonIgnore
     public static final int Inactive = 0;
 
 
@@ -28,9 +31,13 @@ public class Offer {
     private long ruleID;
 
     //region Attribute Objects
+	@JsonIgnore
     private List<Product> products;
+	@JsonIgnore
     private List<Group> clubs;
+	@JsonIgnore
     private User user;
+	@JsonIgnore
     private Rule rule;
 	//endregion
 

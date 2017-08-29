@@ -6,41 +6,52 @@ package com.pos.leaders.leaderspossystem.Models.Offers;
 
 public class Rule11 {
 
-    private int id ;
-    private int amount;
-    private int discountAmount;
+    private long id ;
+    private double amount;
+    private double discountAmount;
     private int club_contain;
     private int contain;
 
-    public int getId() {
+    public Rule11( double amount, double discountAmount,int contain,int club_contain) {
+        this.amount = amount;
+        this.discountAmount = discountAmount;
+        this.contain = contain;
+        this.club_contain = club_contain;
+    }
+
+    public Rule11(long id, double amount, double discountAmount, int club_contain, int contain) {
+        this.id = id;
+        this.amount = amount;
+        this.discountAmount = discountAmount;
+        this.club_contain = club_contain;
+        this.contain = contain;
+    }
+
+    public Rule11() {
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
-    public int getDiscountAmount() {
+    public double getDiscountAmount() {
         return discountAmount;
     }
 
-    public void setDiscountAmount(int discountAmount) {
+    public void setDiscountAmount(double discountAmount) {
         this.discountAmount = discountAmount;
-    }
-
-    public Rule11( int amount, int discountAmount,int contain,int club_contain) {
-        this.amount = amount;
-        this.discountAmount = discountAmount;
-        this.contain=contain;
-        this.club_contain=club_contain;
     }
 
     public int getClub_contain() {

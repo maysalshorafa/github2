@@ -1585,10 +1585,10 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 if (rule3.getContain() == 1) {
                     SumForRule3Status = true;
                     availableRule3 = true;
-                    parcentForRule3 = rule3.getParcent();
+                    parcentForRule3 = rule3.getPercent();
                 } else if (rule3.getContain() == 0) {
                     availableRule3 = true;
-                    parcentForRule3 = rule3.getParcent();
+                    parcentForRule3 = rule3.getPercent();
 
                 }
 

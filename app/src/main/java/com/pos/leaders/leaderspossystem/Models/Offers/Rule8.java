@@ -18,6 +18,9 @@ public class Rule8 {
         this.contain_club=contain_club;
     }
 
+    public Rule8() {
+    }
+
     public long getId() {
         return id;
     }

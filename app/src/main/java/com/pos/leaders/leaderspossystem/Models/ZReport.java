@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.Date;
@@ -12,10 +13,13 @@ public class ZReport {
     private long id;
     private Date creationDate;
     private long byUser;
+    @JsonIgnore
     private User user;
     private long startSaleId;
+    @JsonIgnore
     private Sale startSale;
     private long endSaleId;
+    @JsonIgnore
     private Sale endSale;
 
     public ZReport() {

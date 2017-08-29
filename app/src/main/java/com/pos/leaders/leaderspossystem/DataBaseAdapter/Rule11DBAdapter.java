@@ -25,7 +25,7 @@ public class Rule11DBAdapter {
     protected static final String Rule11_COLUMN_Club_Contain = "club_contain";
 
 
-    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule11 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'amount'  INTEGER  ,"+" 'discountAmount'  INTEGER ,"+" 'contain'  INTEGER"+" 'club_contain'  INTEGER)";
+    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS Rule11 ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+" 'amount'  REAL  ,"+" 'discountAmount'  REAL ,"+" 'contain'  INTEGER"+" 'club_contain'  INTEGER)";
     private SQLiteDatabase db;
 
     // Context of the application using the database.
@@ -51,17 +51,16 @@ public class Rule11DBAdapter {
         return db;
     }
 
-    public long insertEntry(int amount, int discountAmount,int contain,int club_contain){
+    public long insertEntry(Rule11 rule11){
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(Rule11_COLUMN_ID,Util.idHealth(this.db, Rule11_TABLE_NAME, Rule11_COLUMN_ID));
+        val.put(Rule11_COLUMN_ID,rule11.getId());
 
-        val.put(Rule11_COLUMN_Amount,amount);
-        val.put(Rule11_COLUMN_DiscountAmount,discountAmount);
-
-        val.put(Rule11_COLUMN_Contain,contain);
-        val.put(Rule11_COLUMN_Club_Contain,club_contain);
+        val.put(Rule11_COLUMN_Amount,rule11.getAmount());
+        val.put(Rule11_COLUMN_DiscountAmount, rule11.getDiscountAmount());
+        val.put(Rule11_COLUMN_Contain,rule11.getContain());
+        val.put(Rule11_COLUMN_Club_Contain,rule11.getClub_contain());
 
         try {
             return db.insert(Rule11_TABLE_NAME, null, val);
@@ -85,8 +84,8 @@ public class Rule11DBAdapter {
             return rule11;
         }
         cursor1.moveToFirst();
-        rule11= new Rule11(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule11_COLUMN_Amount))),
-                Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule11_COLUMN_DiscountAmount))),
+        rule11= new Rule11(Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule11_COLUMN_Amount))),
+                Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule11_COLUMN_DiscountAmount))),
                 Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule11_COLUMN_Contain))),
                 Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule11_COLUMN_Club_Contain))));
         cursor1.close();

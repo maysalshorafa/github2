@@ -18,19 +18,29 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule11DBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Customer_M;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Models.Offers.Rule11;
+import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
+import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
+import com.pos.leaders.leaderspossystem.Models.Offers.Rule8;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -82,6 +92,20 @@ public class SyncMessage extends Service {
     private long LOOP_TIME = 1 * 10 * 1000;
 
     private boolean isRunning = false;
+
+    public static boolean isConnected(Context context) {
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null) {
+                for (int i = 0; i < info.length; i++) {
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
 
     @Override
     public void onCreate() {
@@ -174,6 +198,7 @@ public class SyncMessage extends Service {
 
     private boolean executeMessage(JSONObject jsonObject) throws JSONException, IOException {
         Log.i(TAG, jsonObject.toString());
+        long rID = 0;
         if(jsonObject.has(MessageKey.MessageType)) {
             String msgType = jsonObject.getString(MessageKey.MessageType);
             String msgData = jsonObject.getString(MessageKey.Data);
@@ -181,6 +206,7 @@ public class SyncMessage extends Service {
             ObjectMapper objectMapper = new ObjectMapper();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             objectMapper.setDateFormat(dateFormat);
+
 
             switch (msgType) {
 
@@ -191,7 +217,7 @@ public class SyncMessage extends Service {
 
                     AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(this);
                     aReportDBAdapter.open();
-                    aReportDBAdapter.insertEntry(aReport);
+                    rID=aReportDBAdapter.insertEntry(aReport);
                     aReportDBAdapter.close();
 
                     break;
@@ -208,7 +234,7 @@ public class SyncMessage extends Service {
 
                     ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(this);
                     checksDBAdapter.open();
-                    checksDBAdapter.insertEntry(check);
+                    rID=checksDBAdapter.insertEntry(check);
                     checksDBAdapter.close();
                     break;
                 case MessageType.UPDATE_CHECK:
@@ -224,7 +250,7 @@ public class SyncMessage extends Service {
 
                     DepartmentDBAdapter departmentDBAdapter = new DepartmentDBAdapter(this);
                     departmentDBAdapter.open();
-                    departmentDBAdapter.insertEntry(department);
+                    rID=departmentDBAdapter.insertEntry(department);
                     departmentDBAdapter.close();
                     break;
                 case MessageType.UPDATE_DEPARTMENT:
@@ -240,7 +266,7 @@ public class SyncMessage extends Service {
 
                     OfferDBAdapter offerDBAdapter = new OfferDBAdapter(this);
                     offerDBAdapter.open();
-                    offerDBAdapter.insertEntry(offer);
+                    rID=offerDBAdapter.insertEntry(offer);
                     offerDBAdapter.close();
                     break;
                 case MessageType.UPDATE_OFFER:
@@ -249,6 +275,74 @@ public class SyncMessage extends Service {
                     break;
                 //endregion OFFER
 
+                //region Rules
+
+                //region Rule3
+                case MessageType.ADD_RULE_3:
+                    Rule3 rule3 = null;
+                    rule3 = objectMapper.readValue(msgData, Rule3.class);
+
+                    Rule3DbAdapter rule3DbAdapter = new Rule3DbAdapter(this);
+                    rule3DbAdapter.open();
+                    rID = rule3DbAdapter.insertEntry(rule3);
+                    rule3DbAdapter.close();
+                    break;
+                case MessageType.UPDATE_RULE_3:
+                    break;
+                case MessageType.DELETE_RULE_3:
+                    break;
+                //endregion Rule3
+
+                //region Rule7
+                case MessageType.ADD_RULE_7:
+                    Rule7 rule7 = null;
+                    rule7 = objectMapper.readValue(msgData, Rule7.class);
+
+                    Rule7DbAdapter rule7DbAdapter = new Rule7DbAdapter(this);
+                    rule7DbAdapter.open();
+                    rID = rule7DbAdapter.insertEntry(rule7);
+                    rule7DbAdapter.close();
+                    break;
+                case MessageType.UPDATE_RULE_7:
+                    break;
+                case MessageType.DELETE_RULE_7:
+                    break;
+                //endregion Rule7
+
+                //region Rule8
+                case MessageType.ADD_RULE_8:
+                    Rule8 rule8 = null;
+                    rule8 = objectMapper.readValue(msgData, Rule8.class);
+
+                    Rule8DBAdapter rule8DbAdapter = new Rule8DBAdapter(this);
+                    rule8DbAdapter.open();
+                    rID = rule8DbAdapter.insertEntry(rule8);
+                    rule8DbAdapter.close();
+                    break;
+                case MessageType.UPDATE_RULE_8:
+                    break;
+                case MessageType.DELETE_RULE_8:
+                    break;
+                //endregion Rule8
+
+                //region Rule11
+                case MessageType.ADD_RULE_11:
+                    Rule11 rule11 = null;
+                    rule11 = objectMapper.readValue(msgData, Rule11.class);
+
+                    Rule11DBAdapter rule11DbAdapter = new Rule11DBAdapter(this);
+                    rule11DbAdapter.open();
+                    rID = rule11DbAdapter.insertEntry(rule11);
+                    rule11DbAdapter.close();
+                    break;
+                case MessageType.UPDATE_RULE_11:
+                    break;
+                case MessageType.DELETE_RULE_11:
+                    break;
+                //endregion Rule11
+
+                //endregion Rules
+
                 //region PAYMENT
                 case MessageType.ADD_PAYMENT:
                     Payment payment = null;
@@ -256,7 +350,7 @@ public class SyncMessage extends Service {
 
                     PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
                     paymentDBAdapter.open();
-                    paymentDBAdapter.insertEntry(payment);
+                    rID=paymentDBAdapter.insertEntry(payment);
                     paymentDBAdapter.close();
                     break;
                 case MessageType.UPDATE_PAYMENT:
@@ -273,7 +367,7 @@ public class SyncMessage extends Service {
                     PermissionsDBAdapter permissionsDBAdapter = new PermissionsDBAdapter(this);
                     permissionsDBAdapter.open();
                     //// TODO: 27/08/2017 insert to database
-                    //permissionsDBAdapter.insertEntry(permissions);
+                    //rID=permissionsDBAdapter.insertEntry(permissions);
                     permissionsDBAdapter.close();
                     break;
                 case MessageType.UPDATE_PERMISSION:
@@ -289,7 +383,7 @@ public class SyncMessage extends Service {
 
                     SaleDBAdapter saleDBAdapter = new SaleDBAdapter(this);
                     saleDBAdapter.open();
-                    saleDBAdapter.insertEntry(sale);
+                    rID = saleDBAdapter.insertEntry(sale);
                     saleDBAdapter.close();
                     break;
                 case MessageType.UPDATE_SALE:
@@ -314,7 +408,7 @@ public class SyncMessage extends Service {
 
                     CustomerDBAdapter customerDBAdapter = new CustomerDBAdapter(this);
                     customerDBAdapter.open();
-                    customerDBAdapter.insertEntry(customer);
+                    rID = customerDBAdapter.insertEntry(customer);
                     customerDBAdapter.close();
 
                     break;
@@ -331,7 +425,7 @@ public class SyncMessage extends Service {
 
                     OrderDBAdapter orderDBAdapter = new OrderDBAdapter(this);
                     orderDBAdapter.open();
-                    orderDBAdapter.insertEntry(o);
+                    rID = orderDBAdapter.insertEntry(o);
                     orderDBAdapter.close();
                     break;
                 case MessageType.UPDATE_ORDER:
@@ -347,7 +441,7 @@ public class SyncMessage extends Service {
 
                     ProductDBAdapter productDBAdapter = new ProductDBAdapter(this);
                     productDBAdapter.open();
-                    productDBAdapter.insertEntry(p);
+                    rID = productDBAdapter.insertEntry(p);
                     productDBAdapter.close();
 
                     break;
@@ -364,7 +458,7 @@ public class SyncMessage extends Service {
 
                     UserDBAdapter userDBAdapter = new UserDBAdapter(this);
                     userDBAdapter.open();
-                    userDBAdapter.insertEntry(u);
+                    rID = userDBAdapter.insertEntry(u);
                     userDBAdapter.close();
                     break;
                 case MessageType.UPDATE_USER:
@@ -373,15 +467,31 @@ public class SyncMessage extends Service {
                     break;
                 //endregion USER
 
+                //region Z REPORT
+                case MessageType.ADD_Z_REPORT:
+                    ZReport zReport = null;
+                    zReport = objectMapper.readValue(msgData, ZReport.class);
+
+                    ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(this);
+                    zReportDBAdapter.open();
+                    rID = zReportDBAdapter.insertEntry(zReport);
+                    zReportDBAdapter.close();
+
+                    break;
+                case MessageType.UPDATE_Z_REPORT:
+                    break;
+                case MessageType.DELETE_Z_REPORT:
+                    break;
+                //endregion Z REPORT
 
             }
         }else{
             //todo: does not have message type
         }
 
-        return true;
+        if(rID>0) return true;
+        else return false;
     }
-
 
     private boolean doSync(BrokerMessage bm) throws IOException, JSONException {
 
@@ -479,6 +589,18 @@ public class SyncMessage extends Service {
                 break;
             //endregion SALE
 
+            //region Z REPORT
+            case MessageType.ADD_Z_REPORT:
+                res = messageTransmit.authPost(ApiURL.ZReport, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_Z_REPORT:
+                res = messageTransmit.authPut(ApiURL.ZReport, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_Z_REPORT:
+                res = messageTransmit.authDelete(ApiURL.ZReport, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //endregion Z REPORT
+
             case MessageType.ADD_CLUB:
                 res = messageTransmit.authPost(ApiURL.Club, jsonObject.getString(MessageKey.Data), token);
                 break;
@@ -545,20 +667,6 @@ public class SyncMessage extends Service {
         }
 
         return true;
-    }
-
-    public static boolean isConnected(Context context) {
-        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null) {
-            NetworkInfo[] info = connectivity.getAllNetworkInfo();
-            if (info != null) {
-                for (int i = 0; i < info.length; i++) {
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
-                        return true;
-                }
-            }
-        }
-        return false;
     }
 
     @Override

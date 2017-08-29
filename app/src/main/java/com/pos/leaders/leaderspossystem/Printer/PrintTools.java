@@ -140,7 +140,13 @@ public class PrintTools {
             }
         }
 
-        return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
+        try {
+            return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     private List<Payment> paymentList(List<Sale> sales){
