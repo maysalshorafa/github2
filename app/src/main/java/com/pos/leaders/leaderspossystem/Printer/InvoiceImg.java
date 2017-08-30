@@ -199,7 +199,7 @@ public class InvoiceImg {
 
 
         Block name = new Block("\u200E"+context.getString(R.string.product)+newLineL, 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.3));
-        Block barcode = new Block(context.getString(R.string.product_id)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.4));
+        Block barcode = new Block(context.getString(R.string.productID)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.4));
         Block counter = new Block(context.getString(R.string.qty)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.15));
         Block price = new Block(context.getString(R.string.price)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.15));
 
@@ -324,7 +324,7 @@ public class InvoiceImg {
 
 
         Block name = new Block("\u200E"+context.getString(R.string.product)+newLineL, 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.35));
-        Block barcode = new Block(context.getString(R.string.product_id)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.4));
+        Block barcode = new Block(context.getString(R.string.productID)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.4));
         Block counter = new Block(context.getString(R.string.qty)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.1));
         Block price = new Block(context.getString(R.string.price)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.15));
 
@@ -427,7 +427,7 @@ public class InvoiceImg {
 
 
         Block name = new Block("\u200E"+context.getString(R.string.product)+newLineL, 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.35));
-        Block barcode = new Block(context.getString(R.string.product_id)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.4));
+        Block barcode = new Block(context.getString(R.string.productID)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.4));
         Block counter = new Block(context.getString(R.string.qty)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.1));
         Block price = new Block(context.getString(R.string.price)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.15));
 
@@ -527,7 +527,7 @@ public class InvoiceImg {
 
 
         Block name = new Block("\u200E"+context.getString(R.string.product)+newLineL, 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.35));
-        Block barcode = new Block(context.getString(R.string.product_id)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.4));
+        Block barcode = new Block(context.getString(R.string.productID)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.4));
         Block counter = new Block(context.getString(R.string.qty)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.1));
         Block price = new Block(context.getString(R.string.price)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.15));
 

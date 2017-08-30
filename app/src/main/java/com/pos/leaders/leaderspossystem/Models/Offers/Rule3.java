@@ -16,6 +16,7 @@ public class Rule3 {
     }
 
     public Rule3() {
+
     }
 
     public long getId() {
@@ -29,7 +30,6 @@ public class Rule3 {
     public int getContain() {
         return contain;
     }
-
 
     public void setId(long id) {
         this.id = id;

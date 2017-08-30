@@ -23,7 +23,7 @@
     <string name="cashier">امين الصندوق</string>
     <string name="change_password">تغير كلمة المرور</string>
     <string name="product">منتج</string>
-    <string name="product_id">معرف</string>
+    <string name="productID">معرف</string>
     <string name="products">منتوجات</string>
     <string name="qty">كمية</string>
     <string name="refresh">تحديث</string>

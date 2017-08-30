@@ -51,7 +51,7 @@
     <!--Z Report-->
     <string name="z_number">מספר Z:</string>
     <string name="product">פריט</string>
-    <string name="product_id">מק\'\'ט</string>
+    <string name="productID">מק\'\'ט</string>
     <string name="qty">כמות</string>
     <string name="refresh">רענון</string>
     <string name="returned">עודף</string>

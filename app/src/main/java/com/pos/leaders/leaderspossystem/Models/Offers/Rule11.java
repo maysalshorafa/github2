@@ -9,21 +9,21 @@ public class Rule11 {
     private long id ;
     private double amount;
     private double discountAmount;
-    private int club_contain;
+    private int clubContain;
     private int contain;
 
-    public Rule11( double amount, double discountAmount,int contain,int club_contain) {
+    public Rule11( double amount, double discountAmount,int contain,int clubContain) {
         this.amount = amount;
         this.discountAmount = discountAmount;
         this.contain = contain;
-        this.club_contain = club_contain;
+        this.clubContain = clubContain;
     }
 
-    public Rule11(long id, double amount, double discountAmount, int club_contain, int contain) {
+    public Rule11(long id, double amount, double discountAmount, int clubContain, int contain) {
         this.id = id;
         this.amount = amount;
         this.discountAmount = discountAmount;
-        this.club_contain = club_contain;
+        this.clubContain = clubContain;
         this.contain = contain;
     }
 
@@ -54,12 +54,12 @@ public class Rule11 {
         this.discountAmount = discountAmount;
     }
 
-    public int getClub_contain() {
-        return club_contain;
+    public int getClubContain() {
+        return clubContain;
     }
 
-    public void setClub_contain(int club_contain) {
-        this.club_contain = club_contain;
+    public void setClubContain(int clubContain) {
+        this.clubContain = clubContain;
     }
 
     public int getContain() {

@@ -9,8 +9,6 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule11;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
-import com.pos.leaders.leaderspossystem.Tools.Util;
 
 /**
  * Created by Win8.1 on 8/2/2017.
@@ -60,7 +58,7 @@ public class Rule11DBAdapter {
         val.put(Rule11_COLUMN_Amount,rule11.getAmount());
         val.put(Rule11_COLUMN_DiscountAmount, rule11.getDiscountAmount());
         val.put(Rule11_COLUMN_Contain,rule11.getContain());
-        val.put(Rule11_COLUMN_Club_Contain,rule11.getClub_contain());
+        val.put(Rule11_COLUMN_Club_Contain,rule11.getClubContain());
 
         try {
             return db.insert(Rule11_TABLE_NAME, null, val);
