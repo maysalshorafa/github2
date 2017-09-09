@@ -66,28 +66,6 @@ public class OrderDBAdapter {
 		return db;
 	}
 
-	public int insertEntry(long productId, int counter, double userOffer, long saleId) {
-		ContentValues val = new ContentValues();
-		if(isEmpty){
-            val.put(ORDER_COLUMN_ID, Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID));
-			isEmpty = false;
-		}
-		//Assign values for each row.
-		val.put(ORDER_COLUMN_PRODUCTID, productId);
-		val.put(ORDER_COLUMN_COUNTER, counter);
-		val.put(ORDER_COLUMN_USEROFFER, userOffer);
-		val.put(ORDER_COLUMN_SALEID, saleId);
-		try {
-			return (int)db.insert(ORDER_TABLE_NAME, null, val);
-		} catch (SQLException ex) {
-			Log.e("Order DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
-			return 0;
-		}
-	}
-
-
-
-
 	public long insertEntry(Order o){
         ContentValues val = new ContentValues();
         val.put(ORDER_COLUMN_ID, o.getId());
@@ -99,7 +77,7 @@ public class OrderDBAdapter {
         val.put(ORDER_COLUMN_ORIGINAL_PRICE, o.getOriginal_price());
         val.put(ORDER_COLUMN_DISCOUNT, o.getDiscount());
         try {
-            return (int) db.insert(ORDER_TABLE_NAME, null, val);
+            return db.insert(ORDER_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e("Order DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
             return 0;
@@ -107,7 +85,6 @@ public class OrderDBAdapter {
 	}
 
     public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount) {
-
         Order o = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount);
         sendToBroker(MessageType.ADD_ORDER, o, this.context);
 
@@ -161,6 +138,7 @@ public class OrderDBAdapter {
 
 		return ordersList;
 	}
+
 	public List<Order> getOrderBySaleID(long saleID){
 		List<Order> saleOrderList=new ArrayList<Order>();
 		Cursor cursor =  db.rawQuery( "select * from "+ORDER_TABLE_NAME+" where "+ORDER_COLUMN_SALEID+"="+saleID, null );
