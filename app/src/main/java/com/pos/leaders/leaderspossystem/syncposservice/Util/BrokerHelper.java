@@ -2,6 +2,9 @@ package com.pos.leaders.leaderspossystem.syncposservice.Util;
 
 
 import android.content.Context;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.util.Locale;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +27,8 @@ public class BrokerHelper {
         try {
             jsonObject.put(MessageKey.MessageType, msgType);
             ObjectMapper objectMapper = new ObjectMapper();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
+            objectMapper.setDateFormat(dateFormat);
             String jsonInString = objectMapper.writeValueAsString(obj);
             JSONObject data = new JSONObject(jsonInString);
             jsonObject.put(MessageKey.Data, data);

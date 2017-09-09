@@ -1,5 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +16,7 @@ public class Department {
     private long byUser;
     private boolean hide;
 
+    @JsonIgnore
     private List<Product> products;
 
     // region Constructor
@@ -30,7 +33,10 @@ public class Department {
         new Department(d.getId(), d.getName(), d.getCreatingDate(), d.getByUser(), d.isHide());
     }
 
-	//endregion
+    public Department() {
+    }
+
+    //endregion
 
 	// region Setters
 
@@ -42,7 +48,23 @@ public class Department {
 		this.name = name;
 	}
 
-	//endregion
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setCreatingDate(Date creatingDate) {
+        CreatingDate = creatingDate;
+    }
+
+    public void setByUser(long byUser) {
+        this.byUser = byUser;
+    }
+
+    public void setHide(boolean hide) {
+        this.hide = hide;
+    }
+
+    //endregion
 
 	// region Getters
 
@@ -70,6 +92,7 @@ public class Department {
 		return products;
 	}
 
+	@JsonIgnore
 	public int getProductCount(){
 		return products.size();
 	}

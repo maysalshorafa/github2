@@ -299,7 +299,7 @@
     <string name="tax">Tax</string>
     <string name="invoice_note">Invoice Note</string>
     <string name="qty">Qty</string>
-    <string name="product_id">Product ID</string>
+    <string name="productID">Product ID</string>
     <string name="replacement_expiration_date">Replacement Expiration Date</string>
     <string name="try_again">Please Try Again!!</string>
 

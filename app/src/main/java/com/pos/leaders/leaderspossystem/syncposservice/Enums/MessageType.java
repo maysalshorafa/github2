@@ -36,9 +36,29 @@ public interface MessageType{
     String UPDATE_SALE = "UpdateSale";
     String DELETE_SALE = "DeleteSale";
 
+    String ADD_Z_REPORT = "AddZReport";
+    String UPDATE_Z_REPORT = "UpdateZReport";
+    String DELETE_Z_REPORT = "DeleteZReport";
+
     String ADD_CLUB = "AddClub";
     String UPDATE_CLUB = "UpdateClub";
     String DELETE_CLUB = "DeleteClub";
+
+    String ADD_RULE_3 = "AddRule3";
+    String UPDATE_RULE_3 = "UpdateRule3";
+    String DELETE_RULE_3 = "DeleteRule3";
+
+    String ADD_RULE_7 = "AddRule7";
+    String UPDATE_RULE_7 = "UpdateRule7";
+    String DELETE_RULE_7 = "DeleteRule7";
+
+    String ADD_RULE_8 = "AddRule8";
+    String UPDATE_RULE_8 = "UpdateRule8";
+    String DELETE_RULE_8 = "DeleteRule8";
+
+    String ADD_RULE_11 = "AddRule11";
+    String UPDATE_RULE_11 = "UpdateRule11";
+    String DELETE_RULE_11 = "DeleteRule11";
 
     String ADD_CUSTOMER = "AddCustomer";
     String UPDATE_CUSTOMER = "UpdateCustomer";

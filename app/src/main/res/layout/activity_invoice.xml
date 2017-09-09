@@ -71,7 +71,7 @@
             android:textStyle="normal|bold" />
 
         <TextView
-            android:text="@string/product_id"
+            android:text="@string/productID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/invoice_tvProductIDTitle"

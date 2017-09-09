@@ -12,10 +12,13 @@ import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 05/01/2017.
@@ -61,27 +64,25 @@ public class ZReportDBAdapter {
         return db;
     }
 
-    public long insertEntry(Date createDate, long byUser, long startSaleID, long endSaleID) {
+    public long insertEntry(ZReport zReport) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
+        if(zReport.getId()==0) {
+            zReport.setId(Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID));
+            sendToBroker(MessageType.ADD_Z_REPORT, zReport, this.context);
+        }
+        val.put(Z_REPORT_COLUMN_ID, zReport.getId());
 
-        val.put(Z_REPORT_COLUMN_ID, Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID));
-
-
-        val.put(Z_REPORT_COLUMN_CREATEDATE, createDate.getTime());
-        val.put(Z_REPORT_COLUMN_BYUSER, byUser);
-        val.put(Z_REPORT_COLUMN_STARTSALEID, startSaleID);
-        val.put(Z_REPORT_COLUMN_ENDSALEID, endSaleID);
+        val.put(Z_REPORT_COLUMN_CREATEDATE, zReport.getCreationDate().getTime());
+        val.put(Z_REPORT_COLUMN_BYUSER, zReport.getByUser());
+        val.put(Z_REPORT_COLUMN_STARTSALEID, zReport.getStartSaleId());
+        val.put(Z_REPORT_COLUMN_ENDSALEID, zReport.getEndSaleId());
         try {
             return db.insert(Z_REPORT_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e(Z_REPORT_TABLE_NAME+" DB insert", "inserting Entry at " + Z_REPORT_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
-    }
-
-    public long insertEntry(ZReport zReport) {
-        return insertEntry(zReport.getCreationDate(),zReport.getByUser(),zReport.getStartSaleId(),zReport.getEndSaleId());
     }
 
     public ZReport getByID(long id) {

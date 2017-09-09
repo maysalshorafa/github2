@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule8;
 
 /**
@@ -48,19 +47,17 @@ public class Rule8DBAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(long id, double parcent,  long product_id,int contain_club){
+    public long insertEntry(Rule8 rule8){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Rule8_COLUMN_ID,id);
-        val.put(Rule8_COLUMN_Parcent,parcent);
+        val.put(Rule8_COLUMN_ID,rule8.getId());
+        val.put(Rule8_COLUMN_Parcent,rule8.getPercent());
 
-        val.put(Rule8_Product_id,product_id);
-        val.put(Rule8_Contain_club,contain_club);
+        val.put(Rule8_Product_id,rule8.getProductID());
+        val.put(Rule8_Contain_club,rule8.getContainClub());
 
         try {
-
-            db.insert(Rule8_TABLE_NAME, null, val);
-            return 1;
+            return db.insert(Rule8_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e("Rule8 insertEntry", "inserting Entry at " + Rule8_TABLE_NAME + ": " + ex.getMessage());
             return 0;

@@ -175,17 +175,16 @@ public class Util {
 
     private static long getCurrentLastID(SQLiteDatabase db, String tableName, String idField){
         long i = 0;
-
         Cursor cursor = db.rawQuery("select  "+tableName+"  from  "+IdsCounterDBAdapter.IDS_COUNTER_TABLE_NAME+";", null);
-        Log.i("ids", cursor.toString());
         if (cursor.getCount() < 1) // don`t have any sale yet
         {
             cursor.close();
             i = (long) SESSION.POS_ID_NUMBER * SESSION.firstIDOffset;
         }
-        cursor.moveToFirst();
-        i=Long.parseLong(cursor.getString(0));
-
+        else {
+            cursor.moveToFirst();
+            i = Long.parseLong(cursor.getString(0));
+        }
         ContentValues values = new ContentValues();
         if(i==0){
             i = (long) SESSION.POS_ID_NUMBER * SESSION.firstIDOffset;

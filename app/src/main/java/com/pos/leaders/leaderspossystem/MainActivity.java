@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity{
     int amount;
     int type;
     int point ;
-    int offerAmount=0;
+    double offerAmount=0;
 
     String cInformation;
     double parcent;
@@ -234,8 +234,8 @@ double SumForClub=0.0;
 
     long productIDForRule7;
     Boolean availableRule11=false;
-    int amountForRule11=0;
-    int DiscountamountForRule11=0;
+    double amountForRule11=0;
+    double DiscountamountForRule11=0;
     double ParcentForRule8=0.0;
     long productIDForRule8;
     int priceForRule5;
@@ -1503,10 +1503,10 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
     public void clearCart() {
         SESSION._Rest();
-        club_name.setText("");
-        custmer_name.setText("");
-        information.setText("");
-        custmername_EditText.setText("");
+        //club_name.setText("");
+        //custmer_name.setText("");
+        //information.setText("");
+        //custmername_EditText.setText("");
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
         offerDBAdapter = new OfferDBAdapter(this);
@@ -1585,10 +1585,10 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 if (rule3.getContain() == 1) {
                     SumForRule3Status = true;
                     availableRule3 = true;
-                    parcentForRule3 = rule3.getParcent();
+                    parcentForRule3 = rule3.getPercent();
                 } else if (rule3.getContain() == 0) {
                     availableRule3 = true;
-                    parcentForRule3 = rule3.getParcent();
+                    parcentForRule3 = rule3.getPercent();
 
                 }
 
@@ -1626,7 +1626,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                     amountForRule11 = rule11.getAmount();
                     DiscountamountForRule11 = rule11.getDiscountAmount();
                 }
-                if (rule11.getClub_contain() == 1) {
+                if (rule11.getClubContain() == 1) {
                     clubStatusForRule11 = true;
                 } else {
                     clubStatusForRule11 = false;
@@ -1638,10 +1638,10 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 ProductOfferDBAdapter offersProducts = new ProductOfferDBAdapter(this);
                 offersProducts.open();
                 Rule8 rule8 = rule8DbAdapter.getParcentForRule8(offer.getRuleID());
-                ParcentForRule8 = rule8.getParcent();
-                productIDForRule8 = rule8.getProduct_id();
+                ParcentForRule8 = rule8.getPercent();
+                productIDForRule8 = rule8.getProductID();
 
-                if (rule8.getContain_club() == 1) {
+                if (rule8.getContainClub() == 1) {
                     clubStatusForRule8 = true;
                 } else {
                     clubStatusForRule8 = false;
@@ -1731,12 +1731,12 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 }
 
                 if (SumForRule11Status) {
-                    offerAmount = ((int) (saleTotalPrice / amountForRule11) * DiscountamountForRule11);
+                    offerAmount = ((saleTotalPrice / amountForRule11) * DiscountamountForRule11);
 
                     saleTotalPrice = saleTotalPrice - offerAmount;
                 } else if (!SumForRule11Status) {
 
-                    offerAmount = ((int) (saleTotalPrice / amountForRule11) * DiscountamountForRule11);
+                    offerAmount = ((saleTotalPrice / amountForRule11) * DiscountamountForRule11);
 
                     saleTotalPrice = saleTotalPrice - offerAmount;
                     saleTotalPrice += SumForRule11;

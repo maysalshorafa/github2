@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -117,7 +118,9 @@ String str;
                 PrintTools pt=new PrintTools(ReportsManagementActivity.this);
 
                 //create and print z report
-                pt.PrintReport(pt.createZReport(lastZReport.getId(),lastZReport.getStartSaleId(),lastZReport.getEndSaleId(),false));
+                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false);
+                if(bmap!=null)
+                    pt.PrintReport(bmap);
 
                 Intent i=new Intent(ReportsManagementActivity.this,ReportZDetailsActivity.class);
                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID,lastZReport.getId());

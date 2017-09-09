@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.Space;
 import android.widget.Switch;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
@@ -24,6 +25,7 @@ public class Payment {
 	private long saleId;
 	private double amount;
 
+	@JsonIgnore
     private Locale locale = new Locale("en");
 
 	// Constructors
@@ -38,7 +40,10 @@ public class Payment {
 		this(p.getId(), p.getPaymentWay(), p.getAmount(), p.getSaleId());
 	}
 
-	// Getters
+	public Payment() {
+	}
+
+	//region Getters
 	public long getId() {
 		return id;
 	}
@@ -54,6 +59,29 @@ public class Payment {
 	public double getAmount() {
 		return amount;
 	}
+
+	//endregion
+
+	//region Setters
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setPaymentWay(String paymentWay) {
+		this.paymentWay = paymentWay;
+	}
+
+	public void setSaleId(long saleId) {
+		this.saleId = saleId;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	//endregion Setters
+
 
 	@Override
 	public String toString() {

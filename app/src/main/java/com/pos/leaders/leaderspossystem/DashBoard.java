@@ -439,12 +439,12 @@ public class DashBoard extends Activity{
             _aReport.setCreationDate(new Date().getTime());
 
 
-            if (aReport.getLastZReportID() == (int) zReport.getId()) {
+            if (aReport.getLastZReportID() == zReport.getId()) {
                 //its have a report
 
             } else {
-                _aReport.setLastZReportID((int) zReport.getId());
-                _aReport.setLastSaleID((int)zReport.getEndSaleId());
+                _aReport.setLastZReportID(zReport.getId());
+                _aReport.setLastSaleID(zReport.getEndSaleId());
 
                 ShowAReportDialog(_aReport);
             }

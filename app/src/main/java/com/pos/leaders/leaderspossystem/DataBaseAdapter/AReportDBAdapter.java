@@ -85,13 +85,17 @@ public class AReportDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
+        if(aReport.getId()==0){
+            aReport.setId(Util.idHealth(this.db, A_REPORT_TABLE_NAME, A_REPORT_COLUMN_ID));
+            sendToBroker(MessageType.ADD_A_REPORT, aReport, this.context);
+        }
         val.put(A_REPORT_COLUMN_ID, aReport.getId());
 
         val.put(A_REPORT_COLUMN_CREATEDATE, aReport.getCreationDate());
         val.put(A_REPORT_COLUMN_BYUSER, aReport.getByUserID());
         val.put(A_REPORT_COLUMN_AMOUNT, aReport.getAmount());
         val.put(A_REPORT_COLUMN_LASTSALEID, aReport.getLastSaleID());
-        val.put(A_REPORT_COLUMN_LASTZREPORTID, aReport.getLastSaleID());
+        val.put(A_REPORT_COLUMN_LASTZREPORTID, aReport.getLastZReportID());
         try {
             return db.insert(A_REPORT_TABLE_NAME, null, val);
         } catch (SQLException ex) {

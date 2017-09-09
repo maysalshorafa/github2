@@ -17,17 +17,17 @@ public class User {
     private String phoneNumber;
     private double present;
     private double hourlyWage;
-    private String permissions_name;
+    private String permissionsName;
 
     public void setId(long id) {
         this.id = id;
     }
 
-    public void setPermissions_name(String permissions_name) {
-        this.permissions_name = permissions_name;
+    public void setPermissionsName(String permissionsName) {
+        this.permissionsName = permissionsName;
     }
 
-    public User(long id, String userName, String password, String firstName, String lastName, Date creatingDate, boolean hide, String phoneNumber, double present, double hourlyWage , String permissions_name) {
+    public User(long id, String userName, String password, String firstName, String lastName, Date creatingDate, boolean hide, String phoneNumber, double present, double hourlyWage , String permissionsName) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -38,7 +38,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.present = present;
         this.hourlyWage = hourlyWage;
-        this.permissions_name=permissions_name;
+        this.permissionsName = permissionsName;
     }
     public User(User user){
         this(user.getId(),user.getUserName(),user.getPassword(),user.getFirstName(),
@@ -91,7 +91,7 @@ public class User {
         return phoneNumber;
     }
     public String getPermtionName() {
-        return permissions_name;
+        return permissionsName;
     }
 
     public void setPassword(String password){
@@ -135,7 +135,7 @@ public class User {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", present=" + present +
                 ", hourlyWage=" + hourlyWage +
-                ", permissions_name=" + permissions_name + '\''+
+                ", permissionsName=" + permissionsName + '\''+
 
                 '}';
     }

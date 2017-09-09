@@ -20,6 +20,11 @@ public interface ApiURL {
     String Payment = "Payment";
     String Permission = "Permission";
     String Sale = "Sale";
+    String ZReport = "ZReport";
+    String Rule3 = "Rule3";
+    String Rule7 = "Rule7";
+    String Rule8 = "Rule8";
+    String Rule11 = "Rule11";
 
 
     String Sync = "sync";

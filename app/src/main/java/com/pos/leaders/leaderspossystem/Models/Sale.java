@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem.Models;
 
 import android.graphics.Path;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -22,49 +23,28 @@ public class Sale {
 	private boolean cancelling;
 	private double totalPrice;
 	private double totalPaid;
-	private int custmer_id;
+	private long customer_id;
 
-	public int getCustmer_id() {
-		return custmer_id;
-	}
-
-	public void setCustmer_id(int custmer_id) {
-		this.custmer_id = custmer_id;
-	}
-
-	public String getCustmer_name() {
-		return custmer_name;
-	}
-
-	public void setCustmer_name(String custmer_name) {
-		this.custmer_name = custmer_name;
-	}
-
-	private String custmer_name;
-
-
+	@JsonIgnore
+    private String customer_name;
+	@JsonIgnore
 	private List<Order> orders;
+    @JsonIgnore
 	private User user;
+    @JsonIgnore
 	private Payment payment;
 
 
-
+    @JsonIgnore
     private Locale locale = new Locale("en");
-
-    /**
-	 *
-	 * @param id
-	 * @param byUser
-	 * @param saleDate
-	 * @param replacementNote
-	 * @param cancelling
-	 * @param totalPrice
-	 * @param totalPaid
-	 */
 
 	// region Constructors
 
-	public Sale(long id, long byUser, Date saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid,int custmer_id,String custmer_name) {
+
+    public Sale() {
+    }
+
+    public Sale(long id, long byUser, Date saleDate, int replacementNote, boolean cancelling, double totalPrice, double totalPaid, long customer_id, String customer_name) {
 		this.id = id;
 		this.byUser = byUser;
 		this.saleDate=saleDate;
@@ -72,8 +52,8 @@ public class Sale {
 		this.cancelling = cancelling;
 		this.totalPrice = totalPrice;
 		this.totalPaid=totalPaid;
-		this.custmer_id=custmer_id;
-		this.custmer_name=custmer_name;
+		this.customer_id=customer_id;
+		this.customer_name=customer_name;
 	}
 
 	public Sale(long byUser, Date saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid) {
@@ -98,95 +78,129 @@ public class Sale {
 	}
 
 	public Sale(Sale s) {
-		this(s.getId(),s.getByUser(),s.getSaleDate(),s.getReplacementNote(),s.isCancelling(),s.getTotalPrice(),s.getTotalPaid(),s.getCustmer_id(),s.getCustmer_name());
+		this(s.getId(),s.getByUser(),s.getSaleDate(),s.getReplacementNote(),s.isCancelling(),s.getTotalPrice(),s.getTotalPaid(),s.getCustomer_id(),s.getCustomer_name());
 	}
 
 	public static Sale newInstance(Sale s){
-		return new Sale(s.getId(),s.getByUser(),s.getSaleDate(),s.getReplacementNote(),s.isCancelling(),s.getTotalPrice(),s.getTotalPaid(),s.getCustmer_id(),s.getCustmer_name());
+		return new Sale(s.getId(),s.getByUser(),s.getSaleDate(),s.getReplacementNote(),s.isCancelling(),s.getTotalPrice(),s.getTotalPaid(),s.getCustomer_id(),s.getCustomer_name());
 	}
 
     //endregion
 
 	//region Getter
 
-	public long getId() {
-		return id;
-	}
-
-	public long getByUser() {
-		return byUser;
-	}
-
-	public Date getSaleDate() {
-		return saleDate;
-	}
-
-	public int getReplacementNote() {
-		return replacementNote;
-	}
-
-	public boolean isCancelling() {
-		return cancelling;
-	}
-
-	public double getTotalPrice() {
-		return totalPrice;
-	}
-
-	public double getTotalPaid() {
-		return totalPaid;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-    public List<Order> getOrders(){
-        return this.orders;
+    public long getId() {
+        return id;
     }
 
-	public Payment getPayment(){
-		return this.payment;
-	}
+    public long getByUser() {
+        return byUser;
+    }
 
-	//endregion
+    public Date getSaleDate() {
+        return saleDate;
+    }
+
+    public int getReplacementNote() {
+        return replacementNote;
+    }
+
+    public boolean isCancelling() {
+        return cancelling;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public double getTotalPaid() {
+        return totalPaid;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public long getCustomer_id() {
+        return customer_id;
+    }
+
+    public String getCustomer_name() {
+        return customer_name;
+    }
+
+
+
+    //endregion
 
 	//region Setter
 
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setSaleDate(Date saleDate) {
+        this.saleDate = saleDate;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setCancelling(boolean cancelling) {
+        this.cancelling = cancelling;
+    }
 
-	public void setCancelling(boolean cancelling) {
-		this.cancelling = cancelling;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setReplacementNote(int replacementNote) {
-		this.replacementNote = replacementNote;
-	}
+    public void setByUser(long byUser) {
+        this.byUser = byUser;
+    }
 
-	public void setTotalPrice(double totalPrice) {
-		this.totalPrice = totalPrice;
-	}
+    public void setReplacementNote(int replacementNote) {
+        this.replacementNote = replacementNote;
+    }
 
-	public void setTotalPaid(double totalPaid) {
-		this.totalPaid = totalPaid;
-	}
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 
-	public void setOrders(List<Order> orders){
-		this.orders = orders;
-	}
+    public void setTotalPaid(double totalPaid) {
+        this.totalPaid = totalPaid;
+    }
 
-	public void setPayment(Payment payment){
-		this.payment = payment;
-	}
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 
-	//endregion
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    public void setCustomer_id(long customer_id) {
+        this.customer_id = customer_id;
+    }
+
+    public void setCustomer_name(String customer_name) {
+        this.customer_name = customer_name;
+    }
+
+    //endregion
 
 	@Override
 	public String toString() {

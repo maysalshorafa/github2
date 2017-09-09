@@ -93,7 +93,7 @@ public class DepartmentDBAdapter {
 
             return db.insert(DEPARTMENTS_TABLE_NAME, null, val);
         } catch (SQLException ex) {
-            Log.e("DepartmentDB insert", "insatring Entry at " + DEPARTMENTS_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("DepartmentDB insert", "inserting Entry at " + DEPARTMENTS_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
 

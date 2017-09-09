@@ -233,7 +233,7 @@ custmer_name=(String)extras.get("_custmer");
                         else
                             print(invoiceImg.cancelingInvoice(sale, false, null));
                         sale.setPayment(new Payment(payments.get(0)));
-                        int sID = saleDBAdapter.insertEntry(SESSION._USER.getId(), new Date(), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaid() * -1,sale.getCustmer_id(),sale.getCustmer_name());
+                        long sID = saleDBAdapter.insertEntry(SESSION._USER.getId(), new Date(), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaid() * -1,sale.getCustomer_id(),sale.getCustomer_name());
 
                         saleDBAdapter.close();
                         PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(SalesManagementActivity.this);

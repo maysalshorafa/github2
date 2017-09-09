@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -22,7 +21,6 @@ import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.PermissionsGridViewAdapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -150,7 +148,7 @@ public class AddUserActivity extends Activity {
 									user.setPhoneNumber(etPhoneNumber.getText().toString());
 									user.setHourlyWage(Double.parseDouble(etHourlyWage.getText().toString()));
 									user.setPresent(Double.parseDouble(etPresent.getText().toString()));
-									user.setPermissions_name(selectedFromList);
+									user.setPermissionsName(selectedFromList);
 
 									userDBAdapter.updateEntry(user);
 									Log.i("success Edit", user.toString());

@@ -12,10 +12,13 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 19/10/2016.
@@ -66,25 +69,18 @@ public class SaleDBAdapter {
 
 
 
-	public int insertEntry(long byUser, Date saleDate, int replacementNote, boolean canceled, double totalPrice,double totalPaid,long custmer_id,String custmer_name) {
-		ContentValues val = new ContentValues();
-		val.put(SALES_COLUMN_ID, Util.idHealth(this.db, SALES_TABLE_NAME, SALES_COLUMN_ID));
-		//Assign values for each row.
-		val.put(SALES_COLUMN_BYUSER, byUser);
-		val.put(SALES_COLUMN_SALEDATE, new Date().getTime());
-		val.put(SALES_COLUMN_REPLACEMENTNOTE, replacementNote);
-		val.put(SALES_COLUMN_CANCELED, canceled);
-		val.put(SALES_COLUMN_TOTALPRICE, totalPrice);
-		val.put(SALES_COLUMN_TOTALPAID, totalPaid);
-		val.put(SALES_COLUMN__custmer_id, custmer_id);
-		val.put(SALES_COLUMN__custmer_name, custmer_name);
+	public long insertEntry(long byUser, Date saleDate, int replacementNote, boolean canceled, double totalPrice,double totalPaid,long custmer_id,String custmer_name) {
 
-		try {
-			return (int) db.insert(SALES_TABLE_NAME, null, val);
-		} catch (SQLException ex) {
-			Log.e("Sales DB insert", "insatring Entry at " + SALES_TABLE_NAME + ": " + ex.getMessage());
-			return 0;
-		}
+        Sale sale = new Sale(Util.idHealth(this.db, SALES_TABLE_NAME, SALES_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name);
+
+        sendToBroker(MessageType.ADD_SALE, sale, this.context);
+
+        try {
+            return insertEntry(sale);
+        } catch (SQLException ex) {
+            Log.e("Sales DB insert", "inserting Entry at " + SALES_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
 	}
 
 	public long insertEntry(Sale sale ,long _custmer_id,String custmer_name) {
@@ -100,8 +96,8 @@ public class SaleDBAdapter {
         val.put(SALES_COLUMN_CANCELED, sale.isCancelling()?1:0);
         val.put(SALES_COLUMN_TOTALPRICE, sale.getTotalPrice());
         val.put(SALES_COLUMN_TOTALPAID, sale.getTotalPaid());
-        val.put(SALES_COLUMN__custmer_id, sale.getCustmer_id());
-        val.put(SALES_COLUMN__custmer_name, sale.getCustmer_name());
+        val.put(SALES_COLUMN__custmer_id, sale.getCustomer_id());
+        val.put(SALES_COLUMN__custmer_name, sale.getCustomer_name());
 
         try {
             return db.insert(SALES_TABLE_NAME, null, val);

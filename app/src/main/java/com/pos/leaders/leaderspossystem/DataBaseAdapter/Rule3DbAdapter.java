@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
 
 /**
@@ -19,7 +18,7 @@ public class Rule3DbAdapter {
     //////rule3 tabel
     protected static final String Rule3_TABLE_NAME = "Rule3";
     protected static final String Rule3_COLUMN_ID = "id";
-    protected static final String Rule3_COLUMN_Parcent = "parcent";
+    protected static final String Rule3_COLUMN_PERCENT = "parcent";
     protected static final String Rule3_COLUMN_Contain = "contain";
   //  protected static final String Rule3_COLUMN_CLub_Contain = "club_contain";
 
@@ -50,22 +49,19 @@ public class Rule3DbAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(long id,double parcent,int contain,int club_contain){
+
+
+    public long insertEntry(Rule3 rule3){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Rule3_COLUMN_ID,id);
+        val.put(Rule3_COLUMN_ID,rule3.getId());
 
-        val.put(Rule3_COLUMN_Parcent,parcent);
-        val.put(Rule3_COLUMN_Contain,contain);
+        val.put(Rule3_COLUMN_PERCENT,rule3.getPercent());
+        val.put(Rule3_COLUMN_Contain,rule3.getContain());
        // val.put(Rule3_COLUMN_CLub_Contain,club_contain);
 
-
-
-
         try {
-
-            db.insert(Rule3_TABLE_NAME, null, val);
-            return 1;
+            return db.insert(Rule3_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e("Rule3 insertEntry", "inserting Entry at " + Rule3_TABLE_NAME + ": " + ex.getMessage());
             return 0;
@@ -87,7 +83,7 @@ public class Rule3DbAdapter {
             return rule3;
         }
         cursor1.moveToFirst();
-        rule3= new Rule3(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_ID))),Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Parcent))),Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Contain))));
+        rule3= new Rule3(Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_ID))),Double.parseDouble(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_PERCENT))),Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(Rule3_COLUMN_Contain))));
         cursor1.close();
         return  rule3;}
 
