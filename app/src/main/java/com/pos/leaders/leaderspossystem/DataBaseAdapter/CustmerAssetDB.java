@@ -2,11 +2,13 @@ package com.pos.leaders.leaderspossystem.DataBaseAdapter;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.Models.Order;
 
 /**
  * Created by Win8.1 on 8/27/2017.
@@ -49,20 +51,24 @@ public class CustmerAssetDB {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public int insertEntry(long sale_id,long user_id,double amount,int type){
+
+
+
+    public long insertEntry(long order_id,long user_id,double amount,int type){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(CustmerAssest_COLUMN_Order_Id,sale_id);
+        val.put(CustmerAssest_COLUMN_Order_Id,order_id);
         val.put(CustmerAssest_COLUMN_ID,user_id);
         val.put(CustmerAssest_COLUMN_amount,amount);
         val.put(CustmerAssest_COLUMN_type,type);
 
         try {
-            db.insert( CustmerAsset_TabelName, null, val);
-            return 1;
+            return db.insert(CustmerAsset_TabelName, null, val);
+
         } catch (SQLException ex) {
-            Log.e("CustmerAssest  insertEntry", "inserting Entry at " +  CustmerAsset_TabelName + ": " + ex.getMessage());
+            Log.e("ASsest DB insert", "inserting Entry at " + CustmerAsset_TabelName + ": " + ex.getMessage());
             return 0;
         }
     }
+
 }

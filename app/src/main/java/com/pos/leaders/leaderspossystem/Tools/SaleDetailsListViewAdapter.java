@@ -1,9 +1,20 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -45,7 +56,7 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
  * Created by KARAM on 20/10/2016.
  */
 
-public class SaleDetailsListViewAdapter extends ArrayAdapter {
+public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickListener {
 
 
 	private  PopupWindow popupWindow;
@@ -66,6 +77,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter {
 	boolean userScrolled =false;
 	public  CustmerAssetDB custmerAssetDB ;
 	public CustmerAssestCatlogGridViewAdapter custmerCatalogGridViewAdapter;
+	ViewHolder holder=null;
 	/**
 	 * Constructor
 	 *
@@ -84,7 +96,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder holder=null;
+
 
 		if(convertView==null){
 			holder=new ViewHolder();
@@ -110,12 +122,10 @@ custmerAssetDB=new CustmerAssetDB(context);
 		holder.tvPrice.setText(String.format(new Locale("en"),"%.2f",price)+" "+ context.getString(R.string.ins));
 		holder.tvCount.setText(count+"");
 		holder.tvTotal.setText(String.format(new Locale("en"),"%.2f",(price*count))+ " " + context.getString(R.string.ins));
-		holder.saleMan.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				callPopup();
-			}
-		});
+		holder . saleMan.setOnClickListener(this);
+
+		//	callPopup();
+
 		userDB.open();
 		custmerAssetDB.open();
 		if(selected==position&&selected!=-1){
@@ -129,12 +139,14 @@ custmerAssetDB=new CustmerAssetDB(context);
 		return convertView;
 	}
 
-	class ViewHolder{
+
+
+public 	class ViewHolder{
 		private TextView tvName;
 		private TextView tvCount;
 		private TextView tvPrice;
 		private TextView tvTotal;
-		private TextView saleMan;
+		public TextView saleMan;
 		private RelativeLayout llMethods;
 
 
@@ -150,24 +162,25 @@ custmerAssetDB=new CustmerAssetDB(context);
 			return str.substring(0,MINCHARNUMBER);
 		return str;
 	}
+
 	private void callPopup() {
 
+
 		LayoutInflater layoutInflater = (LayoutInflater) context
-				.getSystemService(LAYOUT_INFLATER_SERVICE);
-
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View popupView = layoutInflater.inflate(R.layout.custmer_assest_popup, null);
-
 		popupWindow = new PopupWindow(popupView, 1000, ActionBar.LayoutParams.WRAP_CONTENT,
 				true);
 
 		popupWindow.setTouchable(true);
 		popupWindow.setFocusable(true);
-
-		popupWindow.showAtLocation(popupView, Gravity.LEFT, 0, 0);
+		popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
 		custmerAssest = (EditText) popupView.findViewById(R.id.customerAssest_name);
+
 		lvcustmerAssest=(ListView) popupView.findViewById(R.id.custmerAssest_list_view);
 
 		btn_cancel=(Button) popupView.findViewById(R.id.btn_cancel) ;
+
 
 		btn_cancel.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -207,8 +220,8 @@ custmerAssetDB=new CustmerAssetDB(context);
 		lvcustmerAssest.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-				custmerAssetDB.insertEntry(SESSION._ORDER.getId(),custmerAssestList.get(position).getId(),SESSION._ORDER.getItemTotalPrice(),0);
+SESSION._ORDER.setCustmerAssestId(custmerAssestList.get(position).getId());
+			//	custmerAssetDB.insertEntry(SESSION._ORDER.getId(),custmerAssestList.get(position).getId(),SESSION._ORDER.getItemTotalPrice(),0);
 
 			}
 		});
@@ -241,4 +254,47 @@ custmerAssetDB=new CustmerAssetDB(context);
 
 
 	}
-}
+
+
+
+
+	@Override
+	public void onClick(View v) {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		custmerAssestList = userDB.getAllSalesMAn();
+			List<String> mAnimals = new ArrayList<String>();
+			for (int i = 0, size = custmerAssestList.size(); i < size; i++) {
+				mAnimals.add(
+						custmerAssestList.get(i).getFullName());
+			}
+
+			//Create sequence of items
+			final CharSequence[] Animals = mAnimals.toArray(new String[mAnimals.size()]);
+
+			for (final Order o : SESSION._ORDERS) {
+				builder.setItems(Animals, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						final long finalI = custmerAssestList.get(item).getId();
+						o.setCustmerAssestId(finalI);
+
+					}
+				});
+			}
+
+
+
+
+			builder.setTitle("Choose Custmer Assest");
+
+			AlertDialog alert = builder.create();
+			alert.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+		alert.getWindow().setBackgroundDrawableResource(android.R.color.darker_gray);
+
+			alert.show();
+
+		}}
+
+
+
+

@@ -116,9 +116,9 @@ public class AddUserActivity extends Activity {
 									Toast.makeText(getApplicationContext(), "success dding new user", Toast.LENGTH_LONG).show();
 
 									Log.i("success", "adding new user");
-							/**		intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
-									intent.putExtra("permissions_name",selectedFromList);
-									startActivity(intent);**/
+									intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
+								//	intent.putExtra("permissions_name",selectedFromList);
+									startActivity(intent);
 									//// TODO: 17/10/2016 sucess to add entity
 								} else {
 									Log.e("error", "can`t add user");

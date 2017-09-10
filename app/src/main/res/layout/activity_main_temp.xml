@@ -93,6 +93,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView" />
+            <TextView
+                android:id="@+id/saleMan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sales Man "
+                android:textColor="@color/black"/>
 
         </LinearLayout>
 

@@ -84,9 +84,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/departmentActivity_btnCancel"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp"
         android:background="@drawable/btn_secondary"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        tools:layout_editor_absoluteY="823dp"
+        android:layout_marginLeft="0dp" />
 
 </android.support.constraint.ConstraintLayout>

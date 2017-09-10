@@ -90,16 +90,16 @@ public class DepartmentGridViewAdapter extends BaseAdapter {
 		View gridView=convertView;
 		if(convertView==null){
 			inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			gridView=inflater.inflate(R.layout.grid_view_item_department,null);
+			gridView=inflater.inflate(R.layout.grid_view_department,null);
 		}
-		TextView tvName=(TextView)gridView.findViewById(R.id.gridViewItemDepartment_TVName);
-		TextView tvCount=(TextView)gridView.findViewById(R.id.gridViewItemDepartment_TVCount);
+	final TextView tvName=(TextView)gridView.findViewById(R.id.gridViewItemDepartment_TVName);
+		//TextView tvCount=(TextView)gridView.findViewById(R.id.gridViewItemDepartment_TVCount);
 		tvName.setText(departments.get(position).getName());
 		String prifix="";
-		if(departments.get(position).getProductCount()>1)
-			prifix="s";
+//		if(departments.get(position).getProductCount()>1)
+		//	prifix="s";
 
-		tvCount.setText(departments.get(position).getProductCount()+" Product"+prifix+".");
+		//tvCount.setText(departments.get(position).getProductCount()+" Product"+prifix+".");
 		return gridView;
 	}
 }

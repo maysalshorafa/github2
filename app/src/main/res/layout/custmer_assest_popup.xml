@@ -29,7 +29,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="65dp"
             android:ems="10"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+           />
 
 
 
@@ -51,7 +52,8 @@
                 android:layout_margin="12dp"
                 android:textStyle="bold"
                 android:textSize="18dp"
-                android:text="Add" />
+                android:text="Add Custmer  "
+                android:background="@drawable/bt_green_enabled"/>
             <Button
                 android:id="@+id/btn_cancel"
                 android:layout_width="60dp"
@@ -60,7 +62,8 @@
                 android:layout_margin="12dp"
                 android:textStyle="bold"
                 android:textSize="18dp"
-                android:text="Cancel" />
+                android:text="Cancel"
+                android:background="@drawable/btn_cancel"/>
         </LinearLayout>
     </LinearLayout>
 

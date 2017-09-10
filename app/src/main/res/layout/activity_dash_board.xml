@@ -8,13 +8,6 @@
     tools:context="com.pos.leaders.leaderspossystem.DashBoard"
 
 >
-<android.support.v7.widget.Toolbar
-    android:layout_width="752dp"
-    android:layout_height="0dp"
-    tools:layout_editor_absoluteY="0dp"
-    tools:layout_editor_absoluteX="8dp">
-    <include layout="@layout/title_bar"/>
-</android.support.v7.widget.Toolbar>
 
     <GridView
         android:id="@+id/grid"
@@ -30,7 +23,8 @@
         android:verticalSpacing="30dp"
         tools:layout_editor_absoluteX="-27dp"
         tools:layout_editor_absoluteY="92dp"
-        android:layoutDirection="rtl" />
+        android:layoutDirection="rtl"
+     />
 
 
 

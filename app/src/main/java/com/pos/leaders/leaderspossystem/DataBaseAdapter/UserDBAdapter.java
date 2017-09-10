@@ -211,7 +211,8 @@ public class UserDBAdapter {
 	}
     public List<User> getAllSalesMAn() {
         List<User> users = new ArrayList<User>();
-        Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where " + USERS_COLUMN_DISENABLED + "=0 order by id desc"+"and"+USERS_COLUMN_PERMISSIONS_NAME+"LIKE"+"%sales man%", null);
+        String permtion="sales man";
+        Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where  permissions_name='" + permtion + "'", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             users.add(createNewUser(cursor));
