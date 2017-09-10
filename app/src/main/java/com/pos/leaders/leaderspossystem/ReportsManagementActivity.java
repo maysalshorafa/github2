@@ -65,7 +65,7 @@ String str;
 
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_reports_management);
+        setContentView(R.layout.report_mangment);
 
         //region Init
 
@@ -75,6 +75,7 @@ String str;
         btnZView.setText("Z " + getString(R.string.report) + " " + getString(R.string.view));
         btnX=(Button)findViewById(R.id.reportManagementActivity_btnX);
         btnX.setText("X " + getString(R.string.report));
+
         btnSales =(Button)findViewById(R.id.reportManagementActivity_btnSaleManagement);
         btnExFiles = (Button) findViewById(R.id.reportManagementActivity_btnExtractingFiles);
 

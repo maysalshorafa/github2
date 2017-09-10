@@ -10,7 +10,6 @@
 
 >
 
-
     <GridView
         android:id="@+id/grid"
         android:layout_width="0dp"
@@ -18,6 +17,7 @@
         android:layout_margin="64dp"
         android:horizontalSpacing="32dp"
         android:numColumns="4"
+<<<<<<< HEAD
         android:verticalSpacing="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -25,6 +25,19 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
+=======
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="60dp"
+        android:verticalSpacing="30dp"
+        tools:layout_editor_absoluteX="-27dp"
+        tools:layout_editor_absoluteY="92dp"
+        android:layoutDirection="rtl"
+     />
+
+
+
+>>>>>>> mays-sameer
 
 
 </android.support.constraint.ConstraintLayout>

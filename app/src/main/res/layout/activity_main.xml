@@ -5,7 +5,6 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:id="@+id/mainActivity_drawerLayout"
     >
-
     <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -72,19 +71,20 @@
             tools:layout_editor_absoluteX="0dp" />
 
         <Button
-            android:id="@+id/mainActivity_btnOtherWays"
-            style="@style/Widget.AppCompat.Button"
+            android:text="@string/other_ways"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginStart="4dp"
-            android:text="@string/other_ways"
+            android:id="@+id/mainActivity_btnOtherWays"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintRight_toLeftOf="@+id/guideline42"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
             app:layout_constraintLeft_toLeftOf="@+id/guideline43"
-            app:layout_constraintRight_toLeftOf="@+id/guideline42" />
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:background="@drawable/btn_secondary"
+            style="@style/TextAppearance"/>
 
 
         <Button
@@ -279,12 +279,11 @@
                         android:id="@+id/mainActivity_llButtonsSales">
 
                         <Button
-                            android:id="@+id/button14"
-                            style="@style/AppTheme.bt_normal"
+                            android:text="Button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Button" />
+                            android:id="@+id/button14"
+                            android:layout_weight="1" />
 
                         <Button
                             android:text="Button"
@@ -359,20 +358,19 @@
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/edit_text_search"
-            android:drawableLeft="@drawable/search_icon"
-            android:ems="10"
             android:inputType="textPersonName"
             android:text="Name"
-            app:layout_constraintLeft_toLeftOf="@+id/guideline42"
-            app:layout_constraintRight_toLeftOf="@+id/mainActivity_btnDone"
+            android:ems="10"
+            android:id="@+id/mainActivity_etSearch"
             app:layout_constraintTop_toTopOf="@+id/linearLayout"
-            android:layout_marginTop="12dp"
-            app:layout_constraintHorizontal_bias="0.0" />
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintRight_toLeftOf="@+id/mainActivity_btnDone"
+            android:layout_marginRight="8dp"
+            android:drawableLeft="@drawable/search_icon"
+            android:background="@drawable/edit_text_search"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline42"
+            android:layout_marginEnd="8dp" />
 
         <GridView
             app:layout_constraintRight_toRightOf="@+id/mainActivity_btnList"
@@ -412,9 +410,7 @@
             android:layoutDirection="ltr"
             app:layout_constraintLeft_toLeftOf="@+id/guideline42"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintVertical_bias="1.0" />
+            android:layout_marginEnd="8dp" />
 
 
         <HorizontalScrollView
@@ -426,6 +422,7 @@
             app:layout_constraintRight_toRightOf="@+id/mainActivity_btnList"
             android:id="@+id/mainActivity_svDepartment"
             android:layout_marginStart="8dp"
+            android:elevation="1dp"
             android:background="@color/secondaryColor">
 
             <LinearLayout
@@ -508,21 +505,20 @@
                     tools:layout_editor_absoluteX="40dp"
                     android:layout_weight="1"
                     android:layout_margin="4dp" />
-
                 <Button
-                    android:id="@+id/usedPoint"
+                    android:text="used point"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_margin="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/btn_primary"
-                    android:onClick="quickPriceButtonClick"
-                    android:text="used point"
+                    android:id="@+id/usedPoint"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="normal|bold"
+                    android:background="@drawable/btn_primary"
+                    android:onClick="quickPriceButtonClick"
+                    tools:layout_editor_absoluteY="16dp"
                     tools:layout_editor_absoluteX="40dp"
-                    tools:layout_editor_absoluteY="16dp" />
+                    android:layout_weight="1"
+                    android:layout_margin="4dp" />
 
 
             </LinearLayout>
@@ -654,5 +650,3 @@
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>
-
-

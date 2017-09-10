@@ -25,16 +25,27 @@ public class Order {
 	@JsonIgnore
 	private Product product;
 
+	public long getCustmerAssestId() {
+		return custmerAssestId;
+	}
+
+	public void setCustmerAssestId(long custmerAssestId) {
+		this.custmerAssestId = custmerAssestId;
+	}
+
+	private  long custmerAssestId;
+
 	//region Constructors
-	public Order(long id, long productId, int count, double userOffer, long saleId) {
+	public Order(long id, long productId, int count, double userOffer, long saleId,long custmerAssestId) {
 		this.id = id;
 		this.productId = productId;
 		this.count = count;
 		this.userOffer = userOffer;
 		this.saleId = saleId;
+		this.custmerAssestId=custmerAssestId;
 	}
 
-    public Order(long id, long productId, int count, double userOffer, long saleId, double price, double original_price, double discount) {
+    public Order(long id, long productId, int count, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestId) {
         this.id = id;
         this.productId = productId;
         this.count = count;
@@ -43,15 +54,16 @@ public class Order {
         this.price = price;
         this.original_price = original_price;
         this.discount = discount;
-    }
+    this.custmerAssestId=custmerAssestId;}
 
-	public Order(long id, long productId, int count, double userOffer, long saleId, Product product) {
+	public Order(long id, long productId, int count, double userOffer, long saleId, Product product,long custmerAssestId) {
 		this.id = id;
 		this.productId = productId;
 		this.count = count;
 		this.userOffer = userOffer;
 		this.saleId = saleId;
 		this.product = product;
+		this.custmerAssestId=custmerAssestId;
 	}
 	public Order(long productId, int count, double userOffer, long saleId, Product product) {
 		this.productId = productId;
@@ -59,6 +71,7 @@ public class Order {
 		this.userOffer = userOffer;
 		this.saleId = saleId;
 		this.product = product;
+
 	}
 	public Order(int count, double userOffer, Product product) {
         this.count = count;
@@ -81,14 +94,14 @@ public class Order {
     }
 
 	public Order(Order o) {
-        this(o.getId(), o.getProductId(), o.getCount(), o.getUserOffer(), o.getSaleId(), o.getPrice(), o.getOriginal_price(), o.getDiscount());
+        this(o.getId(), o.getProductId(), o.getCount(), o.getUserOffer(), o.getSaleId(), o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
     }
 
 	public Order newInstance(Order o) {
-		return new Order(o.getId(), o.getProductId(), o.getCount(), o.getUserOffer(), o.getSaleId());
+		return new Order(o.getId(), o.getProductId(), o.getCount(), o.getUserOffer(), o.getSaleId(),o.getCustmerAssestId());
 	}
 
-	public Order(){
+	public Order(long l, long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount){
 
 	}
 
