@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.*;
 import com.pos.leaders.leaderspossystem.Models.*;
+import com.pos.leaders.leaderspossystem.Models.Offers.Rule1;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -41,7 +42,7 @@ public class DbHelper extends SQLiteOpenHelper {
     //21
     public DbHelper(Context context)
     {
-        super(context, DATABASE_NAME ,null,21);
+        super(context, DATABASE_NAME ,null,1);
         this.context = context;
     }
 
@@ -59,6 +60,93 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // TODO Auto-generated method stub
+
+
+
+
+
+        //        db.execSQL(AReportDBAdapter.DATABASE_CREATE);
+/*
+        db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
+        db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values ('','','',0,'',0,'','');");
+*/
+/*
+        db.execSQL("delete from z_report where id=1");
+        db.execSQL("delete from z_report where id=2");
+        db.execSQL("delete from z_report where id=3");
+        db.execSQL("delete from z_report where id=4");
+        db.execSQL("delete from z_report where id=4");
+        */
+        //db.execSQL("DROP TABLE IF EXISTS z_report");
+        //db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
+        /*
+        db.execSQL("ALTER TABLE `offers` ADD COLUMN y REAL");
+        db.execSQL("ALTER TABLE `offers` ADD COLUMN z REAL");
+        db.execSQL("ALTER TABLE `offers` ADD COLUMN p REAL");
+        db.execSQL("ALTER TABLE `offers` ADD COLUMN a REAL");
+        db.execSQL("ALTER TABLE `offers` ADD COLUMN b REAL");
+        db.execSQL("ALTER TABLE `offers` ADD COLUMN c REAL");
+        db.execSQL("ALTER TABLE `offers` ADD COLUMN d REAL");
+        db.execSQL("ALTER TABLE `offers` ADD COLUMN e REAL");
+        db.execSQL("ALTER TABLE `offers` ADD COLUMN f REAL");
+        db.execSQL("ALTER TABLE `offers` ADD COLUMN g REAL");
+        db.execSQL("ALTER TABLE `offers` ADD COLUMN h REAL");
+       // db.execSQL("ALTER TABLE `sales` ADD COLUMN totalPaid REAL");
+*/
+        //db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'User','User','User','"+new Date().getTime()+"','1234',0,100,0,35);");
+
+        // db.execSQL(ChecksDBAdapter.DATABASE_CREATE);
+        //offers
+        db.execSQL(Rule1DBAdapter.DATABASE_CREATE);
+        db.execSQL(Rule3DbAdapter.DATABASE_CREATE);
+        db.execSQL(Rule5DBAdapter.DATABASE_CREATE);
+        db.execSQL(Rule7DbAdapter.DATABASE_CREATE);
+        db.execSQL(Rule8DBAdapter.DATABASE_CREATE);
+        db.execSQL(Rule11DBAdapter.DATABASE_CREATE);
+        db.execSQL(OfferRuleDBAdapter.DATABASE_CREATE);
+        db.execSQL(OfferDBAdapter.DATABASE_CREATE);
+
+        db.execSQL(GroupAdapter.DATABASE_CREATE);//Club
+        db.execSQL(CustomerDBAdapter.DATABASE_CREATE);
+        db.execSQL(UsedPoint.DATABASE_CREATE);
+        db.execSQL(Sum_PointDbAdapter.DATABASE_CREATE);
+        db.execSQL(ValueOfPointDB.DATABASE_CREATE);
+
+        db.execSQL(SaleDBAdapter.DATABASE_CREATE);
+        db.execSQL(ChecksDBAdapter.DATABASE_CREATE);
+        db.execSQL(DepartmentDBAdapter.DATABASE_CREATE);
+
+        db.execSQL(OrderDBAdapter.DATABASE_CREATE);
+        db.execSQL(PaymentDBAdapter.DATABASE_CREATE);
+        db.execSQL(PermissionsDBAdapter.DATABASE_CREATE);
+        db.execSQL(ProductDBAdapter.DATABASE_CREATE);
+        db.execSQL(ProductOfferDBAdapter.DATABASE_CREATE);
+
+        db.execSQL(ScheduleWorkersDBAdapter.DATABASE_CREATE);
+        db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
+        db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values ('','','',0,'',0,'0','0');");
+        db.execSQL(UserDBAdapter.DATABASE_CREATE);
+        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'Dev','Ops','tec','"+new Date().getTime()+"','1234',0,046316969,20,35);");
+        db.execSQL(UserPermissionsDBAdapter.DATABASE_CREATE);
+        db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
+        db.execSQL(AReportDBAdapter.DATABASE_CREATE);
+
+        /*
+        db.execSQL("ALTER TABLE `_order` ADD COLUMN price REAL");
+        db.execSQL("ALTER TABLE `_order` ADD COLUMN original_price REAL");
+        db.execSQL("ALTER TABLE `_order` ADD COLUMN discount REAL");
+        */
+        //db.execSQL("ALTER TABLE `order` ADD COLUMN userOffer REAL");
+
+
+
+
+
+
+
+
+
+
 
 
         List<String> tblNames = tablesName(db);

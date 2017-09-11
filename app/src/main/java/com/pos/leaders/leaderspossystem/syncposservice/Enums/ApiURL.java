@@ -26,6 +26,8 @@ public interface ApiURL {
     String Rule8 = "Rule8";
     String Rule11 = "Rule11";
 
+    String CompanyCredentials = "CompanyCredentials";
+
 
     String Sync = "sync";
 }

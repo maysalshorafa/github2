@@ -320,4 +320,8 @@
 
     <string name="search">Search</string>
 
+    <!--online setup -->
+    <string name="key">Key</string>
+    <string name="connect">Connect</string>
+
 </resources>
