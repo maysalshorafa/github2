@@ -9,11 +9,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -37,12 +39,19 @@ import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
-public class DashBoard extends Activity{
+public class DashBoard extends AppCompatActivity{
+    android.support.v7.app.ActionBar actionBar;
+
     public static final String PREFS_NAME = "Time_Pref";
     private boolean enableBackButton = true;
-
+    DateFormat format;
+    String currentDateandTime;
     ImageView im;
     GridView grid;
     String permissions_name;
@@ -93,8 +102,46 @@ public class DashBoard extends Activity{
 
         // Remove notification bar
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        // Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_dash_board);
+
+        final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
+                R.layout.title_bar,
+                null);
+
+        // Set up your ActionBar
+        actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(android.app.ActionBar.NAVIGATION_MODE_LIST);
+        // TODO: Remove the redundant calls to getSupportActionBar()
+        //       and use variable actionBar instead
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(actionBarLayout);
+         long date;
+        Calendar ca = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        // You customization
+        final int actionBarColor = getResources().getColor(R.color.primaryColor);
+        actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
+
+        final TextView actionBarTitle = (TextView) findViewById(R.id.editText8);
+        actionBarTitle.setText(format.format(ca.getTime()));
+        final TextView actionBarSent = (TextView) findViewById(R.id.editText9);
+        actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
+
+
+        final TextView actionBarStaff = (TextView) findViewById(R.id.editText10);
+        actionBarStaff.setText(SESSION._USER.getFullName());
+
+        final TextView actionBarLocations = (TextView) findViewById(R.id.editText11);
+        actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
+
      //  this.getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,R.layout.title_bar);
 
 

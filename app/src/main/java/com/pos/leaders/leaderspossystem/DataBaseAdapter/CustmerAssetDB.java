@@ -22,9 +22,9 @@ public class CustmerAssetDB {
     protected static final String CustmerAssest_COLUMN_ID = "custmerAssestID";
     protected static final String CustmerAssest_COLUMN_amount= "amount";
     protected static final String CustmerAssest_COLUMN_type= "type";
-
+    protected static final String CustmerAssest_COLUMN_Case= "salescase";
     public static final String DATABASE_CREATE = "CREATE TABLE `"+CustmerAsset_TabelName+"` ( `"+CustmerAssest_COLUMN_Order_Id+"` INTEGER , " +
-            "`"+CustmerAssest_COLUMN_ID+"` INTEGER NOT NULL, `"+CustmerAssest_COLUMN_amount+"` REAL, `"+CustmerAssest_COLUMN_type+"` INTEGER DEFAULT 0 )";
+            "`"+CustmerAssest_COLUMN_ID+"` INTEGER NOT NULL, `"+CustmerAssest_COLUMN_amount+"` REAL, `"+CustmerAssest_COLUMN_type+"` INTEGER DEFAULT 0 "+CustmerAssest_COLUMN_Case+"` TEXT ";
     private SQLiteDatabase db;
     private final Context context;
     // Database open/upgrade helper
@@ -54,13 +54,14 @@ public class CustmerAssetDB {
 
 
 
-    public long insertEntry(long order_id,long user_id,double amount,int type){
+    public long insertEntry(long order_id,long user_id,double amount,int type,String salescase){
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(CustmerAssest_COLUMN_Order_Id,order_id);
         val.put(CustmerAssest_COLUMN_ID,user_id);
         val.put(CustmerAssest_COLUMN_amount,amount);
         val.put(CustmerAssest_COLUMN_type,type);
+        val.put(CustmerAssest_COLUMN_Case,salescase);
 
         try {
             return db.insert(CustmerAsset_TabelName, null, val);

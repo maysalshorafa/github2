@@ -1,192 +1,236 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="8dp"
-    tools:context="com.pos.leaders.leaderspossystem.AddNewCoustmer">
+    android:id="@+id/scrollView1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white">
+    <LinearLayout
 
-
-    <TextView
-        android:layout_width="131dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView12"
-        android:textSize="18sp"
-        android:text="Group Name"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textDirection="rtl" />
-
-    <EditText
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/group_name"
-        android:hint="Coustmer name"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline18"
-        app:layout_constraintRight_toLeftOf="@+id/textView12"
-        android:layout_marginStart="6dp"
-        android:layout_marginLeft="6dp"
-        app:layout_constraintTop_toTopOf="@+id/textView12"
-        android:background="@drawable/edit_text_search"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintLeft_creator="1" />
-
-    <TextView
-        android:text="Description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView13"
-        android:textSize="18sp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/group_name"
-        app:layout_constraintRight_toRightOf="@+id/textView12" />
-
-    <EditText
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:ems="10"
-        android:id="@+id/ET_description"
-        android:hint="Add Description"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline18"
-        app:layout_constraintTop_toTopOf="@+id/textView13"
-        app:layout_constraintRight_toRightOf="@+id/group_name"
-        android:background="@drawable/edit_text_search"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintLeft_creator="1" />
-
-    <TextView
-        android:text="Type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView14"
-        android:textSize="18sp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/ET_description"
-        app:layout_constraintRight_toRightOf="@+id/textView13"
-        android:textAlignment="center"/>
-
-    <EditText
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:ems="10"
-        android:id="@+id/et_type"
-        android:hint="Add Group Type"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline18"
-        app:layout_constraintTop_toTopOf="@+id/textView14"
-        app:layout_constraintRight_toRightOf="@+id/ET_description"
-        android:background="@drawable/edit_text_search" />
-
-
-
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline18"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_end="580dp"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="284dp" />
+        android:background="@color/white">
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="62dp"
+                    android:gravity="center"
+                    android:text="@string/GroupName"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="20dp"/>
+
+                <EditText
+                    android:id="@+id/group_name"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bubble"
+                    android:paddingLeft="5dp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="62dp"
+                    android:gravity="center"
+                    android:text="@string/description"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="20dp"/>
+            <EditText
+                android:id="@+id/ET_description"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bubble"
+                android:paddingLeft="5dp" />
+</LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="62dp"
+                    android:gravity="center"
+                    android:text="@string/Type"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="20dp"/>
+
+                <EditText
+                    android:id="@+id/et_type"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bubble"
+                    android:paddingLeft="5dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="62dp"
+                    android:gravity="center"
+                    android:text="@string/amount"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="20dp"/>
+
+            <EditText
+                android:id="@+id/et_amount"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bubble"
+                android:paddingLeft="5dp" />
+
+
+                </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="62dp"
+                    android:gravity="center"
+                    android:text="@string/Parcent"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="20dp"/>
+            <EditText
+                android:id="@+id/et_parcent"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bubble"
+                android:paddingLeft="5dp" />
+</LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="62dp"
+                    android:gravity="center"
+                    android:text="@string/Point"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="20dp"/>
+            <EditText
+                android:id="@+id/et_point"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bubble"
+                android:paddingLeft="5dp" />
+                </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/add_group"
+                    android:layout_width="400dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bt_green_enabled"
+                    android:gravity="center"
+                    android:text="@string/add"
+                    android:textColor="#fff"
+                    android:textSize="20dp"/>.
+                <Button
+
+                    android:id="@+id/addGroup_BTCancel"
+                    android:layout_width="197dp"
+                    android:gravity="center"
+                    android:layout_height="38dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/btn_cancel"
+                    android:text="@android:string/cancel"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:layout_marginTop="16dp"
+                    android:layout_gravity="center_horizontal"
+                    />
 
 
 
-    <TextView
-        android:text="Amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView15"
-        android:textSize="18sp"
-        android:layout_marginTop="31dp"
-        app:layout_constraintTop_toBottomOf="@+id/et_type"
-        app:layout_constraintRight_toRightOf="@+id/textView14"
-        android:layout_marginRight="37dp"
-        android:layout_marginEnd="37dp" />
-
-    <EditText
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/et_amount"
-        android:hint="Group Amount"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline18"
-        app:layout_constraintTop_toTopOf="@+id/textView15"
-        app:layout_constraintRight_toRightOf="@+id/et_type"
-        android:background="@drawable/edit_text_search" />
+            </LinearLayout>
 
 
-    <TextView
-        android:text="Point"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView16"
-        android:textSize="18sp"
-        android:layout_marginTop="31dp"
-        app:layout_constraintTop_toBottomOf="@+id/et_amount"
-        app:layout_constraintRight_toRightOf="@+id/textView15"
-        android:layout_marginRight="37dp"
-        android:layout_marginEnd="37dp" />
+        </LinearLayout>
 
-    <EditText
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/et_point"
-        android:hint="Group Amount"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline18"
-        app:layout_constraintTop_toTopOf="@+id/textView16"
-        app:layout_constraintRight_toRightOf="@+id/et_amount"
-        android:background="@drawable/edit_text_search" />
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
+            >
 
 
 
 
+        </LinearLayout>
 
 
-    <Button
-        android:id="@+id/add_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:background="@color/primaryColor"
-        android:text="Add Group"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
-    <TextView
-        android:text="Parcent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView17"
-        android:textSize="18sp"
-        android:layout_marginTop="31dp"
-        app:layout_constraintTop_toBottomOf="@+id/et_point"
-        app:layout_constraintRight_toRightOf="@+id/textView16" />
-
-    <EditText
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:ems="10"
-        android:id="@+id/et_parcent"
-        android:hint="Group Parcent"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline18"
-        app:layout_constraintTop_toTopOf="@+id/textView17"
-        app:layout_constraintRight_toRightOf="@+id/et_point"
-        android:background="@drawable/edit_text_search" />
+    </LinearLayout>
 
 
 
-
-
-</android.support.constraint.ConstraintLayout>
+</ScrollView>

@@ -10,51 +10,67 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
 
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
             android:inputType="number"
             android:ems="10"
             android:id="@+id/creditCardByPhone_tvCCNum"
             android:hint="@string/credit_card_number"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/edit_text_style"
+            android:layout_marginLeft="10dp"
+            android:textAlignment="center"/>
 
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
             android:inputType="number"
             android:ems="10"
             android:id="@+id/creditCardByPhone_tvID"
             android:hint="@string/id"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/edit_text_style"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="10dp"
+            android:textAlignment="center"/>
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+       >
 
 
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="date"
-            android:ems="10"
             android:id="@+id/creditCardByPhone_tvCE"
-            android:hint="@string/card_expiry"
-            android:layout_weight="1" />
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/edit_text_style"
+            android:ems="10"
+            android:hint="@string/credit_card_number"
+            android:inputType="number"
+            android:textAlignment="center" />
 
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/creditCardByPhone_tvCCV"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
             android:inputType="number"
             android:ems="10"
-            android:id="@+id/creditCardByPhone_tvCCV"
-            android:hint="@string/ccv"
-            android:layout_weight="1" />
+            android:hint="@string/id"
+            android:layout_weight="1"
+            android:background="@drawable/edit_text_style"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="10dp"
+            android:textAlignment="center"/>
     </LinearLayout>
 
 </LinearLayout>
