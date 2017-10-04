@@ -20,6 +20,14 @@ public interface ApiURL {
     String Payment = "Payment";
     String Permission = "Permission";
     String Sale = "Sale";
+    String CurrencyReturn = "CurrencyReturn";
+    String   CurrencyOpearation = "CurrencyOpearation";
+    String   CashPayment= "CashPayment";
+    String   CustmerAssest= "CustmerAssest";
+
+    String   Currencys= "Currencys";
+
+
 
 
     String Sync = "sync";

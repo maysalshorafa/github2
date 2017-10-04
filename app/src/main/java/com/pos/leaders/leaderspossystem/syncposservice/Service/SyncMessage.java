@@ -11,6 +11,10 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencysDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
@@ -22,6 +26,10 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currencys;
 import com.pos.leaders.leaderspossystem.Models.Customer_M;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Offer;
@@ -368,6 +376,78 @@ public class SyncMessage extends Service {
                 //endregion USER
 
 
+
+                //region CurrencyReturns
+                case MessageType.AddCurrencyReturn:
+                    CurrencyReturns c = null;
+                    c = objectMapper.readValue(msgData, CurrencyReturns.class);
+
+                    CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(this);
+                    currencyReturnsDBAdapter.open();
+                    currencyReturnsDBAdapter.insertEntry(c);
+                    currencyReturnsDBAdapter.close();
+
+                    break;
+                case MessageType.UPDATE_CurrencyReturn:
+                    break;
+                case MessageType.DELETE_CurrencyReturn:
+                    break;
+                //endregion Currency Return
+
+
+                //region CurrencyOpeartion
+                case MessageType.ADD_CurrencyOpearation:
+                    CurrencyOperation currencyOperation = null;
+                    currencyOperation = objectMapper.readValue(msgData, CurrencyOperation.class);
+
+                    CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(this);
+                    currencyOperationDBAdapter.open();
+                    currencyOperationDBAdapter.insertEntry(currencyOperation);
+                    currencyOperationDBAdapter.close();
+
+                    break;
+                case MessageType.UPDATE_CurrencyOpearation:
+                    break;
+                case MessageType.DELETE_CurrencyOpearation:
+                    break;
+                //endregion Currency Opeartion
+
+
+                //region CashPayment
+                case MessageType.AddCashPayment:
+                    CashPayment cashPayment = null;
+                    cashPayment = objectMapper.readValue(msgData, CashPayment.class);
+
+                    CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
+                    cashPaymentDBAdapter.open();
+                    cashPaymentDBAdapter.insertEntry(cashPayment);
+                    cashPaymentDBAdapter.close();
+
+                    break;
+                case MessageType.UPDATE_CashPayment:
+                    break;
+                case MessageType.DELETE_CashPayment:
+                    break;
+                //endregion Cash payment..
+
+
+                //region Currencys
+                case MessageType.AddCurrencys:
+                    Currencys currencys = null;
+                    currencys = objectMapper.readValue(msgData, Currencys.class);
+
+                    CurrencysDBAdapter currencysDBAdapter = new CurrencysDBAdapter(this);
+                    currencysDBAdapter.open();
+                    currencysDBAdapter.insertEntry(currencys);
+                    currencysDBAdapter.close();
+
+                    break;
+                case MessageType.UPDATE_Currencys:
+                    break;
+                case MessageType.DELETE_Currencys:
+                    break;
+                //endregion Currency Opeartion.
+
             }
         }else{
             //todo: does not have message type
@@ -526,6 +606,51 @@ public class SyncMessage extends Service {
             case MessageType.DELETE_USER:
                 res = messageTransmit.authDelete(ApiURL.Users, jsonObject.getString(MessageKey.Data), token);
                 break;
+            //CurrencyReturns
+
+            case MessageType.AddCurrencyReturn:
+                res = messageTransmit.authPost(ApiURL.CurrencyReturn, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_CurrencyReturn:
+                res = messageTransmit.authPut(ApiURL.CurrencyReturn, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_CurrencyReturn:
+                res = messageTransmit.authDelete(ApiURL.CurrencyReturn, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //CurrencyOPeration
+            case MessageType.ADD_CurrencyOpearation:
+                res = messageTransmit.authPost(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_CurrencyOpearation:
+                res = messageTransmit.authPut(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_CurrencyOpearation:
+                res = messageTransmit.authDelete(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //CashPayment
+            case MessageType.AddCashPayment:
+                res = messageTransmit.authPost(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_CashPayment:
+                res = messageTransmit.authPut(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_CashPayment:
+                res = messageTransmit.authDelete(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //CustmerAssest
+            case MessageType.AddCustmerAssest:
+                res = messageTransmit.authPost(ApiURL.CustmerAssest, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_CustmerAssest:
+                res = messageTransmit.authPut(ApiURL.CustmerAssest, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_CustmerAssest:
+                res = messageTransmit.authDelete(ApiURL.CustmerAssest, jsonObject.getString(MessageKey.Data), token);
+                break;
+
+
+
+
         }
 
         try {

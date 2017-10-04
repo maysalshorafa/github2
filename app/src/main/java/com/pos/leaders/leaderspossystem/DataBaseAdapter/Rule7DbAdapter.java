@@ -10,6 +10,7 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.OfferRule;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 /**
  * Created by Win8.1 on 7/31/2017.
@@ -54,7 +55,7 @@ public class Rule7DbAdapter {
     public int insertEntry(long id, double price,  long product_id,int contain_club){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Rule7_COLUMN_ID,id);
+        val.put(Rule7_COLUMN_ID, Util.idHealth(this.db, Rule7_TABLE_NAME, Rule7_COLUMN_ID));
         val.put(Rule7_COLUMN_Price,price);
 
         val.put(Rule7_Product_id,product_id);

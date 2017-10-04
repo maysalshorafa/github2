@@ -43,7 +43,6 @@
     <string name="_new">New</string>
 
 
-
     <!--Product Management-->
     <string name="edit_product">Edit Product</string>
     <string name="add_product">Add Product</string>
@@ -335,11 +334,12 @@
     <string name="GroupName"> Club Name</string>
     <string name="AddGroup">    Add Group</string>
 
-<!--custmer String -->
+    <!--custmer String -->
     <string name="Custmername">Name</string>
     <string name="DateOfBirthday">Birthday</string>
     <string name="CustmerID">CustmerID</string>
-    <string name="Gender">Gender</string> .
+    <string name="Gender">Gender</string>
+    .
     <string name="Job">Job</string>
     <string name="Email">Email</string>
     <string name="Phone">Phone</string>
@@ -347,23 +347,7 @@
     <string name="AddtoCity"> Add to City</string>
     <string name="AddtoCustomerClub"> Add Club</string>
     <string name="AddCustomer"> Add Customer</string>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <string name="title_activity_temp_cash_activty">TempCashActivty</string>
 
 
 </resources>

@@ -10,6 +10,7 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule8;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 /**
  * Created by Win8.1 on 8/2/2017.
@@ -51,7 +52,7 @@ public class Rule8DBAdapter {
     public int insertEntry(long id, double parcent,  long product_id,int contain_club){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Rule8_COLUMN_ID,id);
+        val.put(Rule8_COLUMN_ID, Util.idHealth(this.db, Rule8_TABLE_NAME, Rule8_COLUMN_ID));
         val.put(Rule8_COLUMN_Parcent,parcent);
 
         val.put(Rule8_Product_id,product_id);

@@ -10,6 +10,7 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 /**
  * Created by Win8.1 on 7/31/2017.
@@ -53,7 +54,7 @@ public class Rule3DbAdapter {
     public int insertEntry(long id,double parcent,int contain,int club_contain){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Rule3_COLUMN_ID,id);
+        val.put(Rule3_COLUMN_ID, Util.idHealth(this.db, Rule3_TABLE_NAME, Rule3_COLUMN_ID));
 
         val.put(Rule3_COLUMN_Parcent,parcent);
         val.put(Rule3_COLUMN_Contain,contain);

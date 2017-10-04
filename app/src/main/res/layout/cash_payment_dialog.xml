@@ -27,6 +27,12 @@
             android:id="@+id/cashPaymentDialog_SwitchProportion"
             android:layout_width="240dp" />
 
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"></Spinner>
+
     </LinearLayout>
 
 

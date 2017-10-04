@@ -1,51 +1,35 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Handler;
 import android.support.v7.app.ActionBar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.AddUserActivity;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustmerAssetDB;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
-import com.pos.leaders.leaderspossystem.MainActivity;
-import com.pos.leaders.leaderspossystem.Models.Customer_M;
-import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.R;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -75,7 +59,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 	private  EditText custmerAssest;
 	private  Button btn_cancel;
 	boolean userScrolled =false;
-	public  CustmerAssetDB custmerAssetDB ;
+	public CustomerAssetDB custmerAssetDB ;
 	public CustmerAssestCatlogGridViewAdapter custmerCatalogGridViewAdapter;
 	ViewHolder holder=null;
 	/**
@@ -108,7 +92,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 			holder.saleMan=(TextView)convertView.findViewById(R.id.saleMan);
 			holder.llMethods=(RelativeLayout)convertView.findViewById(R.id.rowSaleDetails_LLMethods);
 			userDB=new UserDBAdapter(context);
-custmerAssetDB=new CustmerAssetDB(context);
+custmerAssetDB=new CustomerAssetDB(context);
 			convertView.setTag(holder);
 		}
 		else{
@@ -263,17 +247,17 @@ SESSION._ORDER.setCustmerAssestId(custmerAssestList.get(position).getId());
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		custmerAssestList = userDB.getAllSalesMAn();
-			List<String> mAnimals = new ArrayList<String>();
+			List<String> user = new ArrayList<String>();
 			for (int i = 0, size = custmerAssestList.size(); i < size; i++) {
-				mAnimals.add(
+				user.add(
 						custmerAssestList.get(i).getFullName());
 			}
 
 			//Create sequence of items
-			final CharSequence[] Animals = mAnimals.toArray(new String[mAnimals.size()]);
+			final CharSequence[] User = user.toArray(new String[user.size()]);
 
 			for (final Order o : SESSION._ORDERS) {
-				builder.setItems(Animals, new DialogInterface.OnClickListener() {
+				builder.setItems(User, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
 						final long finalI = custmerAssestList.get(item).getId();
 						o.setCustmerAssestId(finalI);

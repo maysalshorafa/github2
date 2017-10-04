@@ -267,7 +267,6 @@ android:textAlignment="textStart"                    android:textSize="18dp"
                             android:visibility="gone"/>
 
                         <Button
-                            android:id="@+id/usedPoint"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -298,7 +297,10 @@ android:textAlignment="textStart"                    android:textSize="18dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_customer_file" />
+                            app:srcCompat="@drawable/ic_customer_file"
+                            android:id="@+id/usedPoint"
+
+                            />
 
                         <ImageButton
                             android:id="@+id/searchPerson"
@@ -410,7 +412,8 @@ android:textAlignment="textStart"                    android:textSize="18dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:textColor="@color/black"
-                                android:layout_gravity="center"/>
+                                android:layout_gravity="center"
+                                android:maxLength="10"/>
 
                         </LinearLayout>
 
@@ -511,11 +514,15 @@ android:textAlignment="textStart"                    android:textSize="18dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:horizontalSpacing="8dp"
                 android:verticalSpacing="8dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="10.0sp"
+                />
 
             <ScrollView
                 android:id="@+id/mainActivity_svDepartment"

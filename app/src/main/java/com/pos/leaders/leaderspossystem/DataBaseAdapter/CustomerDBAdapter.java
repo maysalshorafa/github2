@@ -128,7 +128,7 @@ public class CustomerDBAdapter {
     public long insertEntry(Customer_M customer){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(CUSTOMER_COLUMN_ID, customer.getId());
+        val.put(CUSTOMER_COLUMN_ID, Util.idHealth(this.db, CUSTOMER_TABLE_NAME, CUSTOMER_COLUMN_ID));
         val.put(CUSTOMER_COLUMN_NAME, customer.getName());
         val.put(CUSTOMER_COLUMN_BIRTHDAY, customer.getBirthday());
         val.put(CUSTOMER_COLUMN_GENDER, customer.getGender());

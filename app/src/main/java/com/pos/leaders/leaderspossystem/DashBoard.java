@@ -1,9 +1,5 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.AlarmManager;
-
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,43 +7,55 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Dash_bord_adapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Tools.CurrencyCatlogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
-public class DashBoard extends AppCompatActivity{
+public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     android.support.v7.app.ActionBar actionBar;
-
     public static final String PREFS_NAME = "Time_Pref";
     private boolean enableBackButton = true;
     DateFormat format;
@@ -56,14 +64,19 @@ public class DashBoard extends AppCompatActivity{
     GridView grid;
     String permissions_name;
     PopupWindow popupWindow;
-    EditText custmer_id;
+    EditText custmer_id,currencyName;
     TextView btLogOut;
     AReportDBAdapter aReportDBAdapter;
     User user=new User();
     UserDBAdapter userDBAdapter;
     AReport aReport=new AReport();
+    ListView lvCurrency;
     ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
+    long currencyType;
+    boolean userScrolled=false;
+    private List<CurrencyType> currencyTypesList=null;
 
+    private List<CurrencyType> AllcurrencyTypesList;
     String[] dashbord_text = {
             "Main Screen",
             "Report",
@@ -458,8 +471,10 @@ public class DashBoard extends AppCompatActivity{
 
         final AReport _aReport = new AReport();
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(this);
+
         zReportDBAdapter.open();
         ZReport zReport = null;
+        CurrencyOperation currencyOperation=null;
         try {
             zReport = zReportDBAdapter.getLastRow();
         } catch (Exception e) {
@@ -503,7 +518,10 @@ public class DashBoard extends AppCompatActivity{
         }
     }
 
-    private void ShowAReportDialog(final AReport aReport){
+    private void ShowAReportDialog(final AReport aReport) {
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
+        currencyTypeDBAdapter.open();
+
 
         //there is no a report after z report
         enableBackButton = false;
@@ -518,7 +536,9 @@ public class DashBoard extends AppCompatActivity{
         btCancel.setVisibility(View.GONE);
         final EditText et = (EditText) discountDialog.findViewById(R.id.cashPaymentDialog_TECash);
         final Switch sw = (Switch) discountDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
+        final Spinner spinner = (Spinner) discountDialog.findViewById(R.id.spinner);
         sw.setVisibility(View.GONE);
+        spinner.setVisibility(View.VISIBLE);
         discountDialog.setCanceledOnTouchOutside(false);
 
 
@@ -533,66 +553,145 @@ public class DashBoard extends AppCompatActivity{
             }
         });
 
-        btOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String str = et.getText().toString();
-                if (!str.equals("")) {
-                    aReport.setAmount(Double.parseDouble(str));
-                    AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBoard.this);
-                    aReportDBAdapter.open();
-                    aReportDBAdapter.insertEntry(aReport);
-                    aReportDBAdapter.close();
-                    discountDialog.cancel();
-                }
+        // Spinner click listener
+        spinner.setOnItemSelectedListener(this);
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        if(currencyTypesList==null){
+            Toast.makeText(DashBoard.this, "Selected: Nulll " , Toast.LENGTH_LONG).show();
 
-            }
-        });
+        }
+        List<String> currency = new ArrayList<String>();
+        for (int i = 0;  i < currencyTypesList.size(); i++) {
+            currency.add(currencyTypesList.get(i).getType());
+        }
 
-        btCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //discountDialog.cancel();
-            }
-        });
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currency);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinner.setAdapter(dataAdapter);
+
+
+        btOK.setOnClickListener(new View.OnClickListener()
+
+    {
+        @Override
+        public void onClick (View v){
+        String str = et.getText().toString();
+        if (!str.equals("")) {
+            aReport.setAmount(Double.parseDouble(str));
+            AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBoard.this);
+            aReportDBAdapter.open();
+            CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(DashBoard.this);
+            currencyOperationDBAdapter.open();
+            aReportDBAdapter.insertEntry(aReport);
+            currencyOperationDBAdapter.insertEntry(aReport.getCreationDate(), aReport.getId(), "a_report", aReport.getAmount(), currencyType);
+
+            aReportDBAdapter.close();
+            currencyOperationDBAdapter.close();
+            discountDialog.cancel();
+        }
+
+    }
+    });
+
+        btCancel.setOnClickListener(new View.OnClickListener()
+
+    {
+        @Override
+        public void onClick (View v){
+        //discountDialog.cancel();
+    }
+    });
         discountDialog.show();
 
-         }
 
-/**    private void callPopup() {
+}
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+currencyType=parent.getSelectedItemId();
+        Toast.makeText(DashBoard.this,"mays"+currencyType,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+
+    private void callPopupForCurrency() {
+        CurrencyTypeDBAdapter currencyTypeDBAdapter=new CurrencyTypeDBAdapter(this);
+        currencyTypeDBAdapter.open();
+
 
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View popupView = layoutInflater.inflate(R.layout.currency_popup, null);
 
-        View popupView = layoutInflater.inflate(R.layout.pop_up, null);
-
-        popupWindow = new PopupWindow(popupView,
-                ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.MATCH_PARENT,
+        popupWindow = new PopupWindow(popupView, 600, ActionBar.LayoutParams.WRAP_CONTENT,
                 true);
 
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
+        popupWindow.showAtLocation(popupView, Gravity.AXIS_PULL_AFTER, 0, 0);
+        currencyName = (EditText) popupView.findViewById(R.id.currencyName);
 
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-        custmer_id = (EditText) popupView.findViewById(R.id.custmer_id);
-
-        ((Button) popupView.findViewById(R.id.btn_add))
-                .setOnClickListener(new View.OnClickListener() {
-
-                    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-                    public void onClick(View arg0) {
-                        Toast.makeText(getApplicationContext(),
-                                custmer_id.getText().toString(),Toast.LENGTH_LONG).show();
-                     //   String s= custmer_id.getText().toString();
-
-                 Intent i = new Intent(DashBoard.this, MainActivity.class);
-                 //       i.putExtra("custmer_id",s);
-                        startActivity(i);
-
-                        popupWindow.dismiss();
-
-                }});
+        lvCurrency=(ListView) popupView.findViewById(R.id.currency_list_view);
 
 
-    }**/
+
+
+        currencyName.setText("");
+        currencyName.setHint("Search..");
+
+        currencyName.setFocusable(true);
+        currencyName.requestFocus();
+        currencyName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                currencyName.setFocusable(true);
+            }
+        });
+
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        lvCurrency.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                currencyType=currencyTypesList.get(position).getId();
+                popupWindow.dismiss();
+            }
+        });
+        lvCurrency.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    userScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (userScrolled && firstVisibleItem + visibleItemCount == totalItemCount) {
+
+                    userScrolled = false;
+                    //  loadMoreProduct();
+                }
+            }
+        });
+
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        AllcurrencyTypesList = currencyTypesList;
+
+
+        CurrencyCatlogGridViewAdapter adapter = new CurrencyCatlogGridViewAdapter(getApplicationContext(), currencyTypesList);
+        lvCurrency.setAdapter(adapter);
+
+
+
+    }
 }

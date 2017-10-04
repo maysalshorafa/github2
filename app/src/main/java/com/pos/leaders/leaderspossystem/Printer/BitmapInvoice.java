@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Sale;
@@ -276,7 +277,7 @@ public class BitmapInvoice {
         return b;
     }
 
-    public static Bitmap zPrint(Context context,ZReport zReport, double cash_plus, double cash_minus, double check_plus, double check_minus, double creditCard_plus, double creditCard_minus,boolean isCopy,double starterAmount) {
+    public static Bitmap zPrint(Context context,ZReport zReport,double usa_plus,double usa_minus,double eur_plus,double eur_minus,double gbp_plus,double gbp_minus, double cash_plus, double cash_minus, double check_plus, double check_minus, double creditCard_plus, double creditCard_minus,boolean isCopy,double starterAmount) {
         //miriam_libre_bold.ttf
         //miriam_libre_regular.ttf
         //carmelitregular.ttf
@@ -331,12 +332,12 @@ public class BitmapInvoice {
         //// TODO: 09/01/2017   flag
         String names = "", in = "", out = "", total = "";
 
-        names += "מזומן" + "\n" + "אשראי" + "\n" + "המחאות"+"\n"+"קרן"+"\n"+"סה''כ";
+        names +=  "דולר אמריקאי" + "\n" + "יורו" + "\n" + "ליש\"ט" + "\n" + "מזומן" + "\n" + "אשראי" + "\n" + "המחאות"+"\n"+"קרן"+"\n"+"סה''כ";
 
 
-        in += dTS(cash_plus) + "\n" + dTS(creditCard_plus) + "\n" + dTS(check_plus)+"\n"+"~"+"\n"+dTS(cash_plus+check_plus+creditCard_plus);
-        out += dTS(cash_minus) + "\n" + dTS(creditCard_minus) + "\n" + dTS(check_minus)+"\n"+"~"+"\n"+dTS(cash_minus+check_minus+creditCard_minus);
-        total += dTS(cash_plus + cash_minus) + "\n" + dTS(creditCard_plus + creditCard_minus) + "\n" + dTS(check_plus + check_minus) + "\n" + starterAmount + "\n" +
+        in += dTS(usa_plus) +"\n" +dTS(eur_plus) +"\n" +dTS(gbp_plus) +"\n" +dTS(cash_plus) + "\n" + dTS(creditCard_plus) + "\n" + dTS(check_plus)+"\n"+"~"+"\n"+dTS(cash_plus+check_plus+creditCard_plus);
+        out += dTS(usa_minus) + "\n" +dTS(eur_minus) + "\n" +dTS(gbp_minus) + "\n" +dTS(cash_minus) + "\n" + dTS(creditCard_minus) + "\n" + dTS(check_minus)+"\n"+"~"+"\n"+dTS(cash_minus+check_minus+creditCard_minus);
+        total += dTS(0 + 0) + "\n" + dTS(0 + 0) + "\n" + dTS(0 + 0) + "\n" +  dTS(cash_plus + cash_minus) + "\n" +dTS(creditCard_plus + creditCard_minus) + "\n" + dTS(check_plus + check_minus) + "\n" + starterAmount + "\n" +
             dTS(cash_plus + cash_minus+creditCard_plus + creditCard_minus+check_plus + check_minus+starterAmount);
 
         StaticLayout slNames = new StaticLayout(names, orderTP,

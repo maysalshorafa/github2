@@ -5,13 +5,17 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.DashBoard;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
@@ -111,10 +115,39 @@ public class PrintTools {
 
 
         List<Payment> payments = paymentList(sales);
+        List<CashPayment> cashPayments = cashPaymentList(sales);
+
         double cash_plus=0,cash_minus=0;
         double check_plus=0,check_minus=0;
         double creditCard_plus=0,creditCard_minus=0;
+        double usd_plus=0,usd_minus=0;
+        double eur_plus=0,eur_minus=0;
+        double gbp_plus=0,gbp_minus=0;
 
+        for (CashPayment cashPayment : cashPayments) {
+            int i=0;
+            switch ((int) cashPayment.getCurrency_type()){
+
+                case 1:
+                    if(cashPayment.getAmount()>0)
+                        usd_plus+=cashPayment.getAmount();
+                    else
+                        usd_minus+=cashPayment.getAmount();
+                    break;
+                case 2:
+                    if(cashPayment.getAmount()>0)
+                        eur_plus+=cashPayment.getAmount();
+                    else
+                        eur_minus+=cashPayment.getAmount();
+                    break;
+                case 3:
+                    if(cashPayment.getAmount()>0)
+                        gbp_plus+=cashPayment.getAmount();
+                    else
+                        gbp_minus+=cashPayment.getAmount();
+                    break;
+            }
+        }
         for (Payment p : payments) {
             int i=0;
             switch (p.getPaymentWay()){
@@ -140,7 +173,7 @@ public class PrintTools {
             }
         }
 
-        return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
+        return BitmapInvoice.zPrint(context, zReport,0,usd_minus,eur_plus,eur_minus,gbp_plus,gbp_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
     }
 
     private List<Payment> paymentList(List<Sale> sales){
@@ -153,6 +186,20 @@ public class PrintTools {
         paymentDBAdapter.close();
         return pl;
     }
+    private List<CashPayment> cashPaymentList(List<Sale> sales){
+        List<CashPayment> cl=new ArrayList<CashPayment>();
+        CashPaymentDBAdapter cashPaymentDBAdapter=new CashPaymentDBAdapter(context);
+        cashPaymentDBAdapter.open();
+        for (Sale s : sales) {
+            cl.addAll(cashPaymentDBAdapter.getPaymentBySaleID(s.getId()));
+        }
+        cashPaymentDBAdapter.close();
+        return cl;
+    }
+
+
+
+
 
 
     public Bitmap createXReport(long endSaleId, long id, User user, Date date) {
