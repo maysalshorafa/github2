@@ -37,7 +37,6 @@ public class Coustmer extends AppCompatActivity {
 
         // Set up your ActionBar
         actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(android.app.ActionBar.NAVIGATION_MODE_LIST);
         // TODO: Remove the redundant calls to getSupportActionBar()
         //       and use variable actionBar instead
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

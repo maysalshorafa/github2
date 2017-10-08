@@ -56,26 +56,26 @@ public interface MessageType{
     String UPDATE_ORDER = "UpdateOrder";
     String DELETE_ORDER = "DeleteOrder";
 
-    String ADD_CurrencyOpearation = "AddCurrencyOpearation";
-    String UPDATE_CurrencyOpearation = "UpdateCurrencyOpearation";
-    String DELETE_CurrencyOpearation = "DeleteCurrencyOpearation";
+    String ADD_CURRENCY_OPEARATION = "AddCurrencyOpearation";
+    String UPDATE_CURRENCY_OPEARATION = "UpdateCurrencyOpearation";
+    String DELETE_CURRENCY_OPEARATION = "DeleteCurrencyOpearation";
 
 
-    String AddCashPayment = "AddCashPayment";
-    String UPDATE_CashPayment = "UpdateCashPayment";
-    String DELETE_CashPayment = "DeleteCashPayment";
+    String ADD_CASH_PAYMENT = "ADDCashPayment";
+    String UPDATE_CASH_PAYMENT = "UpdateCashPayment";
+    String DELETE_CASH_PAYMENT = "DeleteCashPayment";
 
-    String AddCustmerAssest = "AddCustmerAssest";
-    String UPDATE_CustmerAssest = "UpdateCustmerAssest";
-    String DELETE_CustmerAssest = "DeleteCustmerAssest";
+    String ADD_CUSTMER_ASSEST = "AddCustomerAssest";
+    String UPDATE_CUSTMER_ASSEST = "UpdateCustmerAssest";
+    String DELETE_CUSTMER_ASSEST = "DeleteCustmerAssest";
 
-    String AddCurrencyReturn = "AddCurrencyReturn";
-    String UPDATE_CurrencyReturn = "UpdateCurrencyReturn";
-    String DELETE_CurrencyReturn = "DeleteCurrencyReturn";
+    String ADD_CURRENCY_RETURN = "AddCurrencyReturn";
+    String UPDATE_CURRENCY_RETURN = "UpdateCurrencyReturn";
+    String DELETE_CURRENCY_RETURN = "DeleteCurrencyReturn";
 
-    String AddCurrencys = "AddCurrencys";
-    String UPDATE_Currencys = "UpdateCurrencys";
-    String DELETE_Currencys = "DeleteCurrencys";
+    String ADD_CURRENCYS = "AddCurrencys";
+    String UPDATE_CURRENCYS = "UpdateCurrencys";
+    String DELETE_CURRENCYS = "DeleteCurrencys";
 
 
 

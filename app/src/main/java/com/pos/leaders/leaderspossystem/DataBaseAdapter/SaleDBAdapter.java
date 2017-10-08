@@ -12,17 +12,19 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 19/10/2016.
  */
 
 public class SaleDBAdapter {
-	// Table Name
 	protected static final String SALES_TABLE_NAME = "sales";
 	// Column Names
 	protected static final String SALES_COLUMN_ID = "id";
@@ -66,23 +68,16 @@ public class SaleDBAdapter {
 
 
 
-	public int insertEntry(long byUser, Date saleDate, int replacementNote, boolean canceled, double totalPrice,double totalPaid,long custmer_id,String custmer_name) {
-		ContentValues val = new ContentValues();
-		val.put(SALES_COLUMN_ID, Util.idHealth(this.db, SALES_TABLE_NAME, SALES_COLUMN_ID));
-		//Assign values for each row.
-		val.put(SALES_COLUMN_BYUSER, byUser);
-		val.put(SALES_COLUMN_SALEDATE, new Date().getTime());
-		val.put(SALES_COLUMN_REPLACEMENTNOTE, replacementNote);
-		val.put(SALES_COLUMN_CANCELED, canceled);
-		val.put(SALES_COLUMN_TOTALPRICE, totalPrice);
-		val.put(SALES_COLUMN_TOTALPAID, totalPaid);
-		val.put(SALES_COLUMN__custmer_id, custmer_id);
-		val.put(SALES_COLUMN__custmer_name, custmer_name);
+	public long insertEntry(long byUser, Date saleDate, int replacementNote, boolean canceled, double totalPrice,double totalPaid,long custmer_id,String custmer_name) {
+
+		Sale sale = new Sale(Util.idHealth(this.db, SALES_TABLE_NAME, SALES_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name);
+
+		sendToBroker(MessageType.ADD_SALE, sale, this.context);
 
 		try {
-			return (int) db.insert(SALES_TABLE_NAME, null, val);
+			return insertEntry(sale);
 		} catch (SQLException ex) {
-			Log.e("Sales DB insert", "insatring Entry at " + SALES_TABLE_NAME + ": " + ex.getMessage());
+			Log.e("Sales DB insert", "inserting Entry at " + SALES_TABLE_NAME + ": " + ex.getMessage());
 			return 0;
 		}
 	}
@@ -91,25 +86,25 @@ public class SaleDBAdapter {
 		return insertEntry(sale.getByUser(), sale.getSaleDate(), sale.getReplacementNote(), sale.isCancelling(), sale.getTotalPrice(),sale.getTotalPaid(),_custmer_id,custmer_name);
 	}
 	public long insertEntry(Sale sale){
-        ContentValues val = new ContentValues();
-        val.put(SALES_COLUMN_ID,sale.getId());
-        //Assign values for each row.
-        val.put(SALES_COLUMN_BYUSER, sale.getByUser());
-        val.put(SALES_COLUMN_SALEDATE, sale.getSaleDate().getTime());
-        val.put(SALES_COLUMN_REPLACEMENTNOTE, sale.getReplacementNote());
-        val.put(SALES_COLUMN_CANCELED, sale.isCancelling()?1:0);
-        val.put(SALES_COLUMN_TOTALPRICE, sale.getTotalPrice());
-        val.put(SALES_COLUMN_TOTALPAID, sale.getTotalPaid());
-        val.put(SALES_COLUMN__custmer_id, sale.getCustmer_id());
-        val.put(SALES_COLUMN__custmer_name, sale.getCustmer_name());
+		ContentValues val = new ContentValues();
+		val.put(SALES_COLUMN_ID,sale.getId());
+		//Assign values for each row.
+		val.put(SALES_COLUMN_BYUSER, sale.getByUser());
+		val.put(SALES_COLUMN_SALEDATE, sale.getSaleDate().getTime());
+		val.put(SALES_COLUMN_REPLACEMENTNOTE, sale.getReplacementNote());
+		val.put(SALES_COLUMN_CANCELED, sale.isCancelling()?1:0);
+		val.put(SALES_COLUMN_TOTALPRICE, sale.getTotalPrice());
+		val.put(SALES_COLUMN_TOTALPAID, sale.getTotalPaid());
+		val.put(SALES_COLUMN__custmer_id, sale.getCustomer_id());
+		val.put(SALES_COLUMN__custmer_name, sale.getCustomer_name());
 
-        try {
-            return db.insert(SALES_TABLE_NAME, null, val);
-        } catch (SQLException ex) {
-            Log.e("Sales DB insert", "inserting Entry at " + SALES_TABLE_NAME + ": " + ex.getMessage());
-            return 0;
-        }
-    }
+		try {
+			return db.insert(SALES_TABLE_NAME, null, val);
+		} catch (SQLException ex) {
+			Log.e("Sales DB insert", "inserting Entry at " + SALES_TABLE_NAME + ": " + ex.getMessage());
+			return 0;
+		}
+	}
 
 	public Sale getSaleByID(long id) {
 		Sale sale = null;
@@ -178,19 +173,19 @@ public class SaleDBAdapter {
 		return userSaleList;
 	}
 
-    public List<Sale> getBetween(long from, long to){
-        List<Sale> saleList = new ArrayList<Sale>();
-        Cursor cursor = db.rawQuery("select * from "+SALES_TABLE_NAME+" where "+SALES_COLUMN_ID+" <= "+to+" and "+SALES_COLUMN_ID +" >= "+from,null);
-        //Cursor cursor = db.rawQuery("select * from "+SALES_TABLE_NAME+" where "+SALES_COLUMN_SALEDATE+" <= "+to+" and "+SALES_COLUMN_SALEDATE +" >= "+from,null);
-        cursor.moveToFirst();
+	public List<Sale> getBetween(long from, long to){
+		List<Sale> saleList = new ArrayList<Sale>();
+		Cursor cursor = db.rawQuery("select * from "+SALES_TABLE_NAME+" where "+SALES_COLUMN_ID+" <= "+to+" and "+SALES_COLUMN_ID +" >= "+from,null);
+		//Cursor cursor = db.rawQuery("select * from "+SALES_TABLE_NAME+" where "+SALES_COLUMN_SALEDATE+" <= "+to+" and "+SALES_COLUMN_SALEDATE +" >= "+from,null);
+		cursor.moveToFirst();
 
-        while (!cursor.isAfterLast()) {
-            saleList.add(makeSale(cursor));
-            cursor.moveToNext();
-        }
+		while (!cursor.isAfterLast()) {
+			saleList.add(makeSale(cursor));
+			cursor.moveToNext();
+		}
 
-        return saleList;
-    }
+		return saleList;
+	}
 
 	public List<Sale> getBetweenTwoDates(long from, long to){
 		List<Sale> saleList = new ArrayList<Sale>();
@@ -198,29 +193,29 @@ public class SaleDBAdapter {
 		cursor.moveToFirst();
 
 		while (!cursor.isAfterLast()) {
-            if (cursor.getInt(cursor.getColumnIndex(SALES_COLUMN_CANCELED)) < 1)
-                saleList.add(makeSale(cursor));
+			if (cursor.getInt(cursor.getColumnIndex(SALES_COLUMN_CANCELED)) < 1)
+				saleList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
 
 		return saleList;
 	}
 
-    public Sale getLast(){
-        Sale sale = null;
-        Cursor cursor = db.rawQuery("select * from " + SALES_TABLE_NAME + " order by id desc", null);
+	public Sale getLast(){
+		Sale sale = null;
+		Cursor cursor = db.rawQuery("select * from " + SALES_TABLE_NAME + " order by id desc", null);
 
-        if (cursor.getCount() < 1) // don`t have any sale yet
-        {
-            cursor.close();
-            return sale;
-        }
-        cursor.moveToFirst();
-        sale = new Sale(makeSale(cursor));
-        cursor.close();
+		if (cursor.getCount() < 1) // don`t have any sale yet
+		{
+			cursor.close();
+			return sale;
+		}
+		cursor.moveToFirst();
+		sale = new Sale(makeSale(cursor));
+		cursor.close();
 
-        return sale;
-    }
+		return sale;
+	}
 
 	private Sale makeSale(Cursor cursor){
 		try {

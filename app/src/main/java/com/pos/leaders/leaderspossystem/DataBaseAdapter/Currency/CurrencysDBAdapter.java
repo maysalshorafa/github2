@@ -8,19 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
-import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currencys;
-import com.pos.leaders.leaderspossystem.Models.Customer_M;
-import com.pos.leaders.leaderspossystem.Models.Department;
-import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
@@ -74,7 +67,7 @@ public class CurrencysDBAdapter {
 
     public long insertEntry(String name, String currency_code, String country, long rate,Date createDate) {
         Currencys currencys = new Currencys(Util.idHealth(this.db, Currency_TABLE_NAME, Currency_COLUMN_ID), name, currency_code, country,rate,createDate);
-        sendToBroker(MessageType.AddCashPayment, currencys, this.context);
+        sendToBroker(MessageType.ADD_CASH_PAYMENT, currencys, this.context);
 
         try {
             return insertEntry(currencys);

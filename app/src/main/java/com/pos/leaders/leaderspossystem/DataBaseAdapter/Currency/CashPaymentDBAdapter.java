@@ -7,11 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
-import com.pos.leaders.leaderspossystem.Models.Currency.Currencys;
-import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -36,7 +33,7 @@ public class CashPaymentDBAdapter {
     protected static final String CashPAYMENT_COLUMN_CREATEDATE = "createDate";
 
 
-    public static final String DATABASE_CREATE = "CREATE TABLE `payment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `paymentWay` TEXT NOT NULL, `amount` REAL NOT NULL, `currency_type` INTEGER`,'createDate'  TEXT DEFAULT current_timestamp)";
+    public static final String DATABASE_CREATE = "CREATE TABLE `CashPayment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `saleId` INTEGER, `amount` REAL NOT NULL, `currency_type` INTEGER`,'createDate'  TEXT DEFAULT current_timestamp)";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -64,7 +61,7 @@ public class CashPaymentDBAdapter {
 
     public long insertEntry(long saleId, double amount, long currency_type, Date createDate) {
         CashPayment payment = new CashPayment(Util.idHealth(this.db, CashPAYMENT_TABLE_NAME, CashPAYMENT_COLUMN_ID), saleId, amount, currency_type,createDate);
-        sendToBroker(MessageType.AddCashPayment, payment, this.context);
+        sendToBroker(MessageType.ADD_CASH_PAYMENT, payment, this.context);
 
         try {
             return insertEntry(payment);
@@ -111,7 +108,7 @@ public class CashPaymentDBAdapter {
     public List<CashPayment> getPaymentBySaleID(long saleID) {
         List<CashPayment> salePaymentList = new ArrayList<CashPayment>();
 
-        Cursor cursor = db.rawQuery("select * from " + CashPAYMENT_TABLE_NAME +" where "+CashPAYMENT_COLUMN_ID+"="+saleID, null);
+        Cursor cursor = db.rawQuery("select * from " + CashPAYMENT_TABLE_NAME +" where "+CashPAYMENT_COLUMN_SALEID+"="+saleID, null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
@@ -128,5 +125,15 @@ public class CashPaymentDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_AMOUNT))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CurencyType))),DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CREATEDATE))));
     }
+    public double getSumOftype(int currencyType, long from,long to) {
+
+          Cursor cur = db.rawQuery("SELECT SUM(amount) from " +  CashPAYMENT_TABLE_NAME + "  where "+ CashPAYMENT_COLUMN_CurencyType+"=" + currencyType +" and " + CashPAYMENT_COLUMN_SALEID +" <= " + to + " and " + CashPAYMENT_COLUMN_SALEID +" >= "+from, null);
+        if (cur.moveToFirst()) {
+            return cur.getLong(0);
+        }
+        return  0;
+    }
+
+
 
 }

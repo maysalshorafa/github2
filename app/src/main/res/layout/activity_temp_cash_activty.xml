@@ -20,12 +20,24 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="12dp"
-            android:orientation="vertical"
+            android:orientation="horizontal"
 
             >
 
-        <TextView
-                    android:layout_width="match_parent"
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Custmer Name"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                />
+
+
+            <TextView
+                    android:layout_width="400dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:gravity="center"
@@ -43,79 +55,139 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:weightSum="1">
-
                 <TextView
-                    android:id="@+id/cashActivity_TVRequired"
-                    android:layout_width="wrap_content"
+                    android:layout_width="200dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="@color/black"
                     android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:text="Sale Total Price"/>
+
+                <TextView
+                    android:id="@+id/cashActivity_TVRequired"
+                    android:layout_width="400dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/Custmername"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
                     android:textStyle="bold" />
 
             </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:text="Total Paid"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
+
+            <EditText
+                android:id="@+id/cashActivity_TVTotalInserted"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:inputType="number"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/Gray"
+                android:textSize="20dp"
+
+                android:text="Choose First Currency  "/>
+
+
+            <EditText
+                android:id="@+id/cashActivity_TVTotalInsertedForfirstCurrency"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:inputType="number"
+                android:text="0"
+
+               />
+
+
+
+            <Spinner
+                android:id="@+id/spinnerForFirstCurrency"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="1">
+                android:layout_gravity="center"
+                ></Spinner>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/Gray"
+                android:textSize="20dp"
 
-                <EditText
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:id="@+id/cashActivity_TVTotalInserted"
-                    android:inputType="number"
-                    android:text="0"
-                 />
-                <EditText
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:id="@+id/cashActivity_TVTotalInsertedForfirstCurrency"
-                    android:inputType="number"
-                    android:text="0"
-              />
+                android:text="Choose Second Currency  "/>
 
-                <Spinner
-                    android:id="@+id/spinnerForFirstCurrency"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    ></Spinner>
-                <EditText
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:id="@+id/cashActivity_TVTotalInsertedForSecondCurrency"
-                    android:inputType="number"
-                  android:text="0"  />
 
-                <Spinner
-                    android:id="@+id/spinnerForSecondCurrency"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    ></Spinner>
+            <EditText
+                android:id="@+id/cashActivity_TVTotalInsertedForSecondCurrency"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:inputType="number"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                />
 
-            </LinearLayout>
+
+
+            <Spinner
+                android:id="@+id/spinnerForSecondCurrency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                ></Spinner>
+        </LinearLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -125,15 +197,24 @@
                 android:weightSum="1">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="62dp"
+                    android:layout_width="200dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold"
+                    android:text="Total Return"/>
+
+                <TextView
+                    android:layout_width="379dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
                     android:id="@+id/cashActivity_TVExcess"
-                    android:layout_marginLeft="40dp"
                     />
                 <Spinner
                     android:id="@+id/spinnerForReturnValue"

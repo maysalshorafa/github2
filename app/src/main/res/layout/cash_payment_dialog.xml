@@ -6,37 +6,29 @@
     android:layoutDirection="ltr">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <EditText
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-
             android:id="@+id/cashPaymentDialog_TECash"
+            android:layout_width="120dp"
+
+            android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:inputType="numberDecimal"
             android:layout_weight="1"
             android:background="@drawable/edit_text_style"
-            android:textAlignment="center"/>
+            android:inputType="numberDecimal"
+            android:textAlignment="center" />
 
         <Switch
-            android:text="@string/proportion"
-            android:layout_height="wrap_content"
             android:id="@+id/cashPaymentDialog_SwitchProportion"
-            android:layout_width="240dp" />
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="140dp"
+            android:layout_width="240dp"
             android:layout_height="wrap_content"
-            android:visibility="gone"></Spinner>
+            android:text="@string/proportion" />
+
 
     </LinearLayout>
-
-
-
 
 
     <LinearLayout

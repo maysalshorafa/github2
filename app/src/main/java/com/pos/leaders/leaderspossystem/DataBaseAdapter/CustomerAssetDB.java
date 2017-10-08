@@ -63,7 +63,7 @@ public class CustomerAssetDB {
    
     public long insertEntry(long order_id,long user_id,double amount,int type,String salescase) {
         CustomerAssest assest = new CustomerAssest(Util.idHealth(this.db, CustmerAsset_TabelName, CustmerAssest_Id), order_id, user_id, amount,type,salescase);
-        sendToBroker(MessageType.AddCustmerAssest, assest, this.context);
+        sendToBroker(MessageType.ADD_CUSTMER_ASSEST, assest, this.context);
 
         try {
             return insertEntry(assest);

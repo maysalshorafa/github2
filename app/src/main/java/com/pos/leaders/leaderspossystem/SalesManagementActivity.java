@@ -48,7 +48,7 @@ import POSSDK.POSSDK;
  * Editing by KARAM on 10/04/2016.
  */
 public class SalesManagementActivity extends Activity {
-TextView custmer;
+    TextView custmer;
     ListView lvSales;
     EditText etFrom, etTo;
     SaleDBAdapter saleDBAdapter;
@@ -57,7 +57,7 @@ TextView custmer;
     private static final int DIALOG_FROM_DATE = 825;
     private static final int DIALOG_TO_DATE = 324;
     Date from, to;
-String custmer_name;
+    String custmer_name;
     SaleManagementListViewAdapter adapter;
     View previousView = null;
 
@@ -69,10 +69,10 @@ String custmer_name;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_management);
-custmer = (TextView) findViewById(R.id.sales_custmer_name);
+        custmer = (TextView) findViewById(R.id.sales_custmer_name);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-custmer_name=(String)extras.get("_custmer");
+            custmer_name=(String)extras.get("_custmer");
             custmer.setText(custmer_name);
         } else {
             finish();
@@ -233,7 +233,7 @@ custmer_name=(String)extras.get("_custmer");
                         else
                             print(invoiceImg.cancelingInvoice(sale, false, null));
                         sale.setPayment(new Payment(payments.get(0)));
-                        int sID = saleDBAdapter.insertEntry(SESSION._USER.getId(), new Date(), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaid() * -1,sale.getCustmer_id(),sale.getCustmer_name());
+                        long sID = saleDBAdapter.insertEntry(SESSION._USER.getId(), new Date(), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaid() * -1,sale.getCustomer_id(),sale.getCustomer_name());
 
                         saleDBAdapter.close();
                         PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(SalesManagementActivity.this);

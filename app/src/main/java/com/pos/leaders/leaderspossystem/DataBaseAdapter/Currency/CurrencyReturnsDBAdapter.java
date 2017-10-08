@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -34,7 +33,7 @@ public class CurrencyReturnsDBAdapter {
 
     protected static final String CurrencyReturns_COLUMN_CurencyType = "currency_type";
 
-    public static final String DATABASE_CREATE = "CREATE TABLE `payment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `paymentWay` TEXT NOT NULL, `amount` REAL NOT NULL,'createDate'  TEXT DEFAULT current_timestamp, `currency_type` INTEGER)";
+    public static final String DATABASE_CREATE = "CREATE TABLE `CurrencyReturns` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `saleId` INTEGER, `amount` REAL NOT NULL,'createDate'  TEXT DEFAULT current_timestamp, `currency_type` INTEGER)";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -62,7 +61,7 @@ public class CurrencyReturnsDBAdapter {
 
     public long insertEntry(long saleId, double amount, Date createDate , long currency_type) {
         CurrencyReturns returns = new CurrencyReturns(Util.idHealth(this.db, CurrencyReturnsDBAdapterTabelName, CurrencyReturns_COLUMN_ID), saleId, amount,createDate, currency_type);
-        sendToBroker(MessageType.AddCurrencyReturn, returns, this.context);
+        sendToBroker(MessageType.ADD_CURRENCY_RETURN, returns, this.context);
 
         try {
             return insertEntry(returns);
@@ -109,7 +108,7 @@ public class CurrencyReturnsDBAdapter {
     public List<CurrencyReturns> getCurencyReturnBySaleID(long saleID) {
         List<CurrencyReturns> saleReturns = new ArrayList<CurrencyReturns>();
 
-        Cursor cursor = db.rawQuery("select * from " + CurrencyReturnsDBAdapterTabelName +" where "+CurrencyReturns_COLUMN_ID+"="+saleID, null);
+        Cursor cursor = db.rawQuery("select * from " + CurrencyReturnsDBAdapterTabelName +" where "+CurrencyReturns_COLUMN_SALEID+"="+saleID, null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
@@ -128,4 +127,13 @@ public class CurrencyReturnsDBAdapter {
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CurrencyReturns_COLUMN_CurencyType))));
     }
 
+    public double getSumOftype(int currencyType, long from,long to) {
+
+             Cursor cur = db.rawQuery("SELECT SUM(amount) from " +  CurrencyReturnsDBAdapterTabelName + "  where "+ CurrencyReturns_COLUMN_CurencyType+"=" + currencyType +" and " + CurrencyReturns_COLUMN_SALEID +" <= " + to + " and " + CurrencyReturns_COLUMN_SALEID +" >= "+from, null);
+        if (cur.moveToFirst()) {
+            return cur.getLong(0);
+
+        }
+        return  0;
+    }
 }
