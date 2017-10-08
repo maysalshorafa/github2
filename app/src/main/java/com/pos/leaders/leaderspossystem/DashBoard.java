@@ -1,60 +1,72 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.AlarmManager;
-
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Dash_bord_adapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Tools.CurrencyCatlogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
-public class DashBoard extends Activity{
+public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    android.support.v7.app.ActionBar actionBar;
     public static final String PREFS_NAME = "Time_Pref";
     private boolean enableBackButton = true;
-
+    DateFormat format;
     ImageView im;
     GridView grid;
     String permissions_name;
-    PopupWindow popupWindow;
-    EditText custmer_id;
-    TextView btLogOut;
     AReportDBAdapter aReportDBAdapter;
     User user=new User();
     UserDBAdapter userDBAdapter;
-    AReport aReport=new AReport();
     ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
-
+    long currencyType;
     String[] dashbord_text = {
             "Main Screen",
             "Report",
@@ -84,33 +96,48 @@ public class DashBoard extends Activity{
 
 
     };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Remove title bar
-        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // Remove notification bar
-        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_dash_board);
-     //  this.getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,R.layout.title_bar);
+
+        final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
+                R.layout.title_bar,
+                null);
+
+        // Set up your ActionBar
+        actionBar = getSupportActionBar();
+        // TODO: Remove the redundant calls to getSupportActionBar()
+        //       and use variable actionBar instead
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(actionBarLayout);
+         long date;
+        Calendar ca = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        // You customization
+        final int actionBarColor = getResources().getColor(R.color.primaryColor);
+        actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
+
+        final TextView actionBarTitle = (TextView) findViewById(R.id.editText8);
+        actionBarTitle.setText(format.format(ca.getTime()));
+        final TextView actionBarSent = (TextView) findViewById(R.id.editText9);
+        actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
 
 
-      //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        final TextView actionBarStaff = (TextView) findViewById(R.id.editText10);
+        actionBarStaff.setText(SESSION._USER.getFullName());
 
-
-
-
-        // Remove notification bar
-       // this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-        //setContentView(R.layout.activity_dash_board);
-        //getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
-
-		
-		
+        final TextView actionBarLocations = (TextView) findViewById(R.id.editText11);
+        actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
         im = (ImageView) findViewById(R.id.home);
         Dash_bord_adapter adapter = new Dash_bord_adapter(DashBoard.this, dashbord_text, imageId);
         aReportDBAdapter=new AReportDBAdapter(this);
@@ -131,60 +158,9 @@ public class DashBoard extends Activity{
                                     View v, int position, long id) {
                 // Send intent to SingleViewActivity
                 onClickedImage(position);
-
-
-                // Intent i = new Intent(getApplicationContext(), SingleViewActivity.class);
-                // Pass image index
-                // i.putExtra("id", position);
-                //startActivity(i);
             }
         });
-
-/**
-
-        btLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DashBoard.this, LogInActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                try {
-                    scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getId(), new Date());
-                    SESSION._SCHEDULEWORKERS.setExitTime(new Date());
-                    Log.i("Worker get out", SESSION._SCHEDULEWORKERS.toString());
-                }
-                catch (Exception ex) {
-                }
-                SESSION._LogOut();
-                startActivity(intent);
-            }
-        });**/
         }
-
-
-  /**  public void alertdialoge() {
-        AlertDialog alertDialog1 = new AlertDialog.Builder(DashBoard.this).create();
-        alertDialog1.setTitle("Alert");
-        alertDialog1.setMessage("This Payment With Custmer");
-        alertDialog1.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                   callPopup();
-
-                    }
-                });
-        alertDialog1.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(i);
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog1.show();
-
-
-    }**/
 
     public void onClickedImage(int pos) {
         Intent i;
@@ -203,35 +179,6 @@ public class DashBoard extends Activity{
                     i = new Intent(getApplicationContext(), MainActivity.class);
                     i.putExtra("permissions_name",permissions_name);
                     startActivity(i);
- /**
-  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-  Date dateToday = new Date();
-
-  String date = sdf.format(dateToday);
-  String s = Objects.toString(aReport.getCreationDate(), null); if(!(user.getId()==aReport.getByUserID()&& date==s)){
-
-       final AlertDialog alertDialog = new AlertDialog.Builder(DashBoard.this).create();
-       alertDialog.setTitle("Alert");
-       alertDialog.setMessage("Did you create A report?");
-       alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
-               new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int which) {
-                       Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                       startActivity(i);
-                       dialog.dismiss();
-                   }
-               });
-       alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
-               new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int which) {
-                       Intent i = new Intent(getApplicationContext(), UserAttendanceReport.class);
-                       startActivity(i);
-                       dialog.dismiss();
-                   }
-               });
-       alertDialog.show();**/
-
 
                     }
 
@@ -411,8 +358,10 @@ public class DashBoard extends Activity{
 
         final AReport _aReport = new AReport();
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(this);
+
         zReportDBAdapter.open();
         ZReport zReport = null;
+        CurrencyOperation currencyOperation=null;
         try {
             zReport = zReportDBAdapter.getLastRow();
         } catch (Exception e) {
@@ -456,7 +405,10 @@ public class DashBoard extends Activity{
         }
     }
 
-    private void ShowAReportDialog(final AReport aReport){
+    private void ShowAReportDialog(final AReport aReport) {
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
+        currencyTypeDBAdapter.open();
+
 
         //there is no a report after z report
         enableBackButton = false;
@@ -471,7 +423,9 @@ public class DashBoard extends Activity{
         btCancel.setVisibility(View.GONE);
         final EditText et = (EditText) discountDialog.findViewById(R.id.cashPaymentDialog_TECash);
         final Switch sw = (Switch) discountDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
+    //    final Spinner spinner = (Spinner) discountDialog.findViewById(R.id.spinner);
         sw.setVisibility(View.GONE);
+  //      spinner.setVisibility(View.VISIBLE);
         discountDialog.setCanceledOnTouchOutside(false);
 
 
@@ -486,66 +440,76 @@ public class DashBoard extends Activity{
             }
         });
 
-        btOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String str = et.getText().toString();
-                if (!str.equals("")) {
-                    aReport.setAmount(Double.parseDouble(str));
-                    AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBoard.this);
-                    aReportDBAdapter.open();
-                    aReportDBAdapter.insertEntry(aReport);
-                    aReportDBAdapter.close();
-                    discountDialog.cancel();
-                }
+        // Spinner click listener
+     /**   spinner.setOnItemSelectedListener(this);
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        if(currencyTypesList==null){
+            Toast.makeText(DashBoard.this, "Selected: Nulll " , Toast.LENGTH_LONG).show();
 
-            }
-        });
+        }
+        List<String> currency = new ArrayList<String>();
+        for (int i = 0;  i < currencyTypesList.size(); i++) {
+            currency.add(currencyTypesList.get(i).getType());
+        }
 
-        btCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //discountDialog.cancel();
-            }
-        });
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currency);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinner.setAdapter(dataAdapter);
+
+**/
+        btOK.setOnClickListener(new View.OnClickListener()
+
+    {
+        @Override
+        public void onClick (View v){
+        String str = et.getText().toString();
+        if (!str.equals("")) {
+            aReport.setAmount(Double.parseDouble(str));
+            AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBoard.this);
+            aReportDBAdapter.open();
+        /**    CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(DashBoard.this);
+            currencyOperationDBAdapter.open();
+            aReportDBAdapter.insertEntry(aReport);
+            currencyOperationDBAdapter.insertEntry(aReport.getCreationDate(), aReport.getId(), "a_report", aReport.getAmount(), currencyType);
+         currencyOperationDBAdapter.close();
+         **/
+
+            aReportDBAdapter.close();
+            discountDialog.cancel();
+        }
+
+    }
+    });
+
+        btCancel.setOnClickListener(new View.OnClickListener()
+
+    {
+        @Override
+        public void onClick (View v){
+        //discountDialog.cancel();
+    }
+    });
         discountDialog.show();
 
-         }
 
-/**    private void callPopup() {
+}
 
-        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
-                .getSystemService(LAYOUT_INFLATER_SERVICE);
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+currencyType=parent.getSelectedItemId();
+        Toast.makeText(DashBoard.this,"mays"+currencyType,Toast.LENGTH_LONG).show();
+    }
 
-        View popupView = layoutInflater.inflate(R.layout.pop_up, null);
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
-        popupWindow = new PopupWindow(popupView,
-                ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.MATCH_PARENT,
-                true);
-
-        popupWindow.setTouchable(true);
-        popupWindow.setFocusable(true);
-
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-        custmer_id = (EditText) popupView.findViewById(R.id.custmer_id);
-
-        ((Button) popupView.findViewById(R.id.btn_add))
-                .setOnClickListener(new View.OnClickListener() {
-
-                    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-                    public void onClick(View arg0) {
-                        Toast.makeText(getApplicationContext(),
-                                custmer_id.getText().toString(),Toast.LENGTH_LONG).show();
-                     //   String s= custmer_id.getText().toString();
-
-                 Intent i = new Intent(DashBoard.this, MainActivity.class);
-                 //       i.putExtra("custmer_id",s);
-                        startActivity(i);
-
-                        popupWindow.dismiss();
-
-                }});
+    }
 
 
-    }**/
+
 }

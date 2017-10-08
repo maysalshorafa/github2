@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 /**
  * Created by Win8.1 on 7/31/2017.
@@ -54,7 +55,11 @@ public class Rule3DbAdapter {
     public long insertEntry(Rule3 rule3){
         ContentValues val = new ContentValues();
         //Assign values for each row.
+<<<<<<< HEAD
         val.put(Rule3_COLUMN_ID,rule3.getId());
+=======
+        val.put(Rule3_COLUMN_ID, Util.idHealth(this.db, Rule3_TABLE_NAME, Rule3_COLUMN_ID));
+>>>>>>> mays-sameer
 
         val.put(Rule3_COLUMN_PERCENT,rule3.getPercent());
         val.put(Rule3_COLUMN_Contain,rule3.getContain());

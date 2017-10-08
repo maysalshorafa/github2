@@ -6,6 +6,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -26,6 +29,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
@@ -39,7 +43,9 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;
@@ -54,6 +60,7 @@ import jxl.read.biff.BiffException;
  */
 
 public class ProductCatalogActivity extends AppCompatActivity {
+    android.support.v7.app.ActionBar actionBar;
 
     private Button btCreate, btImport;
     EditText etSearch;
@@ -90,7 +97,6 @@ public class ProductCatalogActivity extends AppCompatActivity {
         btAll.setPressed(true);
 
         prseedButtonDepartments = btAll;
-
         filter_productsList = productDBAdapter.getTopProducts(productLoadItemOffset,productCountLoad);
         productsList = filter_productsList;
         adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
@@ -111,14 +117,13 @@ public class ProductCatalogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-
         setContentView(R.layout.activity_product_catalog);
+
+        getWindow().getDecorView().setBackgroundColor(Color.WHITE);
 
         btCreate = (Button) findViewById(R.id.productCatalog_BTCreateNewProduct);
         btImport = (Button) findViewById(R.id.productCatalog_BTImport);
@@ -126,6 +131,11 @@ public class ProductCatalogActivity extends AppCompatActivity {
         etSearch = (EditText) findViewById(R.id.productCatalog_ETSearch);
         llDepartments=(LinearLayout)findViewById(R.id.productCatalog_LLDepartment);
 
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        layoutParams.setMargins(0, 10, 10, 40);
 
 
 
@@ -282,17 +292,23 @@ public class ProductCatalogActivity extends AppCompatActivity {
         });
 
         //region Departments
-
-
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        params.setMargins(2,6, 6, 2);
 
         departmentDBAdapter=new DepartmentDBAdapter(this);
         departmentDBAdapter.open();
         for (Department d : departmentDBAdapter.getAllDepartments()) {
             Button bt = new Button(this);
+            bt.setLayoutParams(params);
+
             //bt.setId(d.getId());
             bt.setText(d.getName());
             bt.setTextAppearance(this, R.style.TextAppearance);
-            bt.setBackground(getResources().getDrawable(R.drawable.btn_secondary));
+            bt.setBackground(getResources().getDrawable(R.drawable.bt_normal));
+
+
+
             bt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -313,7 +329,8 @@ public class ProductCatalogActivity extends AppCompatActivity {
                 }
             });
 
-            llDepartments.addView(bt);
+          //  llDepartments.addView(bt);
+            llDepartments.addView(bt, layoutParams);
         }
 
         btAll = new Button(this);
@@ -321,10 +338,9 @@ public class ProductCatalogActivity extends AppCompatActivity {
         btAll.setText(getResources().getText(R.string.all));
         btAll.setTextAppearance(this, R.style.TextAppearance);
         btAll.setPressed(true);
-        btAll.setBackground(getResources().getDrawable(R.drawable.btn_secondary));
-        llDepartments.addView(btAll);
+        btAll.setBackground(getResources().getDrawable(R.drawable.bt_normal));
+        llDepartments.addView(btAll,layoutParams);
         prseedButtonDepartments = btAll;
-
         btAll.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

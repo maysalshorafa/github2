@@ -84,7 +84,7 @@ public class CreditCardActivity extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width * 0.5), (int) (height * 0.4));
+        getWindow().setLayout((int) (width * 0.6), (int) (height * 0.5));
 
         //etFirstPayment=(EditText)findViewById(R.id.creditCardActivity_etFirstPayment);
         etNumberOfPayments = (EditText) findViewById(R.id.creditCardActivity_etNumberOfPayments);
@@ -119,9 +119,9 @@ custmer_name=(TextView)findViewById(R.id.custmer_name);
             isByPhone = true;
             CreditCardByPhone fTP = new CreditCardByPhone();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.byPhoneFragment_fl, fTP);
+        transaction.add(R.id.byPhoneFragment_fl, fTP);
             transaction.commit();
-            getWindow().setLayout((int) (width * 0.5), (int) (height * 0.5));
+            getWindow().setLayout((int) (width * 0.6), (int) (height * 0.6));
         }
 
         btOK.setOnClickListener(new View.OnClickListener() {

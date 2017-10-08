@@ -3,7 +3,7 @@
     <item
         android:state_pressed="true"
         android:state_enabled="true"
-        android:drawable="@drawable/bt_dark_pressed" />
+        android:drawable="@drawable/header_text" />
     <item
         android:state_enabled="true"
         android:drawable="@drawable/bt_dark_enabled" />

@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -69,6 +70,8 @@ public class AReportDBAdapter {
     public long insertEntry(long createDate, long byUser, double amount, long lastSaleID,long lastZReport) {
         AReport aReport = new AReport(Util.idHealth(this.db, A_REPORT_TABLE_NAME, A_REPORT_COLUMN_ID), createDate, byUser, amount, lastSaleID, lastZReport);
         sendToBroker(MessageType.ADD_A_REPORT, aReport, this.context);
+
+
 
         try {
             long insertResult = insertEntry(aReport);

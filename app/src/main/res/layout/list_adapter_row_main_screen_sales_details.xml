@@ -156,8 +156,8 @@
         android:layout_height="wrap_content"
         android:text="Sales Man"
         tools:layout_editor_absoluteX="350dp"
-        android:textSize="30sp"
-        android:textColor="@color/black"
+        android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@+id/rowSaleDetails_LLMethods"
-        android:layout_marginBottom="-99dp" />
+        android:layout_marginBottom="-99dp"
+        android:textColor="@color/black"/>
 </android.support.constraint.ConstraintLayout>
