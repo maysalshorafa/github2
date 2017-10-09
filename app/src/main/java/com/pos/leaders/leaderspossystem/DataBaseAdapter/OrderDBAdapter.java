@@ -68,6 +68,28 @@ public class OrderDBAdapter {
 		return db;
 	}
 
+	public long insertEntry(long productId, int counter, double userOffer, long saleId) {
+		ContentValues val = new ContentValues();
+		if(isEmpty){
+            val.put(ORDER_COLUMN_ID, Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID));
+			isEmpty = false;
+		}
+		//Assign values for each row.
+		val.put(ORDER_COLUMN_PRODUCTID, productId);
+		val.put(ORDER_COLUMN_COUNTER, counter);
+		val.put(ORDER_COLUMN_USEROFFER, userOffer);
+		val.put(ORDER_COLUMN_SALEID, saleId);
+		try {
+			return db.insert(ORDER_TABLE_NAME, null, val);
+		} catch (SQLException ex) {
+			Log.e("Order DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
+			return 0;
+		}
+	}
+
+
+
+
 	public long insertEntry(Order o){
         ContentValues val = new ContentValues();
         val.put(ORDER_COLUMN_ID, o.getId());

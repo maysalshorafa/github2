@@ -19,12 +19,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperati
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencysDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.*;
-import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
-import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
-import com.pos.leaders.leaderspossystem.Tools.Util;
 
 /**
  * Created by Karam on 16/10/2016.
@@ -64,10 +58,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // TODO Auto-generated method stub
-
-
-
 
         //offers
         db.execSQL(Rule1DBAdapter.DATABASE_CREATE);
@@ -98,8 +88,6 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CurrencysDBAdapter.DATABASE_CREATE);
         db.execSQL(CurrencyTypeDBAdapter.DATABASE_CREATE);
 
-
-
         db.execSQL(PermissionsDBAdapter.DATABASE_CREATE);
         db.execSQL(ProductDBAdapter.DATABASE_CREATE);
         db.execSQL(ProductOfferDBAdapter.DATABASE_CREATE);
@@ -115,19 +103,10 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(AReportDBAdapter.DATABASE_CREATE);
 
 
-
-
-
-
-
         List<String> tblNames = tablesName(db);
         String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
         db.execSQL(dbc);
         db.execSQL(IdsCounterDBAdapter.INIT(tblNames));
-
-
-
-
 
 
     }

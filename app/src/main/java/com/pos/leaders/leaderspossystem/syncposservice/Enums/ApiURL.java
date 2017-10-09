@@ -29,7 +29,7 @@ public interface ApiURL {
     String CurrencyOpearation = "CurrencyOpearation";
     String CashPayment= "CashPayment";
     String CustmerAssest= "CustmerAssest";
-
+    String CompanyCredentials = "CompanyCredentials";
     String Currencys= "Currencys";
     String Sync = "sync";
 }

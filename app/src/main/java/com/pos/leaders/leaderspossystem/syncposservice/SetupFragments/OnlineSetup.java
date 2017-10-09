@@ -52,7 +52,7 @@ public class OnlineSetup extends Fragment {
                     ProgressDialog progressDialog = new ProgressDialog(context);
                     progressDialog.setTitle("Please Wait");
                     progressDialog.show();
-
+/*
                     StartConnection startConnection = new StartConnection();
                     startConnection.execute(etKey.getText().toString(),uuid);
                     try {
@@ -83,7 +83,7 @@ public class OnlineSetup extends Fragment {
 
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                 }
             }
         });
@@ -91,7 +91,7 @@ public class OnlineSetup extends Fragment {
         return rootView;
     }
 }
-
+/*
 class StartConnection extends AsyncTask<String,Void,String>{
     MessageTransmit messageTransmit;
 
@@ -126,7 +126,7 @@ class StartConnection extends AsyncTask<String,Void,String>{
     }
 }
 
-
+/*
 class AccessToken extends AsyncTask<Context,Void,Boolean>{
     MessageTransmit messageTransmit;
 
@@ -162,3 +162,4 @@ class AccessToken extends AsyncTask<Context,Void,Boolean>{
     }
 }
 
+*/

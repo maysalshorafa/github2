@@ -29,10 +29,12 @@ public class MessageTransmit {
     private OkHttpClient client;
 
     public MessageTransmit(String domainURL){
+        if(domainURL.length()>0){
         char c=domainURL.charAt(domainURL.length() - 1);
         if(c!='/')
-            domainURL += "/";
+            domainURL += "/";}
         this.domainURL = domainURL;
+        this.domainURL = "http://185.118.252.26:8080/leadBO/webapi/";
         client = new OkHttpClient();
     }
 

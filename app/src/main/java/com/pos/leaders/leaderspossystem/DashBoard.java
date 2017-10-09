@@ -397,6 +397,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
 
                 ShowAReportDialog(_aReport);
             }
+
         } else if(aReport==null) {
             _aReport.setByUserID(SESSION._USER.getId());
             _aReport.setCreationDate(new Date().getTime());

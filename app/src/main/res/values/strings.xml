@@ -351,4 +351,12 @@
     <string name="title_activity_temp_cash_activty">TempCashActivty</string>
 
 
+    <!--online setup -->
+    <string name="key">Key</string>
+    <string name="connect">Connect</string>
+
+    <string name="internet_not_connected">Please check your internet connection and try again.</string>
+    <string name="retry">Retry</string>
+    <string name="internet_access">No internet access.</string>
+
 </resources>

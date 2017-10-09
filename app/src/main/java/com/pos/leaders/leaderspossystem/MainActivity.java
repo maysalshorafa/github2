@@ -683,6 +683,7 @@ usedpointDbAdapter.open();
             @Override
             public void onClick(View v) {
 
+
                 Intent intent = new Intent(MainActivity.this, SyncMessage.class);
                 intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, "http://192.168.252.11:8080/webapi");
                 startService(intent);
