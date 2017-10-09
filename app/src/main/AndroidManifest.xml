@@ -108,14 +108,11 @@
             android:exported="true" />
 
         <activity android:name=".MainTempActivity" />
-<<<<<<< HEAD
         <activity android:name=".SetupNewPOSOnlineActivity"></activity>
-=======
         <activity
             android:name=".Tools.TempCashActivty"
             android:label="@string/title_activity_temp_cash_activty"
             android:theme="@style/AppTheme.NoActionBar"></activity>
->>>>>>> master
     </application>
 
 </manifest>
