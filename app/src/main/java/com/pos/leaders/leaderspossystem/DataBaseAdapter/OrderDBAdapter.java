@@ -39,7 +39,7 @@ public class OrderDBAdapter {
 
     public static final String DATABASE_CREATE = "CREATE TABLE `_order` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL , `productId` INTEGER," +
             " `counter` INTEGER, `saleId` INTEGER, " +
-            " '" + ORDER_COLUMN_PRICE + "' REAL , '" + ORDER_COLUMN_ORIGINAL_PRICE + "' REAL, '" + ORDER_COLUMN_DISCOUNT + "' REAL , " +ORDER_COLUMN_custmerAssestID + "' INTEGER , " +
+            " '" + ORDER_COLUMN_PRICE + "' REAL , '" + ORDER_COLUMN_ORIGINAL_PRICE + "' REAL, '" + ORDER_COLUMN_DISCOUNT + "' REAL , '" +ORDER_COLUMN_custmerAssestID + "' INTEGER , " +
             "FOREIGN KEY(`productId`) REFERENCES `products.id`, FOREIGN KEY(`saleId`) REFERENCES `sales.id` )";
     // Variable to hold the database instance
 	private SQLiteDatabase db;
@@ -87,14 +87,8 @@ public class OrderDBAdapter {
         }
 	}
 
-<<<<<<< HEAD
-    public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount) {
-        Order o = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount);
-=======
     public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID) {
-
         Order o = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID);
->>>>>>> mays-sameer
         sendToBroker(MessageType.ADD_ORDER, o, this.context);
 
         try {

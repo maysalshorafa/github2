@@ -27,11 +27,7 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-<<<<<<< HEAD
-=======
 import java.util.Calendar;
-import java.util.HashMap;
->>>>>>> mays-sameer
 import java.util.List;
 
 /**

@@ -51,13 +51,8 @@ public class Rule8DBAdapter {
     public long insertEntry(Rule8 rule8){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-<<<<<<< HEAD
         val.put(Rule8_COLUMN_ID,rule8.getId());
         val.put(Rule8_COLUMN_Parcent,rule8.getPercent());
-=======
-        val.put(Rule8_COLUMN_ID, Util.idHealth(this.db, Rule8_TABLE_NAME, Rule8_COLUMN_ID));
-        val.put(Rule8_COLUMN_Parcent,parcent);
->>>>>>> mays-sameer
 
         val.put(Rule8_Product_id,rule8.getProductID());
         val.put(Rule8_Contain_club,rule8.getContainClub());

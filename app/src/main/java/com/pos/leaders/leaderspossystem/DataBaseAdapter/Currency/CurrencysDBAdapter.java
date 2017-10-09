@@ -36,8 +36,8 @@ public class CurrencysDBAdapter {
 
     public static final String DATABASE_CREATE = "CREATE TABLE "+ Currency_TABLE_NAME
             +" ( `"+ Currency_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ Currency_COLUMN_Name +"` TEXT ,  `"
-            + Currency_COLUMN_CurrencyCode +"` TEXT, " + Currency_COLUMN_Country +"` TEXT, " +
-            " `"+ CurrencyCOLUMN_Rate +"` INTEGER,  `"  + CurrencyCOLUMN_createDate +"` TEXT DEFAULT current_timestamp,  `"  +")";
+            + Currency_COLUMN_CurrencyCode +"` TEXT, `" + Currency_COLUMN_Country +"` TEXT, " +
+            " `"+ CurrencyCOLUMN_Rate +"` INTEGER,  `"  + CurrencyCOLUMN_createDate +"` TEXT DEFAULT current_timestamp)";
 
     // Variable to hold the database instance
     private SQLiteDatabase db;

@@ -177,17 +177,14 @@ cashPaymentDBAdapter.close();
             }
         }
 
-<<<<<<< HEAD
         try {
-            return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
+            return BitmapInvoice.zPrint(context, zReport,usd_plus,usd_minus,eur_plus,eur_minus,gbp_plus,gbp_minus,sheqle_plus+500,sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, 500);
+            //return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
         }
         catch (Exception ex){
             ex.printStackTrace();
             return null;
         }
-=======
-        return BitmapInvoice.zPrint(context, zReport,usd_plus,usd_minus,eur_plus,eur_minus,gbp_plus,gbp_minus,sheqle_plus+500,sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, 500);
->>>>>>> mays-sameer
     }
 
     private List<Payment> paymentList(List<Sale> sales){

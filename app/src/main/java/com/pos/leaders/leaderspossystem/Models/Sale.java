@@ -26,7 +26,6 @@ public class Sale {
 	private long customer_id;
 
 	@JsonIgnore
-<<<<<<< HEAD
     private String customer_name;
 	@JsonIgnore
 	private List<Order> orders;
@@ -46,27 +45,6 @@ public class Sale {
     }
 
     public Sale(long id, long byUser, Date saleDate, int replacementNote, boolean cancelling, double totalPrice, double totalPaid, long customer_id, String customer_name) {
-=======
-	private String customer_name;
-	@JsonIgnore
-	private List<Order> orders;
-	@JsonIgnore
-	private User user;
-	@JsonIgnore
-	private Payment payment;
-
-
-	@JsonIgnore
-	private Locale locale = new Locale("en");
-
-	// region Constructors
-
-
-	public Sale() {
-	}
-
-	public Sale(long id, long byUser, Date saleDate, int replacementNote, boolean cancelling, double totalPrice, double totalPaid, long customer_id, String customer_name) {
->>>>>>> mays-sameer
 		this.id = id;
 		this.byUser = byUser;
 		this.saleDate=saleDate;
@@ -138,8 +116,6 @@ public class Sale {
     public double getTotalPaid() {
         return totalPaid;
     }
-
-<<<<<<< HEAD
     public List<Order> getOrders() {
         return orders;
     }
@@ -167,40 +143,10 @@ public class Sale {
 
 
     //endregion
-=======
-	public List<Order> getOrders() {
-		return orders;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public Payment getPayment() {
-		return payment;
-	}
-
-	public Locale getLocale() {
-		return locale;
-	}
-
-	public long getCustomer_id() {
-		return customer_id;
-	}
-
-	public String getCustomer_name() {
-		return customer_name;
-	}
-
-
-
-	//endregion
->>>>>>> mays-sameer
 
 	//region Setter
 
 
-<<<<<<< HEAD
     public void setSaleDate(Date saleDate) {
         this.saleDate = saleDate;
     }
@@ -208,33 +154,15 @@ public class Sale {
     public void setCancelling(boolean cancelling) {
         this.cancelling = cancelling;
     }
-=======
-	public void setSaleDate(Date saleDate) {
-		this.saleDate = saleDate;
-	}
->>>>>>> mays-sameer
 
     public void setId(long id) {
         this.id = id;
     }
 
-<<<<<<< HEAD
     public void setByUser(long byUser) {
         this.byUser = byUser;
     }
-=======
-	public void setId(long id) {
-		this.id = id;
-	}
 
-	public void setByUser(long byUser) {
-		this.byUser = byUser;
-	}
-
-	public void setReplacementNote(int replacementNote) {
-		this.replacementNote = replacementNote;
-	}
->>>>>>> mays-sameer
 
     public void setReplacementNote(int replacementNote) {
         this.replacementNote = replacementNote;
@@ -244,7 +172,6 @@ public class Sale {
         this.totalPrice = totalPrice;
     }
 
-<<<<<<< HEAD
     public void setTotalPaid(double totalPaid) {
         this.totalPaid = totalPaid;
     }
@@ -274,33 +201,6 @@ public class Sale {
     }
 
     //endregion
-=======
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public void setPayment(Payment payment) {
-		this.payment = payment;
-	}
-
-	public void setLocale(Locale locale) {
-		this.locale = locale;
-	}
-
-	public void setCustomer_id(long customer_id) {
-		this.customer_id = customer_id;
-	}
-
-	public void setCustomer_name(String customer_name) {
-		this.customer_name = customer_name;
-	}
-
-	//endregion
->>>>>>> mays-sameer
 
 	@Override
 	public String toString() {

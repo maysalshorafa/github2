@@ -26,7 +26,7 @@ public class CurrencyTypeDBAdapter {
     protected static final String CurrencyType_COLUMN_Name= "type";
 
     public static final String DATABASE_CREATE = "CREATE TABLE `"+ CurrencyType_TABLE_NAME +"` ( `"+ CurrencyType_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "`"+ CurrencyType_COLUMN_Name +"` TEXT, `"+")";
+            "`"+ CurrencyType_COLUMN_Name +"` TEXT)";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.

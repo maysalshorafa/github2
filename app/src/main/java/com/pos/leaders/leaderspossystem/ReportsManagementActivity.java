@@ -4,11 +4,8 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-<<<<<<< HEAD
 import android.graphics.Bitmap;
-=======
 import android.graphics.drawable.ColorDrawable;
->>>>>>> mays-sameer
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

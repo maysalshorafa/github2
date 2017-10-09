@@ -52,13 +52,8 @@ public class Rule7DbAdapter {
     public long insertEntry(Rule7 rule7) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
-<<<<<<< HEAD
         val.put(Rule7_COLUMN_ID, rule7.getId());
         val.put(Rule7_COLUMN_Price, rule7.getPrice());
-=======
-        val.put(Rule7_COLUMN_ID, Util.idHealth(this.db, Rule7_TABLE_NAME, Rule7_COLUMN_ID));
-        val.put(Rule7_COLUMN_Price,price);
->>>>>>> mays-sameer
 
         val.put(Rule7_Product_id, rule7.getProduct_id());
         val.put(Rule7_Product_Contain_club, rule7.getContain_club());

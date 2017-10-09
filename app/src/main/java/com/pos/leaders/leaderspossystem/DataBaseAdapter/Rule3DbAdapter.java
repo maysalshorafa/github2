@@ -55,12 +55,7 @@ public class Rule3DbAdapter {
     public long insertEntry(Rule3 rule3){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-<<<<<<< HEAD
-        val.put(Rule3_COLUMN_ID,rule3.getId());
-=======
         val.put(Rule3_COLUMN_ID, Util.idHealth(this.db, Rule3_TABLE_NAME, Rule3_COLUMN_ID));
->>>>>>> mays-sameer
-
         val.put(Rule3_COLUMN_PERCENT,rule3.getPercent());
         val.put(Rule3_COLUMN_Contain,rule3.getContain());
        // val.put(Rule3_COLUMN_CLub_Contain,club_contain);

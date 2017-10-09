@@ -174,13 +174,8 @@ ImageButton search_person;
     int amount;
     int type;
     int point ;
-<<<<<<< HEAD
     double offerAmount=0;
-
-=======
-    int offerAmount=0;
     long saleIDforCash ;
->>>>>>> mays-sameer
     String cInformation;
     double parcent;
 

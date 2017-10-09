@@ -33,7 +33,7 @@ public class CashPaymentDBAdapter {
     protected static final String CashPAYMENT_COLUMN_CREATEDATE = "createDate";
 
 
-    public static final String DATABASE_CREATE = "CREATE TABLE `CashPayment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `saleId` INTEGER, `amount` REAL NOT NULL, `currency_type` INTEGER`,'createDate'  TEXT DEFAULT current_timestamp)";
+    public static final String DATABASE_CREATE = "CREATE TABLE `CashPayment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `saleId` INTEGER, `amount` REAL NOT NULL, `currency_type` INTEGER,'createDate'  TEXT DEFAULT current_timestamp)";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.

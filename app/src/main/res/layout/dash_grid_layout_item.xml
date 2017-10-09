@@ -13,14 +13,10 @@
     <ImageView
         android:id="@+id/grid_image"
         android:layout_width="150dp"
-<<<<<<< HEAD
-        android:layout_height="100dp"></ImageView>
-=======
         android:layout_height="100dp"
         android:scaleType="centerInside"
         >
     </ImageView>
->>>>>>> mays-sameer
 
     <TextView
         android:id="@+id/grid_text"

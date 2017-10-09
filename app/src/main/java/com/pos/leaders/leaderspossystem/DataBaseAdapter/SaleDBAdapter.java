@@ -69,8 +69,6 @@ public class SaleDBAdapter {
 
 
 	public long insertEntry(long byUser, Date saleDate, int replacementNote, boolean canceled, double totalPrice,double totalPaid,long custmer_id,String custmer_name) {
-<<<<<<< HEAD
-
         Sale sale = new Sale(Util.idHealth(this.db, SALES_TABLE_NAME, SALES_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name);
 
         sendToBroker(MessageType.ADD_SALE, sale, this.context);
@@ -81,26 +79,12 @@ public class SaleDBAdapter {
             Log.e("Sales DB insert", "inserting Entry at " + SALES_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
-=======
-
-		Sale sale = new Sale(Util.idHealth(this.db, SALES_TABLE_NAME, SALES_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name);
-
-		sendToBroker(MessageType.ADD_SALE, sale, this.context);
-
-		try {
-			return insertEntry(sale);
-		} catch (SQLException ex) {
-			Log.e("Sales DB insert", "inserting Entry at " + SALES_TABLE_NAME + ": " + ex.getMessage());
-			return 0;
-		}
->>>>>>> mays-sameer
 	}
 
 	public long insertEntry(Sale sale ,long _custmer_id,String custmer_name) {
 		return insertEntry(sale.getByUser(), sale.getSaleDate(), sale.getReplacementNote(), sale.isCancelling(), sale.getTotalPrice(),sale.getTotalPaid(),_custmer_id,custmer_name);
 	}
 	public long insertEntry(Sale sale){
-<<<<<<< HEAD
         ContentValues val = new ContentValues();
         val.put(SALES_COLUMN_ID,sale.getId());
         //Assign values for each row.
@@ -120,27 +104,6 @@ public class SaleDBAdapter {
             return 0;
         }
     }
-=======
-		ContentValues val = new ContentValues();
-		val.put(SALES_COLUMN_ID,sale.getId());
-		//Assign values for each row.
-		val.put(SALES_COLUMN_BYUSER, sale.getByUser());
-		val.put(SALES_COLUMN_SALEDATE, sale.getSaleDate().getTime());
-		val.put(SALES_COLUMN_REPLACEMENTNOTE, sale.getReplacementNote());
-		val.put(SALES_COLUMN_CANCELED, sale.isCancelling()?1:0);
-		val.put(SALES_COLUMN_TOTALPRICE, sale.getTotalPrice());
-		val.put(SALES_COLUMN_TOTALPAID, sale.getTotalPaid());
-		val.put(SALES_COLUMN__custmer_id, sale.getCustomer_id());
-		val.put(SALES_COLUMN__custmer_name, sale.getCustomer_name());
-
-		try {
-			return db.insert(SALES_TABLE_NAME, null, val);
-		} catch (SQLException ex) {
-			Log.e("Sales DB insert", "inserting Entry at " + SALES_TABLE_NAME + ": " + ex.getMessage());
-			return 0;
-		}
-	}
->>>>>>> mays-sameer
 
 	public Sale getSaleByID(long id) {
 		Sale sale = null;

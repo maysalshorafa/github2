@@ -33,8 +33,8 @@ public class CurrencyOperationDBAdapter {
 
     public static final String DATABASE_CREATE = "CREATE TABLE "+ CurrencyOperation_TABLE_NAME
             +" ( `"+ CurrencyOperation_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ CurrencyOperation_COLUMN_CREATEDATE +"` TEXT DEFAULT current_timestamp,  `"
-            + CurrencyOperation_COLUMN_Operation_ID +"` INTEGER, " + CurrencyOperation_COLUMN_Operation_Type +"` TEXT, " +
-            " `"+ CurrencyOperationCOLUMN_AMOUNT +"` REAL,  `"+ CurrencyOperation_COLUMN_Currency_Type +"` INTEGER , "  +")";
+            + CurrencyOperation_COLUMN_Operation_ID +"` INTEGER, `" + CurrencyOperation_COLUMN_Operation_Type +"` TEXT, " +
+            " `"+ CurrencyOperationCOLUMN_AMOUNT +"` REAL,  `"+ CurrencyOperation_COLUMN_Currency_Type +"` INTEGER )";
 
     // Variable to hold the database instance
     private SQLiteDatabase db;
