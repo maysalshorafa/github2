@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.util.Log;
@@ -50,6 +51,7 @@ import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.pos.leaders.leaderspossystem.syncposservice.MessagesCreator;
 import com.pos.leaders.leaderspossystem.syncposservice.Model.BrokerMessage;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.syncposservice.SetupFragments.Token;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,14 +94,15 @@ public class SyncMessage extends Service {
     private long LOOP_TIME = 1 * 10 * 1000;
 
     private boolean isRunning = false;
+    private Context context;
 
     public static boolean isConnected(Context context) {
         ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
-            NetworkInfo[] info = connectivity.getAllNetworkInfo();
-            if (info != null) {
-                for (int i = 0; i < info.length; i++) {
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
+            Network[] networks = connectivity.getAllNetworks();
+            if(networks!=null){
+                for(int k=0;k<networks.length;k++) {
+                    if (connectivity.getNetworkInfo(networks[k]).getState() == NetworkInfo.State.CONNECTED)
                         return true;
                 }
             }
@@ -111,6 +114,14 @@ public class SyncMessage extends Service {
     public void onCreate() {
         Log.i(TAG, "Service onCreate");
         broker = new Broker(this);
+        if(SESSION.token.equals("")){
+            try {
+                token = Token.getToken(getApplicationContext());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                onDestroy();
+            }
+        }
     }
 
     @Override

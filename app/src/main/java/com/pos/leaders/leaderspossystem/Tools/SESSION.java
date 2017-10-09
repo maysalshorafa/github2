@@ -43,6 +43,7 @@ public class SESSION {
 
 
 	//public static String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrYXJhbSJ9.qU2JoZ74qnkiCzUYCnMq4viTY5Nk8HcE0vFMx0Famww";
-	public static String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWpkIn0.Sukg7BnOunEClUy3_nMoop4jkDb8kdMoUNNNhX9NTyI";
+	//public static String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWpkIn0.Sukg7BnOunEClUy3_nMoop4jkDb8kdMoUNNNhX9NTyI";
+	public static String token = "";
 }
 

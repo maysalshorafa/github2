@@ -1,8 +1,12 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +25,7 @@ import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.pos.leaders.leaderspossystem.syncposservice.MessagesCreator;
+import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 import com.pos.leaders.leaderspossystem.syncposservice.SetupFragments.Token;
 
 import org.json.JSONException;
@@ -47,23 +52,46 @@ public class SetupNewPOSOnlineActivity extends Activity {
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_setup_new_posonline);
-
         etKey = (EditText) findViewById(R.id.setuponlinepos_etKey);
         btConnect = (Button) findViewById(R.id.setuponlinepos_btConnect);
+
+        //region check internet connection
+        if(!SyncMessage.isConnected(this)) {
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle(getString(R.string.internet_access));
+            alertDialog.setMessage(getString(R.string.internet_not_connected));
+            alertDialog.setIcon(R.drawable.ic_setting);
+            alertDialog.setCancelable(false);
+
+            alertDialog.setButton(getString(R.string.retry), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    //restart the activity
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                }
+            });
+
+            alertDialog.show();
+        }
+
+        //endregion
+
+        //region connect button
         btConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String key = etKey.getText().toString();
                 if((!key.equals(""))&&(key.length()==6)){
                     String uuid = UUID.randomUUID().toString();
-                    ProgressDialog progressDialog = new ProgressDialog(SetupNewPOSOnlineActivity.this);
+                    final ProgressDialog progressDialog = new ProgressDialog(SetupNewPOSOnlineActivity.this);
                     progressDialog.setTitle("Please Wait");
                     progressDialog.show();
 
                     StartConnection startConnection = new StartConnection();
                     startConnection.execute(etKey.getText().toString(),uuid);
                     try {
-                        Thread.sleep(2000);//wait to async task finish
+                        Thread.sleep(4000);//wait to async task finish
                         startConnection.cancel(true);
                         if(startConnection.isCancelled()){
                             //the async task is finished
@@ -82,11 +110,22 @@ public class SetupNewPOSOnlineActivity extends Activity {
 
                                 //call new activity //get access token
 
-                                String token=Token.getToken(SetupNewPOSOnlineActivity.this);
-                                updateSettings(token);
-                                finish();
+                                final String token=Token.getToken(SetupNewPOSOnlineActivity.this);
 
-                                progressDialog.cancel();
+                                new AsyncTask<Void, Void, Void>() {
+                                    @Override
+                                    protected Void doInBackground(Void... params) {
+                                        updateSettings(token);
+                                        return null;
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(Void aVoid) {
+                                        progressDialog.cancel();
+                                        finish();
+                                        super.onPostExecute(aVoid);
+                                    }
+                                }.execute();
                             }else{
                                 //fail
                                 Toast.makeText(SetupNewPOSOnlineActivity.this, "Try Again With True Key.", Toast.LENGTH_SHORT).show();
@@ -108,6 +147,8 @@ public class SetupNewPOSOnlineActivity extends Activity {
 
 
         });
+        //endregion
+
     }
 
     private void updateSettings(String token) {
@@ -136,6 +177,7 @@ public class SetupNewPOSOnlineActivity extends Activity {
         }
 
     }
+
 }
 
 class StartConnection extends AsyncTask<String,Void,String> {
