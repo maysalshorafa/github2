@@ -14,6 +14,7 @@ import java.util.List;
 
 public class SESSION {
 	public static User _USER;
+public  static  Order _ORDER;
 	public static List<Order> _ORDERS;
 	public static Sale _SALE;
 	public static ScheduleWorkers _SCHEDULEWORKERS;
@@ -33,12 +34,15 @@ public class SESSION {
 		SESSION._USERPERMISSIONS = null;
 		SESSION._CHECKS_HOLDER = null;
         TEMP_NUMBER = 0;
+		SESSION._ORDER=null;
 	}
 
 	public static void _Rest() {
 		SESSION._ORDERS = new ArrayList<Order>();
 		SESSION._SALE = new Sale(SESSION._USER.getId(), new Date(), 0, false, 0, 0);
 		SESSION._CHECKS_HOLDER = new ArrayList<Check>();
+		SESSION._ORDER=null;
+
 	}
 
 

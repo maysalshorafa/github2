@@ -337,7 +337,7 @@ public class MainScreenActivity extends Activity {
 												long saleId=saleDBAdapter.insertEntry(SESSION._SALE,1,"dd");
                                                 SESSION._SALE.setId(saleId);
 												for(Order o:SESSION._ORDERS){
-													orderDBAdapter.insertEntry(o.getProductId(),o.getCount(),o.getUserOffer(),saleId);
+												//	orderDBAdapter.insertEntry(o.getProductId(),o.getCount(),o.getUserOffer(),saleId);
 												}
 												paymentDBAdapter.insertEntry("cash",saleTotalPrice,saleId);
                                                 ///Controller();

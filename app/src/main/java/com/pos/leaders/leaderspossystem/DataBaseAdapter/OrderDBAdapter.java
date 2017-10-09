@@ -34,10 +34,12 @@ public class OrderDBAdapter {
 	protected static final String ORDER_COLUMN_PRICE = "price";
 	protected static final String ORDER_COLUMN_ORIGINAL_PRICE = "original_price";
 	protected static final String ORDER_COLUMN_DISCOUNT = "discount";
+	protected static final String ORDER_COLUMN_custmerAssestID = "custmerAssestID";
+
 
     public static final String DATABASE_CREATE = "CREATE TABLE `_order` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL , `productId` INTEGER," +
             " `counter` INTEGER, `saleId` INTEGER, " +
-            " '" + ORDER_COLUMN_PRICE + "' REAL , '" + ORDER_COLUMN_ORIGINAL_PRICE + "' REAL, '" + ORDER_COLUMN_DISCOUNT + "' REAL , " +
+            " '" + ORDER_COLUMN_PRICE + "' REAL , '" + ORDER_COLUMN_ORIGINAL_PRICE + "' REAL, '" + ORDER_COLUMN_DISCOUNT + "' REAL , '" +ORDER_COLUMN_custmerAssestID + "' INTEGER , " +
             "FOREIGN KEY(`productId`) REFERENCES `products.id`, FOREIGN KEY(`saleId`) REFERENCES `sales.id` )";
     // Variable to hold the database instance
 	private SQLiteDatabase db;
@@ -98,6 +100,7 @@ public class OrderDBAdapter {
         val.put(ORDER_COLUMN_PRICE, o.getPrice());
         val.put(ORDER_COLUMN_ORIGINAL_PRICE, o.getOriginal_price());
         val.put(ORDER_COLUMN_DISCOUNT, o.getDiscount());
+		val.put(ORDER_COLUMN_custmerAssestID,o.getCustmerAssestId());
         try {
             return db.insert(ORDER_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -106,8 +109,8 @@ public class OrderDBAdapter {
         }
 	}
 
-    public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount) {
-        Order o = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount);
+    public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID) {
+        Order o = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID);
         sendToBroker(MessageType.ADD_ORDER, o, this.context);
 
         try {

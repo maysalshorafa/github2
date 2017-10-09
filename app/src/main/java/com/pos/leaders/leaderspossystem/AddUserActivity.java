@@ -2,9 +2,12 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -12,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
@@ -19,15 +23,18 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Permissions;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.PermissionsGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
  * Created by KARAM on 22/10/2016.
  */
 
-public class AddUserActivity extends Activity {
+public class AddUserActivity extends AppCompatActivity {
 
 	EditText etUserName, etPassword, etREPassword, etFirstName, etLastName, etPhoneNumber, etPresent, etHourlyWage;
 	Button btAdd, btCancel;
@@ -37,6 +44,7 @@ public class AddUserActivity extends Activity {
 	final List<View> selectedViews=new ArrayList<View>();
 	String selectedFromList ;
 
+	android.support.v7.app.ActionBar actionBar;
 
 
 
@@ -48,8 +56,41 @@ public class AddUserActivity extends Activity {
 
 		// Remove notification bar
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
 		setContentView(R.layout.activity_add_users);
+
+
+		final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
+				R.layout.title_bar,
+				null);
+
+		// Set up your ActionBar
+		actionBar = getSupportActionBar();
+		// TODO: Remove the redundant calls to getSupportActionBar()
+		//       and use variable actionBar instead
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(false);
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayShowCustomEnabled(true);
+		actionBar.setCustomView(actionBarLayout);
+		Calendar ca = Calendar.getInstance();
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		// You customization
+		final int actionBarColor = getResources().getColor(R.color.primaryColor);
+		actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
+
+		final TextView actionBarTitle = (TextView) findViewById(R.id.editText8);
+		actionBarTitle.setText(format.format(ca.getTime()));
+		final TextView actionBarSent = (TextView) findViewById(R.id.editText9);
+		actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
+
+
+		final TextView actionBarStaff = (TextView) findViewById(R.id.editText10);
+		actionBarStaff.setText(SESSION._USER.getFullName());
+
+		final TextView actionBarLocations = (TextView) findViewById(R.id.editText11);
+		actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
+
 
 		// Get Refferences of Views
 		etUserName = (EditText) findViewById(R.id.addUser_ETUserName);
@@ -114,9 +155,9 @@ public class AddUserActivity extends Activity {
 									Toast.makeText(getApplicationContext(), "success dding new user", Toast.LENGTH_LONG).show();
 
 									Log.i("success", "adding new user");
-							/**		intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
-									intent.putExtra("permissions_name",selectedFromList);
-									startActivity(intent);**/
+									intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
+								//	intent.putExtra("permissions_name",selectedFromList);
+									startActivity(intent);
 									//// TODO: 17/10/2016 sucess to add entity
 								} else {
 									Log.e("error", "can`t add user");

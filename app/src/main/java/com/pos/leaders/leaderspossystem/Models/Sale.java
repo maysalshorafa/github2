@@ -85,7 +85,7 @@ public class Sale {
 		return new Sale(s.getId(),s.getByUser(),s.getSaleDate(),s.getReplacementNote(),s.isCancelling(),s.getTotalPrice(),s.getTotalPaid(),s.getCustomer_id(),s.getCustomer_name());
 	}
 
-    //endregion
+	//endregion
 
 	//region Getter
 
@@ -116,7 +116,6 @@ public class Sale {
     public double getTotalPaid() {
         return totalPaid;
     }
-
     public List<Order> getOrders() {
         return orders;
     }
@@ -163,6 +162,7 @@ public class Sale {
     public void setByUser(long byUser) {
         this.byUser = byUser;
     }
+
 
     public void setReplacementNote(int replacementNote) {
         this.replacementNote = replacementNote;
@@ -222,67 +222,67 @@ public class Sale {
 
 		if (totalPrice < 0){
 			recordType = "330";
-            OP = "-";
-            //totalPaid *= -1;
-        }
-        double totalPriceBeforeDiscount = 0;
-        for (Order o : orders) {
-            totalPriceBeforeDiscount += (o.getOriginal_price()*o.getCount());
-        }
-        if(totalPrice<0){
-            totalPrice *= -1;
+			OP = "-";
+			//totalPaid *= -1;
+		}
+		double totalPriceBeforeDiscount = 0;
+		for (Order o : orders) {
+			totalPriceBeforeDiscount += (o.getOriginal_price()*o.getCount());
+		}
+		if(totalPrice<0){
+			totalPrice *= -1;
 
-        }
-        double totalSaved = totalPriceBeforeDiscount - totalPrice;
-        if(totalSaved<0)
-            totalSaved *= -1;
-        //totalSaved = (totalSaved / (1 + SETTINGS.tax / 100));
-        if(totalPaid < 0) {
-            totalSaved = 0;
-            totalPriceBeforeDiscount = totalPrice;
-        }
+		}
+		double totalSaved = totalPriceBeforeDiscount - totalPrice;
+		if(totalSaved<0)
+			totalSaved *= -1;
+		//totalSaved = (totalSaved / (1 + SETTINGS.tax / 100));
+		if(totalPaid < 0) {
+			totalSaved = 0;
+			totalPriceBeforeDiscount = totalPrice;
+		}
 
-        double noTax = totalPrice / (1 + (SETTINGS.tax / 100));
-        if(noTax<0)
-            noTax *= -1;
-        double tax = totalPrice-noTax;
-        String name = "";
-        if(user.getFullName().length()>9)
-            name = user.getFullName().substring(0, 9);
-        else{
-            name = String.format("%9s", user.getFullName());
-        }
+		double noTax = totalPrice / (1 + (SETTINGS.tax / 100));
+		if(noTax<0)
+			noTax *= -1;
+		double tax = totalPrice-noTax;
+		String name = "";
+		if(user.getFullName().length()>9)
+			name = user.getFullName().substring(0, 9);
+		else{
+			name = String.format("%9s", user.getFullName());
+		}
 
 
-        return "C100" + String.format(locale, "%09d", rowNumber) + pc + recordType + String.format(locale, "%020d", id) + DateConverter.getYYYYMMDD(saleDate) + DateConverter.getHHMM(saleDate)
-                + String.format(locale, "%50s", "Customer") + Util.spaces(50) + Util.spaces(10) + Util.spaces(30) + Util.spaces(8) + Util.spaces(30) + Util.spaces(2) + Util.spaces(15) + Util.spaces(9)
-                + DateConverter.getYYYYMMDD(saleDate) + Util.spaces(15) + Util.spaces(3)
-                + OP + Util.x12V99(totalPriceBeforeDiscount/(1+(SETTINGS.tax/100)))
-                + mOP + Util.x12V99(((totalSaved)/(1+(SETTINGS.tax/100))))
-                + OP + Util.x12V99(noTax)
-                + OP + Util.x12V99(tax+0.004)
-                + OP + Util.x12V99(totalPrice)
-                + OP + String.format(locale, "%09.0f", 0.0f) + String.format(locale, "%02d", (int) ((0.0f - Math.floor(0.0f) + 0.001) * 100))
-                + Util.spaces(13) + "a0" + Util.spaces(8) + "b0" + "0" + DateConverter.getYYYYMMDD(saleDate) + Util.spaces(7) + name + String.format(locale, "%07d", id)
-                + Util.spaces(13);
+		return "C100" + String.format(locale, "%09d", rowNumber) + pc + recordType + String.format(locale, "%020d", id) + DateConverter.getYYYYMMDD(saleDate) + DateConverter.getHHMM(saleDate)
+				+ String.format(locale, "%50s", "Customer") + Util.spaces(50) + Util.spaces(10) + Util.spaces(30) + Util.spaces(8) + Util.spaces(30) + Util.spaces(2) + Util.spaces(15) + Util.spaces(9)
+				+ DateConverter.getYYYYMMDD(saleDate) + Util.spaces(15) + Util.spaces(3)
+				+ OP + Util.x12V99(totalPriceBeforeDiscount/(1+(SETTINGS.tax/100)))
+				+ mOP + Util.x12V99(((totalSaved)/(1+(SETTINGS.tax/100))))
+				+ OP + Util.x12V99(noTax)
+				+ OP + Util.x12V99(tax+0.004)
+				+ OP + Util.x12V99(totalPrice)
+				+ OP + String.format(locale, "%09.0f", 0.0f) + String.format(locale, "%02d", (int) ((0.0f - Math.floor(0.0f) + 0.001) * 100))
+				+ Util.spaces(13) + "a0" + Util.spaces(8) + "b0" + "0" + DateConverter.getYYYYMMDD(saleDate) + Util.spaces(7) + name + String.format(locale, "%07d", id)
+				+ Util.spaces(13);
 
 
 	}
-    static class test{
-        public static void main1(String[] args){
-            double num = 414.70;
-            double tax = 17.0;
+	static class test{
+		public static void main1(String[] args){
+			double num = 414.70;
+			double tax = 17.0;
 
-            double withouttax = num / (1 + (tax / 100));
+			double withouttax = num / (1 + (tax / 100));
 
-            String str = String.format("%2.2f", withouttax - 0.005);
-            System.out.println(str);
+			String str = String.format("%2.2f", withouttax - 0.005);
+			System.out.println(str);
 
 
-            String st = String.format("%2.2f", num - Double.parseDouble(str));
-            System.out.println((num-withouttax)+"\n"+Util.x12V99(num-withouttax+0.004));
-            //print(Double.parseDouble(st));
-        }
+			String st = String.format("%2.2f", num - Double.parseDouble(str));
+			System.out.println((num-withouttax)+"\n"+Util.x12V99(num-withouttax+0.004));
+			//print(Double.parseDouble(st));
+		}
 
-    }
+	}
 }

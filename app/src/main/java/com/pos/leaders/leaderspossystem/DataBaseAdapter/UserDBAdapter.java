@@ -209,6 +209,17 @@ public class UserDBAdapter {
 		}
 		return users;
 	}
+    public List<User> getAllSalesMAn() {
+        List<User> users = new ArrayList<User>();
+        String permtion="sales man";
+        Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where  permissions_name='" + permtion + "'", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            users.add(createNewUser(cursor));
+            cursor.moveToNext();
+        }
+        return users;
+    }
 
 	private User createNewUser(Cursor cursor){
 		return new User(Long.parseLong(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_ID)))

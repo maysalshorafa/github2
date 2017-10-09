@@ -25,7 +25,6 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
  */
 
 public class SaleDBAdapter {
-	// Table Name
 	protected static final String SALES_TABLE_NAME = "sales";
 	// Column Names
 	protected static final String SALES_COLUMN_ID = "id";
@@ -70,7 +69,6 @@ public class SaleDBAdapter {
 
 
 	public long insertEntry(long byUser, Date saleDate, int replacementNote, boolean canceled, double totalPrice,double totalPaid,long custmer_id,String custmer_name) {
-
         Sale sale = new Sale(Util.idHealth(this.db, SALES_TABLE_NAME, SALES_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name);
 
         sendToBroker(MessageType.ADD_SALE, sale, this.context);
@@ -174,19 +172,19 @@ public class SaleDBAdapter {
 		return userSaleList;
 	}
 
-    public List<Sale> getBetween(long from, long to){
-        List<Sale> saleList = new ArrayList<Sale>();
-        Cursor cursor = db.rawQuery("select * from "+SALES_TABLE_NAME+" where "+SALES_COLUMN_ID+" <= "+to+" and "+SALES_COLUMN_ID +" >= "+from,null);
-        //Cursor cursor = db.rawQuery("select * from "+SALES_TABLE_NAME+" where "+SALES_COLUMN_SALEDATE+" <= "+to+" and "+SALES_COLUMN_SALEDATE +" >= "+from,null);
-        cursor.moveToFirst();
+	public List<Sale> getBetween(long from, long to){
+		List<Sale> saleList = new ArrayList<Sale>();
+		Cursor cursor = db.rawQuery("select * from "+SALES_TABLE_NAME+" where "+SALES_COLUMN_ID+" <= "+to+" and "+SALES_COLUMN_ID +" >= "+from,null);
+		//Cursor cursor = db.rawQuery("select * from "+SALES_TABLE_NAME+" where "+SALES_COLUMN_SALEDATE+" <= "+to+" and "+SALES_COLUMN_SALEDATE +" >= "+from,null);
+		cursor.moveToFirst();
 
-        while (!cursor.isAfterLast()) {
-            saleList.add(makeSale(cursor));
-            cursor.moveToNext();
-        }
+		while (!cursor.isAfterLast()) {
+			saleList.add(makeSale(cursor));
+			cursor.moveToNext();
+		}
 
-        return saleList;
-    }
+		return saleList;
+	}
 
 	public List<Sale> getBetweenTwoDates(long from, long to){
 		List<Sale> saleList = new ArrayList<Sale>();
@@ -194,29 +192,29 @@ public class SaleDBAdapter {
 		cursor.moveToFirst();
 
 		while (!cursor.isAfterLast()) {
-            if (cursor.getInt(cursor.getColumnIndex(SALES_COLUMN_CANCELED)) < 1)
-                saleList.add(makeSale(cursor));
+			if (cursor.getInt(cursor.getColumnIndex(SALES_COLUMN_CANCELED)) < 1)
+				saleList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
 
 		return saleList;
 	}
 
-    public Sale getLast(){
-        Sale sale = null;
-        Cursor cursor = db.rawQuery("select * from " + SALES_TABLE_NAME + " order by id desc", null);
+	public Sale getLast(){
+		Sale sale = null;
+		Cursor cursor = db.rawQuery("select * from " + SALES_TABLE_NAME + " order by id desc", null);
 
-        if (cursor.getCount() < 1) // don`t have any sale yet
-        {
-            cursor.close();
-            return sale;
-        }
-        cursor.moveToFirst();
-        sale = new Sale(makeSale(cursor));
-        cursor.close();
+		if (cursor.getCount() < 1) // don`t have any sale yet
+		{
+			cursor.close();
+			return sale;
+		}
+		cursor.moveToFirst();
+		sale = new Sale(makeSale(cursor));
+		cursor.close();
 
-        return sale;
-    }
+		return sale;
+	}
 
 	private Sale makeSale(Cursor cursor){
 		try {

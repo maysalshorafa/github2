@@ -90,19 +90,19 @@ public class WorkerGridViewAdapter extends BaseAdapter {
 
 		if(convertView==null){
 			inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			gridView=inflater.inflate(R.layout.grid_view_item_worker,null);
+			gridView=inflater.inflate(R.layout.grid_view_user,null);
 		}
-
-		TextView tvUserName=(TextView)gridView.findViewById(R.id.workerGridView_TVUserName);
 		TextView tvFullName=(TextView)gridView.findViewById(R.id.workerGridView_TVFullName);
+		tvFullName.setText(workers.get(position).getFullName());
+/**
+		TextView tvUserName=(TextView)gridView.findViewById(R.id.workerGridView_TVUserName);
 		TextView tvPhoneNumber=(TextView)gridView.findViewById(R.id.workerGridView_TVPhoneNumber);
 		TextView tvPresent=(TextView)gridView.findViewById(R.id.workerGridView_TVPresent);
 
 		tvUserName.setText(workers.get(position).getUserName());
-		tvFullName.setText(workers.get(position).getFullName());
 		tvPhoneNumber.setText(workers.get(position).getPhoneNumber());
 		tvPresent.setText(workers.get(position).getPresent()+"");
-
+**/
 		return gridView;
 	}
 }

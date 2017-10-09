@@ -2,12 +2,14 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -15,21 +17,26 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.Backup.Backup;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class BackupActivity extends Activity {
+public class BackupActivity extends AppCompatActivity {
+    android.support.v7.app.ActionBar actionBar;
 
     private Button btnCancel,btnDepartments,btnSystem;
     private ListView lv;
@@ -49,8 +56,41 @@ public class BackupActivity extends Activity {
 
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_backup);
+
+
+        final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
+                R.layout.title_bar,
+                null);
+
+        // Set up your ActionBar
+        actionBar = getSupportActionBar();
+        // TODO: Remove the redundant calls to getSupportActionBar()
+        //       and use variable actionBar instead
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(actionBarLayout);
+        Calendar ca = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        // You customization
+        final int actionBarColor = getResources().getColor(R.color.primaryColor);
+        actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
+
+        final TextView actionBarTitle = (TextView) findViewById(R.id.editText8);
+        actionBarTitle.setText(format.format(ca.getTime()));
+        final TextView actionBarSent = (TextView) findViewById(R.id.editText9);
+        actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
+
+
+        final TextView actionBarStaff = (TextView) findViewById(R.id.editText10);
+        actionBarStaff.setText(SESSION._USER.getFullName());
+
+        final TextView actionBarLocations = (TextView) findViewById(R.id.editText11);
+        actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
+
 
         btnCancel = (Button) findViewById(R.id.backupActivity_btnCancel);
         btnDepartments = (Button) findViewById(R.id.backupActivity_btnDepartment);

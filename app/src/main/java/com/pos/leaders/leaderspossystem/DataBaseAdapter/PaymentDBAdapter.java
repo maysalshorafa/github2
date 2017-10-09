@@ -28,6 +28,7 @@ public class PaymentDBAdapter {
 	protected static final String PAYMENT_COLUMN_PAYMENTWAY = "paymentWay";
 	protected static final String PAYMENT_COLUMN_SALEID = "saleId";
 	protected static final String PAYMENT_COLUMN_AMOUNT = "amount";
+
 	private static final String PAYMENT_CHECKS_ID = "checkId";
 
 	public static final String DATABASE_CREATE = "CREATE TABLE `payment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `paymentWay` TEXT NOT NULL, `amount` REAL NOT NULL, `checkId` INTEGER , `saleId` INTEGER, FOREIGN KEY(`saleId`) REFERENCES `sales.id` ,FOREIGN KEY(`checkId`) REFERENCES `checks.id`)";

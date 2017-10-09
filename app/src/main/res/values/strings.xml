@@ -13,7 +13,7 @@
 
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
-    <string name="phone_number">Phone Number</string>
+    <string name="phone_number">Phone No</string>
     <string name="hourly_wage">Hourly Wage</string>
     <string name="present">Present</string>
     <string name="log_out">Log Out</string>
@@ -41,6 +41,7 @@
     <string name="sales_history">Sales History</string>
     <string name="clear_cart">Clear Cart</string>
     <string name="_new">New</string>
+
 
     <!--Product Management-->
     <string name="edit_product">Edit Product</string>
@@ -145,6 +146,10 @@
     <string name="set_price">Set Price</string>
     <string name="opening_report">Opening Report</string>
 
+    <string name="resume">Resume</string>
+    <string name="discount">Discount</string>
+
+
     <!--Cash Activity-->
     <string name="cancel">Cancel</string>
     <string name="tendered">Tendered</string>
@@ -214,8 +219,8 @@
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
-    <string name="terminal_number">Terminal Number</string>
-    <string name="terminal_password">Terminal Password</string>
+    <string name="terminal_number">Terminal No</string>
+    <string name="terminal_password"> Password</string>
     <string name="general_settings">General Settings</string>
     <string name="pref_header_general">General</string>
     <string name="settings">Settings</string>
@@ -301,7 +306,9 @@
     <string name="qty">Qty</string>
     <string name="productID">Product ID</string>
     <string name="replacement_expiration_date">Replacement Expiration Date</string>
+
     <string name="try_again">Please Try Again!!</string>
+    <string name="Information">Information</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -319,6 +326,30 @@
     <string name="confirmation">Confirmation</string>
 
     <string name="search">Search</string>
+    <!--club string-->
+    <string name="Description"> Descriptione</string>
+    <string name="Type"> Type</string>
+    <string name="Amount">   Amount</string>
+    <string name="Point">  Point</string>
+    <string name="Parcent">Parcent</string>
+    <string name="GroupName"> Club Name</string>
+    <string name="AddGroup">    Add Group</string>
+
+    <!--custmer String -->
+    <string name="Custmername">Name</string>
+    <string name="DateOfBirthday">Birthday</string>
+    <string name="CustmerID">CustmerID</string>
+    <string name="Gender">Gender</string>
+    .
+    <string name="Job">Job</string>
+    <string name="Email">Email</string>
+    <string name="Phone">Phone</string>
+    <string name="Address">Address</string>
+    <string name="AddtoCity"> Add to City</string>
+    <string name="AddtoCustomerClub"> Add Club</string>
+    <string name="AddCustomer"> Add Customer</string>
+    <string name="title_activity_temp_cash_activty">TempCashActivty</string>
+
 
     <!--online setup -->
     <string name="key">Key</string>

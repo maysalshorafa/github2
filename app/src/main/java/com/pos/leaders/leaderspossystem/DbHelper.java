@@ -14,8 +14,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.*;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencysDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.*;
+<<<<<<< HEAD
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule1;
+=======
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
+>>>>>>> master
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -64,6 +73,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
 
+<<<<<<< HEAD
 
         //        db.execSQL(AReportDBAdapter.DATABASE_CREATE);
 /*
@@ -96,6 +106,8 @@ public class DbHelper extends SQLiteOpenHelper {
         //db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'User','User','User','"+new Date().getTime()+"','1234',0,100,0,35);");
 
         // db.execSQL(ChecksDBAdapter.DATABASE_CREATE);
+=======
+>>>>>>> master
         //offers
         db.execSQL(Rule1DBAdapter.DATABASE_CREATE);
         db.execSQL(Rule3DbAdapter.DATABASE_CREATE);
@@ -118,6 +130,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.execSQL(OrderDBAdapter.DATABASE_CREATE);
         db.execSQL(PaymentDBAdapter.DATABASE_CREATE);
+<<<<<<< HEAD
         db.execSQL(PermissionsDBAdapter.DATABASE_CREATE);
         db.execSQL(ProductDBAdapter.DATABASE_CREATE);
         db.execSQL(ProductOfferDBAdapter.DATABASE_CREATE);
@@ -154,6 +167,30 @@ public class DbHelper extends SQLiteOpenHelper {
         String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
         db.execSQL(dbc);
         db.execSQL(IdsCounterDBAdapter.INIT(tblNames));
+=======
+
+        db.execSQL(CashPaymentDBAdapter.DATABASE_CREATE);
+        db.execSQL(CurrencyOperationDBAdapter.DATABASE_CREATE);
+        db.execSQL(CurrencyReturnsDBAdapter.DATABASE_CREATE);
+        db.execSQL(CurrencysDBAdapter.DATABASE_CREATE);
+        db.execSQL(CurrencyTypeDBAdapter.DATABASE_CREATE);
+>>>>>>> master
+
+
+
+        db.execSQL(PermissionsDBAdapter.DATABASE_CREATE);
+        db.execSQL(ProductDBAdapter.DATABASE_CREATE);
+        db.execSQL(ProductOfferDBAdapter.DATABASE_CREATE);
+
+        db.execSQL(ScheduleWorkersDBAdapter.DATABASE_CREATE);
+        db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
+        db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
+        db.execSQL(UserDBAdapter.DATABASE_CREATE);
+        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'Dev','Ops','tec','"+new Date().getTime()+"','1234',0,046316969,20,35,'main screen');");
+
+        db.execSQL(UserPermissionsDBAdapter.DATABASE_CREATE);
+        db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
+        db.execSQL(AReportDBAdapter.DATABASE_CREATE);
 
 
 
@@ -161,26 +198,15 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
 
+        List<String> tblNames = tablesName(db);
+        String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
+        db.execSQL(dbc);
+        db.execSQL(IdsCounterDBAdapter.INIT(tblNames));
 
 
-		/*for (String s : Permissions.PERMISSIONS_ROLE) {
-			db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+" (name) values ('"+s+"');");
-		}*/
 
 
-        Log.w("Create DBAdapter ", "");
-        /*db.execSQL(
-                "CREATE TABLE IF NOT EXISTS users ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,`userName` TEXT UNIQUE, `firstName` TEXT NOT NULL, `lastName` TEXT, `visitDate` TEXT NOT NULL DEFAULT current_timestamp, `pwd` TEXT NOT NULL, `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, `hourlyWage` REAL DEFAULT 0.0 )"
-        );/*
-        db.execSQL(
-                "CREATE TABLE IF NOT EXISTS workLog ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `userId` INTEGER, `date` TEXT DEFAULT current_timestamp, `startTime` TEXT, `exitTime` TEXT, FOREIGN KEY(`userId`) REFERENCES users.id"
-        );*//*
-        db.execSQL(
-                "INSERT INTO users (`userName`,`pwd`,`firstName`,`lastName`,`phoneNumber`) VALUES ('root','1234','karam','abed','0527068607')"
-        );
-        db.execSQL(
-                "INSERT INTO users (`userName`,`pwd`,`firstName`,`lastName`,`phoneNumber`) VALUES ('karam','12','ard','abed','0527068607')"
-        );*/
+
 
     }
 

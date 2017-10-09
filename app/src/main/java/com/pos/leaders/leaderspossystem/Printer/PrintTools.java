@@ -5,13 +5,21 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.DashBoard;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
+
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
+
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
@@ -87,13 +95,31 @@ public class PrintTools {
 
 
     public Bitmap createZReport(long id,long from,long to,boolean isCopy){
+        double sheqle_plus=0,sheqle_minus=0;
+
+        double usd_plus=0,usd_minus=0;
+        double eur_plus=0,eur_minus=0;
+        double gbp_plus=0,gbp_minus=0;
         Log.i("CZREPO", "id:" + id+ " ,from:" + from + " ,to" + to+"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         SaleDBAdapter saleDBAdapter=new SaleDBAdapter(context);
         saleDBAdapter.open();
+        CashPaymentDBAdapter cashPaymentDBAdapter=new CashPaymentDBAdapter(context);
+        cashPaymentDBAdapter.open();
+        CurrencyReturnsDBAdapter currencyReturnsDBAdapter=new CurrencyReturnsDBAdapter(context);
+        currencyReturnsDBAdapter.open();
+
         List<Sale> sales=saleDBAdapter.getBetween(from,to);
+        sheqle_plus=cashPaymentDBAdapter.getSumOftype(0,from,to)- currencyReturnsDBAdapter.getSumOftype(0,from,to);
+
+        usd_plus=cashPaymentDBAdapter.getSumOftype(1,from,to)- currencyReturnsDBAdapter.getSumOftype(1,from,to);
+        eur_plus=cashPaymentDBAdapter.getSumOftype(2,from,to)- currencyReturnsDBAdapter.getSumOftype(2,from,to);
+        gbp_plus=cashPaymentDBAdapter.getSumOftype(3,from,to)- currencyReturnsDBAdapter.getSumOftype(3,from,to);
+
+
         saleDBAdapter.close();
         ZReportDBAdapter zReportDBAdapter=new ZReportDBAdapter(context);
         zReportDBAdapter.open();
+
         ZReport zReport=zReportDBAdapter.getByID(id);
         zReportDBAdapter.close();
         UserDBAdapter userDBAdapter=new UserDBAdapter(context);
@@ -104,6 +130,7 @@ public class PrintTools {
         AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
         aReportDBAdapter.open();
         AReport aReport = aReportDBAdapter.getByLastZReport((int)id);
+
         aReportDBAdapter.close();
 
 
@@ -111,9 +138,19 @@ public class PrintTools {
 
 
         List<Payment> payments = paymentList(sales);
+
         double cash_plus=0,cash_minus=0;
         double check_plus=0,check_minus=0;
         double creditCard_plus=0,creditCard_minus=0;
+
+
+
+
+
+
+cashPaymentDBAdapter.close();
+        currencyReturnsDBAdapter.close();
+
 
         for (Payment p : payments) {
             int i=0;
@@ -141,7 +178,8 @@ public class PrintTools {
         }
 
         try {
-            return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
+            return BitmapInvoice.zPrint(context, zReport,usd_plus,usd_minus,eur_plus,eur_minus,gbp_plus,gbp_minus,sheqle_plus+500,sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, 500);
+            //return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
         }
         catch (Exception ex){
             ex.printStackTrace();
@@ -161,10 +199,30 @@ public class PrintTools {
     }
 
 
+
     public Bitmap createXReport(long endSaleId, long id, User user, Date date) {
+        double usd_plus=0,usd_minus=0;
+        double eur_plus=0,eur_minus=0;
+        double gbp_plus=0,gbp_minus=0;
+        double sheqle_plus=0,sheqle_minus=0;
+
+
         SaleDBAdapter saleDBAdapter=new SaleDBAdapter(context);
         saleDBAdapter.open();
+
+
+        CashPaymentDBAdapter cashPaymentDBAdapter=new CashPaymentDBAdapter(context);
+        cashPaymentDBAdapter.open();
+        CurrencyReturnsDBAdapter currencyReturnsDBAdapter=new CurrencyReturnsDBAdapter(context);
+        currencyReturnsDBAdapter.open();
+        sheqle_plus=cashPaymentDBAdapter.getSumOftype(0,endSaleId,id)- currencyReturnsDBAdapter.getSumOftype(0,endSaleId,id);
+
+        usd_plus=cashPaymentDBAdapter.getSumOftype(1,endSaleId,id)- currencyReturnsDBAdapter.getSumOftype(1,endSaleId,id);
+        eur_plus=cashPaymentDBAdapter.getSumOftype(2,endSaleId,id)- currencyReturnsDBAdapter.getSumOftype(2,endSaleId,id);
+        gbp_plus=cashPaymentDBAdapter.getSumOftype(3,endSaleId,id)- currencyReturnsDBAdapter.getSumOftype(3,endSaleId,id);
+
         List<Sale> sales=saleDBAdapter.getBetween(endSaleId,id);
+
         saleDBAdapter.close();
 
         AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
@@ -209,6 +267,6 @@ public class PrintTools {
             }
         }
 
-        return BitmapInvoice.xPrint(context,user,date.getTime(),cash_plus,cash_minus,check_plus,check_minus,creditCard_plus,creditCard_minus,aReport.getAmount());
+        return BitmapInvoice.xPrint(context,user,date.getTime(),usd_plus,usd_minus,eur_plus,eur_minus,gbp_plus,gbp_minus,sheqle_plus+aReport.getAmount(),sheqle_minus,cash_plus,cash_minus,check_plus,check_minus,creditCard_plus,creditCard_minus,aReport.getAmount());
     }
 }

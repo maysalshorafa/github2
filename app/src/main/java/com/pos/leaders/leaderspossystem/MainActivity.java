@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -51,6 +53,8 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupAdapter;
@@ -66,6 +70,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPoint;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Customer_M;
@@ -80,10 +85,11 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
-import com.pos.leaders.leaderspossystem.Tools.CashActivity;
 import com.pos.leaders.leaderspossystem.Models.Group;
+import com.pos.leaders.leaderspossystem.Tools.CustmerAssestCatlogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustmerCatalogGridViewAdapter;
 
@@ -91,11 +97,14 @@ import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.TempCashActivty;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -115,6 +124,7 @@ import static java.lang.Thread.sleep;
  */
 
 public class MainActivity extends AppCompatActivity{
+    android.support.v7.app.ActionBar actionBar;
 
     private static final int REQUEST_CASH_ACTIVITY_CODE = 590;
     private static final int REQUEST_CHECKS_ACTIVITY_CODE = 753;
@@ -127,13 +137,15 @@ public class MainActivity extends AppCompatActivity{
     private ActionBarDrawerToggle actionBarDrawerToggle;//
     private NavigationView navigationView;
 
-    ImageButton btnPauseSale, btnResumeSale, btnPercentProduct, btnLastSales;
-
-    Button btnCancel, btnCash, btnCreditCard, btnOtherWays  , search_person;
-    TextView tvTotalPrice, tvTotalSaved;
+ //   ImageButton    btnLastSales;
+    Button btnPercentProduct,btnPauseSale,btnResumeSale;
+ImageButton search_person;
+    Button btnCancel, btnCash, btnCreditCard, btnOtherWays   ;
+    TextView tvTotalPrice, tvTotalSaved , saleman;
     EditText etSearch;
-    Button btnDone;
-    ImageButton btnGrid, btnList;
+    ImageButton btnDone;
+    ImageButton btnGrid, btnList, used_point;
+    ;
     ScrollView scDepartment;
 
     LinearLayout llDepartments;
@@ -163,7 +175,7 @@ public class MainActivity extends AppCompatActivity{
     int type;
     int point ;
     double offerAmount=0;
-
+    long saleIDforCash ;
     String cInformation;
     double parcent;
 
@@ -187,7 +199,12 @@ public class MainActivity extends AppCompatActivity{
     SaleDetailsListViewAdapter saleDetailsListViewAdapter;
     View selectedIteminCartList;
     Order selectedOrderOnCart =null;
-
+    private List<User> custmerAssestList;
+    private List<User> AllCustmerAssestList;
+    private  ListView lvcustmerAssest;
+    private  EditText custmerAssest;
+    public CustomerAssetDB custmerAssetDB ;
+    public CustmerAssestCatlogGridViewAdapter custmerAssestCatlogGridViewAdapter;
     private boolean isGrid = true;
     double saleTotalPrice = 0.0;
     double totalSaved = 0.0;
@@ -202,7 +219,6 @@ public class MainActivity extends AppCompatActivity{
     LinearLayout ll;
     ImageView imv;
     int club_id;
-Button used_point;
     private String touchPadPressed = "";
     private boolean enableBackButton = true;
 
@@ -245,38 +261,69 @@ double SumForClub=0.0;
     long Ppoint;
     double i=0.0;
     String str;
+    boolean forSaleMan=false;
+    long custmerAssetstId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-
         setContentView(R.layout.activity_main_temp);
 
 
+        final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
+                R.layout.title_bar,
+                null);
 
-        used_point=(Button)findViewById(R.id.usedPoint);
+        // Set up your ActionBar
+        actionBar = getSupportActionBar();
+        // TODO: Remove the redundant calls to getSupportActionBar()
+        //       and use variable actionBar instead
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(actionBarLayout);
+        Calendar ca = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        // You customization
+        final int actionBarColor = getResources().getColor(R.color.primaryColor);
+        actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
+
+        final TextView actionBarTitle = (TextView) findViewById(R.id.editText8);
+        actionBarTitle.setText(format.format(ca.getTime()));
+        final TextView actionBarSent = (TextView) findViewById(R.id.editText9);
+        actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
+
+
+        final TextView actionBarStaff = (TextView) findViewById(R.id.editText10);
+        actionBarStaff.setText(SESSION._USER.getFullName());
+
+        final TextView actionBarLocations = (TextView) findViewById(R.id.editText11);
+        actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
+
+
+        used_point=(ImageButton)findViewById(R.id.usedPoint);
         custmer_name=(TextView)findViewById(R.id.cName);
         club_name=(TextView)findViewById(R.id.cClubName);
         information=(TextView)findViewById(R.id.cInformation);
         custmername_EditText=(EditText) findViewById(R.id.custmer_textview);
         //a=custmername_EditText.getText().toString();
 
-        search_person=(Button)findViewById(R.id.searchPerson);
+        search_person=(ImageButton)findViewById(R.id.searchPerson);
         drawerLayout = (DrawerLayout) findViewById(R.id.mainActivity_drawerLayout);
         navigationView = (NavigationView) findViewById(R.id.mainActivity_navigationView);
         //((MenuItem)(navigationView.findViewById(R.id.menuItem_ZReport))).setTitle("Z"+getString(R.string.reports));
 
         //region Init
-        btnPauseSale = (ImageButton) findViewById(R.id.mainActivity_BTNGeneralProduct);
-        btnResumeSale = (ImageButton) findViewById(R.id.mainActivity_BTNMultProduct);
-        btnPercentProduct = (ImageButton) findViewById(R.id.mainActivity_BTNPercentProduct);
-        btnLastSales = (ImageButton) findViewById(R.id.mainActivity_BTNLastSales);
+        btnPauseSale = (Button) findViewById(R.id.mainActivity_BTNGeneralProduct);
+        btnResumeSale = (Button) findViewById(R.id.mainActivity_BTNMultProduct);
+        btnPercentProduct = (Button) findViewById(R.id.mainActivity_BTNPercentProduct);
+      //  btnLastSales = (ImageButton) findViewById(R.id.mainActivity_BTNLastSales);
         btnCancel = (Button) findViewById(R.id.mainActivity_btnCancel);
         lvOrder = (ListView) findViewById(R.id.mainScreen_LVOrder);
 
@@ -292,7 +339,7 @@ double SumForClub=0.0;
         //   lvcustmer.setVisibility(View.GONE);
         btnGrid = (ImageButton) findViewById(R.id.mainActivity_btnGrid);
         btnList = (ImageButton) findViewById(R.id.mainActivity_btnList);
-
+saleman=(TextView)findViewById(R.id.saleMan);
         //fragmentTouchPad = (FrameLayout) findViewById(R.id.mainActivity_fragmentTochPad);
 
         //region  Init cash drawer
@@ -400,6 +447,12 @@ usedpointDbAdapter.open();
                 btnGrid.setImageDrawable(getResources().getDrawable(R.drawable.icon_gridview));
                 lvProducts.setVisibility(View.VISIBLE);
                 gvProducts.setVisibility(View.GONE);
+            }
+        });
+        saleman.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              callPopupForSalesMan();
             }
         });
 
@@ -625,7 +678,7 @@ usedpointDbAdapter.open();
 
         //region Done Button
 
-        btnDone = (Button) findViewById(R.id.mainActivity_btnDone);
+        btnDone = (ImageButton) findViewById(R.id.mainActivity_btnDone);
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -893,8 +946,11 @@ usedpointDbAdapter.open();
             public void onClick(View v) {
                 a=custmername_EditText.getText().toString();
 
-                Intent intent = new Intent(MainActivity.this, CashActivity.class);
+                Intent intent = new Intent(MainActivity.this, TempCashActivty.class);
                 intent.putExtra("_Price", saleTotalPrice);
+                intent.putExtra("_SaleId", saleIDforCash);
+                Toast.makeText(MainActivity.this,"id"+saleIDforCash,Toast.LENGTH_LONG).show();
+
                 intent.putExtra("_custmer", a);
 
 
@@ -1167,7 +1223,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
         //region last sale button
 
-        btnLastSales.setOnClickListener(new View.OnClickListener() {
+/**        btnLastSales.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, SalesManagementActivity.class);
@@ -1175,7 +1231,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
                 startActivity(i);
             }
-        });
+        });**/
 
         //endregion last sale button
 
@@ -1197,10 +1253,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                     case R.id.menuItem_Users:
                         intent = new Intent(MainActivity.this, WorkerManagementActivity.class);
                         break;
-                    case R.id.menuItem_Offers:
-                        SESSION._TEMPOFFERPRODUCTS = null;
-                    //    intent = new Intent(MainActivity.this, OfferActivity.class);
-                        break;
+
                     case R.id.menuItem_Reports:
                         intent = new Intent(MainActivity.this, ReportsManagementActivity.class);
                         intent.putExtra("permissions_name",str);
@@ -1923,6 +1976,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
     }
 
     private void refreshCart() {
+
         // getOffers();
         saleDetailsListViewAdapter.notifyDataSetChanged();
         //lvOrder.setAdapter(saleDetailsListViewAdapter);
@@ -2075,9 +2129,8 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
-
-
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
+
                 sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
 
                 /**  Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
@@ -2086,13 +2139,28 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 saleDBAdapter.close();
 
                 orderDBAdapter = new OrderDBAdapter(MainActivity.this);
+                custmerAssetDB=new CustomerAssetDB(MainActivity.this);
                 orderDBAdapter.open();
+                custmerAssetDB.open();
                 SESSION._SALE.setId(saleID);
                 for (Order o : SESSION._ORDERS) {
-                    orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount());
+                    long orderid=orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                    Toast.makeText(MainActivity.this,"order id"+orderid,Toast.LENGTH_LONG).show();
+
+                    if(o.getCustmerAssestId()!=0){
+
+                        custmerAssetDB.insertEntry(orderid,o.getCustmerAssestId(),o.getPrice(),0,"o");
+                        Toast.makeText(MainActivity.this,"order id"+o.getId(),Toast.LENGTH_LONG).show();
+                    }
+                }
+                if (forSaleMan){
+                    custmerAssetDB.insertEntry(saleID,custmerAssetstId,SESSION._SALE.getTotalPrice(),0,"s");
+
                 }
                 orderDBAdapter.close();
-
+custmerAssetDB.close();
                 SESSION._SALE.setOrders(SESSION._ORDERS);
                 SESSION._SALE.setUser(SESSION._USER);
 
@@ -2100,6 +2168,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 paymentDBAdapter.open();
 
                 long paymentID = paymentDBAdapter.insertEntry(CREDIT_CARD, saleTotalPrice, saleID);
+
                 paymentDBAdapter.close();
 
                 Payment payment = new Payment(paymentID, CREDIT_CARD, saleTotalPrice, saleID);
@@ -2131,6 +2200,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
         }
         if (requestCode == REQUEST_CHECKS_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
+
                 final double result = data.getDoubleExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, 0.0f);
                 SESSION._SALE.setTotalPaid(result);
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
@@ -2139,6 +2209,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
 
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
+
                 sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
                 /**     Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
                  cInformation= String.valueOf(Ppoint.getPoint());
@@ -2148,17 +2219,34 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 saleDBAdapter.close();
 
                 orderDBAdapter = new OrderDBAdapter(MainActivity.this);
+                custmerAssetDB=new CustomerAssetDB(MainActivity.this);
                 orderDBAdapter.open();
+                custmerAssetDB.open();
                 SESSION._SALE.setId(saleID);
                 for (Order o : SESSION._ORDERS) {
-                    orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount());
+                    long orderid=orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                    Toast.makeText(MainActivity.this,"order id"+orderid,Toast.LENGTH_LONG).show();
+
+                    if(o.getCustmerAssestId()!=0){
+
+                        custmerAssetDB.insertEntry(orderid,o.getCustmerAssestId(),o.getPrice(),0,"o");
+                        Toast.makeText(MainActivity.this,"order id"+o.getId(),Toast.LENGTH_LONG).show();
+                    }
                 }
+                if (forSaleMan){
+                    custmerAssetDB.insertEntry(saleID,custmerAssetstId,SESSION._SALE.getTotalPrice(),0,"s");
+
+                }
+
                 orderDBAdapter.close();
 
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
                 paymentDBAdapter.open();
 
                 long paymentID = paymentDBAdapter.insertEntry(CHECKS, saleTotalPrice, saleID);
+
                 paymentDBAdapter.close();
 
                 Payment payment = new Payment(paymentID, CHECKS, saleTotalPrice, saleID);
@@ -2178,19 +2266,24 @@ saleTotalPrice=saleTotalPrice-newPrice;
         }
         if (requestCode == REQUEST_CASH_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
-                final float result = data.getFloatExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY, 0.0f);
+                CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(MainActivity.this);
+                currencyOperationDBAdapter.open();
+                final float result = data.getFloatExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY, 0.0f);
                 SESSION._SALE.setTotalPaid(result);
 
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 orderDBAdapter = new OrderDBAdapter(MainActivity.this);
+                custmerAssetDB=new CustomerAssetDB(MainActivity.this);
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
 
                 saleDBAdapter.open();
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
 
 
-                long saleID = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
-                sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
+                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
+                currencyOperationDBAdapter.insertEntry(SESSION._SALE.getSaleDate().getTime(), saleIDforCash, "sale", SESSION._SALE.getTotalPaid(), 0);
+
+                sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);
 
                 /** Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
                  cInformation= String.valueOf(Ppoint.getPoint());
@@ -2203,42 +2296,57 @@ saleTotalPrice=saleTotalPrice-newPrice;
                     SESSION._SALE.setTotalPaid(0.0);
                     saleDBAdapter.updateEntry(SESSION._SALE);
 
-                    usedpointDbAdapter.insertEntry(saleID,newPoint,_custmer_id);
+                    usedpointDbAdapter.insertEntry(saleIDforCash,newPoint,_custmer_id);
                 }
                 else if(biggerUsedPoint){
-                    usedpointDbAdapter.insertEntry(saleID,aPoint,_custmer_id);
+                    usedpointDbAdapter.insertEntry(saleIDforCash,aPoint,_custmer_id);
                 }
                 else if(lessUsedPoint) {
                     saleTotalPrice=0.0;
 
-                    usedpointDbAdapter.insertEntry(saleID, newPoint, _custmer_id);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, _custmer_id);
                 } else if (biggerUsedPoint) {
-                    usedpointDbAdapter.insertEntry(saleID, aPoint, _custmer_id);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, aPoint, _custmer_id);
                 } else if (lessUsedPoint) {
    SESSION._SALE.setTotalPaid(0.0);
                     saleDBAdapter.updateEntry(SESSION._SALE);
-                    usedpointDbAdapter.insertEntry(saleID, newPoint, _custmer_id);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, _custmer_id);
 
                 }
 
 
                 orderDBAdapter.open();
-                SESSION._SALE.setId(saleID);
+                custmerAssetDB.open();
+                SESSION._SALE.setId(saleIDforCash);
 
                 for (Order o : SESSION._ORDERS) {
-                    orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount());
+                    long orderid=orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                    Toast.makeText(MainActivity.this,"order id"+orderid,Toast.LENGTH_LONG).show();
+
+                    if(o.getCustmerAssestId()!=0){
+
+                        custmerAssetDB.insertEntry(o.getId(),o.getCustmerAssestId(),o.getPrice(),0,"o");
+                        Toast.makeText(MainActivity.this,"order id"+o.getId(),Toast.LENGTH_LONG).show();
+                    }
+                }
+                if (forSaleMan){
+                    custmerAssetDB.insertEntry(saleIDforCash,custmerAssetstId,SESSION._SALE.getTotalPrice(),0,"s");
+
                 }
                 orderDBAdapter.close();
 
 
                 paymentDBAdapter.open();
 
-                long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleID);
-                Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleID);
+                long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash);
+                currencyOperationDBAdapter.insertEntry(SESSION._SALE.getSaleDate().getTime(), paymentID, "payment_cash", saleTotalPrice, 0);
+
+                Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
 
                 SESSION._SALE.setPayment(payment);
 
                 paymentDBAdapter.close();
+                currencyOperationDBAdapter.close();
 
                 printAndOpenCashBox("", "", "");
                 return;
@@ -2275,6 +2383,9 @@ saleTotalPrice=saleTotalPrice-newPrice;
         }
         //do not move from here :)
     }
+
+
+
     private void callPopup() {
 
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
@@ -2282,7 +2393,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
         View popupView = layoutInflater.inflate(R.layout.pop_up, null);
 
-        popupWindow = new PopupWindow(popupView, 1000, ActionBar.LayoutParams.WRAP_CONTENT,
+        popupWindow = new PopupWindow(popupView, 800, ActionBar.LayoutParams.WRAP_CONTENT,
                 true);
 
         popupWindow.setTouchable(true);
@@ -2306,7 +2417,8 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
                     public void onClick(View arg0) {
-                        Toast.makeText(getApplicationContext(), custmername_EditText.getText().toString(), Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(MainActivity.this, AddNewCoustmer.class);
+                        startActivity(intent);
 
                         popupWindow.dismiss();
 
@@ -2317,15 +2429,6 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
         custmer_id.setText("");
         custmer_id.setHint("Search..");
-
-        custmer_id.setFocusable(true);
-        custmer_id.requestFocus();
-        custmer_id.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                custmer_id.setFocusable(true);
-            }
-        });
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         lvcustmer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -2359,8 +2462,45 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
         lvcustmer.setAdapter(custmerCatalogGridViewAdapter);
 
+        lvcustmer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+a= custmer_List.get(position).getCustmerName();
+                  custmername_EditText.setText(a);
+                custmer_name.setText(a);
 
+                _custmer_id =custmer_List.get(position).getId();
+                club_id = custmer_List.get(position).getClub();
 
+                if (club_id != 0) {
+                    Group group = groupDbAdapter.getGroupInfo(club_id);
+                    type = group.getType();
+                    if (type == 1) {
+                        parcent = group.getParcent();
+
+                        club_name.setText(group.getname());
+                        information.setText(parcent + "");
+                    } else if (type == 2) {
+                        club_name.setText(group.getname());
+                        amount = group.getAmount();
+                        point = group.getPoint();
+
+                        Ppoint = sum_pointDbAdapter.getPointInfo(_custmer_id);
+
+                        cInformation = String.valueOf(Ppoint);
+
+                        long unUsedPointForCustmer = usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
+                        aPoint = Ppoint - unUsedPointForCustmer;
+                        information.setText(aPoint + " ");
+                    } else {
+                        club_name.setText(group.getname());
+                        information.setText("general");
+                    }
+                    //  Toast.makeText(getApplicationContext(),"succees", Toast.LENGTH_LONG).show();
+                }
+                popupWindow.dismiss();
+            }
+        });
 
 
 
@@ -2388,39 +2528,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                                 c.getPhoneNumber().toLowerCase().contains(word.toLowerCase()) ||
                                 c.getAddress().toLowerCase().contains(word.toLowerCase())) {
                             custmer_List.add(c);
-                            a = c.getName();
-                            custmername_EditText.setText(a);
-                            custmer_name.setText(a);
 
-                            _custmer_id = c.getId();
-                            club_id = c.getClub();
-
-                            if (club_id != 0) {
-                                Group group = groupDbAdapter.getGroupInfo(club_id);
-                                type = group.getType();
-                                if (type == 1) {
-                                    parcent = group.getParcent();
-
-                                    club_name.setText(group.getname());
-                                    information.setText(parcent + "");
-                                } else if (type == 2) {
-                                    club_name.setText(group.getname());
-                                    amount = group.getAmount();
-                                    point = group.getPoint();
-
-                                    Ppoint = sum_pointDbAdapter.getPointInfo(_custmer_id);
-
-                                    cInformation = String.valueOf(Ppoint);
-
-                                    long unUsedPointForCustmer = usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
-                                    aPoint = Ppoint - unUsedPointForCustmer;
-                                    information.setText(aPoint + " ");
-                                } else {
-                                    club_name.setText(group.getname());
-                                    information.setText("general");
-                                }
-                                //  Toast.makeText(getApplicationContext(),"succees", Toast.LENGTH_LONG).show();
-                            }
                         }
                     }
                 }
@@ -2438,4 +2546,100 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
 
     }
+    private void callPopupForSalesMan() {
+        UserDBAdapter userDB=new UserDBAdapter(this);
+        userDB.open();
+        final CustomerAssetDB custmerAssetDB=new CustomerAssetDB(this);
+        custmerAssetDB.open();
+
+        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
+                .getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View popupView = layoutInflater.inflate(R.layout.custmer_assest_popup, null);
+        popupWindow = new PopupWindow(popupView, 800, ActionBar.LayoutParams.WRAP_CONTENT,
+                true);
+
+        popupWindow.setTouchable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+        custmerAssest = (EditText) popupView.findViewById(R.id.customerAssest_name);
+
+        lvcustmerAssest=(ListView) popupView.findViewById(R.id.custmerAssest_list_view);
+
+      Button  btn_cancel=(Button) popupView.findViewById(R.id.btn_cancel) ;
+
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+
+        ((Button) popupView.findViewById(R.id.btn_add))
+                .setOnClickListener(new View.OnClickListener() {
+
+                    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+                    public void onClick(View arg0) {
+                        Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
+                       startActivity(intent);
+
+                        popupWindow.dismiss();
+
+
+                    } });
+
+
+
+        custmerAssest.setText("");
+        custmerAssest.setHint("Search..");
+
+        custmerAssest.setFocusable(true);
+        custmerAssest.requestFocus();
+        custmerAssest.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                custmerAssest.setFocusable(true);
+            }
+        });
+
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        lvcustmerAssest.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                forSaleMan=true;
+                custmerAssetstId=custmerAssestList.get(position).getId();
+                 saleman.setText(custmerAssestList.get(position).getFullName());
+popupWindow.dismiss();
+            }
+        });
+        lvcustmerAssest.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    userScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (userScrolled && firstVisibleItem + visibleItemCount == totalItemCount) {
+
+                    userScrolled = false;
+                    //  loadMoreProduct();
+                }
+            }
+        });
+
+        custmerAssestList = userDB.getAllSalesMAn();
+        AllCustmerAssestList = custmerAssestList;
+
+
+        CustmerAssestCatlogGridViewAdapter adapter = new CustmerAssestCatlogGridViewAdapter(getApplicationContext(), custmerAssestList);
+        lvcustmerAssest.setAdapter(adapter);
+
+
+
+    }
+
+
 }

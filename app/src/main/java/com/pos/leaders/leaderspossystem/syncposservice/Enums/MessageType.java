@@ -75,4 +75,28 @@ public interface MessageType{
     String ADD_ORDER = "AddOrder";
     String UPDATE_ORDER = "UpdateOrder";
     String DELETE_ORDER = "DeleteOrder";
+
+    String ADD_CURRENCY_OPEARATION = "AddCurrencyOpearation";
+    String UPDATE_CURRENCY_OPEARATION = "UpdateCurrencyOpearation";
+    String DELETE_CURRENCY_OPEARATION = "DeleteCurrencyOpearation";
+
+
+    String ADD_CASH_PAYMENT = "ADDCashPayment";
+    String UPDATE_CASH_PAYMENT = "UpdateCashPayment";
+    String DELETE_CASH_PAYMENT = "DeleteCashPayment";
+
+    String ADD_CUSTMER_ASSEST = "AddCustomerAssest";
+    String UPDATE_CUSTMER_ASSEST = "UpdateCustmerAssest";
+    String DELETE_CUSTMER_ASSEST = "DeleteCustmerAssest";
+
+    String ADD_CURRENCY_RETURN = "AddCurrencyReturn";
+    String UPDATE_CURRENCY_RETURN = "UpdateCurrencyReturn";
+    String DELETE_CURRENCY_RETURN = "DeleteCurrencyReturn";
+
+    String ADD_CURRENCYS = "AddCurrencys";
+    String UPDATE_CURRENCYS = "UpdateCurrencys";
+    String DELETE_CURRENCYS = "DeleteCurrencys";
+
+
+
 }
