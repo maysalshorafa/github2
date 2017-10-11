@@ -1,138 +1,63 @@
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="top">
-
-    <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+    android:layoutDirection="ltr"
     android:background="#3B4151"
-    android:orientation="horizontal"
-    android:layoutDirection="rtl"
-    android:paddingRight="0dp">
+    android:layout_marginStart="0dp"
+>
 
     <TextView
-        android:id="@+id/editText8"
-        android:layout_width="wrap_content"
+        android:id="@+id/userPermtions"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="#3B4151"
-        android:gravity="center"
-        android:orientation="horizontal"></TextView>
-        <EditText
-            android:id="@+id/editText8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/normal_edit_text"
-            android:ems="10"
-            android:gravity="right"
-            android:inputType="textPersonName"
-            android:text="Name"
-            android:textAlignment="gravity"
-            android:textColor="@color/white" />
-
-        <EditText
-            android:id="@+id/editText8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/normal_edit_text"
-            android:ems="10"
-            android:gravity="right"
-            android:inputType="textPersonName"
-            android:text="Name"
-            android:textAlignment="gravity"
-            android:textColor="@color/white" />
-
-        <EditText
-            android:id="@+id/editText9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/normal_edit_text"
-            android:ems="10"
-            android:gravity="right"
-            android:inputType="textPersonName"
-            android:text="Name"
-            android:textAlignment="gravity"
-            android:textColor="@color/white" />
-        <EditText
-        android:id="@+id/editText11"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="0dp"
-        android:layout_weight="1"
+        android:layout_marginTop="5dp"
         android:background="@drawable/header_text"
-        android:textColor="@color/White"
-        />
-        <EditText
-            android:id="@+id/editText10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="2"
-            android:background="@drawable/normal_edit_text"
-            android:ems="10"
-            android:gravity="right"
-            android:inputType="textPersonName"
-            android:text="Name"
-            android:textAlignment="gravity"
-            android:textColor="@color/white" />
-    </LinearLayout>
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:textColor="@color/white" />
 
     <TextView
-        android:id="@+id/editText10"
-        android:background="@drawable/header_text"
+        android:id="@+id/userName"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_width="195dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="15dp"
-        android:textColor="@color/White"
-        android:layout_weight="1"/>
-
-    <TextView
-        android:id="@+id/editText9"
-        android:layout_width="195dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="150dp"
-        android:layout_weight="1"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/header_text"
-        android:textColor="@color/White" />
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:textColor="@color/white" />
 
     <TextView
-        android:id="@+id/editText10"
-        android:layout_width="wrap_content"
+        android:id="@+id/posID"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:ems="10"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/header_text"
         android:inputType="textPersonName"
         android:text="Name"
         android:textColor="@color/white"
-        android:background="@drawable/normal_edit_text"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
-        android:gravity="right"
-        android:textAlignment="gravity"/>
+        />
 
+
+    <TextView
+        android:id="@+id/date"
+        style="@style/ActionBarButtonWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/White"
+        android:textStyle="bold"
+
+
+        />
 </LinearLayout>

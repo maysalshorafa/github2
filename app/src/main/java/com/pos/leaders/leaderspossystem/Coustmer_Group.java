@@ -14,10 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
-import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -58,16 +55,16 @@ public class Coustmer_Group extends AppCompatActivity {
         final int actionBarColor = getResources().getColor(R.color.primaryColor);
         actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
 
-        final TextView actionBarTitle = (TextView) findViewById(R.id.editText8);
+        final TextView actionBarTitle = (TextView) findViewById(R.id.date);
         actionBarTitle.setText(format.format(ca.getTime()));
-        final TextView actionBarSent = (TextView) findViewById(R.id.editText9);
+        final TextView actionBarSent = (TextView) findViewById(R.id.posID);
         actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
 
 
-        final TextView actionBarStaff = (TextView) findViewById(R.id.editText10);
+        final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
         actionBarStaff.setText(SESSION._USER.getFullName());
 
-        final TextView actionBarLocations = (TextView) findViewById(R.id.editText11);
+        final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
         actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
         etGroupName = (EditText) findViewById(R.id.group_name);
         etType = (EditText) findViewById(R.id.et_type);
