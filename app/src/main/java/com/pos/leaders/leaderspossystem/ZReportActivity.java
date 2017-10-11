@@ -23,7 +23,6 @@ import com.pos.leaders.leaderspossystem.Tools.ZReportListViewAdapter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class ZReportActivity extends AppCompatActivity {
@@ -73,13 +72,13 @@ public class ZReportActivity extends AppCompatActivity {
         final int actionBarColor = getResources().getColor(R.color.primaryColor);
         actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
 
-        final TextView actionBarTitle = (TextView) findViewById(R.id.editText8);
+        final TextView actionBarTitle = (TextView) findViewById(R.id.date);
         actionBarTitle.setText(format.format(ca.getTime()));
-        final TextView actionBarSent = (TextView) findViewById(R.id.editText9);
+        final TextView actionBarSent = (TextView) findViewById(R.id.posID);
         actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
 
 
-        final TextView actionBarStaff = (TextView) findViewById(R.id.editText10);
+        final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
         actionBarStaff.setText(SESSION._USER.getFullName());
 
         //region Init

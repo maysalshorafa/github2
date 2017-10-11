@@ -1,6 +1,5 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -79,16 +78,16 @@ public class AddUserActivity extends AppCompatActivity {
 		final int actionBarColor = getResources().getColor(R.color.primaryColor);
 		actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
 
-		final TextView actionBarTitle = (TextView) findViewById(R.id.editText8);
+		final TextView actionBarTitle = (TextView) findViewById(R.id.date);
 		actionBarTitle.setText(format.format(ca.getTime()));
-		final TextView actionBarSent = (TextView) findViewById(R.id.editText9);
+		final TextView actionBarSent = (TextView) findViewById(R.id.posID);
 		actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
 
 
-		final TextView actionBarStaff = (TextView) findViewById(R.id.editText10);
+		final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
 		actionBarStaff.setText(SESSION._USER.getFullName());
 
-		final TextView actionBarLocations = (TextView) findViewById(R.id.editText11);
+		final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
 		actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
 
 
