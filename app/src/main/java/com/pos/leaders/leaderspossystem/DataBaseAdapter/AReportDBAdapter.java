@@ -70,12 +70,8 @@ public class AReportDBAdapter {
     public long insertEntry(long createDate, long byUser, double amount, long lastSaleID,long lastZReport) {
         AReport aReport = new AReport(Util.idHealth(this.db, A_REPORT_TABLE_NAME, A_REPORT_COLUMN_ID), createDate, byUser, amount, lastSaleID, lastZReport);
         sendToBroker(MessageType.ADD_A_REPORT, aReport, this.context);
-
-
-
         try {
-            long insertResult = insertEntry(aReport);
-            return insertResult;
+            return insertEntry(aReport);
         } catch (SQLException ex) {
             Log.e(A_REPORT_TABLE_NAME +" DB insert", "inserting Entry at " + A_REPORT_TABLE_NAME + ": " + ex.getMessage());
             return -1;
@@ -84,16 +80,9 @@ public class AReportDBAdapter {
     }
 
     public long insertEntry(AReport aReport) {
-
         ContentValues val = new ContentValues();
-        //Assign values for each row.
 
-        if(aReport.getId()==0){
-            aReport.setId(Util.idHealth(this.db, A_REPORT_TABLE_NAME, A_REPORT_COLUMN_ID));
-            sendToBroker(MessageType.ADD_A_REPORT, aReport, this.context);
-        }
         val.put(A_REPORT_COLUMN_ID, aReport.getId());
-
         val.put(A_REPORT_COLUMN_CREATEDATE, aReport.getCreationDate());
         val.put(A_REPORT_COLUMN_BYUSER, aReport.getByUserID());
         val.put(A_REPORT_COLUMN_AMOUNT, aReport.getAmount());
@@ -117,49 +106,6 @@ public class AReportDBAdapter {
         cursor.moveToFirst();
         aReport = makeAReport(cursor);
         return aReport;
-    }
-
-    public AReport getByID(long id) {
-        AReport aReport = null;
-        Cursor cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME + " where " + A_REPORT_COLUMN_ID + "='" + id + "'", null);
-        if (cursor.getCount() < 1) // aReport Not Exist
-        {
-            cursor.close();
-            return aReport;
-        }
-        cursor.moveToFirst();
-        aReport = makeAReport(cursor);
-        cursor.close();
-
-        return aReport;
-    }
-
-    public List<AReport> getAll() {
-        List<AReport> aReports = new ArrayList<AReport>();
-
-        Cursor cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME + " order by " + A_REPORT_COLUMN_ID + " desc", null);
-        cursor.moveToFirst();
-
-        while (!cursor.isAfterLast()) {
-            aReports.add(makeAReport(cursor));
-            cursor.moveToNext();
-        }
-
-        return aReports;
-    }
-
-    public List<AReport> getAllUserID(long userId) {
-        List<AReport> aReports = new ArrayList<AReport>();
-
-        Cursor cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME + " where " + A_REPORT_COLUMN_ID + "='" + userId + "' order by " + A_REPORT_COLUMN_ID + " desc", null);
-        cursor.moveToFirst();
-
-        while (!cursor.isAfterLast()) {
-            aReports.add(makeAReport(cursor));
-            cursor.moveToNext();
-        }
-
-        return aReports;
     }
 
     public List<AReport> getBetween(Date fromDate,Date toDate){

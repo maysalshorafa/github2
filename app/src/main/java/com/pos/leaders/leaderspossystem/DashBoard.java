@@ -1,9 +1,11 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -46,6 +48,8 @@ import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.CurrencyCatlogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.SetupFragments.Token;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -53,6 +57,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
+import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
 
 public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     android.support.v7.app.ActionBar actionBar;
@@ -110,6 +117,19 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
                 R.layout.title_bar,
                 null);
 
+        //load pos id from shared file
+        SharedPreferences sharedpreferences = getSharedPreferences(BO_CORE_ACCESS_AUTH, Context.MODE_PRIVATE);
+        if(sharedpreferences.contains(MessageKey.PosId)){
+            int posID = Integer.parseInt(sharedpreferences.getString(MessageKey.PosId, "1"));
+            SESSION.POS_ID_NUMBER = posID;
+        }
+        //load token from shared file
+        sharedpreferences = getSharedPreferences(BO_CORE_ACCESS_TOKEN, Context.MODE_PRIVATE);
+        if(sharedpreferences.contains(MessageKey.Token)){
+            String token = sharedpreferences.getString(MessageKey.Token, null);
+            SESSION.token = token;
+        }
+
         // Set up your ActionBar
         actionBar = getSupportActionBar();
         // TODO: Remove the redundant calls to getSupportActionBar()
@@ -120,7 +140,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setCustomView(actionBarLayout);
-         long date;
+        long date;
         Calendar ca = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         // You customization
@@ -130,70 +150,52 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
         final TextView actionBarTitle = (TextView) findViewById(R.id.editText8);
         actionBarTitle.setText(format.format(ca.getTime()));
         final TextView actionBarSent = (TextView) findViewById(R.id.editText9);
-        actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
+        actionBarSent.setText("POSID  " + SESSION.POS_ID_NUMBER);
 
 
         final TextView actionBarStaff = (TextView) findViewById(R.id.editText10);
         actionBarStaff.setText(SESSION._USER.getFullName());
 
         final TextView actionBarLocations = (TextView) findViewById(R.id.editText11);
-        actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
+        actionBarLocations.setText(" " + SESSION._USER.getPermtionName());
         im = (ImageView) findViewById(R.id.home);
         Dash_bord_adapter adapter = new Dash_bord_adapter(DashBoard.this, dashbord_text, imageId);
-        aReportDBAdapter=new AReportDBAdapter(this);
-        userDBAdapter=new UserDBAdapter(this);
+        aReportDBAdapter = new AReportDBAdapter(this);
+        userDBAdapter = new UserDBAdapter(this);
         userDBAdapter.open();
         aReportDBAdapter.open();
-       // btLogOut = (TextView) findViewById(R.id.log_out);
-        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "Rubik-Bold.ttf");
-//        btLogOut.setTypeface(custom_font);
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "Rubik-Bold.ttf");
         grid = (GridView) findViewById(R.id.grid);
         grid.setAdapter(adapter);
         Bundle bundle = getIntent().getExtras();
         permissions_name = bundle.getString("permissions_name");
-        Toast.makeText(DashBoard.this,permissions_name,Toast.LENGTH_LONG).show();
+        Toast.makeText(DashBoard.this, permissions_name, Toast.LENGTH_LONG).show();
 
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent,
                                     View v, int position, long id) {
-                // Send intent to SingleViewActivity
                 onClickedImage(position);
             }
         });
-        }
+    }
 
     public void onClickedImage(int pos) {
         Intent i;
         switch (pos) {
 
             case 0://1.popUp selection 2.Main activity
-
-
                 if (!(permissions_name.toLowerCase().contains("main screen"))) {
-                    //im.setVisibility(View.GONE);
                     grid.getChildAt(pos).setClickable(false);
-                    //       im.setClickable(false);
-
-
                 } else {
                     i = new Intent(getApplicationContext(), MainActivity.class);
-                    i.putExtra("permissions_name",permissions_name);
+                    i.putExtra("permissions_name", permissions_name);
                     startActivity(i);
 
-                    }
-
-
-
-
-
+                }
                 break;
             case 1:
                 if (!(permissions_name.toLowerCase().contains("report"))) {
-                    //im.setVisibility(View.GONE);
                     grid.getChildAt(pos).setClickable(false);
-                    //       im.setClickable(false);
-
-
                 } else {
                     i = new Intent(getApplicationContext(), ReportsManagementActivity.class);
                     startActivity(i);
@@ -201,11 +203,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
                 break;
             case 2:
                 if (!(permissions_name.toLowerCase().contains("product"))) {
-                    //im.setVisibility(View.GONE);
                     grid.getChildAt(pos).setClickable(false);
-                    //       im.setClickable(false);
-
-
                 } else {
                     i = new Intent(getApplicationContext(), ProductCatalogActivity.class);
                     startActivity(i);
@@ -214,11 +212,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
             case 3:
 
                 if (!(permissions_name.toLowerCase().contains("department"))) {
-                    //im.setVisibility(View.GONE);
                     grid.getChildAt(pos).setClickable(false);
-                    //       im.setClickable(false);
-
-
                 } else {
                     i = new Intent(getApplicationContext(), DepartmentActivity.class);
                     startActivity(i);
@@ -226,11 +220,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
                 break;
             case 4:
                 if (!(permissions_name.toLowerCase().contains("users"))) {
-                    //im.setVisibility(View.GONE);
                     grid.getChildAt(pos).setClickable(false);
-                    //       im.setClickable(false);
-
-
                 } else {
                     i = new Intent(getApplicationContext(), AddUserActivity.class);
                     startActivity(i);
@@ -238,27 +228,17 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
                 break;
             case 5:
                 if (!(permissions_name.toLowerCase().contains("offers"))) {
-                    //im.setVisibility(View.GONE);
                     grid.getChildAt(pos).setClickable(false);
-                    //       im.setClickable(false);
-
-
                 } else {
 
-                 /**   i = new Intent(getApplicationContext(), OfferActivity.class);
-                    startActivity(i);
-                **/}
+                    /**   i = new Intent(getApplicationContext(), OfferActivity.class);
+                     startActivity(i);
+                     **/}
                 break;
             case 6:
                 if (!(permissions_name.toLowerCase().contains("back up"))) {
-                    //im.setVisibility(View.GONE);
                     grid.getChildAt(pos).setClickable(false);
-                    //       im.setClickable(false);
-
-
                 } else {
-
-
                     i = new Intent(getApplicationContext(), BackupActivity.class);
                     startActivity(i);
                 }
@@ -271,21 +251,13 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
                 break;
             case 9:
                 if (!(permissions_name.toLowerCase().contains("customer club"))) {
-                    //im.setVisibility(View.GONE);
                     grid.getChildAt(pos).setClickable(false);
-                    //       im.setClickable(false);
-
-
                 } else {
-
-
-
-
                     final String[] items = {
-                           "ADD Custmer",
+                            "ADD Custmer",
                             "Show Custmer",
-                           "ADD Club",
-                            };
+                            "ADD Club",
+                    };
                     android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(DashBoard.this);
                     builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
                     builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -298,7 +270,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
                                     break;
                                 case 1:
                                     intent = new Intent(DashBoard.this, CustmerMangmentActivity.class);
-                                    intent.putExtra("permissions_name",permissions_name);
+                                    intent.putExtra("permissions_name", permissions_name);
                                     startActivity(intent);
                                     break;
                                 case 2:
@@ -312,7 +284,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
                     android.app.AlertDialog alert = builder.create();
                     alert.show();
                 }
-      break;
+                break;
             case 10:
                 Intent intent = new Intent(DashBoard.this, LogInActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -321,17 +293,12 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
                     scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getId(), new Date());
                     SESSION._SCHEDULEWORKERS.setExitTime(new Date());
                     Log.i("Worker get out", SESSION._SCHEDULEWORKERS.toString());
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                 }
                 SESSION._LogOut();
                 startActivity(intent);
-
         }
-                }
-
-
-
+    }
 
     @Override
     protected void onResume() {
@@ -343,16 +310,9 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
             if (str.equals(LogInActivity.LEADPOS_MAKE_A_REPORT)) {
                 extras.clear();
                 createAReport();
-
-                //make shure the user can not do any thinks if the report a does not created
-                //get the last a report and last z report check if the a report
             }
-
         }
-
     }
-
-
 
     private void createAReport() {
 
@@ -410,8 +370,6 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
 
     private void ShowAReportDialog(final AReport aReport) {
         CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
-        currencyTypeDBAdapter.open();
-
 
         //there is no a report after z report
         enableBackButton = false;
@@ -421,14 +379,11 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
         discountDialog.setCancelable(false);
 
         final Button btOK = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTOk);
-        //btOK.setBackground(getBaseContext().getResources().getDrawable(R.drawable.btn_primary));
         final Button btCancel = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTCancel);
         btCancel.setVisibility(View.GONE);
         final EditText et = (EditText) discountDialog.findViewById(R.id.cashPaymentDialog_TECash);
         final Switch sw = (Switch) discountDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
-    //    final Spinner spinner = (Spinner) discountDialog.findViewById(R.id.spinner);
         sw.setVisibility(View.GONE);
-  //      spinner.setVisibility(View.VISIBLE);
         discountDialog.setCanceledOnTouchOutside(false);
 
 
@@ -443,76 +398,42 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
             }
         });
 
-        // Spinner click listener
-     /**   spinner.setOnItemSelectedListener(this);
-        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
-        if(currencyTypesList==null){
-            Toast.makeText(DashBoard.this, "Selected: Nulll " , Toast.LENGTH_LONG).show();
-
-        }
-        List<String> currency = new ArrayList<String>();
-        for (int i = 0;  i < currencyTypesList.size(); i++) {
-            currency.add(currencyTypesList.get(i).getType());
-        }
-
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currency);
-
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        spinner.setAdapter(dataAdapter);
-
-**/
         btOK.setOnClickListener(new View.OnClickListener()
 
-    {
-        @Override
-        public void onClick (View v){
-        String str = et.getText().toString();
-        if (!str.equals("")) {
-            aReport.setAmount(Double.parseDouble(str));
-            AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBoard.this);
-            aReportDBAdapter.open();
-        /**    CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(DashBoard.this);
-            currencyOperationDBAdapter.open();
-            aReportDBAdapter.insertEntry(aReport);
-            currencyOperationDBAdapter.insertEntry(aReport.getCreationDate(), aReport.getId(), "a_report", aReport.getAmount(), currencyType);
-         currencyOperationDBAdapter.close();
-         **/
-
-            aReportDBAdapter.close();
-            discountDialog.cancel();
-        }
-
-    }
-    });
+        {
+            @Override
+            public void onClick(View v) {
+                String str = et.getText().toString();
+                if (!str.equals("")) {
+                    aReport.setAmount(Double.parseDouble(str));
+                    AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBoard.this);
+                    aReportDBAdapter.open();
+                    aReportDBAdapter.insertEntry(aReport.getCreationDate(),aReport.getByUserID(),aReport.getAmount(),aReport.getLastSaleID(),aReport.getLastZReportID());
+                    aReportDBAdapter.close();
+                    discountDialog.cancel();
+                }
+            }
+        });
 
         btCancel.setOnClickListener(new View.OnClickListener()
 
-    {
-        @Override
-        public void onClick (View v){
-        //discountDialog.cancel();
-    }
-    });
+        {
+            @Override
+            public void onClick(View v) {
+                //discountDialog.cancel();
+            }
+        });
         discountDialog.show();
-
-
-}
+    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-currencyType=parent.getSelectedItemId();
-        Toast.makeText(DashBoard.this,"mays"+currencyType,Toast.LENGTH_LONG).show();
+        currencyType = parent.getSelectedItemId();
+        Toast.makeText(DashBoard.this, "mays" + currencyType, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
-
-
 }

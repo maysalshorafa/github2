@@ -100,7 +100,8 @@ public class ImportProductsActivity extends Activity {
                             int count = 0;
                             for (Product p : lsProducts) {
                                 p.setDepartmentId(departmentMap.get(selectedDepartment));
-                                count += productDBAdapter.insertEntry(p);
+                                count++;
+                                productDBAdapter.insertEntry(p);
                             }
                             if (lsProducts.size() == count) {//success to add all the products
                             } else {

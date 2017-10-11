@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -28,6 +29,7 @@ public class Product {
     private long byUser;
     private int with_pos;
     private int with_point_system;
+    @JsonIgnore
     private List<Integer> offersIDs=new ArrayList<Integer>();
 
     public Product(int i, String string) {

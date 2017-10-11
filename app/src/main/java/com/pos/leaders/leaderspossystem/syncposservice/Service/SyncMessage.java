@@ -68,6 +68,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 public class SyncMessage extends Service {
 
@@ -123,12 +124,8 @@ public class SyncMessage extends Service {
         Log.i(TAG, "Service onCreate");
         broker = new Broker(this);
         if(SESSION.token.equals("")){
-            try {
-                token = Token.getToken(getApplicationContext());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                onDestroy();
-            }
+            token = Token.readToken(getApplicationContext());
+            SESSION.token = token;
         }
     }
 
@@ -193,7 +190,8 @@ public class SyncMessage extends Service {
 
     private void getSync() throws IOException, JSONException {
         String res = messageTransmit.authGet(ApiURL.Sync, token);
-        if(!res.equals(MessageResult.Invalid)){
+        if (!res.equals(MessageResult.Invalid) && res.charAt(0) == '{') {
+            Log.w("getSync", res);
             JSONObject jsonObject = new JSONObject(res);
 
             //todo: execute the command
@@ -209,9 +207,11 @@ public class SyncMessage extends Service {
             }
         } else if(res.equals(MessageResult.Invalid)) {
             //todo: there is no update is coming
+            Log.i(TAG, "there is no update incoming.");
         }
         else {
             //todo: error 401,404,403
+            Log.i(TAG, "Can`t sync messages.");
         }
     }
 

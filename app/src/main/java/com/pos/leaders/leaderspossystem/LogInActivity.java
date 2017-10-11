@@ -12,6 +12,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.Backup.CryptoException;
@@ -34,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 /**
  * Created by KARAM on 19/11/2016.
@@ -63,6 +66,50 @@ public class LogInActivity extends Activity implements View.OnClickListener {
         Intent intent=new Intent(LogInActivity.this,BackupActivity.class);
         startActivity(intent);
         */
+
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.loginActivity_parentLayout);
+        Random random = new Random();
+        int rand = random.nextInt(12) + 1;
+
+        switch (rand){
+            case 1:
+                relativeLayout.setBackground(getResources().getDrawable(R.drawable.background1));
+                break;
+            case 2:
+                relativeLayout.setBackground(getResources().getDrawable(R.drawable.background2));
+                break;
+            case 3:
+                relativeLayout.setBackground(getResources().getDrawable(R.drawable.background3));
+                break;
+            case 4:
+                relativeLayout.setBackground(getResources().getDrawable(R.drawable.background4));
+                break;
+            case 5:
+                relativeLayout.setBackground(getResources().getDrawable(R.drawable.background5));
+                break;
+            case 6:
+                relativeLayout.setBackground(getResources().getDrawable(R.drawable.background6));
+                break;
+            case 7:
+                relativeLayout.setBackground(getResources().getDrawable(R.drawable.background7));
+                break;
+            case 8:
+                relativeLayout.setBackground(getResources().getDrawable(R.drawable.background8));
+                break;
+            case 9:
+                relativeLayout.setBackground(getResources().getDrawable(R.drawable.background9));
+                break;
+            case 10:
+                relativeLayout.setBackground(getResources().getDrawable(R.drawable.background10));
+                break;
+            case 11:
+                relativeLayout.setBackground(getResources().getDrawable(R.drawable.background11));
+                break;
+            case 12:
+                relativeLayout.setBackground(getResources().getDrawable(R.drawable.background12));
+                break;
+        }
+
 
         SESSION._ORDERS = new ArrayList<Order>();
 

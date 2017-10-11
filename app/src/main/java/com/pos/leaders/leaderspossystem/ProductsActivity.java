@@ -234,14 +234,12 @@ public class ProductsActivity  extends AppCompatActivity {
                     if (selectedDepartment.equals("")) {
                         Toast.makeText(getApplicationContext(), "please select an department", Toast.LENGTH_LONG).show();
                     } else {
-                        int check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
+                        long check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
                                 etDescription.getText().toString(), Double.parseDouble(etPrice.getText().toString()),
                                 Double.parseDouble(etCostPrice.getText().toString()), swWithTax.isChecked(),
                                 swWeighable.isChecked(), departmentMap.get(selectedDepartment), SESSION._USER.getId(),with_pos,with_point_system);
-                        if (check == 1) {
+                        if (check > 0) {
                             Toast.makeText(getApplicationContext(), "success to add product", Toast.LENGTH_LONG).show();
-
-
                         } else {
                             Toast.makeText(getApplicationContext(), "fail to add product", Toast.LENGTH_LONG).show();
                         }
