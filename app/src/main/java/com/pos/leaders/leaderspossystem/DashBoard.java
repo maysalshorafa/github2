@@ -117,6 +117,8 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
                 R.layout.title_bar,
                 null);
 
+        AccessToken accessToken = new AccessToken(this);
+        accessToken.execute(this);
         //load pos id from shared file
         SharedPreferences sharedpreferences = getSharedPreferences(BO_CORE_ACCESS_AUTH, Context.MODE_PRIVATE);
         if(sharedpreferences.contains(MessageKey.PosId)){
@@ -129,6 +131,8 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
             String token = sharedpreferences.getString(MessageKey.Token, null);
             SESSION.token = token;
         }
+
+
 
         // Set up your ActionBar
         actionBar = getSupportActionBar();

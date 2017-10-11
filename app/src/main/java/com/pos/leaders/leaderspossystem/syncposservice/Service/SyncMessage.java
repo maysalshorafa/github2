@@ -106,7 +106,8 @@ public class SyncMessage extends Service {
     private Context context;
 
     public static boolean isConnected(Context context) {
-        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return true;
+       /* ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             Network[] networks = connectivity.getAllNetworks();
             if(networks!=null){
@@ -116,7 +117,7 @@ public class SyncMessage extends Service {
                 }
             }
         }
-        return false;
+        return false;*/
     }
 
     @Override

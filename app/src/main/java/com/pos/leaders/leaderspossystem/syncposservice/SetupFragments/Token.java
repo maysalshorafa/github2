@@ -15,7 +15,7 @@ public class Token{
             return token;
         }else{
             //there is no token file
-            AccessToken accessToken = new AccessToken();
+            AccessToken accessToken = new AccessToken(context);
             accessToken.execute(context);
             getToken(context);
         }

@@ -20,11 +20,14 @@ import java.security.acl.LastOwnerException;
 
 public class AccessToken extends AsyncTask<Context,Void,String> {
     MessageTransmit messageTransmit;
-
-    public AccessToken(){
+    Context context;
+    ProgressDialog progressDialog;
+    public AccessToken(Context context){
         messageTransmit = new MessageTransmit("");
+        this.context = context;
+        this.progressDialog = new ProgressDialog(context);
     }
-    final ProgressDialog progressDialog = new ProgressDialog(SetupNewPOSOnlineActivity.context);
+
 
     @Override
     protected String doInBackground(Context... contexts) {

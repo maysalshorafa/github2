@@ -179,7 +179,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
             SESSION.POS_ID_NUMBER = Integer.parseInt(SetupNewPOSOnlineActivity.posPrefix);
 
             //call new activity //get access token
-            AccessToken accessToken = new AccessToken();
+            AccessToken accessToken = new AccessToken(SetupNewPOSOnlineActivity.context);
             accessToken.execute(SetupNewPOSOnlineActivity.context);
 
             while(!accessToken.isCancelled()){
