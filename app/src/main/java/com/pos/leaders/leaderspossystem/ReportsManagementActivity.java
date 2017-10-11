@@ -121,11 +121,11 @@ String str;
 
                 ZReport z=new ZReport(0,DateConverter.stringToDate(DateConverter.currentDateTime()) , SESSION._USER,lastZReport.getEndSaleId()+1,lastSale);
                 z.setByUser(SESSION._USER.getId());
-                long zID=zReportDBAdapter.insertEntry(z);
+                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId());
                 z.setId(zID);
-                lastZReport=new ZReport(z);
+                lastZReport = new ZReport(z);
 
-                PrintTools pt=new PrintTools(ReportsManagementActivity.this);
+                PrintTools pt = new PrintTools(ReportsManagementActivity.this);
 
                 //create and print z report
                 Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false);

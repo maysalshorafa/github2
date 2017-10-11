@@ -64,13 +64,20 @@ public class ZReportDBAdapter {
         return db;
     }
 
+    public long insertEntry(long creatingDate,long byUserID,long startSaleID,long endSaleID){
+        ZReport zReport = new ZReport(Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID), new Date(creatingDate), byUserID, startSaleID, endSaleID);
+        sendToBroker(MessageType.ADD_Z_REPORT, zReport, this.context);
+        try {
+            return insertEntry(zReport);
+        } catch (SQLException ex) {
+            Log.e(Z_REPORT_TABLE_NAME+" DB insert", "inserting Entry at " + Z_REPORT_TABLE_NAME + ": " + ex.getMessage());
+            return -1;
+        }
+    }
+
     public long insertEntry(ZReport zReport) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        if(zReport.getId()==0) {
-            zReport.setId(Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID));
-            sendToBroker(MessageType.ADD_Z_REPORT, zReport, this.context);
-        }
         val.put(Z_REPORT_COLUMN_ID, zReport.getId());
 
         val.put(Z_REPORT_COLUMN_CREATEDATE, zReport.getCreationDate().getTime());
@@ -104,20 +111,6 @@ public class ZReportDBAdapter {
         List<ZReport> zReports = new ArrayList<ZReport>();
 
         Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " order by "+Z_REPORT_COLUMN_ID+" desc", null);
-        cursor.moveToFirst();
-
-        while (!cursor.isAfterLast()) {
-            zReports.add(makeZReport(cursor));
-            cursor.moveToNext();
-        }
-
-        return zReports;
-    }
-
-    public List<ZReport> getAllUserID(long userId) {
-        List<ZReport> zReports = new ArrayList<ZReport>();
-
-        Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " where "+Z_REPORT_COLUMN_ID+"='"+userId+"' order by "+Z_REPORT_COLUMN_ID+" desc", null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {

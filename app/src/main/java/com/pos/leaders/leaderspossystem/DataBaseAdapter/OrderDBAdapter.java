@@ -68,28 +68,6 @@ public class OrderDBAdapter {
 		return db;
 	}
 
-	public long insertEntry(long productId, int counter, double userOffer, long saleId) {
-		ContentValues val = new ContentValues();
-		if(isEmpty){
-            val.put(ORDER_COLUMN_ID, Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID));
-			isEmpty = false;
-		}
-		//Assign values for each row.
-		val.put(ORDER_COLUMN_PRODUCTID, productId);
-		val.put(ORDER_COLUMN_COUNTER, counter);
-		val.put(ORDER_COLUMN_USEROFFER, userOffer);
-		val.put(ORDER_COLUMN_SALEID, saleId);
-		try {
-			return db.insert(ORDER_TABLE_NAME, null, val);
-		} catch (SQLException ex) {
-			Log.e("Order DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
-			return 0;
-		}
-	}
-
-
-
-
 	public long insertEntry(Order o){
         ContentValues val = new ContentValues();
         val.put(ORDER_COLUMN_ID, o.getId());
@@ -122,48 +100,6 @@ public class OrderDBAdapter {
         }
     }
 
-	public Order getOrderByID(long id) {
-		Order order = null;
-		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where id='" + id + "'", null);
-		if (cursor.getCount() < 1) // UserName Not Exist
-		{
-			cursor.close();
-			return order;
-		}
-		cursor.moveToFirst();
-        order = new Order(make(cursor));
-        cursor.close();
-
-		return order;
-	}
-
-
-	public void updateEntry(Order order) {
-		ContentValues val = new ContentValues();
-		//Assign values for each row.
-		val.put(ORDER_COLUMN_PRODUCTID, order.getProductId());
-		val.put(ORDER_COLUMN_COUNTER, order.getCount());
-		val.put(ORDER_COLUMN_USEROFFER, order.getUserOffer());
-		val.put(ORDER_COLUMN_SALEID, order.getSaleId());
-
-		String where = ORDER_COLUMN_ID + " = ?";
-		db.update(ORDER_TABLE_NAME, val, where, new String[]{order.getId() + ""});
-	}
-
-	public List<Order> getAllOrders(){
-		List<Order> ordersList =new ArrayList<Order>();
-
-		Cursor cursor =  db.rawQuery( "select * from "+ORDER_TABLE_NAME, null );
-		cursor.moveToFirst();
-
-		while(!cursor.isAfterLast()){
-			ordersList.add(make(cursor));
-			cursor.moveToNext();
-		}
-
-		return ordersList;
-	}
-
 	public List<Order> getOrderBySaleID(long saleID){
 		List<Order> saleOrderList=new ArrayList<Order>();
 		Cursor cursor =  db.rawQuery( "select * from "+ORDER_TABLE_NAME+" where "+ORDER_COLUMN_SALEID+"="+saleID, null );
@@ -175,6 +111,7 @@ public class OrderDBAdapter {
 		}
 		return saleOrderList;
 	}
+
 	private Order make(Cursor cursor){
 		return new Order(Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_ID))),
 				Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_PRODUCTID))),

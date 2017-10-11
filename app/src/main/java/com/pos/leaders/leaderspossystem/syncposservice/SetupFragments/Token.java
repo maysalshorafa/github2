@@ -15,11 +15,17 @@ public class Token{
             return token;
         }else{
             //there is no token file
-            AccessToken accessToken = new AccessToken();
+            AccessToken accessToken = new AccessToken(context);
             accessToken.execute(context);
-            Thread.sleep(2000);
             getToken(context);
         }
-        return null;
+        return getToken(context);
+    }
+    public static String readToken(Context context){
+        SharedPreferences prefs = context.getSharedPreferences(SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN, Context.MODE_PRIVATE);
+        String token = null;
+        if(prefs.contains(MessageKey.Token))
+            token = prefs.getString(MessageKey.Token, null);
+        return token;
     }
 }

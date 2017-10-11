@@ -64,7 +64,7 @@ public class ProductDBAdapter {
             "`name` TEXT NOT NULL, `barcode` INTEGER NOT NULL, `description` TEXT,"+
             "`price` REAL NOT NULL, `costPrice` REAL, `withTax` INTEGER NOT NULL DEFAULT 1, "+
             "`weighable` INTEGER NOT NULL DEFAULT 0, `creatingDate` TEXT NOT NULL DEFAULT current_timestamp, "+
-            "`hide` INTEGER DEFAULT 0, `depId` INTEGER NOT NULL, `byUser` INTEGER NOT NULL, `status` INTEGER NOT NULL ,  `with_pos` INTEGER NOT NULL DEFAULT 1, `with_point_system` INTEGER NOT NULL DEFAULT 1,"+
+            "`hide` INTEGER DEFAULT 0, `depId` INTEGER NOT NULL, `byUser` INTEGER NOT NULL, `status` INTEGER NOT NULL DEFAULT 0 ,  `with_pos` INTEGER NOT NULL DEFAULT 1, `with_point_system` INTEGER NOT NULL DEFAULT 1,"+
             "FOREIGN KEY(`depId`) REFERENCES `departments.id`, FOREIGN KEY(`byUser`) REFERENCES `users.id` )";
     // Variable to hold the database instance
     public SQLiteDatabase db;
@@ -92,22 +92,18 @@ public class ProductDBAdapter {
         return db;
     }
 
-    public int insertEntry(String name,String barCode,String description,double price,double costPrice,
+    public long insertEntry(String name,String barCode,String description,double price,double costPrice,
                            boolean withTax,boolean weighable,long depId,long byUser ,int pos,int point_system) {
         Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price, costPrice, withTax, weighable, new Date(), depId, byUser, pos, point_system);
 
-        sendToBroker(MessageType.ADD_PRODUCT, p, this.context);
-
-        try {
-            long insertResult = insertEntry(p);
-            return 1;
-        } catch (SQLException ex) {
-            Log.e("ProductDB insertEntry", "inserting Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
-            return 0;
+        long id = insertEntry(p);
+        if (id > 0) {
+            sendToBroker(MessageType.ADD_PRODUCT, p, this.context);
         }
+        return id;
     }
 
-    public int insertEntry(Product p) {
+    public long insertEntry(Product p) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(PRODUCTS_COLUMN_ID, p.getId());
@@ -124,11 +120,10 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_with_point_system,p.getWith_point_system());
 
         try {
-            db.insert(PRODUCTS_TABLE_NAME, null, val);
-            return 1;
+            return db.insert(PRODUCTS_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e("ProductDB insertEntry", "inserting Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
-            return 0;
+            return -1;
         }
     }
 
@@ -225,16 +220,6 @@ public class ProductDBAdapter {
         return productsList;
     }
 
-    public List<Product> getAllUserProducts(int  userId){
-        List<Product> userProductList=new ArrayList<Product>();
-        List<Product> productsList=getAllProducts();
-        for (Product d:productsList) {
-            if(d.getByUser()==userId)
-                userProductList.add(d);
-        }
-        return productsList;
-    }
-
 	public List<Product> getAllProductsByDepartment(long departmentId){
 		List<Product> productsList =new ArrayList<Product>();
 
@@ -265,7 +250,7 @@ public class ProductDBAdapter {
 
     public List<Product> getTopProducts(int from ,int count){
         List<Product> productsList =new ArrayList<Product>();
-//SELECT * FROM table limit 100, 200
+        //SELECT * FROM table limit 100, 200
         Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME +" where "+PRODUCTS_COLUMN_DISENABLED+"=0 order by id desc limit "+from+","+count, null );
         cursor.moveToFirst();
 
