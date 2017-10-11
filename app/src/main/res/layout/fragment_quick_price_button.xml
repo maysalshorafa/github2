@@ -3,58 +3,51 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_vertical">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+ >
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
 
         <Button
             android:id="@+id/fragmentQuickPriceButton_bt00"
             style="@style/AppTheme.bt_dark"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="quickPriceButtonClick"
-            android:paddingBottom="20dp"
-            android:paddingTop="20dp"
-            android:text="1" />
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_margin="2dp"
+            android:text="@string/TouchPad_1"
+            android:layout_marginLeft="3dp"
+          />
 
         <Button
             android:id="@+id/fragmentQuickPriceButton_bt01"
             style="@style/AppTheme.bt_dark"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="quickPriceButtonClick"
-            android:paddingBottom="20dp"
-            android:paddingTop="20dp"
-            android:text="3" />
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_margin="2dp"
+            android:text="@string/TouchPad_2" />
 
         <Button
-            android:id="@+id/fragmentQuickPriceButton_bt02"
+        android:id="@+id/fragmentQuickPriceButton_bt02"
             style="@style/AppTheme.bt_dark"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="quickPriceButtonClick"
-            android:paddingBottom="20dp"
-            android:paddingTop="20dp"
-            android:text="5" />
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_margin="2dp"
 
+        android:text="@string/TouchPad_3" />
         <Button
             android:id="@+id/fragmentQuickPriceButton_bt10"
             style="@style/AppTheme.bt_dark"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="quickPriceButtonClick"
-            android:paddingBottom="20dp"
-            android:paddingTop="20dp"
-            android:text="10" />
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_margin="2dp"
+            android:text="@string/TouchPad_4"
+            android:layout_marginRight="3dp"/>
     </LinearLayout>
-
  </LinearLayout>

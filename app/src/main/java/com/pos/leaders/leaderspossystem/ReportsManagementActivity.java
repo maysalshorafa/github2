@@ -1,12 +1,8 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,41 +11,16 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Anchor;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.CMYKColor;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.codec.Base64;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
-import com.pos.leaders.leaderspossystem.OpenFormat.BKMVDATA;
-import com.pos.leaders.leaderspossystem.OpenFormat.INI;
-import com.pos.leaders.leaderspossystem.OpenFormat.OpenFrmt;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
-import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 
-import org.joda.time.DateTime;
-
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -95,17 +66,17 @@ String str;
         final int actionBarColor = getResources().getColor(R.color.primaryColor);
         actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
 
-        final TextView actionBarTitle = (TextView) findViewById(R.id.editText8);
+        final TextView actionBarTitle = (TextView) findViewById(R.id.date);
         actionBarTitle.setText(format.format(ca.getTime()));
-        final TextView actionBarSent = (TextView) findViewById(R.id.editText9);
+        final TextView actionBarSent = (TextView) findViewById(R.id.posID);
         actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
 
 
-        final TextView actionBarStaff = (TextView) findViewById(R.id.editText10);
+        final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
         actionBarStaff.setText(SESSION._USER.getFullName());
         //region Init
 
-        final TextView actionBarLocations = (TextView) findViewById(R.id.editText11);
+        final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
         actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
         btnZ = (Button) findViewById(R.id.reportManagementActivity_btnZ);
         btnZ.setText("Z " + getString(R.string.report));
