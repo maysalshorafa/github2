@@ -140,25 +140,15 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
 
         final TextView actionBarTitle = (TextView) findViewById(R.id.date);
         actionBarTitle.setText(format.format(ca.getTime()));
-<<<<<<< HEAD
-        final TextView actionBarSent = (TextView) findViewById(R.id.editText9);
-        actionBarSent.setText("POSID  " + SESSION.POS_ID_NUMBER);
-=======
         final TextView actionBarSent = (TextView) findViewById(R.id.posID);
         actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
->>>>>>> master
 
 
         final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
         actionBarStaff.setText(SESSION._USER.getFullName());
 
-<<<<<<< HEAD
-        final TextView actionBarLocations = (TextView) findViewById(R.id.editText11);
-        actionBarLocations.setText(" " + SESSION._USER.getPermtionName());
-=======
         final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
         actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
->>>>>>> master
         im = (ImageView) findViewById(R.id.home);
         Dash_bord_adapter adapter = new Dash_bord_adapter(DashBoard.this, dashbord_text, imageId);
         aReportDBAdapter = new AReportDBAdapter(this);
