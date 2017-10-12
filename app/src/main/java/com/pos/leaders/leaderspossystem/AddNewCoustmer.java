@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,9 +35,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AddNewCoustmer  extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     Intent intent ;
-    EditText etCoustmerName, dateOfbirtday, etCoustmerId, etGender, etJob, etEmail, etPhoneNo, etAddress;
+    EditText etCoustmerName, dateOfbirtday, etCoustmerId, etJob, etEmail, etPhoneNo, etAddress;
     Button btAddcoustmer,btCancel;
     Spinner selectCitySpinner, selectClubSpinner;
     CustomerDBAdapter customerDBAdapter;
@@ -43,8 +46,9 @@ public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnI
     android.support.v7.app.ActionBar actionBar;
     private List<City> cityList=null;
     private List<Group> groupList=null;
-
-
+    RadioButton maleRadioButton, femaleRadioButton;
+    RadioGroup radioGender ;
+    String gender="";
 
     int selectedClub;
 
@@ -89,7 +93,9 @@ public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnI
 
         final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
         actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
-
+        radioGender = (RadioGroup) findViewById(R.id.user_gender);
+        maleRadioButton=(RadioButton)findViewById(R.id.male);
+        femaleRadioButton=(RadioButton)findViewById(R.id.female);
 
         init();
         custmer = null;
@@ -97,12 +103,10 @@ public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnI
         if (bundle != null) {
            long i = (long) bundle.get("id");
             Toast.makeText(getApplicationContext(), "Custmer id is"+ i, Toast.LENGTH_LONG).show();
-
             custmer = customerDBAdapter.getCustmerByID(i);
+            etCoustmerId.setText(""+custmer.getId());
             etCoustmerName.setText(custmer.getName());
             dateOfbirtday.setText(custmer.getBirthday());
-//           etCoustmerId.setText((CharSequence) customerDBAdapter.getCustmerByID(i));
-            etGender.setText(custmer.getGender());
             etJob.setText(custmer.getJob());
             etEmail.setText(custmer.getEmail());
             etPhoneNo.setText(custmer.getPhoneNumber());
@@ -116,10 +120,8 @@ public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnI
             @Override
             public void onClick(View v) {
                 //// TODO: 22/10/2016 cancel and return to previous activity
-                Intent intent = new Intent(AddNewCoustmer.this, DashBoard.class);
-                //	intent.putExtra("permissions_name",user.getPermtionName());
+                Intent intent = new Intent(AddNewCoustmer.this, MainActivity.class);
 
-                //userDBAdapter.close();
                 startActivity(intent);
             }
         });
@@ -136,8 +138,6 @@ public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnI
                                 Toast.makeText(getApplicationContext(), "Please insert  name", Toast.LENGTH_LONG).show();
                             } else if (dateOfbirtday.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), "Please insert date of birthday", Toast.LENGTH_LONG).show();
-                            } else if (etGender.getText().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), "Please insert gender", Toast.LENGTH_LONG).show();
                             }
                             else if (etEmail.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), "Please insert job", Toast.LENGTH_LONG).show();
@@ -155,8 +155,7 @@ public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnI
 
                             else {
                                 long i = customerDBAdapter.insertEntry(Long.parseLong(etCoustmerId.getText().toString()) ,etCoustmerName.getText().toString(), dateOfbirtday.getText().toString(),
-                                        etGender.getText().toString(),  etEmail.getText().toString(),
-                                        etJob.getText().toString(),etPhoneNo.getText().toString(),etAddress.getText().toString() , (int) selectCitySpinner.getSelectedItemId(),(int) selectClubSpinner.getSelectedItemId());
+                                        gender,  etEmail.getText().toString(), etJob.getText().toString(),etPhoneNo.getText().toString(),etAddress.getText().toString() , (int) selectCitySpinner.getSelectedItemId(),(int) selectClubSpinner.getSelectedItemId());
                                 if (i > 0) {
                                     Log.i("success", "adding new custmer");
                                     intent = new Intent(AddNewCoustmer.this, CustmerMangmentActivity.class);
@@ -180,8 +179,6 @@ public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnI
                                 Toast.makeText(getApplicationContext(), "Please insert  name", Toast.LENGTH_LONG).show();
                             } else if (dateOfbirtday.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), "Please insert date of birthday", Toast.LENGTH_LONG).show();
-                            } else if (etGender.getText().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), "Please insert gender", Toast.LENGTH_LONG).show();
                             }
                             else if (etEmail.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), "Please insert job", Toast.LENGTH_LONG).show();
@@ -200,10 +197,9 @@ public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnI
                                     custmer.setName(etCoustmerName.getText().toString());
                                     custmer.setAddress(etAddress.getText().toString());
                                     custmer.setBirthday(dateOfbirtday.getText().toString());
-                                    custmer.setEmail(etGender.getText().toString());
                                     custmer.setPhoneNumber(etPhoneNo.getText().toString());
                                     custmer.setEmail(etEmail.getText().toString());
-                                    custmer.setGender(etGender.getText().toString());
+                                    custmer.setGender(gender);
                                     custmer.setJob(etJob.getText().toString());
 
                                     customerDBAdapter.updateEntry(custmer);
@@ -226,7 +222,33 @@ public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnI
 
 
 
+        radioGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // TODO Auto-generated method stub
+                int childCount = group.getChildCount();
+                String gender=null;
+                for (int x = 0; x < childCount; x++) {
+                    RadioButton btn = (RadioButton) group.getChildAt(x);
+
+
+                    if(btn.getId()==R.id.male){
+                        btn.setText("Male");
+                    }else{
+                        btn.setText("Female");
+                    }
+                    if (btn.getId() == checkedId) {
+
+                        gender=btn.getText().toString();// here gender will contain M or F.
+
+                    }
+
+                }
+
+                Log.e("Gender",gender);
+            }
+        });
 
     }
 
@@ -234,27 +256,26 @@ public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnI
 
 
 
-    private void init(){
-        CityDbAdapter cityDbAdapter=new CityDbAdapter(AddNewCoustmer.this);
+    private void init() {
+        CityDbAdapter cityDbAdapter = new CityDbAdapter(AddNewCoustmer.this);
         cityDbAdapter.open();
-        GroupAdapter groupAdapter=new GroupAdapter(AddNewCoustmer.this);
+        GroupAdapter groupAdapter = new GroupAdapter(AddNewCoustmer.this);
         groupAdapter.open();
 
         etCoustmerName = (EditText) findViewById(R.id.add_coustmer_name);
         dateOfbirtday = (EditText) findViewById(R.id.addCoustmer_Birthday);
         etCoustmerId = (EditText) findViewById(R.id.addCoustmer_Id);
-        etGender = (EditText) findViewById(R.id.addCoustmer_gender);
 
 
         etJob = (EditText) findViewById(R.id.addCoustmer_job);
         etEmail = (EditText) findViewById(R.id.addCoustmer_email);
         etPhoneNo = (EditText) findViewById(R.id.addCoustmer_ETPhoneNumber);
         etAddress = (EditText) findViewById(R.id.addCoustmer_Address);
-        btAddcoustmer=(Button)findViewById(R.id.add_Custmer);
-        btCancel=(Button)findViewById(R.id.addCustmer_BTCancel);
+        btAddcoustmer = (Button) findViewById(R.id.add_Custmer);
+        btCancel = (Button) findViewById(R.id.addCustmer_BTCancel);
 
 //        dateFormatter = new SimpleDateFormat(UtilityDateFormater.Format1);
-        customerDBAdapter=new CustomerDBAdapter(this);
+        customerDBAdapter = new CustomerDBAdapter(this);
         customerDBAdapter.open();
 
 
@@ -264,7 +285,7 @@ public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnI
         selectClubSpinner.setOnItemSelectedListener(this);
         final List<String> city = new ArrayList<String>();
         cityList = cityDbAdapter.getAllCity();
-        for (int i = 0;  i < cityList.size(); i++) {
+        for (int i = 0; i < cityList.size(); i++) {
             city.add(cityList.get(i).getName());
         }
 
@@ -280,89 +301,27 @@ public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnI
 
         final List<String> club = new ArrayList<String>();
         groupList = groupAdapter.getAllGroup();
-        for (int i = 0;  i < groupList.size(); i++) {
+        for (int i = 0; i < groupList.size(); i++) {
             club.add(groupList.get(i).getname());
         }
 
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter1= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, club);
+        ArrayAdapter<String> dataAdapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, club);
 
         // Drop down layout style - list view with radio button
         dataAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-
-
-
         // attaching data adapter to spinner
         selectClubSpinner.setAdapter(dataAdapter1);
 
-
-
-
-        //Spinner My_spinner = (Spinner) findViewById(R.id.customer_spinner);
-
-
-
-
-        selectCitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-
-            public void onItemSelected(AdapterView<?> parent, View arg1, int arg2,
-                                       long arg3) {
-                // TODO Auto-generated method stub
-
-                //selectedCity = (int) parent.getItemAtPosition(arg2);
-                // ((TextView) parent.getChildAt(0)).setTextColor(0x00000000);
-
-                Log.e("Test Spinner", "" +   selectedCity);
-
-
-            }
-
-
-
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-
-            }
-
-        });
-
-        selectClubSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-
-            public void onItemSelected(AdapterView<?> parent, View arg1, int arg2,
-                                       long arg3) {
-                // TODO Auto-generated method stub
-
-                // ((TextView) parent.getChildAt(0)).setTextColor(0x00000000);
-
-                Log.e("Test Spinner", "" +   selectedCity);
-
-
-            }
-
-
-
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-
-            }
-
-        });
-
-
     }
-
-
 
     protected boolean ValidationCreationMethod(boolean notvalid){
 
         //notvalid = false;
         String name = etCoustmerName.getText().toString();
         String email = etEmail.getText().toString();
-        String gender = etGender.getText().toString();
         String job  = etJob.getText().toString();
         String phoneNumber = etPhoneNo.getText().toString();
         String address  = etAddress.getText().toString();
@@ -395,7 +354,6 @@ public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnI
         }
 
         if(!UtilityValidation.isValidGender(gender)){
-            etGender.setError("Invalid Address");
             notvalid = true;
         }
 
@@ -421,7 +379,6 @@ public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnI
 
         return notvalid;
     }
-
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

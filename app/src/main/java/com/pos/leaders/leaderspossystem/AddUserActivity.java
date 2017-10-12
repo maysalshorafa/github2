@@ -111,7 +111,7 @@ public class AddUserActivity extends AppCompatActivity {
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			int i = (int) extras.get("userId");
+			long i = (long) extras.get("userId");
 			user = userDBAdapter.getUserByID(i);
 			etUserName.setText(user.getUserName());
 			etPassword.setText(user.getPassword());

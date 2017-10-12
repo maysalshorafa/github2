@@ -86,7 +86,7 @@ public class Coustmer_Group extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //// TODO: 22/10/2016 cancel and return to previous activity
-                Intent intent = new Intent(Coustmer_Group.this, DashBoard.class);
+                Intent intent = new Intent(Coustmer_Group.this, MainActivity.class);
                 //	intent.putExtra("permissions_name",user.getPermtionName());
 
                 //userDBAdapter.close();

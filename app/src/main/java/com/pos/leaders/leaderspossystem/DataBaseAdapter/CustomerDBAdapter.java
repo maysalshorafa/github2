@@ -163,7 +163,7 @@ public class CustomerDBAdapter {
     }
 
     private Customer_M createNewCustmer(Cursor cursor){
-        return new Customer_M(Integer.parseInt(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_ID))),
+        return new Customer_M(Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_NAME)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BIRTHDAY)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_ADDRESS)),
@@ -231,7 +231,7 @@ public class CustomerDBAdapter {
 
 
     private Customer_M makecustmer(Cursor cursor){
-        Customer_M c=new Customer_M(Integer.parseInt(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_ID))),
+        Customer_M c=new Customer_M(Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_NAME)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BIRTHDAY)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_ADDRESS)),
@@ -257,7 +257,7 @@ public class CustomerDBAdapter {
 
 
         while(!cursor.isAfterLast()){
-            customerMs.add(new Customer_M(Integer.parseInt(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_ID))),
+            customerMs.add(new Customer_M(Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_ID))),
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_NAME)),
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BIRTHDAY)),
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_ADDRESS)),

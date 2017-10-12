@@ -112,7 +112,17 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 relativeLayout.setBackground(getResources().getDrawable(R.drawable.background12));
                 break;
         }
-
+//  to insert data from file
+             /**
+            DbHelper dbHelper = new DbHelper(LogInActivity.this);
+                 this.db = dbHelper.getWritableDatabase();
+                 try {
+                   int insertCount = dbHelper.insertFromFile(this, R.raw.testdbfile);
+                   Toast.makeText(this, "Rows loaded from file= " + insertCount, Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }**/
 
         SESSION._ORDERS = new ArrayList<Order>();
 
