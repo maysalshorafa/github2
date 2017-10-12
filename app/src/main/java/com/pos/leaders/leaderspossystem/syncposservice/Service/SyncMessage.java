@@ -12,6 +12,7 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
@@ -32,6 +33,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
@@ -419,6 +421,22 @@ public class SyncMessage extends Service {
                 case MessageType.DELETE_CLUB:
                     break;
                 //endregion CLUB
+                //region City
+                case MessageType.ADD_CITY:
+                    City city = null;
+                    city = objectMapper.readValue(msgData, City.class);
+
+                    CityDbAdapter cityDbAdapter = new CityDbAdapter(this);
+                    cityDbAdapter.open();
+                    rID = cityDbAdapter.insertEntry(city);
+                    cityDbAdapter.close();
+                    break;
+                case MessageType.UPDATE_CITY:
+                    break;
+                case MessageType.DELETE_CITY:
+                    break;
+                //endregion City
+
 
                 //region CUSTOMER
                 case MessageType.ADD_CUSTOMER:
@@ -700,6 +718,16 @@ public class SyncMessage extends Service {
                 break;
             case MessageType.DELETE_CLUB:
                 res = messageTransmit.authDelete(ApiURL.Club, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //City Region
+            case MessageType.ADD_CITY:
+                res = messageTransmit.authPost(ApiURL.City, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_CITY:
+                res = messageTransmit.authPut(ApiURL.City, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_CITY:
+                res = messageTransmit.authDelete(ApiURL.City, jsonObject.getString(MessageKey.Data), token);
                 break;
 
 

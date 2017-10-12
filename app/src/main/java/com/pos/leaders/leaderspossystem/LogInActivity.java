@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,7 +50,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     private ZReport lastZReport;
     public static final String LEADPOS_MAKE_A_REPORT = "LEADPOS_make_a_report";
 
-
+    private SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +65,17 @@ public class LogInActivity extends Activity implements View.OnClickListener {
         Intent intent=new Intent(LogInActivity.this,BackupActivity.class);
         startActivity(intent);
         */
-
+      //  to insert data from file
+        /**
+   DbHelper dbHelper = new DbHelper(LogInActivity.this);
+        this.db = dbHelper.getWritableDatabase();
+        try {
+            int insertCount = dbHelper.insertFromFile(this, R.raw.testDbFile);
+            Toast.makeText(this, "Rows loaded from file= " + insertCount, Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }**/
         SESSION._ORDERS = new ArrayList<Order>();
 
         scheduleWorkersDBAdapter = new ScheduleWorkersDBAdapter(this);

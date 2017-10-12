@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -60,30 +61,6 @@ public class GroupAdapter {
     }
 
 
-    public List<Group> getAllGroup(){
-        List<Group> groupList =new ArrayList<>();
-
-        Cursor cursor =  db.rawQuery( "select * from "+Group_TABLE_NAME,null );
-
-        cursor.moveToFirst();
-
-
-        while(!cursor.isAfterLast()){
-            groupList.add(new Group(Long.parseLong(cursor.getString(cursor.getColumnIndex(Group_COLUMN__ID))),
-                    cursor.getString(cursor.getColumnIndex(Group_COLUMN_Name)),
-                    cursor.getString(cursor.getColumnIndex(Group_COLUMN__Descrption)),
-
-                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Type)))
-                    , (float) Double.parseDouble(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Parcent))),
-                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Amount)))
-                    ,Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Point)))));
-
-            cursor.moveToNext();
-
-        }
-
-        return groupList;
-    }
     public int getRowCount(){
         Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME , null);
         return cursor.getCount();
@@ -165,6 +142,26 @@ public class GroupAdapter {
 
             return group;
 
+    }
+    public List<Group> getAllGroup() {
+        List<Group> groups = new ArrayList<Group>();
+        Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME , null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            groups.add(createNewGroup(cursor));
+            cursor.moveToNext();
+        }
+        return groups;
+    }
+
+    private Group createNewGroup(Cursor cursor){
+        return  new Group(Long.parseLong(cursor.getString(cursor.getColumnIndex(Group_COLUMN__ID))),
+                cursor.getString(cursor.getColumnIndex(Group_COLUMN_Name)),
+                cursor.getString(cursor.getColumnIndex(Group_COLUMN__Descrption)),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Type))),
+                (float) Double.parseDouble(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Parcent))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Amount))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Point))));
     }
 
 

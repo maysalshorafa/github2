@@ -1,5 +1,9 @@
 package com.pos.leaders.leaderspossystem;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,6 +29,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencysDBAdap
  */
 
 public class DbHelper extends SQLiteOpenHelper {
+    private SQLiteDatabase db;
+
 
     protected static final String DATABASE_NAME = "POSDB.db";
     protected static final String CONTACTS_TABLE_NAME = "contacts";
@@ -85,7 +91,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CashPaymentDBAdapter.DATABASE_CREATE);
         db.execSQL(CurrencyOperationDBAdapter.DATABASE_CREATE);
         db.execSQL(CurrencyReturnsDBAdapter.DATABASE_CREATE);
-        db.execSQL(CurrencysDBAdapter.DATABASE_CREATE);
+       db.execSQL(CurrencysDBAdapter.DATABASE_CREATE);
         db.execSQL(CurrencyTypeDBAdapter.DATABASE_CREATE);
 
         db.execSQL(PermissionsDBAdapter.DATABASE_CREATE);
@@ -111,6 +117,27 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
+    public int insertFromFile(Context context, int resourceId) throws IOException {
+        DbHelper dbHelper = new DbHelper(context);
+        this.db = dbHelper.getWritableDatabase();
+        // Reseting Counter
+        int result = 0;
+
+        // Open the resource
+        InputStream insertsStream = context.getResources().openRawResource(resourceId);
+        BufferedReader insertReader = new BufferedReader(new InputStreamReader(insertsStream));
+
+        // Iterate through lines (assuming each insert has its own line and theres no other stuff)
+        while (insertReader.ready()) {
+            String insertStmt = insertReader.readLine();
+            db.execSQL(insertStmt);
+            result++;
+        }
+        insertReader.close();
+
+        // returning number of inserted rows
+        return result;
+    }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
