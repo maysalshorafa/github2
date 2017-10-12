@@ -68,7 +68,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
         Intent intent=new Intent(LogInActivity.this,BackupActivity.class);
         startActivity(intent);
         */
-<<<<<<< HEAD
+
 
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.loginActivity_parentLayout);
         Random random = new Random();
@@ -114,19 +114,6 @@ public class LogInActivity extends Activity implements View.OnClickListener {
         }
 
 
-=======
-      //  to insert data from file
-        /**
-   DbHelper dbHelper = new DbHelper(LogInActivity.this);
-        this.db = dbHelper.getWritableDatabase();
-        try {
-            int insertCount = dbHelper.insertFromFile(this, R.raw.testdbfile);
-            Toast.makeText(this, "Rows loaded from file= " + insertCount, Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }**/
->>>>>>> mays-sameer
         SESSION._ORDERS = new ArrayList<Order>();
 
         scheduleWorkersDBAdapter = new ScheduleWorkersDBAdapter(this);
