@@ -5,54 +5,50 @@ package com.pos.leaders.leaderspossystem.Models;
  */
 
 public class Customer_M {
-
     private long id;
-    private String name;
-    private String birthday;
+    private String firstName;
+    private String lastName;
     private String gender;
     private String email;
     private String job;
     private String phoneNumber;
-    private String address;
+    private String street;
     private boolean hide;
-    private String city;
-    private int club;
+    private int city;
+    private long club;
+    String houseNumber;
+    String postalCode;
+    String country;
+    String countryCode;
 
-    public Customer_M(long id, String name, String birthday, String gender, String email, String job, String phoneNumber, String address, boolean hide , String city, int club) {
+    public Customer_M(long id, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode) {
         this.id = id;
-        this.name = name;
-        this.birthday = birthday;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.gender = gender;
         this.email = email;
         this.job = job;
         this.phoneNumber = phoneNumber;
-        this.address = address;
+        this.street = street;
         this.hide = hide;
-        this.city=city;
-        this.club=club;
+        this.city = city;
+        this.club = club;
+        this.houseNumber = houseNumber;
+        this.postalCode = postalCode;
+        this.country = country;
+        this.countryCode = countryCode;
     }
 
     public Customer_M(Customer_M customer){
-        this(customer.getId(),customer.getName(),customer.getBirthday(),customer.getGender(),
-                customer.getEmail(),customer.getJob(),customer.getPhoneNumber(),customer.getAddress(),customer.getHide(),customer.getCity(),customer.getClub());
+        this(customer.getId(),customer.getFirstName(),customer.getLastName(),customer.getGender(),
+                customer.getEmail(),customer.getJob(),customer.getPhoneNumber(),customer.getStreet(),
+                customer.getHide(),customer.getCity(),customer.getClub(),customer.getHouseNumber()
+                ,customer.getPostalCode(),customer.getCountry(),customer.getCountryCode());
     }
 
-    public Customer_M() {
-
+    public String getLastName() {
+        return lastName;
     }
-
-    /**   public Customer_M(int id, String name, String birthday, String gender, String email, String job, String phoneNumber, String address, boolean hide) {
-        this.id = id;
-        this.name = name;
-        this.birthday = birthday;
-        this.gender = gender;
-        this.email = email;
-        this.job = job;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.hide = hide;
-    }**/
-
     public boolean isHide() {
      return hide;
  }
@@ -61,15 +57,15 @@ public class Customer_M {
         this.hide = hide;
     }
 
-    public String getCity() {
+    public int getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(int city) {
         this.city = city;
     }
 
-    public int getClub() {
+    public long getClub() {
         return club;
     }
 
@@ -81,13 +77,10 @@ public class Customer_M {
      return id;
  }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getBirthday() {
-        return birthday;
-    }
 
     public String getGender() {
         return gender;
@@ -105,8 +98,8 @@ public class Customer_M {
         return phoneNumber;
     }
 
-    public String getAddress() {
-        return address;
+    public String getStreet() {
+        return street;
     }
 
     public boolean getHide() {
@@ -117,12 +110,12 @@ public class Customer_M {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String name) {
+        this.firstName = name;
     }
 
     public void setBirthday(String birthday) {
-        this.birthday = birthday;
+        this.lastName = birthday;
     }
 
     public void setGender(String gender) {
@@ -142,11 +135,50 @@ public class Customer_M {
     }
 
     public void setAddress(String address) {
-        this.address = address;
+        this.street = address;
     }
 
     public String getCustmerName(){
-        return this.name;
+        return this.firstName;
     }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getHouseNumber() {
+        return houseNumber;
+    }
+
+    public void setHouseNumber(String houseNumber) {
+        this.houseNumber = houseNumber;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
 }

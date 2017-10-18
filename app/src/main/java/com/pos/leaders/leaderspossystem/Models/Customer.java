@@ -14,7 +14,6 @@ public class Customer {
     String postalCode;
     String country;
     String countryCode;
-
     public Customer() {
         this.id = 0;
         this.firstName = "";

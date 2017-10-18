@@ -107,11 +107,14 @@
             android:exported="true" />
 
         <activity android:name=".MainTempActivity" />
-        <activity android:name=".SetupNewPOSOnlineActivity"></activity>
+        <activity android:name=".SetupNewPOSOnlineActivity" />
         <activity
             android:name=".Tools.TempCashActivty"
             android:label="@string/title_activity_temp_cash_activty"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ClubMangmentActivity"
+            android:label="@string/title_activity_temp_cash_activty"
+            ></activity>
     </application>
 
 </manifest>

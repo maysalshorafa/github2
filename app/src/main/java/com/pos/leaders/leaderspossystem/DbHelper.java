@@ -107,6 +107,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(UserPermissionsDBAdapter.DATABASE_CREATE);
         db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
         db.execSQL(AReportDBAdapter.DATABASE_CREATE);
+        db.execSQL(CityDbAdapter.DATABASE_CREATE);
 
 
         List<String> tblNames = tablesName(db);

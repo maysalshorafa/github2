@@ -41,8 +41,6 @@
     <string name="sales_history">Sales History</string>
     <string name="clear_cart">Clear Cart</string>
     <string name="_new">New</string>
-
-
     <!--Product Management-->
     <string name="edit_product">Edit Product</string>
     <string name="add_product">Add Product</string>
@@ -327,28 +325,32 @@
 
     <string name="search">Search</string>
     <!--club string-->
-    <string name="Description"> Descriptione</string>
-    <string name="Type"> Type</string>
-    <string name="Amount">   Amount</string>
-    <string name="Point">  Point</string>
-    <string name="Parcent">Parcent</string>
-    <string name="GroupName"> Club Name</string>
-    <string name="AddGroup">    Add Group</string>
+    <string name="_description"> Descriptione</string>
+    <string name="type"> Type</string>
+    <string name="_amount">   Amount</string>
+    <string name="point">  Point</string>
+    <string name="parcent">Parcent</string>
+    <string name="group_name"> Club Name</string>
+    <string name="add_group">    Add Group</string>
 
     <!--custmer String -->
-    <string name="Custmername">Name</string>
-    <string name="DateOfBirthday">Birthday</string>
-    <string name="CustmerID">CustmerID</string>
-    <string name="Gender">Gender</string>
-    .
-    <string name="Job">Job</string>
-    <string name="Email">Email</string>
-    <string name="Phone">Phone</string>
-    <string name="Address">Address</string>
-    <string name="AddtoCity"> Add to City</string>
-    <string name="AddtoCustomerClub"> Add Club</string>
-    <string name="AddCustomer"> Add Customer</string>
+    <string name="custmer_name">Name</string>
+    <string name="custmer_id">CustmerID</string>
+    <string name="gender">Gender</string>
+    <string name="street">Street</string>
+    <string name="country">Country</string>
+    <string name="country_code">Country Code</string>
+    <string name="postal_code">Postal Code</string>
+    <string name="house_number">House Number</string>
+    <string name="job">Job</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="address">Address</string>
+    <string name="add_to_city"> Add to City</string>
+    <string name="add_customer_club"> Add Club</string>
+    <string name="add_customer"> Add Customer</string>
     <string name="title_activity_temp_cash_activty">TempCashActivty</string>
+    <string name="title_activity_club_mangment_activty">ClubMangmentActivity</string>
 
 
     <!--online setup -->

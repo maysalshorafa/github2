@@ -54,7 +54,42 @@ public class AddUserActivity extends AppCompatActivity {
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_add_users);
 
+<<<<<<< HEAD
 		TitleBar.setTitleBar(this);
+=======
+
+		final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
+				R.layout.title_bar, null);
+
+		// Set up your ActionBar
+		actionBar = getSupportActionBar();
+		// TODO: Remove the redundant calls to getSupportActionBar()
+		//       and use variable actionBar instead
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(false);
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayShowCustomEnabled(true);
+		actionBar.setCustomView(actionBarLayout);
+		Calendar ca = Calendar.getInstance();
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		// You customization
+		final int actionBarColor = getResources().getColor(R.color.primaryColor);
+		actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
+
+		final TextView actionBarTitle = (TextView) findViewById(R.id.date);
+		actionBarTitle.setText(format.format(ca.getTime()));
+		final TextView actionBarSent = (TextView) findViewById(R.id.posID);
+		actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
+
+
+		final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
+		actionBarStaff.setText(SESSION._USER.getFullName());
+
+		final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
+		actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
+
+>>>>>>> mays-sameer
 
 		// Get Refferences of Views
 		etUserName = (EditText) findViewById(R.id.addUser_ETUserName);
@@ -76,7 +111,7 @@ public class AddUserActivity extends AppCompatActivity {
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			int i = (int) extras.get("userId");
+			long i = (long) extras.get("userId");
 			user = userDBAdapter.getUserByID(i);
 			etUserName.setText(user.getUserName());
 			etPassword.setText(user.getPassword());

@@ -1,226 +1,256 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollView1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/white">
-    <LinearLayout
-
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:background="@color/white">
-
-
+    android:orientation="vertical"
+    android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android">
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:layout_marginBottom="30dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
             android:orientation="vertical"
-
-            >
-
+            android:layout_weight="0.23">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
-                android:weightSum="1">
-
+                android:weightSum="2">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_weight="0.20">
+                    <TextView
+                        android:text="@string/group_name"
+                        android:layout_width="120dp"
+                        android:layout_height="62dp"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="20dp"/>
+                    <EditText
+                        android:id="@+id/group_name"
+                        android:layout_width="300dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/bubble"
+                        android:paddingLeft="5dp"
+                        android:hint="@string/group_name"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_weight="1">
+                    <TextView
+                        android:text="@string/description"
+                        android:layout_width="120dp"
+                        android:layout_height="62dp"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="20dp" />
+                    <EditText
+                        android:id="@+id/ET_description"
+                        android:layout_width="300dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/bubble"
+                        android:paddingLeft="5dp"
+                        android:hint="@string/description"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
                 <TextView
                     android:layout_width="120dp"
                     android:layout_height="62dp"
+                    android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="@string/GroupName"
+                    android:text="@string/type"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+                <Spinner
+                    android:id="@+id/typeSpinner"
+                    android:layout_width="300dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="15dp"
+                    android:inputType="number"
+                    android:paddingLeft="5dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/parcentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+                <TextView
+                    android:text="@string/parcent"
+                    android:layout_width="120dp"
+                    android:layout_height="62dp"
+                    android:gravity="center"
                     android:layout_gravity="center"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    android:textSize="20dp"/>
-
+                    android:textSize="20dp"
+                    android:id="@+id/tvParcent"
+                    android:visibility="gone"/>
                 <EditText
-                    android:id="@+id/group_name"
-                    android:layout_width="fill_parent"
+                    android:id="@+id/et_parcent"
+                    android:layout_width="300dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/bubble"
                     android:paddingLeft="5dp"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="1">
-
-                <TextView
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
-                    android:gravity="center"
-                    android:text="@string/description"
-                    android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="20dp"/>
-            <EditText
-                android:id="@+id/ET_description"
-                android:layout_width="fill_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bubble"
-                android:paddingLeft="5dp" />
-</LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="1">
-
-                <TextView
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
-                    android:gravity="center"
-                    android:text="@string/Type"
-                    android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="20dp"/>
-
-                <EditText
-                    android:id="@+id/et_type"
-                    android:layout_width="fill_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/bubble"
-                    android:paddingLeft="5dp" />
+                    android:hint="@string/parcent"
+                    android:visibility="gone"
+                   />
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/amountLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
-                android:weightSum="1">
-
+                android:weightSum="2"
+               >
                 <TextView
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
-                    android:gravity="center"
                     android:text="@string/amount"
+                    android:layout_width="120dp"
+                    android:layout_height="62dp"
+                    android:gravity="center"
                     android:layout_gravity="center"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    android:textSize="20dp"/>
-
+                    android:textSize="20dp"
+                    android:id="@+id/tvAmount"
+                    android:visibility="gone"/>
             <EditText
                 android:id="@+id/et_amount"
-                android:layout_width="fill_parent"
+                android:layout_width="300dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
-                android:paddingLeft="5dp" />
-
-
+                android:paddingLeft="5dp"
+                android:hint="@string/amount"
+                android:visibility="gone"    />
                 </LinearLayout>
             <LinearLayout
+                android:id="@+id/pointLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
-                android:weightSum="1">
-
+                android:weightSum="2"
+            >
                 <TextView
+                    android:text="@string/point"
                     android:layout_width="120dp"
                     android:layout_height="62dp"
                     android:gravity="center"
-                    android:text="@string/Parcent"
                     android:layout_gravity="center"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    android:textSize="20dp"/>
-            <EditText
-                android:id="@+id/et_parcent"
-                android:layout_width="fill_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bubble"
-                android:paddingLeft="5dp" />
-</LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="1">
-
-                <TextView
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
-                    android:gravity="center"
-                    android:text="@string/Point"
-                    android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="20dp"/>
+                    android:textSize="20dp"
+                    android:id="@+id/tvPoint"
+                android:visibility="gone"/>
             <EditText
                 android:id="@+id/et_point"
-                android:layout_width="fill_parent"
+                android:layout_width="300dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
-                android:paddingLeft="5dp" />
+                android:paddingLeft="5dp"
+                android:hint="@string/point"
+                android:visibility="gone"   />
                 </LinearLayout>
             <LinearLayout
+                android:id="@+id/pointLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_weight="1"
+                android:layout_marginBottom="10dp">
+
+                <GridView
+                    android:id="@+id/custmerManagement_GVCustmerClub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:columnWidth="80dp"
+                    android:gravity="right"
+                    android:horizontalSpacing="30dp"
+                    android:numColumns="6"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="0dp"
+                    android:verticalSpacing="30dp"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="-19dp"
+                    android:layoutDirection="rtl"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:orientation="horizontal"
+                android:layout_weight="2.38"
+                android:weightSum="2"
+                >
 
                 <Button
                     android:id="@+id/add_group"
                     android:layout_width="200dp"
-                    android:layout_height="38dp"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="16dp"
                     android:background="@drawable/bt_green_enabled"
                     android:gravity="center"
                     android:text="@string/add"
                     android:textColor="#fff"
-                    android:textSize="20dp"/>.
+                    android:textSize="20dp"
+                    android:layout_weight="1"
+                   />
                 <Button
 
                     android:id="@+id/addGroup_BTCancel"
                     android:layout_width="200dp"
-                    android:layout_height="38dp"                    android:gravity="center"
-                    android:layout_marginBottom="10dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="10dp"
                     android:background="@drawable/btn_cancel"
-                    android:text="@android:string/cancel"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:layout_marginTop="16dp"
-                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:text="@string/cancel"
+                    android:textColor="#fff"
+                    android:textSize="20dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="20dp"
                     />
-
-
-
             </LinearLayout>
-
-
         </LinearLayout>
 
-        <LinearLayout android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-
-            >
 
 
 
@@ -228,8 +258,4 @@
         </LinearLayout>
 
 
-    </LinearLayout>
 
-
-
-</ScrollView>
