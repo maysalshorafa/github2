@@ -367,16 +367,11 @@
                                     android:layout_marginLeft="5dp"
                                     android:layout_marginRight="5dp"
                                     android:layout_weight="1"
-<<<<<<< HEAD
+
                                     android:paddingLeft="5dp"
                                     android:paddingRight="5dp"
-                                    android:text="@string/Custmername"
+                                android:text="@string/custmer_name"
                                     android:textColor="@color/black" />
-=======
-                                    android:text="@string/custmer_name"
-                                    android:textColor="@color/black"
-                                    android:layout_gravity="center"/>
->>>>>>> mays-sameer
 
                                 <TextView
                                     android:id="@+id/cName"
@@ -413,16 +408,12 @@
                                     android:layout_marginLeft="5dp"
                                     android:layout_marginRight="5dp"
                                     android:layout_weight="1"
-<<<<<<< HEAD
+
                                     android:paddingLeft="5dp"
                                     android:paddingRight="5dp"
-                                    android:text="@string/GroupName"
+                                android:text="@string/group_name"
                                     android:textColor="@color/black" />
-=======
-                                    android:text="@string/group_name"
-                                    android:textColor="@color/black"
-                                    android:layout_gravity="center"/>
->>>>>>> mays-sameer
+
 
                                 <TextView
                                     android:id="@+id/cClubName"

@@ -26,11 +26,10 @@ import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.Customer_M;
 import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
-<<<<<<< HEAD
+
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.UtilityValidation;
-=======
->>>>>>> mays-sameer
+
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,16 +46,13 @@ public class AddNewCoustmer  extends AppCompatActivity implements AdapterView.On
 
     private List<City> cityList=null;
     private List<Group> groupList=null;
-<<<<<<< HEAD
 
-    int selectedClub;
-=======
     RadioButton maleRadioButton, femaleRadioButton;
     RadioGroup radioGender ;
     String gender=null;
     final List<String> club = new ArrayList<String>();
 long clubID;
->>>>>>> mays-sameer
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,35 +60,12 @@ long clubID;
         // ActionBar Region
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_add_new_coustmer);
-<<<<<<< HEAD
+
 
         TitleBar.setTitleBar(this);
 
-=======
-        final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(R.layout.title_bar, null);
-        // Set up your ActionBar
-        actionBar = getSupportActionBar();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setCustomView(actionBarLayout);
-        Calendar ca = Calendar.getInstance();
-        final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        // You customization
-        final int actionBarColor = getResources().getColor(R.color.primaryColor);
-        actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
-        final TextView actionBarTitle = (TextView) findViewById(R.id.date);
-        actionBarTitle.setText(format.format(ca.getTime()));
-        final TextView actionBarSent = (TextView) findViewById(R.id.posID);
-        actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
-        final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
-        actionBarStaff.setText(SESSION._USER.getFullName());
-        final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
-        actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
-        //end ActionBar Region
->>>>>>> mays-sameer
+
+
         init();
         custmer = null;
         Bundle bundle = getIntent().getExtras();

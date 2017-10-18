@@ -32,16 +32,12 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-<<<<<<< HEAD
-public class Coustmer_Group extends AppCompatActivity {
-    EditText etGroupName ,etType , etParcent , etAmount ,etPoint ,etDescription;
-=======
 public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
     android.support.v7.app.ActionBar actionBar;
 TextView tvParcent , tvPoint ,tvAmount;
     EditText etGroupName , etParcent , etAmount ,etPoint ,etDescription;
     Spinner clubType;
->>>>>>> mays-sameer
+
     Button btAddGroup ,btCancel  ;
      GroupAdapter groupAdapter ;
     Group group;
@@ -60,43 +56,6 @@ TextView tvParcent , tvPoint ,tvAmount;
 
         TitleBar.setTitleBar(this);
 
-<<<<<<< HEAD
-=======
-        final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
-                R.layout.title_bar,
-                null);
-        // Set up your ActionBar
-        actionBar = getSupportActionBar();
-        // TODO: Remove the redundant calls to getSupportActionBar()
-        //       and use variable actionBar instead
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setCustomView(actionBarLayout);
-        Calendar ca = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        // You customization
-        final int actionBarColor = getResources().getColor(R.color.primaryColor);
-        actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
-
-        final TextView actionBarTitle = (TextView) findViewById(R.id.date);
-        actionBarTitle.setText(format.format(ca.getTime()));
-        final TextView actionBarSent = (TextView) findViewById(R.id.posID);
-        actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
-
-
-        final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
-        actionBarStaff.setText(SESSION._USER.getFullName());
-
-        final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
-        actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
-        gvcustmer = (GridView) findViewById(R.id.custmerManagement_GVCustmerClub);
-
-        groupAdapter=new GroupAdapter(this);
-        groupAdapter.open();
->>>>>>> mays-sameer
         etGroupName = (EditText) findViewById(R.id.group_name);
         clubType = (Spinner) findViewById(R.id.typeSpinner);
         clubType.setOnItemSelectedListener(this);
