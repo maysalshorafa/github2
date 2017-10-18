@@ -7,13 +7,11 @@ import android.content.Intent;
 
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -36,8 +34,11 @@ import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 import com.pos.leaders.leaderspossystem.syncposservice.SetupFragments.Token;
 
 import java.text.DateFormat;
@@ -49,7 +50,6 @@ import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
 
 public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    android.support.v7.app.ActionBar actionBar;
     public static final String PREFS_NAME = "Time_Pref";
     private boolean enableBackButton = true;
     DateFormat format;
@@ -100,9 +100,13 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_dash_board);
 
-        final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
-                R.layout.title_bar,
-                null);
+        if (SyncMessage.isConnected(this)) {
+            SESSION.internetStatus = InternetStatus.CONNECTED;
+        } else {
+            SESSION.internetStatus = InternetStatus.ERROR;
+        }
+        TitleBar.setTitleBar(this);
+
 
         AccessToken accessToken = new AccessToken(this);
         accessToken.execute(this);
@@ -118,37 +122,6 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
             String token = sharedpreferences.getString(MessageKey.Token, null);
             SESSION.token = token;
         }
-
-
-
-        // Set up your ActionBar
-        actionBar = getSupportActionBar();
-        // TODO: Remove the redundant calls to getSupportActionBar()
-        //       and use variable actionBar instead
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setCustomView(actionBarLayout);
-        long date;
-        Calendar ca = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        // You customization
-        final int actionBarColor = getResources().getColor(R.color.primaryColor);
-        actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
-
-        final TextView actionBarTitle = (TextView) findViewById(R.id.date);
-        actionBarTitle.setText(format.format(ca.getTime()));
-        final TextView actionBarSent = (TextView) findViewById(R.id.posID);
-        actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
-
-
-        final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
-        actionBarStaff.setText(SESSION._USER.getFullName());
-
-        final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
-        actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
         im = (ImageView) findViewById(R.id.home);
         Dash_bord_adapter adapter = new Dash_bord_adapter(DashBoard.this, dashbord_text, imageId);
         aReportDBAdapter = new AReportDBAdapter(this);

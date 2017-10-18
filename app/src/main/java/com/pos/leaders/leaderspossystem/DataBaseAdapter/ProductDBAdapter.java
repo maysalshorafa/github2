@@ -234,7 +234,7 @@ public class ProductDBAdapter {
 		return productsList;
 	}
 
-    public List<Product> getAllProductsByDepartment(int departmentId,int from ,int count){
+    public List<Product> getAllProductsByDepartment(long departmentId,int from ,int count){
         List<Product> productsList =new ArrayList<Product>();
 
         Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+PRODUCTS_COLUMN_DEPARTMENTID+"="+departmentId+" and "+PRODUCTS_COLUMN_DISENABLED+"=0 order by id desc limit "+from+","+count, null );

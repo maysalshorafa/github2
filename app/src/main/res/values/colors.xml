@@ -228,6 +228,12 @@
     <color name="light_press_yellow1">#f59c00</color>
     <color name="light_press_yellow2">#7c540f</color>
 
+
+    <color name="light_dangers1">#ff0000</color>
+    <color name="light_dangers2">#9a0000</color>
+    <color name="light_press_dangers1">#9a0000</color>
+    <color name="light_press_dangers2">#670101</color>
+
     <!--End Buttons-->
 
 </resources>

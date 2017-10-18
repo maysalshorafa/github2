@@ -1,29 +1,20 @@
-
-<ScrollView
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/scrollView1"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:background="@color/white">
-<LinearLayout
-
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="@color/white">
-
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginBottom="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
-        android:orientation="vertical"
+        android:layout_weight="1"
 
-        >
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,12 +25,13 @@ android:background="@color/white">
             <TextView
                 android:layout_width="120dp"
                 android:layout_height="62dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.09"
                 android:gravity="center"
-                android:text="@string/general_settings"                android:layout_gravity="center"
+                android:text="@string/general_settings"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:layout_weight="0.09" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
 
         </LinearLayout>
@@ -54,19 +46,20 @@ android:background="@color/white">
             <TextView
                 android:layout_width="120dp"
                 android:layout_height="62dp"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/company_name"                android:layout_gravity="center"
+                android:text="@string/company_name"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="16dp"/>
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/settings_etCompanyName"                android:layout_width="fill_parent"
+                android:id="@+id/settings_etCompanyName"
+                android:layout_width="fill_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
-                android:paddingLeft="5dp"
-                />
+                android:paddingLeft="5dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -79,12 +72,13 @@ android:background="@color/white">
             <TextView
                 android:layout_width="120dp"
                 android:layout_height="62dp"
+                android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/private_company"
-                android:layout_gravity="center"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="16dp"/>
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
             <EditText
                 android:id="@+id/settings_etPC"
                 android:layout_width="fill_parent"
@@ -93,6 +87,7 @@ android:background="@color/white">
                 android:background="@drawable/bubble"
                 android:paddingLeft="5dp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -103,20 +98,22 @@ android:background="@color/white">
             <TextView
                 android:layout_width="120dp"
                 android:layout_height="62dp"
+                android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/tax"
-                android:layout_gravity="center"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="16dp"/>
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/settings_etTax"                android:layout_width="fill_parent"
+                android:id="@+id/settings_etTax"
+                android:layout_width="fill_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
                 android:paddingLeft="5dp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -136,15 +133,16 @@ android:background="@color/white">
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/settings_etInvoiceNote"
                 android:layout_width="fill_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
-                android:paddingLeft="5dp"
-                android:id="@+id/settings_etInvoiceNote"                />
+                android:paddingLeft="5dp" />
 
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -155,14 +153,15 @@ android:background="@color/white">
             <TextView
                 android:layout_width="120dp"
                 android:layout_height="62dp"
+                android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/credit_card"
-                android:layout_gravity="center"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="16dp"/>
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -173,12 +172,13 @@ android:background="@color/white">
             <TextView
                 android:layout_width="120dp"
                 android:layout_height="62dp"
+                android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/terminal_number"
-                android:layout_gravity="center"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="16dp"/>
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
             <EditText
                 android:id="@+id/settings_etTNum"
                 android:layout_width="fill_parent"
@@ -187,6 +187,7 @@ android:background="@color/white">
                 android:background="@drawable/bubble"
                 android:paddingLeft="5dp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -197,12 +198,13 @@ android:background="@color/white">
             <TextView
                 android:layout_width="120dp"
                 android:layout_height="62dp"
+                android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/terminal_password"
-                android:layout_gravity="center"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="16dp"/>
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
             <EditText
                 android:id="@+id/settings_etTPass"
                 android:layout_width="fill_parent"
@@ -215,38 +217,41 @@ android:background="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_alignParentBottom="true"
             android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/settings_btSave"
-                android:layout_width="200dp"
-                android:layout_height="38dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bt_green_enabled"
-                android:gravity="center"
-                android:text="@string/save"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
 
             <Button
 
                 android:id="@+id/settings_btCancel"
-                android:layout_width="200dp"
-                android:layout_height="38dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/btn_cancel"
+                style="@style/AppTheme.bt_dangers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="3"
                 android:gravity="center"
                 android:text="@android:string/cancel"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/settings_btSave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/bt_green_enabled"
+                android:gravity="center"
+                android:text="@string/save"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -256,20 +261,5 @@ android:background="@color/white">
 
     </LinearLayout>
 
-    <LinearLayout android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-
-        >
-
-
-
-
-    </LinearLayout>
-
 
 </LinearLayout>
-
-
-
-</ScrollView>

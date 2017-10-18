@@ -1,15 +1,11 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -17,50 +13,31 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.webkit.MimeTypeMap;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CyclicBarrier;
-
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.read.biff.BiffException;
 
 /**
  * Created by KARAM on 20/10/2016.
  */
 
 public class ProductCatalogActivity extends AppCompatActivity {
-    android.support.v7.app.ActionBar actionBar;
 
     private Button btCreate, btImport;
     EditText etSearch;
@@ -123,6 +100,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_product_catalog);
 
+        TitleBar.setTitleBar(this);
         getWindow().getDecorView().setBackgroundColor(Color.WHITE);
 
         btCreate = (Button) findViewById(R.id.productCatalog_BTCreateNewProduct);
@@ -133,9 +111,10 @@ public class ProductCatalogActivity extends AppCompatActivity {
 
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        layoutParams.setMargins(0, 10, 10, 40);
+        //layoutParams.setMargins(0, 10, 10, 40);
+        layoutParams.setMargins(0, 10, 10, 0);
 
 
 
@@ -301,6 +280,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
         for (Department d : departmentDBAdapter.getAllDepartments()) {
             Button bt = new Button(this);
             bt.setLayoutParams(params);
+            bt.setTag(d);
 
             //bt.setId(d.getId());
             bt.setText(d.getName());
@@ -314,15 +294,13 @@ public class ProductCatalogActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     productLoadItemOffset=0;
                     prseedButtonDepartments.setPressed(false);
+                    prseedButtonDepartments.setBackground(getResources().getDrawable(R.drawable.bt_normal));
                     v.setPressed(true);
-                    final int departmentID=v.getId();
+                    v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
+                    final long departmentID = ((Department) v.getTag()).getId();
                     prseedButtonDepartments = v;
-
-                    Log.i("starting time",new Date().toString());
-                    productsList = productDBAdapter.getAllProductsByDepartment(departmentID,productLoadItemOffset,productCountLoad);
-                    Log.i("Ending time",new Date().toString());
+                    productsList = productDBAdapter.getAllProductsByDepartment(departmentID, productLoadItemOffset, productCountLoad);
                     filter_productsList = productsList;
-
                     adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
                     gvProducts.setAdapter(adapter);
 
@@ -346,7 +324,9 @@ public class ProductCatalogActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 productLoadItemOffset=0;
                 prseedButtonDepartments.setPressed(false);
+                prseedButtonDepartments.setBackground(getResources().getDrawable(R.drawable.bt_normal));
                 v.setPressed(true);
+                v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                 prseedButtonDepartments = v;
 

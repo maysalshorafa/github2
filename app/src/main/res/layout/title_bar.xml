@@ -1,50 +1,77 @@
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-    android:layoutDirection="ltr"
-    android:background="#3B4151"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginStart="0dp"
->
+    android:layout_weight="1"
+    android:background="#3B4151"
+    android:layoutDirection="ltr">
+
+    <ImageView
+        android:id="@+id/titleBar_ivInternetStatus"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:padding="8dp"
+        android:src="@drawable/internet_error" />
+
+    <ImageView
+        android:id="@+id/titleBar_ivSync"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:padding="4dp"
+        android:src="@drawable/cloud_sync_error" />
 
     <TextView
         android:id="@+id/userPermtions"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_marginTop="5dp"
+        android:layout_weight="1"
         android:background="@drawable/header_text"
         android:inputType="textPersonName"
         android:text="Name"
+        android:textAlignment="center"
         android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/userName"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="5dp"
+        android:layout_weight="1"
         android:background="@drawable/header_text"
         android:inputType="textPersonName"
         android:text="Name"
+        android:textAlignment="center"
         android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/posID"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="5dp"
+        android:layout_weight="1"
         android:background="@drawable/header_text"
         android:inputType="textPersonName"
         android:text="Name"
-        android:textColor="@color/white"
-        />
+        android:textAlignment="center"
+        android:textColor="@color/white" />
 
 
     <TextView
@@ -53,11 +80,12 @@ android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="5dp"
+        android:layout_weight="1"
         android:textColor="@color/White"
-        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textStyle="bold" />
 
-
-        />
 </LinearLayout>

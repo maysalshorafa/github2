@@ -19,14 +19,13 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Customer_M;
 import com.pos.leaders.leaderspossystem.Tools.CustmerCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
 public class CustmerMangmentActivity extends AppCompatActivity {
-    android.support.v7.app.ActionBar actionBar;
-
     List<Customer_M> custmers;
     CustomerDBAdapter customerDBAdapter;
     GridView gvcustmer;
@@ -44,38 +43,7 @@ public class CustmerMangmentActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_custmer_mangment);
 
-
-        final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
-                R.layout.title_bar,
-                null);
-
-        // Set up your ActionBar
-        actionBar = getSupportActionBar();
-        // TODO: Remove the redundant calls to getSupportActionBar()
-        //       and use variable actionBar instead
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setCustomView(actionBarLayout);
-        Calendar ca = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        // You customization
-        final int actionBarColor = getResources().getColor(R.color.primaryColor);
-        actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
-
-        final TextView actionBarTitle = (TextView) findViewById(R.id.date);
-        actionBarTitle.setText(format.format(ca.getTime()));
-        final TextView actionBarSent = (TextView) findViewById(R.id.posID);
-        actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
-
-
-        final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
-        actionBarStaff.setText(SESSION._USER.getFullName());
-        final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
-        actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
-
+        TitleBar.setTitleBar(this);
 
         gvcustmer = (GridView) findViewById(R.id.custmerManagement_GVCustmer);
             btAddCustmer = (Button) findViewById(R.id.custmerManagement_BTNewCustmer);

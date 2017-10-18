@@ -1,14 +1,7 @@
-
-<ScrollView
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/scrollView1"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:background="@color/white">
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_marginTop="15dp"
     android:orientation="vertical"
     android:weightSum="1">
@@ -18,10 +11,10 @@ android:background="@color/white">
         android:id="@+id/textView12"
         android:layout_width="match_parent"
         android:layout_height="62dp"
-        android:gravity="center"
+        android:layout_marginLeft="20dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="0dp"
-        android:layout_marginLeft="20dp"
+        android:gravity="center"
         android:text="@string/backup_products_by_department"
         android:textColor="@color/black"
         android:textSize="20dp"
@@ -29,20 +22,20 @@ android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/backupActivity_btnDepartment"
+            style="@style/AppTheme.bt_normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
 
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="16dp"
-            android:background="@drawable/bt_normal_enabled"
             android:gravity="center"
             android:text="@string/backup_department"
             android:textColor="@color/white"
@@ -51,6 +44,7 @@ android:background="@color/white">
         <Button
 
             android:id="@+id/backupActivity_btnSystem"
+            style="@style/AppTheme.bt_dangers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -58,7 +52,6 @@ android:background="@color/white">
             android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="16dp"
-            android:background="@drawable/btn_cancel"
             android:gravity="center"
             android:text="@string/backup_all_system"
             android:textColor="@color/white"
@@ -69,34 +62,36 @@ android:background="@color/white">
 
     <ListView
         android:id="@+id/backupActivity_lvDepartments"
-        android:layout_width="200dp"
-        android:layout_height="400dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="40dp"
+        android:layout_weight="1"
         android:textAlignment="center"
-        android:textFilterEnabled="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="40dp"/>
+        android:textFilterEnabled="true" />
 
 
-    <Button
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        android:id="@+id/backupActivity_btnCancel"
-        android:layout_width="197dp"
-        android:gravity="center"
-        android:layout_height="38dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/btn_cancel"
-        android:text="@android:string/cancel"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp"
-        />
+        <Button
+
+            android:id="@+id/backupActivity_btnCancel"
+            style="@style/AppTheme.bt_dangers"
+            android:layout_width="197dp"
+            android:layout_height="38dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@android:string/cancel"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
 
 </LinearLayout>
-
-
-
-
-</ScrollView>

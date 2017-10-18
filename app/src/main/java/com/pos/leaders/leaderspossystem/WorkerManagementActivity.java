@@ -23,6 +23,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Reports.UserAttendanceReport;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.WorkerGridViewAdapter;
 
 import java.text.SimpleDateFormat;
@@ -34,8 +35,6 @@ import java.util.List;
  */
 
 public class WorkerManagementActivity  extends AppCompatActivity {
-	android.support.v7.app.ActionBar actionBar;
-
 	List<User> users;
 	UserDBAdapter userDBAdapter;
 	GridView gvUsers;
@@ -54,41 +53,7 @@ public class WorkerManagementActivity  extends AppCompatActivity {
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_worker_management);
 
-
-		final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
-				R.layout.title_bar,
-				null);
-
-		// Set up your ActionBar
-		actionBar = getSupportActionBar();
-		// TODO: Remove the redundant calls to getSupportActionBar()
-		//       and use variable actionBar instead
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		actionBar.setDisplayShowHomeEnabled(false);
-		actionBar.setDisplayShowTitleEnabled(false);
-		actionBar.setDisplayShowCustomEnabled(true);
-		actionBar.setCustomView(actionBarLayout);
-		Calendar ca = Calendar.getInstance();
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		// You customization
-		final int actionBarColor = getResources().getColor(R.color.primaryColor);
-		actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
-
-		final TextView actionBarTitle = (TextView) findViewById(R.id.date);
-		actionBarTitle.setText(format.format(ca.getTime()));
-		final TextView actionBarSent = (TextView) findViewById(R.id.posID);
-		actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
-
-
-		final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
-		actionBarStaff.setText(SESSION._USER.getFullName());
-
-		final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
-		actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
-		//region Init
-	//	Bundle bundle = getIntent().getExtras();
-	//	final String permissions_name = bundle.getString("permissions_name");
+		TitleBar.setTitleBar(this);
 
 		gvUsers = (GridView) findViewById(R.id.workerManagement_GVWorkers);
 		btAddUser = (Button) findViewById(R.id.workerManagement_BTNewUser);
@@ -127,7 +92,6 @@ public class WorkerManagementActivity  extends AppCompatActivity {
 		gvUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
 				final String[] items = {
                         getString(R.string.view),
 						getString(R.string.edit),
@@ -203,11 +167,11 @@ public class WorkerManagementActivity  extends AppCompatActivity {
 					public void onClick(View v) {
 						if (etPassword.getText().toString().equals("")) {
 							Toast.makeText(WorkerManagementActivity.this, "Please type new password.", Toast.LENGTH_LONG);
-							Log.i("dialog_ETPassword","empty");
-						} else if (!(etPassword.getText().toString().equals(etRePassword.getText().toString()))) {
+                            //Log.i("dialog_ETPassword", "empty");
+                        } else if (!(etPassword.getText().toString().equals(etRePassword.getText().toString()))) {
 							Toast.makeText(WorkerManagementActivity.this, "Password does`t match.", Toast.LENGTH_LONG);
-							Log.i("dialog_ETPassword","Password does`t match");
-						} else {
+                            //Log.i("dialog_ETPassword", "Password does`t match");
+                        } else {
 							user.setPassword(etPassword.getText().toString());
 							userDBAdapter.updateEntry(user);
 							Toast.makeText(WorkerManagementActivity.this, "Success, setting new password.", Toast.LENGTH_LONG);

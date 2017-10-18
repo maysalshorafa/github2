@@ -21,6 +21,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,8 +33,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class BackupActivity extends AppCompatActivity {
-    android.support.v7.app.ActionBar actionBar;
-
     private Button btnCancel,btnDepartments,btnSystem;
     private ListView lv;
     private Backup backup;
@@ -54,48 +53,14 @@ public class BackupActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_backup);
 
-
-        final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
-                R.layout.title_bar,
-                null);
-
-        // Set up your ActionBar
-        actionBar = getSupportActionBar();
-        // TODO: Remove the redundant calls to getSupportActionBar()
-        //       and use variable actionBar instead
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setCustomView(actionBarLayout);
-        Calendar ca = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        // You customization
-        final int actionBarColor = getResources().getColor(R.color.primaryColor);
-        actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
-
-        final TextView actionBarTitle = (TextView) findViewById(R.id.date);
-        actionBarTitle.setText(format.format(ca.getTime()));
-        final TextView actionBarSent = (TextView) findViewById(R.id.posID);
-        actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
-
-
-        final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
-        actionBarStaff.setText(SESSION._USER.getFullName());
-
-        final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
-        actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
-
+        TitleBar.setTitleBar(this);
 
         btnCancel = (Button) findViewById(R.id.backupActivity_btnCancel);
         btnDepartments = (Button) findViewById(R.id.backupActivity_btnDepartment);
         btnSystem = (Button) findViewById(R.id.backupActivity_btnSystem);
         lv = (ListView) findViewById(R.id.backupActivity_lvDepartments);
         final String folderName=String.format(new Locale("en"),Long.toString(new Date().getTime()));
-        departments=new ArrayList<String>();
-
-
+        departments = new ArrayList<String>();
 
         departmentMap.put(getBaseContext().getString(R.string.all),0L);
 
@@ -108,11 +73,9 @@ public class BackupActivity extends AppCompatActivity {
             departmentMap.put(d.getName(),d.getId());
             departments.add(d.getName());
         }
-        ArrayAdapter adapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,departments);
+
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, departments);
         lv.setAdapter(adapter);
-
-
-
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,6 +92,7 @@ public class BackupActivity extends AppCompatActivity {
                 Toast.makeText(BackupActivity.this, getBaseContext().getString(R.string.done)+" ", Toast.LENGTH_SHORT).show();
             }
         });
+
         btnDepartments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,6 +101,7 @@ public class BackupActivity extends AppCompatActivity {
                 Toast.makeText(BackupActivity.this, getBaseContext().getString(R.string.done)+" ", Toast.LENGTH_SHORT).show();
             }
         });
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -173,15 +138,5 @@ public class BackupActivity extends AppCompatActivity {
                 //// TODO: 16/01/2017 flag
             }
         });
-
-
-
-
-
-
-
-
     }
-
-
 }

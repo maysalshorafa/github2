@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
+import android.app.ActivityManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,6 +9,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
+import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -201,6 +203,20 @@ public class Util {
 
     public static long idHealth(SQLiteDatabase db, String tableName, String idField){
         return  getCurrentLastID(db,tableName,idField);
+    }
+
+    private static boolean isMyServiceRunning(Class<?> serviceClass,Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isSyncServiceRunning(Context context) {
+        return isMyServiceRunning(SyncMessage.class, context);
     }
 
 
