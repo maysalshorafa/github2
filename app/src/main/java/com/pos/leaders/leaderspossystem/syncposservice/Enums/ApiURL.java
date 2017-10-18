@@ -10,6 +10,7 @@ public interface ApiURL {
 
     String Product = "Product";
     String Club = "club";
+    String City = "City";
     String Customer = "Customer";
     String Users = "Users";
     String Order = "Order";

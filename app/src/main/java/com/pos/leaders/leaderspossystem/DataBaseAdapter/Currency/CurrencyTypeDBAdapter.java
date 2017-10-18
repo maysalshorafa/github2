@@ -58,13 +58,13 @@ public class CurrencyTypeDBAdapter {
         Cursor cursor = db.rawQuery("select * from " + CurrencyType_TABLE_NAME , null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            currencyTypes.add(createNewUser(cursor));
+            currencyTypes.add(createNewCurrency(cursor));
             cursor.moveToNext();
         }
         return currencyTypes;
     }
 
-    private CurrencyType createNewUser(Cursor cursor){
+    private CurrencyType createNewCurrency(Cursor cursor){
         return new CurrencyType(Long.parseLong(cursor.getString(cursor.getColumnIndex(CurrencyType_COLUMN_ID)))
                 , cursor.getString(cursor.getColumnIndex(CurrencyType_COLUMN_Name)));
     }

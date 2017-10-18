@@ -44,6 +44,10 @@ public interface MessageType{
     String UPDATE_CLUB = "UpdateClub";
     String DELETE_CLUB = "DeleteClub";
 
+    String ADD_CITY = "AddCity";
+    String UPDATE_CITY = "UpdateCity";
+    String DELETE_CITY = "DeleteCity";
+
     String ADD_RULE_3 = "AddRule3";
     String UPDATE_RULE_3 = "UpdateRule3";
     String DELETE_RULE_3 = "DeleteRule3";

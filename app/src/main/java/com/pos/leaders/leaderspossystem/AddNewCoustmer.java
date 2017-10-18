@@ -17,8 +17,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupAdapter;
+import com.pos.leaders.leaderspossystem.Models.City;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Customer_M;
+import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.UtilityValidation;
@@ -26,15 +31,20 @@ import com.pos.leaders.leaderspossystem.Tools.UtilityValidation;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
-public class AddNewCoustmer extends AppCompatActivity  {
+public class AddNewCoustmer extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     Intent intent ;
     EditText etCoustmerName, dateOfbirtday, etCoustmerId, etGender, etJob, etEmail, etPhoneNo, etAddress;
     Button btAddcoustmer,btCancel;
     Spinner selectCitySpinner, selectClubSpinner;
     CustomerDBAdapter customerDBAdapter;
-    int selectedCity;
+    long selectedCity;
     Customer_M custmer;
+
+    private List<City> cityList=null;
+    private List<Group> groupList=null;
+
     int selectedClub;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +122,7 @@ public class AddNewCoustmer extends AppCompatActivity  {
                             else {
                                 long i = customerDBAdapter.insertEntry(Long.parseLong(etCoustmerId.getText().toString()) ,etCoustmerName.getText().toString(), dateOfbirtday.getText().toString(),
                                         etGender.getText().toString(),  etEmail.getText().toString(),
-                                        etJob.getText().toString(),etPhoneNo.getText().toString(),etAddress.getText().toString() ,selectedCity,selectedClub);
+                                        etJob.getText().toString(),etPhoneNo.getText().toString(),etAddress.getText().toString() , (int) selectCitySpinner.getSelectedItemId(),(int) selectClubSpinner.getSelectedItemId());
                                 if (i > 0) {
                                     Log.i("success", "adding new custmer");
                                     intent = new Intent(AddNewCoustmer.this, CustmerMangmentActivity.class);
@@ -191,6 +201,10 @@ public class AddNewCoustmer extends AppCompatActivity  {
 
 
     private void init(){
+        CityDbAdapter cityDbAdapter=new CityDbAdapter(AddNewCoustmer.this);
+        cityDbAdapter.open();
+        GroupAdapter groupAdapter=new GroupAdapter(AddNewCoustmer.this);
+        groupAdapter.open();
 
         etCoustmerName = (EditText) findViewById(R.id.add_coustmer_name);
         dateOfbirtday = (EditText) findViewById(R.id.addCoustmer_Birthday);
@@ -212,24 +226,50 @@ public class AddNewCoustmer extends AppCompatActivity  {
 
         selectCitySpinner = (Spinner) findViewById(R.id.customer_spinner);
         selectClubSpinner = (Spinner) findViewById(R.id.SelectClubSpinner);
+        selectCitySpinner.setOnItemSelectedListener(this);
+        selectClubSpinner.setOnItemSelectedListener(this);
+        final List<String> city = new ArrayList<String>();
+        cityList = cityDbAdapter.getAllCity();
+        for (int i = 0;  i < cityList.size(); i++) {
+            city.add(cityList.get(i).getName());
+        }
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, city);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        selectCitySpinner.setAdapter(dataAdapter);
 
 
-        ArrayList<Integer> citiesArray = new ArrayList<Integer>();
+        final List<String> club = new ArrayList<String>();
+        groupList = groupAdapter.getAllGroup();
+        for (int i = 0;  i < groupList.size(); i++) {
+            club.add(groupList.get(i).getname());
+        }
 
-        // here we add the values to the Spiiner array
-        citiesArray.add(1);
-        citiesArray.add(2);
-        citiesArray.add(3);
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter1= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, club);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+
+
+
+        // attaching data adapter to spinner
+        selectClubSpinner.setAdapter(dataAdapter1);
+
+
 
 
         //Spinner My_spinner = (Spinner) findViewById(R.id.customer_spinner);
-        ArrayAdapter city_adapter = new ArrayAdapter(this, R.layout.spinner_row_layout,R.id.spinnerTxt,
-                citiesArray);
 
-        ArrayAdapter club_adapter = new ArrayAdapter(this, R.layout.spinner_club_row,R.id.spinnerClubRowTxt,
-                citiesArray);
-        selectCitySpinner.setAdapter(city_adapter);
-        selectClubSpinner.setAdapter(club_adapter);
+
+
 
         selectCitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -238,7 +278,7 @@ public class AddNewCoustmer extends AppCompatActivity  {
                                        long arg3) {
                 // TODO Auto-generated method stub
 
-                selectedCity = (int) parent.getItemAtPosition(arg2);
+                //selectedCity = (int) parent.getItemAtPosition(arg2);
                 // ((TextView) parent.getChildAt(0)).setTextColor(0x00000000);
 
                 Log.e("Test Spinner", "" +   selectedCity);
@@ -262,7 +302,6 @@ public class AddNewCoustmer extends AppCompatActivity  {
                                        long arg3) {
                 // TODO Auto-generated method stub
 
-                selectedClub = (int) parent.getItemAtPosition(arg2);
                 // ((TextView) parent.getChildAt(0)).setTextColor(0x00000000);
 
                 Log.e("Test Spinner", "" +   selectedCity);
@@ -350,6 +389,13 @@ public class AddNewCoustmer extends AppCompatActivity  {
     }
 
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+    }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
