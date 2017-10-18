@@ -49,5 +49,8 @@ public  static  Order _ORDER;
 	//public static String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrYXJhbSJ9.qU2JoZ74qnkiCzUYCnMq4viTY5Nk8HcE0vFMx0Famww";
 	//public static String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYWpkIn0.Sukg7BnOunEClUy3_nMoop4jkDb8kdMoUNNNhX9NTyI";
 	public static String token = "";
+
+	public static InternetStatus internetStatus = InternetStatus.ERROR;
+	public static SyncStatus syncStatus = SyncStatus.DISABLED;
 }
 

@@ -19,6 +19,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Tools.DepartmentGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,7 +30,6 @@ import java.util.List;
  */
 
 public class DepartmentActivity extends AppCompatActivity {
-	android.support.v7.app.ActionBar actionBar;
 
 	DepartmentDBAdapter departmentDBAdapter;
 	EditText etDepartmentName;
@@ -52,38 +52,7 @@ public class DepartmentActivity extends AppCompatActivity {
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.department_mangment);
 
-
-		final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
-				R.layout.title_bar,
-				null);
-
-		// Set up your ActionBar
-		actionBar = getSupportActionBar();
-		// TODO: Remove the redundant calls to getSupportActionBar()
-		//       and use variable actionBar instead
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		actionBar.setDisplayShowHomeEnabled(false);
-		actionBar.setDisplayShowTitleEnabled(false);
-		actionBar.setDisplayShowCustomEnabled(true);
-		actionBar.setCustomView(actionBarLayout);
-		Calendar ca = Calendar.getInstance();
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		// You customization
-		final int actionBarColor = getResources().getColor(R.color.primaryColor);
-		actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
-
-		final TextView actionBarTitle = (TextView) findViewById(R.id.date);
-		actionBarTitle.setText(format.format(ca.getTime()));
-		final TextView actionBarSent = (TextView) findViewById(R.id.posID);
-		actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
-
-
-		final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
-		actionBarStaff.setText(SESSION._USER.getFullName());
-		final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
-		actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
-		setContentView(R.layout.department_mangment);
+		TitleBar.setTitleBar(this);
 
 		// Get Refferences of Views
 		gvDepartment = (GridView) findViewById(R.id.workerManagement_GVDEpartment);
@@ -107,77 +76,32 @@ public class DepartmentActivity extends AppCompatActivity {
 									View v, int position, long id) {
 				editableDepartment = listDepartment.get(position);
 				if (previousDepartmentView != null)
-					previousDepartmentView.setBackgroundColor(getResources().getColor(R.color.transparent));
+					previousDepartmentView.setBackground(getResources().getDrawable(R.drawable.bt_normal));
 				previousDepartmentView = v;
-				v.setBackgroundColor(getResources().getColor(R.color.pressed_color));
-				btAddDepartment.setText(getResources().getText(R.string.edit_department));
+                v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
+                btAddDepartment.setText(getResources().getText(R.string.edit_department));
 				addDepartmentOnClick(v);
 			}
 		});
 
-		//// TODO: 22/10/2016  on select item on department list view
-                /*
-                btAddDepartment.setText("Edit Department");
-                etDepartmentName.setText((String)parent.getItemAtPosition(position));
-
-
-			}
-		});
-
-/**		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				String selectedItem = (String) parent.getItemAtPosition(position);
-
-				editableDepartment=listDepartment.get(position);
-				if(previousDepartmentView!=null)
-					previousDepartmentView.setBackgroundColor(getResources().getColor(R.color.transparent));
-				previousDepartmentView=v;
-				v.setBackgroundColor(getResources().getColor(R.color.pressed_color));
-				etDepartmentName.setText(selectedItem);
-				btAddDepartment.setText(getResources().getText(R.string.edit_department));
-				//// TODO: 22/10/2016  on select item on department list view
-                /*
-                btAddDepartment.setText("Edit Department");
-                etDepartmentName.setText((String)parent.getItemAtPosition(position));
-
-			}
-		});**/
-
-				btAddDepartment.setOnClickListener(new View.OnClickListener() {
+        btAddDepartment.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						addDepartmentOnClick(v);
 					}
 				});
-				/**    btNewDepartment.setOnClickListener(new View.OnClickListener() {
-				@Override public void onClick(View v) {
-				rest();
-				}
-				});**/
-			}
+	}
 
 	private void makeList(){
-
 		// Department Data adapter
 		departmentDBAdapter = new DepartmentDBAdapter(this);
 		departmentDBAdapter.open();
 
-
-	//	departmentsName = new ArrayList<String>();
 		listDepartment = departmentDBAdapter.getAllDepartments();
 
 		final DepartmentGridViewAdapter adapter = new DepartmentGridViewAdapter(this, listDepartment);
-		gvDepartment.setAdapter(adapter);}
-
-	/**	for (Department d : listDepartment) {
-			departmentsName.add(d.getName());
-			Log.i("departments", d.getName());
-		}
-
-		LAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, departmentsName);
-		lv.setAdapter(LAdapter);
-	}**/
+		gvDepartment.setAdapter(adapter);
+	}
 
 	private void rest(){
 		if(previousDepartmentView!=null)
@@ -192,9 +116,9 @@ public class DepartmentActivity extends AppCompatActivity {
 		if (editableDepartment == null) {
 			long check = departmentDBAdapter.insertEntry(etDepartmentName.getText().toString(), SESSION._USER.getId());
 			if (check > 0) {
-				Log.i("seccess", "added department");
+				Log.i("success", "added department");
 			} else {
-				Log.e("error", " addeing department");
+				Log.e("error", " adding department");
 			}
 			rest();
 			makeList();
@@ -211,5 +135,4 @@ public class DepartmentActivity extends AppCompatActivity {
 			}
 		}
 	}
-
 }

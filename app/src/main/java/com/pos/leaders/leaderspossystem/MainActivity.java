@@ -39,6 +39,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -98,6 +99,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TempCashActivty;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
@@ -124,8 +126,6 @@ import static java.lang.Thread.sleep;
  */
 
 public class MainActivity extends AppCompatActivity{
-    android.support.v7.app.ActionBar actionBar;
-
     private static final int REQUEST_CASH_ACTIVITY_CODE = 590;
     private static final int REQUEST_CHECKS_ACTIVITY_CODE = 753;
     private static final int REQUEST_CREDIT_CARD_ACTIVITY_CODE = 801;
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity{
 
  //   ImageButton    btnLastSales;
     Button btnPercentProduct,btnPauseSale,btnResumeSale;
-ImageButton search_person;
+    ImageButton search_person;
     Button btnCancel, btnCash, btnCreditCard, btnOtherWays   ;
     TextView tvTotalPrice, tvTotalSaved , saleman;
     EditText etSearch;
@@ -274,37 +274,8 @@ double SumForClub=0.0;
         setContentView(R.layout.activity_main_temp);
 
 
-        final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
-                R.layout.title_bar,
-                null);
+        TitleBar.setTitleBar(this);
 
-        // Set up your ActionBar
-        actionBar = getSupportActionBar();
-        // TODO: Remove the redundant calls to getSupportActionBar()
-        //       and use variable actionBar instead
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setCustomView(actionBarLayout);
-        Calendar ca = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        // You customization
-        final int actionBarColor = getResources().getColor(R.color.primaryColor);
-        actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
-
-        final TextView actionBarTitle = (TextView) findViewById(R.id.date);
-        actionBarTitle.setText(format.format(ca.getTime()));
-        final TextView actionBarSent = (TextView) findViewById(R.id.posID);
-        actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
-
-
-        final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
-        actionBarStaff.setText(SESSION._USER.getFullName());
-
-        final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
-        actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
 
 
         used_point=(ImageButton)findViewById(R.id.usedPoint);
@@ -548,11 +519,14 @@ usedpointDbAdapter.open();
 
         //region Departments
         Button btAll = new Button(this);
+        LinearLayout.LayoutParams btAllParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
+        btAllParams.setMargins(5,5,5,5);
         btAll.setId(0);
         btAll.setText(getResources().getText(R.string.all));
         btAll.setTextAppearance(this, R.style.TextAppearance);
         btAll.setPressed(true);
-        btAll.setBackground(getResources().getDrawable(R.drawable.btn_secondary));
+        btAll.setLayoutParams(btAllParams);
+        btAll.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
         llDepartments.addView(btAll);
         prseedButtonDepartments = btAll;
         btAll.setOnClickListener(new View.OnClickListener() {
@@ -560,10 +534,9 @@ usedpointDbAdapter.open();
             public void onClick(View v) {
                 productLoadItemOffset = 0;
                 prseedButtonDepartments.setPressed(false);
-                prseedButtonDepartments.setBackgroundColor(getBaseContext().getResources().getColor(R.color.secondaryColor));
+                prseedButtonDepartments.setBackground(getResources().getDrawable(R.drawable.bt_normal));
                 v.setPressed(true);
-                v.setBackgroundColor(getBaseContext().getResources().getColor(R.color.secondaryDarkColor));
-
+                v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
                 prseedButtonDepartments = v;
 
                 productList = productDBAdapter.getTopProducts(productLoadItemOffset, productCountLoad);
@@ -574,40 +547,108 @@ usedpointDbAdapter.open();
             }
         });
 
+        List<Department> departments = departmentDBAdapter.getAllDepartments();
+        int co = 2;
+        for(int k=0,r=0,c=0;k<departments.size();k++){
+            if(k%2==1){
+                LinearLayout ll = new LinearLayout(this);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
+                LinearLayout.LayoutParams btParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
+                btParams.setMargins(5,5,5,5);
+                ll.setLayoutParams(params);
 
-        for (Department d : departmentDBAdapter.getAllDepartments()) {
+                Button bt = new Button(this);
+                bt.setText(departments.get(k-1).getName());
+                bt.setTag(departments.get(k-1));
+
+                bt.setLayoutParams(btParams);
+                bt.setTextAppearance(this, R.style.TextAppearance);
+                bt.setBackground(getResources().getDrawable(R.drawable.bt_normal));
+                bt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        productLoadItemOffset = 0;
+                        prseedButtonDepartments.setPressed(false);
+                        prseedButtonDepartments.setBackground(getResources().getDrawable(R.drawable.bt_normal));
+                        v.setPressed(true);
+                        v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
+
+                        prseedButtonDepartments = v;
+                        productList = productDBAdapter.getAllProductsByDepartment(((Department)v.getTag()).getId(), productLoadItemOffset, productCountLoad);
+                        All_productsList = productList;
+                        productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
+                        gvProducts.setAdapter(productCatalogGridViewAdapter);
+                        lvProducts.setAdapter(productCatalogGridViewAdapter);
+                    }
+                });
+                ll.addView(bt);
+                Button bt2 = new Button(this);
+                bt2.setText(departments.get(k).getName());
+                bt2.setTag(departments.get(k));
+                bt2.setLayoutParams(btParams);
+                bt2.setTextAppearance(this, R.style.TextAppearance);
+                bt2.setBackground(getResources().getDrawable(R.drawable.bt_normal));
+                bt2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        productLoadItemOffset = 0;
+                        prseedButtonDepartments.setPressed(false);
+                        prseedButtonDepartments.setBackground(getResources().getDrawable(R.drawable.bt_normal));
+                        v.setPressed(true);
+                        v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
+
+                        prseedButtonDepartments = v;
+                        productList = productDBAdapter.getAllProductsByDepartment(((Department)v.getTag()).getId(), productLoadItemOffset, productCountLoad);
+                        All_productsList = productList;
+                        productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
+                        gvProducts.setAdapter(productCatalogGridViewAdapter);
+                        lvProducts.setAdapter(productCatalogGridViewAdapter);
+                    }
+                });
+                ll.addView(bt2);
+                llDepartments.addView(ll);
+                  /*View line = new View(this);
+            line.setBackgroundColor(getResources().getColor(R.color.backgroundColor));
+            llDepartments.addView(line);*/
+
+                //add line
+            }
+        }
+
+        if(departments.size()%2==1){
+            LinearLayout ll = new LinearLayout(this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,1.0f);
+            LinearLayout.LayoutParams btParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
+            btParams.setMargins(5,5,5,5);
+            ll.setLayoutParams(params);
+
             Button bt = new Button(this);
-            bt.setPadding(15, 0, 15, 0);
-            bt.setText(d.getName());
+            bt.setText(departments.get(departments.size()-1).getName());
+            bt.setTag(departments.get(departments.size()-1));
+            bt.setLayoutParams(btParams);
             bt.setTextAppearance(this, R.style.TextAppearance);
-            bt.setBackground(getResources().getDrawable(R.drawable.btn_secondary));
+            bt.setBackground(getResources().getDrawable(R.drawable.bt_normal));
             bt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     productLoadItemOffset = 0;
                     prseedButtonDepartments.setPressed(false);
-                    prseedButtonDepartments.setBackgroundColor(getBaseContext().getResources().getColor(R.color.secondaryColor));
+                    prseedButtonDepartments.setBackground(getResources().getDrawable(R.drawable.bt_normal));
                     v.setPressed(true);
-                    v.setBackgroundColor(getBaseContext().getResources().getColor(R.color.secondaryDarkColor));
+                    v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                     prseedButtonDepartments = v;
-                    productList = productDBAdapter.getAllProductsByDepartment(v.getId(), productLoadItemOffset, productCountLoad);
+                    productList = productDBAdapter.getAllProductsByDepartment(((Department)v.getTag()).getId(), productLoadItemOffset, productCountLoad);
                     All_productsList = productList;
                     productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                     gvProducts.setAdapter(productCatalogGridViewAdapter);
                     lvProducts.setAdapter(productCatalogGridViewAdapter);
                 }
             });
-
-
-            View line = new View(this);
-            line.setBackgroundColor(getResources().getColor(R.color.backgroundColor));
-            line.setMinimumWidth(1);
-            llDepartments.addView(line);
-            llDepartments.addView(bt);
-
-            //add line
+            ll.addView(bt);
+            llDepartments.addView(ll);
         }
+
         //endregion
 
         //endregion
@@ -685,7 +726,7 @@ usedpointDbAdapter.open();
 
 
                 Intent intent = new Intent(MainActivity.this, SyncMessage.class);
-                intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, "http://192.168.252.11:8080/webapi");
+                intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, "http://185.118.252.26:8080/leadBO/");
                 startService(intent);
 
                 barcodeScanned = etSearch.getText().toString();
@@ -1301,126 +1342,8 @@ saleTotalPrice=saleTotalPrice-newPrice;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
              str = extras.getString("permissions_name");
-
-
-        }
-
-    }
-/**
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String str = extras.getString(LogInActivity.LEADPOS_MAKE_A_REPORT);
-            if (str.equals(LogInActivity.LEADPOS_MAKE_A_REPORT)) {
-                extras.clear();
-                createAReport();
-                //make shure the user can not do any thinks if the report a does not created
-                //get the last a report and last z report check if the a report
-            }
-        }
-
-    }
-
-    private void createAReport() {
-        final AReport _aReport = new AReport();
-        ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(this);
-        zReportDBAdapter.open();
-        ZReport zReport = null;
-        try {
-            zReport = zReportDBAdapter.getLastRow();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        zReportDBAdapter.close();
-
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(this);
-        aReportDBAdapter.open();
-        AReport aReport = null;
-
-        try {
-            aReport = aReportDBAdapter.getLastRow();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        aReportDBAdapter.close();
-
-
-        if (aReport != null && zReport != null) {
-            _aReport.setByUserID(SESSION._USER.getId());
-            _aReport.setCreationDate(new Date().getTime());
-
-
-            if (aReport.getLastZReportID() == (int) zReport.getId()) {
-                //its have a report
-            } else {
-                _aReport.setLastZReportID((int) zReport.getId());
-                _aReport.setLastSaleID((int)zReport.getEndSaleId());
-                ShowAReportDialog(_aReport);
-            }
-        } else {
-            _aReport.setLastZReportID(-1);
-            _aReport.setLastSaleID(-1);
-            ShowAReportDialog(_aReport);
         }
     }
-
-    private void ShowAReportDialog(final AReport aReport){
-        //there is no a report after z report
-        enableBackButton = false;
-        final Dialog discountDialog = new Dialog(MainActivity.this);
-        discountDialog.setTitle(R.string.opening_report);
-        discountDialog.setContentView(R.layout.cash_payment_dialog);
-        discountDialog.setCancelable(false);
-
-        final Button btOK = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTOk);
-        //btOK.setBackground(getBaseContext().getResources().getDrawable(R.drawable.btn_primary));
-        final Button btCancel = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTCancel);
-        btCancel.setVisibility(View.GONE);
-        final EditText et = (EditText) discountDialog.findViewById(R.id.cashPaymentDialog_TECash);
-        final Switch sw = (Switch) discountDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
-        sw.setVisibility(View.GONE);
-        discountDialog.setCanceledOnTouchOutside(false);
-
-
-        et.setHint(R.string.amount);
-        et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    btOK.callOnClick();
-                }
-                return false;
-            }
-        });
-
-        btOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String str = et.getText().toString();
-                if (!str.equals("")) {
-                    aReport.setAmount(Double.parseDouble(str));
-                    AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(MainActivity.this);
-                    aReportDBAdapter.open();
-                    aReportDBAdapter.insertEntry(aReport);
-                    aReportDBAdapter.close();
-                    discountDialog.cancel();
-                }
-            }
-        });
-
-        btCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //discountDialog.cancel();
-            }
-        });
-        discountDialog.show();
-    }
-**/
-
     //region fragment Touch Pad
 
     private void showAlertDialogResumePauseSale() {

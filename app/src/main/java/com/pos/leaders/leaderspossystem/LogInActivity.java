@@ -43,7 +43,7 @@ import java.util.Random;
  */
 
 public class LogInActivity extends Activity implements View.OnClickListener {
-    private Button btn_0,btn_1,btn_2,btn_3,btn_4,btn_5,btn_6,btn_7,btn_8,btn_9;
+    private Button btn_0,btn_1,btn_2,btn_3,btn_4,btn_5,btn_6,btn_7,btn_8,btn_9,btn_del;
     private EditText et;
     private Button btn_login;
     private UserDBAdapter userDBAdapter;
@@ -136,6 +136,8 @@ public class LogInActivity extends Activity implements View.OnClickListener {
         btn_8.setOnClickListener(this);
         btn_9 = (Button) findViewById(R.id.touchPad_bt9);
         btn_9.setOnClickListener(this);
+        btn_del = (Button) findViewById(R.id.touchPad_btDel);
+        btn_del.setOnClickListener(this);
         btn_login = (Button) findViewById(R.id.loginActivity_btnLogin);
         btn_login.setOnClickListener(this);
         et = (EditText) findViewById(R.id.touchPad_et);
@@ -228,34 +230,45 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.touchPad_bt0:
-                et.setText(et.getText() + "0");
+                et.append("0");
                 break;
             case R.id.touchPad_bt1:
-                et.setText(et.getText() + "1");
+                et.append("1");
                 break;
             case R.id.touchPad_bt2:
-                et.setText(et.getText() + "2");
+                et.append("2");
                 break;
             case R.id.touchPad_bt3:
-                et.setText(et.getText() + "3");
+                et.append("3");
                 break;
             case R.id.touchPad_bt4:
-                et.setText(et.getText() + "4");
+                et.append("4");
                 break;
             case R.id.touchPad_bt5:
-                et.setText(et.getText() + "5");
+                et.append("5");
                 break;
             case R.id.touchPad_bt6:
-                et.setText(et.getText() + "6");
+                et.append("6");
                 break;
             case R.id.touchPad_bt7:
-                et.setText(et.getText() + "7");
+                et.append("7");
                 break;
             case R.id.touchPad_bt8:
-                et.setText(et.getText() + "8");
+                et.append("8");
                 break;
             case R.id.touchPad_bt9:
-                et.setText(et.getText() + "9");
+                et.append("9");
+                break;
+            case R.id.touchPad_btDel:
+                String str = et.getText().toString();
+                if(!str.equals("")){
+                    if(str.length()==1){
+                        str = "";
+                    }else {
+                        str = str.substring(0, str.length() - 1);
+                    }
+                    et.setText(str);
+                }
                 break;
             case R.id.loginActivity_btnLogin:
                 login();

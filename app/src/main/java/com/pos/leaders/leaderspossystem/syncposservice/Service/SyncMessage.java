@@ -107,7 +107,8 @@ public class SyncMessage extends Service {
 
     public static boolean isConnected(Context context) {
         return true;
-       /* ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        /*
+       ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             Network[] networks = connectivity.getAllNetworks();
             if(networks!=null){
@@ -134,8 +135,8 @@ public class SyncMessage extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Log.i(TAG, "Service onStartCommand");
-        //messageTransmit = new MessageTransmit(intent.getStringExtra(API_DOMAIN_SYNC_MESSAGE));
-        messageTransmit = new MessageTransmit("http://192.168.252.11:8080/webapi/");
+        messageTransmit = new MessageTransmit(intent.getStringExtra(API_DOMAIN_SYNC_MESSAGE));
+        //messageTransmit = new MessageTransmit("http://192.168.252.11:8080/webapi/");
 
         if(!isRunning) {
             Log.i(TAG, "Create New Thread");
@@ -191,28 +192,29 @@ public class SyncMessage extends Service {
 
     private void getSync() throws IOException, JSONException {
         String res = messageTransmit.authGet(ApiURL.Sync, token);
-        if (!res.equals(MessageResult.Invalid) && res.charAt(0) == '{') {
-            Log.w("getSync", res);
-            JSONObject jsonObject = new JSONObject(res);
+        if (res.length() != 0) {
+            if (!res.equals(MessageResult.Invalid) && res.charAt(0) == '{') {
+                Log.w("getSync", res);
+                JSONObject jsonObject = new JSONObject(res);
 
-            //todo: execute the command
-            if(executeMessage(jsonObject)) {
-                String resp = messageTransmit.authPost(ApiURL.Sync, MessagesCreator.acknowledge(jsonObject.getInt(MessageKey.Ak)), token);
-                Log.i(TAG, "getSync: " + resp);
-                if (resp.equals(MessageResult.Invalid)) {
-                    //stop
-                    return;
-                } else if (resp.equals(MessageResult.OK)) {
-                    getSync();
+                //todo: execute the command
+                if (executeMessage(jsonObject)) {
+                    String resp = messageTransmit.authPost(ApiURL.Sync, MessagesCreator.acknowledge(jsonObject.getInt(MessageKey.Ak)), token);
+                    Log.i(TAG, "getSync: " + resp);
+                    if (resp.equals(MessageResult.Invalid)) {
+                        //stop
+                        return;
+                    } else if (resp.equals(MessageResult.OK)) {
+                        getSync();
+                    }
                 }
+            } else if (res.equals(MessageResult.Invalid)) {
+                //todo: there is no update is coming
+                Log.i(TAG, "there is no update incoming.");
+            } else {
+                //todo: error 401,404,403
+                Log.i(TAG, "Can`t sync messages.");
             }
-        } else if(res.equals(MessageResult.Invalid)) {
-            //todo: there is no update is coming
-            Log.i(TAG, "there is no update incoming.");
-        }
-        else {
-            //todo: error 401,404,403
-            Log.i(TAG, "Can`t sync messages.");
         }
     }
 

@@ -51,8 +51,7 @@
         <activity android:name=".ProductsActivity" />
         <activity
             android:name=".ProductCatalogActivity"
-            android:label="@string/title_activity_product_catalog"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_product_catalog" />
         <activity android:name=".MainScreenActivity" />
         <activity android:name=".AddUserActivity" />
         <activity android:name=".OfferActivity" />

@@ -23,6 +23,7 @@ import com.pos.leaders.leaderspossystem.Models.Permissions;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.PermissionsGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,10 +44,6 @@ public class AddUserActivity extends AppCompatActivity {
 	final List<View> selectedViews=new ArrayList<View>();
 	String selectedFromList ;
 
-	android.support.v7.app.ActionBar actionBar;
-
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,39 +54,7 @@ public class AddUserActivity extends AppCompatActivity {
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_add_users);
 
-
-		final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
-				R.layout.title_bar,
-				null);
-
-		// Set up your ActionBar
-		actionBar = getSupportActionBar();
-		// TODO: Remove the redundant calls to getSupportActionBar()
-		//       and use variable actionBar instead
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		actionBar.setDisplayShowHomeEnabled(false);
-		actionBar.setDisplayShowTitleEnabled(false);
-		actionBar.setDisplayShowCustomEnabled(true);
-		actionBar.setCustomView(actionBarLayout);
-		Calendar ca = Calendar.getInstance();
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		// You customization
-		final int actionBarColor = getResources().getColor(R.color.primaryColor);
-		actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
-
-		final TextView actionBarTitle = (TextView) findViewById(R.id.date);
-		actionBarTitle.setText(format.format(ca.getTime()));
-		final TextView actionBarSent = (TextView) findViewById(R.id.posID);
-		actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
-
-
-		final TextView actionBarStaff = (TextView) findViewById(R.id.userName);
-		actionBarStaff.setText(SESSION._USER.getFullName());
-
-		final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
-		actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
-
+		TitleBar.setTitleBar(this);
 
 		// Get Refferences of Views
 		etUserName = (EditText) findViewById(R.id.addUser_ETUserName);
