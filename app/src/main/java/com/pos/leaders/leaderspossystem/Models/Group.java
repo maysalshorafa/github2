@@ -16,7 +16,18 @@ public class Group {
     private int amount;
     private int point;
 
-    public Group(long id, String name, String description, int type, float parcent, int amount, int point) {
+    public boolean isHide() {
+        return hide;
+    }
+
+    public void setHide(boolean hide) {
+        this.hide = hide;
+    }
+
+    private boolean hide;
+
+
+    public Group(long id, String name, String description, int type, float parcent, int amount, int point,boolean hide) {
         this.id=id;
         this.name=name;
         this.description=description;

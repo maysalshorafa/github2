@@ -218,7 +218,7 @@ ImageButton search_person;
     Button btn_cancel;
     LinearLayout ll;
     ImageView imv;
-    int club_id;
+    long club_id;
     private String touchPadPressed = "";
     private boolean enableBackButton = true;
 
@@ -2524,9 +2524,9 @@ a= custmer_List.get(position).getCustmerName();
                 if (!word.equals("")) {
                     for (Customer_M c : All_custmerList) {
 
-                        if (c.getName().toLowerCase().contains(word.toLowerCase()) ||
+                        if (c.getCustmerName().toLowerCase().contains(word.toLowerCase()) ||
                                 c.getPhoneNumber().toLowerCase().contains(word.toLowerCase()) ||
-                                c.getAddress().toLowerCase().contains(word.toLowerCase())) {
+                                c.getStreet().toLowerCase().contains(word.toLowerCase())) {
                             custmer_List.add(c);
 
                         }

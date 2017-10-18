@@ -59,8 +59,7 @@ public class AddUserActivity extends AppCompatActivity {
 
 
 		final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
-				R.layout.title_bar,
-				null);
+				R.layout.title_bar, null);
 
 		// Set up your ActionBar
 		actionBar = getSupportActionBar();

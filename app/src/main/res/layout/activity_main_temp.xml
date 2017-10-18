@@ -362,7 +362,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="@string/Custmername"
+                                    android:text="@string/custmer_name"
                                     android:textColor="@color/black"
                                     android:layout_gravity="center"/>
 
@@ -394,7 +394,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="@string/GroupName"
+                                    android:text="@string/group_name"
                                     android:textColor="@color/black"
                                     android:layout_gravity="center"/>
 

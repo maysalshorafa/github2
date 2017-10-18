@@ -28,7 +28,7 @@ public class CityDbAdapter {
     // Column Names
     protected static final String City_COLUMN_Id = "id";
     protected static final String City_COLUMN_Name = "name";
-    public static final String DATABASE_CREATE = "CREATE TABLE City ( `id` INTEGER ," + " `name` TEXT )";
+    public static final String DATABASE_CREATE = "CREATE TABLE City ( `id` INTEGER PRIMARY KEY AUTOINCREMENT ," + " `name` TEXT )";
     private DbHelper dbHelper;
     Context context;
     private SQLiteDatabase db;

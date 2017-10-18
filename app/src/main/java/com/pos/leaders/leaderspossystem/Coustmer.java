@@ -18,7 +18,7 @@ import java.util.Calendar;
 
 
 public class Coustmer extends AppCompatActivity {
-    Button btAdd_coustmer, btshow_coustmer , addgroup;
+    Button btAddCoustmer, btshowCoustmer, addgroup ,btShowGroup;
     android.support.v7.app.ActionBar actionBar;
 
     @Override
@@ -62,10 +62,11 @@ public class Coustmer extends AppCompatActivity {
 
         final TextView actionBarLocations = (TextView) findViewById(R.id.userPermtions);
         actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
-        btAdd_coustmer = (Button) findViewById(R.id.add_new_coustmer);
-        btshow_coustmer = (Button) findViewById(R.id.show_coustmer);
+        btAddCoustmer = (Button) findViewById(R.id.add_new_coustmer);
+        btshowCoustmer = (Button) findViewById(R.id.show_coustmer);
         addgroup = (Button) findViewById(R.id.new_group);
-        btAdd_coustmer.setOnClickListener(new View.OnClickListener() {
+        btShowGroup = (Button) findViewById(R.id.show_group);
+        btAddCoustmer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //// TODO: 22/10/2016 cancel and return to previous activity
@@ -84,11 +85,21 @@ public class Coustmer extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-       btshow_coustmer.setOnClickListener(new View.OnClickListener() {
+       btshowCoustmer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //// TODO: 22/10/2016 cancel and return to previous activity
                 Intent intent = new Intent(Coustmer.this,CustmerMangmentActivity.class);
+                //userDBAdapter.close();
+
+                startActivity(intent);
+            }
+        });
+        btShowGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //// TODO: 22/10/2016 cancel and return to previous activity
+                Intent intent = new Intent(Coustmer.this,ClubMangmentActivity.class);
                 //userDBAdapter.close();
 
                 startActivity(intent);

@@ -9,11 +9,15 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.City;
+import com.pos.leaders.leaderspossystem.Models.Customer_M;
 import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by Win8.1 on 6/21/2017.
@@ -30,10 +34,11 @@ public class GroupAdapter {
     protected static final String Group_COLUMN_Parcent = "parcent";
     protected static final String Group_COLUMN_Amount = "amount";
     protected static final String Group_COLUMN_Point = "point";
+    protected static final String Group_COLUMN_DISENABLED = "hide";
 
 
 
-    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS club ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+"`name` TEXT NOT NULL,"+"'description' Text ,"+"'type' INTEGER ,"+" 'parcent'  REAL DEFAULT 0 ,"+" 'amount' REAL DEFAULT 0,"+" 'point' REAL DEFAULT 0  )";
+    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS club ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+"`name` TEXT NOT NULL,"+"'description' Text ,"+"'type' INTEGER ,"+" 'parcent'  REAL DEFAULT 0 ,"+" 'amount' REAL DEFAULT 0,"+" 'point' REAL DEFAULT 0 ,"+"`hide` INTEGER DEFAULT 0 )";
     private SQLiteDatabase db;
 
     // Context of the application using the database.
@@ -65,30 +70,39 @@ public class GroupAdapter {
         Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME , null);
         return cursor.getCount();
     }
-    public int insertEntry(String name,String description, String type, String parcent, String amount, String point){
-        ContentValues val = new ContentValues();
-        val.put(Group_COLUMN__ID, Util.idHealth(this.db, Group_TABLE_NAME, Group_COLUMN__ID));
 
-
-        //Assign values for each row.
-        val.put(Group_COLUMN_Name,name);
-        val.put(Group_COLUMN__Descrption,description);
-        val.put(Group_COLUMN_Type,type);
-        val.put(Group_COLUMN_Parcent,parcent);
-        val.put(Group_COLUMN_Amount,amount);
-        val.put(Group_COLUMN_Point,point);
-
-
+    public long insertEntry( String name,String description, int type, float parcent, int amount, int point) {
+        Group group = new Group(Util.idHealth(this.db, Group_TABLE_NAME, Group_COLUMN__ID), name, description, type, parcent, amount, point, false );
+        sendToBroker(MessageType.ADD_CLUB, group, this.context);
 
         try {
-
-        db.insert(Group_TABLE_NAME, null, val);
-            return 1;
+            long insertResult = insertEntry(group);
+            return insertResult;
         } catch (SQLException ex) {
             Log.e("Group insertEntry", "inserting Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
+
+    public long insertEntry(Group group) {
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(Group_COLUMN__ID, group.getId());
+        val.put(Group_COLUMN_Name, group.getname());
+        val.put(Group_COLUMN__Descrption, group.getDescription());
+        val.put(Group_COLUMN_Type, group.getType());
+        val.put(Group_COLUMN_Parcent, group.getParcent());
+        val.put(Group_COLUMN_Amount, group.getAmount());
+        val.put(Group_COLUMN_Point, group.getPoint());
+        val.put(Group_COLUMN_DISENABLED, group.isHide()?1:0);
+        try {
+            return db.insert(Group_TABLE_NAME, null, val);
+        } catch (SQLException ex) {
+            Log.e("GroupDB insertEntry", "inserting Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+    }
+
     public int updateEntry(String name,String description, String type, String parcent, String amount, String point){
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -108,6 +122,16 @@ public class GroupAdapter {
         }
 
     }
+    public boolean availableGrouprName(String groupName){
+        Cursor cursor=db.query(Group_TABLE_NAME,null,Group_COLUMN_Name+"=?",new String[]{groupName},null,null,null);
+        cursor.moveToFirst();
+        if(cursor.getCount()>0){
+            // group Name not available
+            return false;
+        }
+        //group Name available
+        return true;
+    }
 
     /*
     public void read(Cursor cursor) {
@@ -122,7 +146,7 @@ public class GroupAdapter {
         cursor.close();
     }*/
 
-    public  Group getGroupInfo(int club_id){
+    public  Group getGroupInfo(long club_id){
             Group group = null;
             Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME + " where id='" + club_id + "'", null);
             if (cursor.getCount() < 1) // UserName Not Exist
@@ -137,11 +161,24 @@ public class GroupAdapter {
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Type))),
                     (float) Double.parseDouble(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Parcent))),
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Amount))),
-                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Point))));
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Point))), Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(Group_COLUMN_DISENABLED))));
             cursor.close();
 
             return group;
 
+    }
+    public Group getGroupByID(long id) {
+        Group group = null;
+        Cursor cursor = db.query(Group_TABLE_NAME, null, Group_COLUMN__ID + "=? ", new String[]{id + ""}, null, null, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0)
+        {
+            group = createNewGroup(cursor);
+            cursor.close();
+            return group;
+        }
+        cursor.close();
+        return group;
     }
     public List<Group> getAllGroup() {
         List<Group> groups = new ArrayList<Group>();
@@ -161,7 +198,23 @@ public class GroupAdapter {
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Type))),
                 (float) Double.parseDouble(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Parcent))),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Amount))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Point))));
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Point))),
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(Group_COLUMN_DISENABLED))));
+    }
+    public int deleteEntry(long id) {
+        // Define the updated row content.
+        ContentValues updatedValues = new ContentValues();
+        // Assign values for each row.
+        updatedValues.put(Group_COLUMN_DISENABLED, 1);
+
+        String where = Group_COLUMN__ID + " = ?";
+        try {
+            db.update(Group_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+            return 1;
+        } catch (SQLException ex) {
+            Log.e("Group deleteEntry", "enable hide Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
     }
 
 
