@@ -199,7 +199,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 //open main screen
                 //// TODO: 01/06/2017 open dashboard screen
 
-                Intent intent = new Intent(getApplicationContext(), DashBoard.class);
+                Intent intent = new Intent(getApplicationContext(), TempDashBord.class);
                 intent.putExtra("permissions_name",user.getPermtionName());
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
