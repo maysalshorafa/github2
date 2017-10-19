@@ -131,6 +131,7 @@ public class SyncMessage extends Service {
             token = Token.readToken(getApplicationContext());
             SESSION.token = token;
         }
+        token = SESSION.token;
     }
 
     @Override
