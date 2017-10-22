@@ -39,7 +39,7 @@ TextView tvParcent , tvPoint ,tvAmount;
     Spinner clubType;
 
     Button btAddGroup ,btCancel  ;
-     GroupAdapter groupAdapter ;
+     GroupAdapter groupAdapter =new GroupAdapter(this);
     Group group;
     List<Customer_M> custmers;
     CustomerDBAdapter customerDBAdapter;
@@ -55,7 +55,7 @@ TextView tvParcent , tvPoint ,tvAmount;
         setContentView(R.layout.activity_coustmer__group);
 
         TitleBar.setTitleBar(this);
-
+groupAdapter.open();
         etGroupName = (EditText) findViewById(R.id.group_name);
         clubType = (Spinner) findViewById(R.id.typeSpinner);
         clubType.setOnItemSelectedListener(this);

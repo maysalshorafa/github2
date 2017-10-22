@@ -44,7 +44,7 @@ import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE
 
 public class TempDashBord  extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private boolean enableBackButton = true;
-    Button mainScreen,report ,product ,department,users,backUp,customerClub,logOut,tax,offers,houseOfWork;
+    Button mainScreen,report ,product ,department,users,backUp,customerClub,logOut,tax,offers,houseOfWork ,settings;
     String permissions_name;
     AReportDBAdapter aReportDBAdapter;
     User user=new User();
@@ -93,6 +93,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         logOut=(Button) findViewById(R.id.logOut);
         houseOfWork=(Button) findViewById(R.id.houseOfWork);
         customerClub=(Button) findViewById(R.id.coustmerClub);
+        settings=(Button) findViewById(R.id.settings);
         aReportDBAdapter = new AReportDBAdapter(this);
         userDBAdapter = new UserDBAdapter(this);
         userDBAdapter.open();
@@ -137,7 +138,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
 
                 }
 
-  else if ((permissions_name.toLowerCase().contains("report"))) {
+ if ((permissions_name.toLowerCase().contains("report"))) {
 
 
             report.setOnClickListener(new View.OnClickListener() {
@@ -167,7 +168,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                     });}
 
 
-        else if ((permissions_name.toLowerCase().contains("department"))) {
+       if ((permissions_name.toLowerCase().contains("department"))) {
 
 
             department.setOnClickListener(new View.OnClickListener() {
@@ -181,7 +182,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                 }
             });}
 
-             else    if ((permissions_name.toLowerCase().contains("users"))) {
+               if ((permissions_name.toLowerCase().contains("users"))) {
                     users.setClickable(true);
 
 
@@ -196,12 +197,12 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                         }
                     });}
 
-               else if ((permissions_name.toLowerCase().contains("offers"))) {
+             if ((permissions_name.toLowerCase().contains("offers"))) {
                   offers.setClickable(true);
 
                     }
 
-              else   if ((permissions_name.toLowerCase().contains("back up"))) {
+             if ((permissions_name.toLowerCase().contains("back up"))) {
                     backUp.setClickable(true);
 
 
@@ -215,8 +216,22 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                             startActivity(i);
                         }
                     });}
+                 if ((permissions_name.toLowerCase().contains("settings"))) {
 
-               else if ((permissions_name.toLowerCase().contains("customer club"))) {
+
+                    settings.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //// TODO: 22/10/2016 cancel and return to previous activity
+                            Intent i;
+                            i = new Intent(getApplicationContext(),SettingActivity.class);
+                            i.putExtra("permissions_name", permissions_name);
+                            startActivity(i);
+                        }
+                    });}
+
+
+if ((permissions_name.toLowerCase().contains("customer club"))) {
                    customerClub.setClickable(true);
 
                     final String[] items = {

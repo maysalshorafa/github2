@@ -19,7 +19,7 @@
         <Button
             android:id="@+id/mainScreen"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/dashbord_frame"
             android:drawableTop="@drawable/home"
             android:paddingBottom="5dp"
@@ -30,12 +30,13 @@
             android:textColor="#e8e9e9"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_gravity="center"/>
 
         <Button
             android:id="@+id/report"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/dashbord_frame"
@@ -47,12 +48,13 @@
             android:textColor="#e8e9e9"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_gravity="center"/>
 
         <Button
             android:id="@+id/tax"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:background="@drawable/dashbord_frame"
@@ -63,12 +65,14 @@
             android:text="@string/tax"
             android:textColor="#e8e9e9"
             android:textSize="20dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
 
         <Button
+            android:layout_gravity="center"
             android:id="@+id/product"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/dashbord_frame"
@@ -97,7 +101,7 @@
         <Button
             android:id="@+id/department"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/dashbord_frame"
             android:drawableTop="@drawable/department"
             android:paddingBottom="5dp"
@@ -108,12 +112,13 @@
             android:textColor="#e8e9e9"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_gravity="center"/>
 
         <Button
             android:id="@+id/users"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
@@ -125,28 +130,31 @@
             android:text="@string/users"
             android:textColor="#e8e9e9"
             android:textSize="20dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
 
         <Button
             android:id="@+id/offers"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
             android:background="@drawable/dashbord_frame"
             android:drawableTop="@drawable/offer"
             android:paddingBottom="5dp"
-            android:layout_marginLeft="10dp"
             android:paddingRight="16dp"
             android:paddingTop="8dp"
             android:text="@string/offers"
             android:textColor="#e8e9e9"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:layout_weight="1"
-            android:layout_marginRight="16dp"/>
+            android:layout_gravity="center"/>
+
         <Button
             android:id="@+id/backUp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/dashbord_frame"
             android:drawableTop="@drawable/back_up"
             android:paddingBottom="5dp"
@@ -157,55 +165,60 @@
             android:textColor="#e8e9e9"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_gravity="center"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:layout_weight="1"
-        android:weightSum="3">
+        android:orientation="horizontal"
+        android:weightSum="4">
 
         <Button
             android:id="@+id/coustmerClub"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
             android:background="@drawable/dashbord_frame"
             android:drawableTop="@drawable/custmer_club"
             android:paddingBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:paddingTop="8dp"
             android:text="@string/custmer_club"
             android:textColor="#e8e9e9"
             android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_weight="1"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/houseOfWork"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
             android:background="@drawable/dashbord_frame"
             android:drawableTop="@drawable/hoursofwork"
             android:paddingBottom="5dp"
-            android:layout_marginRight="10dp"
             android:paddingRight="16dp"
             android:paddingTop="8dp"
             android:text="@string/hours_of_work"
             android:textColor="#e8e9e9"
             android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"/>
+            android:textStyle="bold" />
+
         <Button
             android:id="@+id/logOut"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
@@ -220,6 +233,24 @@
             android:textSize="20dp"
             android:textStyle="bold" />
 
+        <Button
+            android:id="@+id/settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/dashbord_frame"
+            android:drawableTop="@drawable/settings"
+            android:paddingBottom="5dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:text="@string/settings"
+            android:textColor="#e8e9e9"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
 
     </LinearLayout>
