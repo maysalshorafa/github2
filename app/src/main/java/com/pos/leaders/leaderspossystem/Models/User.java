@@ -17,17 +17,14 @@ public class User {
     private String phoneNumber;
     private double present;
     private double hourlyWage;
-    private String permissionsName;
 
     public void setId(long id) {
         this.id = id;
     }
 
-    public void setPermissionsName(String permissionsName) {
-        this.permissionsName = permissionsName;
-    }
 
-    public User(long id, String userName, String password, String firstName, String lastName, Date creatingDate, boolean hide, String phoneNumber, double present, double hourlyWage , String permissionsName) {
+
+    public User(long id, String userName, String password, String firstName, String lastName, Date creatingDate, boolean hide, String phoneNumber, double present, double hourlyWage ) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -38,11 +35,10 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.present = present;
         this.hourlyWage = hourlyWage;
-        this.permissionsName = permissionsName;
     }
     public User(User user){
         this(user.getId(),user.getUserName(),user.getPassword(),user.getFirstName(),
-                user.getLastName(),user.getCreatingDate(),user.isHide(),user.getPhoneNumber(),user.getPresent(),user.getHourlyWage(),user.getPermtionName());
+                user.getLastName(),user.getCreatingDate(),user.isHide(),user.getPhoneNumber(),user.getPresent(),user.getHourlyWage());
     }
     public User(){}
 
@@ -90,9 +86,7 @@ public class User {
     public String getPhoneNumber() {
         return phoneNumber;
     }
-    public String getPermtionName() {
-        return permissionsName;
-    }
+
 
     public void setPassword(String password){
         this.password=password;
@@ -135,7 +129,6 @@ public class User {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", present=" + present +
                 ", hourlyWage=" + hourlyWage +
-                ", permissionsName=" + permissionsName + '\''+
 
                 '}';
     }

@@ -8,8 +8,31 @@ import java.util.List;
 
 public class UserPermissions {
 
-	//region Attribute
+	public long getId() {
+		return id;
+	}
 
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public UserPermissions(long id, long userId, long permissionId) {
+		this.id = id;
+		this.userId = userId;
+		this.permissionId = permissionId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+
+	}
+
+	public void setPermissionId(long permissionId) {
+		this.permissionId = permissionId;
+	}
+
+	//region Attribute
+long id;
 	private long userId;
 	private long permissionId;
 

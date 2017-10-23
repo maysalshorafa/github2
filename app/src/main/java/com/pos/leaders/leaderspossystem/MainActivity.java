@@ -134,8 +134,8 @@ public class MainActivity extends AppCompatActivity{
 
     TextView custmer_name, club_name,information;
     private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle actionBarDrawerToggle;//
-    private NavigationView navigationView;
+   //private ActionBarDrawerToggle actionBarDrawerToggle;//
+   // private NavigationView navigationView;
 
  //   ImageButton    btnLastSales;
     Button btnPercentProduct,btnPauseSale,btnResumeSale;
@@ -145,9 +145,7 @@ public class MainActivity extends AppCompatActivity{
     EditText etSearch;
     ImageButton btnDone;
     ImageButton btnGrid, btnList, used_point;
-    ;
     ScrollView scDepartment;
-
     LinearLayout llDepartments;
     FrameLayout fragmentTouchPad;
     GridView gvProducts;
@@ -191,9 +189,7 @@ public class MainActivity extends AppCompatActivity{
     ProductCatalogGridViewAdapter productCatalogGridViewAdapter;
     CustmerCatalogGridViewAdapter custmerCatalogGridViewAdapter;
     //ProductCatalogListViewAdapter productCatalogListViewAdapter;
-
     String barcodeScanned = "";
-
     ListView lvOrder;
     static Sale sale;
     SaleDetailsListViewAdapter saleDetailsListViewAdapter;
@@ -209,11 +205,9 @@ public class MainActivity extends AppCompatActivity{
     double saleTotalPrice = 0.0;
     double totalSaved = 0.0;
     double secondPrice= 0.0;
-
     boolean userScrolled=false;
     int productLoadItemOffset=0;
     int productCountLoad=60;
-
     POSSDK pos;
     Button btn_cancel;
     LinearLayout ll;
@@ -287,7 +281,7 @@ double SumForClub=0.0;
 
         search_person=(ImageButton)findViewById(R.id.searchPerson);
         drawerLayout = (DrawerLayout) findViewById(R.id.mainActivity_drawerLayout);
-        navigationView = (NavigationView) findViewById(R.id.mainActivity_navigationView);
+     //   navigationView = (NavigationView) findViewById(R.id.mainActivity_navigationView);
         //((MenuItem)(navigationView.findViewById(R.id.menuItem_ZReport))).setTitle("Z"+getString(R.string.reports));
 
         //region Init
@@ -743,11 +737,11 @@ usedpointDbAdapter.open();
         });
 
         //endregion
-
+/**
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+       drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-
+**/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //region Order List View
@@ -1278,7 +1272,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
         //endregion
 
-        //region navigation menu items
+       /*region navigation menu items
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -1320,7 +1314,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
             }
         });
         //endregion
-
+*/
         etSearch.setFocusable(true);
         etSearch.requestFocus();
         etSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -1460,7 +1454,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
     }
 
     //endregion
-
+/**
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {//
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
@@ -1468,7 +1462,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
         }
         return super.onOptionsItemSelected(item);
     }
-
+**/
     private void removeOrderItemSelection(){
         saleDetailsListViewAdapter.setSelected(-1);
         if(selectedIteminCartList!=null) {
@@ -2298,14 +2292,14 @@ custmerAssetDB.close();
         view.requestFocus();
         inputMethodManager.showSoftInput(view, 0);
     }
-
+/**
     @Override
     public void onBackPressed() {
-        if(!enableBackButton){
+        if(enableBackButton){
             //stop all moves
         }
         //do not move from here :)
-    }
+    }**/
 
 
 
