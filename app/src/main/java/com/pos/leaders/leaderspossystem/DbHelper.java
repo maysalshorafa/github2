@@ -102,9 +102,12 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
         db.execSQL(UserDBAdapter.DATABASE_CREATE);
-        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'Dev','Ops','tec','"+new Date().getTime()+"','1234',0,046316969,20,35,'main screen');");
+        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'Dev','Ops','tec','"+new Date().getTime()+"','1234',0,046316969,20,35);");
+db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (1 , 'main screen');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (2 , 'report');");
 
         db.execSQL(UserPermissionsDBAdapter.DATABASE_CREATE);
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(1,1,1);");
         db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
         db.execSQL(AReportDBAdapter.DATABASE_CREATE);
         db.execSQL(CityDbAdapter.DATABASE_CREATE);

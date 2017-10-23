@@ -56,7 +56,7 @@ public class TitleBar {
         actionBarStaff.setText(SESSION._USER.getFullName());
 
         final TextView actionBarLocations = (TextView) context.findViewById(R.id.userPermtions);
-        actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
+      //  actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
 
 
         ivInternet = (ImageView) context.findViewById(R.id.titleBar_ivInternetStatus);

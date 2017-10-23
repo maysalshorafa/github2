@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem.DataBaseAdapter;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -9,9 +10,14 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.Group;
+import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
+import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.UserPermissions;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
@@ -21,7 +27,7 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 
 public class UserPermissionsDBAdapter {
 	// Table Name
-	protected static final String USERPERMISSIONS_TABLE_NAME = "userPermissions";
+	public static final String USERPERMISSIONS_TABLE_NAME = "userPermissions";
 	// Column Names
 	protected static final String USERPERMISSIONS_COLUMN_USERID = "userId";
 	protected static final String USERPERMISSIONS_COLUMN_PERMISSIONSID = "permissionId";
@@ -50,7 +56,7 @@ public class UserPermissionsDBAdapter {
 
 
 		public long insertEntry( int permissionsId, long userId) {
-			UserPermissions userPermissions = new UserPermissions(Util.idHealth(this.db, USERPERMISSIONS_TABLE_NAME, USERPERMISSIONS_COLUMN_ID),permissionsId,userId );
+			UserPermissions userPermissions = new UserPermissions(Util.idHealth(this.db, USERPERMISSIONS_TABLE_NAME, USERPERMISSIONS_COLUMN_ID),userId,permissionsId);
 			sendToBroker(MessageType.ADD_USER_PERMISSION, userPermissions, this.context);
 
 			try {
@@ -75,6 +81,27 @@ public class UserPermissionsDBAdapter {
 			return 0;
 		}
 	}
+	public ArrayList<Integer> getPermissions(long rule_id) {
+		ArrayList<Integer> permissions = new ArrayList<Integer>();
+		UserPermissions userPermissions=null;
+		Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where userId='" + rule_id + "'" , null);
+		cursor1.moveToFirst();
+
+
+		if (cursor1.getCount() < 1) // UserName Not Exist
+		{
+			cursor1.close();
+			return permissions;
+		}
+		while(!cursor1.isAfterLast()){
+			userPermissions= new UserPermissions(Long.parseLong(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_ID))),Long.parseLong(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_USERID))),Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_PERMISSIONSID))));
+			permissions.add((int) userPermissions.getPermissionId());
+			cursor1.moveToNext();
+		}
+		return permissions;
+	}
+
+
 	public void close() {
 		db.close();
 	}

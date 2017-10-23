@@ -37,7 +37,10 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
@@ -45,10 +48,10 @@ import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE
 public class TempDashBord  extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private boolean enableBackButton = true;
     Button mainScreen,report ,product ,department,users,backUp,customerClub,logOut,tax,offers,houseOfWork ,settings;
-    String permissions_name;
     AReportDBAdapter aReportDBAdapter;
     User user=new User();
     UserDBAdapter userDBAdapter;
+    ArrayList<Integer> permissions_name;
     ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +102,9 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         userDBAdapter.open();
         aReportDBAdapter.open();
         Bundle bundle = getIntent().getExtras();
-        permissions_name = bundle.getString("permissions_name");
-        Toast.makeText(TempDashBord.this, permissions_name, Toast.LENGTH_LONG).show();
-       onClickedImage();
-
+     //   permissions_name = bundle.getString("permissions_name");
+      permissions_name = getIntent().getIntegerArrayListExtra("permissions_name");
+        onClickedImage();
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,7 +124,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
 
     }
     public void onClickedImage() {
-                if ((permissions_name.toLowerCase().contains("main screen"))) {
+                if (permissions_name.contains(1)) {
 
                     mainScreen.setClickable(true);
                     mainScreen.setOnClickListener(new View.OnClickListener() {
@@ -131,14 +133,15 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                             //// TODO: 22/10/2016 cancel and return to previous activity
                             Intent i;
                             i = new Intent(getApplicationContext(), MainActivity.class);
-                            i.putExtra("permissions_name", permissions_name);
+                            i.putIntegerArrayListExtra("permissions_name",  permissions_name);
                             startActivity(i);
                         }
                     });
 
                 }
 
- if ((permissions_name.toLowerCase().contains("report"))) {
+
+ if (permissions_name.contains(2)) {
 
 
             report.setOnClickListener(new View.OnClickListener() {
@@ -153,7 +156,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
             });}
 
 
-            else     if ((permissions_name.toLowerCase().contains("product"))) {
+            else     if (permissions_name.contains(3)) {
                     product.setClickable(true);
 
                     product.setOnClickListener(new View.OnClickListener() {
@@ -168,7 +171,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                     });}
 
 
-       if ((permissions_name.toLowerCase().contains("department"))) {
+       if (permissions_name.contains(4)) {
 
 
             department.setOnClickListener(new View.OnClickListener() {
@@ -182,7 +185,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                 }
             });}
 
-               if ((permissions_name.toLowerCase().contains("users"))) {
+               if (permissions_name.contains(5)) {
                     users.setClickable(true);
 
 
@@ -197,12 +200,12 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                         }
                     });}
 
-             if ((permissions_name.toLowerCase().contains("offers"))) {
+             if (permissions_name.contains(6)) {
                   offers.setClickable(true);
 
                     }
 
-             if ((permissions_name.toLowerCase().contains("back up"))) {
+             if (permissions_name.contains(7)) {
                     backUp.setClickable(true);
 
 
@@ -216,7 +219,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                             startActivity(i);
                         }
                     });}
-                 if ((permissions_name.toLowerCase().contains("settings"))) {
+                 if (permissions_name.contains(8)) {
 
 
                     settings.setOnClickListener(new View.OnClickListener() {
@@ -231,7 +234,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                     });}
 
 
-if ((permissions_name.toLowerCase().contains("customer club"))) {
+if (permissions_name.contains(9)) {
                    customerClub.setClickable(true);
 
                     final String[] items = {

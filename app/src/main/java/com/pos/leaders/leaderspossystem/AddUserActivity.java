@@ -48,8 +48,8 @@ public class AddUserActivity extends AppCompatActivity {
 	UserDBAdapter userDBAdapter;
 	User user;
 	final List<View> selectedViews=new ArrayList<View>();
-String selectedFromList="";
-	List<Long> permissions=new  ArrayList<Long>();;
+List<String> selectedFromList=new  ArrayList<String>();;
+	ArrayList<Integer> permissions=new  ArrayList<Integer>();;
 	List<String> permissionName;
 	Map<String,Integer> permissionsMap=new HashMap<String,Integer>();
 	ArrayAdapter<String> LAdapter;
@@ -65,8 +65,6 @@ String selectedFromList="";
 
 
 		TitleBar.setTitleBar(this);
-
-
 
 
 		// Get Refferences of Views
@@ -129,12 +127,13 @@ String selectedFromList="";
 							} else {
 								long i = userDBAdapter.insertEntry(etUserName.getText().toString(), etPassword.getText().toString(), etFirstName.getText().toString()
 										, etLastName.getText().toString(), etPhoneNumber.getText().toString()
-										, Double.parseDouble(etPresent.getText().toString()), Double.parseDouble(etHourlyWage.getText().toString()),selectedFromList );
+										, Double.parseDouble(etPresent.getText().toString()), Double.parseDouble(etHourlyWage.getText().toString()) );
 								if (i > 0) {
 									UserPermissionsDBAdapter userPermissionAdapter=new UserPermissionsDBAdapter(AddUserActivity.this);
 									userPermissionAdapter.open();
-									userPermissionAdapter.insertEntry(permissionsMap.get(selectedFromList),i);
-
+									for(int permissionNo=0;permissionNo<selectedFromList.size();permissionNo++) {
+										userPermissionAdapter.insertEntry(permissionsMap.get(selectedFromList.get(permissionNo)), i);
+									}
 									Toast.makeText(getApplicationContext(), "success dding new user", Toast.LENGTH_LONG).show();
 
 									Log.i("success", "adding new user");
@@ -172,13 +171,12 @@ String selectedFromList="";
 									user.setPhoneNumber(etPhoneNumber.getText().toString());
 									user.setHourlyWage(Double.parseDouble(etHourlyWage.getText().toString()));
 									user.setPresent(Double.parseDouble(etPresent.getText().toString()));
-									user.setPermissionsName(selectedFromList);
+									//user.setPermissionsName(selectedFromList);
 
 									userDBAdapter.updateEntry(user);
 									Log.i("success Edit", user.toString());
 									intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
-									intent.putExtra("permissions_name",user.getPermtionName());
-
+intent.putIntegerArrayListExtra("permissions_name",permissions);
 									startActivity(intent);
 								} catch (Exception ex) {
 									Log.e("error can`t edit 0user", ex.getMessage().toString());
@@ -222,7 +220,7 @@ String selectedFromList="";
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
 				view.setSelected(true);
-				selectedFromList=lvPermissions.getItemAtPosition(position).toString();
+				selectedFromList.add(lvPermissions.getItemAtPosition(position).toString());
 
 				if(selectedViews.contains(view)){
 					selectedViews.remove(view);
