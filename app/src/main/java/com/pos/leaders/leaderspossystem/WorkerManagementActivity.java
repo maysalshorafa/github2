@@ -57,7 +57,7 @@ public class WorkerManagementActivity  extends AppCompatActivity {
 
 		gvUsers = (GridView) findViewById(R.id.workerManagement_GVWorkers);
 		btAddUser = (Button) findViewById(R.id.workerManagement_BTNewUser);
-		btCancel = (Button) findViewById(R.id.workerManagement_BTCancel);
+		//btCancel = (Button) findViewById(R.id.workerManagement_BTCancel);
 
 		//region Buttons
 
@@ -68,7 +68,7 @@ public class WorkerManagementActivity  extends AppCompatActivity {
 				startActivity(intent);
 			}
 		});
-
+/**
 		btCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -77,7 +77,7 @@ public class WorkerManagementActivity  extends AppCompatActivity {
 				startActivity(intent);
 			}
 		});
-
+**/
 
 		//endregion
 

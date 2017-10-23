@@ -90,7 +90,7 @@ long clubID;
             @Override
             public void onClick(View v) {
                 //// TODO: 22/10/2016 cancel and return to previous activity
-                Intent intent = new Intent(AddNewCoustmer.this, MainActivity.class);
+                Intent intent = new Intent(AddNewCoustmer.this, Coustmer.class);
 
                 startActivity(intent);
             }

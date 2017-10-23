@@ -49,7 +49,7 @@ public class AddUserActivity extends AppCompatActivity {
 	User user;
 	final List<View> selectedViews=new ArrayList<View>();
 List<String> selectedFromList=new  ArrayList<String>();;
-	ArrayList<Integer> permissions=new  ArrayList<Integer>();;
+	ArrayList<Integer> permissions_name;
 	List<String> permissionName;
 	Map<String,Integer> permissionsMap=new HashMap<String,Integer>();
 	ArrayAdapter<String> LAdapter;
@@ -68,6 +68,7 @@ List<String> selectedFromList=new  ArrayList<String>();;
 
 
 		// Get Refferences of Views
+		permissions_name = getIntent().getIntegerArrayListExtra("permissions_name");
 		permissionName=new ArrayList<String>();
 		etUserName = (EditText) findViewById(R.id.addUser_ETUserName);
 		etPassword = (EditText) findViewById(R.id.addUser_ETPassword);
@@ -88,6 +89,7 @@ List<String> selectedFromList=new  ArrayList<String>();;
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
+
 			long i = (long) extras.get("userId");
 			user = userDBAdapter.getUserByID(i);
 			etUserName.setText(user.getUserName());
@@ -101,7 +103,6 @@ List<String> selectedFromList=new  ArrayList<String>();;
 			etPresent.setText(user.getPresent() + "");
 			etHourlyWage.setText(user.getHourlyWage() + "");
 			btAdd.setText(getResources().getText(R.string.edit));
-
 
 			//The key argument here must match that used in the other activity
 		}
@@ -176,7 +177,7 @@ List<String> selectedFromList=new  ArrayList<String>();;
 									userDBAdapter.updateEntry(user);
 									Log.i("success Edit", user.toString());
 									intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
-intent.putIntegerArrayListExtra("permissions_name",permissions);
+									intent.putIntegerArrayListExtra("permissions_name",  permissions_name);
 									startActivity(intent);
 								} catch (Exception ex) {
 									Log.e("error can`t edit 0user", ex.getMessage().toString());
@@ -195,7 +196,7 @@ intent.putIntegerArrayListExtra("permissions_name",permissions);
 			@Override
 			public void onClick(View v) {
 				//// TODO: 22/10/2016 cancel and return to previous activity
-				Intent intent = new Intent(AddUserActivity.this, MainActivity.class);
+				Intent intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
 			//	intent.putExtra("permissions_name",user.getPermtionName());
 
 				//userDBAdapter.close();

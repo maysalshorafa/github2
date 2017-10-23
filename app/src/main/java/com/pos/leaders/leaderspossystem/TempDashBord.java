@@ -102,8 +102,10 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         userDBAdapter.open();
         aReportDBAdapter.open();
         Bundle bundle = getIntent().getExtras();
+        if(bundle!=null){
      //   permissions_name = bundle.getString("permissions_name");
       permissions_name = getIntent().getIntegerArrayListExtra("permissions_name");
+        }
         onClickedImage();
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,8 +196,8 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                         public void onClick(View v) {
                             //// TODO: 22/10/2016 cancel and return to previous activity
                             Intent i;
-                            i = new Intent(getApplicationContext(), AddUserActivity.class);
-                            i.putExtra("permissions_name", permissions_name);
+                            i = new Intent(getApplicationContext(), WorkerManagementActivity.class);
+                            i.putIntegerArrayListExtra("permissions_name",  permissions_name);
                             startActivity(i);
                         }
                     });}
@@ -237,41 +239,16 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
 if (permissions_name.contains(9)) {
                    customerClub.setClickable(true);
 
-                    final String[] items = {
-                            "ADD Custmer",
-                            "Show Custmer",
-                            "ADD Club",
-                            "Show Club",
-                    };
-                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(TempDashBord.this);
-                    builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
-                    builder.setItems(items, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int item) {
-                            Intent intent;
-                            switch (item) {
-                                case 0:
-                                    intent = new Intent(TempDashBord.this, AddNewCoustmer.class);
-                                    startActivity(intent);
-                                    break;
-                                case 1:
-                                    intent = new Intent(TempDashBord.this, CustmerMangmentActivity.class);
-                                    intent.putExtra("permissions_name", permissions_name);
-                                    startActivity(intent);
-                                    break;
-                                case 2:
-                                    intent = new Intent(TempDashBord.this, Coustmer_Group.class);
-                                    startActivity(intent);
-                                    break;
-                                case 3:
-                                    intent = new Intent(TempDashBord.this, ClubMangmentActivity.class);
-                                    startActivity(intent);
-                                    break;
-
-                            }
-                        }
-                    });
-                    android.app.AlertDialog alert = builder.create();
-                    alert.show();
+    customerClub.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //// TODO: 22/10/2016 cancel and return to previous activity
+            Intent i;
+            i = new Intent(getApplicationContext(),Coustmer.class);
+            i.putExtra("permissions_name", permissions_name);
+            startActivity(i);
+        }
+    });
                 }
 
 

@@ -35,7 +35,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".HomeActivity" />
-        <activity android:name=".LogInActivity">
+        <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -61,7 +61,7 @@
         <activity android:name=".Reports.UserAttendanceReport" />
         <activity android:name="." />
         <activity android:name=".AddOfferActivity" />
-
+        <activity android:name=".LogInActivity" />
         <activity android:name=".MainActivity" />
         <activity
             android:name=".Tools.CashActivity"
