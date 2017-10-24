@@ -31,6 +31,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Check;
@@ -52,6 +53,7 @@ import com.pos.leaders.leaderspossystem.Models.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.UserPermissions;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
@@ -415,6 +417,24 @@ public class SyncMessage extends Service {
                     break;
                 //endregion PERMISSION
 
+                //region UserPermtiossion
+                case MessageType.ADD_USER_PERMISSION:
+                    UserPermissions userPermissions = null;
+                    userPermissions = objectMapper.readValue(msgData, UserPermissions.class);
+
+                    UserPermissionsDBAdapter userPermissionsDBAdapter = new UserPermissionsDBAdapter(this);
+                    userPermissionsDBAdapter.open();
+                    rID = userPermissionsDBAdapter.insertEntry(userPermissions);
+                    userPermissionsDBAdapter.close();
+                    break;
+                case MessageType.UPDATE_USER_PERMISSION:
+                    break;
+                case MessageType.DELETE_USER_PERMISSION:
+                    break;
+
+
+                //end user permission region
+
                 //region SALE
                 case MessageType.ADD_SALE:
                     Sale sale = null;
@@ -703,6 +723,19 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.Permission, jsonObject.getString(MessageKey.Data), token);
                 break;
             //endregion PERMISSION
+
+            //region UserPermissions
+            case MessageType.ADD_USER_PERMISSION:
+                res = messageTransmit.authPost(ApiURL.UserPermission, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_USER_PERMISSION:
+                res = messageTransmit.authPut(ApiURL.UserPermission, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_USER_PERMISSION:
+                res = messageTransmit.authDelete(ApiURL.UserPermission, jsonObject.getString(MessageKey.Data), token);
+                break;
+
+            //End region
 
             //region SALE
             case MessageType.ADD_SALE:

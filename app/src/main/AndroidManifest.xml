@@ -112,9 +112,10 @@
             android:name=".Tools.TempCashActivty"
             android:label="@string/title_activity_temp_cash_activty"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ClubMangmentActivity"
-            android:label="@string/title_activity_temp_cash_activty"
-            ></activity>
+        <activity
+            android:name=".ClubMangmentActivity"
+            android:label="@string/title_activity_temp_cash_activty" />
+        <activity android:name=".TempDashBord"></activity>
     </application>
 
 </manifest>

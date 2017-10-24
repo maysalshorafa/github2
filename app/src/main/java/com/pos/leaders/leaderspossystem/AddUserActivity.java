@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -17,8 +18,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Permissions;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.PermissionsGridViewAdapter;
@@ -28,7 +32,9 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by KARAM on 22/10/2016.
@@ -42,8 +48,11 @@ public class AddUserActivity extends AppCompatActivity {
 	UserDBAdapter userDBAdapter;
 	User user;
 	final List<View> selectedViews=new ArrayList<View>();
-	String selectedFromList ;
-
+List<String> selectedFromList=new  ArrayList<String>();;
+	ArrayList<Integer> permissions_name;
+	List<String> permissionName;
+	Map<String,Integer> permissionsMap=new HashMap<String,Integer>();
+	ArrayAdapter<String> LAdapter;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,9 +67,9 @@ public class AddUserActivity extends AppCompatActivity {
 		TitleBar.setTitleBar(this);
 
 
-
-
 		// Get Refferences of Views
+		permissions_name = getIntent().getIntegerArrayListExtra("permissions_name");
+		permissionName=new ArrayList<String>();
 		etUserName = (EditText) findViewById(R.id.addUser_ETUserName);
 		etPassword = (EditText) findViewById(R.id.addUser_ETPassword);
 		etREPassword = (EditText) findViewById(R.id.addUser_ETREPassword);
@@ -80,6 +89,7 @@ public class AddUserActivity extends AppCompatActivity {
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
+
 			long i = (long) extras.get("userId");
 			user = userDBAdapter.getUserByID(i);
 			etUserName.setText(user.getUserName());
@@ -118,8 +128,13 @@ public class AddUserActivity extends AppCompatActivity {
 							} else {
 								long i = userDBAdapter.insertEntry(etUserName.getText().toString(), etPassword.getText().toString(), etFirstName.getText().toString()
 										, etLastName.getText().toString(), etPhoneNumber.getText().toString()
-										, Double.parseDouble(etPresent.getText().toString()), Double.parseDouble(etHourlyWage.getText().toString()),selectedFromList );
+										, Double.parseDouble(etPresent.getText().toString()), Double.parseDouble(etHourlyWage.getText().toString()) );
 								if (i > 0) {
+									UserPermissionsDBAdapter userPermissionAdapter=new UserPermissionsDBAdapter(AddUserActivity.this);
+									userPermissionAdapter.open();
+									for(int permissionNo=0;permissionNo<selectedFromList.size();permissionNo++) {
+										userPermissionAdapter.insertEntry(permissionsMap.get(selectedFromList.get(permissionNo)), i);
+									}
 									Toast.makeText(getApplicationContext(), "success dding new user", Toast.LENGTH_LONG).show();
 
 									Log.i("success", "adding new user");
@@ -157,13 +172,12 @@ public class AddUserActivity extends AppCompatActivity {
 									user.setPhoneNumber(etPhoneNumber.getText().toString());
 									user.setHourlyWage(Double.parseDouble(etHourlyWage.getText().toString()));
 									user.setPresent(Double.parseDouble(etPresent.getText().toString()));
-									user.setPermissionsName(selectedFromList);
+									//user.setPermissionsName(selectedFromList);
 
 									userDBAdapter.updateEntry(user);
 									Log.i("success Edit", user.toString());
 									intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
-									intent.putExtra("permissions_name",user.getPermtionName());
-
+									intent.putIntegerArrayListExtra("permissions_name",  permissions_name);
 									startActivity(intent);
 								} catch (Exception ex) {
 									Log.e("error can`t edit 0user", ex.getMessage().toString());
@@ -182,45 +196,36 @@ public class AddUserActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 				//// TODO: 22/10/2016 cancel and return to previous activity
-				Intent intent = new Intent(AddUserActivity.this, DashBoard.class);
+				Intent intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
 			//	intent.putExtra("permissions_name",user.getPermtionName());
 
 				//userDBAdapter.close();
 				startActivity(intent);
 			}
 		});
-
 		PermissionsDBAdapter permissionsDBAdapter = new PermissionsDBAdapter(this);
 		permissionsDBAdapter.open();
 
 		List<Permissions> permissionsList = new ArrayList<Permissions>();
-		//permissionsList = permissionsDBAdapter.getAllPermissions();
-		final String perList[]=getResources().getStringArray(R.array.permissions_list);
-		for (String s : perList) {
-			permissionsList.add(new Permissions(s));
+		permissionsList = permissionsDBAdapter.getAllPermissions();
+
+		for (Permissions d : permissionsList) {
+			permissionName.add(d.getName());
+			permissionsMap.put(d.getName(),d.getId());
 		}
 
-
-		ArrayAdapter arrayAdapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,perList);
-
-		PermissionsGridViewAdapter adapter = new PermissionsGridViewAdapter(this, permissionsList);
-		lvPermissions.setAdapter(arrayAdapter);
-		lvPermissions.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		LAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,permissionName);
+		lvPermissions.setAdapter(LAdapter);
+		lvPermissions.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 		lvPermissions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
-		 selectedFromList = (String) lvPermissions.getItemAtPosition(position);
-
-
-
+			public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
+				view.setSelected(true);
+				selectedFromList.add(lvPermissions.getItemAtPosition(position).toString());
 
 				if(selectedViews.contains(view)){
 					selectedViews.remove(view);
 					view.setBackgroundColor(getResources().getColor(R.color.transparent));
-
-
 				}
 				else
 				{

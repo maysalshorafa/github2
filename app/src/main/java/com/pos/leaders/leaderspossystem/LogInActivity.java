@@ -22,6 +22,7 @@ import com.pos.leaders.leaderspossystem.Backup.CryptoUtils;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Sale;
@@ -36,8 +37,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -187,6 +190,10 @@ public class LogInActivity extends Activity implements View.OnClickListener {
         }
         else{
             User user=userDBAdapter.logIn(et.getText().toString());
+            UserPermissionsDBAdapter userPermissionsDBAdapter =new UserPermissionsDBAdapter(this);
+            userPermissionsDBAdapter.open();
+       ArrayList<Integer>permissions= userPermissionsDBAdapter.getPermissions(user.getId());
+
             if(user==null){
                 Toast.makeText(this, getResources().getString(R.string.wrong_password), Toast.LENGTH_SHORT).show();
             }
@@ -194,14 +201,12 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 // success to log in
                 SESSION._USER = new User(user);
                 Toast.makeText(getApplicationContext(), "Hello " + user.getFullName() + " !!", Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), "Hello " + user.getPermtionName() + " !!", Toast.LENGTH_SHORT).show();
+
 
                 //open main screen
                 //// TODO: 01/06/2017 open dashboard screen
-
-                Intent intent = new Intent(getApplicationContext(), DashBoard.class);
-                intent.putExtra("permissions_name",user.getPermtionName());
-
+                Intent intent =  new Intent(getApplicationContext(), TempDashBord.class);
+intent.putIntegerArrayListExtra("permissions_name",  permissions);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, LogInActivity.LEADPOS_MAKE_A_REPORT);
 

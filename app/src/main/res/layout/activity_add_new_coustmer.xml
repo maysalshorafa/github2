@@ -46,7 +46,9 @@ android:background="@color/white">
                 android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                android:textSize="20dp"/>
+                android:textSize="20dp"
+                android:textAlignment="textStart"
+                />
 
             <EditText
                 android:id="@+id/etCustomerFirstName"
@@ -75,6 +77,8 @@ android:background="@color/white">
                 android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:textStyle="bold"
+                android:textAlignment="inherit"
+
                 android:textSize="20dp" />
             <EditText
                 android:id="@+id/etCustomerLastName"
@@ -109,6 +113,7 @@ android:background="@color/white">
                     android:layout_height="62dp"
                     android:gravity="center"
                     android:layout_gravity="center"
+                    android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="20dp" />
@@ -122,6 +127,7 @@ android:background="@color/white">
                     android:paddingLeft="5dp"
                     android:inputType="textEmailAddress"
                     android:hint="@string/email"
+
                     />
             </LinearLayout>
 
@@ -142,6 +148,7 @@ android:background="@color/white">
                     android:textStyle="bold"
                     android:textSize="20dp"
                     android:text="@string/phone_number"
+                    android:textAlignment="inherit"
                     />
 
                 <EditText
@@ -179,7 +186,9 @@ android:background="@color/white">
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="20dp"
-                    android:text="@string/street"/>
+                    android:text="@string/street"
+                    android:textAlignment="textStart"
+                    />
 
                 <EditText
                     android:id="@+id/etCustomerStreet"
@@ -207,6 +216,7 @@ android:background="@color/white">
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="20dp"
+                    android:textAlignment="inherit"
                     android:text="@string/country"/>
 
                 <EditText
@@ -244,7 +254,9 @@ android:background="@color/white">
                     android:text="@string/country_code"
                     android:textColor="@color/black"
                     android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textAlignment="textStart"
+                    />
 
                 <EditText
                     android:id="@+id/etCustomerCountryCode"
@@ -273,6 +285,7 @@ android:background="@color/white">
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="20dp"
+                    android:textAlignment="inherit"
                     android:text="@string/postal_code" />
 
                 <EditText
@@ -312,7 +325,9 @@ android:background="@color/white">
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="20dp"
-                android:text="@string/house_number" />
+                android:text="@string/house_number"
+                android:textAlignment="textStart"
+                />
 
             <EditText
                 android:id="@+id/etHouseNumber"
@@ -341,6 +356,7 @@ android:background="@color/white">
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="20dp"
+                android:textAlignment="textStart"
                 android:text="@string/job" />
 
             <EditText
@@ -378,7 +394,8 @@ android:background="@color/white">
                     android:textStyle="bold"
                     android:textSize="20dp"
                     android:text="@string/add_customer_club"
-                     />
+                    android:textAlignment="textStart"
+                    />
 
                 <Spinner
                     android:id="@+id/customerClubSpinner"
@@ -406,7 +423,8 @@ android:background="@color/white">
                     android:textStyle="bold"
                     android:textSize="20dp"
                     android:text="@string/add_to_city"
-                   />
+                    android:textAlignment="inherit"
+                    />
 
                 <Spinner
                     android:id="@+id/customerCitySpinner"
@@ -445,6 +463,7 @@ android:background="@color/white">
                     android:textStyle="bold"
                     android:textSize="20dp"
                     android:text="@string/gender"
+                    android:textAlignment="textStart"
 
                     />
                 <RadioGroup
