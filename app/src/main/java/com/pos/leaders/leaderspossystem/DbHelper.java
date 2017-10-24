@@ -86,6 +86,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(SaleDBAdapter.DATABASE_CREATE);
         db.execSQL(ChecksDBAdapter.DATABASE_CREATE);
         db.execSQL(DepartmentDBAdapter.DATABASE_CREATE);
+        db.execSQL(CustomerAssetDB.DATABASE_CREATE);
 
         db.execSQL(OrderDBAdapter.DATABASE_CREATE);
         db.execSQL(PaymentDBAdapter.DATABASE_CREATE);
@@ -144,7 +145,10 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (1,'type1','type1',1,1,2,0,0);");
         db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (2,'type2','type2',2,2,0,50,200);");
         db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (3,'type3','type3',3,3,0,0,0);");
-
+        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (3,'test1','test1','test1','"+new Date().getTime()+"','12',0,046316969,20,35);");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (10, 'sales man');");
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(10,2,10);");
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(11,3,3);");
 
 
         List<String> tblNames = tablesName(db);
