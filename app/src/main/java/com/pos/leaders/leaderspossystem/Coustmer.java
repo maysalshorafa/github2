@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,10 +32,10 @@ public class Coustmer extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_coustmer);
 
+        TitleBar.setTitleBar(this);
 
-
-        btAddCoustmer = (Button) findViewById(R.id.add_new_coustmer);
-        btshowCoustmer = (Button) findViewById(R.id.show_coustmer);
+        btAddCoustmer=(Button)findViewById(R.id.add_new_coustmer);
+        btshowCoustmer=(Button)findViewById(R.id.show_coustmer);
         addgroup = (Button) findViewById(R.id.new_group);
         btShowGroup = (Button) findViewById(R.id.show_group);
         btAddCoustmer.setOnClickListener(new View.OnClickListener() {

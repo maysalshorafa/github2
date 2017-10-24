@@ -74,7 +74,9 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(Rule11DBAdapter.DATABASE_CREATE);
         db.execSQL(OfferRuleDBAdapter.DATABASE_CREATE);
         db.execSQL(OfferDBAdapter.DATABASE_CREATE);
-
+        db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
+        db.execSQL(AReportDBAdapter.DATABASE_CREATE);
+        db.execSQL(CityDbAdapter.DATABASE_CREATE);
         db.execSQL(GroupAdapter.DATABASE_CREATE);//Club
         db.execSQL(CustomerDBAdapter.DATABASE_CREATE);
         db.execSQL(UsedPoint.DATABASE_CREATE);
@@ -102,9 +104,10 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
         db.execSQL(UserDBAdapter.DATABASE_CREATE);
-        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'Dev','Ops','tec','"+new Date().getTime()+"','1234',0,046316969,20,35,'main screen');");
-        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (2,'john','mas','fo','"+new Date().getTime()+"','147',0,046316969,20,35,'sales man');");
-        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (3,'karam','karam','jabareen','"+new Date().getTime()+"','741',0,046316969,20,35,'sales man');");
+
+        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'Dev','Ops','tec','"+new Date().getTime()+"','1234',0,046316969,20,35);");
+        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (2,'john','mas','fo','"+new Date().getTime()+"','147',0,046316969,20,35);");
+        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (3,'karam','karam','jabareen','"+new Date().getTime()+"','741',0,046316969,20,35);");
 
         db.execSQL(UserPermissionsDBAdapter.DATABASE_CREATE);
         db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
@@ -113,44 +116,57 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CustomerAssetDB.DATABASE_CREATE);
 
 
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (1 , 'main screen');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (2 , 'report');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (3 , 'product');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (4 , 'department');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (5 , 'user');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (6 , 'offer');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (7 , 'back up');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (8 , 'settings');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (9 , 'customer club');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (10 , 'sales man');");
+        db.execSQL(UserPermissionsDBAdapter.DATABASE_CREATE);
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(1,1,1);");
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(2,2,1);");
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(3,2,3);");
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(4,2,4);");
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(5,2,5);");
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(6,2,6);");
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(7,2,7);");
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(8,2,8);");
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(9,2,9);");
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(10,2,10);");
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(11,3,20);");
+        // Currency Statment
+        db.execSQL("insert into "+CurrencysDBAdapter.Currency_TABLE_NAME+"  values (0 , 'Shekel','Shekel','Palestine',0,'"+new Date().getTime()+"');");
+        db.execSQL("insert into "+CurrencysDBAdapter.Currency_TABLE_NAME+"  values (1 , 'Dollar','USD','USA',3.491,'"+new Date().getTime()+"');");
+        db.execSQL("insert into "+CurrencysDBAdapter.Currency_TABLE_NAME+"  values (2 , 'Pound','GBP','Great Britain',4.5974,'"+new Date().getTime()+"');");
+        db.execSQL("insert into "+CurrencysDBAdapter.Currency_TABLE_NAME+"  values (3 , 'Euro','EUR','EMU',4.1002,'"+new Date().getTime()+"');");
+      //Currency Type
+        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (0 , 'Shekel');");
+        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (1 , 'Dollar');");
+        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (2 , 'Pound');");
+        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (3 , 'Euro');");
+      
+        db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Date().getTime()+"');");
+        db.execSQL("insert into "+DepartmentDBAdapter.DEPARTMENTS_TABLE_NAME+" values(3, 'FOOD','"+new Date().getTime()+"',1,0);");
+        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'mays','mays','female','11/8/1994','mays94alshorafa@gmail.com','coder','123','tt','0',1,1,'1',1,'1','1');");
+        db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (0,'TULKAREM');");
+        db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (1,'NUBLUS');");
+        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (1,'type1','type1',1,1,2,0,0);");
+        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (2,'type2','type2',2,2,0,50,200);");
+        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (3,'type3','type3',3,3,0,0,0);");
+
+
+
         List<String> tblNames = tablesName(db);
         String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
         db.execSQL(dbc);
         db.execSQL(IdsCounterDBAdapter.INIT(tblNames));
-
-
-
-        // Currency Statment
-        db.execSQL("insert into "+CurrencysDBAdapter.Currency_TABLE_NAME+"  values (1 , 'Shekel','INS','Israel',1.0,'"+new Date().getTime()+"');");
-        db.execSQL("insert into "+CurrencysDBAdapter.Currency_TABLE_NAME+"  values (2 , 'Dollar','USD','USA',3.491,'"+new Date().getTime()+"');");
-        db.execSQL("insert into "+CurrencysDBAdapter.Currency_TABLE_NAME+"  values (3 , 'Pound','GBP','Great Britain',4.5974,'"+new Date().getTime()+"');");
-        db.execSQL("insert into "+CurrencysDBAdapter.Currency_TABLE_NAME+"  values (4 , 'Euro','EUR','EMU',4.1002,'"+new Date().getTime()+"');");
-//Currency Type
-        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (1 , 'Shekel');");
-        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (2 , 'Dollar');");
-        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (3 , 'Pound');");
-        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (4 , 'Euro');");
-
-        db.execSQL("INSERT INTO `city` VALUES (0,'TULKAREM');");
-        db.execSQL("INSERT INTO `city` VALUES (1,'NUBLUS');");
-        db.execSQL("INSERT INTO `club` VALUES (1,'type1','type1',1,0.2,0,0,0);");
-        db.execSQL("INSERT INTO `club` VALUES (2,'type2','type2',2,0,50,200,0);");
-        db.execSQL("INSERT INTO `club` VALUES (3,'type3','type3',3,0,0,0,0);");
-        db.execSQL("INSERT INTO `customer` VALUES (1,'mays','11/8/1994','female','mays94alshorafa@gmail.com','aa','200','tulkarem',0,0,1,0,0,0,0);");
-        db.execSQL("INSERT INTO `customer` VALUES (2,'heraa','11/8/1994','male','mays94alshorafa@gmail.com','aa','200','tulkarem',0,0,1,0,0,0,0);");
-        db.execSQL("INSERT INTO departments (id, name,byUser) VALUES (3, 'FOOD',1);");
-        db.execSQL("INSERT INTO `permissions` VALUES (0,'main screen');");
-        db.execSQL("INSERT INTO `permissions` VALUES (1,'report');");
-        db.execSQL("INSERT INTO `permissions` VALUES (2,'product');");
-        db.execSQL("INSERT INTO `permissions` VALUES (3,'department');");
-        db.execSQL("INSERT INTO `permissions` VALUES (4,'back up');");
-        db.execSQL("INSERT INTO `permissions` VALUES (5,'offers');");
-        db.execSQL("INSERT INTO `permissions` VALUES (6,'tax');");
-        db.execSQL("INSERT INTO `permissions` VALUES (7,'main screen');");
-        db.execSQL("INSERT INTO `permissions` VALUES (8,'customer club');");
+      
         db.execSQL("INSERT INTO products (id, name,barcode,description,price,costPrice,depId,byUser,status) VALUES (8, 'FOOD1',10,'aa',10,10,3,1,1);");
-        //db.execSQL("INSERT INTO `users` (id, userName,firstName,lastName,pwd,phoneNumber,present,hourlyWage,permissions_name) VALUES(3,'mays','mays','mays','',12345,'046316969',20,35,'main screen');");
-        db.execSQL("INSERT INTO value_ofPoint (id, value) VALUES (1,.5);");
+  
 
     }
 

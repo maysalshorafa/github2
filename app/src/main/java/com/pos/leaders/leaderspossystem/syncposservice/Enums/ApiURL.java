@@ -33,4 +33,5 @@ public interface ApiURL {
     String CompanyCredentials = "CompanyCredentials";
     String Currencys= "Currencys";
     String Sync = "sync";
+    String UserPermission="UserPermission";
 }

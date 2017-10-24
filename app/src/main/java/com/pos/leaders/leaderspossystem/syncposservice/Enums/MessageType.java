@@ -32,6 +32,10 @@ public interface MessageType{
     String UPDATE_PERMISSION = "UpdatePermission";
     String DELETE_PERMISSION = "DeletePermission";
 
+    String ADD_USER_PERMISSION = "AddUserPermission";
+    String UPDATE_USER_PERMISSION = "UpdateUserPermission";
+    String DELETE_USER_PERMISSION = "DeleteUserPermission";
+
     String ADD_SALE = "AddSale";
     String UPDATE_SALE = "UpdateSale";
     String DELETE_SALE = "DeleteSale";
