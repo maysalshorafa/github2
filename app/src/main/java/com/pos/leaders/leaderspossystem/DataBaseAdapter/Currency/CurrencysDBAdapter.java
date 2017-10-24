@@ -23,7 +23,8 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 
 public class CurrencysDBAdapter {
 
-    public static final String Currency_TABLE_NAME = "Currencys";
+    public static final  String Currency_TABLE_NAME = "Currencys";
+
     // Column Names
     protected static final String Currency_COLUMN_ID = "id";
     protected static final String Currency_COLUMN_Name = "name";

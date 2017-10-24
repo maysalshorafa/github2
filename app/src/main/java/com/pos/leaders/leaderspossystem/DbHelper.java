@@ -109,6 +109,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (2,'john','mas','fo','"+new Date().getTime()+"','147',0,046316969,20,35);");
         db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (3,'karam','karam','jabareen','"+new Date().getTime()+"','741',0,046316969,20,35);");
 
+
         db.execSQL(UserPermissionsDBAdapter.DATABASE_CREATE);
         db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
         db.execSQL(AReportDBAdapter.DATABASE_CREATE);
@@ -126,7 +127,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (8 , 'settings');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (9 , 'customer club');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (10 , 'sales man');");
-        db.execSQL(UserPermissionsDBAdapter.DATABASE_CREATE);
+
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(1,1,1);");
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(2,2,1);");
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(3,2,3);");
@@ -164,9 +165,9 @@ public class DbHelper extends SQLiteOpenHelper {
         String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
         db.execSQL(dbc);
         db.execSQL(IdsCounterDBAdapter.INIT(tblNames));
+
       
         db.execSQL("INSERT INTO products (id, name,barcode,description,price,costPrice,depId,byUser,status) VALUES (8, 'FOOD1',10,'aa',10,10,3,1,1);");
-  
 
     }
 
