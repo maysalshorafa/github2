@@ -14,23 +14,25 @@ import com.pos.leaders.leaderspossystem.DbHelper;
  */
 
 public class Sum_PointDbAdapter {
-    public static final String Sum_PointDbAdapter_TABLE_NAME = "sumPoint";
+    public static final String SUM_POINT_TABLE_NAME = "sumPoint";
     // Column Names
-    protected static final String Sum_PointDbAdapter_COLUMN_Sale_Id = "sale_id";
-    protected static final String Sum_PointDbAdapter_COLUMN_Point = "point_amount";
-    protected static final String Sum_PointDbAdapter_COLUMN_Custmer= "custmer_id";
+    protected static final String SUM_POINT_COLUMN_SALE_ID = "sale_id";
+    protected static final String SUM_POINT_COLUMN_POINT = "point_amount";
+    protected static final String SUM_POINT_COLUMN_CUSTOMER = "customer_id";
 
-    public static final String DATABASE_CREATE= "CREATE TABLE sumPoint ( `sale_id` INTEGER ,"+" `point_amount` INTEGER ,"+" `custmer_id` INTEGER , FOREIGN KEY(`sale_id`) REFERENCES `sales.id` )";    private SQLiteDatabase db;
+    public static final String DATABASE_CREATE= "CREATE TABLE sumPoint ( `sale_id` INTEGER ,"+" `point_amount` INTEGER , `"+ SUM_POINT_COLUMN_CUSTOMER +"` INTEGER, FOREIGN KEY(`sale_id`) REFERENCES `sales.id` )";
+    private SQLiteDatabase db;
+
     private final Context context;
     // Database open/upgrade helper
     private DbHelper dbHelper;
     public int getPointInfo(long _custmer_id) {
 
-        Cursor cur = db.rawQuery("SELECT SUM(point_amount) from " + Sum_PointDbAdapter_TABLE_NAME + "  where custmer_id='" + _custmer_id + "'", null);
+        Cursor cur = db.rawQuery("SELECT SUM(point_amount) from " + SUM_POINT_TABLE_NAME + "  where "+ SUM_POINT_COLUMN_CUSTOMER +"='" + _custmer_id + "'", null);
         if (cur.moveToFirst()) {
             return cur.getInt(0);
         }
-return  0;
+        return  0;
     }
     public Sum_PointDbAdapter(Context context) {
         this.context = context;
@@ -53,17 +55,16 @@ return  0;
     public long insertEntry(long  sale_id, int point,long custmer_id){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Sum_PointDbAdapter_COLUMN_Sale_Id,sale_id);
-        val.put(Sum_PointDbAdapter_COLUMN_Point,point);
+        val.put(SUM_POINT_COLUMN_SALE_ID,sale_id);
+        val.put(SUM_POINT_COLUMN_POINT,point);
 
-        val.put(Sum_PointDbAdapter_COLUMN_Custmer,custmer_id);
+        val.put(SUM_POINT_COLUMN_CUSTOMER,custmer_id);
 
 
         try {
-            db.insert(Sum_PointDbAdapter_TABLE_NAME, null, val);
-            return 1;
+            return db.insert(SUM_POINT_TABLE_NAME, null, val);
         } catch (SQLException ex) {
-            Log.e("Sum_point insertEntry", "inserting Entry at " + Sum_PointDbAdapter_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("Sum_point insertEntry", "inserting Entry at " + SUM_POINT_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }

@@ -34,8 +34,8 @@ public class Coustmer extends AppCompatActivity {
 
         TitleBar.setTitleBar(this);
 
-       btAddCoustmer=(Button)findViewById(R.id.add_new_coustmer);
-        btshowCoustmer=(Button)findViewById(R.id.show_coustmer);
+        btAddCoustmer = (Button) findViewById(R.id.add_new_coustmer);
+        btshowCoustmer = (Button) findViewById(R.id.show_coustmer);
         addgroup = (Button) findViewById(R.id.new_group);
         btShowGroup = (Button) findViewById(R.id.show_group);
         btAddCoustmer.setOnClickListener(new View.OnClickListener() {
