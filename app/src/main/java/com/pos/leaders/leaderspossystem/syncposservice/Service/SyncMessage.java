@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -110,19 +111,32 @@ public class SyncMessage extends Service {
     private Context context;
 
     public static boolean isConnected(Context context) {
-        return true;
-        /*
-       ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null) {
-            Network[] networks = connectivity.getAllNetworks();
-            if(networks!=null){
-                for(int k=0;k<networks.length;k++) {
-                    if (connectivity.getNetworkInfo(networks[k]).getState() == NetworkInfo.State.CONNECTED)
-                        return true;
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Network[] networks = connectivityManager.getAllNetworks();
+            NetworkInfo networkInfo;
+            for (Network mNetwork : networks) {
+                networkInfo = connectivityManager.getNetworkInfo(mNetwork);
+                if (networkInfo.getState().equals(NetworkInfo.State.CONNECTED)) {
+                    return true;
+                }
+            }
+        }else {
+            if (connectivityManager != null) {
+                //noinspection deprecation
+                NetworkInfo[] info = connectivityManager.getAllNetworkInfo();
+                if (info != null) {
+                    for (NetworkInfo anInfo : info) {
+                        if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
+                            Log.d("Network",
+                                    "NETWORKNAME: " + anInfo.getTypeName());
+                            return true;
+                        }
+                    }
                 }
             }
         }
-        return false;*/
+        return false;
     }
 
     @Override
@@ -133,6 +147,7 @@ public class SyncMessage extends Service {
             token = Token.readToken(getApplicationContext());
             SESSION.token = token;
         }
+        token = SESSION.token;
     }
 
     @Override

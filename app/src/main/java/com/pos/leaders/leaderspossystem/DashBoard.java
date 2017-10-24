@@ -122,6 +122,8 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
             String token = sharedpreferences.getString(MessageKey.Token, null);
             SESSION.token = token;
         }
+        Log.i("Token", SESSION.token);
+
         im = (ImageView) findViewById(R.id.home);
         Dash_bord_adapter adapter = new Dash_bord_adapter(DashBoard.this, dashbord_text, imageId);
         aReportDBAdapter = new AReportDBAdapter(this);

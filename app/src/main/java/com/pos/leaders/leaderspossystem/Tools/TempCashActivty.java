@@ -193,7 +193,12 @@ currencyReturnsDBAdapter.close();
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                     //do something here
                     String value = tvTotalInserted.getText().toString();
+                if(value.length()>0) {
                     basicCurrencyValue = Double.parseDouble(value);
+                }
+                else{
+                    basicCurrencyValue = 0;
+                }
                     exceesValue = (basicCurrencyValue+firstCurruncyValue+secondCurrency) - totalPrice;
                     tvExcess.setText(exceesValue + " ");
                     if (exceesValue >=0) {
