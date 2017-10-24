@@ -74,7 +74,9 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(Rule11DBAdapter.DATABASE_CREATE);
         db.execSQL(OfferRuleDBAdapter.DATABASE_CREATE);
         db.execSQL(OfferDBAdapter.DATABASE_CREATE);
-
+        db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
+        db.execSQL(AReportDBAdapter.DATABASE_CREATE);
+        db.execSQL(CityDbAdapter.DATABASE_CREATE);
         db.execSQL(GroupAdapter.DATABASE_CREATE);//Club
         db.execSQL(CustomerDBAdapter.DATABASE_CREATE);
         db.execSQL(UsedPoint.DATABASE_CREATE);
@@ -123,11 +125,24 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(6,2,6);");
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(7,2,7);");
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(8,2,8);");
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(3,2,9);");
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(9,2,9);");
+        // Currency Statment
+        db.execSQL("insert into "+CurrencysDBAdapter.Currency_TABLE_NAME+"  values (1 , 'Dollar','USD','USA',3.491,'"+new Date().getTime()+"');");
+        db.execSQL("insert into "+CurrencysDBAdapter.Currency_TABLE_NAME+"  values (2 , 'Pound','GBP','Great Britain',4.5974,'"+new Date().getTime()+"');");
+        db.execSQL("insert into "+CurrencysDBAdapter.Currency_TABLE_NAME+"  values (3 , 'Euro','EUR','EMU',4.1002,'"+new Date().getTime()+"');");
+//Currency Type
+        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (1 , 'Dollar');");
+        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (2 , 'Pound');");
+        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (3 , 'Euro');");
+        db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Date().getTime()+"');");
+        db.execSQL("insert into "+DepartmentDBAdapter.DEPARTMENTS_TABLE_NAME+" values(3, 'FOOD','"+new Date().getTime()+"',1,0);");
+        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'mays','mays','female','11/8/1994','mays94alshorafa@gmail.com','coder''123','tt','0',1,1,'1','1','1','1');");
+        db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (0,'TULKAREM');");
+        db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (1,'NUBLUS');");
+        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (1,'type1','type1','mm',1,.2,0,0);");
+        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (2,'type2','type2','mm',2,0,50,200);");
+        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (3,'type3','type3','mm',3,0,0,0);");
 
-        db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
-        db.execSQL(AReportDBAdapter.DATABASE_CREATE);
-        db.execSQL(CityDbAdapter.DATABASE_CREATE);
 
 
         List<String> tblNames = tablesName(db);
