@@ -770,6 +770,40 @@ public class SyncMessage extends Service {
             case MessageType.DELETE_CLUB:
                 res = messageTransmit.authDelete(ApiURL.Club, jsonObject.getString(MessageKey.Data), token);
                 break;
+            // Sum Point Region
+            case MessageType.ADD_SUMPOINT:
+                res = messageTransmit.authPost(ApiURL.SumPoint, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_SUMPOINT:
+                res = messageTransmit.authPut(ApiURL.SumPoint, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_SUMPOINT:
+                res = messageTransmit.authDelete(ApiURL.SumPoint, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //End Sum Point Region
+            // Value Of Point Region
+            case MessageType.ADD_VALUEOFPOINT:
+                res = messageTransmit.authPost(ApiURL.ValueOfPoint, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_ValueOfPoint:
+                res = messageTransmit.authPut(ApiURL.ValueOfPoint, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_ValueOfPoint:
+                res = messageTransmit.authDelete(ApiURL.ValueOfPoint, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //End Value Of Point Region
+            //
+            // UsedPoint Region
+            case MessageType.ADD_USEDPOINT:
+                res = messageTransmit.authPost(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_USEDPOINT:
+                res = messageTransmit.authPut(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_USEDPOINT:
+                res = messageTransmit.authDelete(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //End Value Of Point Region
             //City Region
             case MessageType.ADD_CITY:
                 res = messageTransmit.authPost(ApiURL.City, jsonObject.getString(MessageKey.Data), token);

@@ -8,19 +8,26 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.Models.SumPoint;
+import com.pos.leaders.leaderspossystem.Models.UserPermissions;
+import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by Win8.1 on 7/19/2017.
  */
 
 public class Sum_PointDbAdapter {
-    public static final String SUM_POINT_TABLE_NAME = "sumPoint";
+    public static final String SUM_POINT_TABLE_NAME = "SumPoint";
     // Column Names
-    protected static final String SUM_POINT_COLUMN_SALE_ID = "sale_id";
-    protected static final String SUM_POINT_COLUMN_POINT = "point_amount";
+    protected static final String SUM_POINT_COLUMN_ID = "id";
+    protected static final String SUM_POINT_COLUMN_SALE_ID = "saleId";
+    protected static final String SUM_POINT_COLUMN_POINT = "pointAmount";
     protected static final String SUM_POINT_COLUMN_CUSTOMER = "customer_id";
 
-    public static final String DATABASE_CREATE= "CREATE TABLE sumPoint ( `sale_id` INTEGER ,"+" `point_amount` INTEGER , `"+ SUM_POINT_COLUMN_CUSTOMER +"` INTEGER, FOREIGN KEY(`sale_id`) REFERENCES `sales.id` )";
+    public static final String DATABASE_CREATE= "CREATE TABLE sumPoint ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  , `sale_id` INTEGER ,"+" `point_amount` INTEGER , `"+ SUM_POINT_COLUMN_CUSTOMER +"` INTEGER, FOREIGN KEY(`sale_id`) REFERENCES `sales.id` )";
     private SQLiteDatabase db;
 
     private final Context context;
@@ -49,22 +56,35 @@ public class Sum_PointDbAdapter {
         db.close();
     }
 
+
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public long insertEntry(long  sale_id, int point,long custmer_id){
+
+    public long insertEntry( long  saleId, int point,long custmerId) {
+        SumPoint sumPoint = new SumPoint(Util.idHealth(this.db, SUM_POINT_TABLE_NAME, SUM_POINT_COLUMN_ID),saleId, point,custmerId);
+        sendToBroker(MessageType.ADD_SUMPOINT, sumPoint, this.context);
+
+        try {
+            long insertResult = insertEntry(sumPoint);
+            return insertResult;
+        } catch (SQLException ex) {
+            Log.e("SumPoint insertEntry", "inserting Entry at " + SUM_POINT_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+    }
+    public long insertEntry(SumPoint sumPoint){
         ContentValues val = new ContentValues();
+        val.put(SUM_POINT_COLUMN_ID,sumPoint.getId());
         //Assign values for each row.
-        val.put(SUM_POINT_COLUMN_SALE_ID,sale_id);
-        val.put(SUM_POINT_COLUMN_POINT,point);
-
-        val.put(SUM_POINT_COLUMN_CUSTOMER,custmer_id);
-
+        val.put(SUM_POINT_COLUMN_SALE_ID, sumPoint.getSaleId());
+        val.put(SUM_POINT_COLUMN_POINT, sumPoint.getPointAmount());
+        val.put(SUM_POINT_COLUMN_CUSTOMER,sumPoint.getCustomer_id());
 
         try {
             return db.insert(SUM_POINT_TABLE_NAME, null, val);
         } catch (SQLException ex) {
-            Log.e("Sum_point insertEntry", "inserting Entry at " + SUM_POINT_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("SumPoint DB insert", "inserting Entry at " + SUM_POINT_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }

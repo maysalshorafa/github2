@@ -48,6 +48,18 @@ public interface MessageType{
     String UPDATE_CLUB = "UpdateClub";
     String DELETE_CLUB = "DeleteClub";
 
+    String ADD_SUMPOINT = "AddSumPoint";
+    String UPDATE_SUMPOINT = "UpdateSumPoint";
+    String DELETE_SUMPOINT = "DeleteSumPoint";
+
+    String ADD_VALUEOFPOINT = "AddValueOfPoint";
+    String UPDATE_ValueOfPoint = "UpdateValueOfPoint";
+    String DELETE_ValueOfPoint = "DeleteValueOfPoint";
+
+    String ADD_USEDPOINT = "AddUsedPoint";
+    String UPDATE_USEDPOINT = "UpdateUsedPoint";
+    String DELETE_USEDPOINT = "DeleteUsedPoint";
+
     String ADD_CITY = "AddCity";
     String UPDATE_CITY = "UpdateCity";
     String DELETE_CITY = "DeleteCity";

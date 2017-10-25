@@ -79,7 +79,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CityDbAdapter.DATABASE_CREATE);
         db.execSQL(GroupAdapter.DATABASE_CREATE);//Club
         db.execSQL(CustomerDBAdapter.DATABASE_CREATE);
-        db.execSQL(UsedPoint.DATABASE_CREATE);
+        db.execSQL(UsedPointDBAdapter.DATABASE_CREATE);
         db.execSQL(Sum_PointDbAdapter.DATABASE_CREATE);
         db.execSQL(ValueOfPointDB.DATABASE_CREATE);
 
@@ -105,19 +105,10 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
         db.execSQL(UserDBAdapter.DATABASE_CREATE);
-
         db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'Dev','Ops','tec','"+new Date().getTime()+"','1234',0,046316969,20,35);");
-        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (2,'john','mas','fo','"+new Date().getTime()+"','147',0,046316969,20,35);");
+        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (2,'john','mas','fo','"+new Date().getTime()+"','123',0,046316969,20,35);");
         db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (3,'karam','karam','jabareen','"+new Date().getTime()+"','741',0,046316969,20,35);");
-
-
         db.execSQL(UserPermissionsDBAdapter.DATABASE_CREATE);
-        db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
-        db.execSQL(AReportDBAdapter.DATABASE_CREATE);
-        db.execSQL(CityDbAdapter.DATABASE_CREATE);
-        db.execSQL(CustomerAssetDB.DATABASE_CREATE);
-
-
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (1 , 'main screen');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (2 , 'report');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (3 , 'product');");
@@ -139,7 +130,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(8,2,8);");
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(9,2,9);");
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(10,2,10);");
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(11,3,20);");
+        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(11,2,2);");
         // Currency Statment
         db.execSQL("insert into "+CurrencysDBAdapter.Currency_TABLE_NAME+"  values (0 , 'Shekel','Shekel','Palestine',0,'"+new Date().getTime()+"');");
         db.execSQL("insert into "+CurrencysDBAdapter.Currency_TABLE_NAME+"  values (1 , 'Dollar','USD','USA',3.491,'"+new Date().getTime()+"');");
@@ -153,18 +144,13 @@ public class DbHelper extends SQLiteOpenHelper {
       
         db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Date().getTime()+"');");
         db.execSQL("insert into "+DepartmentDBAdapter.DEPARTMENTS_TABLE_NAME+" values(3, 'FOOD','"+new Date().getTime()+"',1,0);");
-        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'mays','mays','female','11/8/1994','mays94alshorafa@gmail.com','coder','123','tt','0',1,1,'1',1,'1','1');");
+        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'mays','mays','female','11/8/1994','mays94alshorafa@gmail.com','coder','123','tt','0',0,1,'1',1,'1');");
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (0,'TULKAREM');");
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (1,'NUBLUS');");
-        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (1,'type1','type1',1,1,2,0,0);");
-        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (2,'type2','type2',2,2,0,50,200);");
-        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (3,'type3','type3',3,3,0,0,0);");
-        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (3,'test1','test1','test1','"+new Date().getTime()+"','12',0,046316969,20,35);");
-        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (10, 'sales man');");
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(10,2,10);");
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(11,3,3);");
-
-
+        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (1,'type1','type1',1,.2,0,0,0);");
+        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (2,'type2','type2',2,0,50,200,0);");
+        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (3,'type3','type3',2,0,0,0,0);");
+        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (4,'test1','test1','test1','"+new Date().getTime()+"','12',0,046316969,20,35);");
         List<String> tblNames = tablesName(db);
         String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
         db.execSQL(dbc);
