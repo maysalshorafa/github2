@@ -152,7 +152,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                     //// TODO: 22/10/2016 cancel and return to previous activity
                     Intent i;
                     i = new Intent(getApplicationContext(), ReportsManagementActivity.class);
-                    i.putExtra("permissions_name", permissions_name);
+                    i.putIntegerArrayListExtra("permissions_name",  permissions_name);
                     startActivity(i);
                 }
             });}
@@ -167,7 +167,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                             //// TODO: 22/10/2016 cancel and return to previous activity
                             Intent i;
                             i = new Intent(getApplicationContext(), ProductsActivity.class);
-                            i.putExtra("permissions_name", permissions_name);
+                            i.putIntegerArrayListExtra("permissions_name",  permissions_name);
                             startActivity(i);
                         }
                     });}
@@ -182,7 +182,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                     //// TODO: 22/10/2016 cancel and return to previous activity
                     Intent i;
                     i = new Intent(getApplicationContext(), DepartmentActivity.class);
-                    i.putExtra("permissions_name", permissions_name);
+                    i.putIntegerArrayListExtra("permissions_name",  permissions_name);
                     startActivity(i);
                 }
             });}
@@ -217,7 +217,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                             //// TODO: 22/10/2016 cancel and return to previous activity
                             Intent i;
                             i = new Intent(getApplicationContext(), BackupActivity.class);
-                            i.putExtra("permissions_name", permissions_name);
+                            i.putIntegerArrayListExtra("permissions_name",  permissions_name);
                             startActivity(i);
                         }
                     });}
@@ -230,7 +230,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                             //// TODO: 22/10/2016 cancel and return to previous activity
                             Intent i;
                             i = new Intent(getApplicationContext(),SettingActivity.class);
-                            i.putExtra("permissions_name", permissions_name);
+                            i.putIntegerArrayListExtra("permissions_name",  permissions_name);
                             startActivity(i);
                         }
                     });}
@@ -245,7 +245,7 @@ if (permissions_name.contains(9)) {
             //// TODO: 22/10/2016 cancel and return to previous activity
             Intent i;
             i = new Intent(getApplicationContext(),Coustmer.class);
-            i.putExtra("permissions_name", permissions_name);
+            i.putIntegerArrayListExtra("permissions_name",  permissions_name);
             startActivity(i);
         }
     });

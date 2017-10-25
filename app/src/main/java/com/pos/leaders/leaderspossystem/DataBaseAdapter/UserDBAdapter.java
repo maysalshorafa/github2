@@ -207,14 +207,23 @@ public class UserDBAdapter {
 		return users;
 	}
     public List<User> getAllSalesMAn() {
+        List<Long> salesManId = new ArrayList<Long>();
         List<User> users = new ArrayList<User>();
-        String permtion="sales man";
-        Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where  permissions_name='" + permtion + "'", null);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            users.add(createNewUser(cursor));
-            cursor.moveToNext();
+        UserPermissionsDBAdapter userPermissionsDBAdapter=new UserPermissionsDBAdapter(context);
+        userPermissionsDBAdapter.open();
+        salesManId=userPermissionsDBAdapter.getSalesManId();
+
+        Cursor cursor=null;
+        for(int i=0 ;i<salesManId.size();i++){
+            cursor = db.rawQuery("select * from " + USERS_TABLE_NAME+ " where  id='" + salesManId.get(i) + "'", null);
+            if (cursor != null) {
+
+                while (cursor.moveToNext()) {
+                    users.add(createNewUser(cursor));
+                }}
         }
+        cursor.close();
+
         return users;
     }
 

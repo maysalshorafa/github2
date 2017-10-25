@@ -9,6 +9,10 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
+import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by Win8.1 on 7/26/2017.
@@ -19,8 +23,8 @@ public class ValueOfPointDB {
     // Column Names
     protected static final String Value_COLUMN_Id = "id";
     protected static final String Value_COLUMN = "value";
-    protected static final String CreateDate_Value_COLUMN_Point = "createDate";
-    public static final String DATABASE_CREATE = "CREATE TABLE value_ofPoint ( `id` INTEGER ," + " `value` INTEGER ,`createDate` TEXT DEFAULT current_timestamp )";
+    protected static final String CreateDate_Value_COLUMN_CreateDate = "createDate";
+    public static final String DATABASE_CREATE = "CREATE TABLE value_ofPoint ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  ," + " `value` INTEGER ,`createDate` TEXT DEFAULT current_timestamp )";
     private DbHelper dbHelper;
     Context context;
     private SQLiteDatabase db;
@@ -44,20 +48,28 @@ public class ValueOfPointDB {
         return db;
     }
 
-    public int insertEntry(long id,int value,String create_date){
-        ContentValues val = new ContentValues();
-        //Assign values for each row.
+      public long insertEntry( int value,String create_date) {
+        ValueOfPoint valueOfPoint = new ValueOfPoint(Util.idHealth(this.db, ValueOfPoint_TABLE_NAME, Value_COLUMN_Id),value, create_date);
+        sendToBroker(MessageType.ADD_VALUEOFPOINT, valueOfPoint, this.context);
 
-        val.put(Value_COLUMN_Id,id);
-        val.put(Value_COLUMN,value);
-
-        val.put(CreateDate_Value_COLUMN_Point,create_date);
         try {
-
-            db.insert(ValueOfPoint_TABLE_NAME, null, val);
-            return 1;
+            long insertResult = insertEntry(valueOfPoint);
+            return insertResult;
         } catch (SQLException ex) {
-            Log.e("Value_point insertEntry", "inserting Entry at " + ValueOfPoint_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("Value Of Point insertEntry", "inserting Entry at " + ValueOfPoint_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+    }
+    public long insertEntry(ValueOfPoint valueOfPoint){
+        ContentValues val = new ContentValues();
+        val.put(Value_COLUMN_Id,valueOfPoint.getId());
+        val.put(Value_COLUMN, valueOfPoint.getValue());
+        val.put(CreateDate_Value_COLUMN_CreateDate, valueOfPoint.getCreate_Date());
+
+        try {
+            return db.insert(ValueOfPoint_TABLE_NAME, null, val);
+        } catch (SQLException ex) {
+            Log.e("Value Of Point  DB insert", "inserting Entry at " + ValueOfPoint_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
@@ -72,7 +84,7 @@ public class ValueOfPointDB {
         }        cursor.moveToLast();
         valueOfPoint =new ValueOfPoint(Long.parseLong(cursor.getString(cursor.getColumnIndex(Value_COLUMN_Id))),Double.parseDouble(
                 cursor.getString(cursor.getColumnIndex(Value_COLUMN))),
-                cursor.getString(cursor.getColumnIndex(CreateDate_Value_COLUMN_Point)));
+                cursor.getString(cursor.getColumnIndex(CreateDate_Value_COLUMN_CreateDate)));
         return valueOfPoint;
     }
 }

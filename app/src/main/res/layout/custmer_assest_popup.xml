@@ -53,7 +53,8 @@
                 android:textStyle="bold"
                 android:textSize="18dp"
                 android:text="@string/add"
-                android:background="@drawable/bt_green_enabled"/>
+                android:background="@drawable/bt_green_enabled"
+                android:textColor="@color/AntiqueWhite"/>
             <Button
                 android:id="@+id/btn_cancel"
                 android:layout_width="40dp"
@@ -63,7 +64,19 @@
                 android:textStyle="bold"
                 android:textSize="18dp"
                 android:text="@string/cancel"
-                android:background="@drawable/btn_cancel"/>
+                android:background="@drawable/btn_cancel"
+                android:textColor="@color/AntiqueWhite"/>
+            <Button
+                android:id="@+id/btn_delete"
+                android:layout_width="40dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:layout_margin="12dp"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:text="@string/delete"
+                android:background="@drawable/bt_dark_enabled"
+                android:textColor="@color/AntiqueWhite"/>
         </LinearLayout>
     </LinearLayout>
 
