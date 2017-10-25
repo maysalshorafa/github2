@@ -32,26 +32,26 @@ import java.util.Date;
 import java.util.List;
 
 public class TempCashActivty extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
-    private List<CurrencyType> currencyTypesList=null;
+    private List<CurrencyType> currencyTypesList = null;
     public static final String LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY = "LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY";
     TextView custmer_name;
 
     TextView tv, tvExcess;
-    EditText tvTotalInserted , tvTotalInsertedForFirstCurrency,tvTotalInsertedForSecondCurrency;
+    EditText tvTotalInserted, tvTotalInsertedForFirstCurrency, tvTotalInsertedForSecondCurrency;
     String custmer_nameS;
-   Spinner  spinnerForFirstCurrency,spinnerForSecondCurrency,spinnerForReturnValue;
+    Spinner spinnerForFirstCurrency, spinnerForSecondCurrency, spinnerForReturnValue;
     Button btnDone;
 
     double totalPrice = 0.0;
     float totalPid = 0.0f;
-    long saleId=0;
-long firstCurrencyId,secondCurrencyId,returnSpenerId=0;
+    long saleId = 0;
+    long firstCurrencyId, secondCurrencyId, returnSpenerId = 0;
 
     double basicCurrencyValue;
-    String insertedValueForFirstCurrency ,insertedValueForSecondCurrency,valueForReturnCurrency;
+    String insertedValueForFirstCurrency, insertedValueForSecondCurrency, valueForReturnCurrency;
     double valueInsertedForDolar;
     CashPaymentDBAdapter cashpayment;
-    double firstCurruncyValue,secondCurrency,exceesValue=0;
+    double firstCurruncyValue, secondCurrency, exceesValue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +76,12 @@ long firstCurrencyId,secondCurrencyId,returnSpenerId=0;
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        custmer_name=(TextView)findViewById(R.id.custmer_name);
-        spinnerForFirstCurrency = (Spinner)findViewById(R.id.spinnerForFirstCurrency);
-        spinnerForSecondCurrency = (Spinner)findViewById(R.id.spinnerForSecondCurrency);
-        spinnerForReturnValue= (Spinner)findViewById(R.id.spinnerForReturnValue);
+        custmer_name = (TextView) findViewById(R.id.custmer_name);
+        spinnerForFirstCurrency = (Spinner) findViewById(R.id.spinnerForFirstCurrency);
+        spinnerForSecondCurrency = (Spinner) findViewById(R.id.spinnerForSecondCurrency);
+        spinnerForReturnValue = (Spinner) findViewById(R.id.spinnerForReturnValue);
 
-        btnDone=(Button)findViewById(R.id.cashActivity_BTNDone);
+        btnDone = (Button) findViewById(R.id.cashActivity_BTNDone);
         tv = (TextView) findViewById(R.id.cashActivity_TVRequired);
         tvExcess = (TextView) findViewById(R.id.cashActivity_TVExcess);
         tvExcess.setText(0 + " ");
@@ -93,9 +93,9 @@ long firstCurrencyId,secondCurrencyId,returnSpenerId=0;
 
         CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
         currencyTypeDBAdapter.open();
-        final CurrencyReturnsDBAdapter currencyReturnsDBAdapter=new CurrencyReturnsDBAdapter(this);
-currencyReturnsDBAdapter.open();
-        cashpayment=new CashPaymentDBAdapter(this);
+        final CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(this);
+        currencyReturnsDBAdapter.open();
+        cashpayment = new CashPaymentDBAdapter(this);
         cashpayment.open();
         spinnerForFirstCurrency.setOnItemSelectedListener(this);
         spinnerForSecondCurrency.setOnItemSelectedListener(this);
@@ -107,7 +107,7 @@ currencyReturnsDBAdapter.open();
         currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
 
         final List<String> currency = new ArrayList<String>();
-        for (int i = 0;  i < currencyTypesList.size(); i++) {
+        for (int i = 0; i < currencyTypesList.size(); i++) {
             currency.add(currencyTypesList.get(i).getType());
         }
 
@@ -126,63 +126,44 @@ currencyReturnsDBAdapter.open();
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                //tvTotalInserted.setText(tv.getText());
-                tvExcess.setText(0 + " " );
-                tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));
-                btnDone.setEnabled(true);
-                btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
-                btnDone.setPadding(50,10,50,10);
+            //tvTotalInserted.setText(tv.getText());
+            tvExcess.setText(0 + " ");
+            tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));
+            btnDone.setEnabled(true);
+            btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
+            btnDone.setPadding(50, 10, 50, 10);
             }
         });
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             totalPrice = (double) extras.get("_Price");
-            custmer_nameS= (String) extras.get("_custmer");
+            custmer_nameS = (String) extras.get("_custmer");
             saleId = (long) extras.get("_SaleId");
-            Toast.makeText(TempCashActivty.this,"id"+saleId,Toast.LENGTH_LONG).show();
+            Toast.makeText(TempCashActivty.this, "id" + saleId, Toast.LENGTH_LONG).show();
 
-            tv.setText(totalPrice + " " );
+            tv.setText(totalPrice + " ");
             custmer_name.setText(custmer_nameS);
-            custmer_nameS="";
+            custmer_nameS = "";
         } else {
             finish();
         }
 
 
-
-
-
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-totalPid= (float) (basicCurrencyValue+firstCurruncyValue+secondCurrency);
+                totalPid = (float) (basicCurrencyValue + firstCurruncyValue + secondCurrency);
                 //// TODO: 01/12/2016 return how match inserted money
-                Intent i=new Intent();
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY,totalPid);
-                setResult(RESULT_OK,i);
-cashpayment.insertEntry(saleId,Double.parseDouble(tvTotalInserted.getText().toString()),0,new Date());
-                cashpayment.insertEntry(saleId,Double.parseDouble(tvTotalInsertedForFirstCurrency.getText().toString()),firstCurrencyId,new Date());
-                cashpayment.insertEntry(saleId,Double.parseDouble(tvTotalInsertedForSecondCurrency.getText().toString()),secondCurrencyId,new Date());
+                Intent i = new Intent();
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY, totalPid);
+                setResult(RESULT_OK, i);
+                cashpayment.insertEntry(saleId, Double.parseDouble(tvTotalInserted.getText().toString()), 0, new Date());
+                cashpayment.insertEntry(saleId, Double.parseDouble(tvTotalInsertedForFirstCurrency.getText().toString()), firstCurrencyId, new Date());
+                cashpayment.insertEntry(saleId, Double.parseDouble(tvTotalInsertedForSecondCurrency.getText().toString()), secondCurrencyId, new Date());
 
-
-                currencyReturnsDBAdapter.insertEntry(saleId,Double.parseDouble(tvExcess.getText().toString()), new Date(),returnSpenerId);
-currencyReturnsDBAdapter.close();
+                currencyReturnsDBAdapter.insertEntry(saleId, Double.parseDouble(tvExcess.getText().toString()), new Date(), returnSpenerId);
+                currencyReturnsDBAdapter.close();
                 cashpayment.close();
-
-               /** if(spinner2.getSelectedItemId()==1){
-                    tvTotalInsertedForDollar.setVisibility(View.VISIBLE);
-                    insertedValueForDolar= tvTotalInsertedForDollar.getText().toString();
-                    valueInsertedForDolar= (double) (Double.parseDouble(insertedValueForDolar));
-                    Toast.makeText(TempCashActivty.this,"for dolar"+valueInsertedForDolar,Toast.LENGTH_LONG).show();
-                }
-                if(tvTotalInsertedForDollar.isShown())
-                {
-                    cashpayment.insertEntry(saleId,Double.parseDouble(tvTotalInsertedForDollar.getText().toString()),1,new Date());
-                }**/
-
-
                 finish();
             }
         });
@@ -191,25 +172,22 @@ currencyReturnsDBAdapter.close();
         tvTotalInserted.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    //do something here
-                    String value = tvTotalInserted.getText().toString();
-                if(value.length()>0) {
+                //do something here
+                String value = tvTotalInserted.getText().toString();
+                if (value.length() > 0) {
                     basicCurrencyValue = Double.parseDouble(value);
-                }
-                else{
+                } else {
                     basicCurrencyValue = 0;
                 }
-                    exceesValue = (basicCurrencyValue+firstCurruncyValue+secondCurrency) - totalPrice;
-                    tvExcess.setText(exceesValue + " ");
-                    if (exceesValue >=0) {
-                        btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
+                exceesValue = (basicCurrencyValue + firstCurruncyValue + secondCurrency) - totalPrice;
+                tvExcess.setText(exceesValue + " ");
+                if (exceesValue >= 0) {
+                    btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
 
-                        btnDone.setEnabled(true);
-                        valueForReturnCurrency = tvExcess.getText().toString();
+                    btnDone.setEnabled(true);
+                    valueForReturnCurrency = tvExcess.getText().toString();
 
-                    }
-
-
+                }
                 return false;
             }
         });
@@ -244,6 +222,8 @@ currencyReturnsDBAdapter.close();
                 return false;
             }
         });
+
+
         tvTotalInsertedForSecondCurrency.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -263,7 +243,7 @@ currencyReturnsDBAdapter.close();
 
                     exceesValue = (basicCurrencyValue + firstCurruncyValue + secondCurrency) - totalPrice;
                     tvExcess.setText(exceesValue + " ");
-                    if (exceesValue >=0) {
+                    if (exceesValue >= 0) {
                         btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
                         btnDone.setEnabled(true);
                         valueForReturnCurrency = tvExcess.getText().toString();
@@ -277,20 +257,19 @@ currencyReturnsDBAdapter.close();
         });
 
 
-
         spinnerForReturnValue.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-                CurrencysDBAdapter currencysDBAdapter=new CurrencysDBAdapter(TempCashActivty.this);
+                CurrencysDBAdapter currencysDBAdapter = new CurrencysDBAdapter(TempCashActivty.this);
                 currencysDBAdapter.open();
 
-                returnSpenerId =spinnerForReturnValue.getSelectedItemId();
-                Currencys currencys=currencysDBAdapter.getSpeficCurrencys(spinnerForReturnValue.getSelectedItem().toString(),new Date());
+                returnSpenerId = spinnerForReturnValue.getSelectedItemId();
+                Currencys currencys = currencysDBAdapter.getSpeficCurrencys(spinnerForReturnValue.getSelectedItem().toString(), new Date());
 
-                exceesValue= Double.parseDouble(valueForReturnCurrency)/currencys.getRate();
-                tvExcess.setText(exceesValue+"");
+                exceesValue = Double.parseDouble(valueForReturnCurrency) / currencys.getRate();
+                tvExcess.setText(exceesValue + "");
 
 
             }
@@ -303,25 +282,26 @@ currencyReturnsDBAdapter.close();
 
         });
     }
+
     private void calcTotalInserted() {
         totalPid = 0;
-        String value= tvTotalInserted.getText().toString();
-        basicCurrencyValue=Integer.parseInt(value);
+        String value = tvTotalInserted.getText().toString();
+        basicCurrencyValue = Integer.parseInt(value);
 
-        float deltaPrice = (float)(basicCurrencyValue -(float)totalPrice );
+        float deltaPrice = (float) (basicCurrencyValue - (float) totalPrice);
         if (deltaPrice >= 0) {
             btnDone.setEnabled(true);
             btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
-            btnDone.setPadding(50,10,50,10);
+            btnDone.setPadding(50, 10, 50, 10);
             tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));
         } else {
             btnDone.setEnabled(false);
             btnDone.setBackground(getResources().getDrawable(R.drawable.btn_secondary));
-            btnDone.setPadding(50,10,50,10);
+            btnDone.setPadding(50, 10, 50, 10);
             tvExcess.setTextColor(getResources().getColor(R.color.dangerColor));
         }
 
-        tvExcess.setText(String.format("%.2f",deltaPrice+valueInsertedForDolar) + " ");
+        tvExcess.setText(String.format("%.2f", deltaPrice + valueInsertedForDolar) + " ");
     }
 
 
@@ -341,5 +321,4 @@ currencyReturnsDBAdapter.close();
 
 
     }
-
 }

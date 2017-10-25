@@ -111,9 +111,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
         db.execSQL(UserPermissionsDBAdapter.DATABASE_CREATE);
-        db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
-        db.execSQL(AReportDBAdapter.DATABASE_CREATE);
-        db.execSQL(CityDbAdapter.DATABASE_CREATE);
         db.execSQL(CustomerAssetDB.DATABASE_CREATE);
 
 
@@ -152,7 +149,7 @@ public class DbHelper extends SQLiteOpenHelper {
       
         db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Date().getTime()+"');");
         db.execSQL("insert into "+DepartmentDBAdapter.DEPARTMENTS_TABLE_NAME+" values(3, 'FOOD','"+new Date().getTime()+"',1,0);");
-        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'mays','mays','female','11/8/1994','mays94alshorafa@gmail.com','coder','123','tt','0',1,1,'1',1,'1','1');");
+        //db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'mays','mays','female','11/8/1994','mays94alshorafa@gmail.com','coder','123','tt','0',1,1,'1',1,'1','1');");
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (0,'TULKAREM');");
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (1,'NUBLUS');");
         db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (1,'type1','type1',1,1,2,0,0);");
