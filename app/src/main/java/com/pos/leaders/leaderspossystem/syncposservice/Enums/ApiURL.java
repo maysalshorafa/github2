@@ -34,4 +34,7 @@ public interface ApiURL {
     String Currencys= "Currencys";
     String Sync = "sync";
     String UserPermission="UserPermission";
+    String SumPoint="SumPoint";
+    String ValueOfPoint="ValueOfPoint";
+    String UsedPoint="UsedPoint";
 }

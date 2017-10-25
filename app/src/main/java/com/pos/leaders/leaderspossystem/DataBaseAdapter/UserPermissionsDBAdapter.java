@@ -100,7 +100,25 @@ public class UserPermissionsDBAdapter {
 		}
 		return permissions;
 	}
+    public ArrayList<Long> getSalesManId() {
+        ArrayList<Long> salesManId = new ArrayList<Long>();
+        UserPermissions userPermissions=null;
+        Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where permissionId='" + 10 + "'" , null);
+        cursor1.moveToFirst();
 
+
+        if (cursor1.getCount() < 1) // UserName Not Exist
+        {
+            cursor1.close();
+            return  salesManId;
+        }
+        while(!cursor1.isAfterLast()){
+            userPermissions= new UserPermissions(Long.parseLong(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_ID))),Long.parseLong(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_USERID))),Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_PERMISSIONSID))));
+            salesManId.add( userPermissions.getUserId());
+            cursor1.moveToNext();
+        }
+        return salesManId;
+    }
 
 	public void close() {
 		db.close();

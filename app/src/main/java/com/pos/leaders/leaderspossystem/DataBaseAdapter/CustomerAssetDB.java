@@ -19,7 +19,7 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 
 public class CustomerAssetDB {
 
-    public static final String CustmerAsset_TabelName = "custmerAssest";
+    public static final String CustmerAsset_TabelName = "CustmerAssest";
     // Column Names
     protected static final String CustmerAssest_Id = "id";
 
@@ -28,9 +28,11 @@ public class CustomerAssetDB {
     protected static final String CustmerAssest_COLUMN_amount= "amount";
     protected static final String CustmerAssest_COLUMN_type= "type";
     protected static final String CustmerAssest_COLUMN_Case= "salescase";
+
     public static final String DATABASE_CREATE = "CREATE TABLE `"+CustmerAsset_TabelName+"` ( `"+ CustmerAssest_Id+"` INTEGER PRIMARY KEY AUTOINCREMENT, "+
             "`"+CustmerAssest_COLUMN_Order_Id+"` INTEGER ,"+
             "`"+CustmerAssest_COLUMN_ID+"` INTEGER NOT NULL, `"+CustmerAssest_COLUMN_amount+"` REAL, `"+CustmerAssest_COLUMN_type+"` INTEGER DEFAULT 0, `"+CustmerAssest_COLUMN_Case+"` TEXT );";
+
     private SQLiteDatabase db;
     private final Context context;
     // Database open/upgrade helper

@@ -146,7 +146,7 @@ public class GroupAdapter {
         cursor.close();
     }*/
 
-    public  Group getGroupInfo(long club_id){
+    public  Group getGroupInfo(int club_id){
             Group group = null;
             Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME + " where id='" + club_id + "'", null);
             if (cursor.getCount() < 1) // UserName Not Exist

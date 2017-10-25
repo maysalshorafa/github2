@@ -4,7 +4,8 @@
                                              xmlns:tools="http://schemas.android.com/tools"
                                              android:orientation="vertical"
                                              android:layout_width="match_parent"
-                                             android:layout_height="match_parent">
+                                             android:layout_height="match_parent"
+    >
 
     <TextView
         android:layout_width="0dp"
@@ -27,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/rowSaleDetails_TVPrice"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:text="132"
         android:layout_marginStart="16dp"
         app:layout_constraintLeft_toRightOf="@+id/textView16"
@@ -39,7 +40,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/rowSaleDetails_TVCount"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:text="68"
         app:layout_constraintBottom_toBottomOf="@+id/rowSaleDetails_TVTotalPrice"
         app:layout_constraintLeft_toRightOf="@+id/rowSaleDetails_TVTotalPrice"
@@ -54,11 +55,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/rowSaleDetails_TVTotalPrice"
-        android:textSize="18sp"
-        android:layout_marginEnd="16dp"
+        android:textSize="15sp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toTopOf="parent"
         android:text="4305.54"
         android:textAlignment="textEnd"
@@ -79,85 +78,101 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp" />
 
-    <RelativeLayout
-        android:orientation="horizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/rowSaleDetails_TVTotalPrice"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="16dp"
-        android:id="@+id/rowSaleDetails_LLMethods"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layoutDirection="ltr"
-        android:layout_marginTop="8dp">
 
-        <Button
-            android:text="@string/delete"
+    <LinearLayout
+        android:layout_width="752dp"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/rowSaleDetails_LLMethods"
+        android:layout_toStartOf="@+id/rowSaleDetails_LLMethods"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteX="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/rowSaleDetails_TVPrice"
+        android:id="@+id/saleManLayout"
+        android:layout_marginBottom="10dp"
+        >
+
+        <TextView
+            android:id="@+id/saleMan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_weight="1"
+            android:text="Sales Man"
+            android:textColor="@color/Black"
+            android:textSize="13dp" />
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rowSaleDetails_LLMethods"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layoutDirection="ltr"
+        android:orientation="horizontal"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/saleManLayout">
+
+        <Button
             android:id="@+id/rowSaleDetails_MethodsDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn_danger"
+            android:text="@string/delete"
             android:textAppearance="@android:style/TextAppearance" />
 
         <Button
-            android:text="%"
+            android:id="@+id/rowSaleDetails_Dicount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/rowSaleDetails_Dicount"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
             android:layout_weight="1"
             android:background="@drawable/btn_primary"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:text="%" />
 
         <Button
-            android:text="@string/edit"
+            android:id="@+id/rowSaleDetails_MethodsEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/rowSaleDetails_MethodsEdit"
-            android:background="@color/secondaryColor"
             android:layout_alignBaseline="@+id/rowSaleDetails_MethodsDelete"
             android:layout_alignBottom="@+id/rowSaleDetails_MethodsDelete"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:background="@color/secondaryColor"
+            android:text="@string/edit" />
 
         <Button
-            android:text="+1"
+            android:id="@+id/rowSaleDetails_MethodsPlusOne"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/rowSaleDetails_MethodsPlusOne"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="2dp"
+            android:layout_toEndOf="@+id/rowSaleDetails_MethodsEdit"
+            android:layout_toRightOf="@+id/rowSaleDetails_MethodsEdit"
             android:layout_weight="1"
             android:background="@drawable/btn_primary"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/rowSaleDetails_MethodsEdit"
-            android:layout_toEndOf="@+id/rowSaleDetails_MethodsEdit"
-            android:layout_marginLeft="2dp" />
+            android:text="+1" />
 
         <Button
-            android:text="-1"
+            android:id="@+id/rowSaleDetails_MethodsMOne"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/rowSaleDetails_MethodsMOne"
-            android:layout_weight="1"
-            android:background="@drawable/btn_danger"
             android:layout_alignParentTop="true"
+            android:layout_marginRight="2dp"
             android:layout_toLeftOf="@+id/rowSaleDetails_MethodsEdit"
             android:layout_toStartOf="@+id/rowSaleDetails_MethodsEdit"
-            android:layout_marginRight="2dp" />
+            android:layout_weight="1"
+            android:background="@drawable/btn_danger"
+            android:text="-1" />
 
     </RelativeLayout>
-    <TextView
-        android:id="@+id/saleMan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sales Man"
-        tools:layout_editor_absoluteX="350dp"
-        android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@+id/rowSaleDetails_LLMethods"
-        android:layout_marginBottom="-99dp"
-        android:textColor="@color/black"/>
+
 </android.support.constraint.ConstraintLayout>
