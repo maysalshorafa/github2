@@ -96,6 +96,7 @@ import com.pos.leaders.leaderspossystem.Tools.TempCashActivty;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageData;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
 import java.util.ArrayList;
@@ -161,6 +162,7 @@ public class MainActivity extends AppCompatActivity{
     ValueOfPointDB valueOfPointDB;
     int newPoint=0;
     int aPoint=0;
+    int unUsedPointForCustmer=0 ;
     int amount;
     int type;
     int point ;
@@ -987,11 +989,7 @@ usedpointDbAdapter.open();
                 Intent intent = new Intent(MainActivity.this, TempCashActivty.class);
                 intent.putExtra("_Price", saleTotalPrice);
                 intent.putExtra("_SaleId", saleIDforCash);
-                Toast.makeText(MainActivity.this,"id"+saleIDforCash,Toast.LENGTH_LONG).show();
-
                 intent.putExtra("_custmer", a);
-
-
                 startActivityForResult(intent, REQUEST_CASH_ACTIVITY_CODE);
             }
         });
@@ -999,50 +997,30 @@ usedpointDbAdapter.open();
         used_point.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this,"sale id"+SESSION._SALE.getId(),Toast.LENGTH_LONG).show();
-
                 double unusedPointMoney=0.0;
-
-
                 ValueOfPoint valueOfPoint=valueOfPointDB.getValue();
                 double value= valueOfPoint.getValue();
-                /**
-                int unUsedPointForCustmer=usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
-                 aPoint=Ppoint-unUsedPointForCustmer;
-                information.setText(aPoint+" ");**/
+                Toast.makeText(MainActivity.this,"value Of Point "+value,Toast.LENGTH_LONG).show();
                 double newPrice=aPoint*value;
-
                 if(saleTotalPrice==newPrice){
-                    saleTotalPrice=0.0;
                    equleUsedPoint=true;
                     newPoint= (int) (saleTotalPrice/value);
-
-                    Toast.makeText(MainActivity.this,"with point"+saleTotalPrice,Toast.LENGTH_LONG).show();
+                    saleTotalPrice=0;
                     tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",0.0) + " " + getString(R.string.ins));
                 }
                 if(saleTotalPrice<newPrice){
-                    saleTotalPrice=0.0;
 lessUsedPoint=true;
  unusedPointMoney=newPrice-saleTotalPrice;
-
-                    Toast.makeText(MainActivity.this,"uou have money more than sale totale price"+unusedPointMoney,Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(MainActivity.this,"uou have money more than sale totale price"+"   "+unusedPointMoney,Toast.LENGTH_LONG).show();
                      newPoint= (int) (saleTotalPrice/value);
-                 //   usedpointDbAdapter.insertEntry(SESSION._SALE.getId(),newPoint,_custmer_id);
-
-                    Toast.makeText(MainActivity.this,"with point"+newPoint,Toast.LENGTH_LONG).show();
+                    saleTotalPrice=0;
                     tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
                 }
                 if(saleTotalPrice>newPrice){
                     biggerUsedPoint=true;
 saleTotalPrice=saleTotalPrice-newPrice;
                     unusedPointMoney=newPrice-saleTotalPrice;
-
                     Toast.makeText(MainActivity.this,"uou have money more than sale totale price"+unusedPointMoney,Toast.LENGTH_LONG).show();
-                 //   newPoint= (int) (unusedPointMoney/value);
-                 ///   usedpointDbAdapter.insertEntry(SESSION._SALE.getId(),newPoint,SESSION._SALE.getCustmer_id());
-
-
                     tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
                 }
    }
@@ -1477,6 +1455,10 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
     public void clearCart() {
         parcent=0;
+        point=0;
+        amount=0;
+        Ppoint=0;
+        saleman.setText("Sales Man");
         SESSION._Rest();
         club_name.setText("");
         custmer_name.setText("");
@@ -2065,16 +2047,13 @@ offerList=null;
                     long orderid=orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
 
                     //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
-                    Toast.makeText(MainActivity.this,"order id"+orderid,Toast.LENGTH_LONG).show();
-
                     if(forOrderSaleMan){
                         o.setCustmerAssestId(custmerAssetstId);
-                        custmerAssetDB.insertEntry(orderid,o.getCustmerAssestId(),o.getPrice(),0,"o");
-                        Toast.makeText(MainActivity.this,"order id"+o.getId(),Toast.LENGTH_LONG).show();
+                        custmerAssetDB.insertEntry(orderid,o.getCustmerAssestId(),o.getPrice(),0,"Order",SESSION._SALE.getSaleDate().getTime());
                     }
                 }
                 if (forSaleMan){
-                    custmerAssetDB.insertEntry(saleID,custmerAssetstId,SESSION._SALE.getTotalPrice(),0,"s");
+                    custmerAssetDB.insertEntry(saleID,custmerAssetstId,SESSION._SALE.getTotalPrice(),0,"Sale",SESSION._SALE.getSaleDate().getTime());
 
                 }
                 orderDBAdapter.close();
@@ -2124,8 +2103,6 @@ custmerAssetDB.close();
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
-
-
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
                 sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
                 saleDBAdapter.close();
@@ -2137,15 +2114,13 @@ custmerAssetDB.close();
                 SESSION._SALE.setId(saleID);
                 for (Order o : SESSION._ORDERS) {
                     long orderid=orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
-                    Toast.makeText(MainActivity.this,"order id"+orderid,Toast.LENGTH_LONG).show();
                     if(forOrderSaleMan){
                     o.setCustmerAssestId(custmerAssetstId);
-                        custmerAssetDB.insertEntry(orderid,o.getCustmerAssestId(),o.getPrice(),0,"o");
-                        Toast.makeText(MainActivity.this,"order id"+o.getId(),Toast.LENGTH_LONG).show();
+                        custmerAssetDB.insertEntry(orderid,o.getCustmerAssestId(),o.getPrice(),0,"Order",SESSION._SALE.getSaleDate().getTime());
                     }
                 }
                 if (forSaleMan){
-                    custmerAssetDB.insertEntry(saleID,custmerAssetstId,SESSION._SALE.getTotalPrice(),0,"s");
+                    custmerAssetDB.insertEntry(saleID,custmerAssetstId,SESSION._SALE.getTotalPrice(),0,"Sale",SESSION._SALE.getSaleDate().getTime());
 
                 }
 
@@ -2192,14 +2167,7 @@ custmerAssetDB.close();
 
                  saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
                 currencyOperationDBAdapter.insertEntry(SESSION._SALE.getSaleDate().getTime(), saleIDforCash, "sale", SESSION._SALE.getTotalPaid(), 0);
-
                 sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);
-                Toast.makeText(MainActivity.this,"point"+saleIDforCash,Toast.LENGTH_LONG).show();
-
-                /** Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
-                 cInformation= String.valueOf(Ppoint.getPoint());
-
-                 information.setText(cInformation);**/
                 saleDBAdapter.close();
                 if (equleUsedPoint) {
                     saleTotalPrice = 0.0;
@@ -2231,21 +2199,16 @@ custmerAssetDB.close();
 
                 for (Order o : SESSION._ORDERS) {
                     long orderid=orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
-                    Toast.makeText(MainActivity.this,"order id"+orderid,Toast.LENGTH_LONG).show();
 
                     if(forOrderSaleMan){
                         o.setCustmerAssestId(custmerAssetstId);
-                        custmerAssetDB.insertEntry(o.getId(),o.getCustmerAssestId(),o.getPrice(),0,"o");
-                        Toast.makeText(MainActivity.this,"order id"+o.getId(),Toast.LENGTH_LONG).show();
+                        custmerAssetDB.insertEntry(orderid,o.getCustmerAssestId(),o.getPrice(),0, "Order",SESSION._SALE.getSaleDate().getTime());
                     }
                 }
                 if (forSaleMan){
-                    custmerAssetDB.insertEntry(saleIDforCash,custmerAssetstId,SESSION._SALE.getTotalPrice(),0,"s");
-
+                    custmerAssetDB.insertEntry(saleIDforCash,custmerAssetstId,SESSION._SALE.getTotalPrice(),0,"Sale",SESSION._SALE.getSaleDate().getTime());
                 }
                 orderDBAdapter.close();
-
-
                 paymentDBAdapter.open();
 
                 long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash);
@@ -2382,8 +2345,6 @@ custmerAssetDB.close();
 
                 _custmer_id =custmer_List.get(position).getId();
                 club_id = (int) custmer_List.get(position).getClub();
-                Toast.makeText(MainActivity.this,"club id"+club_id,Toast.LENGTH_LONG).show();
-
                 if (club_id != 0) {
                     Group group = groupDbAdapter.getGroupInfo(club_id);
                     type = group.getType();
@@ -2397,20 +2358,17 @@ custmerAssetDB.close();
                         club_name.setText(group.getname());
                         amount = group.getAmount();
                         point = group.getPoint();
-                        Toast.makeText(MainActivity.this,"point and amount"+point + " mmm"+amount,Toast.LENGTH_LONG).show();
-
                         Ppoint = sum_pointDbAdapter.getPointInfo(_custmer_id);
 
                         cInformation = String.valueOf(Ppoint);
 
-                        int unUsedPointForCustmer = usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
+                         unUsedPointForCustmer = usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
                         aPoint = Ppoint - unUsedPointForCustmer;
                         information.setText(aPoint + " ");
                     } else {
                         club_name.setText(group.getname());
                         information.setText("general");
                     }
-                    //  Toast.makeText(getApplicationContext(),"succees", Toast.LENGTH_LONG).show();
                 }
                 popupWindow.dismiss();
             }

@@ -115,7 +115,9 @@
         <activity
             android:name=".ClubMangmentActivity"
             android:label="@string/title_activity_temp_cash_activty" />
-        <activity android:name=".TempDashBord"></activity>
+        <activity android:name=".TempDashBord" />
+        <activity android:name=".SalesManManagementActivity" />
+        <activity android:name=".SalesAssistantDetailesSalesMangmentActivity"></activity>
     </application>
 
 </manifest>

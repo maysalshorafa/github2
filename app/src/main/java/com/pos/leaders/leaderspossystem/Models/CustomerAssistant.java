@@ -6,16 +6,26 @@ import java.util.Date;
  * Created by Win8.1 on 9/28/2017.
  */
 
-public class CustomerAssest {
+public class CustomerAssistant {
     private long id ;
 
-    public CustomerAssest(long id, long order_id, long custmerAssestID, double amount, int type, String salescase) {
+    public long getSaleDate() {
+        return saleDate;
+    }
+
+    public void setSaleDate(long saleDate) {
+        this.saleDate = saleDate;
+    }
+
+    private long saleDate;
+    public CustomerAssistant(long id, long order_id, long custmerAssestID, double amount, int type, String salescase, long saleDate) {
         this.id = id;
         this.order_id = order_id;
         this.custmerAssestID = custmerAssestID;
         this.amount = amount;
         this.type = type;
         this.salescase = salescase;
+        this.saleDate=saleDate;
     }
 
     private long order_id;
