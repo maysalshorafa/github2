@@ -579,7 +579,7 @@ public class SyncMessage extends Service {
 
 
                 //region CurrencyOpeartion
-                case MessageType.ADD_CURRENCY_OPEARATION:
+                case MessageType.ADD_CURRENCY_OPERATION:
                     CurrencyOperation currencyOperation = null;
                     currencyOperation = objectMapper.readValue(msgData, CurrencyOperation.class);
 
@@ -589,9 +589,9 @@ public class SyncMessage extends Service {
                     currencyOperationDBAdapter.close();
 
                     break;
-                case MessageType.UPDATE_CURRENCY_OPEARATION:
+                case MessageType.UPDATE_CURRENCY_OPERATION:
                     break;
-                case MessageType.DELETE_CURRENCY_OPEARATION:
+                case MessageType.DELETE_CURRENCY_OPERATION:
                     break;
                 //endregion Currency Opeartion
 
@@ -615,7 +615,7 @@ public class SyncMessage extends Service {
 
 
                 //region Currencys
-                case MessageType.ADD_CURRENCYS:
+                case MessageType.ADD_CURRENCIES:
                     Currencys currencys = null;
                     currencys = objectMapper.readValue(msgData, Currencys.class);
 
@@ -625,9 +625,9 @@ public class SyncMessage extends Service {
                     currencysDBAdapter.close();
 
                     break;
-                case MessageType.UPDATE_CURRENCYS:
+                case MessageType.UPDATE_CURRENCIES:
                     break;
-                case MessageType.DELETE_CURRENCYS:
+                case MessageType.DELETE_CURRENCIES:
                     break;
                 //endregion Currency Opeartion.
 
@@ -858,7 +858,7 @@ public class SyncMessage extends Service {
             case MessageType.DELETE_USER:
                 res = messageTransmit.authDelete(ApiURL.Users, jsonObject.getString(MessageKey.Data), token);
                 break;
-            //CurrencyReturns
+            //CurrencyReturn
 
             case MessageType.ADD_CURRENCY_RETURN:
                 res = messageTransmit.authPost(ApiURL.CurrencyReturn, jsonObject.getString(MessageKey.Data), token);
@@ -869,15 +869,15 @@ public class SyncMessage extends Service {
             case MessageType.DELETE_CURRENCY_RETURN:
                 res = messageTransmit.authDelete(ApiURL.CurrencyReturn, jsonObject.getString(MessageKey.Data), token);
                 break;
-            //CurrencyOPeration
-            case MessageType.ADD_CURRENCY_OPEARATION:
-                res = messageTransmit.authPost(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
+            //CurrencyOperation
+            case MessageType.ADD_CURRENCY_OPERATION:
+                res = messageTransmit.authPost(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.UPDATE_CURRENCY_OPEARATION:
-                res = messageTransmit.authPut(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
+            case MessageType.UPDATE_CURRENCY_OPERATION:
+                res = messageTransmit.authPut(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.DELETE_CURRENCY_OPEARATION:
-                res = messageTransmit.authDelete(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
+            case MessageType.DELETE_CURRENCY_OPERATION:
+                res = messageTransmit.authDelete(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
                 break;
             //CashPayment
             case MessageType.ADD_CASH_PAYMENT:
@@ -889,15 +889,15 @@ public class SyncMessage extends Service {
             case MessageType.DELETE_CASH_PAYMENT:
                 res = messageTransmit.authDelete(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
                 break;
-            //CustmerAssest
-            case MessageType.ADD_CUSTMER_ASSEST:
-                res = messageTransmit.authPost(ApiURL.CustmerAssest, jsonObject.getString(MessageKey.Data), token);
+            //CUSTOMER_ASSISTANT
+            case MessageType.ADD_CUSTOMER_ASSISTANT:
+                res = messageTransmit.authPost(ApiURL.CustomerAssistant, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.UPDATE_CUSTMER_ASSEST:
-                res = messageTransmit.authPut(ApiURL.CustmerAssest, jsonObject.getString(MessageKey.Data), token);
+            case MessageType.UPDATE_CUSTOMER_ASSISTANT:
+                res = messageTransmit.authPut(ApiURL.CustomerAssistant, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.DELETE_CUSTMER_ASSEST:
-                res = messageTransmit.authDelete(ApiURL.CustmerAssest, jsonObject.getString(MessageKey.Data), token);
+            case MessageType.DELETE_CUSTOMER_ASSISTANT:
+                res = messageTransmit.authDelete(ApiURL.CustomerAssistant, jsonObject.getString(MessageKey.Data), token);
                 break;
 
 

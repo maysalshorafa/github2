@@ -27,7 +27,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class ReportsManagementActivity  extends AppCompatActivity {
-    Button btnZ, btnZView,btnX, btnSales,btnExFiles;
+    Button btnZ, btnZView,btnX, btnSales,btnExFiles ,btnSalesMan;
 
     ZReportDBAdapter zReportDBAdapter;
     SaleDBAdapter saleDBAdapter;
@@ -48,6 +48,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         TitleBar.setTitleBar(this);
 
         btnZ = (Button) findViewById(R.id.reportManagementActivity_btnZ);
+        btnSalesMan=(Button)findViewById(R.id.reportManagementActivity_btnSalesManReport);
         btnZ.setText("Z " + getString(R.string.report));
         btnZView = (Button) findViewById(R.id.reportManagementActivity_btnZView);
         btnZView.setText("Z " + getString(R.string.report) + " " + getString(R.string.view));
@@ -149,17 +150,24 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        btnSalesMan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ReportsManagementActivity.this, SalesManManagementActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     @Override
     protected void onResume() {
         super.onResume();
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
+      /**  if (extras != null) {
             str = extras.getString("permissions_name");
 
 
-        }
+        }**/
 
     }
 

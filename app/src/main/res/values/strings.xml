@@ -10,7 +10,9 @@
     <string name="refresh">Refresh</string>
     <string name="add">Add</string>
     <string name="user_name">User Name</string>
-
+    <string name="total_amount">Total Amount</string>
+    <string name="sale_type">Sale Type</string>
+    <string name="sale_id">Sale Id</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="phone_number">Phone No</string>
@@ -41,6 +43,8 @@
     <string name="sales_history">Sales History</string>
     <string name="clear_cart">Clear Cart</string>
     <string name="_new">New</string>
+    <string name="sales_man">Sales Man</string>
+
     <!--Product Management-->
     <string name="edit_product">Edit Product</string>
     <string name="add_product">Add Product</string>
@@ -52,6 +56,7 @@
     <string name="save">Save</string>
     <string name="_return">Return</string>
     <string name="view">View</string>
+    <string name="view_sales">View Sales</string>
     <string name="amount">Amount</string>
     <string name="check_number">Check Number</string>
     <string name="date">Date</string>
@@ -366,7 +371,6 @@
     <string name="back_up">BackUp</string>
     <string name="hours_of_work">Hours Of Work</string>
     <string name="coustmer_club">Coustmer Club</string>
-
 
 
 </resources>

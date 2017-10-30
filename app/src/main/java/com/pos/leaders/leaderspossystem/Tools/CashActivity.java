@@ -120,7 +120,7 @@ public class CashActivity extends AppCompatActivity implements View.OnTouchListe
                 tvExcess.setText(0 + " " + getResources().getText(R.string.ins));
                 tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));
                 btnDone.setEnabled(true);
-                btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
+                btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
                 btnDone.setPadding(50,10,50,10);
             }
         });
@@ -241,7 +241,7 @@ public class CashActivity extends AppCompatActivity implements View.OnTouchListe
         float deltaPrice = (float)(totalPid -(float)totalPrice );
         if (deltaPrice >= 0) {
             btnDone.setEnabled(true);
-            btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
+            btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
             btnDone.setPadding(50,10,50,10);
             tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));
         } else {

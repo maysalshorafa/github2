@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:layoutDirection="ltr"
+    android:background="@drawable/bubble"
+    >
+    <TextView
+        android:layout_gravity="center"
+        android:id="@+id/salesManGridView_TVSaleId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginLeft="40dp"
+        android:gravity="center"
+        >
+    </TextView>
+    <TextView
+        android:layout_gravity="center"
+        android:id="@+id/salesManGridView_TVSaleCase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginLeft="70dp"
+        >
+
+    </TextView>
+    <TextView
+        android:layout_gravity="center"
+        android:id="@+id/salesManGridView_TVAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginLeft="80dp"
+
+        >
+
+    </TextView>
+
+    <TextView
+        android:layout_gravity="center"
+        android:id="@+id/salesManGridView_TVSaleDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginLeft="80dp"
+        >
+
+    </TextView>
+
+</LinearLayout>

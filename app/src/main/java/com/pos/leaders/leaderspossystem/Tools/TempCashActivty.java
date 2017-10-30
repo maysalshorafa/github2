@@ -162,12 +162,12 @@ totalPid= (float) (basicCurrencyValue+firstCurruncyValue+secondCurrency);
                 Intent i=new Intent();
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY,totalPid);
                 setResult(RESULT_OK,i);
-cashpayment.insertEntry(saleId,Double.parseDouble(tvTotalInserted.getText().toString()),0,new Date());
+                cashpayment.insertEntry(saleId,Double.parseDouble(tvTotalInserted.getText().toString()),0,new Date());
                 cashpayment.insertEntry(saleId,Double.parseDouble(tvTotalInsertedForFirstCurrency.getText().toString()),firstCurrencyId,new Date());
                 cashpayment.insertEntry(saleId,Double.parseDouble(tvTotalInsertedForSecondCurrency.getText().toString()),secondCurrencyId,new Date());
-
-
                 currencyReturnsDBAdapter.insertEntry(saleId,Double.parseDouble(tvExcess.getText().toString()), new Date(),returnSpenerId);
+
+
 currencyReturnsDBAdapter.close();
                 cashpayment.close();
 
