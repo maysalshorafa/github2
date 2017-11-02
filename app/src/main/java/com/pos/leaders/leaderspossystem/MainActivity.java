@@ -48,6 +48,7 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
@@ -2153,7 +2154,10 @@ custmerAssetDB.close();
 
                 CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(MainActivity.this);
                 currencyOperationDBAdapter.open();
+                CashPaymentDBAdapter cashPaymentDBAdapter=new CashPaymentDBAdapter(this);
+                cashPaymentDBAdapter.open();
                 final float result = data.getFloatExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY, 0.0f);
+
                 SESSION._SALE.setTotalPaid(result);
 
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
@@ -2166,6 +2170,21 @@ custmerAssetDB.close();
 
 
                  saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
+                final double firstCurrencyAmount = data.getDoubleExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_FIRSTCURRENCY_AMOUNT, 0.0f);
+                final double secondCurrencyAmount = data.getDoubleExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_AMOUNT, 0.0f);
+                final double thirdCurrencyAmount = data.getDoubleExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_AMOUNT, 0.0f);
+                final long secondCurrencyId = data.getLongExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_ID_AMOUNT, 0);
+                final long thirdCurrencyId = data.getLongExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_ID_AMOUNT, 0);
+                if (firstCurrencyAmount>0) {
+                    cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, 0, new Date());
+                }
+                if (secondCurrencyAmount>0){
+                    cashPaymentDBAdapter.insertEntry(saleIDforCash,secondCurrencyAmount,secondCurrencyId,new Date());
+
+                }if (thirdCurrencyAmount>0){
+                    cashPaymentDBAdapter.insertEntry(saleIDforCash,thirdCurrencyAmount,thirdCurrencyId,new Date());
+                }
+                cashPaymentDBAdapter.close();
                 currencyOperationDBAdapter.insertEntry(SESSION._SALE.getSaleDate().getTime(), saleIDforCash, "sale", SESSION._SALE.getTotalPaid(), 0);
                 sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);
                 saleDBAdapter.close();
@@ -2224,6 +2243,7 @@ custmerAssetDB.close();
                 printAndOpenCashBox("", "", "");
                 return;
             }
+
         }
     }
 
