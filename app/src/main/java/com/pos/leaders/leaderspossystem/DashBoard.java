@@ -110,6 +110,12 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
 
         AccessToken accessToken = new AccessToken(this);
         accessToken.execute(this);
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         //load pos id from shared file
         SharedPreferences sharedpreferences = getSharedPreferences(BO_CORE_ACCESS_AUTH, Context.MODE_PRIVATE);
         if(sharedpreferences.contains(MessageKey.PosId)){

@@ -100,6 +100,9 @@ public interface MessageType{
     String UPDATE_CURRENCY_OPERATION = "UpdateCurrencyOperation";
     String DELETE_CURRENCY_OPERATION = "DeleteCurrencyOperation";
 
+    String ADD_CREDIT_CARD_PAYMENT = "AddCreditCardPayment";
+    String UPDATE_CREDIT_CARD_PAYMENT = "UpdateCreditCardPayment";
+    String DELETE_CREDIT_CARD_PAYMENT = "DeleteCreditCardPayment";
 
     String ADD_CASH_PAYMENT = "ADDCashPayment";
     String UPDATE_CASH_PAYMENT = "UpdateCashPayment";

@@ -55,7 +55,7 @@
             android:layout_weight="1"
             android:background="@drawable/edit_text_style"
             android:ems="10"
-            android:hint="@string/credit_card_number"
+            android:hint="@string/card_expiry"
             android:inputType="number"
             android:textAlignment="center" />
 
@@ -65,7 +65,7 @@
             android:layout_height="30dp"
             android:inputType="number"
             android:ems="10"
-            android:hint="@string/id"
+            android:hint="@string/ccv"
             android:layout_weight="1"
             android:background="@drawable/edit_text_style"
             android:layout_marginRight="5dp"

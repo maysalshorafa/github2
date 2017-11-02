@@ -73,7 +73,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 public class SyncMessage extends Service {
 
@@ -869,15 +868,17 @@ public class SyncMessage extends Service {
             case MessageType.DELETE_CURRENCY_RETURN:
                 res = messageTransmit.authDelete(ApiURL.CurrencyReturn, jsonObject.getString(MessageKey.Data), token);
                 break;
-            //CurrencyOperation
+
+            //CurrencyOPeration
             case MessageType.ADD_CURRENCY_OPERATION:
-                res = messageTransmit.authPost(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authPost(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_CURRENCY_OPERATION:
-                res = messageTransmit.authPut(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authPut(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.DELETE_CURRENCY_OPERATION:
-                res = messageTransmit.authDelete(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authDelete(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
+
                 break;
             //CashPayment
             case MessageType.ADD_CASH_PAYMENT:

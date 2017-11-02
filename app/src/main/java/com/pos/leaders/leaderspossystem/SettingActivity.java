@@ -41,9 +41,9 @@ public class SettingActivity extends AppCompatActivity {
         etTax = (EditText) findViewById(R.id.settings_etTax);
         etInvoiceNote = (EditText) findViewById(R.id.settings_etInvoiceNote);
         etTerminalNumber = (EditText) findViewById(R.id.settings_etTNum);
-        etTerminalNumber.setEnabled(false);
+        etTerminalNumber.setEnabled(true);
         etTerminalPassword = (EditText) findViewById(R.id.settings_etTPass);
-        etTerminalPassword.setEnabled(false);
+        etTerminalPassword.setEnabled(true);
 
         btSave = (Button) findViewById(R.id.settings_btSave);
         btCancel = (Button) findViewById(R.id.settings_btCancel);

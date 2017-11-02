@@ -27,7 +27,8 @@ public class Sum_PointDbAdapter {
     protected static final String SUM_POINT_COLUMN_POINT = "pointAmount";
     protected static final String SUM_POINT_COLUMN_CUSTOMER = "customer_id";
 
-    public static final String DATABASE_CREATE= "CREATE TABLE SumPoint ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  , `saleId` INTEGER ,"+" `pointAmount` INTEGER , `"+ SUM_POINT_COLUMN_CUSTOMER +"` INTEGER, FOREIGN KEY(`saleId`) REFERENCES `sales.id` )";
+
+    public static final String DATABASE_CREATE= "CREATE TABLE sumPoint ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  , `saleId` INTEGER ,"+" `pointAmount` INTEGER , `"+ SUM_POINT_COLUMN_CUSTOMER +"` INTEGER, FOREIGN KEY(`saleId`) REFERENCES `sales.id` )";
     private SQLiteDatabase db;
 
     private final Context context;

@@ -4,8 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -13,12 +12,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.Backup.CryptoException;
-import com.pos.leaders.leaderspossystem.Backup.CryptoUtils;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
@@ -31,16 +27,8 @@ import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -48,7 +36,7 @@ import java.util.Random;
  */
 
 public class LogInActivity extends Activity implements View.OnClickListener {
-    private Button btn_0,btn_1,btn_2,btn_3,btn_4,btn_5,btn_6,btn_7,btn_8,btn_9,btn_del;
+    private Button btn_0, btn_1, btn_2, btn_3, btn_4, btn_5, btn_6, btn_7, btn_8, btn_9, btn_del;
     private EditText et;
     private Button btn_login;
     private UserDBAdapter userDBAdapter;
@@ -57,6 +45,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     public static final String LEADPOS_MAKE_A_REPORT = "LEADPOS_make_a_report";
 
     private SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +66,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
         Random random = new Random();
         int rand = random.nextInt(12) + 1;
 
-        switch (rand){
+        switch (rand) {
             case 1:
                 relativeLayout.setBackground(getResources().getDrawable(R.drawable.background1));
                 break;
@@ -116,21 +105,21 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 break;
         }
 //  to insert data from file
-             /**
-            DbHelper dbHelper = new DbHelper(LogInActivity.this);
-                 this.db = dbHelper.getWritableDatabase();
-                 try {
-                   int insertCount = dbHelper.insertFromFile(this, R.raw.testdbfile);
-                   Toast.makeText(this, "Rows loaded from file= " + insertCount, Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                }**/
+        /**
+         DbHelper dbHelper = new DbHelper(LogInActivity.this);
+         this.db = dbHelper.getWritableDatabase();
+         try {
+         int insertCount = dbHelper.insertFromFile(this, R.raw.testdbfile);
+         Toast.makeText(this, "Rows loaded from file= " + insertCount, Toast.LENGTH_SHORT).show();
+         } catch (IOException e) {
+         Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+         e.printStackTrace();
+         }**/
 
         SESSION._ORDERS = new ArrayList<Order>();
 
         scheduleWorkersDBAdapter = new ScheduleWorkersDBAdapter(this);
-        userDBAdapter=new UserDBAdapter(this);
+        userDBAdapter = new UserDBAdapter(this);
 
         btn_0 = (Button) findViewById(R.id.touchPad_bt0);
         btn_0.setOnClickListener(this);
@@ -183,21 +172,19 @@ public class LogInActivity extends Activity implements View.OnClickListener {
         return true;
     }
 
-    private void login(){
-        String str=et.getText().toString();
-        if(str.equals("")){
+    private void login() {
+        String str = et.getText().toString();
+        if (str.equals("")) {
             Toast.makeText(this, getResources().getString(R.string.empty_password), Toast.LENGTH_SHORT).show();
-        }
-        else{
-            User user=userDBAdapter.logIn(et.getText().toString());
-            UserPermissionsDBAdapter userPermissionsDBAdapter =new UserPermissionsDBAdapter(this);
+        } else {
+            User user = userDBAdapter.logIn(et.getText().toString());
+            UserPermissionsDBAdapter userPermissionsDBAdapter = new UserPermissionsDBAdapter(this);
             userPermissionsDBAdapter.open();
-       ArrayList<Integer>permissions= userPermissionsDBAdapter.getPermissions(user.getId());
+            ArrayList<Integer> permissions = userPermissionsDBAdapter.getPermissions(user.getId());
 
-            if(user==null){
+            if (user == null) {
                 Toast.makeText(this, getResources().getString(R.string.wrong_password), Toast.LENGTH_SHORT).show();
-            }
-            else{
+            } else {
                 // success to log in
                 SESSION._USER = new User(user);
                 Toast.makeText(getApplicationContext(), "Hello " + user.getFullName() + " !!", Toast.LENGTH_SHORT).show();
@@ -205,8 +192,10 @@ public class LogInActivity extends Activity implements View.OnClickListener {
 
                 //open main screen
                 //// TODO: 01/06/2017 open dashboard screen
-                Intent intent =  new Intent(getApplicationContext(), DashBoard.class);
-intent.putIntegerArrayListExtra("permissions_name",  permissions);
+
+                Intent intent = new Intent(getApplicationContext(), TempDashBord.class);
+                intent.putIntegerArrayListExtra("permissions_name", permissions);
+
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, LogInActivity.LEADPOS_MAKE_A_REPORT);
 
@@ -226,14 +215,12 @@ intent.putIntegerArrayListExtra("permissions_name",  permissions);
 
                 try {
                     lastZReport = zReportDBAdapter.getLastRow();
-                    if (lastZReport.getEndSaleId() == lastSale.getId()){
+                    if (lastZReport.getEndSaleId() == lastSale.getId()) {
                         intent.putExtra(LEADPOS_MAKE_A_REPORT, LEADPOS_MAKE_A_REPORT);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
 
 
                 startActivity(intent);
@@ -279,10 +266,10 @@ intent.putIntegerArrayListExtra("permissions_name",  permissions);
                 break;
             case R.id.touchPad_btDel:
                 String str = et.getText().toString();
-                if(!str.equals("")){
-                    if(str.length()==1){
+                if (!str.equals("")) {
+                    if (str.length() == 1) {
                         str = "";
-                    }else {
+                    } else {
                         str = str.substring(0, str.length() - 1);
                     }
                     et.setText(str);

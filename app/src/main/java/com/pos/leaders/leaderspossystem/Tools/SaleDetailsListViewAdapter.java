@@ -18,6 +18,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -79,6 +80,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 			holder.tvTotal=(TextView)convertView.findViewById(R.id.rowSaleDetails_TVTotalPrice);
 
 			holder.llMethods=(RelativeLayout)convertView.findViewById(R.id.rowSaleDetails_LLMethods);
+			holder.llSalesMan=(LinearLayout) convertView.findViewById(R.id.saleManLayout);
 			convertView.setTag(holder);
 		}
 		else{
@@ -98,10 +100,12 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 
 		if(selected==position&&selected!=-1){
 			holder.llMethods.setVisibility(View.VISIBLE);
+			holder.llSalesMan.setVisibility(View.VISIBLE);
 			convertView.setBackgroundColor(context.getResources().getColor(R.color.list_background_color));
 		}
 		else {
 			holder.llMethods.setVisibility(View.GONE);
+			holder.llSalesMan.setVisibility(View.GONE);
 			convertView.setBackgroundColor(context.getResources().getColor(R.color.white));
 		}
 		return convertView;
@@ -115,6 +119,7 @@ public 	class ViewHolder{
 		private TextView tvPrice;
 		private TextView tvTotal;
 		private RelativeLayout llMethods;
+		private LinearLayout llSalesMan;
 
 
 	}

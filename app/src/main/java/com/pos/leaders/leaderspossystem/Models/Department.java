@@ -34,6 +34,7 @@ public class Department {
     }
 
     public Department() {
+
     }
 
     //endregion

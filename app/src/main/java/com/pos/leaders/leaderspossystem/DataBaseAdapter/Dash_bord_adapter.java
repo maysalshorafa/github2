@@ -49,19 +49,16 @@ public class Dash_bord_adapter  extends BaseAdapter{
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (grid == null) {
-
             grid = inflater.inflate(R.layout.dash_grid_layout_item, null);
             TextView textView = (TextView) grid.findViewById(R.id.grid_text);
             ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
 
             textView.setText(dash_bord_text[i]);
             imageView.setImageResource(Imageid[i]);
-        //    grid.setBackgroundColor(Color.parseColor(color));
+            //grid.setBackgroundColor(Color.parseColor(color));
         } else {
             grid = view;
         }
-
-
         return grid;
     }
 
