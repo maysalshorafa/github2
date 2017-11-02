@@ -64,7 +64,7 @@ public class CurrencyOperationDBAdapter {
     public long insertEntry(long createDate, long operation_id,String operation_type, double amount, long currency_type) {
 
         CurrencyOperation currency = new CurrencyOperation(Util.idHealth(this.db, CurrencyOperation_TABLE_NAME, CurrencyOperation_COLUMN_ID), createDate, operation_id,operation_type, amount, currency_type);
-        sendToBroker(MessageType.ADD_CURRENCY_OPEARATION, currency, this.context);
+        sendToBroker(MessageType.ADD_CURRENCY_OPERATION, currency, this.context);
 
         try {
             long insertResult = insertEntry(currency);

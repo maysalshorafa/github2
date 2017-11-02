@@ -73,7 +73,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 public class SyncMessage extends Service {
 
@@ -579,7 +578,7 @@ public class SyncMessage extends Service {
 
 
                 //region CurrencyOpeartion
-                case MessageType.ADD_CURRENCY_OPEARATION:
+                case MessageType.ADD_CURRENCY_OPERATION:
                     CurrencyOperation currencyOperation = null;
                     currencyOperation = objectMapper.readValue(msgData, CurrencyOperation.class);
 
@@ -589,9 +588,9 @@ public class SyncMessage extends Service {
                     currencyOperationDBAdapter.close();
 
                     break;
-                case MessageType.UPDATE_CURRENCY_OPEARATION:
+                case MessageType.UPDATE_CURRENCY_OPERATION:
                     break;
-                case MessageType.DELETE_CURRENCY_OPEARATION:
+                case MessageType.DELETE_CURRENCY_OPERATION:
                     break;
                 //endregion Currency Opeartion
 
@@ -870,13 +869,13 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.CurrencyReturn, jsonObject.getString(MessageKey.Data), token);
                 break;
             //CurrencyOPeration
-            case MessageType.ADD_CURRENCY_OPEARATION:
+            case MessageType.ADD_CURRENCY_OPERATION:
                 res = messageTransmit.authPost(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.UPDATE_CURRENCY_OPEARATION:
+            case MessageType.UPDATE_CURRENCY_OPERATION:
                 res = messageTransmit.authPut(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.DELETE_CURRENCY_OPEARATION:
+            case MessageType.DELETE_CURRENCY_OPERATION:
                 res = messageTransmit.authDelete(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
                 break;
             //CashPayment

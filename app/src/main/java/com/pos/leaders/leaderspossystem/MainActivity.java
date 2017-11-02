@@ -48,6 +48,7 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
@@ -84,6 +85,7 @@ import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Models.Group;
+import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.CustmerAssestCatlogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustmerCatalogGridViewAdapter;
@@ -790,7 +792,15 @@ usedpointDbAdapter.open();
                         removeFromCart(position);
                     }
                 });
-              salesMan = (TextView) view.findViewById(R.id.saleMan);
+
+                salesMan = (TextView) view.findViewById(R.id.saleMan);
+                view.setOnLongClickListener(new View.OnLongClickListener(){
+                    @Override
+                    public boolean onLongClick(View v) {
+                        callPopupOrderSalesMan();
+                        return false;
+                    }
+                });
                 salesMan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1061,6 +1071,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 startActivity(i);
 */
 
+                final String __customerName = custmername_EditText.getText().toString();
                 final Context c = MainActivity.this;
                 new AlertDialog.Builder(c)
                         .setTitle(c.getResources().getString(R.string.clearCartAlertTitle))
@@ -1068,10 +1079,9 @@ saleTotalPrice=saleTotalPrice-newPrice;
                         .setPositiveButton(c.getResources().getString(R.string.by_card), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                a=custmername_EditText.getText().toString();
                                 Intent intent = new Intent(c, CreditCardActivity.class);
-                                intent.putExtra("_Price", saleTotalPrice);
-                                intent.putExtra("_custmer", a);
+                                intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
+                                intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_CUSTOMER, __customerName);
 
                                 intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TYPE, CreditCardActivity.LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PASS_CARD);
                                 startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
@@ -1084,8 +1094,8 @@ saleTotalPrice=saleTotalPrice-newPrice;
                                 a=custmername_EditText.getText().toString();
 
                                 Intent intent = new Intent(c, CreditCardActivity.class);
-                                intent.putExtra("_Price", saleTotalPrice);
-                                intent.putExtra("_custmer", a);
+                                intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
+                                intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_CUSTOMER, __customerName);
 
                                 intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TYPE, CreditCardActivity.LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PHONE);
                                 startActivityForResult(intent ,REQUEST_CREDIT_CARD_ACTIVITY_CODE);
@@ -1904,7 +1914,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
         offerDBAdapter.open();
        // Offer offer=offerDBAdapter.getAllValidOffers();
         List<Offer>offerList=offerDBAdapter.getAllOffersByStatus(1);
-offerList=null;
+        offerList=null;
         if(offerList!=null){
 
             calculateTotalPriceWithOffers(offerList);
@@ -2078,7 +2088,7 @@ offerList=null;
 
                 }
                 orderDBAdapter.close();
-custmerAssetDB.close();
+                custmerAssetDB.close();
                 SESSION._SALE.setOrders(SESSION._ORDERS);
                 SESSION._SALE.setUser(SESSION._USER);
 
@@ -2092,12 +2102,19 @@ custmerAssetDB.close();
                 Payment payment = new Payment(paymentID, CREDIT_CARD, saleTotalPrice, saleID);
                 SESSION._SALE.setPayment(payment);
 
+                CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
+                creditCardPaymentDBAdapter.open();
+                creditCardPaymentDBAdapter.insertEntry(saleID, saleTotalPrice, "", CreditCardTransactionType.NORMAL,
+                        "0000", "", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote), 0, 0, 0, "");
+                creditCardPaymentDBAdapter.close();
+
                 printAndOpenCashBox(data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY),
                         data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote),
                         data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
 
                 //get the invoice plugin
                 //print invoice
+
                 Log.w("mainAns", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY));
                 Log.w("mainMer", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote));
                 Log.w("mainCli", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
@@ -2183,14 +2200,14 @@ custmerAssetDB.close();
 
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 orderDBAdapter = new OrderDBAdapter(MainActivity.this);
-                custmerAssetDB=new CustomerAssetDB(MainActivity.this);
+                custmerAssetDB = new CustomerAssetDB(MainActivity.this);
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
 
                 saleDBAdapter.open();
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
 
 
-                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
+                saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
                 currencyOperationDBAdapter.insertEntry(SESSION._SALE.getSaleDate().getTime(), saleIDforCash, "sale", SESSION._SALE.getTotalPaid(), 0);
 
                 sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);
@@ -2219,7 +2236,7 @@ custmerAssetDB.close();
                 } else if (biggerUsedPoint) {
                     usedpointDbAdapter.insertEntry(saleIDforCash, aPoint, _custmer_id);
                 } else if (lessUsedPoint) {
-   SESSION._SALE.setTotalPaid(0.0);
+                    SESSION._SALE.setTotalPaid(0.0);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, _custmer_id);
                 }

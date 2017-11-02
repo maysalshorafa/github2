@@ -191,6 +191,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                 return false;
             }
         });
+
         tvTotalInsertedForFirstCurrency.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {

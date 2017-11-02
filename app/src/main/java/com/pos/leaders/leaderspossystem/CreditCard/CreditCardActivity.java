@@ -1,18 +1,14 @@
 package com.pos.leaders.leaderspossystem.CreditCard;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -23,11 +19,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.MainActivity;
-import com.pos.leaders.leaderspossystem.QuickPricePadFragment;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 
 import org.ksoap2.serialization.SoapObject;
 
@@ -37,12 +30,12 @@ import org.ksoap2.serialization.SoapObject;
 
 public class CreditCardActivity extends AppCompatActivity {
     EditText etNumberOfPayments;
-    TextView tvTotalPrice ,custmer_name;
+    TextView tvTotalPrice , tvCustomerName;
     Button btOK, btCancel;
     Spinner sCreditType;
 
     double totalPrice;
-    String custmer_nameS;
+    String custmerName;
 
     String creditCardNumber = "";
     boolean nextStep = false;
@@ -51,6 +44,8 @@ public class CreditCardActivity extends AppCompatActivity {
     public static final String LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PHONE = "LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PHONE";
     public static final String LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PASS_CARD = "LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PASS_CARD";
     public static final String LEADERS_POS_CREDIT_CARD_TYPE = "LEADERS_POS_CREDIT_CARD_TYPE";
+    public static final String LEADERS_POS_CREDIT_CARD_TOTAL_PRICE = "LEADERS_POS_CREDIT_CARD_TOTAL_PRICE";
+    public static final String LEADERS_POS_CREDIT_CARD_CUSTOMER = "LEADERS_POS_CREDIT_CARD_CUSTOMER";
 
     public static final String LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY = "LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY";
     public static final String LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote = "LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote";
@@ -92,7 +87,7 @@ public class CreditCardActivity extends AppCompatActivity {
         sCreditType = (Spinner) findViewById(R.id.creditCardActivity_sCreditType);
 
         tvTotalPrice = (TextView) findViewById(R.id.creditCardActivity_tvTotalPrice);
-custmer_name=(TextView)findViewById(R.id.custmer_name);
+        tvCustomerName =(TextView)findViewById(R.id.custmer_name);
         btOK = (Button) findViewById(R.id.creditCardActivity_btnOK);
         btCancel = (Button) findViewById(R.id.creditCardActivity_btnCancel);
         btCancel.setOnClickListener(new View.OnClickListener() {
@@ -104,12 +99,12 @@ custmer_name=(TextView)findViewById(R.id.custmer_name);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            totalPrice = (double) extras.get("_Price");
-            custmer_nameS= (String) extras.get("_custmer");
+            totalPrice = (double) extras.get(LEADERS_POS_CREDIT_CARD_TOTAL_PRICE);
+            custmerName = (String) extras.get(LEADERS_POS_CREDIT_CARD_CUSTOMER);
 
 
             tvTotalPrice.setText(totalPrice + " " + getResources().getText(R.string.ins));
-            custmer_name.setText(custmer_nameS);
+            tvCustomerName.setText(custmerName);
         } else {
             finish();
         }
@@ -119,7 +114,7 @@ custmer_name=(TextView)findViewById(R.id.custmer_name);
             isByPhone = true;
             CreditCardByPhone fTP = new CreditCardByPhone();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.byPhoneFragment_fl, fTP);
+            transaction.add(R.id.byPhoneFragment_fl, fTP);
             transaction.commit();
             getWindow().setLayout((int) (width * 0.6), (int) (height * 0.6));
         }
@@ -251,7 +246,7 @@ custmer_name=(TextView)findViewById(R.id.custmer_name);
                             creditCardNumber.replace("/", "");
                             Log.e("Card Number", creditCardNumber);
                             String validCCNUM = "";
-                            char[] validchars = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '='};
+                            char[] validChars = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '='};
                             String validSTR = "1234567890=";
                             for (char c : creditCardNumber.toCharArray()) {
                                 if (validSTR.contains(c + "")) {

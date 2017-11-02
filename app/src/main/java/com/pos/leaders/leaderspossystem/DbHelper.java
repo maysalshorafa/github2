@@ -90,11 +90,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.execSQL(OrderDBAdapter.DATABASE_CREATE);
         db.execSQL(PaymentDBAdapter.DATABASE_CREATE);
+        db.execSQL(CreditCardPaymentDBAdapter.DATABASE_CREATE);
 
         db.execSQL(CashPaymentDBAdapter.DATABASE_CREATE);
         db.execSQL(CurrencyOperationDBAdapter.DATABASE_CREATE);
         db.execSQL(CurrencyReturnsDBAdapter.DATABASE_CREATE);
-       db.execSQL(CurrencysDBAdapter.DATABASE_CREATE);
+        db.execSQL(CurrencysDBAdapter.DATABASE_CREATE);
         db.execSQL(CurrencyTypeDBAdapter.DATABASE_CREATE);
 
         db.execSQL(PermissionsDBAdapter.DATABASE_CREATE);
@@ -153,6 +154,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (2,'type2','type2',2,0,50,200,0);");
         db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (3,'type3','type3',2,0,0,0,0);");
         db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (4,'test1','test1','test1','"+new Date().getTime()+"','12',0,046316969,20,35);");
+
         List<String> tblNames = tablesName(db);
         String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
         db.execSQL(dbc);
