@@ -111,11 +111,15 @@
         <activity
             android:name=".Tools.TempCashActivty"
             android:label="@string/title_activity_temp_cash_activty"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.PopUp" />
         <activity
             android:name=".ClubMangmentActivity"
             android:label="@string/title_activity_temp_cash_activty" />
-        <activity android:name=".TempDashBord"></activity>
+        <activity android:name=".TempDashBord" />
+        <activity android:name=".SalesManManagementActivity" />
+        <activity android:name=".SalesAssistantDetailesSalesMangmentActivity" />
+        <activity android:name=".CurrencyReturnsCustomDialogActivity"
+            android:theme="@style/AppTheme.PopUp"></activity>
     </application>
 
 </manifest>

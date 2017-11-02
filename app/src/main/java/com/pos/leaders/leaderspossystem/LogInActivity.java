@@ -192,8 +192,10 @@ public class LogInActivity extends Activity implements View.OnClickListener {
 
                 //open main screen
                 //// TODO: 01/06/2017 open dashboard screen
+
                 Intent intent = new Intent(getApplicationContext(), TempDashBord.class);
                 intent.putIntegerArrayListExtra("permissions_name", permissions);
+
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, LogInActivity.LEADPOS_MAKE_A_REPORT);
 

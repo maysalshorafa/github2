@@ -222,7 +222,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
 
                 break;
             case 9:
-                if (!(permissions_name.toLowerCase().contains("customer club"))) {
+                if (!(permissions_name.toLowerCase().contains("user club"))) {
                     grid.getChildAt(pos).setClickable(false);
                 } else {
                     final String[] items = {

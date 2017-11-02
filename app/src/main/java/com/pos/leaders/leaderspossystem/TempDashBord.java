@@ -234,8 +234,6 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                             startActivity(i);
                         }
                     });}
-
-
 if (permissions_name.contains(9)) {
                    customerClub.setClickable(true);
 
@@ -250,11 +248,7 @@ if (permissions_name.contains(9)) {
         }
     });
                 }
-
-
  }
-
-
     @Override
     protected void onResume() {
         super.onResume();

@@ -9,14 +9,14 @@ import android.content.Context;
 public class Point {
     public int saleId ;
     public int point;
-    public int custmer_id;
+    public int customer_id;
 
     public int getCustmer_id() {
-        return custmer_id;
+        return customer_id;
     }
 
     public void setCustmer_id(int custmer_id) {
-        this.custmer_id = custmer_id;
+        this.customer_id = custmer_id;
     }
 
     public int getSaleId() {
@@ -38,7 +38,7 @@ public class Point {
     public Point(int saleId, int point,int custmer_id) {
         this.saleId = saleId;
         this.point = point;
-        this.custmer_id = custmer_id;
+        this.customer_id = custmer_id;
     }
 
     public Point(Context context) {

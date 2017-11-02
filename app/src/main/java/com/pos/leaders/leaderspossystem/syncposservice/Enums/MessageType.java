@@ -108,17 +108,17 @@ public interface MessageType{
     String UPDATE_CASH_PAYMENT = "UpdateCashPayment";
     String DELETE_CASH_PAYMENT = "DeleteCashPayment";
 
-    String ADD_CUSTMER_ASSEST = "AddCustomerAssest";
-    String UPDATE_CUSTMER_ASSEST = "UpdateCustmerAssest";
-    String DELETE_CUSTMER_ASSEST = "DeleteCustmerAssest";
+    String ADD_CUSTOMER_ASSISTANT = "AddCustomerAssistant";
+    String UPDATE_CUSTOMER_ASSISTANT = "UpdateCustomerAssistant";
+    String DELETE_CUSTOMER_ASSISTANT = "DeleteCustomerAssistant";
 
     String ADD_CURRENCY_RETURN = "AddCurrencyReturn";
     String UPDATE_CURRENCY_RETURN = "UpdateCurrencyReturn";
     String DELETE_CURRENCY_RETURN = "DeleteCurrencyReturn";
 
-    String ADD_CURRENCYS = "AddCurrencys";
-    String UPDATE_CURRENCYS = "UpdateCurrencys";
-    String DELETE_CURRENCYS = "DeleteCurrencys";
+    String ADD_CURRENCIES = "AddCurrencies";
+    String UPDATE_CURRENCIES = "UpdateCurrencies";
+    String DELETE_CURRENCIES = "DeleteCurrencies";
 
 
 

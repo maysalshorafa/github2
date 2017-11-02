@@ -154,18 +154,18 @@ long clubID;
                                             etHouseNumber.getText().toString(),etPostalCode.getText().toString(),
                                             etCountry.getText().toString(),etCountryCode.getText().toString());
                                 if (i > 0) {
-                                    Log.i("success", "adding new custmer");
+                                    Log.i("success", "adding new customer");
                                     intent = new Intent(AddNewCoustmer.this, CustmerMangmentActivity.class);
                                     startActivity(intent);
                                     //// TODO: 17/10/2016 sucess to add entity
                                 } else {
-                                    Log.e("error", "can`t add custmer");
-                                    Toast.makeText(getApplicationContext(), "Can`t add custmer please try again", Toast.LENGTH_LONG).show();
+                                    Log.e("error", "can`t add customer");
+                                    Toast.makeText(getApplicationContext(), "Can`t add customer please try again", Toast.LENGTH_LONG).show();
                                     //// TODO: 17/10/2016 error with adding entity
                                 }
                             }
                         } else {
-                            Toast.makeText(getApplicationContext(), "Custmer name is not available, try to use another Custmer name", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Customer name is not available, try to use another Custmer name", Toast.LENGTH_LONG).show();
                         }
                     }
                 } else {

@@ -1,7 +1,10 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
@@ -12,20 +15,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.CurrencyReturnsCustomDialogActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencysDBAdapter;
-import com.pos.leaders.leaderspossystem.MainActivity;
-import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currencys;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.TouchPadFragment;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,21 +35,32 @@ import java.util.List;
 public class TempCashActivty extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
     private List<CurrencyType> currencyTypesList = null;
     public static final String LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY = "LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY";
-    TextView custmer_name;
+    public static final String LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_FIRSTCURRENCY_AMOUNT = "LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_FIRSTCURRENCY_AMOUNT";
+    public static final String LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_AMOUNT = "LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_AMOUNT";
+    public static final String LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_ID_AMOUNT = "LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_ID_AMOUNT";
+    public static final String LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_ID_AMOUNT = "LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_ID_AMOUNT";
+    public static final String LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_AMOUNT = "LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_AMOUNT";
+    public static final String LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_EXCESSVALUE = "LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_EXCESSVALUE";
 
-    TextView tv, tvExcess;
-    EditText tvTotalInserted, tvTotalInsertedForFirstCurrency, tvTotalInsertedForSecondCurrency;
+
+    TextView custmer_name;
+String touchPadPressed="";
+    TextView tv ,tvTotalInserted ;
+    EditText  tvTotalInsertedForFirstCurrency,tvTotalInsertedForSecondCurrency;
     String custmer_nameS;
-    Spinner spinnerForFirstCurrency, spinnerForSecondCurrency, spinnerForReturnValue;
+   Spinner  spinnerForFirstCurrency,spinnerForSecondCurrency, spinnerForTotalPrice;
+
     Button btnDone;
 
     double totalPrice = 0.0;
     float totalPid = 0.0f;
+
     long saleId = 0;
     long firstCurrencyId, secondCurrencyId, returnSpenerId = 0;
 
     double basicCurrencyValue;
     String insertedValueForFirstCurrency, insertedValueForSecondCurrency, valueForReturnCurrency;
+
     double valueInsertedForDolar;
     CashPaymentDBAdapter cashpayment;
     double firstCurruncyValue, secondCurrency, exceesValue = 0;
@@ -61,8 +73,8 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_temp_cash_activty);
 
+        setContentView(R.layout.test_cash);
         Window window = getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();
         //wlp.gravity = Gravity.CENTER_VERTICAL;
@@ -76,34 +88,32 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        custmer_name = (TextView) findViewById(R.id.custmer_name);
-        spinnerForFirstCurrency = (Spinner) findViewById(R.id.spinnerForFirstCurrency);
-        spinnerForSecondCurrency = (Spinner) findViewById(R.id.spinnerForSecondCurrency);
-        spinnerForReturnValue = (Spinner) findViewById(R.id.spinnerForReturnValue);
+
+        getWindow().setLayout((int) (width * 0.9), (int) (height * 0.95));
+
+        showTouchPad(false);
+        custmer_name=(TextView)findViewById(R.id.custmer_name);
+        spinnerForFirstCurrency = (Spinner)findViewById(R.id.spinnerForFirstCurrency);
+        spinnerForSecondCurrency = (Spinner)findViewById(R.id.spinnerForSecondCurrency);
+        spinnerForTotalPrice = (Spinner)findViewById(R.id.spinnerForTotalPrice);
+
 
         btnDone = (Button) findViewById(R.id.cashActivity_BTNDone);
         tv = (TextView) findViewById(R.id.cashActivity_TVRequired);
-        tvExcess = (TextView) findViewById(R.id.cashActivity_TVExcess);
-        tvExcess.setText(0 + " ");
-        tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));
-        tvTotalInserted = (EditText) findViewById(R.id.cashActivity_TVTotalInserted);
+        tvTotalInserted = (TextView) findViewById(R.id.cashActivity_TVTotalInserted);
         tvTotalInsertedForFirstCurrency = (EditText) findViewById(R.id.cashActivity_TVTotalInsertedForfirstCurrency);
         tvTotalInsertedForSecondCurrency = (EditText) findViewById(R.id.cashActivity_TVTotalInsertedForSecondCurrency);
-        valueForReturnCurrency = tvExcess.getText().toString();
 
         CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
         currencyTypeDBAdapter.open();
-        final CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(this);
-        currencyReturnsDBAdapter.open();
-        cashpayment = new CashPaymentDBAdapter(this);
+
+
+        cashpayment=new CashPaymentDBAdapter(this);
         cashpayment.open();
         spinnerForFirstCurrency.setOnItemSelectedListener(this);
         spinnerForSecondCurrency.setOnItemSelectedListener(this);
-        spinnerForReturnValue.setOnItemSelectedListener(this);
-
+        spinnerForTotalPrice.setOnItemSelectedListener(this);
         btnDone.setEnabled(false);
-
-
         currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
 
         final List<String> currency = new ArrayList<String>();
@@ -120,18 +130,21 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
         // attaching data adapter to spinner
         spinnerForFirstCurrency.setAdapter(dataAdapter);
         spinnerForSecondCurrency.setAdapter(dataAdapter);
-        spinnerForReturnValue.setAdapter(dataAdapter);
+        spinnerForTotalPrice.setAdapter(dataAdapter);
 
 
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //tvTotalInserted.setText(tv.getText());
-            tvExcess.setText(0 + " ");
-            tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));
-            btnDone.setEnabled(true);
-            btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
-            btnDone.setPadding(50, 10, 50, 10);
+
+
+
+                //tvTotalInserted.setText(tv.getText());
+
+                btnDone.setEnabled(true);
+                btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
+                btnDone.setPadding(50,10,50,10);
+
             }
         });
         Bundle extras = getIntent().getExtras();
@@ -141,7 +154,10 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
             saleId = (long) extras.get("_SaleId");
             Toast.makeText(TempCashActivty.this, "id" + saleId, Toast.LENGTH_LONG).show();
 
-            tv.setText(totalPrice + " ");
+
+            tv.setText(totalPrice + " " );
+            valueForTotalPriceCurrency = tv.getText().toString();
+
             custmer_name.setText(custmer_nameS);
             custmer_nameS = "";
         } else {
@@ -154,22 +170,27 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
             public void onClick(View v) {
                 totalPid = (float) (basicCurrencyValue + firstCurruncyValue + secondCurrency);
                 //// TODO: 01/12/2016 return how match inserted money
-                Intent i = new Intent();
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY, totalPid);
-                setResult(RESULT_OK, i);
-                cashpayment.insertEntry(saleId, Double.parseDouble(tvTotalInserted.getText().toString()), 0, new Date());
-                cashpayment.insertEntry(saleId, Double.parseDouble(tvTotalInsertedForFirstCurrency.getText().toString()), firstCurrencyId, new Date());
-                cashpayment.insertEntry(saleId, Double.parseDouble(tvTotalInsertedForSecondCurrency.getText().toString()), secondCurrencyId, new Date());
 
-                currencyReturnsDBAdapter.insertEntry(saleId, Double.parseDouble(tvExcess.getText().toString()), new Date(), returnSpenerId);
-                currencyReturnsDBAdapter.close();
-                cashpayment.close();
-                finish();
+                Intent i=new Intent();
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY,totalPid);
+                    i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_FIRSTCURRENCY_AMOUNT,Double.parseDouble(tvTotalInserted.getText().toString()));
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_AMOUNT,Double.parseDouble(tvTotalInsertedForFirstCurrency.getText().toString()));
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_AMOUNT,Double.parseDouble(tvTotalInsertedForSecondCurrency.getText().toString()));
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_ID_AMOUNT,firstCurrencyId);
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_ID_AMOUNT,secondCurrencyId);
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_ID_AMOUNT,exceesValue);
+                setResult(RESULT_OK,i);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(TempCashActivty.this);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putFloat(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_EXCESSVALUE, (float) exceesValue);
+                editor.apply();
+                CurrencyReturnsCustomDialogActivity cdd=new CurrencyReturnsCustomDialogActivity(TempCashActivty.this);
+                cdd.show();
             }
         });
 
 
-        tvTotalInserted.setOnKeyListener(new View.OnKeyListener() {
+   /**     tvTotalInserted.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 //do something here
@@ -179,10 +200,17 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                 } else {
                     basicCurrencyValue = 0;
                 }
-                exceesValue = (basicCurrencyValue + firstCurruncyValue + secondCurrency) - totalPrice;
-                tvExcess.setText(exceesValue + " ");
-                if (exceesValue >= 0) {
-                    btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
+
+                    exceesValue = (basicCurrencyValue+firstCurruncyValue+secondCurrency) - totalPrice;
+
+                    if (exceesValue >=0) {
+                        btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
+
+                        btnDone.setEnabled(true);
+
+
+                    }
+
 
                     btnDone.setEnabled(true);
                     valueForReturnCurrency = tvExcess.getText().toString();
@@ -190,8 +218,8 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                 }
                 return false;
             }
-        });
 
+        });**/
         tvTotalInsertedForFirstCurrency.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -209,11 +237,11 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                     //do something here
 
                     exceesValue = (basicCurrencyValue + firstCurruncyValue + secondCurrency) - totalPrice;
-                    tvExcess.setText(exceesValue + " ");
+
                     if (exceesValue >= 0) {
                         btnDone.setEnabled(true);
                         btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
-                        valueForReturnCurrency = tvExcess.getText().toString();
+
 
                     }
 
@@ -243,11 +271,11 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                     //do something here
 
                     exceesValue = (basicCurrencyValue + firstCurruncyValue + secondCurrency) - totalPrice;
-                    tvExcess.setText(exceesValue + " ");
-                    if (exceesValue >= 0) {
+
+                    if (exceesValue >=0) {
                         btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
                         btnDone.setEnabled(true);
-                        valueForReturnCurrency = tvExcess.getText().toString();
+
 
                     }
 
@@ -258,19 +286,21 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
         });
 
 
-        spinnerForReturnValue.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                       int arg2, long arg3) {
-                CurrencysDBAdapter currencysDBAdapter = new CurrencysDBAdapter(TempCashActivty.this);
-                currencysDBAdapter.open();
+                spinnerForTotalPrice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-                returnSpenerId = spinnerForReturnValue.getSelectedItemId();
-                Currencys currencys = currencysDBAdapter.getSpeficCurrencys(spinnerForReturnValue.getSelectedItem().toString(), new Date());
+                    @Override
+                    public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                               int arg2, long arg3) {
+                        CurrencysDBAdapter currencysDBAdapter=new CurrencysDBAdapter(TempCashActivty.this);
+                        currencysDBAdapter.open();
 
-                exceesValue = Double.parseDouble(valueForReturnCurrency) / currencys.getRate();
-                tvExcess.setText(exceesValue + "");
+                        totalPriceSpinnerId = spinnerForTotalPrice.getSelectedItemId();
+                        Currencys currencys=currencysDBAdapter.getSpeficCurrencys(spinnerForTotalPrice.getSelectedItem().toString(),new Date());
+
+                        exceesValue= Double.parseDouble(valueForTotalPriceCurrency)/currencys.getRate();
+                        tv.setText(exceesValue+"");
+
 
 
             }
@@ -293,16 +323,15 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
         if (deltaPrice >= 0) {
             btnDone.setEnabled(true);
             btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
-            btnDone.setPadding(50, 10, 50, 10);
-            tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));
+
+            btnDone.setPadding(50,10,50,10);
+
         } else {
             btnDone.setEnabled(false);
             btnDone.setBackground(getResources().getDrawable(R.drawable.btn_secondary));
-            btnDone.setPadding(50, 10, 50, 10);
-            tvExcess.setTextColor(getResources().getColor(R.color.dangerColor));
-        }
+            btnDone.setPadding(50,10,50,10);
 
-        tvExcess.setText(String.format("%.2f", deltaPrice + valueInsertedForDolar) + " ");
+        }
     }
 
 
@@ -322,4 +351,81 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
 
     }
+
+    private void showTouchPad(boolean b) {
+            TouchPadFragment fTP = new TouchPadFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.cashActivity_fragmentTochPad, fTP);
+            transaction.commit();
+
+
+    }
+    public void touchPadClick(View view) {
+        switch (view.getId()) {
+            case R.id.touchPadFragment_bt0:
+                touchPadPressed += 0;
+                break;
+            case R.id.touchPadFragment_bt1:
+                touchPadPressed += 1;
+                break;
+            case R.id.touchPadFragment_bt2:
+                touchPadPressed += 2;
+                break;
+            case R.id.touchPadFragment_bt3:
+                touchPadPressed += 3;
+                break;
+            case R.id.touchPadFragment_bt4:
+                touchPadPressed += 4;
+                break;
+            case R.id.touchPadFragment_bt5:
+                touchPadPressed += 5;
+                break;
+            case R.id.touchPadFragment_bt6:
+                touchPadPressed += 6;
+                break;
+            case R.id.touchPadFragment_bt7:
+                touchPadPressed += 7;
+                break;
+            case R.id.touchPadFragment_bt8:
+                touchPadPressed += 8;
+                break;
+            case R.id.touchPadFragment_bt9:
+                touchPadPressed += 9;
+                break;
+            case R.id.touchPadFragment_btCE:
+                if(!touchPadPressed.equals(""))
+                    touchPadPressed = Util.removeLastChar(touchPadPressed);
+
+                break;
+            case R.id.touchPadFragment_btEnter:
+                if(!touchPadPressed.equals("")){
+                   tvTotalInserted.setText(touchPadPressed);
+                String value = tvTotalInserted.getText().toString();
+                if(value.length()>0) {
+                    basicCurrencyValue = Double.parseDouble(value);
+                }
+
+                exceesValue = (basicCurrencyValue+firstCurruncyValue+secondCurrency) - totalPrice;
+
+                if (exceesValue >=0) {
+                    btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
+
+                    btnDone.setEnabled(true);
+                }else{
+                        btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
+
+                        btnDone.setEnabled(false);
+
+                }
+                touchPadPressed = "";}
+                break;
+            case R.id.touchPadFragment_btDot:
+                if(touchPadPressed.indexOf(".")<0)
+                    touchPadPressed += ".";
+                break;
+        }
+        TextView tirh=(TextView)this.findViewById(R.id.touchPadFragment_tvView);
+        tirh.setText(touchPadPressed);
+    }
+
 }
