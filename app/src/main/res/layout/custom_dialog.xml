@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-
+    android:layout_width="600dp"
+    android:layout_height="300dp"
     android:orientation="vertical"
-    android:weightSum="1">
+>
 
 
 
     <LinearLayout
-        android:layout_width="549dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:layout_weight="0.56">
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -23,7 +22,7 @@
             android:gravity="center"
             android:text="Total Return"
             android:textColor="@color/Green"
-            android:textSize="40dp"
+            android:textSize="30dp"
             android:textStyle="bold" />
 
         <TextView
@@ -31,32 +30,56 @@
             android:layout_width="400dp"
             android:layout_height="70dp"
             android:layout_gravity="center"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="0"
             android:textAlignment="center"
             android:textColor="@color/Green"
-            android:textSize="40dp"
+            android:textSize="50dp"
             android:textStyle="bold" />
 
         <Spinner
             android:id="@+id/spinnerForReturnValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"></Spinner>
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"></Spinner>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            >
 
+            <Button
+                android:id="@+id/btn_done"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/done"
+                android:textSize="20dp"
+                android:background="@drawable/bt_green_enabled"
+                android:textColor="@color/white"
+               android:layout_weight="1" />
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textSize="20dp"
+                android:background="@drawable/btn_cancel"
+                android:textColor="@color/white"
+                android:layout_weight="1"   />
+
+        </LinearLayout>
     </LinearLayout>
-    <Button
-        android:id="@+id/btn_done"
-        android:layout_width="160dp"
-        android:layout_height="50dp"
-        android:background="@android:color/transparent"
-        android:clickable="true"
-        android:text="Done"
-        android:textColor="@color/Green"
-        android:textStyle="bold"
-        android:layout_gravity="center"
-       android:layout_marginBottom="20dp" />
-
 
 </LinearLayout>

@@ -17,7 +17,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencysDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrenciesDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
@@ -37,9 +37,9 @@ import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currencies;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
-import com.pos.leaders.leaderspossystem.Models.Currency.Currencys;
 import com.pos.leaders.leaderspossystem.Models.Customer_M;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Offer;
@@ -613,20 +613,20 @@ public class SyncMessage extends Service {
                 //endregion Cash payment..
 
 
-                //region Currencys
-                case MessageType.ADD_CURRENCIES:
-                    Currencys currencys = null;
-                    currencys = objectMapper.readValue(msgData, Currencys.class);
+                //region Currencies
+                case MessageType.ADD_CURRENCY:
+                    Currencies currencys = null;
+                    currencys = objectMapper.readValue(msgData, Currencies.class);
 
-                    CurrencysDBAdapter currencysDBAdapter = new CurrencysDBAdapter(this);
+                    CurrenciesDBAdapter currencysDBAdapter = new CurrenciesDBAdapter(this);
                     currencysDBAdapter.open();
                     currencysDBAdapter.insertEntry(currencys);
                     currencysDBAdapter.close();
 
                     break;
-                case MessageType.UPDATE_CURRENCIES:
+                case MessageType.UPDATE_CURRENCY:
                     break;
-                case MessageType.DELETE_CURRENCIES:
+                case MessageType.DELETE_CURRENCY:
                     break;
                 //endregion Currency Opeartion.
 
@@ -770,36 +770,36 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.Club, jsonObject.getString(MessageKey.Data), token);
                 break;
             // Sum Point Region
-            case MessageType.ADD_SUMPOINT:
+            case MessageType.ADD_SUM_POINT:
                 res = messageTransmit.authPost(ApiURL.SumPoint, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.UPDATE_SUMPOINT:
+            case MessageType.UPDATE_SUM_POINT:
                 res = messageTransmit.authPut(ApiURL.SumPoint, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.DELETE_SUMPOINT:
+            case MessageType.DELETE_SUM_POINT:
                 res = messageTransmit.authDelete(ApiURL.SumPoint, jsonObject.getString(MessageKey.Data), token);
                 break;
             //End Sum Point Region
             // Value Of Point Region
-            case MessageType.ADD_VALUEOFPOINT:
+            case MessageType.ADD_VALUE_OF_POINT:
                 res = messageTransmit.authPost(ApiURL.ValueOfPoint, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.UPDATE_ValueOfPoint:
+            case MessageType.UPDATE_VALUE_OF_POINT:
                 res = messageTransmit.authPut(ApiURL.ValueOfPoint, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.DELETE_ValueOfPoint:
+            case MessageType.DELETE_VALUE_OF_POINT:
                 res = messageTransmit.authDelete(ApiURL.ValueOfPoint, jsonObject.getString(MessageKey.Data), token);
                 break;
             //End Value Of Point Region
             //
             // UsedPoint Region
-            case MessageType.ADD_USEDPOINT:
+            case MessageType.ADD_USED_POINT:
                 res = messageTransmit.authPost(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.UPDATE_USEDPOINT:
+            case MessageType.UPDATE_USED_POINT:
                 res = messageTransmit.authPut(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.DELETE_USEDPOINT:
+            case MessageType.DELETE_USED_POINT:
                 res = messageTransmit.authDelete(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token);
                 break;
             //End Value Of Point Region
@@ -857,6 +857,29 @@ public class SyncMessage extends Service {
             case MessageType.DELETE_USER:
                 res = messageTransmit.authDelete(ApiURL.Users, jsonObject.getString(MessageKey.Data), token);
                 break;
+            //Currencies
+
+            case MessageType.ADD_CURRENCY:
+                res = messageTransmit.authPost(ApiURL.Currencies, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_CURRENCY:
+                res = messageTransmit.authPut(ApiURL.Currencies, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_CURRENCY:
+                res = messageTransmit.authDelete(ApiURL.Currencies, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //Currencies_Type
+
+            case MessageType.ADD_CURRENCY_TYPE:
+                res = messageTransmit.authPost(ApiURL.CurrencyType, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_CURRENCY_TYPE:
+                res = messageTransmit.authPut(ApiURL.CurrencyType, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_CURRENCY_TYPE:
+                res = messageTransmit.authDelete(ApiURL.CurrencyType, jsonObject.getString(MessageKey.Data), token);
+                break;
+
             //CurrencyReturn
 
             case MessageType.ADD_CURRENCY_RETURN:
@@ -871,13 +894,13 @@ public class SyncMessage extends Service {
 
             //CurrencyOPeration
             case MessageType.ADD_CURRENCY_OPERATION:
-                res = messageTransmit.authPost(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authPost(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_CURRENCY_OPERATION:
-                res = messageTransmit.authPut(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authPut(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.DELETE_CURRENCY_OPERATION:
-                res = messageTransmit.authDelete(ApiURL.CurrencyOpearation, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authDelete(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
 
                 break;
             //CashPayment
