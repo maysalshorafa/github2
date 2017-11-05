@@ -50,7 +50,7 @@ public class ValueOfPointDB {
 
       public long insertEntry( int value,String create_date) {
         ValueOfPoint valueOfPoint = new ValueOfPoint(Util.idHealth(this.db, ValueOfPoint_TABLE_NAME, Value_COLUMN_Id),value, create_date);
-        sendToBroker(MessageType.ADD_VALUEOFPOINT, valueOfPoint, this.context);
+        sendToBroker(MessageType.ADD_VALUE_OF_POINT, valueOfPoint, this.context);
 
         try {
             long insertResult = insertEntry(valueOfPoint);

@@ -28,6 +28,7 @@ public interface ApiURL {
     String Rule11 = "Rule11";
     String CurrencyReturn = "CurrencyReturn";
     String CurrencyOperation = "CurrencyOperation";
+    String CurrencyType = "CurrencyType";
     String CashPayment= "CashPayment";
     String CustomerAssistant= "CustomerAssistant";
     String CompanyCredentials = "CompanyCredentials";

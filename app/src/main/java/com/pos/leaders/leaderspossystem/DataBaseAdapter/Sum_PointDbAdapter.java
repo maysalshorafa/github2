@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.SumPoint;
-import com.pos.leaders.leaderspossystem.Models.UserPermissions;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -64,7 +63,7 @@ public class Sum_PointDbAdapter {
 
     public long insertEntry( long  saleId, int point,long custmerId) {
         SumPoint sumPoint = new SumPoint(Util.idHealth(this.db, SUM_POINT_TABLE_NAME, SUM_POINT_COLUMN_ID),saleId, point,custmerId);
-        sendToBroker(MessageType.ADD_SUMPOINT, sumPoint, this.context);
+        sendToBroker(MessageType.ADD_SUM_POINT, sumPoint, this.context);
 
         try {
             long insertResult = insertEntry(sumPoint);

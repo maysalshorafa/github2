@@ -2,10 +2,11 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -17,9 +18,9 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencysDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrenciesDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
-import com.pos.leaders.leaderspossystem.Models.Currency.Currencys;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currencies;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TempCashActivty;
 
@@ -27,18 +28,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
-import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.context;
-
-public class CurrencyReturnsCustomDialogActivity extends Dialog implements  View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class CurrencyReturnsCustomDialogActivity extends  Dialog implements  View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     public Activity c;
     public Dialog d;
-    public Button done, no;
+    public Button done, cancel;
     TextView tvExcess;
-    float excessValue=0;
+   String valueForReturnValue;
     Spinner returnSpener;
-    float template=0;
+    double template=0;
     long returnSpenerId=0;
     private List<CurrencyType> currencyTypesList=null;
     CurrencyReturnsDBAdapter currencyReturnsDBAdapter=new CurrencyReturnsDBAdapter(getContext());
@@ -56,10 +54,12 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog implements  View
         setContentView(R.layout.custom_dialog);
         currencyReturnsDBAdapter.open();
         done = (Button) findViewById(R.id.btn_done);
+        cancel=(Button)findViewById(R.id.btn_cancel);
       tvExcess=(TextView)findViewById(R.id.cashActivity_TVExcess) ;
         returnSpener =(Spinner)findViewById(R.id.spinnerForReturnValue) ;
         currencyTypeDBAdapter.open();
         done.setOnClickListener(this);
+        cancel.setOnClickListener(this);
 tvExcess.setOnClickListener(this);
         returnSpener.setOnItemSelectedListener(this);
 
@@ -81,18 +81,20 @@ tvExcess.setOnClickListener(this);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
       template = preferences.getFloat(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_EXCESSVALUE,0);
         tvExcess.setText(template+"");
+        valueForReturnValue = String.valueOf(template);
+
         returnSpener.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-                CurrencysDBAdapter currencysDBAdapter=new CurrencysDBAdapter(getContext());
+                CurrenciesDBAdapter currencysDBAdapter=new CurrenciesDBAdapter(getContext());
                 currencysDBAdapter.open();
 
                 returnSpenerId =returnSpener.getSelectedItemId();
-                Currencys currencys=currencysDBAdapter.getSpeficCurrencys(returnSpener.getSelectedItem().toString(),new Date());
+                Currencies currencys=currencysDBAdapter.getSpecificCurrencies(returnSpener.getSelectedItem().toString(),new Date().getTime());
 
-                template= (float) (template/currencys.getRate());
+                template= (double) (Double.parseDouble(valueForReturnValue)/currencys.getRate());
                 tvExcess.setText(template+"");
 
 
@@ -117,7 +119,11 @@ tvExcess.setOnClickListener(this);
                 currencyReturnsDBAdapter.close();
                 c.finish();
                 break;
-
+            case R.id.btn_cancel:
+                Intent i;
+                i = new Intent(getContext(), TempCashActivty.class);
+                c.startActivity(i);
+                break;
             default:
                 break;
         }
@@ -132,5 +138,13 @@ tvExcess.setOnClickListener(this);
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+      //  if(keyCode==KeyEvent.KEYCODE_BACK)
+         //   Toast.makeText(getContext(), "back press", Toast.LENGTH_LONG).show();
+
+        return false;
+        // Disable back button..............
     }
 }

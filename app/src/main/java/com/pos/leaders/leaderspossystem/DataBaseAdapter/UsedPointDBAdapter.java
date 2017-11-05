@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.SumPoint;
 import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -67,7 +66,7 @@ public class UsedPointDBAdapter {
 
     public long insertEntry( long saleId, int point,long custmerId) {
         UsedPoint usedPoint = new UsedPoint(Util.idHealth(this.db, UsedPoint_TabelName, UsedPoint_COLUMN_Id),saleId, point,custmerId);
-        sendToBroker(MessageType.ADD_USEDPOINT, usedPoint, this.context);
+        sendToBroker(MessageType.ADD_USED_POINT, usedPoint, this.context);
 
         try {
             long insertResult = insertEntry(usedPoint);
