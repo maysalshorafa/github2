@@ -1,18 +1,20 @@
 package com.pos.leaders.leaderspossystem.Models.Currency;
 
+import java.util.Date;
+
 /**
  * Created by Win8.1 on 9/24/2017.
  */
 
 public class CurrencyOperation {
     private long id;
-    private long creationDate;
+    private Date creationDate;
     private long operation_id;
     private String operation_type;
     private double amount;
     private long currency_type;
 
-    public CurrencyOperation(long id, long creationDate, long operation_id, String operation_type, double amount, long currency_type) {
+    public CurrencyOperation(long id, Date creationDate, long operation_id, String operation_type, double amount, long currency_type) {
         this.id = id;
         this.creationDate = creationDate;
         this.operation_id = operation_id;
@@ -30,11 +32,11 @@ public class CurrencyOperation {
         this.id = id;
     }
 
-    public long getCreationDate() {
+    public Date getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(long creationDate) {
+    public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 

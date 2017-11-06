@@ -2207,7 +2207,7 @@ if(club_id==2) {
                     cashPaymentDBAdapter.insertEntry(saleIDforCash,thirdCurrencyAmount,thirdCurrencyId,new Date());
                 }
                 cashPaymentDBAdapter.close();
-                currencyOperationDBAdapter.insertEntry(SESSION._SALE.getSaleDate().getTime(), saleIDforCash, "sale", SESSION._SALE.getTotalPaid(), 0);
+                currencyOperationDBAdapter.insertEntry(SESSION._SALE.getSaleDate(), saleIDforCash, "sale", SESSION._SALE.getTotalPaid(), 0);
                 if(club_id==2){
                 sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);}
                 saleDBAdapter.close();
@@ -2254,7 +2254,7 @@ if(club_id==2) {
                 paymentDBAdapter.open();
 
                 long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash);
-                currencyOperationDBAdapter.insertEntry(SESSION._SALE.getSaleDate().getTime(), paymentID, "payment_cash", saleTotalPrice, 0);
+                currencyOperationDBAdapter.insertEntry(SESSION._SALE.getSaleDate(), paymentID, "payment_cash", saleTotalPrice, 0);
 
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
 

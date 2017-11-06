@@ -11,6 +11,8 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.util.Date;
+
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
@@ -61,7 +63,7 @@ public class CurrencyOperationDBAdapter {
         return db;
     }
 
-    public long insertEntry(long createDate, long operation_id,String operation_type, double amount, long currency_type) {
+    public long insertEntry(Date createDate, long operation_id, String operation_type, double amount, long currency_type) {
 
         CurrencyOperation currency = new CurrencyOperation(Util.idHealth(this.db, CurrencyOperation_TABLE_NAME, CurrencyOperation_COLUMN_ID), createDate, operation_id,operation_type, amount, currency_type);
         sendToBroker(MessageType.ADD_CURRENCY_OPERATION, currency, this.context);
@@ -82,8 +84,7 @@ public class CurrencyOperationDBAdapter {
         //Assign values for each row.
 
         val.put(CurrencyOperation_COLUMN_ID, currency.getId());
-
-        val.put(CurrencyOperation_COLUMN_CREATEDATE, currency.getCreationDate());
+        val.put(CurrencyOperation_COLUMN_CREATEDATE, String.valueOf(currency.getCreationDate()));
         val.put(CurrencyOperation_COLUMN_Operation_ID, currency.getOperation_id());
         val.put(CurrencyOperation_COLUMN_Operation_Type,currency.getOperation_type());
         val.put(CurrencyOperationCOLUMN_AMOUNT, currency.getAmount());
