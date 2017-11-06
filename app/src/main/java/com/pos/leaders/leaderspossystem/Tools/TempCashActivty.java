@@ -152,7 +152,6 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_AMOUNT,secondCurrency);
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_ID_AMOUNT,firstCurrencyId);
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_ID_AMOUNT,secondCurrencyId);
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_ID_AMOUNT,exceesValue);
                 setResult(RESULT_OK,i);
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(TempCashActivty.this);
                 SharedPreferences.Editor editor = preferences.edit();
