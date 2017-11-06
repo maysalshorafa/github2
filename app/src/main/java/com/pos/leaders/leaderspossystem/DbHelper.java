@@ -22,7 +22,11 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAd
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
+
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
+
+import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+
 
 /**
  * Created by Karam on 16/10/2016.
@@ -95,7 +99,9 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CashPaymentDBAdapter.DATABASE_CREATE);
         db.execSQL(CurrencyOperationDBAdapter.DATABASE_CREATE);
         db.execSQL(CurrencyReturnsDBAdapter.DATABASE_CREATE);
+
         db.execSQL(CurrencyDBAdapter.DATABASE_CREATE);
+
         db.execSQL(CurrencyTypeDBAdapter.DATABASE_CREATE);
 
         db.execSQL(PermissionsDBAdapter.DATABASE_CREATE);
@@ -134,10 +140,15 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(10,2,10);");
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(11,2,2);");
         // Currency Statment
-        db.execSQL("insert into "+ CurrencyDBAdapter.Currency_TABLE_NAME+"  values (0 , 'Shekel','Shekel','Palestine',1,'"+new Date().getTime()+"');");
-        db.execSQL("insert into "+ CurrencyDBAdapter.Currency_TABLE_NAME+"  values (1 , 'Dollar','USD','USA',3.491,'"+new Date().getTime()+"');");
-        db.execSQL("insert into "+ CurrencyDBAdapter.Currency_TABLE_NAME+"  values (2 , 'Pound','GBP','Great Britain',4.5974,'"+new Date().getTime()+"');");
-        db.execSQL("insert into "+ CurrencyDBAdapter.Currency_TABLE_NAME+"  values (3 , 'Euro','EUR','EMU',4.1002,'"+new Date().getTime()+"');");
+
+        Date date=new Date();
+
+
+        db.execSQL("insert into "+ CurrenciesDBAdapter.Currency_TABLE_NAME+"  values (0 , 'Shekel','Shekel','Palestine',1,'"+DateConverter.toDate(date)+"');");
+        db.execSQL("insert into "+ CurrenciesDBAdapter.Currency_TABLE_NAME+"  values (1 , 'Dollar','USD','USA',3.491,'"+DateConverter.toDate(date)+"');");
+        db.execSQL("insert into "+ CurrenciesDBAdapter.Currency_TABLE_NAME+"  values (2 , 'Pound','GBP','Great Britain',4.5974,'"+DateConverter.toDate(date)+"');");
+        db.execSQL("insert into "+ CurrenciesDBAdapter.Currency_TABLE_NAME+"  values (3 , 'Euro','EUR','EMU',4.1002,'"+DateConverter.toDate(date)+"');");
+
       //Currency Type
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (0 , 'Shekel');");
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (1 , 'Dollar');");
@@ -146,13 +157,15 @@ public class DbHelper extends SQLiteOpenHelper {
       
         db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Date().getTime()+"');");
         db.execSQL("insert into "+DepartmentDBAdapter.DEPARTMENTS_TABLE_NAME+" values(3, 'FOOD','"+new Date().getTime()+"',1,0);");
-        //db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'mays','mays','female','11/8/1994','mays94alshorafa@gmail.com','coder','123','tt','0',1,1,'1',1,'1','1');");
+        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'test1','test1','female','11/8/1994','mays94alshorafa@gmail.com','coder','123','tt','1',1,1,'1',1,'1');");
+        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (2,'test2','test2','female','11/8/1994','mays94alshorafa@gmail.com','coder','123','tt','1',2,1,'1',1,'1');");
+        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (3,'test3','test3','female','11/8/1994','mays94alshorafa@gmail.com','coder','123','tt','1',3,1,'1',1,'1');");
 
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (0,'TULKAREM');");
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (1,'NUBLUS');");
         db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (1,'type1','type1',1,.2,0,0,0);");
         db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (2,'type2','type2',2,0,50,200,0);");
-        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (3,'type3','type3',2,0,0,0,0);");
+        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (3,'type3','type3',3,0,0,0,0);");
         db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (4,'test1','test1','test1','"+new Date().getTime()+"','12',0,046316969,20,35);");
 
         List<String> tblNames = tablesName(db);

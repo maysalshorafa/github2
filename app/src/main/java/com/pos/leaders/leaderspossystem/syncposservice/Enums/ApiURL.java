@@ -28,9 +28,11 @@ public interface ApiURL {
     String Rule11 = "Rule11";
     String CurrencyReturn = "CurrencyReturn";
     String CurrencyOperation = "CurrencyOperation";
+
     String CashPayment = "CashPayment";
     String CreditCardPayment = "CreditCardPayment";
     String CustomerAssistant = "CustomerAssistant";
+    String CurrencyType = "CurrencyType";
     String CompanyCredentials = "CompanyCredentials";
     String Currencies = "Currencies";
     String Sync = "sync";

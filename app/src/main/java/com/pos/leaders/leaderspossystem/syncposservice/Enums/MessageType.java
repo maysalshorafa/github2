@@ -48,17 +48,17 @@ public interface MessageType{
     String UPDATE_CLUB = "UpdateClub";
     String DELETE_CLUB = "DeleteClub";
 
-    String ADD_SUMPOINT = "AddSumPoint";
-    String UPDATE_SUMPOINT = "UpdateSumPoint";
-    String DELETE_SUMPOINT = "DeleteSumPoint";
+    String ADD_SUM_POINT = "AddSumPoint";
+    String UPDATE_SUM_POINT = "UpdateSumPoint";
+    String DELETE_SUM_POINT = "DeleteSumPoint";
 
-    String ADD_VALUEOFPOINT = "AddValueOfPoint";
-    String UPDATE_ValueOfPoint = "UpdateValueOfPoint";
-    String DELETE_ValueOfPoint = "DeleteValueOfPoint";
+    String ADD_VALUE_OF_POINT = "AddValueOfPoint";
+    String UPDATE_VALUE_OF_POINT = "UpdateValueOfPoint";
+    String DELETE_VALUE_OF_POINT = "DeleteValueOfPoint";
 
-    String ADD_USEDPOINT = "AddUsedPoint";
-    String UPDATE_USEDPOINT = "UpdateUsedPoint";
-    String DELETE_USEDPOINT = "DeleteUsedPoint";
+    String ADD_USED_POINT = "AddUsedPoint";
+    String UPDATE_USED_POINT = "UpdateUsedPoint";
+    String DELETE_USED_POINT = "DeleteUsedPoint";
 
     String ADD_CITY = "AddCity";
     String UPDATE_CITY = "UpdateCity";
@@ -116,10 +116,13 @@ public interface MessageType{
     String UPDATE_CURRENCY_RETURN = "UpdateCurrencyReturn";
     String DELETE_CURRENCY_RETURN = "DeleteCurrencyReturn";
 
-    String ADD_CURRENCIES = "AddCurrencies";
-    String UPDATE_CURRENCIES = "UpdateCurrencies";
-    String DELETE_CURRENCIES = "DeleteCurrencies";
+    String ADD_CURRENCY = "AddCurrency";
+    String UPDATE_CURRENCY = "UpdateCurrency";
+    String DELETE_CURRENCY = "DeleteCurrency";
 
+    String ADD_CURRENCY_TYPE = "AddCurrencyType";
+    String UPDATE_CURRENCY_TYPE = "UpdateCurrencyType";
+    String DELETE_CURRENCY_TYPE = "DeleteCurrencyType";
 
 
 }
