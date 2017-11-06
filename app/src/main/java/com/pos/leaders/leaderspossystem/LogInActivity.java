@@ -178,14 +178,15 @@ public class LogInActivity extends Activity implements View.OnClickListener {
             Toast.makeText(this, getResources().getString(R.string.empty_password), Toast.LENGTH_SHORT).show();
         } else {
             User user = userDBAdapter.logIn(et.getText().toString());
-            UserPermissionsDBAdapter userPermissionsDBAdapter = new UserPermissionsDBAdapter(this);
-            userPermissionsDBAdapter.open();
-            ArrayList<Integer> permissions = userPermissionsDBAdapter.getPermissions(user.getId());
-
             if (user == null) {
                 Toast.makeText(this, getResources().getString(R.string.wrong_password), Toast.LENGTH_SHORT).show();
             } else {
+                UserPermissionsDBAdapter userPermissionsDBAdapter = new UserPermissionsDBAdapter(this);
+                userPermissionsDBAdapter.open();
+                ArrayList<Integer> permissions = userPermissionsDBAdapter.getPermissions(user.getId());
+
                 // success to log in
+
                 SESSION._USER = new User(user);
                 Toast.makeText(getApplicationContext(), "Hello " + user.getFullName() + " !!", Toast.LENGTH_SHORT).show();
 

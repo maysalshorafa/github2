@@ -22,8 +22,11 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAd
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrenciesDBAdapter;
+
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
+
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+
 
 /**
  * Created by Karam on 16/10/2016.
@@ -96,7 +99,9 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CashPaymentDBAdapter.DATABASE_CREATE);
         db.execSQL(CurrencyOperationDBAdapter.DATABASE_CREATE);
         db.execSQL(CurrencyReturnsDBAdapter.DATABASE_CREATE);
-        db.execSQL(CurrenciesDBAdapter.DATABASE_CREATE);
+
+        db.execSQL(CurrencyDBAdapter.DATABASE_CREATE);
+
         db.execSQL(CurrencyTypeDBAdapter.DATABASE_CREATE);
 
         db.execSQL(PermissionsDBAdapter.DATABASE_CREATE);
@@ -135,13 +140,15 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(10,2,10);");
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(11,2,2);");
         // Currency Statment
-        Date date=new Date();
-        DateConverter dateConverter=new DateConverter();
 
-        db.execSQL("insert into "+ CurrenciesDBAdapter.Currency_TABLE_NAME+"  values (0 , 'Shekel','Shekel','Palestine',1,'"+dateConverter.toDate(date)+"');");
-        db.execSQL("insert into "+ CurrenciesDBAdapter.Currency_TABLE_NAME+"  values (1 , 'Dollar','USD','USA',3.491,'"+dateConverter.toDate(date)+"');");
-        db.execSQL("insert into "+ CurrenciesDBAdapter.Currency_TABLE_NAME+"  values (2 , 'Pound','GBP','Great Britain',4.5974,'"+dateConverter.toDate(date)+"');");
-        db.execSQL("insert into "+ CurrenciesDBAdapter.Currency_TABLE_NAME+"  values (3 , 'Euro','EUR','EMU',4.1002,'"+dateConverter.toDate(date)+"');");
+        Date date=new Date();
+
+
+        db.execSQL("insert into "+ CurrenciesDBAdapter.Currency_TABLE_NAME+"  values (0 , 'Shekel','Shekel','Palestine',1,'"+DateConverter.toDate(date)+"');");
+        db.execSQL("insert into "+ CurrenciesDBAdapter.Currency_TABLE_NAME+"  values (1 , 'Dollar','USD','USA',3.491,'"+DateConverter.toDate(date)+"');");
+        db.execSQL("insert into "+ CurrenciesDBAdapter.Currency_TABLE_NAME+"  values (2 , 'Pound','GBP','Great Britain',4.5974,'"+DateConverter.toDate(date)+"');");
+        db.execSQL("insert into "+ CurrenciesDBAdapter.Currency_TABLE_NAME+"  values (3 , 'Euro','EUR','EMU',4.1002,'"+DateConverter.toDate(date)+"');");
+
       //Currency Type
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (0 , 'Shekel');");
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (1 , 'Dollar');");

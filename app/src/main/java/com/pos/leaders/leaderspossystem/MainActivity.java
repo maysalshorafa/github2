@@ -2039,6 +2039,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
         if (requestCode == REQUEST_CREDIT_CARD_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
 
+                if(data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote).equals("anyType{}"))
                 SESSION._SALE.setTotalPaid(SESSION._SALE.getTotalPrice());
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 saleDBAdapter.open();

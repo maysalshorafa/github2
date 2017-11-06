@@ -21,9 +21,11 @@ import android.widget.TextView;
 import com.pos.leaders.leaderspossystem.CurrencyReturnsCustomDialogActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrenciesDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Currency.Currencies;
+
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
+
 import com.pos.leaders.leaderspossystem.R;
 
 import java.text.DateFormat;
@@ -57,7 +59,9 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
     long saleId = 0;
     long firstCurrencyId, secondCurrencyId, totalPriceSpinnerId = 0;
+
     String insertedValueForFirstCurrency="0", insertedValueForSecondCurrency="0", valueForTotalPriceCurrency,insertedValue;
+
     CashPaymentDBAdapter cashpayment;
     double firstCurruncyValue, secondCurrency, exceesValue ,valueForTotalPrice = 0;
 DateConverter dateConverter;
@@ -140,6 +144,7 @@ dateConverter=new DateConverter();
             saleId = (long) extras.get("_SaleId");
             tv.setText(totalPrice + " " );
             valueForTotalPriceCurrency = tv.getText().toString();
+
             custmer_name.setText(custmer_nameS);
             custmer_nameS = "";
         } else {
@@ -172,15 +177,16 @@ dateConverter=new DateConverter();
         tvTotalInsertedForFirstCurrency.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_UP)) {
-                    CurrenciesDBAdapter currenciesDBAdapter = new CurrenciesDBAdapter(TempCashActivty.this);
-                    currenciesDBAdapter.open();
-                    firstCurrencyId = spinnerForFirstCurrency.getSelectedItemId();
-                    Currencies currencies = currenciesDBAdapter.getSpecificCurrencies(spinnerForFirstCurrency.getSelectedItem().toString(),dateConverter.toDate(today));
 
+                if ((event.getAction() == KeyEvent.ACTION_UP)) {
+                    CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
+                    currencyDBAdapter.open();
+                    firstCurrencyId = spinnerForFirstCurrency.getSelectedItemId();
+                    Currency currency = currencyDBAdapter.getSpecificCurrencies(spinnerForFirstCurrency.getSelectedItem().toString(),dateConverter.toDate(today));
+                   
                     insertedValueForFirstCurrency = tvTotalInsertedForFirstCurrency.getText().toString();
                     try {
-                        firstCurruncyValue = (double) (Double.parseDouble(insertedValueForFirstCurrency) * currencies.getRate());
+                        firstCurruncyValue = (double) (Double.parseDouble(insertedValueForFirstCurrency) * currency.getRate());
                     } catch (NumberFormatException e) {
                         firstCurruncyValue = 0; // your default value
                     }
@@ -195,11 +201,13 @@ dateConverter=new DateConverter();
                         btnDone.setEnabled(true);
                         btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
                     }
+
                     else {
                         btnDone.setEnabled(false);
                         btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
                     }
-                    currenciesDBAdapter.close();
+                    currencyDBAdapter.close();
+
                 }
 
                 return false;
@@ -210,14 +218,15 @@ dateConverter=new DateConverter();
         tvTotalInsertedForSecondCurrency.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
+
                 if ((event.getAction() == KeyEvent.ACTION_UP)) {
-                    CurrenciesDBAdapter currenciesDBAdapter = new CurrenciesDBAdapter(TempCashActivty.this);
-                    currenciesDBAdapter.open();
+                    CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
+                    currencyDBAdapter.open();
                     secondCurrencyId = spinnerForSecondCurrency.getSelectedItemId();
-                    Currencies currencies = currenciesDBAdapter.getSpecificCurrencies(spinnerForSecondCurrency.getSelectedItem().toString(), dateConverter.toDate(today));
+                    Currency currency = currencyDBAdapter.getSpecificCurrencies(spinnerForSecondCurrency.getSelectedItem().toString(), dateConverter.toDate(today));
                     insertedValueForSecondCurrency = tvTotalInsertedForSecondCurrency.getText().toString();
                     try {
-                        secondCurrency = (double) (Double.parseDouble(insertedValueForSecondCurrency) * currencies.getRate());
+                        secondCurrency = (double) (Double.parseDouble(insertedValueForSecondCurrency) * currency.getRate());
                     } catch (NumberFormatException e) {
                         secondCurrency = 0; // your default value
                     }
@@ -227,6 +236,7 @@ dateConverter=new DateConverter();
                     }
                     else {
 
+
                         tvTotalInserted.setTextColor(Color.BLACK);
                     }
                     exceesValue = ( firstCurruncyValue + secondCurrency) - totalPrice;
@@ -234,11 +244,13 @@ dateConverter=new DateConverter();
                         btnDone.setEnabled(true);
                         btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
                     }
+
                     else {
                         btnDone.setEnabled(false);
                         btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
                     }
-                    currenciesDBAdapter.close();
+                    currencyDBAdapter.close();
+
                 }
 
                 return false;
@@ -252,12 +264,13 @@ dateConverter=new DateConverter();
                     @Override
                     public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                         Date date=new Date();
-                        CurrenciesDBAdapter currenciesDBAdapter=new CurrenciesDBAdapter(TempCashActivty.this);
-                        currenciesDBAdapter.open();
+                       CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(TempCashActivty.this);
+                        currencyDBAdapter.open();
                         totalPriceSpinnerId = spinnerForTotalPrice.getSelectedItemId();
-                        Currencies currencies=currenciesDBAdapter.getSpecificCurrencies(spinnerForTotalPrice.getSelectedItem().toString(),dateConverter.toDate(today));
-                        valueForTotalPrice= Double.parseDouble(valueForTotalPriceCurrency)/currencies.getRate();
+                         Currency currency=currencyDBAdapter.getSpecificCurrencies(spinnerForTotalPrice.getSelectedItem().toString(),DateConverter.toDate(today));
+                        valueForTotalPrice= Double.parseDouble(valueForTotalPriceCurrency)/currency.getRate();
                         tv.setText(valueForTotalPrice+"");
+
             }
 
             @Override

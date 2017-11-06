@@ -2,7 +2,9 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
 import android.app.Dialog;
+
 import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,14 +16,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrenciesDBAdapter;
+
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
-import com.pos.leaders.leaderspossystem.Models.Currency.Currencies;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
+
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TempCashActivty;
 
@@ -29,7 +33,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class CurrencyReturnsCustomDialogActivity extends  Dialog implements  View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class CurrencyReturnsCustomDialogActivity extends Dialog implements  View.OnClickListener, AdapterView.OnItemSelectedListener {
+
 
     public Activity c;
     public Dialog d;
@@ -89,15 +94,15 @@ tvExcess.setOnClickListener(this);
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-                Date date=new Date();
-                DateConverter dateConverter=new DateConverter();
-                CurrenciesDBAdapter currencysDBAdapter=new CurrenciesDBAdapter(getContext());
-                currencysDBAdapter.open();
+
+                CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(getContext());
+                currencyDBAdapter.open();
 
                 returnSpenerId =returnSpener.getSelectedItemId();
-                Currencies currencys=currencysDBAdapter.getSpecificCurrencies(returnSpener.getSelectedItem().toString(),dateConverter.toDate(date));
+                Currency currency=currencyDBAdapter.getSpecificCurrencies(returnSpener.getSelectedItem().toString(),DateConverter.toDate(new Date()));
 
                 template= (double) (Double.parseDouble(valueForReturnValue)/currencys.getRate());
+
                 tvExcess.setText(template+"");
 
 

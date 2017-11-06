@@ -14,10 +14,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrenciesDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
@@ -36,10 +37,13 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.City;
+import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currencies;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
+
 import com.pos.leaders.leaderspossystem.Models.Customer_M;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Offer;
@@ -176,7 +180,8 @@ public class SyncMessage extends Service {
                                 if(doSync(bm)) {
                                     broker.Synced(bm.getId());
                                 }else {
-                                    break;
+                                    //break;
+                                    //don`t stop on fail
                                 }
                             } catch (IOException | JSONException e) {
                                 e.printStackTrace();
@@ -613,22 +618,39 @@ public class SyncMessage extends Service {
                 //endregion Cash payment..
 
 
-                //region Currencies
-                case MessageType.ADD_CURRENCY:
-                    Currencies currencys = null;
-                    currencys = objectMapper.readValue(msgData, Currencies.class);
+                //region Credit Card Payment
+                case MessageType.ADD_CREDIT_CARD_PAYMENT:
+                    CreditCardPayment creditCardPayment = null;
+                    creditCardPayment = objectMapper.readValue(msgData, CreditCardPayment.class);
 
-                    CurrenciesDBAdapter currencysDBAdapter = new CurrenciesDBAdapter(this);
-                    currencysDBAdapter.open();
-                    currencysDBAdapter.insertEntry(currencys);
-                    currencysDBAdapter.close();
+                    CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
+                    creditCardPaymentDBAdapter.open();
+                    creditCardPaymentDBAdapter.insertEntry(creditCardPayment);
+                    creditCardPaymentDBAdapter.close();
 
+                    break;
+                case MessageType.UPDATE_CREDIT_CARD_PAYMENT:
+                    break;
+                case MessageType.DELETE_CREDIT_CARD_PAYMENT:
+                    break;
+                //endregion Credit Card Payment
+
+
+                //region Currency
+                case MessageType.ADD_CURRENCIES:
+                    Currency currency = null;
+                    currency = objectMapper.readValue(msgData, Currency.class);
+
+                    CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(this);
+                    currencyDBAdapter.open();
+                    currencyDBAdapter.insertEntry(currency);
+                    currencyDBAdapter.close();
                     break;
                 case MessageType.UPDATE_CURRENCY:
                     break;
                 case MessageType.DELETE_CURRENCY:
                     break;
-                //endregion Currency Opeartion.
+                //endregion Currency.
 
             }
         }else{
@@ -903,7 +925,7 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
 
                 break;
-            //CashPayment
+            //region CashPayment
             case MessageType.ADD_CASH_PAYMENT:
                 res = messageTransmit.authPost(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
                 break;
@@ -913,6 +935,21 @@ public class SyncMessage extends Service {
             case MessageType.DELETE_CASH_PAYMENT:
                 res = messageTransmit.authDelete(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
                 break;
+            //endregion CashPayment
+
+
+            //region Credit Card Payment
+            case MessageType.ADD_CREDIT_CARD_PAYMENT:
+                res = messageTransmit.authPost(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_CREDIT_CARD_PAYMENT:
+                res = messageTransmit.authPut(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_CREDIT_CARD_PAYMENT:
+                res = messageTransmit.authDelete(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //endregion Credit Card Payment
+
             //CUSTOMER_ASSISTANT
             case MessageType.ADD_CUSTOMER_ASSISTANT:
                 res = messageTransmit.authPost(ApiURL.CustomerAssistant, jsonObject.getString(MessageKey.Data), token);
