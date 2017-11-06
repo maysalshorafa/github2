@@ -128,10 +128,10 @@ public class CurrenciesDBAdapter {
         db.update(Currency_TABLE_NAME, val, where, new String[]{currencies.getId() + ""});
     }
 
-    public Currencies getSpecificCurrencies(String name, long date) {
+    public Currencies getSpecificCurrencies(String name, String date) {
 Currencies currencies=null;
-        Cursor cursor = db.rawQuery("select * from " + Currency_TABLE_NAME + " where  name='" + name + "'", null);
-       // Cursor cursor = db.rawQuery("select * from " + Currency_TABLE_NAME + " where  name='" + name + "'" + " and  createDate='" + date + "'" , null);
+       // Cursor cursor = db.rawQuery("select * from " + Currency_TABLE_NAME + " where  name='" + name + "'", null);
+        Cursor cursor = db.rawQuery("select * from " + Currency_TABLE_NAME + " where  name='" + name + "'" + " and  createDate='" + date + "'" , null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();

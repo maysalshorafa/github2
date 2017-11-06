@@ -21,6 +21,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBA
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrenciesDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currencies;
+import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TempCashActivty;
 
@@ -88,11 +89,13 @@ tvExcess.setOnClickListener(this);
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
+                Date date=new Date();
+                DateConverter dateConverter=new DateConverter();
                 CurrenciesDBAdapter currencysDBAdapter=new CurrenciesDBAdapter(getContext());
                 currencysDBAdapter.open();
 
                 returnSpenerId =returnSpener.getSelectedItemId();
-                Currencies currencys=currencysDBAdapter.getSpecificCurrencies(returnSpener.getSelectedItem().toString(),new Date().getTime());
+                Currencies currencys=currencysDBAdapter.getSpecificCurrencies(returnSpener.getSelectedItem().toString(),dateConverter.toDate(date));
 
                 template= (double) (Double.parseDouble(valueForReturnValue)/currencys.getRate());
                 tvExcess.setText(template+"");
