@@ -26,6 +26,9 @@ import com.pos.leaders.leaderspossystem.Models.Currency.Currencies;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.R;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -54,11 +57,11 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
     long saleId = 0;
     long firstCurrencyId, secondCurrencyId, totalPriceSpinnerId = 0;
-
     String insertedValueForFirstCurrency="0", insertedValueForSecondCurrency="0", valueForTotalPriceCurrency,insertedValue;
     CashPaymentDBAdapter cashpayment;
     double firstCurruncyValue, secondCurrency, exceesValue ,valueForTotalPrice = 0;
-
+DateConverter dateConverter;
+    Date today;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +87,9 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
 
         getWindow().setLayout((int) (width * 0.7), (int) (height * 0.85));
+dateConverter=new DateConverter();
+         today=new Date();
+        dateConverter.toDate(today);
 
         custmer_name=(TextView)findViewById(R.id.custmer_name);
         spinnerForFirstCurrency = (Spinner)findViewById(R.id.spinnerForFirstCurrency);
@@ -143,6 +149,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 totalPid = (float) (firstCurruncyValue + secondCurrency);
                 //// TODO: 01/12/2016 return how match inserted money
                 Intent i=new Intent();
@@ -169,7 +176,8 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                     CurrenciesDBAdapter currenciesDBAdapter = new CurrenciesDBAdapter(TempCashActivty.this);
                     currenciesDBAdapter.open();
                     firstCurrencyId = spinnerForFirstCurrency.getSelectedItemId();
-                    Currencies currencies = currenciesDBAdapter.getSpecificCurrencies(spinnerForFirstCurrency.getSelectedItem().toString(), new Date().getTime());
+                    Currencies currencies = currenciesDBAdapter.getSpecificCurrencies(spinnerForFirstCurrency.getSelectedItem().toString(),dateConverter.toDate(today));
+
                     insertedValueForFirstCurrency = tvTotalInsertedForFirstCurrency.getText().toString();
                     try {
                         firstCurruncyValue = (double) (Double.parseDouble(insertedValueForFirstCurrency) * currencies.getRate());
@@ -206,7 +214,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                     CurrenciesDBAdapter currenciesDBAdapter = new CurrenciesDBAdapter(TempCashActivty.this);
                     currenciesDBAdapter.open();
                     secondCurrencyId = spinnerForSecondCurrency.getSelectedItemId();
-                    Currencies currencies = currenciesDBAdapter.getSpecificCurrencies(spinnerForSecondCurrency.getSelectedItem().toString(), new Date().getTime());
+                    Currencies currencies = currenciesDBAdapter.getSpecificCurrencies(spinnerForSecondCurrency.getSelectedItem().toString(), dateConverter.toDate(today));
                     insertedValueForSecondCurrency = tvTotalInsertedForSecondCurrency.getText().toString();
                     try {
                         secondCurrency = (double) (Double.parseDouble(insertedValueForSecondCurrency) * currencies.getRate());
@@ -243,10 +251,11 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
                     @Override
                     public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                        Date date=new Date();
                         CurrenciesDBAdapter currenciesDBAdapter=new CurrenciesDBAdapter(TempCashActivty.this);
                         currenciesDBAdapter.open();
                         totalPriceSpinnerId = spinnerForTotalPrice.getSelectedItemId();
-                        Currencies currencies=currenciesDBAdapter.getSpecificCurrencies(spinnerForTotalPrice.getSelectedItem().toString(),new Date().getTime());
+                        Currencies currencies=currenciesDBAdapter.getSpecificCurrencies(spinnerForTotalPrice.getSelectedItem().toString(),dateConverter.toDate(today));
                         valueForTotalPrice= Double.parseDouble(valueForTotalPriceCurrency)/currencies.getRate();
                         tv.setText(valueForTotalPrice+"");
             }
