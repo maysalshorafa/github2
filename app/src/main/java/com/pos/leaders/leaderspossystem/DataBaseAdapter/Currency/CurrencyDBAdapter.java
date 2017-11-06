@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Currency.Currencys;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -21,7 +21,7 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
  * Created by Win8.1 on 9/25/2017.
  */
 
-public class CurrencysDBAdapter {
+public class CurrencyDBAdapter {
 
     public static final  String Currency_TABLE_NAME = "Currencys";
 
@@ -48,12 +48,12 @@ public class CurrencysDBAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
-    public CurrencysDBAdapter(Context context) {
+    public CurrencyDBAdapter(Context context) {
         this.context = context;
         this.dbHelper = new DbHelper(context);
     }
 
-    public CurrencysDBAdapter open() throws SQLException {
+    public CurrencyDBAdapter open() throws SQLException {
         this.db = dbHelper.getWritableDatabase();
         return this;
     }
@@ -68,30 +68,30 @@ public class CurrencysDBAdapter {
 
 
     public long insertEntry(String name, String currency_code, String country, long rate,Date createDate) {
-        Currencys currencys = new Currencys(Util.idHealth(this.db, Currency_TABLE_NAME, Currency_COLUMN_ID), name, currency_code, country,rate,createDate);
-        sendToBroker(MessageType.ADD_CASH_PAYMENT, currencys, this.context);
+        Currency currency = new Currency(Util.idHealth(this.db, Currency_TABLE_NAME, Currency_COLUMN_ID), name, currency_code, country,rate,createDate);
+        sendToBroker(MessageType.ADD_CASH_PAYMENT, currency, this.context);
 
         try {
-            return insertEntry(currencys);
+            return insertEntry(currency);
         } catch (SQLException ex) {
             Log.e("Currency DB insert", "inserting Entry at " + Currency_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
     }
 
-    public long insertEntry(Currencys currencys){
+    public long insertEntry(Currency currency){
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(Currency_COLUMN_ID, currencys.getId());
+        val.put(Currency_COLUMN_ID, currency.getId());
 
 
-        val.put(Currency_COLUMN_Name, currencys.getName());
-        val.put(Currency_COLUMN_CurrencyCode,currencys.getCurrency_code() );
-        val.put(Currency_COLUMN_Country, currencys.getCountry());
-        val.put(CurrencyCOLUMN_Rate, currencys.getRate());
+        val.put(Currency_COLUMN_Name, currency.getName());
+        val.put(Currency_COLUMN_CurrencyCode, currency.getCurrency_code() );
+        val.put(Currency_COLUMN_Country, currency.getCountry());
+        val.put(CurrencyCOLUMN_Rate, currency.getRate());
 
-        val.put(CurrencyCOLUMN_createDate, String.valueOf(currencys.getCreateDate()));
+        val.put(CurrencyCOLUMN_createDate, String.valueOf(currency.getCreateDate()));
 
         try {
             return db.insert(Currency_TABLE_NAME, null, val);
@@ -115,36 +115,36 @@ public class CurrencysDBAdapter {
         }
     }
 
-    public void updateEntry(Currencys currencys) {
+    public void updateEntry(Currency currency) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Currency_COLUMN_Name, currencys.getName());
-        val.put(CurrencyCOLUMN_createDate, currencys.getCreateDate().toString());
-        val.put(Currency_COLUMN_Country, currencys.getCountry());
-        val.put(Currency_COLUMN_CurrencyCode, currencys.getCurrency_code());
-        val.put(CurrencyCOLUMN_Rate, currencys.getRate());
+        val.put(Currency_COLUMN_Name, currency.getName());
+        val.put(CurrencyCOLUMN_createDate, currency.getCreateDate().toString());
+        val.put(Currency_COLUMN_Country, currency.getCountry());
+        val.put(Currency_COLUMN_CurrencyCode, currency.getCurrency_code());
+        val.put(CurrencyCOLUMN_Rate, currency.getRate());
 
         String where = Currency_COLUMN_ID + " = ?";
-        db.update(Currency_TABLE_NAME, val, where, new String[]{currencys.getId() + ""});
+        db.update(Currency_TABLE_NAME, val, where, new String[]{currency.getId() + ""});
     }
 
-    public Currencys  getSpeficCurrencys(String name, Date date) {
-Currencys currencys=null;
+    public Currency getSpeficCurrencys(String name, Date date) {
+Currency currency =null;
         Cursor cursor = db.rawQuery("select * from " + Currency_TABLE_NAME + " where  name='" + name + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();
-            return currencys;
+            return currency;
         }
         cursor.moveToFirst();
-        currencys =new Currencys(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Currency_COLUMN_ID))),
+        currency =new Currency(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Currency_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(Currency_COLUMN_Name)),
                 cursor.getString(cursor.getColumnIndex(Currency_COLUMN_CurrencyCode)),
                 cursor.getString(cursor.getColumnIndex(Currency_COLUMN_Country)),
                Double.parseDouble( cursor.getString(cursor.getColumnIndex(CurrencyCOLUMN_Rate))),  DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(CurrencyCOLUMN_createDate))));
         cursor.close();
 
-        return currencys;
+        return currency;
     }
 
 }

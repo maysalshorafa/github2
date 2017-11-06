@@ -7,4 +7,7 @@
     <item
         android:state_enabled="true"
         android:drawable="@drawable/bt_dark_enabled" />
+
+    <item android:state_enabled="false"
+        android:drawable="@drawable/bt_dark_disabled" />
 </selector>

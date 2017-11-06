@@ -28,10 +28,11 @@ public interface ApiURL {
     String Rule11 = "Rule11";
     String CurrencyReturn = "CurrencyReturn";
     String CurrencyOperation = "CurrencyOperation";
-    String CashPayment= "CashPayment";
-    String CustomerAssistant= "CustomerAssistant";
+    String CashPayment = "CashPayment";
+    String CreditCardPayment = "CreditCardPayment";
+    String CustomerAssistant = "CustomerAssistant";
     String CompanyCredentials = "CompanyCredentials";
-    String Currencies= "Currencies";
+    String Currencies = "Currencies";
     String Sync = "sync";
     String UserPermission="UserPermission";
     String SumPoint="SumPoint";

@@ -18,74 +18,50 @@
 
         <Button
             android:id="@+id/mainScreen"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/dashbord_frame"
-            android:drawableTop="@drawable/home"
-            android:paddingBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:paddingTop="8dp"
-            android:text="@string/main_screen"
-            android:textColor="#e8e9e9"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_weight="1"
-            android:layout_gravity="center"/>
-
-        <Button
-            android:id="@+id/report"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/dashbord_frame"
-            android:drawableTop="@drawable/dash_report"
-            android:paddingBottom="5dp"
-            android:paddingRight="10dp"
-            android:paddingTop="8dp"
-            android:text="@string/report"
-            android:textColor="#e8e9e9"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_weight="1"
-            android:layout_gravity="center"/>
-
-        <Button
-            android:id="@+id/tax"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/dashbord_frame"
-            android:drawableTop="@drawable/tax"
-            android:paddingBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:paddingTop="8dp"
-            android:text="@string/tax"
-            android:textColor="#e8e9e9"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_gravity="center"/>
-
-        <Button
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:id="@+id/product"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/dashbord_frame"
-            android:drawableTop="@drawable/product"
-            android:paddingBottom="5dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"
-            android:text="@string/products"
-            android:textColor="#e8e9e9"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/home"
+
+            android:text="@string/main_screen"
             android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_weight="1"/>
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/dashboard_btAreport"
+            style="@style/AppTheme.dashboard_bt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="A"
+            android:textSize="80dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/dashboard_btZreport"
+            style="@style/AppTheme.dashboard_bt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="Z"
+            android:textSize="80dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/product"
+            style="@style/AppTheme.dashboard_bt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/product"
+            android:text="@string/products"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
     </LinearLayout>
     <LinearLayout
@@ -100,73 +76,51 @@
 
         <Button
             android:id="@+id/department"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/dashbord_frame"
-            android:drawableTop="@drawable/department"
-            android:paddingBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:paddingTop="8dp"
-            android:text="@string/department"
-            android:textColor="#e8e9e9"
-            android:textSize="20dp"
-            android:textStyle="bold"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:layout_gravity="center"/>
+            android:drawableTop="@drawable/department"
+            android:text="@string/department"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/users"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@drawable/dashbord_frame"
             android:drawableTop="@drawable/dash_user"
-            android:paddingBottom="5dp"
-            android:paddingLeft="16dp"
-            android:paddingTop="8dp"
             android:text="@string/users"
-            android:textColor="#e8e9e9"
             android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_gravity="center"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/offers"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="16dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@drawable/dashbord_frame"
             android:drawableTop="@drawable/offer"
-            android:paddingBottom="5dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"
             android:text="@string/offers"
-            android:textColor="#e8e9e9"
             android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_gravity="center"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/backUp"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/dashbord_frame"
-            android:drawableTop="@drawable/back_up"
-            android:paddingBottom="5dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:paddingTop="8dp"
-            android:text="@string/back_up"
-            android:textColor="#e8e9e9"
-            android:textSize="20dp"
-            android:textStyle="bold"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:layout_gravity="center"/>
+            android:drawableTop="@drawable/back_up"
+            android:text="@string/back_up"
+            android:textSize="20dp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
@@ -181,73 +135,51 @@
 
         <Button
             android:id="@+id/coustmerClub"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:background="@drawable/dashbord_frame"
             android:drawableTop="@drawable/custmer_club"
-            android:paddingBottom="5dp"
-            android:paddingTop="8dp"
             android:text="@string/custmer_club"
-            android:textColor="#e8e9e9"
             android:textSize="20dp"
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/houseOfWork"
+            android:id="@+id/report"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:background="@drawable/dashbord_frame"
-            android:drawableTop="@drawable/hoursofwork"
-            android:paddingBottom="5dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"
-            android:text="@string/hours_of_work"
-            android:textColor="#e8e9e9"
-            android:textSize="15dp"
+            android:drawableTop="@drawable/dash_report"
+            android:text="@string/report"
+            android:textSize="20dp"
             android:textStyle="bold" />
+
         <Button
             android:id="@+id/settings"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:background="@drawable/dashbord_frame"
             android:drawableTop="@drawable/settings"
-            android:paddingBottom="5dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:paddingTop="8dp"
             android:text="@string/settings"
-            android:textColor="#e8e9e9"
             android:textSize="20dp"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/logOut"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:background="@drawable/dashbord_frame"
             android:drawableTop="@drawable/log_out"
-            android:paddingBottom="5dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"
             android:text="@string/log_out"
-            android:textColor="#e8e9e9"
             android:textSize="20dp"
             android:textStyle="bold" />
 

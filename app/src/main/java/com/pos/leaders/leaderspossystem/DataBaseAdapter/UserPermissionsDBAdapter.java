@@ -83,7 +83,6 @@ public class UserPermissionsDBAdapter {
 	}
 	public ArrayList<Integer> getPermissions(long rule_id) {
 		ArrayList<Integer> permissions = new ArrayList<Integer>();
-		UserPermissions userPermissions=null;
 		Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where userId='" + rule_id + "'" , null);
 		cursor1.moveToFirst();
 
@@ -94,8 +93,7 @@ public class UserPermissionsDBAdapter {
 			return permissions;
 		}
 		while(!cursor1.isAfterLast()){
-			userPermissions= new UserPermissions(Long.parseLong(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_ID))),Long.parseLong(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_USERID))),Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_PERMISSIONSID))));
-			permissions.add((int) userPermissions.getPermissionId());
+			permissions.add(cursor1.getInt(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_PERMISSIONSID)));
 			cursor1.moveToNext();
 		}
 		return permissions;

@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by Win8.1 on 9/25/2017.
  */
 
-public class Currencys {
+public class Currency {
     private long id;
     private String name;
     private String country;
@@ -24,7 +24,7 @@ public class Currencys {
     private Date createDate;
 
 
-    public Currencys(long id, String name, String country, String currency_code, double rate,Date createDate) {
+    public Currency(long id, String name, String country, String currency_code, double rate, Date createDate) {
         this.id = id;
         this.name = name;
         this.country = country;

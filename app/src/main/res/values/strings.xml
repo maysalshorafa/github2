@@ -82,7 +82,7 @@
     <string name="TouchPad_8">8</string>
     <string name="TouchPad_9">9</string>
     <string name="empty_password">Please insert your password</string>
-    <string name="wrong_password">Please insert your a true password</string>
+    <string name="wrong_password">Please insert valid password</string>
 
     <!--menu-->
     <string name="products">Products</string>
@@ -372,7 +372,6 @@
     <string name="hours_of_work">Hours Of Work</string>
     <string name="coustmer_club">Coustmer Club</string>
 
-    <string name="sales_man">Sales Man</string>
 
 
 </resources>

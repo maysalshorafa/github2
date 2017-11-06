@@ -22,9 +22,9 @@ import android.widget.Toast;
 import com.pos.leaders.leaderspossystem.CurrencyReturnsCustomDialogActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencysDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
-import com.pos.leaders.leaderspossystem.Models.Currency.Currencys;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.TouchPadFragment;
 
@@ -56,10 +56,10 @@ String touchPadPressed="";
     float totalPid = 0.0f;
 
     long saleId = 0;
-    long firstCurrencyId, secondCurrencyId, returnSpenerId = 0;
+    long firstCurrencyId, secondCurrencyId, totalPriceSpinnerId = 0;
 
     double basicCurrencyValue;
-    String insertedValueForFirstCurrency, insertedValueForSecondCurrency, valueForReturnCurrency;
+    String insertedValueForFirstCurrency, insertedValueForSecondCurrency, valueForReturnCurrency,valueForTotalPriceCurrency;
 
     double valueInsertedForDolar;
     CashPaymentDBAdapter cashpayment;
@@ -158,6 +158,7 @@ String touchPadPressed="";
             tv.setText(totalPrice + " " );
             valueForTotalPriceCurrency = tv.getText().toString();
 
+
             custmer_name.setText(custmer_nameS);
             custmer_nameS = "";
         } else {
@@ -225,14 +226,14 @@ String touchPadPressed="";
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    CurrencysDBAdapter currencysDBAdapter = new CurrencysDBAdapter(TempCashActivty.this);
-                    currencysDBAdapter.open();
+                    CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
+                    currencyDBAdapter.open();
 
                     firstCurrencyId = spinnerForFirstCurrency.getSelectedItemId();
-                    Currencys currencys = currencysDBAdapter.getSpeficCurrencys(spinnerForFirstCurrency.getSelectedItem().toString(), new Date());
+                    Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForFirstCurrency.getSelectedItem().toString(), new Date());
 
                     insertedValueForFirstCurrency = tvTotalInsertedForFirstCurrency.getText().toString();
-                    firstCurruncyValue = (double) (Double.parseDouble(insertedValueForFirstCurrency) * currencys.getRate());
+                    firstCurruncyValue = (double) (Double.parseDouble(insertedValueForFirstCurrency) * currency.getRate());
                     //   tvTotalInsertedForFirstCurrency.setText(firstCurruncyValue+"");
                     //do something here
 
@@ -245,7 +246,7 @@ String touchPadPressed="";
 
                     }
 
-                    currencysDBAdapter.close();
+                    currencyDBAdapter.close();
                 }
 
                 return false;
@@ -258,15 +259,15 @@ String touchPadPressed="";
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    CurrencysDBAdapter currencysDBAdapter = new CurrencysDBAdapter(TempCashActivty.this);
-                    currencysDBAdapter.open();
+                    CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
+                    currencyDBAdapter.open();
 
                     secondCurrencyId = spinnerForSecondCurrency.getSelectedItemId();
 
-                    Currencys currencys = currencysDBAdapter.getSpeficCurrencys(spinnerForSecondCurrency.getSelectedItem().toString(), new Date());
+                    Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForSecondCurrency.getSelectedItem().toString(), new Date());
 
                     insertedValueForSecondCurrency = tvTotalInsertedForSecondCurrency.getText().toString();
-                    secondCurrency = (double) (Double.parseDouble(insertedValueForSecondCurrency) * currencys.getRate());
+                    secondCurrency = (double) (Double.parseDouble(insertedValueForSecondCurrency) * currency.getRate());
                     // tvTotalInsertedForSecondCurrency.setText(secondCurrency+"");
                     //do something here
 
@@ -279,7 +280,7 @@ String touchPadPressed="";
 
                     }
 
-                    currencysDBAdapter.close();
+                    currencyDBAdapter.close();
                 }
                 return false;
             }
@@ -292,13 +293,13 @@ String touchPadPressed="";
                     @Override
                     public void onItemSelected(AdapterView<?> arg0, View arg1,
                                                int arg2, long arg3) {
-                        CurrencysDBAdapter currencysDBAdapter=new CurrencysDBAdapter(TempCashActivty.this);
-                        currencysDBAdapter.open();
+                        CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(TempCashActivty.this);
+                        currencyDBAdapter.open();
 
                         totalPriceSpinnerId = spinnerForTotalPrice.getSelectedItemId();
-                        Currencys currencys=currencysDBAdapter.getSpeficCurrencys(spinnerForTotalPrice.getSelectedItem().toString(),new Date());
+                        Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForTotalPrice.getSelectedItem().toString(),new Date());
 
-                        exceesValue= Double.parseDouble(valueForTotalPriceCurrency)/currencys.getRate();
+                        exceesValue= Double.parseDouble(valueForTotalPriceCurrency)/ currency.getRate();
                         tv.setText(exceesValue+"");
 
 

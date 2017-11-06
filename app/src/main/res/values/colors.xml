@@ -212,6 +212,9 @@
     <color name="dark_blue1">#3b4151</color>
     <color name="dark_blue2">#0d0a11</color>
 
+    <color name="dark_disabled_blue1">#535354</color>
+    <color name="dark_disabled_blue2">#2F2D32</color>
+
     <color name="dark_press_blue1">#0d0a11</color>
     <color name="dark_press_blue2">#161921</color>
 
