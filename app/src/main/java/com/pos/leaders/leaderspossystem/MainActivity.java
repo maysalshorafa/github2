@@ -2044,9 +2044,9 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 saleDBAdapter.open();
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
-
-                sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
-
+if(club_id==2) {
+    sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
+}
                 /**  Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
                  cInformation= String.valueOf(Ppoint.getPoint());
                  information.setText(cInformation);**/
@@ -2125,7 +2125,8 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 saleDBAdapter.open();
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
-                sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
+                if(club_id==2){
+                sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);}
                 saleDBAdapter.close();
 
                 orderDBAdapter = new OrderDBAdapter(MainActivity.this);
@@ -2207,7 +2208,8 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 }
                 cashPaymentDBAdapter.close();
                 currencyOperationDBAdapter.insertEntry(SESSION._SALE.getSaleDate().getTime(), saleIDforCash, "sale", SESSION._SALE.getTotalPaid(), 0);
-                sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);
+                if(club_id==2){
+                sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);}
                 saleDBAdapter.close();
                 if (equleUsedPoint) {
                     saleTotalPrice = 0.0;
@@ -2406,7 +2408,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                          unUsedPointForCustmer = usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
                         aPoint = Ppoint - unUsedPointForCustmer;
                         information.setText(aPoint + " ");
-                    } else {
+                    } else if(type==3) {
                         club_name.setText(group.getname());
                         information.setText("general");
                     }
