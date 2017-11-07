@@ -181,13 +181,8 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                     CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
                     currencyDBAdapter.open();
                     firstCurrencyId = spinnerForFirstCurrency.getSelectedItemId();
-<<<<<<< HEAD
-                    Currency currency = currencyDBAdapter.getSpecificCurrency(spinnerForFirstCurrency.getSelectedItem().toString(), dateConverter.toDate(today));
 
-=======
                     Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForFirstCurrency.getSelectedItem().toString());
-                   
->>>>>>> master
                     insertedValueForFirstCurrency = tvTotalInsertedForFirstCurrency.getText().toString();
                     try {
                         firstCurruncyValue = (double) (Double.parseDouble(insertedValueForFirstCurrency) * currency.getRate());
@@ -225,11 +220,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                     CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
                     currencyDBAdapter.open();
                     secondCurrencyId = spinnerForSecondCurrency.getSelectedItemId();
-<<<<<<< HEAD
-                    Currency currency = currencyDBAdapter.getSpecificCurrency(spinnerForSecondCurrency.getSelectedItem().toString(), dateConverter.toDate(today));
-=======
                     Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForSecondCurrency.getSelectedItem().toString());
->>>>>>> master
                     insertedValueForSecondCurrency = tvTotalInsertedForSecondCurrency.getText().toString();
                     try {
                         secondCurrency = (double) (Double.parseDouble(insertedValueForSecondCurrency) * currency.getRate());
@@ -262,32 +253,16 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
 
         spinnerForTotalPrice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-<<<<<<< HEAD
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                Date date = new Date();
                 CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
                 currencyDBAdapter.open();
                 totalPriceSpinnerId = spinnerForTotalPrice.getSelectedItemId();
-                Currency currency = currencyDBAdapter.getSpecificCurrency(spinnerForTotalPrice.getSelectedItem().toString(), DateConverter.toDate(today));
+                Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForTotalPrice.getSelectedItem().toString());
+
                 valueForTotalPrice = Double.parseDouble(valueForTotalPriceCurrency) / currency.getRate();
                 tv.setText(valueForTotalPrice + "");
-=======
-                spinnerForTotalPrice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                        Date date=new Date();
-                       CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(TempCashActivty.this);
-                        currencyDBAdapter.open();
-                        totalPriceSpinnerId = spinnerForTotalPrice.getSelectedItemId();
-                         Currency currency=currencyDBAdapter.getSpeficCurrencys(spinnerForTotalPrice.getSelectedItem().toString());
-
-                        valueForTotalPrice= Double.parseDouble(valueForTotalPriceCurrency)/currency.getRate();
-                        tv.setText(valueForTotalPrice+"");
-                        Toast.makeText(TempCashActivty.this,"rate"+currency.getRate(),Toast.LENGTH_LONG).show();
->>>>>>> master
+                Toast.makeText(TempCashActivty.this, "rate" + currency.getRate(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -295,9 +270,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                 // TODO Auto-generated method stub
 
             }
-
         });
-
     }
 
 

@@ -60,19 +60,19 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog implements  View
         setContentView(R.layout.custom_dialog);
         currencyReturnsDBAdapter.open();
         done = (Button) findViewById(R.id.btn_done);
-        cancel=(Button)findViewById(R.id.btn_cancel);
-      tvExcess=(TextView)findViewById(R.id.cashActivity_TVExcess) ;
-        returnSpener =(Spinner)findViewById(R.id.spinnerForReturnValue) ;
+        cancel = (Button) findViewById(R.id.btn_cancel);
+        tvExcess = (TextView) findViewById(R.id.cashActivity_TVExcess);
+        returnSpener = (Spinner) findViewById(R.id.spinnerForReturnValue);
         currencyTypeDBAdapter.open();
         done.setOnClickListener(this);
         cancel.setOnClickListener(this);
-tvExcess.setOnClickListener(this);
+        tvExcess.setOnClickListener(this);
         returnSpener.setOnItemSelectedListener(this);
 
         currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
 
         final List<String> currency = new ArrayList<String>();
-        for (int i = 0;  i < currencyTypesList.size(); i++) {
+        for (int i = 0; i < currencyTypesList.size(); i++) {
             currency.add(currencyTypesList.get(i).getType());
         }
 
@@ -85,8 +85,8 @@ tvExcess.setOnClickListener(this);
         // attaching data adapter to spinner
         returnSpener.setAdapter(dataAdapter);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-      template = preferences.getFloat(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_EXCESSVALUE,0);
-        tvExcess.setText(template+"");
+        template = preferences.getFloat(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_EXCESSVALUE, 0);
+        tvExcess.setText(template + "");
         valueForReturnValue = String.valueOf(template);
 
         returnSpener.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -94,24 +94,12 @@ tvExcess.setOnClickListener(this);
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-
-                CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(getContext());
+                CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(getContext());
                 currencyDBAdapter.open();
-
-                returnSpenerId =returnSpener.getSelectedItemId();
-<<<<<<< HEAD
-                Currency currency = currencyDBAdapter.getSpecificCurrency(returnSpener.getSelectedItem().toString(), DateConverter.toDate(new Date()));
-
-                template = (Double.parseDouble(valueForReturnValue) / currency.getRate());
-=======
-                Currency currency=currencyDBAdapter.getSpeficCurrencys(returnSpener.getSelectedItem().toString());
-
-                template= (double) (Double.parseDouble(valueForReturnValue)/currency.getRate());
->>>>>>> master
-
+                returnSpenerId = returnSpener.getSelectedItemId();
+                Currency currency = currencyDBAdapter.getSpeficCurrencys(returnSpener.getSelectedItem().toString());
+                template = (double) (Double.parseDouble(valueForReturnValue) / currency.getRate());
                 tvExcess.setText(template + "");
-
-
             }
 
             @Override
@@ -119,9 +107,7 @@ tvExcess.setOnClickListener(this);
                 // TODO Auto-generated method stub
 
             }
-
         });
-
     }
 
 
