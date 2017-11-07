@@ -28,9 +28,6 @@ import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 
 import com.pos.leaders.leaderspossystem.R;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,10 +44,10 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
 
     TextView custmer_name;
-    TextView tv ,tvTotalInserted ;
-    EditText  tvTotalInsertedForFirstCurrency,tvTotalInsertedForSecondCurrency;
+    TextView tv, tvTotalInserted;
+    EditText tvTotalInsertedForFirstCurrency, tvTotalInsertedForSecondCurrency;
     String custmer_nameS;
-   Spinner  spinnerForFirstCurrency,spinnerForSecondCurrency, spinnerForTotalPrice;
+    Spinner spinnerForFirstCurrency, spinnerForSecondCurrency, spinnerForTotalPrice;
 
     Button btnDone;
 
@@ -60,12 +57,13 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
     long saleId = 0;
     long firstCurrencyId, secondCurrencyId, totalPriceSpinnerId = 0;
 
-    String insertedValueForFirstCurrency="0", insertedValueForSecondCurrency="0", valueForTotalPriceCurrency,insertedValue;
+    String insertedValueForFirstCurrency = "0", insertedValueForSecondCurrency = "0", valueForTotalPriceCurrency, insertedValue;
 
     CashPaymentDBAdapter cashpayment;
-    double firstCurruncyValue, secondCurrency, exceesValue ,valueForTotalPrice = 0;
-DateConverter dateConverter;
+    double firstCurruncyValue, secondCurrency, exceesValue, valueForTotalPrice = 0;
+    DateConverter dateConverter;
     Date today;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,14 +89,14 @@ DateConverter dateConverter;
 
 
         getWindow().setLayout((int) (width * 0.7), (int) (height * 0.85));
-dateConverter=new DateConverter();
-         today=new Date();
+        dateConverter = new DateConverter();
+        today = new Date();
         dateConverter.toDate(today);
 
-        custmer_name=(TextView)findViewById(R.id.custmer_name);
-        spinnerForFirstCurrency = (Spinner)findViewById(R.id.spinnerForFirstCurrency);
-        spinnerForSecondCurrency = (Spinner)findViewById(R.id.spinnerForSecondCurrency);
-        spinnerForTotalPrice = (Spinner)findViewById(R.id.spinnerForTotalPrice);
+        custmer_name = (TextView) findViewById(R.id.custmer_name);
+        spinnerForFirstCurrency = (Spinner) findViewById(R.id.spinnerForFirstCurrency);
+        spinnerForSecondCurrency = (Spinner) findViewById(R.id.spinnerForSecondCurrency);
+        spinnerForTotalPrice = (Spinner) findViewById(R.id.spinnerForTotalPrice);
 
 
         btnDone = (Button) findViewById(R.id.cashActivity_BTNDone);
@@ -112,7 +110,7 @@ dateConverter=new DateConverter();
         currencyTypeDBAdapter.open();
 
 
-        cashpayment=new CashPaymentDBAdapter(this);
+        cashpayment = new CashPaymentDBAdapter(this);
         cashpayment.open();
         spinnerForFirstCurrency.setOnItemSelectedListener(this);
         spinnerForSecondCurrency.setOnItemSelectedListener(this);
@@ -142,7 +140,7 @@ dateConverter=new DateConverter();
             totalPrice = (double) extras.get("_Price");
             custmer_nameS = (String) extras.get("_custmer");
             saleId = (long) extras.get("_SaleId");
-            tv.setText(totalPrice + " " );
+            tv.setText(totalPrice + " ");
             valueForTotalPriceCurrency = tv.getText().toString();
 
             custmer_name.setText(custmer_nameS);
@@ -157,19 +155,19 @@ dateConverter=new DateConverter();
 
                 totalPid = (float) (firstCurruncyValue + secondCurrency);
                 //// TODO: 01/12/2016 return how match inserted money
-                Intent i=new Intent();
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY,totalPid);
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_FIRSTCURRENCY_AMOUNT,Double.parseDouble(tvTotalInserted.getText().toString()));
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_AMOUNT,firstCurruncyValue);
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_AMOUNT,secondCurrency);
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_ID_AMOUNT,firstCurrencyId);
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_ID_AMOUNT,secondCurrencyId);
-                setResult(RESULT_OK,i);
+                Intent i = new Intent();
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY, totalPid);
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_FIRSTCURRENCY_AMOUNT, Double.parseDouble(tvTotalInserted.getText().toString()));
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_AMOUNT, firstCurruncyValue);
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_AMOUNT, secondCurrency);
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_ID_AMOUNT, firstCurrencyId);
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_ID_AMOUNT, secondCurrencyId);
+                setResult(RESULT_OK, i);
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(TempCashActivty.this);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putFloat(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_EXCESSVALUE, (float) exceesValue);
                 editor.apply();
-                CurrencyReturnsCustomDialogActivity cdd=new CurrencyReturnsCustomDialogActivity(TempCashActivty.this);
+                CurrencyReturnsCustomDialogActivity cdd = new CurrencyReturnsCustomDialogActivity(TempCashActivty.this);
                 cdd.show();
             }
         });
@@ -182,27 +180,25 @@ dateConverter=new DateConverter();
                     CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
                     currencyDBAdapter.open();
                     firstCurrencyId = spinnerForFirstCurrency.getSelectedItemId();
-                    Currency currency = currencyDBAdapter.getSpecificCurrencies(spinnerForFirstCurrency.getSelectedItem().toString(),dateConverter.toDate(today));
-                   
+                    Currency currency = currencyDBAdapter.getSpecificCurrency(spinnerForFirstCurrency.getSelectedItem().toString(), dateConverter.toDate(today));
+
                     insertedValueForFirstCurrency = tvTotalInsertedForFirstCurrency.getText().toString();
                     try {
                         firstCurruncyValue = (double) (Double.parseDouble(insertedValueForFirstCurrency) * currency.getRate());
                     } catch (NumberFormatException e) {
                         firstCurruncyValue = 0; // your default value
                     }
-                    tvTotalInserted.setText(Double.toString (firstCurruncyValue+secondCurrency));
-                    if (firstCurruncyValue+secondCurrency>=totalPrice)
+                    tvTotalInserted.setText(Double.toString(firstCurruncyValue + secondCurrency));
+                    if (firstCurruncyValue + secondCurrency >= totalPrice)
                         tvTotalInserted.setTextColor(getResources().getColor(R.color.Green));
                     else
                         tvTotalInserted.setTextColor(Color.BLACK);
 
-                    exceesValue = ( firstCurruncyValue + secondCurrency) - totalPrice;
+                    exceesValue = (firstCurruncyValue + secondCurrency) - totalPrice;
                     if (exceesValue >= 0) {
                         btnDone.setEnabled(true);
                         btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
-                    }
-
-                    else {
+                    } else {
                         btnDone.setEnabled(false);
                         btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
                     }
@@ -223,29 +219,26 @@ dateConverter=new DateConverter();
                     CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
                     currencyDBAdapter.open();
                     secondCurrencyId = spinnerForSecondCurrency.getSelectedItemId();
-                    Currency currency = currencyDBAdapter.getSpecificCurrencies(spinnerForSecondCurrency.getSelectedItem().toString(), dateConverter.toDate(today));
+                    Currency currency = currencyDBAdapter.getSpecificCurrency(spinnerForSecondCurrency.getSelectedItem().toString(), dateConverter.toDate(today));
                     insertedValueForSecondCurrency = tvTotalInsertedForSecondCurrency.getText().toString();
                     try {
                         secondCurrency = (double) (Double.parseDouble(insertedValueForSecondCurrency) * currency.getRate());
                     } catch (NumberFormatException e) {
                         secondCurrency = 0; // your default value
                     }
-                    tvTotalInserted.setText(Double.toString (firstCurruncyValue+secondCurrency));
-                    if (firstCurruncyValue+secondCurrency>=totalPrice){
+                    tvTotalInserted.setText(Double.toString(firstCurruncyValue + secondCurrency));
+                    if (firstCurruncyValue + secondCurrency >= totalPrice) {
                         tvTotalInserted.setTextColor(getResources().getColor(R.color.Green));
-                    }
-                    else {
+                    } else {
 
 
                         tvTotalInserted.setTextColor(Color.BLACK);
                     }
-                    exceesValue = ( firstCurruncyValue + secondCurrency) - totalPrice;
+                    exceesValue = (firstCurruncyValue + secondCurrency) - totalPrice;
                     if (exceesValue >= 0) {
                         btnDone.setEnabled(true);
                         btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
-                    }
-
-                    else {
+                    } else {
                         btnDone.setEnabled(false);
                         btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
                     }
@@ -258,19 +251,17 @@ dateConverter=new DateConverter();
         });
 
 
+        spinnerForTotalPrice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-                spinnerForTotalPrice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                        Date date=new Date();
-                       CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(TempCashActivty.this);
-                        currencyDBAdapter.open();
-                        totalPriceSpinnerId = spinnerForTotalPrice.getSelectedItemId();
-                         Currency currency=currencyDBAdapter.getSpecificCurrencies(spinnerForTotalPrice.getSelectedItem().toString(),DateConverter.toDate(today));
-                        valueForTotalPrice= Double.parseDouble(valueForTotalPriceCurrency)/currency.getRate();
-                        tv.setText(valueForTotalPrice+"");
-
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                Date date = new Date();
+                CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
+                currencyDBAdapter.open();
+                totalPriceSpinnerId = spinnerForTotalPrice.getSelectedItemId();
+                Currency currency = currencyDBAdapter.getSpecificCurrency(spinnerForTotalPrice.getSelectedItem().toString(), DateConverter.toDate(today));
+                valueForTotalPrice = Double.parseDouble(valueForTotalPriceCurrency) / currency.getRate();
+                tv.setText(valueForTotalPrice + "");
             }
 
             @Override
@@ -300,7 +291,4 @@ dateConverter=new DateConverter();
 
 
     }
-
-
-
 }

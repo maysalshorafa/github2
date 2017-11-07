@@ -8,15 +8,15 @@ import java.util.Date;
 
 public class CurrencyOperation {
     private long id;
-    private Date creationDate;
+    private Date createDate;
     private long operation_id;
     private String operation_type;
     private double amount;
     private long currency_type;
 
-    public CurrencyOperation(long id, Date creationDate, long operation_id, String operation_type, double amount, long currency_type) {
+    public CurrencyOperation(long id, Date createDate, long operation_id, String operation_type, double amount, long currency_type) {
         this.id = id;
-        this.creationDate = creationDate;
+        this.createDate = createDate;
         this.operation_id = operation_id;
         this.operation_type = operation_type;
         this.amount = amount;
@@ -32,12 +32,12 @@ public class CurrencyOperation {
         this.id = id;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public long getOperation_id() {

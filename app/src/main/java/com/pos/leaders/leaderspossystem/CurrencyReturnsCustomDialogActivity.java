@@ -99,11 +99,11 @@ tvExcess.setOnClickListener(this);
                 currencyDBAdapter.open();
 
                 returnSpenerId =returnSpener.getSelectedItemId();
-                Currency currency=currencyDBAdapter.getSpecificCurrencies(returnSpener.getSelectedItem().toString(),DateConverter.toDate(new Date()));
+                Currency currency = currencyDBAdapter.getSpecificCurrency(returnSpener.getSelectedItem().toString(), DateConverter.toDate(new Date()));
 
-                template= (double) (Double.parseDouble(valueForReturnValue)/currencys.getRate());
+                template = (Double.parseDouble(valueForReturnValue) / currency.getRate());
 
-                tvExcess.setText(template+"");
+                tvExcess.setText(template + "");
 
 
             }

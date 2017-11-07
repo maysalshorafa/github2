@@ -128,9 +128,9 @@ public class CurrencyDBAdapter {
         db.update(Currency_TABLE_NAME, val, where, new String[]{currency.getId() + ""});
     }
 
-    public Currency getSpeficCurrencys(String name, Date date) {
-Currency currency =null;
-        Cursor cursor = db.rawQuery("select * from " + Currency_TABLE_NAME + " where  name='" + name + "'", null);
+    public Currency getSpecificCurrency(String name, String date) {
+        Currency currency =null;
+        Cursor cursor = db.rawQuery("select * from " + Currency_TABLE_NAME + " where  name='" + name + "'" + " and  createDate='" + date + "'" , null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();

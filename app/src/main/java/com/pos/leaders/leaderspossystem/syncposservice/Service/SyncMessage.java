@@ -637,7 +637,7 @@ public class SyncMessage extends Service {
 
 
                 //region Currency
-                case MessageType.ADD_CURRENCIES:
+                case MessageType.ADD_CURRENCY:
                     Currency currency = null;
                     currency = objectMapper.readValue(msgData, Currency.class);
 
