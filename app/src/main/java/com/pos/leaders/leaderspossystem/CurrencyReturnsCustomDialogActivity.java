@@ -99,9 +99,15 @@ tvExcess.setOnClickListener(this);
                 currencyDBAdapter.open();
 
                 returnSpenerId =returnSpener.getSelectedItemId();
+<<<<<<< HEAD
                 Currency currency = currencyDBAdapter.getSpecificCurrency(returnSpener.getSelectedItem().toString(), DateConverter.toDate(new Date()));
 
                 template = (Double.parseDouble(valueForReturnValue) / currency.getRate());
+=======
+                Currency currency=currencyDBAdapter.getSpeficCurrencys(returnSpener.getSelectedItem().toString());
+
+                template= (double) (Double.parseDouble(valueForReturnValue)/currency.getRate());
+>>>>>>> master
 
                 tvExcess.setText(template + "");
 
