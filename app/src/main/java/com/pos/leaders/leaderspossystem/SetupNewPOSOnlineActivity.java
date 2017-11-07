@@ -128,11 +128,13 @@ public class SetupNewPOSOnlineActivity extends Activity {
 class StartConnection extends AsyncTask<String,Void,String> {
     private MessageTransmit messageTransmit;
 
-    StartConnection(){
+    StartConnection() {
         messageTransmit = new MessageTransmit("");
     }
+
     final ProgressDialog progressDialog = new ProgressDialog(SetupNewPOSOnlineActivity.context);
     final ProgressDialog progressDialog2 = new ProgressDialog(SetupNewPOSOnlineActivity.context);
+
     @Override
     protected void onPreExecute() {
         progressDialog.setTitle("Please Wait");
@@ -144,8 +146,8 @@ class StartConnection extends AsyncTask<String,Void,String> {
     protected String doInBackground(String... args) {//args{key,uuid}
         String key = args[0];
         String uniqueID = args[1];
-        String initRes= "";
-        String posPass=null,posPrefix=null;
+        String initRes = "";
+        String posPass = null, posPrefix = null;
         try {
             initRes = messageTransmit.post(ApiURL.InitConnection, MessagesCreator.initConnection(key, uniqueID));
             JSONObject jsonObject = new JSONObject(initRes);
@@ -182,7 +184,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
             AccessToken accessToken = new AccessToken(SetupNewPOSOnlineActivity.context);
             accessToken.execute(SetupNewPOSOnlineActivity.context);
 
-            while(!accessToken.isCancelled()){
+            while (!accessToken.isCancelled()) {
                 //Log.i("AccessToken Status", accessToken.getStatus().toString());
                 // waiting until finished protected String[] doInBackground(Void... params)
             }
@@ -229,21 +231,20 @@ class StartConnection extends AsyncTask<String,Void,String> {
     private void updateSettings(String token) {
         MessageTransmit messageTransmit = new MessageTransmit("");
         try {
-            String res=messageTransmit.authGet(ApiURL.CompanyCredentials, token);
+            String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
             JSONObject jsonObject = new JSONObject(res);
 
 
-            SettingsDBAdapter settingsDBAdapter=new SettingsDBAdapter(SetupNewPOSOnlineActivity.context);
+            SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(SetupNewPOSOnlineActivity.context);
             settingsDBAdapter.open();
-            int i = settingsDBAdapter.updateEntry(jsonObject.getString(MessageKey.companyID),jsonObject.getString(MessageKey.companyName),SESSION.POS_ID_NUMBER+"",
-                    (float) jsonObject.getDouble(MessageKey.tax),jsonObject.getString(MessageKey.returnNote),jsonObject.getInt(MessageKey.endOfReturnNote),
-                    jsonObject.getString(MessageKey.CCUN),jsonObject.getString(MessageKey.CCPW));
+            int i = settingsDBAdapter.updateEntry(jsonObject.getString(MessageKey.companyID), jsonObject.getString(MessageKey.companyName), SESSION.POS_ID_NUMBER + "",
+                    (float) jsonObject.getDouble(MessageKey.tax), jsonObject.getString(MessageKey.returnNote), jsonObject.getInt(MessageKey.endOfReturnNote),
+                    jsonObject.getString(MessageKey.CCUN), jsonObject.getString(MessageKey.CCPW));
             settingsDBAdapter.close();
-            if(i==1){
+            if (i == 1) {
                 Util.isFirstLaunch(SetupNewPOSOnlineActivity.context, true);
                 //finish();
-            }
-            else{
+            } else {
                 Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again), Toast.LENGTH_SHORT).show();
             }
 
@@ -252,7 +253,5 @@ class StartConnection extends AsyncTask<String,Void,String> {
         }
 
     }
-
 }
-
 

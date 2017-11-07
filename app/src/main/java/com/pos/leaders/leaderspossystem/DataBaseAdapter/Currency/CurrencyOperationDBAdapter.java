@@ -84,7 +84,7 @@ public class CurrencyOperationDBAdapter {
         //Assign values for each row.
 
         val.put(CurrencyOperation_COLUMN_ID, currency.getId());
-        val.put(CurrencyOperation_COLUMN_CREATEDATE, String.valueOf(currency.getCreationDate()));
+        val.put(CurrencyOperation_COLUMN_CREATEDATE, String.valueOf(currency.getCreateDate()));
         val.put(CurrencyOperation_COLUMN_Operation_ID, currency.getOperation_id());
         val.put(CurrencyOperation_COLUMN_Operation_Type,currency.getOperation_type());
         val.put(CurrencyOperationCOLUMN_AMOUNT, currency.getAmount());
