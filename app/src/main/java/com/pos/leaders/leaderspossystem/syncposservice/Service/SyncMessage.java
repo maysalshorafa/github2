@@ -39,7 +39,6 @@ import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
-import com.pos.leaders.leaderspossystem.Models.Currency.Currencies;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
@@ -637,7 +636,7 @@ public class SyncMessage extends Service {
 
 
                 //region Currency
-                case MessageType.ADD_CURRENCIES:
+                case MessageType.ADD_CURRENCY:
                     Currency currency = null;
                     currency = objectMapper.readValue(msgData, Currency.class);
 

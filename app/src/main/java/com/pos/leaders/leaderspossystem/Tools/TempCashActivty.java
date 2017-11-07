@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CurrencyReturnsCustomDialogActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
@@ -182,7 +183,7 @@ dateConverter=new DateConverter();
                     CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
                     currencyDBAdapter.open();
                     firstCurrencyId = spinnerForFirstCurrency.getSelectedItemId();
-                    Currency currency = currencyDBAdapter.getSpecificCurrencies(spinnerForFirstCurrency.getSelectedItem().toString(),dateConverter.toDate(today));
+                    Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForFirstCurrency.getSelectedItem().toString());
                    
                     insertedValueForFirstCurrency = tvTotalInsertedForFirstCurrency.getText().toString();
                     try {
@@ -223,7 +224,7 @@ dateConverter=new DateConverter();
                     CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
                     currencyDBAdapter.open();
                     secondCurrencyId = spinnerForSecondCurrency.getSelectedItemId();
-                    Currency currency = currencyDBAdapter.getSpecificCurrencies(spinnerForSecondCurrency.getSelectedItem().toString(), dateConverter.toDate(today));
+                    Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForSecondCurrency.getSelectedItem().toString());
                     insertedValueForSecondCurrency = tvTotalInsertedForSecondCurrency.getText().toString();
                     try {
                         secondCurrency = (double) (Double.parseDouble(insertedValueForSecondCurrency) * currency.getRate());
@@ -267,10 +268,11 @@ dateConverter=new DateConverter();
                        CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(TempCashActivty.this);
                         currencyDBAdapter.open();
                         totalPriceSpinnerId = spinnerForTotalPrice.getSelectedItemId();
-                         Currency currency=currencyDBAdapter.getSpecificCurrencies(spinnerForTotalPrice.getSelectedItem().toString(),DateConverter.toDate(today));
+                         Currency currency=currencyDBAdapter.getSpeficCurrencys(spinnerForTotalPrice.getSelectedItem().toString());
+
                         valueForTotalPrice= Double.parseDouble(valueForTotalPriceCurrency)/currency.getRate();
                         tv.setText(valueForTotalPrice+"");
-
+                        Toast.makeText(TempCashActivty.this,"rate"+currency.getRate(),Toast.LENGTH_LONG).show();
             }
 
             @Override

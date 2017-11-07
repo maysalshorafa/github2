@@ -23,7 +23,7 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 
 public class CurrencyDBAdapter {
 
-    public static final  String Currency_TABLE_NAME = "Currencys";
+    public static final  String Currency_TABLE_NAME = "Currency";
 
     // Column Names
     protected static final String Currency_COLUMN_ID = "id";
@@ -128,9 +128,9 @@ public class CurrencyDBAdapter {
         db.update(Currency_TABLE_NAME, val, where, new String[]{currency.getId() + ""});
     }
 
-    public Currency getSpeficCurrencys(String name, Date date) {
+    public Currency getSpeficCurrencys(String name) {
 Currency currency =null;
-        Cursor cursor = db.rawQuery("select * from " + Currency_TABLE_NAME + " where  name='" + name + "'", null);
+        Cursor cursor = db.rawQuery("select * from " + Currency_TABLE_NAME + " where  name='" + name + "'"+ " order by id desc", null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();
