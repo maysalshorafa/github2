@@ -800,18 +800,14 @@ usedpointDbAdapter.open();
                 });
 
                 salesMan = (TextView) view.findViewById(R.id.saleMan);
-                view.setOnLongClickListener(new View.OnLongClickListener(){
+               salesMan.setOnLongClickListener(new View.OnLongClickListener(){
                     @Override
                     public boolean onLongClick(View v) {
                         callPopupOrderSalesMan();
                         return false;
                     }
                 });
-                salesMan.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        callPopupOrderSalesMan();                                    }
-                });
+
 
 
                 Button btnPlusOne = (Button) view.findViewById(R.id.rowSaleDetails_MethodsPlusOne);
@@ -1456,11 +1452,13 @@ saleTotalPrice=saleTotalPrice-newPrice;
     }
 **/
     private void removeOrderItemSelection(){
-        saleDetailsListViewAdapter.setSelected(-1);
+       saleDetailsListViewAdapter.setSelected(-1);
         if(selectedIteminCartList!=null) {
             selectedIteminCartList.findViewById(R.id.rowSaleDetails_LLMethods).setVisibility(View.GONE);
+            selectedIteminCartList.findViewById(R.id.saleMan).setVisibility(View.GONE);
+
             selectedIteminCartList.setBackgroundColor(getResources().getColor(R.color.white));
-            selectedOrderOnCart=null;
+           selectedOrderOnCart=null;
         }
     }
 

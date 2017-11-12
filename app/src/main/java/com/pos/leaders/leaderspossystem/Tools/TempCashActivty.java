@@ -193,7 +193,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                     if (firstCurruncyValue + secondCurrency >= totalPrice)
                         tvTotalInserted.setTextColor(getResources().getColor(R.color.Green));
                     else
-                        tvTotalInserted.setTextColor(Color.BLACK);
+                        tvTotalInserted.setTextColor(getResources().getColor(R.color.dangerColor));
 
                     exceesValue = (firstCurruncyValue + secondCurrency) - totalPrice;
                     if (exceesValue >= 0) {
@@ -233,7 +233,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                     } else {
 
 
-                        tvTotalInserted.setTextColor(Color.BLACK);
+                        tvTotalInserted.setTextColor(getResources().getColor(R.color.dangerColor));
                     }
                     exceesValue = (firstCurruncyValue + secondCurrency) - totalPrice;
                     if (exceesValue >= 0) {
