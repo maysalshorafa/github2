@@ -998,13 +998,14 @@ usedpointDbAdapter.open();
         btnCash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                a=custmername_EditText.getText().toString();
-
-                Intent intent = new Intent(MainActivity.this, TempCashActivty.class);
-                intent.putExtra("_Price", saleTotalPrice);
-                intent.putExtra("_SaleId", saleIDforCash);
-                intent.putExtra("_custmer", a);
-                startActivityForResult(intent, REQUEST_CASH_ACTIVITY_CODE);
+                if(SESSION._ORDERS.size()>0) {
+                    a = custmername_EditText.getText().toString();
+                    Intent intent = new Intent(MainActivity.this, TempCashActivty.class);
+                    intent.putExtra("_Price", saleTotalPrice);
+                    intent.putExtra("_SaleId", saleIDforCash);
+                    intent.putExtra("_custmer", a);
+                    startActivityForResult(intent, REQUEST_CASH_ACTIVITY_CODE);
+                }
             }
         });
 
@@ -1047,45 +1048,41 @@ saleTotalPrice=saleTotalPrice-newPrice;
         btnCreditCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (SESSION._ORDERS.size() > 0) {
+                    final String __customerName = custmername_EditText.getText().toString();
+                    final Context c = MainActivity.this;
+                    new AlertDialog.Builder(c)
+                            .setTitle(c.getResources().getString(R.string.clearCartAlertTitle))
+                            //.setMessage(c.getResources().getString(R.string.clearCartAlertMessage))
+                            .setPositiveButton(c.getResources().getString(R.string.by_card), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(c, CreditCardActivity.class);
+                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
+                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_CUSTOMER, __customerName);
 
-/*
-                Intent i = new Intent(MainActivity.this, ChecksActivity.class);
-                startActivity(i);
-*/
+                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TYPE, CreditCardActivity.LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PASS_CARD);
+                                    startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
+                                    dialog.cancel();
+                                }
+                            })
+                            .setNegativeButton(c.getResources().getString(R.string.by_phone), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    a = custmername_EditText.getText().toString();
 
-                final String __customerName = custmername_EditText.getText().toString();
-                final Context c = MainActivity.this;
-                new AlertDialog.Builder(c)
-                        .setTitle(c.getResources().getString(R.string.clearCartAlertTitle))
-                        //.setMessage(c.getResources().getString(R.string.clearCartAlertMessage))
-                        .setPositiveButton(c.getResources().getString(R.string.by_card), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(c, CreditCardActivity.class);
-                                intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
-                                intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_CUSTOMER, __customerName);
+                                    Intent intent = new Intent(c, CreditCardActivity.class);
+                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
+                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_CUSTOMER, __customerName);
 
-                                intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TYPE, CreditCardActivity.LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PASS_CARD);
-                                startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
-                                dialog.cancel();
-                            }
-                        })
-                        .setNegativeButton(c.getResources().getString(R.string.by_phone), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                a=custmername_EditText.getText().toString();
-
-                                Intent intent = new Intent(c, CreditCardActivity.class);
-                                intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
-                                intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_CUSTOMER, __customerName);
-
-                                intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TYPE, CreditCardActivity.LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PHONE);
-                                startActivityForResult(intent ,REQUEST_CREDIT_CARD_ACTIVITY_CODE);
-                                dialog.cancel();
-                            }
-                        })
-                        .setIcon(android.R.drawable.sym_contact_card)
-                        .show();
+                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TYPE, CreditCardActivity.LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PHONE);
+                                    startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
+                                    dialog.cancel();
+                                }
+                            })
+                            .setIcon(android.R.drawable.sym_contact_card)
+                            .show();
+                }
             }
         });
 
@@ -1097,14 +1094,15 @@ saleTotalPrice=saleTotalPrice-newPrice;
         btnOtherWays.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (SESSION._ORDERS.size() > 0) {
+                    Intent intent = new Intent(MainActivity.this, ChecksActivity.class);
+                    a = custmername_EditText.getText().toString();
 
-                Intent intent = new Intent(MainActivity.this, ChecksActivity.class);
-                a=custmername_EditText.getText().toString();
+                    intent.putExtra("_Price", saleTotalPrice);
+                    intent.putExtra("_custmer", a);
 
-                intent.putExtra("_Price", saleTotalPrice);
-                intent.putExtra("_custmer", a);
-
-                startActivityForResult(intent, REQUEST_CHECKS_ACTIVITY_CODE);
+                    startActivityForResult(intent, REQUEST_CHECKS_ACTIVITY_CODE);
+                }
             }
         });
 
@@ -1372,7 +1370,6 @@ saleTotalPrice=saleTotalPrice-newPrice;
         if(str.equals("")){
             return;
         }
-        view.getId();
         if(Double.parseDouble(str)!=0)
             addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._USER.getId()));
     }

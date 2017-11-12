@@ -670,6 +670,8 @@ public class SyncMessage extends Service {
         String res = "";
         String msgType = jsonObject.getString(MessageKey.MessageType);
 
+        Log.w("DO_SYNC",bm.getCommand());
+
         switch (msgType){
 
             //region A REPORT

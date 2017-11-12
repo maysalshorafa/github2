@@ -48,11 +48,12 @@ public class MessageTransmit {
 
     public String authPost(String url, String json,String token) throws IOException {
         RequestBody body = RequestBody.create(JSON, json);
-        Log.i("Message", body.toString());
+
         Request request = new Request.Builder().url(domainURL + url).post(body).addHeader(AUTHORIZATION, token).addHeader(CONTENT_LENGTH,String.valueOf(body.contentLength()+body.contentType().toString().length())).build();
         Log.i("Message req", request.toString());
         Response response = client.newCall(request).execute();
 
+        Log.w("Response Code", response.code()+"");
         return response.body().string();
     }
 

@@ -12,7 +12,7 @@
 
         <EditText
             android:id="@+id/cashPaymentDialog_TECash"
-            android:layout_width="120dp"
+            android:layout_width="match_parent"
 
             android:layout_height="50dp"
             android:layout_margin="5dp"
@@ -37,27 +37,31 @@
         android:orientation="horizontal"
         android:layout_gravity="bottom"
         >
+
         <Button
             android:id="@+id/cashPaymentDialog_BTOk"
-            android:layout_width="150dp"
-            android:layout_height="38dp"
+            style="@style/AppTheme.bt_green"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="16dp"
-            android:background="@drawable/bt_green_enabled"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="@android:string/ok"
             android:textColor="#fff"
             android:textSize="20dp" />
+
         <Button
 
             android:id="@+id/cashPaymentDialog_BTCancel"
-            android:layout_width="150dp"
-            android:layout_height="38dp"
+            style="@style/AppTheme.bt_dangers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="16dp"
-            android:background="@drawable/btn_cancel"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="@android:string/cancel"
             android:textColor="@color/white"

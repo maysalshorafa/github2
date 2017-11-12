@@ -22,6 +22,7 @@
             android:layout_margin="2dp"
             android:layout_marginLeft="3dp"
             android:layout_weight="1"
+            android:onClick="quickPriceButtonClick"
             android:text="@string/TouchPad_1" />
 
         <Button
@@ -31,6 +32,7 @@
             android:layout_height="match_parent"
             android:layout_margin="2dp"
             android:layout_weight="1"
+            android:onClick="quickPriceButtonClick"
             android:text="@string/TouchPad_2" />
 
         <Button
@@ -41,6 +43,7 @@
             android:layout_margin="2dp"
 
             android:layout_weight="1"
+            android:onClick="quickPriceButtonClick"
             android:text="@string/TouchPad_3" />
 
         <Button
@@ -51,6 +54,7 @@
             android:layout_margin="2dp"
             android:layout_marginRight="3dp"
             android:layout_weight="1"
+            android:onClick="quickPriceButtonClick"
             android:text="@string/TouchPad_4" />
     </LinearLayout>
 </LinearLayout>
