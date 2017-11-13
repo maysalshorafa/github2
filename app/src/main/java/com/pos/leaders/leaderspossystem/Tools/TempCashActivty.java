@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
@@ -173,8 +175,9 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
             }
         });
 
-        tvTotalInsertedForFirstCurrency.setOnKeyListener(new View.OnKeyListener() {
+        tvTotalInsertedForFirstCurrency.addTextChangedListener(new TextWatcher() {
             @Override
+<<<<<<< HEAD
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 
                 if ((event.getAction() == KeyEvent.ACTION_UP)) {
@@ -204,16 +207,57 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                         btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
                     }
                     currencyDBAdapter.close();
+=======
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+>>>>>>> master
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
+                currencyDBAdapter.open();
+                firstCurrencyId = spinnerForFirstCurrency.getSelectedItemId();
+
+                Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForFirstCurrency.getSelectedItem().toString());
+                insertedValueForFirstCurrency = tvTotalInsertedForFirstCurrency.getText().toString();
+                try {
+                    firstCurruncyValue = (double) (Double.parseDouble(insertedValueForFirstCurrency) * currency.getRate());
+                } catch (NumberFormatException e) {
+                    firstCurruncyValue = 0; // your default value
                 }
+                tvTotalInserted.setText(Double.toString(firstCurruncyValue + secondCurrency));
+                if (firstCurruncyValue + secondCurrency >= totalPrice)
+                    tvTotalInserted.setTextColor(getResources().getColor(R.color.Green));
+                else
+                    tvTotalInserted.setTextColor(Color.BLACK);
 
-                return false;
+                exceesValue = (firstCurruncyValue + secondCurrency) - totalPrice;
+                if (exceesValue >= 0) {
+                    btnDone.setEnabled(true);
+                    btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
+                } else {
+                    btnDone.setEnabled(false);
+                    btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
+                }
+                currencyDBAdapter.close();
             }
         });
 
 
-        tvTotalInsertedForSecondCurrency.setOnKeyListener(new View.OnKeyListener() {
+        tvTotalInsertedForSecondCurrency.addTextChangedListener(new TextWatcher() {
             @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+<<<<<<< HEAD
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 
                 if ((event.getAction() == KeyEvent.ACTION_UP)) {
@@ -244,13 +288,43 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                         btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
                     }
                     currencyDBAdapter.close();
+=======
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+>>>>>>> master
 
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
+                currencyDBAdapter.open();
+                secondCurrencyId = spinnerForSecondCurrency.getSelectedItemId();
+                Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForSecondCurrency.getSelectedItem().toString());
+                insertedValueForSecondCurrency = tvTotalInsertedForSecondCurrency.getText().toString();
+                try {
+                    secondCurrency = (double) (Double.parseDouble(insertedValueForSecondCurrency) * currency.getRate());
+                } catch (NumberFormatException e) {
+                    secondCurrency = 0; // your default value
                 }
+                tvTotalInserted.setText(Double.toString(firstCurruncyValue + secondCurrency));
+                if (firstCurruncyValue + secondCurrency >= totalPrice) {
+                    tvTotalInserted.setTextColor(getResources().getColor(R.color.Green));
+                } else {
 
-                return false;
+
+                    tvTotalInserted.setTextColor(Color.BLACK);
+                }
+                exceesValue = (firstCurruncyValue + secondCurrency) - totalPrice;
+                if (exceesValue >= 0) {
+                    btnDone.setEnabled(true);
+                    btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
+                } else {
+                    btnDone.setEnabled(false);
+                    btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
+                }
+                currencyDBAdapter.close();
             }
         });
-
 
         spinnerForTotalPrice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

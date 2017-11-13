@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.Tools;
 import android.util.Pair;
 
 import com.pos.leaders.leaderspossystem.Models.*;
+import com.pos.leaders.leaderspossystem.Models.Permission.UserPermissions;
 
 import java.util.ArrayList;
 import java.util.Date;

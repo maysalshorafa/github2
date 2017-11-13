@@ -1,4 +1,6 @@
-package com.pos.leaders.leaderspossystem.Models;
+package com.pos.leaders.leaderspossystem.Models.Permission;
+
+import com.pos.leaders.leaderspossystem.Models.User;
 
 import java.util.List;
 
