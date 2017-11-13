@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -80,7 +81,6 @@ List<String> selectedFromList=new  ArrayList<String>();;
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-
 			long i = (long) extras.get("userId");
 			user = userDBAdapter.getUserByID(i);
 			etUserName.setText(user.getUserName());
@@ -93,9 +93,7 @@ List<String> selectedFromList=new  ArrayList<String>();;
 			etPhoneNumber.setText(user.getPhoneNumber());
 			etPresent.setText(user.getPresent() + "");
 			etHourlyWage.setText(user.getHourlyWage() + "");
-			btAdd.setText(getResources().getText(R.string.edit));
-
-			//The key argument here must match that used in the other activity
+				//The key argument here must match that used in the other activity
 		}
 
 		btAdd.setOnClickListener(new View.OnClickListener() {
@@ -146,8 +144,6 @@ List<String> selectedFromList=new  ArrayList<String>();;
 				} else {
 					// Edit mode
 					if (_userName != "") {
-
-						if ((userDBAdapter.availableUserName(_userName)) || _userName == user.getUserName()) {
 							if (etFirstName.getText().toString().equals("")) {
 								Toast.makeText(getApplicationContext(), "Please insert first name", Toast.LENGTH_LONG).show();
 							} else if (etPresent.getText().toString().equals("")) {
@@ -175,9 +171,7 @@ List<String> selectedFromList=new  ArrayList<String>();;
 									Toast.makeText(getApplicationContext(), "Can`t edit user please try again", Toast.LENGTH_SHORT).show();
 								}
 							}
-						} else {
-							Toast.makeText(getApplicationContext(), "User name is not available, try to use another user name", Toast.LENGTH_LONG).show();
-						}
+
 					}
 				}
 			}
@@ -236,5 +230,13 @@ List<String> selectedFromList=new  ArrayList<String>();;
 				}
 			}
 		});
+	}
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		//  if(keyCode==KeyEvent.KEYCODE_BACK)
+		//   Toast.makeText(getContext(), "back press", Toast.LENGTH_LONG).show();
+
+		return false;
+		// Disable back button..............
 	}
 }

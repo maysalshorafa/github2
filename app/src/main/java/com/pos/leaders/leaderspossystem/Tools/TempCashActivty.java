@@ -112,7 +112,6 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
         CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
         currencyTypeDBAdapter.open();
 
-
         cashpayment = new CashPaymentDBAdapter(this);
         cashpayment.open();
         spinnerForFirstCurrency.setOnItemSelectedListener(this);
@@ -122,6 +121,11 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
         tvTotalInsertedForFirstCurrency.setOnClickListener(this);
         btnDone.setEnabled(false);
         currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+
+        CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
+        currencyDBAdapter.open();
+        final List<Currency> currencyList = currencyDBAdapter.getAllCurrency(currencyTypesList);
+        Toast.makeText(TempCashActivty.this,currencyList.get(0).getName()+currencyList.get(0).getRate(),Toast.LENGTH_LONG).show();
 
         final List<String> currency = new ArrayList<String>();
         for (int i = 0; i < currencyTypesList.size(); i++) {
@@ -188,11 +192,13 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
             @Override
             public void afterTextChanged(Editable s) {
-                CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
-                currencyDBAdapter.open();
+                Currency currency=new Currency(TempCashActivty.this);
+                for (int i=0 ;i<=currencyList.size()-1;i++){
+                    if(currencyList.get(i).getName().equals(spinnerForFirstCurrency.getSelectedItem().toString())){
+                     currency = currencyList.get(i);
+                    }
+                }
                 firstCurrencyId = spinnerForFirstCurrency.getSelectedItemId();
-
-                Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForFirstCurrency.getSelectedItem().toString());
                 insertedValueForFirstCurrency = tvTotalInsertedForFirstCurrency.getText().toString();
                 try {
                     firstCurruncyValue = (double) (Double.parseDouble(insertedValueForFirstCurrency) * currency.getRate());
@@ -213,7 +219,6 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                     btnDone.setEnabled(false);
                     btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
                 }
-                currencyDBAdapter.close();
             }
         });
 
@@ -231,10 +236,13 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
             @Override
             public void afterTextChanged(Editable s) {
-                CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
-                currencyDBAdapter.open();
+                Currency currency=new Currency(TempCashActivty.this);
+                for (int i=0 ;i<=currencyList.size()-1;i++){
+                    if(currencyList.get(i).getName().equals(spinnerForSecondCurrency.getSelectedItem().toString())){
+                        currency = currencyList.get(i);
+                    }
+                }
                 secondCurrencyId = spinnerForSecondCurrency.getSelectedItemId();
-                Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForSecondCurrency.getSelectedItem().toString());
                 insertedValueForSecondCurrency = tvTotalInsertedForSecondCurrency.getText().toString();
                 try {
                     secondCurrency = (double) (Double.parseDouble(insertedValueForSecondCurrency) * currency.getRate());
@@ -257,21 +265,22 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                     btnDone.setEnabled(false);
                     btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
                 }
-                currencyDBAdapter.close();
             }
         });
 
         spinnerForTotalPrice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
-                currencyDBAdapter.open();
-                totalPriceSpinnerId = spinnerForTotalPrice.getSelectedItemId();
-                Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForTotalPrice.getSelectedItem().toString());
+                Currency currency=new Currency(TempCashActivty.this);
+                for (int i=0 ;i<=currencyList.size()-1;i++){
+                    if(currencyList.get(i).getName().equals(spinnerForTotalPrice.getSelectedItem().toString())){
+                        currency = currencyList.get(i);
 
+                    }
+                }
+                totalPriceSpinnerId = spinnerForTotalPrice.getSelectedItemId();
                 valueForTotalPrice = Double.parseDouble(valueForTotalPriceCurrency) / currency.getRate();
                 tv.setText(valueForTotalPrice + "");
-                Toast.makeText(TempCashActivty.this, "rate" + currency.getRate(), Toast.LENGTH_LONG).show();
             }
 
             @Override
