@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white50"
-    android:weightSum="2">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,13 +54,13 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="30dp"
                 android:gravity="center"
+                android:maxLength="14"
+                android:minLines="1"
                 android:text="0"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="50dp"
-                android:textStyle="bold"
-                android:minLines="1"
-                android:maxLength="14"/>
+                android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/spinnerForTotalPrice"
@@ -100,13 +99,13 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="30dp"
                 android:gravity="center"
+                android:maxLength="14"
+                android:minLines="1"
                 android:text="0"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="50dp"
-                android:textStyle="bold"
-                android:minLines="1"
-                android:maxLength="14"/>
+                android:textStyle="bold" />
 
 
         </LinearLayout>
@@ -116,20 +115,21 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_gravity="bottom"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/layout_border"
         android:orientation="horizontal"
-        android:weightSum="2"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+        android:weightSum="2">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_gravity="bottom"
             android:layout_marginTop="30dp"
+            android:layout_weight=".75"
             android:background="@drawable/layout_border"
-            android:orientation="horizontal"
-            android:layout_weight=".75">
+            android:orientation="horizontal">
 
 
             <EditText
@@ -142,50 +142,52 @@
                 android:layout_marginRight="20dp"
                 android:gravity="center"
                 android:inputType="number"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:text="0"
-                android:textAlignment="textStart"
                 android:textColor="@color/black"
-                android:textSize="20dp"
-                />
+                android:textDirection="ltr"
+                android:textSize="20dp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_gravity="bottom"
             android:layout_marginTop="30dp"
+            android:layout_weight="1.25"
             android:background="@drawable/layout_border"
             android:gravity="bottom"
-            android:orientation="horizontal"
-            android:layout_weight="1.25">
+            android:orientation="horizontal">
 
 
             <Spinner
                 android:id="@+id/spinnerForFirstCurrency"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="15dp"
-                ></Spinner>
+                android:layout_marginLeft="15dp"></Spinner>
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:background="@drawable/layout_border"
         android:orientation="horizontal"
-        android:weightSum="2"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+        android:weightSum="2">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_gravity="bottom"
             android:layout_marginTop="30dp"
+            android:layout_weight=".75"
             android:background="@drawable/layout_border"
             android:gravity="bottom"
-            android:orientation="horizontal"
-            android:layout_weight=".75">
+            android:orientation="horizontal">
 
 
             <EditText
@@ -199,21 +201,23 @@
                 android:gravity="center"
                 android:inputType="number"
                 android:text="0"
-                android:textAlignment="textStart"
                 android:textColor="@color/black"
+                android:textDirection="ltr"
                 android:textSize="20dp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_gravity="bottom"
             android:layout_marginTop="30dp"
+            android:layout_weight="1.25"
             android:background="@drawable/layout_border"
-            android:orientation="horizontal"
-            android:layout_weight="1.25">
+            android:orientation="horizontal">
+
             <Spinner
                 android:id="@+id/spinnerForSecondCurrency"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="15dp"></Spinner>
@@ -222,26 +226,23 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="match_parent"
         android:layout_gravity="bottom"
-        android:layout_marginTop="40dp"
-        android:orientation="vertical"
-        android:weightSum="2"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
-    <Button
-        android:id="@+id/cashActivity_BTNDone"
-        style="@style/AppTheme.bt_dark"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="@string/done"
-        android:textSize="20dp"
-        android:background="@drawable/btn_primary"
-        />
-        </LinearLayout>
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/cashActivity_BTNDone"
+            style="@style/AppTheme.bt_dark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:background="@drawable/btn_primary"
+            android:text="@string/done"
+            android:textSize="20dp" />
+    </LinearLayout>
 
 </LinearLayout>
