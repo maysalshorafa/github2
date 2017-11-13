@@ -22,6 +22,4 @@ public interface MessageKey {
     String endOfReturnNote = "endOfReturnNote";
     String returnNote = "returnNote";
     String tax = "tax";
-
-
 }

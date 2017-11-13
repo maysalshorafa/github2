@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,19 +17,17 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
-import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
+import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
@@ -39,15 +35,12 @@ import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
-import com.pos.leaders.leaderspossystem.Tools.TempCashActivty;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
@@ -60,7 +53,9 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     User user = new User();
     UserDBAdapter userDBAdapter;
     ArrayList<Integer> permissions_name;
+    ArrayList<Permissions> permissions = new ArrayList<Permissions>();
     ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
+    Intent i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +75,6 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
 
         TitleBar.setTitleBar(this);
 
-
         AccessToken accessToken = new AccessToken(this);
         accessToken.execute(this);
         //load pos id from shared file
@@ -95,47 +89,41 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
             String token = sharedpreferences.getString(MessageKey.Token, null);
             SESSION.token = token;
         }
-        mainScreen = (Button) findViewById(R.id.mainScreen);
-        btAReport = (Button) findViewById(R.id.dashboard_btAreport);
-        btZReport = (Button) findViewById(R.id.dashboard_btZreport);
 
-
-
-        report = (Button) findViewById(R.id.report);
-        product = (Button) findViewById(R.id.product);
-        department = (Button) findViewById(R.id.department);
-
-        offers = (Button) findViewById(R.id.offers);
-
-        users = (Button) findViewById(R.id.users);
-
-        backUp = (Button) findViewById(R.id.backUp);
-
-        logOut = (Button) findViewById(R.id.logOut);
-
-        customerClub = (Button) findViewById(R.id.coustmerClub);
-
-        settings = (Button) findViewById(R.id.settings);
-
-        report.setEnabled(false);
-        product.setEnabled(false);
-        offers.setEnabled(false);
-        users.setEnabled(false);
-        backUp.setEnabled(false);
-        department.setEnabled(false);
-        department.setEnabled(false);
-        customerClub.setEnabled(false);
-        settings.setEnabled(false);
-        btAReport.setEnabled(false);
-        btZReport.setEnabled(false);
-        mainScreen.setEnabled(false);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             //   permissions_name = bundle.getString("permissions_name");
             permissions_name = getIntent().getIntegerArrayListExtra("permissions_name");
         }
-        onClickedImage();
+
+
+        PermissionsDBAdapter permissionsDBAdapter = new PermissionsDBAdapter(this);
+        permissionsDBAdapter.open();
+        for (int p : permissions_name) {
+            Permissions per = permissionsDBAdapter.getPermission(p);
+            if (per != null) {
+                permissions.add(per);
+            }
+        }
+        permissionsDBAdapter.close();
+
+
+
+        mainScreen = (Button) findViewById(R.id.mainScreen);
+        btAReport = (Button) findViewById(R.id.dashboard_btAreport);
+        btZReport = (Button) findViewById(R.id.dashboard_btZreport);
+        report = (Button) findViewById(R.id.report);
+        product = (Button) findViewById(R.id.product);
+        department = (Button) findViewById(R.id.department);
+        offers = (Button) findViewById(R.id.offers);
+        users = (Button) findViewById(R.id.users);
+        backUp = (Button) findViewById(R.id.backUp);
+        logOut = (Button) findViewById(R.id.logOut);
+        customerClub = (Button) findViewById(R.id.coustmerClub);
+        settings = (Button) findViewById(R.id.settings);
+
+        EnableButtons();
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,200 +141,189 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
+
+        //region a report button
+        btAReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AReport _aReport = new AReport();
+                _aReport.setByUserID(SESSION._USER.getId());
+                _aReport.setCreationDate(new Date().getTime());
+
+                AReport aReport = getLastAReport();
+                ZReport zReport = getLastZReport();
+
+                if (aReport == null) {
+                    _aReport.setLastZReportID(-1);
+                    _aReport.setLastSaleID(-1);
+
+                    ShowAReportDialog(_aReport);
+                }
+                else{
+                    _aReport.setLastZReportID(zReport.getId());
+                    _aReport.setLastSaleID(zReport.getEndSaleId());
+
+                    ShowAReportDialog(_aReport);
+                }
+
+            }
+        });
+        //endregion a report button
+
+        //region z report button
+        btZReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Sale lastSale;
+                ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(TempDashBord.this);
+                zReportDBAdapter.open();
+                ZReport lastZReport = getLastZReport();
+
+                if(lastZReport == null) {
+                    lastZReport = new ZReport();
+                    lastZReport.setEndSaleId(0);
+                }
+                SaleDBAdapter saleDBAdapter = new SaleDBAdapter(TempDashBord.this);
+                saleDBAdapter.open();
+                lastSale = saleDBAdapter.getLast();
+                saleDBAdapter.close();
+
+                ZReport z=new ZReport(0, DateConverter.stringToDate(DateConverter.currentDateTime()) , SESSION._USER,lastZReport.getEndSaleId()+1,lastSale);
+                z.setByUser(SESSION._USER.getId());
+                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId());
+                z.setId(zID);
+                lastZReport = new ZReport(z);
+                zReportDBAdapter.close();
+                PrintTools pt = new PrintTools(TempDashBord.this);
+
+                //create and print z report
+                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false);
+                if(bmap!=null)
+                    pt.PrintReport(bmap);
+
+                Intent i=new Intent(TempDashBord.this,ReportZDetailsActivity.class);
+                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID,lastZReport.getId());
+                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM,lastZReport.getStartSaleId());
+                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO,lastZReport.getEndSaleId());
+                startActivity(i);
+                btZReport.setEnabled(false);
+            }
+        });
+        //endregion z report button
+
+        mainScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
+            }
+        });
+        report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                i = new Intent(getApplicationContext(), ReportsManagementActivity.class);
+                startActivity(i);
+            }
+        });
+        product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                i = new Intent(getApplicationContext(), ProductsActivity.class);
+                startActivity(i);
+            }
+        });
+        department.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                i = new Intent(getApplicationContext(), DepartmentActivity.class);
+                startActivity(i);
+            }
+        });
+        backUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                i = new Intent(getApplicationContext(), BackupActivity.class);
+                startActivity(i);
+            }
+        });
+        users.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                i = new Intent(getApplicationContext(), WorkerManagementActivity.class);
+                startActivity(i);
+            }
+        });
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                i = new Intent(getApplicationContext(), SettingActivity.class);
+                startActivity(i);
+            }
+        });
+        customerClub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                i = new Intent(getApplicationContext(), Coustmer.class);
+                startActivity(i);
+            }
+        });
+
+
+
+        report.setEnabled(false);
+        product.setEnabled(false);
+        offers.setEnabled(false);
+        users.setEnabled(false);
+        backUp.setEnabled(false);
+        department.setEnabled(false);
+        department.setEnabled(false);
+        customerClub.setEnabled(false);
+        settings.setEnabled(false);
+        btAReport.setEnabled(false);
+        btZReport.setEnabled(false);
+        mainScreen.setEnabled(false);
     }
 
-    public void onClickedImage() {
-        if (permissions_name.contains(1)) {
-            if(needAReport()){
-                btAReport.setEnabled(true);
-                btZReport.setEnabled(false);
-                mainScreen.setEnabled(false);
-            }else{
-                btAReport.setEnabled(false);
-                btZReport.setEnabled(true);
-                mainScreen.setEnabled(true);
+    public void EnableButtons() {
+        for (Permissions p:permissions) {
+            switch (p.getName()) {
+                case Permissions.PERMISSIONS_MAIN_SCREEN:
+                    if (needAReport()) {
+                        btAReport.setEnabled(true);
+                        btZReport.setEnabled(false);
+                        mainScreen.setEnabled(false);
+                    } else {
+                        btAReport.setEnabled(false);
+                        btZReport.setEnabled(true);
+                        mainScreen.setEnabled(true);
+                    }
+                    break;
+
+                case Permissions.PERMISSIONS_REPORT:
+                    report.setEnabled(true);
+                    break;
+                case Permissions.PERMISSIONS_PRODUCT:
+                    product.setEnabled(true);
+                    break;
+                case Permissions.PERMISSIONS_DEPARTMENT:
+                    department.setEnabled(true);
+                    break;
+                case Permissions.PERMISSIONS_USER:
+                    users.setEnabled(true);
+                    break;
+                case Permissions.PERMISSIONS_OFFER:
+                    offers.setEnabled(true);
+                    break;
+                case Permissions.PERMISSIONS_BACK_UP:
+                    backUp.setEnabled(true);
+                    break;
+                case Permissions.PERMISSIONS_SETTINGS:
+                    settings.setEnabled(true);
+                    break;
+                case Permissions.PERMISSIONS_USER_CLUB:
+                    customerClub.setEnabled(true);
+                    break;
             }
-
-            //region a report button
-            btAReport.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final AReport _aReport = new AReport();
-                    _aReport.setByUserID(SESSION._USER.getId());
-                    _aReport.setCreationDate(new Date().getTime());
-
-                    AReport aReport = getLastAReport();
-                    ZReport zReport = getLastZReport();
-
-                    if (aReport == null) {
-                        _aReport.setLastZReportID(-1);
-                        _aReport.setLastSaleID(-1);
-
-                        ShowAReportDialog(_aReport);
-                    }
-                    else{
-                        _aReport.setLastZReportID(zReport.getId());
-                        _aReport.setLastSaleID(zReport.getEndSaleId());
-
-                        ShowAReportDialog(_aReport);
-                    }
-
-                }
-            });
-            //endregion a report button
-
-            //region z report button
-            btZReport.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Sale lastSale;
-                    ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(TempDashBord.this);
-                    zReportDBAdapter.open();
-                    ZReport lastZReport = getLastZReport();
-
-                    if(lastZReport == null) {
-                        lastZReport = new ZReport();
-                        lastZReport.setEndSaleId(0);
-                    }
-                    SaleDBAdapter saleDBAdapter = new SaleDBAdapter(TempDashBord.this);
-                    saleDBAdapter.open();
-                    lastSale = saleDBAdapter.getLast();
-                    saleDBAdapter.close();
-
-                    ZReport z=new ZReport(0, DateConverter.stringToDate(DateConverter.currentDateTime()) , SESSION._USER,lastZReport.getEndSaleId()+1,lastSale);
-                    z.setByUser(SESSION._USER.getId());
-                    long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId());
-                    z.setId(zID);
-                    lastZReport = new ZReport(z);
-                    zReportDBAdapter.close();
-                    PrintTools pt = new PrintTools(TempDashBord.this);
-
-                    //create and print z report
-                    Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false);
-                    if(bmap!=null)
-                        pt.PrintReport(bmap);
-
-                    Intent i=new Intent(TempDashBord.this,ReportZDetailsActivity.class);
-                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID,lastZReport.getId());
-                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM,lastZReport.getStartSaleId());
-                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO,lastZReport.getEndSaleId());
-                    startActivity(i);
-                    btZReport.setEnabled(false);
-                }
-            });
-            //endregion z report button
-
-            mainScreen.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //// TODO: 22/10/2016 cancel and return to previous activity
-                    Intent i;
-                    i = new Intent(getApplicationContext(), MainActivity.class);
-                    i.putIntegerArrayListExtra("permissions_name", permissions_name);
-                    startActivity(i);
-                }
-            });
-        }
-
-        if (permissions_name.contains(2)) {
-            report.setEnabled(true);
-            report.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //// TODO: 22/10/2016 cancel and return to previous activity
-                    Intent i;
-                    i = new Intent(getApplicationContext(), ReportsManagementActivity.class);
-                    i.putIntegerArrayListExtra("permissions_name", permissions_name);
-                    startActivity(i);
-                }
-            });
-        } else if (permissions_name.contains(3)) {
-            product.setEnabled(true);
-            product.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //// TODO: 22/10/2016 cancel and return to previous activity
-                    Intent i;
-                    i = new Intent(getApplicationContext(), ProductsActivity.class);
-                    i.putIntegerArrayListExtra("permissions_name", permissions_name);
-                    startActivity(i);
-                }
-            });
-        }
-
-
-        if (permissions_name.contains(4)) {
-            department.setEnabled(true);
-            department.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //// TODO: 22/10/2016 cancel and return to previous activity
-                    Intent i;
-                    i = new Intent(getApplicationContext(), DepartmentActivity.class);
-                    i.putIntegerArrayListExtra("permissions_name", permissions_name);
-                    startActivity(i);
-                }
-            });
-        }
-
-        if (permissions_name.contains(5)) {
-            users.setEnabled(true);
-            users.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //// TODO: 22/10/2016 cancel and return to previous activity
-                    Intent i;
-                    i = new Intent(getApplicationContext(), WorkerManagementActivity.class);
-                    i.putIntegerArrayListExtra("permissions_name", permissions_name);
-                    startActivity(i);
-                }
-            });
-        }
-
-        if (permissions_name.contains(6)) {
-            offers.setEnabled(true);
-
-        }
-
-        if (permissions_name.contains(7)) {
-            backUp.setEnabled(true);
-            backUp.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //// TODO: 22/10/2016 cancel and return to previous activity
-                    Intent i;
-                    i = new Intent(getApplicationContext(), BackupActivity.class);
-                    i.putIntegerArrayListExtra("permissions_name", permissions_name);
-                    startActivity(i);
-                }
-            });
-        }
-        if (permissions_name.contains(8)) {
-            settings.setEnabled(true);
-            settings.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //// TODO: 22/10/2016 cancel and return to previous activity
-                    Intent i;
-                    i = new Intent(getApplicationContext(), SettingActivity.class);
-                    i.putIntegerArrayListExtra("permissions_name", permissions_name);
-                    startActivity(i);
-                }
-            });
-        }
-        if (permissions_name.contains(9)) {
-            customerClub.setEnabled(true);
-
-            customerClub.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //// TODO: 22/10/2016 cancel and return to previous activity
-                    Intent i;
-                    i = new Intent(getApplicationContext(), Coustmer.class);
-                    i.putIntegerArrayListExtra("permissions_name", permissions_name);
-                    startActivity(i);
-                }
-            });
         }
     }
 
@@ -361,7 +338,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                 extras.clear();
             }
         }
-        onClickedImage();
+        EnableButtons();
     }
 
     private boolean needAReport(){

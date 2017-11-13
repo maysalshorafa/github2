@@ -8,16 +8,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.City;
-import com.pos.leaders.leaderspossystem.Models.Group;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
-import com.pos.leaders.leaderspossystem.Models.User;
-import com.pos.leaders.leaderspossystem.Models.UserPermissions;
+import com.pos.leaders.leaderspossystem.Models.Permission.UserPermissions;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
@@ -55,7 +50,7 @@ public class UserPermissionsDBAdapter {
 
 
 
-		public long insertEntry( int permissionsId, long userId) {
+		public long insertEntry( long permissionsId, long userId) {
 			UserPermissions userPermissions = new UserPermissions(Util.idHealth(this.db, USERPERMISSIONS_TABLE_NAME, USERPERMISSIONS_COLUMN_ID),userId,permissionsId);
 			sendToBroker(MessageType.ADD_USER_PERMISSION, userPermissions, this.context);
 

@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Permissions;
+import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class PermissionsDBAdapter {
 	}
 
 
-	public int insertEntry(String name) {
+	public long insertEntry(String name) {
 		ContentValues val = new ContentValues();
 		val.put(PERMISSIONS_COLUMN_ID, Util.idHealth(this.db, PERMISSIONS_TABLE_NAME, PERMISSIONS_COLUMN_ID));
 
@@ -65,6 +65,18 @@ public class PermissionsDBAdapter {
 			Log.e("Permissions DB insert", "inserting Entry at " + PERMISSIONS_TABLE_NAME + ": " + ex.getMessage());
 			return 0;
 		}
+	}
+
+	public Permissions getPermission(long id){
+		Cursor cursor = db.rawQuery("select * from " + PERMISSIONS_TABLE_NAME + " where id=" + id, null);
+		if (cursor.getCount() < 1) // UserName Not Exist
+		{
+			cursor.close();
+			return null;
+		}
+		cursor.moveToFirst();
+		return new Permissions(cursor.getLong(cursor.getColumnIndex(PERMISSIONS_COLUMN_ID)),
+				cursor.getString(cursor.getColumnIndex(PERMISSIONS_COLUMN_NAME)));
 	}
 
 	public List<Permissions> getAllPermissions() {

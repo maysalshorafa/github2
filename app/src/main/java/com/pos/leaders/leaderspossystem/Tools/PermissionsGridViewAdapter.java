@@ -6,12 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Switch;
-import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.Models.Permissions;
+import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
