@@ -129,13 +129,7 @@
             android:layout_marginTop="30dp"
             android:layout_weight=".75"
             android:background="@drawable/layout_border"
-<<<<<<< HEAD
-            android:orientation="horizontal"
-            android:layout_weight=".75"
-            android:textDirection="anyRtl">
-=======
             android:orientation="horizontal">
->>>>>>> master
 
 
             <EditText
@@ -152,13 +146,8 @@
                 android:paddingTop="10dp"
                 android:text="0"
                 android:textColor="@color/black"
-<<<<<<< HEAD
-                android:textSize="20dp"
-                android:textDirection="anyRtl" />
-=======
                 android:textDirection="ltr"
                 android:textSize="20dp" />
->>>>>>> master
         </LinearLayout>
 
         <LinearLayout
@@ -213,13 +202,8 @@
                 android:inputType="number"
                 android:text="0"
                 android:textColor="@color/black"
-<<<<<<< HEAD
-                android:textSize="20dp"
-                android:textDirection="anyRtl"/>
-=======
                 android:textDirection="ltr"
                 android:textSize="20dp" />
->>>>>>> master
         </LinearLayout>
 
         <LinearLayout

@@ -177,39 +177,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
         tvTotalInsertedForFirstCurrency.addTextChangedListener(new TextWatcher() {
             @Override
-<<<<<<< HEAD
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-
-                if ((event.getAction() == KeyEvent.ACTION_UP)) {
-                    CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
-                    currencyDBAdapter.open();
-                    firstCurrencyId = spinnerForFirstCurrency.getSelectedItemId();
-
-                    Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForFirstCurrency.getSelectedItem().toString());
-                    insertedValueForFirstCurrency = tvTotalInsertedForFirstCurrency.getText().toString();
-                    try {
-                        firstCurruncyValue = (double) (Double.parseDouble(insertedValueForFirstCurrency) * currency.getRate());
-                    } catch (NumberFormatException e) {
-                        firstCurruncyValue = 0; // your default value
-                    }
-                    tvTotalInserted.setText(Double.toString(firstCurruncyValue + secondCurrency));
-                    if (firstCurruncyValue + secondCurrency >= totalPrice)
-                        tvTotalInserted.setTextColor(getResources().getColor(R.color.Green));
-                    else
-                        tvTotalInserted.setTextColor(getResources().getColor(R.color.dangerColor));
-
-                    exceesValue = (firstCurruncyValue + secondCurrency) - totalPrice;
-                    if (exceesValue >= 0) {
-                        btnDone.setEnabled(true);
-                        btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
-                    } else {
-                        btnDone.setEnabled(false);
-                        btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
-                    }
-                    currencyDBAdapter.close();
-=======
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
->>>>>>> master
 
             }
 
@@ -235,7 +203,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                 if (firstCurruncyValue + secondCurrency >= totalPrice)
                     tvTotalInserted.setTextColor(getResources().getColor(R.color.Green));
                 else
-                    tvTotalInserted.setTextColor(Color.BLACK);
+                    tvTotalInserted.setTextColor(getResources().getColor(R.color.Red));
 
                 exceesValue = (firstCurruncyValue + secondCurrency) - totalPrice;
                 if (exceesValue >= 0) {
@@ -257,40 +225,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
             }
 
             @Override
-<<<<<<< HEAD
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-
-                if ((event.getAction() == KeyEvent.ACTION_UP)) {
-                    CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
-                    currencyDBAdapter.open();
-                    secondCurrencyId = spinnerForSecondCurrency.getSelectedItemId();
-                    Currency currency = currencyDBAdapter.getSpeficCurrencys(spinnerForSecondCurrency.getSelectedItem().toString());
-                    insertedValueForSecondCurrency = tvTotalInsertedForSecondCurrency.getText().toString();
-                    try {
-                        secondCurrency = (double) (Double.parseDouble(insertedValueForSecondCurrency) * currency.getRate());
-                    } catch (NumberFormatException e) {
-                        secondCurrency = 0; // your default value
-                    }
-                    tvTotalInserted.setText(Double.toString(firstCurruncyValue + secondCurrency));
-                    if (firstCurruncyValue + secondCurrency >= totalPrice) {
-                        tvTotalInserted.setTextColor(getResources().getColor(R.color.Green));
-                    } else {
-
-
-                        tvTotalInserted.setTextColor(getResources().getColor(R.color.dangerColor));
-                    }
-                    exceesValue = (firstCurruncyValue + secondCurrency) - totalPrice;
-                    if (exceesValue >= 0) {
-                        btnDone.setEnabled(true);
-                        btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
-                    } else {
-                        btnDone.setEnabled(false);
-                        btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
-                    }
-                    currencyDBAdapter.close();
-=======
             public void onTextChanged(CharSequence s, int start, int before, int count) {
->>>>>>> master
 
             }
 
@@ -312,7 +247,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                 } else {
 
 
-                    tvTotalInserted.setTextColor(Color.BLACK);
+                    tvTotalInserted.setTextColor(getResources().getColor(R.color.Red));
                 }
                 exceesValue = (firstCurruncyValue + secondCurrency) - totalPrice;
                 if (exceesValue >= 0) {
