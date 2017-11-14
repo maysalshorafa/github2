@@ -43,7 +43,7 @@ public class UserDBAdapter {
 
     // TODO: Create public field for each column in your table.
     // SQL Statement to create a new database.
-    public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS users ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,`userName` TEXT UNIQUE, `firstName` TEXT NOT NULL, `lastName` TEXT, `visitDate` TEXT NOT NULL DEFAULT current_timestamp,`pwd` TEXT UNIQUE, `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, `hourlyWage` REAL DEFAULT 0.0 )";
+    public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS users ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,`userName` TEXT UNIQUE, `firstName` TEXT NOT NULL, `lastName` TEXT, `visitDate` TEXT NOT NULL DEFAULT current_timestamp,`pwd` TEXT , `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, `hourlyWage` REAL DEFAULT 0.0 )";
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
@@ -197,7 +197,16 @@ public class UserDBAdapter {
         // User Name available
         return true;
     }
-
+    public boolean availablePassWord(String password) {
+        Cursor cursor = db.query(USERS_TABLE_NAME, null, USERS_COLUMN_PASSWORD + "=?", new String[]{password}, null, null, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+            // User Name not available
+            return false;
+        }
+        // User Name available
+        return true;
+    }
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<User>();
         Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where " + USERS_COLUMN_DISENABLED + "=0 order by id desc", null);
