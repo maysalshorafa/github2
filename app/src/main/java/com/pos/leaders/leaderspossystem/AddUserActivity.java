@@ -114,9 +114,9 @@ List<String> selectedFromList=new  ArrayList<String>();;
 			etPresent.setText(user.getPresent() + "");
 			etHourlyWage.setText(user.getHourlyWage() + "");
 			userPermissions	= userPermissionsDBAdapter.getPermissions(i);
-				for (int permissionsNo = 0; permissionsNo <= lvPermissions.getAdapter().getCount(); permissionsNo++){
-				lvPermissions.setSelection(userPermissions.get(permissionsNo));
-					lvPermissions.getChildAt(userPermissions.get(permissionsNo)).setBackgroundColor(Color.BLUE);
+				for (int permissionsNo = 0; permissionsNo <= lvPermissions.getCount()-1; permissionsNo++){
+//				lvPermissions.setSelection(userPermissions.get(permissionsNo));
+					//lvPermissions.getChildAt(userPermissions.get(permissionsNo)).setBackgroundColor(Color.BLUE);
 
 				}
 				//The key argument here must match that used in the other activity
