@@ -76,9 +76,9 @@ public class UserPermissionsDBAdapter {
 			return 0;
 		}
 	}
-	public ArrayList<Integer> getPermissions(long rule_id) {
+	public ArrayList<Integer> getPermissions(long user_id) {
 		ArrayList<Integer> permissions = new ArrayList<Integer>();
-		Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where userId='" + rule_id + "'" , null);
+		Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where userId='" + user_id + "'" , null);
 		cursor1.moveToFirst();
 
 

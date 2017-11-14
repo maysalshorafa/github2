@@ -1,9 +1,11 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.widget.AbsListView.CHOICE_MODE_MULTIPLE;
+
 /**
  * Created by KARAM on 22/10/2016.
  */
@@ -41,6 +45,7 @@ public class AddUserActivity extends AppCompatActivity {
 	final List<View> selectedViews=new ArrayList<View>();
 List<String> selectedFromList=new  ArrayList<String>();;
 	ArrayList<Integer> permissions_name;
+	ArrayList<Integer> userPermissions;
 	List<String> permissionName;
 	Map<String,Long> permissionsMap=new HashMap<String,Long>();
 	ArrayAdapter<String> LAdapter;
@@ -75,13 +80,28 @@ List<String> selectedFromList=new  ArrayList<String>();;
 
 		userDBAdapter = new UserDBAdapter(this);
 		userDBAdapter.open();
-
+		UserPermissionsDBAdapter userPermissionsDBAdapter=new UserPermissionsDBAdapter(this);
+		userPermissionsDBAdapter.open();
 		user = null;
+		PermissionsDBAdapter permissionsDBAdapter = new PermissionsDBAdapter(this);
+		permissionsDBAdapter.open();
 
+		List<Permissions> permissionsList = new ArrayList<Permissions>();
+		permissionsList = permissionsDBAdapter.getAllPermissions();
+
+		for (Permissions d : permissionsList) {
+			permissionName.add(d.getName());
+			permissionsMap.put(d.getName(),d.getId());
+		}
+
+		LAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,permissionName);
+		lvPermissions.setAdapter(LAdapter);
+		lvPermissions.setChoiceMode(CHOICE_MODE_MULTIPLE);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-
 			long i = (long) extras.get("userId");
+			String btnName=extras.getString(WorkerManagementActivity.LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME);
+			btAdd.setText(btnName);
 			user = userDBAdapter.getUserByID(i);
 			etUserName.setText(user.getUserName());
 			etPassword.setText(user.getPassword());
@@ -93,9 +113,13 @@ List<String> selectedFromList=new  ArrayList<String>();;
 			etPhoneNumber.setText(user.getPhoneNumber());
 			etPresent.setText(user.getPresent() + "");
 			etHourlyWage.setText(user.getHourlyWage() + "");
-			btAdd.setText(getResources().getText(R.string.edit));
+			userPermissions	= userPermissionsDBAdapter.getPermissions(i);
+				for (int permissionsNo = 0; permissionsNo <= lvPermissions.getCount()-1; permissionsNo++){
+//				lvPermissions.setSelection(userPermissions.get(permissionsNo));
+					//lvPermissions.getChildAt(userPermissions.get(permissionsNo)).setBackgroundColor(Color.BLUE);
 
-			//The key argument here must match that used in the other activity
+				}
+				//The key argument here must match that used in the other activity
 		}
 
 		btAdd.setOnClickListener(new View.OnClickListener() {
@@ -146,8 +170,6 @@ List<String> selectedFromList=new  ArrayList<String>();;
 				} else {
 					// Edit mode
 					if (_userName != "") {
-
-						if ((userDBAdapter.availableUserName(_userName)) || _userName == user.getUserName()) {
 							if (etFirstName.getText().toString().equals("")) {
 								Toast.makeText(getApplicationContext(), "Please insert first name", Toast.LENGTH_LONG).show();
 							} else if (etPresent.getText().toString().equals("")) {
@@ -175,9 +197,7 @@ List<String> selectedFromList=new  ArrayList<String>();;
 									Toast.makeText(getApplicationContext(), "Can`t edit user please try again", Toast.LENGTH_SHORT).show();
 								}
 							}
-						} else {
-							Toast.makeText(getApplicationContext(), "User name is not available, try to use another user name", Toast.LENGTH_LONG).show();
-						}
+
 					}
 				}
 			}
@@ -194,20 +214,7 @@ List<String> selectedFromList=new  ArrayList<String>();;
 				startActivity(intent);
 			}
 		});
-		PermissionsDBAdapter permissionsDBAdapter = new PermissionsDBAdapter(this);
-		permissionsDBAdapter.open();
 
-		List<Permissions> permissionsList = new ArrayList<Permissions>();
-		permissionsList = permissionsDBAdapter.getAllPermissions();
-
-		for (Permissions d : permissionsList) {
-			permissionName.add(d.getName());
-			permissionsMap.put(d.getName(),d.getId());
-		}
-
-		LAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,permissionName);
-		lvPermissions.setAdapter(LAdapter);
-		lvPermissions.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 		lvPermissions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
@@ -236,5 +243,13 @@ List<String> selectedFromList=new  ArrayList<String>();;
 				}
 			}
 		});
+	}
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		//  if(keyCode==KeyEvent.KEYCODE_BACK)
+		//   Toast.makeText(getContext(), "back press", Toast.LENGTH_LONG).show();
+
+		return false;
+		// Disable back button..............
 	}
 }

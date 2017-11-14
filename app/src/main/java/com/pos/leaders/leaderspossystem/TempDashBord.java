@@ -250,6 +250,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onClick(View v) {
                 i = new Intent(getApplicationContext(), WorkerManagementActivity.class);
+                i.putIntegerArrayListExtra("permissions_name", permissions_name);
                 startActivity(i);
             }
         });

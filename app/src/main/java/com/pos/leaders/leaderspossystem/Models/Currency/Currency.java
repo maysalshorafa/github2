@@ -1,5 +1,9 @@
 package com.pos.leaders.leaderspossystem.Models.Currency;
 
+import android.content.Context;
+
+import com.pos.leaders.leaderspossystem.Tools.TempCashActivty;
+
 import java.util.Date;
 
 /**
@@ -12,6 +16,10 @@ public class Currency {
     private String country;
     private String currency_code;
     private double rate;
+
+    public Currency(Context context) {
+
+    }
 
     public Date getCreateDate() {
         return createDate;

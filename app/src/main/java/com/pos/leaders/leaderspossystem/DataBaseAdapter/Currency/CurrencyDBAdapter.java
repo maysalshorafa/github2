@@ -9,11 +9,15 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
+import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
@@ -128,24 +132,28 @@ public class CurrencyDBAdapter {
         db.update(Currency_TABLE_NAME, val, where, new String[]{currency.getId() + ""});
     }
 
+    public List<Currency> getAllCurrency(List<CurrencyType> currency) {
+        List<Currency> currencyList = new ArrayList<Currency>();
+        Cursor cursor=null;
+        String name="";
+        for (int i=0; i<=currency.size()-1;i++) {
+           name=currency.get(i).getType();
+           cursor = db.rawQuery("select * from " + Currency_TABLE_NAME + " where  name='" + name + "'"+ " order by id desc", null);
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                currencyList.add(createNewCurrency(cursor));
+                cursor.moveToNext();
+            } }
 
-    public Currency getSpeficCurrencys(String name) {
-        Currency currency =null;
-        Cursor cursor = db.rawQuery("select * from " + Currency_TABLE_NAME + " where  name='" + name + "'"+ " order by id desc", null);
-        if (cursor.getCount() < 1) // UserName Not Exist
-        {
-            cursor.close();
-            return currency;
-        }
-        cursor.moveToFirst();
-        currency =new Currency(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Currency_COLUMN_ID))),
+
+        return currencyList;
+    }
+    private Currency createNewCurrency(Cursor cursor) {
+        return new Currency(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Currency_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(Currency_COLUMN_Name)),
                 cursor.getString(cursor.getColumnIndex(Currency_COLUMN_CurrencyCode)),
                 cursor.getString(cursor.getColumnIndex(Currency_COLUMN_Country)),
-               Double.parseDouble( cursor.getString(cursor.getColumnIndex(CurrencyCOLUMN_Rate))),  DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(CurrencyCOLUMN_createDate))));
-        cursor.close();
-
-        return currency;
+                Double.parseDouble( cursor.getString(cursor.getColumnIndex(CurrencyCOLUMN_Rate))),  DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(CurrencyCOLUMN_createDate))));
     }
 
 }
