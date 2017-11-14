@@ -392,7 +392,7 @@
 
                                     android:paddingLeft="5dp"
                                     android:paddingRight="5dp"
-                                android:text="@string/custmer_name"
+                                android:text="@string/customer_name"
                                     android:textColor="@color/black" />
 
                                 <TextView

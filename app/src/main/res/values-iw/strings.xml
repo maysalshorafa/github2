@@ -36,17 +36,14 @@
         <item>תשלומים</item>
         <item>עסקת מועדון בתשלומים</item>
     </string-array>
-
-
     <!--Invoice-->
     <string name="source_invoice">- מקור -</string>
     <string name="copy_invoice">- עותק -</string>
-    <string name="private_company">ח.פ</string>
+    <string name="private_company">ח.פ. / ע.מ.</string>
     <!--\u0190-->
     <string name="invoice_with_tax">חש\' מס-קבלה</string>
     <string name="credit_invoice">חש\' זיכוי</string>
     <string name="replacement_invoice">פתק החלפה</string>
-
 
     <!--Z Report-->
     <string name="z_number">מספר Z:</string>
@@ -75,19 +72,61 @@
     <string name="barcode">מק\'\'ט</string>
     <string name="branch">מס\' סניף</string>
     <string name="browser">עין</string>
-    <string name="by_card">דרך כרטיס</string>
-    <string name="by_phone">ידני</string>
     <string name="cancel">ביטול</string>
-    <string name="cant_do_this_function_discount"></string>
+    <string name="cant_do_this_function_discount">לא תוכל לתת את ההנחה הזו</string>
     <string name="card_expiry">תאריך הכרטיס</string>
-    <string name="check_number"></string>
+    <string name="check_number">מס\' צ\'ק</string>
     <string name="tax">מע\'\'מ</string>
     <string name="checks">המחאות</string>
     <string name="general">כללי</string>
     <string name="extracting_files">הפקת קבצים</string>
     <string name="credit">זיכוי</string>
     <string name="confirmation">אישור</string>
-
     <string name="sales_man">איש מכירות</string>
+    <string name="customer_name">לכבוד</string>
+    <string name="group_name">מועדון לקוחות</string>
+    <string name="Information">מועדון לקוחות</string>
+    <string name="count">כמות</string>
+    <string name="search">חפוש</string>
+    <string name="pause">השהיה</string>
+    <string name="resume">המשיך</string>
+    <string name="discount">הנחה</string>
+    <string name="general_product">מוצר כללי</string>
+    <string name="clearCartAlertTitle">נקוי הסל</string>
+    <string name="clearCartAlertMessage">ברצונך לנקות סל הקניות?</string>
+    <string name="yes">כן</string>
+    <string name="no">לא</string>
+    <string name="multi_count">נא להכניס כמות.</string>
+    <string name="by_card">דרך כרטיס</string>
+    <string name="by_phone">עסקה טלפונית</string>
+    <string name="number_of_payments">מספר תשלומים</string>
+    <string name="first_payment">תשלום ראשון</string>
+    <string name="credit_type">סוג העסקה</string>
+    <string name="wait_for_accept">המתן לאישור</string>
+    <string name="please_select_item">נא לביור מוצר מתוך הסל</string>
+    <string name="please_add_item">נא להכניס מוצרים לסל הקניות</string>
+    <string name="please_select_discount_offer">נא לכניס ערך ההנחה</string>
 
+    <string name="list_of_pause_sales">עסקאות בהשהיה</string>
+    <string name="there_is_no_sale_on_pause">אין עסקאות בהשהיה</string>
+    <string name="deal_number">עסקה מספר</string>
+    <string name="resume_deal_number">המשכת עסקה מספר</string>
+    <string name="set_price">קובע מחיר</string>
+    <string name="opening_report">דוח פתיחה</string>
+
+    <!--Checks Activity pop-up-->
+    <string name="add_check">הוספת צ\'ק</string>
+    <string name="check_pid_error">הערך הכולל של הצ\'קים לא תואם סכום העסקה.</string>
+    <string name="not_inserted_checks">לא הוכנס צ\'ק</string>
+
+    <!--Log In Screen-->
+    <string name="log_in">כניסה</string>
+    <string name="password">סיסמה</string>
+    <string name="empty_password">אנא הכנס את הסיסמה שלך</string>
+    <string name="wrong_password">נא הכנס סיסמה תקינה</string>
+
+
+
+
+    <string name="general_customer">לקוח כללי</string>
 </resources>

@@ -118,8 +118,10 @@
         <activity android:name=".TempDashBord" />
         <activity android:name=".SalesManManagementActivity" />
         <activity android:name=".SalesAssistantDetailesSalesMangmentActivity" />
-        <activity android:name=".CurrencyReturnsCustomDialogActivity"
-            android:theme="@style/AppTheme.PopUp"></activity>
+        <activity
+            android:name=".CurrencyReturnsCustomDialogActivity"
+            android:theme="@style/AppTheme.PopUp" />
+        <activity android:name=".PrinterStub"></activity>
     </application>
 
 </manifest>

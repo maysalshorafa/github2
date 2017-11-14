@@ -20,6 +20,5 @@ public class SETTINGS {
 	public static String posID;
     public static boolean LOADED_DATA ;
 
-	public static String custmer_name ;
-
+	public static String customer_name ;
 }

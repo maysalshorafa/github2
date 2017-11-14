@@ -39,6 +39,11 @@ public class TitleBar {
         actionBar.setDisplayShowCustomEnabled(true);
         actionBarLayout.setLayoutParams(params);
         actionBar.setCustomView(actionBarLayout);
+        if (SESSION._USER == null) {
+            //terminal stop
+            System.exit(0);
+        }
+
         long date;
         Calendar ca = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");

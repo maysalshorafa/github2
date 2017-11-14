@@ -228,7 +228,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         product.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), ProductsActivity.class);
+                i = new Intent(getApplicationContext(), ProductCatalogActivity.class);
                 startActivity(i);
             }
         });
