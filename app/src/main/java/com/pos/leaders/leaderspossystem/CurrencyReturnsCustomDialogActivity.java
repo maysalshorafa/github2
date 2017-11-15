@@ -70,6 +70,9 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog implements  View
         returnSpener.setOnItemSelectedListener(this);
 
         currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(getContext());
+        currencyDBAdapter.open();
+        final List<Currency> currencyList = currencyDBAdapter.getAllCurrency(currencyTypesList);
 
         final List<String> currency = new ArrayList<String>();
         for (int i = 0; i < currencyTypesList.size(); i++) {
@@ -94,10 +97,13 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog implements  View
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-                CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(getContext());
-                currencyDBAdapter.open();
+                Currency currency=new Currency(getContext());
+                for (int i=0 ;i<=currencyList.size()-1;i++){
+                    if(currencyList.get(i).getName().equals(returnSpener.getSelectedItem().toString())){
+                        currency = currencyList.get(i);
+                    }
+                }
                 returnSpenerId = returnSpener.getSelectedItemId();
-                Currency currency = currencyDBAdapter.getSpeficCurrencys(returnSpener.getSelectedItem().toString());
                 template = (double) (Double.parseDouble(valueForReturnValue) / currency.getRate());
                 tvExcess.setText(template + "");
             }

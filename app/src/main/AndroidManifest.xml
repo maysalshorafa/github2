@@ -56,7 +56,6 @@
         <activity android:name=".AddUserActivity" />
         <activity android:name=".OfferActivity" />
         <activity android:name=".OfferRuleActivity" />
-        <activity android:name=".WorkerManagementActivity" />
         <activity android:name=".SalesManagementActivity" />
         <activity android:name=".Reports.UserAttendanceReport" />
         <activity android:name="." />
@@ -121,7 +120,9 @@
         <activity
             android:name=".CurrencyReturnsCustomDialogActivity"
             android:theme="@style/AppTheme.PopUp" />
+
         <activity android:name=".PrinterStub"></activity>
+        <activity android:name=".WorkerManagementActivity"></activity>
     </application>
 
 </manifest>
