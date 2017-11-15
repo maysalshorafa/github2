@@ -83,7 +83,7 @@ List<String> selectedFromList=new  ArrayList<String>();;
 
 		userDBAdapter = new UserDBAdapter(this);
 
-		UserPermissionsDBAdapter userPermissionsDBAdapter=new UserPermissionsDBAdapter(this);
+		final UserPermissionsDBAdapter userPermissionsDBAdapter=new UserPermissionsDBAdapter(this);
 
 		user = null;
 		PermissionsDBAdapter permissionsDBAdapter = new PermissionsDBAdapter(this);
@@ -129,18 +129,17 @@ List<String> selectedFromList=new  ArrayList<String>();;
 			userPermissionsDBAdapter.close();
 			List<Permissions> userPermissionses = new ArrayList<>();
 			permissionsDBAdapter.open();
-			for (int p :
-					userPermissions) {
-				userPermissionses.add(permissionsDBAdapter.getPermission(p));
+			for (int p : userPermissions) {
+                Permissions _p = permissionsDBAdapter.getPermission(p);
+                userPermissionses.add(_p);
+                for (Permissions per : permissionsList){
+                    if (per.getName().equals(_p.getName())) {
+                        per.setChecked(true);
+                    }
+                }
 			}
 			permissionsDBAdapter.close();
 
-
-            //// TODO: 15/11/2017 fix permissions list
-            
-            for (Permissions p : userPermissionses) {
-                permissionsList.get(permissionsList.indexOf(p)).setChecked(true);
-            }
             permissionsGridViewAdapter.updateRecords(permissionsList);
 		}
 
@@ -169,9 +168,13 @@ List<String> selectedFromList=new  ArrayList<String>();;
 								if (i > 0) {
 									UserPermissionsDBAdapter userPermissionAdapter=new UserPermissionsDBAdapter(AddUserActivity.this);
 									userPermissionAdapter.open();
-									for(int permissionNo=0;permissionNo<selectedFromList.size();permissionNo++) {
-										userPermissionAdapter.insertEntry(permissionsMap.get(selectedFromList.get(permissionNo)), i);
-									}
+                                    for (Permissions p : permissionsList) {
+                                        if (p.isChecked()) {
+                                            userPermissionAdapter.insertEntry(p.getId(), user.getId());
+                                        }
+                                    }
+                                    userPermissionAdapter.close();
+
 									Toast.makeText(getApplicationContext(), "success dding new user", Toast.LENGTH_LONG).show();
 
 									Log.i("success", "adding new user");
