@@ -339,8 +339,8 @@
     <string name="add_group">    Add Group</string>
 
     <!--custmer String -->
-    <string name="custmer_name">Name</string>
-    <string name="custmer_id">CustmerID</string>
+    <string name="customer_name">Name</string>
+    <string name="customer_id">Customer ID</string>
     <string name="gender">Gender</string>
     <string name="street">Street</string>
     <string name="country">Country</string>
@@ -370,5 +370,6 @@
     <string name="department">Department</string>
     <string name="back_up">BackUp</string>
     <string name="hours_of_work">Hours Of Work</string>
-    <string name="coustmer_club">Coustmer Club</string>
+    <string name="customer_club">Customer Club</string>
+    <string name="general_customer">General Customer</string>
 </resources>

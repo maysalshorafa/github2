@@ -120,6 +120,8 @@
         <activity
             android:name=".CurrencyReturnsCustomDialogActivity"
             android:theme="@style/AppTheme.PopUp" />
+
+        <activity android:name=".PrinterStub"></activity>
         <activity android:name=".WorkerManagementActivity"></activity>
     </application>
 

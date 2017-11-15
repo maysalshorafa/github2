@@ -388,7 +388,7 @@ public class ProductsActivity  extends AppCompatActivity {
 
             }
             try {
-                editableProduct = productDBAdapter.getProductByID(extras.getInt("productID"));
+                editableProduct = productDBAdapter.getProductByID(extras.getLong("productID"));
                 etName.setText(editableProduct.getName());
                 etBarcode.setText(editableProduct.getBarCode());
                 etDescription.setText(editableProduct.getDescription());

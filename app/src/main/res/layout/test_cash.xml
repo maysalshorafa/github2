@@ -30,7 +30,7 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/custmer_name"
+                android:text="@string/customer_name"
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="bold"
