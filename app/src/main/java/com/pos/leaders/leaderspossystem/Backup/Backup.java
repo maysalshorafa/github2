@@ -199,6 +199,21 @@ public class Backup{
 
         File outFileName = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS+ "/Backup/" + folderName+"/full_backup/");
 
+        if(!outFileName.exists()){
+            Log.w(LOG_TAG, "folder does not exists");
+            Log.w(LOG_TAG, "trying to create folder : "+outFileName.getAbsolutePath());
+            try{
+                if(outFileName.mkdirs()){
+                    Log.w(LOG_TAG, "folder has been created");
+                }else{
+                    Log.w(LOG_TAG, "can not create the folder : "+outFileName.getAbsolutePath());
+                }
+            }
+            catch (Exception npe){
+                Log.w(LOG_TAG, npe.toString());
+            }
+        }
+
         // Open the empty db as the output stream
         File of=new File(outFileName,"db_backup.db");
         try {
@@ -239,7 +254,8 @@ public class Backup{
             CryptoUtils.encrypt(KEY, inputFile, encryptedFile);
             if(Util.isExternalStorageWritable()) {
                 File f = Util.getStorageDir("Backup");
-                _copyFile(encryptedFile, f);
+                File file = new File(f, "full.c");
+                _copyFile(encryptedFile, file);
             } else {
                 Toast.makeText(context, context.getString(R.string.there_is_no_disk_on_key), Toast.LENGTH_LONG).show();
             }

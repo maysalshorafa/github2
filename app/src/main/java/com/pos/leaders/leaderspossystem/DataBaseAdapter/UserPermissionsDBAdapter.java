@@ -81,7 +81,6 @@ public class UserPermissionsDBAdapter {
 		Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where userId='" + user_id + "'" , null);
 		cursor1.moveToFirst();
 
-
 		if (cursor1.getCount() < 1) // UserName Not Exist
 		{
 			cursor1.close();

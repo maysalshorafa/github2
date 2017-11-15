@@ -22,6 +22,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Tools.PermissionsGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.util.ArrayList;
@@ -48,7 +49,9 @@ List<String> selectedFromList=new  ArrayList<String>();;
 	ArrayList<Integer> userPermissions;
 	List<String> permissionName;
 	Map<String,Long> permissionsMap=new HashMap<String,Long>();
-	ArrayAdapter<String> LAdapter;
+
+    List<Permissions> permissionsList = new ArrayList<Permissions>();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -79,30 +82,37 @@ List<String> selectedFromList=new  ArrayList<String>();;
 		lvPermissions = (ListView) findViewById(R.id.addUser_LVPermissions);
 
 		userDBAdapter = new UserDBAdapter(this);
-		userDBAdapter.open();
+
 		UserPermissionsDBAdapter userPermissionsDBAdapter=new UserPermissionsDBAdapter(this);
-		userPermissionsDBAdapter.open();
+
 		user = null;
 		PermissionsDBAdapter permissionsDBAdapter = new PermissionsDBAdapter(this);
 		permissionsDBAdapter.open();
 
-		List<Permissions> permissionsList = new ArrayList<Permissions>();
+
 		permissionsList = permissionsDBAdapter.getAllPermissions();
+		permissionsDBAdapter.close();
 
 		for (Permissions d : permissionsList) {
 			permissionName.add(d.getName());
 			permissionsMap.put(d.getName(),d.getId());
 		}
 
-		LAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,permissionName);
-		lvPermissions.setAdapter(LAdapter);
+        final PermissionsGridViewAdapter permissionsGridViewAdapter = new PermissionsGridViewAdapter(this, permissionsList);
+
+		lvPermissions.setAdapter(permissionsGridViewAdapter);
+
 		lvPermissions.setChoiceMode(CHOICE_MODE_MULTIPLE);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			long i = (long) extras.get("userId");
 			String btnName=extras.getString(WorkerManagementActivity.LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME);
 			btAdd.setText(btnName);
+
+            userDBAdapter.open();
 			user = userDBAdapter.getUserByID(i);
+            userDBAdapter.close();
+
 			etUserName.setText(user.getUserName());
 			etPassword.setText(user.getPassword());
 			etPassword.setEnabled(false);
@@ -113,13 +123,25 @@ List<String> selectedFromList=new  ArrayList<String>();;
 			etPhoneNumber.setText(user.getPhoneNumber());
 			etPresent.setText(user.getPresent() + "");
 			etHourlyWage.setText(user.getHourlyWage() + "");
-			userPermissions	= userPermissionsDBAdapter.getPermissions(i);
-				for (int permissionsNo = 0; permissionsNo <= lvPermissions.getCount()-1; permissionsNo++){
-//				lvPermissions.setSelection(userPermissions.get(permissionsNo));
-					//lvPermissions.getChildAt(userPermissions.get(permissionsNo)).setBackgroundColor(Color.BLUE);
 
-				}
-				//The key argument here must match that used in the other activity
+			userPermissionsDBAdapter.open();
+			userPermissions	= userPermissionsDBAdapter.getPermissions(i);
+			userPermissionsDBAdapter.close();
+			List<Permissions> userPermissionses = new ArrayList<>();
+			permissionsDBAdapter.open();
+			for (int p :
+					userPermissions) {
+				userPermissionses.add(permissionsDBAdapter.getPermission(p));
+			}
+			permissionsDBAdapter.close();
+
+
+            //// TODO: 15/11/2017 fix permissions list
+            
+            for (Permissions p : userPermissionses) {
+                permissionsList.get(permissionsList.indexOf(p)).setChecked(true);
+            }
+            permissionsGridViewAdapter.updateRecords(permissionsList);
 		}
 
 		btAdd.setOnClickListener(new View.OnClickListener() {
@@ -218,33 +240,16 @@ List<String> selectedFromList=new  ArrayList<String>();;
 		lvPermissions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
-				view.setSelected(true);
-				selectedFromList.add(lvPermissions.getItemAtPosition(position).toString());
+                Permissions model = permissionsList.get(position);
+                model.setChecked(!model.isChecked());
+                permissionsList.set(position, model);
 
-				if(selectedViews.contains(view)){
-					selectedViews.remove(view);
-					view.setBackgroundColor(getResources().getColor(R.color.transparent));
-				}
-				else
-				{
-					selectedViews.add(view);
-					view.setBackgroundColor(getResources().getColor(R.color.pressed_color));
-
-				}
-				for (int i = 0; i < lvPermissions.getChildCount(); i++) {
-					if(selectedViews.contains(lvPermissions.getChildAt(i))){
-						lvPermissions.getChildAt(i).setBackgroundColor(getResources().getColor(R.color.pressed_color));
-					}
-					else
-					{
-						lvPermissions.getChildAt(i).setBackgroundColor(getResources().getColor(R.color.transparent));
-
-					}
-				}
-			}
+                permissionsGridViewAdapter.updateRecords(permissionsList);
+            }
 		});
 	}
-	@Override
+
+    @Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		//  if(keyCode==KeyEvent.KEYCODE_BACK)
 		//   Toast.makeText(getContext(), "back press", Toast.LENGTH_LONG).show();
