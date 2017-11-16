@@ -1,10 +1,8 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -20,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,9 +28,7 @@ import com.pos.leaders.leaderspossystem.Tools.ChecksListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -43,14 +40,16 @@ public class ChecksActivity extends AppCompatActivity {
 	public static final String LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY = "LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY";
 	Button btAdd;
 	Button btDone,btCancel;
-    TextView tv ,cheack_custmer_tv;
+    TextView tv , tvCheckCustomer;
 	ListView lvChecks;
 	static List<Check> checkList = new ArrayList<Check>();
 	ChecksListViewAdapter adapter;
 	float historicX = Float.NaN, historicY = Float.NaN;
 	static final int DELTA = 50;
     private double totalPrice;
-	String custmer_name;
+	String customer_name;
+
+	LinearLayout LlCustomer;
 
 	enum Direction {LEFT, RIGHT;}
 
@@ -82,18 +81,23 @@ public class ChecksActivity extends AppCompatActivity {
 		getWindow().setLayout((int) (width * 0.9), (int) (height * 0.95));
 
         tv = (TextView) findViewById(R.id.checksActivity_TVPrice);
-		cheack_custmer_tv = (TextView) findViewById(R.id.custmer_name);
+		tvCheckCustomer = (TextView) findViewById(R.id.custmer_name);
 
+		LlCustomer = (LinearLayout) findViewById(R.id.checkActivity_llCustomer);
 
 		Bundle extras = getIntent().getExtras();
         if (extras != null) {
             totalPrice = (double) extras.get("_Price");
-			custmer_name=(String)extras.get("_custmer");
+			customer_name =(String)extras.get("_custmer");
             tv.setText(totalPrice + " " + getResources().getText(R.string.ins));
-cheack_custmer_tv.setText(custmer_name);
+			tvCheckCustomer.setText(customer_name);
         } else {
             finish();
         }
+
+        if(customer_name.equals("")|| customer_name ==""|| customer_name.equals(null)){
+			LlCustomer.setVisibility(View.GONE);
+		}
 
 		btAdd = (Button) findViewById(R.id.checksActivity_BTAdd);
 		btDone = (Button) findViewById(R.id.checksActivity_BTDone);
@@ -226,7 +230,8 @@ cheack_custmer_tv.setText(custmer_name);
 							//Depending on delta, go right or left
 							if (event.getX() - historicX < -DELTA) {
 								//If something went wrong, we stop it now
-								if (wantedChild < 0 || wantedChild >= checkList.size()|| wantedChild >= lvChecks.getChildCount()) {
+                                // (wantedChild < 1) ignore the header row
+								if (wantedChild < 1 || wantedChild >= checkList.size()|| wantedChild >= lvChecks.getChildCount()) {
 									return true;
 								}
 								new AlertDialog.Builder(ChecksActivity.this)

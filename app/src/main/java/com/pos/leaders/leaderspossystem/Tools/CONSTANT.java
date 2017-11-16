@@ -11,5 +11,5 @@ public class CONSTANT {
     public static final String CREDIT_CARD = "credit_card";
     public static final String CHECKS = "checks";
     public static final String[] PAYMENTS_TYPE = {CASH, CREDIT_CARD, CHECKS};
-    public static final int PRINTER_PAGE_WIDTH = 550;
+    public static final int PRINTER_PAGE_WIDTH = 570;
 }

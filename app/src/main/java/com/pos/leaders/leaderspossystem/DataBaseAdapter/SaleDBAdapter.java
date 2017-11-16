@@ -10,7 +10,6 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.Sale;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -34,8 +33,8 @@ public class SaleDBAdapter {
 	protected static final String SALES_COLUMN_CANCELED = "canceled";
 	protected static final String SALES_COLUMN_TOTALPRICE = "totalPrice";
 	protected static final String SALES_COLUMN_TOTALPAID = "totalPaid";
-	protected static final String SALES_COLUMN__custmer_id = "custmer_id";
-	protected static final String SALES_COLUMN__custmer_name = "custmer_name";
+	protected static final String SALES_COLUMN_CUSTOMER_ID = "custmer_id";
+	protected static final String SALES_COLUMN_CUSTOMER_NAME = "custmer_name";
 
 
 	public static final String DATABASE_CREATE = "CREATE TABLE sales ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byUser` INTEGER, `saleDate` TEXT DEFAULT current_timestamp, " +
@@ -94,8 +93,8 @@ public class SaleDBAdapter {
         val.put(SALES_COLUMN_CANCELED, sale.isCancelling()?1:0);
         val.put(SALES_COLUMN_TOTALPRICE, sale.getTotalPrice());
         val.put(SALES_COLUMN_TOTALPAID, sale.getTotalPaid());
-        val.put(SALES_COLUMN__custmer_id, sale.getCustomer_id());
-        val.put(SALES_COLUMN__custmer_name, sale.getCustomer_name());
+        val.put(SALES_COLUMN_CUSTOMER_ID, sale.getCustomer_id());
+        val.put(SALES_COLUMN_CUSTOMER_NAME, sale.getCustomer_name());
 
         try {
             return db.insert(SALES_TABLE_NAME, null, val);
@@ -225,7 +224,7 @@ public class SaleDBAdapter {
 					Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CANCELED))),
 					cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPRICE)),
 					cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPAID)),
-					Integer.parseInt(cursor.getString(cursor.getColumnIndex(SALES_COLUMN__custmer_id))),cursor.getString(cursor.getColumnIndex(SALES_COLUMN__custmer_name)));
+					Integer.parseInt(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CUSTOMER_ID))),cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CUSTOMER_NAME)));
 		}
 		catch (Exception ex){
 			return new Sale(Long.parseLong(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_ID))),

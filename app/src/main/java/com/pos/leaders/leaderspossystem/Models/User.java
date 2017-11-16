@@ -1,6 +1,10 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
+
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by KARAM on 16/10/2016.
@@ -17,6 +21,9 @@ public class User {
     private String phoneNumber;
     private double present;
     private double hourlyWage;
+
+    @JsonIgnore
+    private List<Permissions> permissionsList;
 
     public void setId(long id) {
         this.id = id;
@@ -116,7 +123,15 @@ public class User {
 		this.userName = userName;
 	}
 
-	@Override
+    public List<Permissions> getPermissionsList() {
+        return permissionsList;
+    }
+
+    public void setPermissionsList(List<Permissions> permissionsList) {
+        this.permissionsList = permissionsList;
+    }
+
+    @Override
     public String toString() {
         return "User{" +
                 "creatingDate=" + creatingDate +

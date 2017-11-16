@@ -6,28 +6,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.R;
 
 import java.util.List;
 
-/**
- * Created by KARAM on 29/10/2016.
- */
-
 public class PermissionsGridViewAdapter extends BaseAdapter {
 	private Context context;
-	private List<Permissions> permissionses;
+	private List<Permissions> permissions;
 	private LayoutInflater inflater;
-	///Permissions permissionsObject;
 
-	public PermissionsGridViewAdapter(Context context, List<Permissions> permissionses) {
+	public PermissionsGridViewAdapter(Context context, List<Permissions> permissions) {
 		this.context = context;
-		this.permissionses = permissionses;
-	//	permissionsObject = new Permissions();
-
-	}
+		this.permissions = permissions;
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
 
 	/**
 	 * How many items are in the data set represented by this Adapter.
@@ -36,7 +31,7 @@ public class PermissionsGridViewAdapter extends BaseAdapter {
 	 */
 	@Override
 	public int getCount() {
-		return permissionses.size();
+		return permissions.size();
 	}
 
 	/**
@@ -48,7 +43,7 @@ public class PermissionsGridViewAdapter extends BaseAdapter {
 	 */
 	@Override
 	public Object getItem(int position) {
-		return permissionses.get(position);
+		return permissions.get(position);
 	}
 
 	/**
@@ -59,7 +54,7 @@ public class PermissionsGridViewAdapter extends BaseAdapter {
 	 */
 	@Override
 	public long getItemId(int position) {
-		return (long)permissionses.get(position).getId();
+		return (long) permissions.get(position).getId();
 	}
 
 	/**
@@ -82,19 +77,38 @@ public class PermissionsGridViewAdapter extends BaseAdapter {
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View gridView=convertView;
-		if(convertView==null){
-			inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			gridView=inflater.inflate(R.layout.grid_view_permissions,null);
-		}
-		Switch sw=(Switch)gridView.findViewById(R.id.gridViewPermissions_Switch);
+        ViewHolder holder = null;
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.grid_view_permissions, parent, false);
 
-		sw.setText(permissionses.get(position).getName());
-		sw.setChecked(permissionses.get(position).isChecked());
+            holder = new ViewHolder();
+            holder.tvName = (TextView) convertView.findViewById(R.id.gridViewPermissions_tvName);
 
-		//set id for the adapter row here.
-	//	sw.setId(permissionsObject.getId());
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
 
-			return gridView;
+        Permissions per = permissions.get(position);
+
+        holder.tvName.setText(per.getName());
+
+        if (per.isChecked()) {
+            convertView.setBackgroundColor(convertView.getResources().getColor(R.color.pressed_color));
+        } else {
+            convertView.setBackgroundColor(convertView.getResources().getColor(R.color.transparent));
+        }
+
+        return convertView;
+	}
+
+	public void updateRecords(List<Permissions> permissions){
+        this.permissions = permissions;
+
+        notifyDataSetChanged();
+    }
+
+	private class ViewHolder {
+		TextView tvName;
 	}
 }

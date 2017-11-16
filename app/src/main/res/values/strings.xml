@@ -348,7 +348,11 @@
 
     <!--custmer String -->
     <string name="customer_name">Name</string>
+<<<<<<< HEAD
     <string name="customer_id">CustomerID</string>
+=======
+    <string name="customer_id">Customer ID</string>
+>>>>>>> master
     <string name="gender">Gender</string>
     <string name="street">Street</string>
     <string name="country">Country</string>
@@ -383,5 +387,9 @@
     <string name="back_up">BackUp</string>
     <string name="hours_of_work">Hours Of Work</string>
     <string name="customer_club">Customer Club</string>
+<<<<<<< HEAD
 
+=======
+    <string name="general_customer">General Customer</string>
+>>>>>>> master
 </resources>
