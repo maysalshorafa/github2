@@ -1,7 +1,6 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.graphics.Bitmap;
@@ -14,7 +13,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
@@ -28,7 +26,6 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Sale;
-import com.pos.leaders.leaderspossystem.Printer.BitmapInvoice;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
@@ -48,7 +45,7 @@ import POSSDK.POSSDK;
  * Editing by KARAM on 10/04/2016.
  */
 public class SalesManagementActivity extends Activity {
-    TextView custmer;
+    TextView customer;
     ListView lvSales;
     EditText etFrom, etTo;
     SaleDBAdapter saleDBAdapter;
@@ -57,7 +54,7 @@ public class SalesManagementActivity extends Activity {
     private static final int DIALOG_FROM_DATE = 825;
     private static final int DIALOG_TO_DATE = 324;
     Date from, to;
-    String custmer_name;
+    String customer_name;
     SaleManagementListViewAdapter adapter;
     View previousView = null;
 
@@ -69,11 +66,11 @@ public class SalesManagementActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_management);
-        custmer = (TextView) findViewById(R.id.sales_custmer_name);
+        customer = (TextView) findViewById(R.id.sales_custmer_name);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            custmer_name=(String)extras.get("_custmer");
-            custmer.setText(custmer_name);
+            customer_name =(String)extras.get("_custmer");
+            customer.setText(customer_name);
         } else {
             finish();
         }

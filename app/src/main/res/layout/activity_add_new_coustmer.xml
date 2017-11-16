@@ -279,7 +279,7 @@ android:background="@color/white">
 
                 <TextView
                     android:layout_width="120dp"
-                    android:layout_height="62dp"
+                    android:layout_height="match_parent"
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:textColor="@color/black"
@@ -386,7 +386,7 @@ android:background="@color/white">
                 android:layout_weight="0.87">
 
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="62dp"
                     android:gravity="center"
                     android:layout_gravity="center"
@@ -404,7 +404,8 @@ android:background="@color/white">
                     android:layout_marginTop="15dp"
                     android:layout_weight="1.52"
                     android:inputType="text"
-                    android:paddingLeft="5dp" />
+                    android:paddingLeft="5dp"
+                    android:textDirection="anyRtl"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -433,7 +434,8 @@ android:background="@color/white">
                     android:layout_marginTop="15dp"
                     android:layout_weight="1.16"
                     android:inputType="text"
-                    android:paddingLeft="5dp" />
+                    android:paddingLeft="5dp"
+                    android:textDirection="anyRtl"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -479,7 +481,7 @@ android:background="@color/white">
                         android:id="@+id/male"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="Male"
+                        android:text="@string/male"
                         android:textSize="20dp"
                         android:layout_weight="1"
                         android:layout_marginBottom="5dp"/>
@@ -487,7 +489,7 @@ android:background="@color/white">
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="Female"
+                        android:text="@string/female"
                         android:textSize="20dp"
                         android:id="@+id/female"
                         android:layout_weight="1"

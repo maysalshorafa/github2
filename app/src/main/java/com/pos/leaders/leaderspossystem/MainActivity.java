@@ -800,14 +800,13 @@ usedpointDbAdapter.open();
                 });
 
                 salesMan = (TextView) view.findViewById(R.id.saleMan);
-               salesMan.setOnLongClickListener(new View.OnLongClickListener(){
+               salesMan.
+                       setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public boolean onLongClick(View v) {
+                    public void onClick(View v) {
                         callPopupOrderSalesMan();
-                        return false;
                     }
                 });
-
 
 
                 Button btnPlusOne = (Button) view.findViewById(R.id.rowSaleDetails_MethodsPlusOne);

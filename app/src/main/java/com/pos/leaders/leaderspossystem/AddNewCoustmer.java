@@ -223,12 +223,12 @@ long clubID;
                                     intent = new Intent(AddNewCoustmer.this, CustmerMangmentActivity.class);
                                     startActivity(intent);
                                 } catch (Exception ex) {
-                                    Log.e("error can`t edit custmer", ex.getMessage().toString());
-                                    Toast.makeText(getApplicationContext(), "Can`t edit custmer please try again", Toast.LENGTH_SHORT).show();
+                                    Log.e("error can`t edit customer", ex.getMessage().toString());
+                                    Toast.makeText(getApplicationContext(), "Can`t edit customer please try again", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         } else {
-                            Toast.makeText(getApplicationContext(), "Custmer name is not available, try to use another custmer name", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Custmer name is not available, try to use another customer name", Toast.LENGTH_LONG).show();
                         }
                     }
                 }}

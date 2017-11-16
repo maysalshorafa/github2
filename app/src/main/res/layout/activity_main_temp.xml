@@ -152,7 +152,7 @@
                         android:id="@+id/saleMan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Sales Man "
+                        android:text="@string/sales_man"
                         android:textColor="@color/black"/>
 
                 </LinearLayout>
@@ -392,7 +392,7 @@
 
                                     android:paddingLeft="5dp"
                                     android:paddingRight="5dp"
-                                android:text="@string/custmer_name"
+                                android:text="@string/customer_name"
                                     android:textColor="@color/black" />
 
                                 <TextView

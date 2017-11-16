@@ -14,16 +14,16 @@
         android:layout_marginTop="10dp">
 
         <EditText
+            android:id="@+id/creditCardByPhone_tvCCNum"
             android:layout_width="100dp"
             android:layout_height="30dp"
-            android:inputType="number"
-            android:ems="10"
-            android:id="@+id/creditCardByPhone_tvCCNum"
-            android:hint="@string/credit_card_number"
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:background="@drawable/edit_text_style"
-            android:layout_marginLeft="10dp"
-            android:textAlignment="center"/>
+            android:ems="10"
+            android:hint="@string/credit_card_number"
+            android:inputType="number"
+            android:textAlignment="center" />
 
         <EditText
             android:layout_width="100dp"

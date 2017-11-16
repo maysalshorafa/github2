@@ -100,7 +100,8 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:inputType="number"
-                android:paddingLeft="5dp" />
+                android:paddingLeft="5dp"
+                android:textDirection="anyRtl"/>
         </LinearLayout>
 
         <LinearLayout
@@ -117,7 +118,7 @@
                 android:layout_height="62dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/parcent"
+                android:text="@string/discount_percentage"
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="bold"
@@ -129,7 +130,7 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
-                android:hint="@string/parcent"
+                android:hint="@string/discount_percentage"
                 android:paddingLeft="5dp"
                 android:visibility="gone" />
         </LinearLayout>
