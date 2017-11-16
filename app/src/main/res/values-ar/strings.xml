@@ -132,4 +132,7 @@
     <!-- Cash Activity String -->
     <string name="total_return">المبلغ الباقي</string>
     <string name="total_paid"> المبلغ الدفوع</string>
+    <string name="edit">تعديل</string>
+    <string name="delete">حذف</string>
+
 </resources>

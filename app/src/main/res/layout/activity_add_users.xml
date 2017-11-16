@@ -26,33 +26,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-<<<<<<< HEAD
-                android:background="@drawable/bubble"
-                android:paddingLeft="5dp"
-                android:inputType="numberPassword"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <TextView
-                android:layout_width="120dp"
-                android:layout_height="62dp"
-                android:gravity="center"
-                android:text="@string/password"
-
-                android:layout_gravity="center"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="20dp"/>
-            <EditText
-                android:id="@+id/addUser_ETREPassword"
-                android:layout_width="500dp"
-                android:layout_height="40dp"
-=======
                 android:orientation="horizontal"
                 android:weightSum="1">
 
@@ -79,7 +52,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
->>>>>>> master
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
                 android:weightSum="1">
@@ -118,7 +90,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
 
-                    android:text=" Password"
+                    android:text="@string/password"
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold" />
