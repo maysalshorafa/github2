@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.DashBoard;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
@@ -16,17 +15,17 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.MainActivity;
 import com.pos.leaders.leaderspossystem.Models.AReport;
-import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
-import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
-import com.pos.leaders.leaderspossystem.Tools.HPRT_TP805;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 
 import java.util.ArrayList;
@@ -37,6 +36,8 @@ import HPRTAndroidSDK.HPRTPrinterHelper;
 import POSAPI.POSInterfaceAPI;
 import POSAPI.POSUSBAPI;
 import POSSDK.POSSDK;
+
+import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CREDIT_CARD;
 
 /**
  * Created by KARAM on 12/01/2017.
@@ -136,6 +137,48 @@ public class PrintTools {
         }
     }
 
+    private void Print_SUNMI_T1(Bitmap _bitmap) {
+        final Bitmap bitmap = _bitmap;
+        AidlUtil.getInstance().connectPrinterService(context);
+        if(AidlUtil.getInstance().isConnect()){
+            final ProgressDialog dialog = new ProgressDialog(context);
+            dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
+
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    dialog.show();
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    try {
+                        //cut
+                        AidlUtil.getInstance().feed();
+                        AidlUtil.getInstance().cut();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    dialog.cancel();
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        AidlUtil.getInstance().printBitmap(bitmap);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+        else {
+            Toast.makeText(context, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+        }
+    }
+
     public void PrintReport(Bitmap _bitmap){
 
         switch (SETTINGS.printer) {
@@ -145,6 +188,8 @@ public class PrintTools {
             case HPRT_TP805:
                 Print_TP805(_bitmap);
                 break;
+            case SUNMI_T1:
+                Print_SUNMI_T1(_bitmap);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.pos.leaders.leaderspossystem.Tools;
+package com.pos.leaders.leaderspossystem.Printer;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -25,7 +25,7 @@ public class HPRT_TP805 {
     private UsbManager mUsbManager=null;
     private static UsbDevice device=null;
     private static PendingIntent mPermissionIntent=null;
-    private static final String ACTION_USB_PERMISSION = "com.pos.leaders.leaderspossystem.Tools.HPRTSDKSample";
+    private static final String ACTION_USB_PERMISSION = "com.pos.leaders.leaderspossystem.Printer.HPRTSDKSample";
 
 
     public static boolean connect(Context context){
