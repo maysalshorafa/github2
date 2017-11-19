@@ -1,28 +1,28 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView1"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@color/white">
-
     <LinearLayout
 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="horizontal">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        android:background="@color/white">
 
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-            android:layout_weight="1"
+            android:orientation="vertical"
 
-            android:orientation="vertical">
+            >
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
@@ -31,25 +31,26 @@
                 <TextView
                     android:layout_width="120dp"
                     android:layout_height="62dp"
-                    android:layout_gravity="center"
                     android:gravity="center"
                     android:text="@string/name"
+                    android:layout_gravity="center"
                     android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="20dp"/>
 
                 <EditText
                     android:id="@+id/ETName"
-                    android:layout_width="match_parent"
+                    android:layout_width="500dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/bubble"
-                    android:paddingLeft="5dp" />
+                    android:paddingLeft="5dp"
+                    />
             </LinearLayout>
 
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
@@ -58,25 +59,24 @@
                 <TextView
                     android:layout_width="120dp"
                     android:layout_height="62dp"
-                    android:layout_gravity="center"
                     android:gravity="center"
-
                     android:text="@string/barcode"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
 
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="20dp"/>
                 <EditText
                     android:id="@+id/ETBarCode"
-                    android:layout_width="match_parent"
+                    android:layout_width="500dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/bubble"
-                    android:paddingLeft="5dp" />
+                    android:paddingLeft="5dp"
+                    android:inputType="number"/>
             </LinearLayout>
-
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
@@ -85,25 +85,23 @@
                 <TextView
                     android:layout_width="120dp"
                     android:layout_height="62dp"
-                    android:layout_gravity="center"
                     android:gravity="center"
-
                     android:text="@string/description"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
 
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="20dp"/>
                 <EditText
                     android:id="@+id/ETDescription"
-                    android:layout_width="match_parent"
+                    android:layout_width="500dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/bubble"
                     android:paddingLeft="5dp" />
             </LinearLayout>
-
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
@@ -112,22 +110,22 @@
                 <TextView
                     android:layout_width="120dp"
                     android:layout_height="62dp"
-                    android:layout_gravity="center"
                     android:gravity="center"
                     android:text="@string/price"
+                    android:layout_gravity="center"
                     android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="20dp"/>
 
                 <EditText
                     android:id="@+id/ETPrice"
-                    android:layout_width="match_parent"
+                    android:layout_width="500dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/bubble"
-                    android:paddingLeft="5dp" />
+                    android:paddingLeft="5dp"
+                    android:inputType="number"/>
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -138,20 +136,21 @@
                 <TextView
                     android:layout_width="120dp"
                     android:layout_height="62dp"
-                    android:layout_gravity="center"
                     android:gravity="center"
                     android:text="@string/cost_price"
+                    android:layout_gravity="center"
                     android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="20dp"/>
 
                 <EditText
-                    android:id="@+id/ETCostPrice"
-                    android:layout_width="match_parent"
+                    android:layout_width="500dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/bubble"
-                    android:paddingLeft="5dp" />
+                    android:paddingLeft="5dp"
+                    android:id="@+id/ETCostPrice"
+                    android:inputType="number"/>
 
 
             </LinearLayout>
@@ -164,7 +163,7 @@
                 android:weightSum="1">
 
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="62dp"
                     android:layout_gravity="center"
                     android:gravity="center"
@@ -191,13 +190,12 @@
                 <TextView
                     android:layout_width="120dp"
                     android:layout_height="62dp"
-                    android:layout_gravity="center"
                     android:gravity="center"
                     android:text="@string/weighable"
+                    android:layout_gravity="center"
                     android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
-
+                    android:textStyle="bold"
+                    android:textSize="20dp"/>
                 <Switch
                     android:id="@+id/SWWeighable"
                     android:layout_width="90dp"
@@ -207,34 +205,55 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
                 android:gravity="bottom"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:weightSum="1"
+                android:layout_gravity="bottom">
 
                 <Button
                     android:id="@+id/productActivity_btnSave"
-                    style="@style/AppTheme.bt_green"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="200dp"
+                    android:layout_height="38dp"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
+
+                    android:layout_marginLeft="80dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="0.81"
+                    style="@style/AppTheme.bt_green"
                     android:gravity="center"
                     android:text="@string/add"
                     android:textColor="#fff"
                     android:textSize="20dp" />
 
+
                 <Button
+
                     android:id="@+id/productActivity_btnCancel"
-                    style="@style/AppTheme.bt_dangers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="197dp"
+                    android:layout_height="38dp"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="16dp"
+                    style="@style/AppTheme.bt_dangers"
                     android:gravity="center"
                     android:text="@android:string/cancel"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+                <Button
+
+                    android:id="@+id/productActivity_btnContinue"
+                    android:layout_width="197dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="16dp"
+                    style="@style/AppTheme.bt_normal"
+                    android:gravity="center"
+                    android:text="@string/_continue"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
@@ -244,22 +263,26 @@
         </LinearLayout>
 
 
+
+
+
+
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:layout_weight="2"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="1">
 
             <TextView
                 android:id="@+id/textView12"
                 android:layout_width="200dp"
-
                 android:layout_height="62dp"
-                android:layout_marginLeft="20dp"
+                android:gravity="center"
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="0dp"
-                android:gravity="center"
+                android:layout_marginLeft="20dp"
                 android:text="@string/department_name"
                 android:textColor="@color/black"
                 android:textSize="20dp"
@@ -267,17 +290,21 @@
 
             <ListView
                 android:id="@+id/LVDepartment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="40dp"
+                android:layout_width="200dp"
+                android:layout_height="800dp"
                 android:textAlignment="center"
-                android:textFilterEnabled="true" />
+                android:textFilterEnabled="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="40dp"/>
 
         </LinearLayout>
+
+
+
 
 
     </LinearLayout>
 
 
-</ScrollView>
+
+</RelativeLayout>

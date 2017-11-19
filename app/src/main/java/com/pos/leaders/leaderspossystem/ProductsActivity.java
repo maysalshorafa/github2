@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.CustomerAndClub.CustmerManagementActivity;
+import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Department;
@@ -43,7 +46,7 @@ public class ProductsActivity  extends AppCompatActivity {
     List<Department> listDepartment;
     List<String> departmentsName;
 
-    Button btSave,btnCancel;
+    Button btSave,btnCancel,btnContinue;
     EditText etName,etBarcode,etDescription,etPrice,etCostPrice;
     Switch swWithTax,swWeighable;
 	static ListView lvDepatment;
@@ -60,6 +63,7 @@ public class ProductsActivity  extends AppCompatActivity {
 
 	ProductCatalogGridViewAdapter adapter;
 	private Product editableProduct;
+    long check;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +89,7 @@ public class ProductsActivity  extends AppCompatActivity {
         etCostPrice=(EditText)findViewById(R.id.ETCostPrice);
         swWithTax=(Switch)findViewById(R.id.SWWithTax);
         swWeighable=(Switch)findViewById(R.id.SWWeighable);
-
+        btnContinue=(Button)findViewById(R.id.productActivity_btnContinue);
 
         productDBAdapter=new ProductDBAdapter(this);
         productDBAdapter.open();
@@ -175,7 +179,7 @@ public class ProductsActivity  extends AppCompatActivity {
                     if (selectedDepartment.equals("")) {
                         Toast.makeText(getApplicationContext(), "please select an department", Toast.LENGTH_LONG).show();
                     } else {
-                        long check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
+                         check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
                                 etDescription.getText().toString(), Double.parseDouble(etPrice.getText().toString()),
                                 Double.parseDouble(etCostPrice.getText().toString()), swWithTax.isChecked(),
                                 swWeighable.isChecked(), departmentMap.get(selectedDepartment), SESSION._USER.getId(),with_pos,with_point_system);
@@ -280,6 +284,7 @@ public class ProductsActivity  extends AppCompatActivity {
 
             } );
 
+
         //endregion
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -292,6 +297,19 @@ public class ProductsActivity  extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        btnContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              if(check>1){
+                  Intent intent = new Intent(ProductsActivity.this,ProductCatalogActivity.class);
+                  startActivity(intent);
+              }else {
+                  Toast.makeText(getApplicationContext(), getString(R.string.please_add_product_then_continue), Toast.LENGTH_LONG).show();
+
+              }
+            }
+        });
+
 
 
 /*

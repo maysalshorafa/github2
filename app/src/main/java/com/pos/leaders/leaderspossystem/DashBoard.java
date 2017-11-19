@@ -24,6 +24,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCoustmer;
+import com.pos.leaders.leaderspossystem.CustomerAndClub.Coustmer_Group;
+import com.pos.leaders.leaderspossystem.CustomerAndClub.CustmerManagementActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Dash_bord_adapter;
@@ -39,11 +42,8 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
-import com.pos.leaders.leaderspossystem.syncposservice.SetupFragments.Token;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
@@ -71,7 +71,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
             "BackUp",
             "Tax",
             "Hours Of Work",
-            "Coustmer Club",
+            "Customer Club",
             "Log Out"
 
     };
@@ -241,7 +241,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
                                     startActivity(intent);
                                     break;
                                 case 1:
-                                    intent = new Intent(DashBoard.this, CustmerMangmentActivity.class);
+                                    intent = new Intent(DashBoard.this, CustmerManagementActivity.class);
                                     intent.putExtra("permissions_name", permissions_name);
                                     startActivity(intent);
                                     break;

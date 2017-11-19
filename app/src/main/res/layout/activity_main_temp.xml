@@ -357,7 +357,7 @@
                             >
 
                             <com.pos.leaders.leaderspossystem.Elements.CustomEditText
-                                android:id="@+id/custmer_textview"
+                                android:id="@+id/customer_textView"
                                 style="@style/AppTheme.EditText_input"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -367,7 +367,6 @@
                                 android:hint="@string/search"
                                 android:inputType="textPersonName"
                                 android:textAlignment="textEnd"
-
                                 android:textSize="13dp"
                                 app:drawableLeftCompat="@drawable/ic_icons_leaders_search" />
 

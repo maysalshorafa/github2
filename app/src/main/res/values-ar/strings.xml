@@ -97,8 +97,7 @@
     <string name="confirmation">تأكيد</string>
     <string name="credit">ائتمان</string>
     <string name="save">حفظ</string>
-
-
+    <string name="_continue">استمر</string>
     <!--DashBord String-->
     <string name="main_screen">شاشة المبيعات</string>
     <string name="department">الاقسام</string>
@@ -134,5 +133,16 @@
     <string name="total_paid"> المبلغ الدفوع</string>
     <string name="edit">تعديل</string>
     <string name="delete">حذف</string>
+    <string name="sale_id">رقم البيع</string>
+    <string name="sale_type">نوع البيع</string>
+    <string name="total_amount">المبلغ الكلي</string>
+    <string name="view_sales">عرض المبيعات</string>
+
+    <!-- Department Activity String -->
+    <string name="insert_department_name_massage">ادخل اسم القسم.</string>
+    <string name="insert_new_department_name_massage">ادخل اسم جديد للقسم.</string>
+    <string name="description">وصف</string>
+    <string name="please_add_product_then_continue">اضف المنتج ثم اكمل ..!</string>
+
 
 </resources>
