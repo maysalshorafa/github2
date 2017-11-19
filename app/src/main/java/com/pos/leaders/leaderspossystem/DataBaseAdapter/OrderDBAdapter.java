@@ -34,12 +34,12 @@ public class OrderDBAdapter {
 	protected static final String ORDER_COLUMN_PRICE = "price";
 	protected static final String ORDER_COLUMN_ORIGINAL_PRICE = "original_price";
 	protected static final String ORDER_COLUMN_DISCOUNT = "discount";
-	protected static final String ORDER_COLUMN_custmerAssestID = "custmerAssestID";
+	protected static final String ORDER_COLUMN_CUSTMER_ASSEST_ID = "custmerAssestID";
 
 
     public static final String DATABASE_CREATE = "CREATE TABLE `_order` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL , `productId` INTEGER," +
             " `counter` INTEGER, `saleId` INTEGER, " +
-            " '" + ORDER_COLUMN_PRICE + "' REAL , '" + ORDER_COLUMN_ORIGINAL_PRICE + "' REAL, '" + ORDER_COLUMN_DISCOUNT + "' REAL , '" +ORDER_COLUMN_custmerAssestID + "' INTEGER , " +
+            " '" + ORDER_COLUMN_PRICE + "' REAL , '" + ORDER_COLUMN_ORIGINAL_PRICE + "' REAL, '" + ORDER_COLUMN_DISCOUNT + "' REAL , '" + ORDER_COLUMN_CUSTMER_ASSEST_ID + "' INTEGER , " +
             "FOREIGN KEY(`productId`) REFERENCES `products.id`, FOREIGN KEY(`saleId`) REFERENCES `sales.id` )";
     // Variable to hold the database instance
 	private SQLiteDatabase db;
@@ -78,7 +78,7 @@ public class OrderDBAdapter {
         val.put(ORDER_COLUMN_PRICE, o.getPrice());
         val.put(ORDER_COLUMN_ORIGINAL_PRICE, o.getOriginal_price());
         val.put(ORDER_COLUMN_DISCOUNT, o.getDiscount());
-		val.put(ORDER_COLUMN_custmerAssestID,o.getCustmerAssestId());
+		val.put(ORDER_COLUMN_CUSTMER_ASSEST_ID,o.getCustmerAssestId());
         try {
             return db.insert(ORDER_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -114,12 +114,13 @@ public class OrderDBAdapter {
 
 	private Order make(Cursor cursor){
 		return new Order(Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_ID))),
-				Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_PRODUCTID))),
+				cursor.getLong(cursor.getColumnIndex(ORDER_COLUMN_PRODUCTID)),
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_COUNTER))),
 				Double.parseDouble(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_USEROFFER))),
 				Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_SALEID))),
-                cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_PRICE)),
-                cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_ORIGINAL_PRICE)),
-                cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_DISCOUNT)));
+				cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_PRICE)),
+				cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_ORIGINAL_PRICE)),
+				cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_DISCOUNT)),
+				cursor.getLong(cursor.getColumnIndex(ORDER_COLUMN_CUSTMER_ASSEST_ID)));
 	}
 }

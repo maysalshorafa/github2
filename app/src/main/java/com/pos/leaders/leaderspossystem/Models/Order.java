@@ -54,7 +54,8 @@ public class Order {
         this.price = price;
         this.original_price = original_price;
         this.discount = discount;
-    this.custmerAssestId=custmerAssestId;}
+    	this.custmerAssestId=custmerAssestId;
+    }
 
 	public Order(long id, long productId, int count, double userOffer, long saleId, Product product,long custmerAssestId) {
 		this.id = id;
@@ -101,9 +102,6 @@ public class Order {
 		return new Order(o.getId(), o.getProductId(), o.getCount(), o.getUserOffer(), o.getSaleId(),o.getCustmerAssestId());
 	}
 
-	public Order(long l, long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount){
-
-	}
 
 	//endregion Constructors
 

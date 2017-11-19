@@ -5,53 +5,56 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     >
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginRight="15dp" >
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/reportManagementActivity_btnZ"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="200dp"
+
+
             android:layout_height="150dp"
-            android:background="@drawable/dashboard_frame"
+            android:layout_margin="16dp"
             android:padding="16dp"
             android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="normal|bold"
-            android:text="@string/z_report"
-            />
+            android:textSize="24sp"
+            android:textStyle="normal|bold" />
+
 
         <Button
+            android:id="@+id/reportManagementActivity_btnZView"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="200dp"
             android:layout_height="150dp"
-            android:id="@+id/reportManagementActivity_btnZView"
-            android:background="@drawable/dashboard_frame"
-            android:textColor="@color/white"
+            android:layout_margin="16dp"
             android:padding="16dp"
-            android:textStyle="normal|bold"
-            android:text="@string/z_report_view"
-            android:layout_marginTop="24dp"
-            android:textSize="22sp"
 
-            />
+            android:textColor="@color/white"
+
+
+            android:textSize="24sp"
+            android:textStyle="normal|bold" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
         android:orientation="vertical">
 
         <Button
             android:id="@+id/reportManagementActivity_btnX"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="200dp"
-            android:layout_height="150dp"
-            android:text="@string/x_report"
 
-            android:background="@drawable/dashboard_frame"
+
+            android:layout_height="150dp"
+            android:layout_margin="16dp"
+
             android:padding="16dp"
             android:textColor="@color/white"
             android:textSize="22sp"
@@ -59,17 +62,19 @@
 
         <Button
             android:id="@+id/reportManagementActivity_btnX"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="200dp"
             android:layout_height="150dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/dashboard_frame"
+
+            android:layout_margin="16dp"
+
             android:padding="16dp"
             android:text="@string/x_report_view"
             android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="normal|bold"
 
-            />
+
+            android:textSize="24sp"
+            android:textStyle="normal|bold" />
 
     </LinearLayout>
 
@@ -80,10 +85,13 @@
 
         <Button
             android:id="@+id/reportManagementActivity_btnSaleManagement"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="200dp"
+
+
             android:layout_height="150dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/dashboard_frame"
+            android:layout_margin="16dp"
+
             android:padding="16dp"
             android:text="@string/sales_history"
             android:textColor="@color/white"
@@ -92,10 +100,12 @@
 
         <Button
             android:id="@+id/reportManagementActivity_btnExtractingFiles"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="200dp"
             android:layout_height="150dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/dashboard_frame"
+
+            android:layout_margin="16dp"
+
             android:padding="16dp"
             android:text="@string/extracting_files"
             android:textColor="@color/white"
@@ -112,15 +122,20 @@
 
         <Button
             android:id="@+id/reportManagementActivity_btnSalesManReport"
+            style="@style/AppTheme.dashboard_bt"
             android:layout_width="200dp"
+
+
             android:layout_height="150dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/dashboard_frame"
+            android:layout_margin="16dp"
+
             android:padding="16dp"
+            android:text="@string/sales_man"
             android:textColor="@color/white"
-            android:textSize="21sp"
-            android:textStyle="normal|bold"
-            android:text="@string/sales_man_report"/>
+
+            android:textSize="24sp"
+            android:textStyle="normal|bold" />
+
 
 
 

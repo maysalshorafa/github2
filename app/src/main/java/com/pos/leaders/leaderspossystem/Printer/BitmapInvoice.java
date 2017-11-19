@@ -281,7 +281,7 @@ public class BitmapInvoice {
         //miriam_libre_bold.ttf
         //miriam_libre_regular.ttf
         //carmelitregular.ttf
-        int PAGE_WIDTH = 800;
+        int PAGE_WIDTH = CONSTANT.PRINTER_PAGE_WIDTH;
         String status = context.getString(R.string.source_invoice);
 
         Typeface plain = Typeface.createFromAsset(context.getAssets(), "carmelitregular.ttf");
@@ -293,7 +293,7 @@ public class BitmapInvoice {
         head.setStyle(Paint.Style.FILL);
         head.setColor(Color.BLACK);
         head.setTypeface(normal);
-        head.setTextSize(40);
+        head.setTextSize(38);
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
         StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID + "\n\r" + status+"\n\r"+DateConverter.dateToString(zReport.getCreationDate().getTime())+"\n\r"+"קןפאי : "+zReport.getUser().getFullName(), head,
@@ -304,7 +304,7 @@ public class BitmapInvoice {
         invoiceHead.setStyle(Paint.Style.FILL);
         invoiceHead.setColor(Color.BLACK);
         invoiceHead.setTypeface(bold);
-        invoiceHead.setTextSize(60);
+        invoiceHead.setTextSize(38);
         StaticLayout sInvoiceHead = new StaticLayout(context.getString(R.string.z_number) + " " + String.format("%06d", zReport.getId()) + "\n\r---------------------------", invoiceHead,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
 
@@ -314,7 +314,7 @@ public class BitmapInvoice {
         invoiceD.setColor(Color.BLACK);
         invoiceD.setTypeface(bold);
 
-        invoiceD.setTextSize(40);
+        invoiceD.setTextSize(30);
 
 
         StaticLayout sInvoiceD = new StaticLayout("פריט        \t\t\t\t\t\t\t\t\t נכנס  \t\t\t\t\t זיכוי \t\t\t סה''כ", invoiceD,
@@ -324,7 +324,7 @@ public class BitmapInvoice {
         orderTP.setStyle(Paint.Style.FILL);
         orderTP.setColor(Color.BLACK);
         orderTP.setTypeface(normal);
-        orderTP.setTextSize(40);
+        orderTP.setTextSize(25);
         orderTP.setTextAlign(Paint.Align.LEFT);
         orderTP.setLinearText(true);
 
@@ -416,7 +416,7 @@ public class BitmapInvoice {
         head.setStyle(Paint.Style.FILL);
         head.setColor(Color.BLACK);
         head.setTypeface(normal);
-        head.setTextSize(40);
+        head.setTextSize(38);
         StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID  +"\n\r"+DateConverter.dateToString(date)+"\n\r"+"קןפאי : "+user.getFullName(), head,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
 
@@ -425,7 +425,7 @@ public class BitmapInvoice {
         invoiceHead.setStyle(Paint.Style.FILL);
         invoiceHead.setColor(Color.BLACK);
         invoiceHead.setTypeface(bold);
-        invoiceHead.setTextSize(60);
+        invoiceHead.setTextSize(38);
         StaticLayout sInvoiceHead = new StaticLayout("---------------------------", invoiceHead,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
 
@@ -435,7 +435,7 @@ public class BitmapInvoice {
         invoiceD.setColor(Color.BLACK);
         invoiceD.setTypeface(bold);
 
-        invoiceD.setTextSize(40);
+        invoiceD.setTextSize(30);
 
 
         StaticLayout sInvoiceD = new StaticLayout("פעולה        \t\t\t\t\t\t\t\t\t נכנס  \t\t\t\t\t זיכוי \t\t\t סה''כ", invoiceD,
@@ -445,7 +445,7 @@ public class BitmapInvoice {
         orderTP.setStyle(Paint.Style.FILL);
         orderTP.setColor(Color.BLACK);
         orderTP.setTypeface(normal);
-        orderTP.setTextSize(40);
+        orderTP.setTextSize(30);
         orderTP.setTextAlign(Paint.Align.LEFT);
         orderTP.setLinearText(true);
 
