@@ -21,6 +21,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
@@ -289,7 +290,8 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         customerClub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), Coustmer.class);
+                i = new Intent(getApplicationContext(), Customer.class);
+                i.putIntegerArrayListExtra("permissions_name", permissions_name);
                 startActivity(i);
             }
         });

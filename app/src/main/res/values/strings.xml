@@ -179,7 +179,14 @@
     <string name="weighable">Weighable</string>
     <string name="department_name">Department Name</string>
     <string name="success_to_update_product">Product has been updated!</string>
+<<<<<<< HEAD
     <string name="error_to_update_product">Failed to update this product.</string>
+=======
+    <string name="error_to_update_product">Filed to update this product.</string>
+    <string name="_continue">continue</string>
+    <string name="please_add_product_then_continue">Please add Product then continue..!</string>
+
+>>>>>>> master
 
     <string name="wait_for_finish">Wait for finish...</string>
     <string name="browser">Browser</string>
@@ -229,8 +236,9 @@
     <string name="backup_all_system">Backup System</string>
     <string name="title_activity_settings">Settings</string>
     <string name="there_is_no_disk_on_key">There is no disk on key mounted.</string>
-    <!-- Strings related to Settings -->
-
+    <!-- Strings related to Department -->
+    <string name="insert_department_name_massage">Please insert department name.</string>
+    <string name="insert_new_department_name_massage">Please insert new department name.</string>
     <!-- Example General settings -->
     <string name="terminal_number">Terminal No</string>
     <string name="terminal_password"> Password</string>
