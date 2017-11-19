@@ -6,12 +6,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="570dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingBottom="16dp"
+        android:weightSum="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -101,7 +101,7 @@
                 android:layout_marginTop="15dp"
                 android:inputType="number"
                 android:paddingLeft="5dp"
-                android:textDirection="anyRtl"/>
+                android:textDirection="anyRtl" />
         </LinearLayout>
 
         <LinearLayout
@@ -156,14 +156,14 @@
                 android:visibility="gone" />
 
             <EditText
-            android:id="@+id/et_amount"
-            android:layout_width="300dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/bubble"
-            android:hint="@string/amount"
-            android:paddingLeft="5dp"
-            android:visibility="gone" />
+                android:id="@+id/et_amount"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bubble"
+                android:hint="@string/amount"
+                android:paddingLeft="5dp"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -184,23 +184,23 @@
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="bold"
-            android:visibility="gone" />
+                android:visibility="gone" />
 
             <EditText
-            android:id="@+id/et_point"
-            android:layout_width="300dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/bubble"
-            android:hint="@string/point"
-            android:paddingLeft="5dp"
-            android:visibility="gone" />
+                android:id="@+id/et_point"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bubble"
+                android:hint="@string/point"
+                android:paddingLeft="5dp"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/pointLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:orientation="horizontal"
@@ -208,10 +208,8 @@
 
             <GridView
                 android:id="@+id/custmerManagement_GVCustmerClub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:columnWidth="80dp"
-                android:gravity="right"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:horizontalSpacing="30dp"
                 android:layoutDirection="rtl"
                 android:numColumns="6"
@@ -229,42 +227,30 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="horizontal"
-        android:layout_weight="2.38"
-        android:weightSum="2"
-        android:layout_gravity="bottom"
+        android:layout_height="wrap_content"
         android:gravity="bottom"
-        >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/add_group"
-            android:layout_width="200dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/bt_green_enabled"
-            android:gravity="center"
+            style="@style/AppTheme.bt_green"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/add"
             android:textColor="#fff"
-            android:textSize="20dp"
-            android:layout_weight="1"
-            />
+            android:textSize="20dp" />
+
         <Button
 
             android:id="@+id/addGroup_BTCancel"
-            android:layout_width="200dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/btn_cancel"
-            android:gravity="center"
+            style="@style/AppTheme.bt_dangers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/cancel"
             android:textColor="#fff"
-            android:textSize="20dp"
-            android:layout_weight="1"
-            android:layout_marginRight="20dp"
-            />
+            android:textSize="20dp" />
     </LinearLayout>
 
 

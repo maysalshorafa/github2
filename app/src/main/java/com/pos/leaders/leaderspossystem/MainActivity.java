@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
@@ -94,7 +95,6 @@ import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.CustmerAssestCatlogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.HPRT_TP805;
-import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustmerCatalogGridViewAdapter;
 
@@ -107,7 +107,6 @@ import com.pos.leaders.leaderspossystem.Tools.TempCashActivty;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageData;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
 import java.util.ArrayList;
@@ -116,7 +115,6 @@ import java.util.List;
 import java.util.Locale;
 
 import HPRTAndroidSDK.HPRTPrinterHelper;
-import HPRTAndroidSDK.PublicFunction;
 import POSAPI.POSInterfaceAPI;
 import POSAPI.POSUSBAPI;
 import POSSDK.POSSDK;
@@ -143,7 +141,7 @@ public class MainActivity extends AppCompatActivity{
    //private ActionBarDrawerToggle actionBarDrawerToggle;//
    // private NavigationView navigationView;
 
- //   ImageButton    btnLastSales;
+    //ImageButton    btnLastSales;
     Button btnPercentProduct,btnPauseSale,btnResumeSale;
     ImageButton search_person;
     Button btnCancel, btnCash, btnCreditCard, btnOtherWays   ;
@@ -155,7 +153,7 @@ public class MainActivity extends AppCompatActivity{
     LinearLayout llDepartments;
     FrameLayout fragmentTouchPad;
     GridView gvProducts;
-    ListView lvProducts ,lvcustmer;
+    ListView lvProducts;
     DepartmentDBAdapter departmentDBAdapter;
     ProductDBAdapter productDBAdapter;
     OfferDBAdapter offerDBAdapter;
@@ -1324,6 +1322,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
         //check starting day report A
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -2463,15 +2462,30 @@ if(club_id==2) {
 
         View popupView = layoutInflater.inflate(R.layout.pop_up, null);
 
-        popupWindow = new PopupWindow(popupView, 800, ActionBar.LayoutParams.WRAP_CONTENT,
-                true);
+
+        Window window = getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        //wlp.gravity = Gravity.CENTER_VERTICAL;
+        wlp.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        wlp.dimAmount = (float) 0.6;
+        window.setAttributes(wlp);
+
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+
+        popupWindow = new PopupWindow(popupView, (int) (width * 0.8), (int) (height * 0.8), true);
 
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
 
-        popupWindow.showAtLocation(popupView, Gravity.LEFT, 0, 0);
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
         custmer_id = (EditText) popupView.findViewById(R.id.customer_name);
-        lvcustmer=(ListView) popupView.findViewById(R.id.custmer_list_view);
+        final GridView gvCustomer = (GridView) popupView.findViewById(R.id.popUp_gvCustomer);
+        gvCustomer.setNumColumns(3);
 
         btn_cancel=(Button) popupView.findViewById(R.id.btn_cancel) ;
 
@@ -2501,13 +2515,13 @@ if(club_id==2) {
         custmer_id.setHint("Search..");
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        lvcustmer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
             }
         });
-        lvcustmer.setOnScrollListener(new AbsListView.OnScrollListener() {
+        gvCustomer.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
@@ -2530,9 +2544,9 @@ if(club_id==2) {
 
         custmerCatalogGridViewAdapter = new CustmerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
 
-        lvcustmer.setAdapter(custmerCatalogGridViewAdapter);
+        gvCustomer.setAdapter(custmerCatalogGridViewAdapter);
 
-        lvcustmer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 parcent=0;
@@ -2559,12 +2573,12 @@ if(club_id==2) {
 
                         cInformation = String.valueOf(Ppoint);
 
-                         unUsedPointForCustmer = usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
+                        unUsedPointForCustmer = usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
                         aPoint = Ppoint - unUsedPointForCustmer;
                         information.setText(aPoint + " ");
-                    } else if(type==3) {
+                    } else if (type == 3) {
                         club_name.setText(group.getname());
-                        information.setText("general");
+                        information.setText(getString(R.string.general));
                     }
                 }
                 popupWindow.dismiss();
@@ -2576,7 +2590,7 @@ if(club_id==2) {
         custmer_id.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                lvcustmer.setTextFilterEnabled(true);
+                gvCustomer.setTextFilterEnabled(true);
 
             }
 
@@ -2605,7 +2619,7 @@ if(club_id==2) {
                     custmer_List=All_custmerList;
                 }
                 CustmerCatalogGridViewAdapter adapter = new CustmerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
-                lvcustmer.setAdapter(adapter);
+                gvCustomer.setAdapter(adapter);
                 // Log.i("products", productList.toString());
 
 
@@ -2615,6 +2629,7 @@ if(club_id==2) {
 
 
     }
+
     public void callPopupOrderSalesMan() {
         UserDBAdapter userDB=new UserDBAdapter(this);
         userDB.open();
@@ -2647,7 +2662,7 @@ if(club_id==2) {
             @Override
             public void onClick(View v) {
                 forOrderSaleMan=false;
-                salesMan.setText("Sales Man");
+                salesMan.setText(getString(R.string.sales_man));
             }
         });
 
@@ -2716,6 +2731,7 @@ if(club_id==2) {
 
 
     }
+
     public void callPopupForSalesMan() {
         UserDBAdapter userDB=new UserDBAdapter(this);
         userDB.open();
@@ -2817,6 +2833,7 @@ popupWindow.dismiss();
 
 
     }
+
 
 
 }

@@ -67,8 +67,7 @@ public class ClubMangmentActivity extends AppCompatActivity  {
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ClubMangmentActivity.this, Coustmer.class);
-                startActivity(intent);
+               onBackPressed();
             }
         });
 
