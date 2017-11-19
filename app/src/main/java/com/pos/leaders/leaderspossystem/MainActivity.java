@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
@@ -88,16 +90,19 @@ import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
+import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.CustmerAssestCatlogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustmerCatalogGridViewAdapter;
 
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TempCashActivty;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -110,6 +115,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import HPRTAndroidSDK.HPRTPrinterHelper;
 import POSAPI.POSInterfaceAPI;
 import POSAPI.POSUSBAPI;
 import POSSDK.POSSDK;
@@ -136,7 +142,7 @@ public class MainActivity extends AppCompatActivity{
    //private ActionBarDrawerToggle actionBarDrawerToggle;//
    // private NavigationView navigationView;
 
- //   ImageButton    btnLastSales;
+    //ImageButton    btnLastSales;
     Button btnPercentProduct,btnPauseSale,btnResumeSale;
     ImageButton search_person;
     Button btnCancel, btnCash, btnCreditCard, btnOtherWays   ;
@@ -148,7 +154,7 @@ public class MainActivity extends AppCompatActivity{
     LinearLayout llDepartments;
     FrameLayout fragmentTouchPad;
     GridView gvProducts;
-    ListView lvProducts ,lvcustmer;
+    ListView lvProducts;
     DepartmentDBAdapter departmentDBAdapter;
     ProductDBAdapter productDBAdapter;
     OfferDBAdapter offerDBAdapter;
@@ -1317,6 +1323,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
         //check starting day report A
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -1980,14 +1987,15 @@ saleTotalPrice=saleTotalPrice-newPrice;
         }.execute();
     }
 
-    private void printAndOpenCashBox(String mainAns, final String mainMer, final String mainCli) {
-        final POSInterfaceAPI posInterfaceAPI=new POSUSBAPI(MainActivity.this);
+
+    private void printAndOpenCashBoxBTP880(String mainAns, final String mainMer, final String mainCli){
+        final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(MainActivity.this);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
 
-        final ProgressDialog dialog=new ProgressDialog(MainActivity.this);
+        final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
         dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
 
-        new AsyncTask<Void,Void,Void>(){
+        new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 dialog.show();
@@ -1995,14 +2003,14 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
                 SESSION._SALE.setTotalPrice(saleTotalPrice);
                 int i = posInterfaceAPI.OpenDevice();
-                pos=new POSSDK(posInterfaceAPI);
+                pos = new POSSDK(posInterfaceAPI);
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 pos.systemFeedLine(2);
-                pos.systemCutPaper(66,0);
-                pos.cashdrawerOpen(0,20,20);
+                pos.systemCutPaper(66, 0);
+                pos.cashdrawerOpen(0, 20, 20);
 
                 posInterfaceAPI.CloseDevice();
                 dialog.cancel();
@@ -2012,7 +2020,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
             @Override
             protected Void doInBackground(Void... params) {
                 InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
-                if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)){
+                if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
                     pos.imageStandardModeRasterPrint(invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer), CONSTANT.PRINTER_PAGE_WIDTH);
                     pos.systemFeedLine(2);
                     pos.systemCutPaper(66, 0);
@@ -2025,6 +2033,157 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 return null;
             }
         }.execute();
+    }
+
+    private static HPRTPrinterHelper HPRTPrinter=new HPRTPrinterHelper();
+    private void printAndOpenCashBoxHPRT_TP805(String mainAns, final String mainMer, final String mainCli) {
+        if (HPRT_TP805.connect(this)) {
+            final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+            dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
+
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    dialog.show();
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    try {
+                        HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        HPRTPrinterHelper.OpenCashdrawer(0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        try {
+                            HPRTPrinterHelper.OpenCashdrawer(1);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                            try {
+                                HPRTPrinterHelper.OpenCashdrawer(2);
+                            } catch (Exception e2) {
+                                e2.printStackTrace();
+                            }
+                        }
+                    }
+
+                    dialog.cancel();
+                    clearCart();
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
+                    byte b = 0;
+                    try {
+                        if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
+                            Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer);
+
+                            HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
+
+                            HPRTPrinterHelper.FeedPaperToCutPosition(HPRTPrinterHelper.HPRT_FULL_CUT);
+                            Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli);
+                            HPRTPrinterHelper.PrintBitmap(bitmap2, b, b, 300);
+                        } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
+                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER);
+                            HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
+                        } else {
+                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null);
+                            HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+    }
+
+    private void printAndOpenCashBoxSUNMI_T1(String mainAns,final String mainMer,final String mainCli){
+        AidlUtil.getInstance().connectPrinterService(this);
+        if(AidlUtil.getInstance().isConnect()){
+            final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+            dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
+
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    dialog.show();
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    try {
+                        //cut
+                        AidlUtil.getInstance().feed();
+                        AidlUtil.getInstance().cut();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        AidlUtil.getInstance().openCashBox();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    dialog.cancel();
+                    clearCart();
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
+                    byte b = 0;
+                    try {
+                        if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
+                            Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer);
+
+                            AidlUtil.getInstance().printBitmap(bitmap);
+
+                            HPRTPrinterHelper.FeedPaperToCutPosition(HPRTPrinterHelper.HPRT_FULL_CUT);
+                            Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli);
+                            AidlUtil.getInstance().printBitmap(bitmap2);
+                        } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
+                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER);
+                            AidlUtil.getInstance().printBitmap(bitmap);
+                        } else {
+                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null);
+                            AidlUtil.getInstance().printBitmap(bitmap);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+        else {
+            Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void printAndOpenCashBox(String mainAns, final String mainMer, final String mainCli) {
+        switch (SETTINGS.printer){
+            case BTP880:
+                printAndOpenCashBoxBTP880(mainAns, mainMer, mainCli);
+                break;
+            case HPRT_TP805:
+                printAndOpenCashBoxHPRT_TP805(mainAns, mainMer, mainCli);
+                break;
+            case SUNMI_T1:
+                printAndOpenCashBoxSUNMI_T1(mainAns, mainMer, mainCli);
+                break;
+        }
     }
 
     @Override
@@ -2304,15 +2463,30 @@ if(club_id==2) {
 
         View popupView = layoutInflater.inflate(R.layout.pop_up, null);
 
-        popupWindow = new PopupWindow(popupView, 800, ActionBar.LayoutParams.WRAP_CONTENT,
-                true);
+
+        Window window = getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        //wlp.gravity = Gravity.CENTER_VERTICAL;
+        wlp.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        wlp.dimAmount = (float) 0.6;
+        window.setAttributes(wlp);
+
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+
+        popupWindow = new PopupWindow(popupView, (int) (width * 0.8), (int) (height * 0.8), true);
 
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
 
-        popupWindow.showAtLocation(popupView, Gravity.LEFT, 0, 0);
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
         custmer_id = (EditText) popupView.findViewById(R.id.customer_name);
-        lvcustmer=(ListView) popupView.findViewById(R.id.custmer_list_view);
+        final GridView gvCustomer = (GridView) popupView.findViewById(R.id.popUp_gvCustomer);
+        gvCustomer.setNumColumns(3);
 
         btn_cancel=(Button) popupView.findViewById(R.id.btn_cancel) ;
 
@@ -2342,13 +2516,13 @@ if(club_id==2) {
         custmer_id.setHint("Search..");
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        lvcustmer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
             }
         });
-        lvcustmer.setOnScrollListener(new AbsListView.OnScrollListener() {
+        gvCustomer.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
@@ -2371,9 +2545,9 @@ if(club_id==2) {
 
         custmerCatalogGridViewAdapter = new CustmerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
 
-        lvcustmer.setAdapter(custmerCatalogGridViewAdapter);
+        gvCustomer.setAdapter(custmerCatalogGridViewAdapter);
 
-        lvcustmer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 parcent=0;
@@ -2400,12 +2574,12 @@ if(club_id==2) {
 
                         cInformation = String.valueOf(Ppoint);
 
-                         unUsedPointForCustmer = usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
+                        unUsedPointForCustmer = usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
                         aPoint = Ppoint - unUsedPointForCustmer;
                         information.setText(aPoint + " ");
-                    } else if(type==3) {
+                    } else if (type == 3) {
                         club_name.setText(group.getname());
-                        information.setText("general");
+                        information.setText(getString(R.string.general));
                     }
                 }
                 popupWindow.dismiss();
@@ -2417,7 +2591,7 @@ if(club_id==2) {
         custmer_id.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                lvcustmer.setTextFilterEnabled(true);
+                gvCustomer.setTextFilterEnabled(true);
 
             }
 
@@ -2446,7 +2620,7 @@ if(club_id==2) {
                     custmer_List=All_custmerList;
                 }
                 CustmerCatalogGridViewAdapter adapter = new CustmerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
-                lvcustmer.setAdapter(adapter);
+                gvCustomer.setAdapter(adapter);
                 // Log.i("products", productList.toString());
 
 
@@ -2456,6 +2630,7 @@ if(club_id==2) {
 
 
     }
+
     public void callPopupOrderSalesMan() {
         UserDBAdapter userDB=new UserDBAdapter(this);
         userDB.open();
@@ -2488,7 +2663,7 @@ if(club_id==2) {
             @Override
             public void onClick(View v) {
                 forOrderSaleMan=false;
-                salesMan.setText("Sales Man");
+                salesMan.setText(getString(R.string.sales_man));
             }
         });
 
@@ -2557,6 +2732,7 @@ if(club_id==2) {
 
 
     }
+
     public void callPopupForSalesMan() {
         UserDBAdapter userDB=new UserDBAdapter(this);
         userDB.open();
@@ -2658,6 +2834,7 @@ popupWindow.dismiss();
 
 
     }
+
 
 
 }

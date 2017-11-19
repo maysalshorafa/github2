@@ -33,7 +33,8 @@ public class Sale {
 	private User user;
     @JsonIgnore
 	private Payment payment;
-
+	@JsonIgnore
+	private Customer_M customer;
 
     @JsonIgnore
     private Locale locale = new Locale("en");

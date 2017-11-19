@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
@@ -33,9 +34,13 @@ import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
+import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
+import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
@@ -109,7 +114,28 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         }
         permissionsDBAdapter.close();
 
+        switch (SETTINGS.printer) {
+            case HPRT_TP805:
+                if (HPRT_TP805.connect(this)) {
+                    Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case BTP880:
+                break;
+            case SUNMI_T1:
+                AidlUtil.getInstance().connectPrinterService(this);
+                if(AidlUtil.getInstance().isConnect()){
+                    Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+                }
+                break;
 
+        }
 
         mainScreen = (Button) findViewById(R.id.mainScreen);
         btAReport = (Button) findViewById(R.id.dashboard_btAreport);

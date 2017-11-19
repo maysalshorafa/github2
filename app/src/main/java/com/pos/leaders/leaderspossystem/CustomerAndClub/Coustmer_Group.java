@@ -51,7 +51,7 @@ TextView tvParcent , tvPoint ,tvAmount;
         setContentView(R.layout.activity_coustmer__group);
 
         TitleBar.setTitleBar(this);
-groupAdapter.open();
+        groupAdapter.open();
         etGroupName = (EditText) findViewById(R.id.group_name);
         clubType = (Spinner) findViewById(R.id.typeSpinner);
         clubType.setOnItemSelectedListener(this);
@@ -86,15 +86,7 @@ groupAdapter.open();
         clubType.setAdapter(adapter1);
         String name = clubType.getSelectedItem().toString();
         final Integer id = spinnerMap.get(clubType.getSelectedItemPosition());
-     /**   ArrayList<Integer> types = new ArrayList<Integer>();
 
-        // here we add the values to the Spiiner array
-        types.add(0);
-        types.add(1);
-        types.add(2);
-        ArrayAdapter type_adapter = new ArrayAdapter(this, R.layout.spinner_row_layout,R.id.spinnerTxt,
-                types);
-        clubType.setAdapter(type_adapter);**/
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             long i = (long) bundle.get("id");
@@ -191,9 +183,8 @@ groupAdapter.open();
             }
         });
 
-
-
     }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (id==1){
