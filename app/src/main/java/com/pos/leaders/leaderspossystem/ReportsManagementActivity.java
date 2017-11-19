@@ -49,8 +49,12 @@ public class ReportsManagementActivity  extends AppCompatActivity {
 
         btnZ = (Button) findViewById(R.id.reportManagementActivity_btnZ);
         btnSalesMan=(Button)findViewById(R.id.reportManagementActivity_btnSalesManReport);
+        btnZ.setText("Z " + getString(R.string.report));
         btnZView = (Button) findViewById(R.id.reportManagementActivity_btnZView);
+        btnZView.setText("Z " + getString(R.string.report) + " " + getString(R.string.view));
         btnX=(Button)findViewById(R.id.reportManagementActivity_btnX);
+        btnX.setText("X " + getString(R.string.report));
+
         btnSales =(Button)findViewById(R.id.reportManagementActivity_btnSaleManagement);
         btnExFiles = (Button) findViewById(R.id.reportManagementActivity_btnExtractingFiles);
 
@@ -133,9 +137,9 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         btnSales.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(ReportsManagementActivity.this,SalesManagementActivity.class);
+                Intent intent = new Intent(ReportsManagementActivity.this, SalesManagementActivity.class);
                 startActivity(intent);
-                  }
+            }
         });
 
         btnExFiles.setOnClickListener(new View.OnClickListener() {

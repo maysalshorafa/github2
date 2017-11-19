@@ -43,8 +43,8 @@ public class AddUserActivity extends AppCompatActivity {
 	ListView lvPermissions;
 	UserDBAdapter userDBAdapter;
 	User user;
-	final List<View> selectedViews=new ArrayList<View>();
-List<String> selectedFromList=new  ArrayList<String>();;
+	final List<View> selectedViews = new ArrayList<View>();
+	List<String> selectedFromList = new  ArrayList<String>();;
 	ArrayList<Integer> permissions_name;
 	ArrayList<Integer> userPermissions;
 	List<String> permissionName;
@@ -65,11 +65,10 @@ List<String> selectedFromList=new  ArrayList<String>();;
 
 		TitleBar.setTitleBar(this);
 
-
 		// Get Refferences of Views
-		permissions_name = getIntent().getIntegerArrayListExtra("permissions_name");
-		permissionName=new ArrayList<String>();
+		permissionName = new ArrayList<String>();
 		etUserName = (EditText) findViewById(R.id.addUser_ETUserName);
+        etUserName.setText("");
 		etPassword = (EditText) findViewById(R.id.addUser_ETPassword);
 		etREPassword = (EditText) findViewById(R.id.addUser_ETREPassword);
 		etFirstName = (EditText) findViewById(R.id.addUser_ETFirstName);
@@ -83,7 +82,7 @@ List<String> selectedFromList=new  ArrayList<String>();;
 
 		userDBAdapter = new UserDBAdapter(this);
 
-		final UserPermissionsDBAdapter userPermissionsDBAdapter=new UserPermissionsDBAdapter(this);
+		final UserPermissionsDBAdapter userPermissionsDBAdapter = new UserPermissionsDBAdapter(this);
 
 		user = null;
 		PermissionsDBAdapter permissionsDBAdapter = new PermissionsDBAdapter(this);
@@ -95,10 +94,10 @@ List<String> selectedFromList=new  ArrayList<String>();;
 
 		for (Permissions d : permissionsList) {
 			permissionName.add(d.getName());
-			permissionsMap.put(d.getName(),d.getId());
+			permissionsMap.put(d.getName(), d.getId());
 		}
 
-        final PermissionsGridViewAdapter permissionsGridViewAdapter = new PermissionsGridViewAdapter(this, permissionsList);
+		final PermissionsGridViewAdapter permissionsGridViewAdapter = new PermissionsGridViewAdapter(this, permissionsList);
 
 		lvPermissions.setAdapter(permissionsGridViewAdapter);
 
@@ -106,12 +105,12 @@ List<String> selectedFromList=new  ArrayList<String>();;
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			long i = (long) extras.get("userId");
-			String btnName=extras.getString(WorkerManagementActivity.LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME);
+			String btnName = extras.getString(WorkerManagementActivity.LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME);
 			btAdd.setText(btnName);
 
-            userDBAdapter.open();
+			userDBAdapter.open();
 			user = userDBAdapter.getUserByID(i);
-            userDBAdapter.close();
+			userDBAdapter.close();
 
 			etUserName.setText(user.getUserName());
 			etPassword.setText(user.getPassword());
@@ -125,22 +124,22 @@ List<String> selectedFromList=new  ArrayList<String>();;
 			etHourlyWage.setText(user.getHourlyWage() + "");
 
 			userPermissionsDBAdapter.open();
-			userPermissions	= userPermissionsDBAdapter.getPermissions(i);
+			userPermissions = userPermissionsDBAdapter.getPermissions(i);
 			userPermissionsDBAdapter.close();
 			List<Permissions> userPermissionses = new ArrayList<>();
 			permissionsDBAdapter.open();
 			for (int p : userPermissions) {
-                Permissions _p = permissionsDBAdapter.getPermission(p);
-                userPermissionses.add(_p);
-                for (Permissions per : permissionsList){
-                    if (per.getName().equals(_p.getName())) {
-                        per.setChecked(true);
-                    }
-                }
+				Permissions _p = permissionsDBAdapter.getPermission(p);
+				userPermissionses.add(_p);
+				for (Permissions per : permissionsList) {
+					if (per.getName().equals(_p.getName())) {
+						per.setChecked(true);
+					}
+				}
 			}
 			permissionsDBAdapter.close();
 
-            permissionsGridViewAdapter.updateRecords(permissionsList);
+			permissionsGridViewAdapter.updateRecords(permissionsList);
 		}
 
 		btAdd.setOnClickListener(new View.OnClickListener() {
@@ -148,80 +147,82 @@ List<String> selectedFromList=new  ArrayList<String>();;
 			public void onClick(View v) {
 				String _userName = etUserName.getText().toString();
 				Intent intent;
+                userDBAdapter.open();
 				if (user == null) {
-					if (_userName != "") {
+					if (!_userName.equals("")) {
 						if (userDBAdapter.availableUserName(_userName)) {
 							if (etPassword.getText().toString().equals("")) {
-								Toast.makeText(getApplicationContext(), "Please set password", Toast.LENGTH_LONG).show();
+								Toast.makeText(getApplicationContext(), getString(R.string.please_set_password), Toast.LENGTH_LONG).show();
 							} else if (!(etPassword.getText().toString().equals(etREPassword.getText().toString()))) {
-								Toast.makeText(getApplicationContext(), "Password does`t match", Toast.LENGTH_LONG).show();
+								Toast.makeText(getApplicationContext(), getString(R.string.password_does_not_match), Toast.LENGTH_LONG).show();
 							} else if (etFirstName.getText().toString().equals("")) {
-								Toast.makeText(getApplicationContext(), "Please insert first name", Toast.LENGTH_LONG).show();
+								Toast.makeText(getApplicationContext(), getString(R.string.please_insert_first_name), Toast.LENGTH_LONG).show();
 							} else if (etPresent.getText().toString().equals("")) {
-								Toast.makeText(getApplicationContext(), "Please insert present", Toast.LENGTH_LONG).show();
+								Toast.makeText(getApplicationContext(), getString(R.string.please_insert_present), Toast.LENGTH_LONG).show();
 							} else if (etHourlyWage.getText().toString().equals("")) {
-								Toast.makeText(getApplicationContext(), "Please insert hourly wage", Toast.LENGTH_LONG).show();
+								Toast.makeText(getApplicationContext(), getString(R.string.please_insert_hourly_wage), Toast.LENGTH_LONG).show();
 							} else {
 								long i = userDBAdapter.insertEntry(etUserName.getText().toString(), etPassword.getText().toString(), etFirstName.getText().toString()
 										, etLastName.getText().toString(), etPhoneNumber.getText().toString()
-										, Double.parseDouble(etPresent.getText().toString()), Double.parseDouble(etHourlyWage.getText().toString()) );
+										, Double.parseDouble(etPresent.getText().toString()), Double.parseDouble(etHourlyWage.getText().toString()));
 								if (i > 0) {
-									UserPermissionsDBAdapter userPermissionAdapter=new UserPermissionsDBAdapter(AddUserActivity.this);
+									UserPermissionsDBAdapter userPermissionAdapter = new UserPermissionsDBAdapter(AddUserActivity.this);
 									userPermissionAdapter.open();
-                                    for (Permissions p : permissionsList) {
-                                        if (p.isChecked()) {
-                                            userPermissionAdapter.insertEntry(p.getId(), user.getId());
-                                        }
-                                    }
-                                    userPermissionAdapter.close();
+									for (Permissions p : permissionsList) {
+										if (p.isChecked()) {
+											userPermissionAdapter.insertEntry(p.getId(), user.getId());
+										}
+									}
+									userPermissionAdapter.close();
 
-									Toast.makeText(getApplicationContext(), "success dding new user", Toast.LENGTH_LONG).show();
-
-									Log.i("success", "adding new user");
-									intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
-								//	intent.putExtra("permissions_name",selectedFromList);
-									startActivity(intent);
-									//// TODO: 17/10/2016 sucess to add entity
+									Toast.makeText(getApplicationContext(), getString(R.string.success_adding_new_user), Toast.LENGTH_LONG).show();
+									try {
+										Thread.sleep(500);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}
+									onBackPressed();
 								} else {
 									Log.e("error", "can`t add user");
-									Toast.makeText(getApplicationContext(), "Can`t add user please try again", Toast.LENGTH_SHORT).show();
+									Toast.makeText(getApplicationContext(), getString(R.string.can_not_add_user_please_try_again), Toast.LENGTH_SHORT).show();
 									//// TODO: 17/10/2016 error with adding entity
 								}
 							}
 						} else {
-							Toast.makeText(getApplicationContext(), "User name is not available, try to use another user name", Toast.LENGTH_LONG).show();
+							Toast.makeText(getApplicationContext(), getString(R.string.user_name_is_not_available_try_to_use_another_user_name), Toast.LENGTH_LONG).show();
 						}
 					}
+					else {
+                        Toast.makeText(getApplicationContext(), getString(R.string.user_name_is_empty), Toast.LENGTH_LONG).show();
+                    }
 				} else {
 					// Edit mode
 					if (_userName != "") {
-							if (etFirstName.getText().toString().equals("")) {
-								Toast.makeText(getApplicationContext(), "Please insert first name", Toast.LENGTH_LONG).show();
-							} else if (etPresent.getText().toString().equals("")) {
-								Toast.makeText(getApplicationContext(), "Please insert present", Toast.LENGTH_LONG).show();
-							} else if (etHourlyWage.getText().toString().equals("")) {
-								Toast.makeText(getApplicationContext(), "Please insert hourly wage", Toast.LENGTH_LONG).show();
-							} else {
-								try {
+						if (etFirstName.getText().toString().equals("")) {
+							Toast.makeText(getApplicationContext(), getString(R.string.please_insert_first_name), Toast.LENGTH_LONG).show();
+						} else if (etPresent.getText().toString().equals("")) {
+							Toast.makeText(getApplicationContext(), getString(R.string.please_insert_present), Toast.LENGTH_LONG).show();
+						} else if (etHourlyWage.getText().toString().equals("")) {
+							Toast.makeText(getApplicationContext(), getString(R.string.please_insert_hourly_wage), Toast.LENGTH_LONG).show();
+						} else {
+							try {
 
-									user.setUserName(etUserName.getText().toString());
-									user.setFirstName(etFirstName.getText().toString());
-									user.setLastName(etLastName.getText().toString());
-									user.setPhoneNumber(etPhoneNumber.getText().toString());
-									user.setHourlyWage(Double.parseDouble(etHourlyWage.getText().toString()));
-									user.setPresent(Double.parseDouble(etPresent.getText().toString()));
-									//user.setPermissionsName(selectedFromList);
+								user.setUserName(etUserName.getText().toString());
+								user.setFirstName(etFirstName.getText().toString());
+								user.setLastName(etLastName.getText().toString());
+								user.setPhoneNumber(etPhoneNumber.getText().toString());
+								user.setHourlyWage(Double.parseDouble(etHourlyWage.getText().toString()));
+								user.setPresent(Double.parseDouble(etPresent.getText().toString()));
+								//user.setPermissionsName(selectedFromList);
 
-									userDBAdapter.updateEntry(user);
-									Log.i("success Edit", user.toString());
-									intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
-									intent.putIntegerArrayListExtra("permissions_name",  permissions_name);
-									startActivity(intent);
-								} catch (Exception ex) {
-									Log.e("error can`t edit 0user", ex.getMessage().toString());
-									Toast.makeText(getApplicationContext(), "Can`t edit user please try again", Toast.LENGTH_SHORT).show();
-								}
+								userDBAdapter.updateEntry(user);
+								Log.i("success Edit", user.toString());
+								onBackPressed();
+							} catch (Exception ex) {
+								Log.e("error can`t edit 0user", ex.getMessage().toString());
+								Toast.makeText(getApplicationContext(), getString(R.string.can_not_edit_user_please_try_again), Toast.LENGTH_SHORT).show();
 							}
+						}
 
 					}
 				}
@@ -231,24 +232,19 @@ List<String> selectedFromList=new  ArrayList<String>();;
 		btCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//// TODO: 22/10/2016 cancel and return to previous activity
-				Intent intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
-			//	intent.putExtra("permissions_name",user.getPermtionName());
-
-				//userDBAdapter.close();
-				startActivity(intent);
+				onBackPressed();
 			}
 		});
 
 		lvPermissions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
-                Permissions model = permissionsList.get(position);
-                model.setChecked(!model.isChecked());
-                permissionsList.set(position, model);
+				Permissions model = permissionsList.get(position);
+				model.setChecked(!model.isChecked());
+				permissionsList.set(position, model);
 
-                permissionsGridViewAdapter.updateRecords(permissionsList);
-            }
+				permissionsGridViewAdapter.updateRecords(permissionsList);
+			}
 		});
 	}
 

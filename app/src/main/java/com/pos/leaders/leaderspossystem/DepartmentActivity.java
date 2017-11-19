@@ -115,22 +115,34 @@ public class DepartmentActivity extends AppCompatActivity {
 	private void addDepartmentOnClick(View v) {
 		if (editableDepartment == null) {
 			if(etDepartmentName.getText().toString().equals("")) {
-				Toast.makeText(getApplicationContext(),getString(R.string.insert_department_name_massage),Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), getString(R.string.please_insert_department_name), Toast.LENGTH_LONG).show();
 			}
 			else {
-				long check = departmentDBAdapter.insertEntry(etDepartmentName.getText().toString(), SESSION._USER.getId());
-				if (check > 0) {
-					Log.i("success", "added department");
-				} else {
-					Log.e("error", " adding department");
+				boolean exist = false;
+				for (Department dep : listDepartment) {
+					if(dep.getName().equals(etDepartmentName.getText().toString())){
+						exist = true;
+						break;
+					}
 				}
-				rest();
-				makeList();
+				if(!exist) {
+					long check = departmentDBAdapter.insertEntry(etDepartmentName.getText().toString(), SESSION._USER.getId());
+					if (check > 0) {
+						Log.i("success", "added department");
+					} else {
+						Log.e("error", " adding department");
+					}
+					rest();
+					makeList();
+				}
+				else{
+					Toast.makeText(getApplicationContext(), getString(R.string.please_insert_another_department_name), Toast.LENGTH_LONG).show();
+				}
 			}
 		}
 		else{
 			if(etDepartmentName.getText().toString().equals("")) {
-				Toast.makeText(getApplicationContext(),getString(R.string.insert_new_department_name_massage),Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), getString(R.string.please_insert_department_name), Toast.LENGTH_LONG).show();
 			}
 			else {
 				editableDepartment.setName(etDepartmentName.getText().toString());

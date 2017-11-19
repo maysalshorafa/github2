@@ -164,8 +164,7 @@ public class InvoiceImg {
         return image;
     }
 
-    private List<Block> Head(){
-        String _customerName = SESSION._SALE.getCustomer_name();
+    private List<Block> Head(Sale sale){
         String customerName = "";
         List<Block> blocks = new ArrayList<Block>();
 
@@ -175,14 +174,14 @@ public class InvoiceImg {
         Block subTitle = new Block("\u200E " + context.getString(R.string.private_company) +
                 ": " + SETTINGS.companyID , 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
 
-        if(_customerName==null) {
+        if (sale.getCustomer_name().equals(null)) {
                 customerName = context.getString(R.string.general_customer);
         }
-        else if(_customerName.equals("")) {
+        else if(sale.getCustomer_name().equals("")) {
             customerName = context.getString(R.string.general_customer);
         }
         else{
-            customerName = _customerName;
+            customerName =  sale.getCustomer_name();
         }
 
         Block third_part = new Block("\u200E "  + context.getString(R.string.customer_name) +
@@ -198,7 +197,7 @@ public class InvoiceImg {
 
     public Bitmap normalInvoice(long id, List<Order> orders, Sale sale, boolean isCopy, User user, List<Check> checks){
         List<Block> blocks = new ArrayList<Block>();
-        blocks.addAll(Head());
+        blocks.addAll(Head(sale));
         Block lineR = new Block("\u200E" + line + "\u200E", 30.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
 
         String status=context.getString(R.string.source_invoice);
@@ -332,7 +331,7 @@ public class InvoiceImg {
 
     public Bitmap creditCardInvoice(Sale sale,Boolean isCopy,String mainMer) {
         List<Block> blocks = new ArrayList<Block>();
-        blocks.addAll(Head());
+        blocks.addAll(Head(sale));
         String status=context.getString(R.string.source_invoice);
         if(isCopy)
             status=context.getString(R.string.copy_invoice);
@@ -435,7 +434,7 @@ public class InvoiceImg {
     public Bitmap cancelingInvoice(Sale sale,Boolean isCopy,List<Check> checks) {
 
         List<Block> blocks = new ArrayList<Block>();
-        blocks.addAll(Head());
+        blocks.addAll(Head(sale));
         String status=context.getString(R.string.source_invoice);
         if(isCopy)
             status=context.getString(R.string.copy_invoice);
@@ -535,15 +534,13 @@ public class InvoiceImg {
 
     public Bitmap replacmentNote(Sale sale, boolean isCopy) {
         List<Block> blocks = new ArrayList<Block>();
-        blocks.addAll(Head());
+        blocks.addAll(Head(sale));
         String status=context.getString(R.string.source_invoice);
         if(isCopy)
             status=context.getString(R.string.copy_invoice);
         Block inum = new Block("\u200E"+status + "\n" +"\u200E"+ context.getString(R.string.replacement_invoice) + String.format(" %06d ", sale.getId()) + "\n"
                 + line, 35.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(inum);
-
-
 
         Block name = new Block("\u200E"+context.getString(R.string.product)+newLineL, 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.35));
         Block barcode = new Block(context.getString(R.string.productID)+"\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.4));

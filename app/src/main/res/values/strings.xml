@@ -71,6 +71,8 @@
     <string name="import_product">Import Products</string>
     <string name="create_new_product">Create New Product</string>
     <string name="make_your_selection">Make your selection</string>
+    <string name="please_insert_department_name">Please insert department name.</string>
+    <string name="please_insert_another_department_name">Please insert another department name.</string>
     <!--Splash Screen-->
 
     <!--Log In Screen-->
@@ -177,10 +179,11 @@
     <string name="weighable">Weighable</string>
     <string name="department_name">Department Name</string>
     <string name="success_to_update_product">Product has been updated!</string>
-    <string name="error_to_update_product">Filed to update this product.</string>
+
+    <string name="error_to_update_product">Failed to update this product.</string>
+
     <string name="_continue">continue</string>
     <string name="please_add_product_then_continue">Please add Product then continue..!</string>
-
 
     <string name="wait_for_finish">Wait for finish...</string>
     <string name="browser">Browser</string>
@@ -388,4 +391,18 @@
     <string name="hours_of_work">Hours Of Work</string>
     <string name="customer_club">Customer Club</string>
     <string name="general_customer">General Customer</string>
+
+    <string name="please_set_password">Please set password.</string>
+    <string name="password_does_not_match">Password does`t match.</string>
+    <string name="please_insert_first_name">Please insert a first name.</string>
+    <string name="please_insert_present">Please insert present.</string>
+    <string name="please_insert_hourly_wage">Please insert hourly wage.</string>
+    <string name="can_not_edit_user_please_try_again">Can`t edit user please try again.</string>
+    <string name="user_name_is_not_available_try_to_use_another_user_name">User name is not available, try to use another user name.</string>
+    <string name="can_not_add_user_please_try_again">Can`t add user please try again.</string>
+    <string name="success_adding_new_user">Success, adding new user.</string>
+    <string name="user_name_is_empty">User name is empty.</string>
+    <string name="success_to_add_product">Success to add an product.</string>
+    <string name="fail_to_add_product">Fail to add product.</string>
+
 </resources>
