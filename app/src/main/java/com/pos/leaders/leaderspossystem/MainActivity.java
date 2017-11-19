@@ -47,6 +47,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
+import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCoustmer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
@@ -102,7 +103,6 @@ import com.pos.leaders.leaderspossystem.Tools.TempCashActivty;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageData;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
 import java.util.ArrayList;
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity{
     EditText custmer_id;
     //Drw drw=null;
     //String devicePath="/dev/ttySAC1";
-    EditText custmername_EditText;
+    EditText customerName_EditText;
 ////offer varible
     boolean SumForRule3Status=false;
     int SumForRule3=0;
@@ -278,8 +278,8 @@ double SumForClub=0.0;
         custmer_name=(TextView)findViewById(R.id.cName);
         club_name=(TextView)findViewById(R.id.cClubName);
         information=(TextView)findViewById(R.id.cInformation);
-        custmername_EditText=(EditText) findViewById(R.id.custmer_textview);
-        //a=custmername_EditText.getText().toString();
+        customerName_EditText =(EditText) findViewById(R.id.customer_textView);
+        //a=customerName_EditText.getText().toString();
 
         search_person=(ImageButton)findViewById(R.id.searchPerson);
         drawerLayout = (DrawerLayout) findViewById(R.id.mainActivity_drawerLayout);
@@ -994,7 +994,7 @@ usedpointDbAdapter.open();
             @Override
             public void onClick(View v) {
                 if(SESSION._ORDERS.size()>0) {
-                    a = custmername_EditText.getText().toString();
+                    a = customerName_EditText.getText().toString();
                     Intent intent = new Intent(MainActivity.this, TempCashActivty.class);
                     intent.putExtra("_Price", saleTotalPrice);
                     intent.putExtra("_SaleId", saleIDforCash);
@@ -1044,7 +1044,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
             @Override
             public void onClick(View v) {
                 if (SESSION._ORDERS.size() > 0) {
-                    final String __customerName = custmername_EditText.getText().toString();
+                    final String __customerName = customerName_EditText.getText().toString();
                     final Context c = MainActivity.this;
                     new AlertDialog.Builder(c)
                             .setTitle(c.getResources().getString(R.string.clearCartAlertTitle))
@@ -1064,7 +1064,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                             .setNegativeButton(c.getResources().getString(R.string.by_phone), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    a = custmername_EditText.getText().toString();
+                                    a = customerName_EditText.getText().toString();
 
                                     Intent intent = new Intent(c, CreditCardActivity.class);
                                     intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
@@ -1091,7 +1091,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
             public void onClick(View v) {
                 if (SESSION._ORDERS.size() > 0) {
                     Intent intent = new Intent(MainActivity.this, ChecksActivity.class);
-                    a = custmername_EditText.getText().toString();
+                    a = customerName_EditText.getText().toString();
 
                     intent.putExtra("_Price", saleTotalPrice);
                     intent.putExtra("_custmer", a);
@@ -1292,7 +1292,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                         finish();
                         break;
                     case R.id.menuItem_Custmer_Club:
-                        intent = new Intent(MainActivity.this, Coustmer.class);
+                        intent = new Intent(MainActivity.this, Customer.class);
                         startActivity(intent);
                         finish();
                         break;
@@ -1471,7 +1471,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
         club_name.setText("");
         custmer_name.setText("");
        information.setText("");
-        custmername_EditText.setText("");
+        customerName_EditText.setText("");
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
         offerDBAdapter = new OfferDBAdapter(this);
@@ -2378,7 +2378,7 @@ if(club_id==2) {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 parcent=0;
                 a= custmer_List.get(position).getCustmerName();
-                  custmername_EditText.setText(a);
+                  customerName_EditText.setText(a);
                 custmer_name.setText(a);
 
                 _custmer_id =custmer_List.get(position).getId();

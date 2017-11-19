@@ -1,4 +1,4 @@
-package com.pos.leaders.leaderspossystem;
+package com.pos.leaders.leaderspossystem.CustomerAndClub;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,13 +8,16 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
+import java.util.ArrayList;
 
-public class Coustmer extends AppCompatActivity {
 
-    Button btAddCoustmer, btshowCoustmer, addgroup ,btShowGroup;
+public class Customer extends AppCompatActivity {
 
+    Button btAddCustomer, btShowCustomer, addGroup,btShowGroup,btCancel;
+    ArrayList<Integer> permissions_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,37 +29,39 @@ public class Coustmer extends AppCompatActivity {
         setContentView(R.layout.activity_coustmer);
 
         TitleBar.setTitleBar(this);
-
-        btAddCoustmer = (Button) findViewById(R.id.add_new_customer);
-        btshowCoustmer = (Button) findViewById(R.id.show_customer);
-        addgroup = (Button) findViewById(R.id.new_group);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            permissions_name = getIntent().getIntegerArrayListExtra("permissions_name");
+        }
+        btAddCustomer = (Button) findViewById(R.id.add_new_customer);
+        btShowCustomer = (Button) findViewById(R.id.show_customer);
+        addGroup = (Button) findViewById(R.id.new_group);
         btShowGroup = (Button) findViewById(R.id.show_group);
-        btAddCoustmer.setOnClickListener(new View.OnClickListener() {
+        btCancel = (Button) findViewById(R.id.customerManagement_BTCancel);
+        btAddCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //// TODO: 22/10/2016 cancel and return to previous activity
-                Intent intent = new Intent(Coustmer.this, AddNewCoustmer.class);
+                Intent intent = new Intent(Customer.this, AddNewCoustmer.class);
                 //userDBAdapter.close();
                 startActivity(intent);
             }
         });
-        addgroup.setOnClickListener(new View.OnClickListener() {
+        addGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //// TODO: 22/10/2016 cancel and return to previous activity
-                Intent intent = new Intent(Coustmer.this,Coustmer_Group.class);
+                Intent intent = new Intent(Customer.this,Coustmer_Group.class);
                 //userDBAdapter.close();
 
                 startActivity(intent);
             }
         });
-       btshowCoustmer.setOnClickListener(new View.OnClickListener() {
+       btShowCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //// TODO: 22/10/2016 cancel and return to previous activity
-                Intent intent = new Intent(Coustmer.this,CustmerMangmentActivity.class);
-                //userDBAdapter.close();
-
+                Intent intent = new Intent(Customer.this,CustmerManagementActivity.class);
                 startActivity(intent);
             }
         });
@@ -64,14 +69,21 @@ public class Coustmer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //// TODO: 22/10/2016 cancel and return to previous activity
-                Intent intent = new Intent(Coustmer.this,ClubMangmentActivity.class);
+                Intent intent = new Intent(Customer.this,ClubMangmentActivity.class);
                 //userDBAdapter.close();
 
                 startActivity(intent);
+            }
+        });
+        btCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
 
 
 
     }
+
 }

@@ -1,34 +1,29 @@
-package com.pos.leaders.leaderspossystem;
+package com.pos.leaders.leaderspossystem.CustomerAndClub;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Customer_M;
+import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CustmerCatalogGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 
-public class CustmerMangmentActivity extends AppCompatActivity {
-    List<Customer_M> custmers;
+public class CustmerManagementActivity extends AppCompatActivity {
+    List<Customer_M> customers;
     CustomerDBAdapter customerDBAdapter;
-    GridView gvcustmer;
+    GridView gvCustomer;
     Button btAddCustmer,btCancel;
     private static final int CHANGE_PASSWORD_DIALOG = 656;
     Customer_M customer;
@@ -45,7 +40,7 @@ public class CustmerMangmentActivity extends AppCompatActivity {
 
         TitleBar.setTitleBar(this);
 
-        gvcustmer = (GridView) findViewById(R.id.custmerManagement_GVCustmer);
+        gvCustomer = (GridView) findViewById(R.id.custmerManagement_GVCustmer);
             btAddCustmer = (Button) findViewById(R.id.custmerManagement_BTNewCustmer);
             btCancel = (Button) findViewById(R.id.custmerManagement_BTCancel);
 
@@ -54,31 +49,29 @@ public class CustmerMangmentActivity extends AppCompatActivity {
             btAddCustmer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(CustmerMangmentActivity.this, AddNewCoustmer.class);
+                    Intent intent = new Intent(CustmerManagementActivity.this, AddNewCoustmer.class);
                     startActivity(intent);
                 }
             });
 
-            btCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(CustmerMangmentActivity.this, Coustmer.class);
-                    startActivity(intent);
-                }
-            });
-
+        btCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
             //endregion
 
 
             customerDBAdapter= new CustomerDBAdapter(this);
             customerDBAdapter.open();
-            custmers = customerDBAdapter.getAllCustmer();
+            customers = customerDBAdapter.getAllCustmer();
             customer = null;
 
-            final CustmerCatalogGridViewAdapter adapter = new CustmerCatalogGridViewAdapter(this, custmers);
-            gvcustmer.setAdapter(adapter);
-            gvcustmer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            final CustmerCatalogGridViewAdapter adapter = new CustmerCatalogGridViewAdapter(this, customers);
+            gvCustomer.setAdapter(adapter);
+            gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
@@ -87,33 +80,33 @@ public class CustmerMangmentActivity extends AppCompatActivity {
                             getString(R.string.edit),
                             getString(R.string.delete),
                            };
-                    AlertDialog.Builder builder = new AlertDialog.Builder(CustmerMangmentActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CustmerManagementActivity.this);
                     builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
                     builder.setItems(items, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int item) {
                             Intent intent;
                             switch (item) {
                                 case 0:
-                                    intent = new Intent(CustmerMangmentActivity.this, AddNewCoustmer.class);
-                                    intent.putExtra("id", custmers.get(position).getId());
+                                    intent = new Intent(CustmerManagementActivity.this, AddNewCoustmer.class);
+                                    intent.putExtra("id", customers.get(position).getId());
 
 
                                     startActivity(intent);
                                 case 1:
-                                    intent = new Intent(CustmerMangmentActivity.this, AddNewCoustmer.class);
-                                    intent.putExtra("id", custmers.get(position).getId());
+                                    intent = new Intent(CustmerManagementActivity.this, AddNewCoustmer.class);
+                                    intent.putExtra("id", customers.get(position).getId());
                                     startActivity(intent);
                                     break;
 
                                 case 2:
-                                    new AlertDialog.Builder(CustmerMangmentActivity.this)
+                                    new AlertDialog.Builder(CustmerManagementActivity.this)
                                             .setTitle("Delete Custmer")
                                             .setMessage("Are you want to delete this Custmer?")
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    customerDBAdapter.deleteEntry(custmers.get(position).getId());
-                                                    custmers.remove(custmers.get(position));
-                                                    gvcustmer.setAdapter(adapter);
+                                                    customerDBAdapter.deleteEntry(customers.get(position).getId());
+                                                    customers.remove(customers.get(position));
+                                                    gvCustomer.setAdapter(adapter);
                                                 }
                                             })
                                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

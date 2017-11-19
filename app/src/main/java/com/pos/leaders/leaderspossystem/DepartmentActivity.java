@@ -114,18 +114,23 @@ public class DepartmentActivity extends AppCompatActivity {
 
 	private void addDepartmentOnClick(View v) {
 		if (editableDepartment == null) {
-			long check = departmentDBAdapter.insertEntry(etDepartmentName.getText().toString(), SESSION._USER.getId());
-			if (check > 0) {
-				Log.i("success", "added department");
-			} else {
-				Log.e("error", " adding department");
+			if(etDepartmentName.getText().toString().equals("")) {
+				Toast.makeText(getApplicationContext(),getString(R.string.insert_department_name_massage),Toast.LENGTH_LONG).show();
 			}
-			rest();
-			makeList();
+			else {
+				long check = departmentDBAdapter.insertEntry(etDepartmentName.getText().toString(), SESSION._USER.getId());
+				if (check > 0) {
+					Log.i("success", "added department");
+				} else {
+					Log.e("error", " adding department");
+				}
+				rest();
+				makeList();
+			}
 		}
 		else{
 			if(etDepartmentName.getText().toString().equals("")) {
-				Toast.makeText(getApplicationContext(),"Please insert department name.",Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(),getString(R.string.insert_new_department_name_massage),Toast.LENGTH_LONG).show();
 			}
 			else {
 				editableDepartment.setName(etDepartmentName.getText().toString());

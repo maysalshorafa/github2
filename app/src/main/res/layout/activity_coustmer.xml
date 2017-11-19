@@ -1,78 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:orientation="horizontal"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
 android:layout_gravity="center"
-    >
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginRight="50dp" >
-
-    <Button
-        android:id="@+id/add_new_customer"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:text="@string/add_customer"
-        android:background="@drawable/dashboard_frame"
-        android:padding="16dp"
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        android:textStyle="normal|bold"
-
-        />
-
-    <Button
-        android:id="@+id/show_customer"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/dashboard_frame"
-        android:padding="16dp"
-        android:text="@string/show_customer"
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        android:textStyle="normal|bold"
-
-        />
-
-</LinearLayout>
-
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginRight="50dp"
-    android:orientation="vertical">
-
-    <Button
-        android:id="@+id/new_group"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:background="@drawable/dashboard_frame"
-        android:padding="16dp"
-        android:text="@string/add_club"
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        android:textStyle="normal|bold" />
-
-    <Button
-        android:id="@+id/show_group"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/dashboard_frame"
-        android:padding="16dp"
-        android:text="@string/show_club"
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        android:textStyle="normal|bold"
-
-        />
-
-</LinearLayout>
+    android:gravity="center"
+    android:weightSum="2">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:weightSum="1"
+      >
 
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="100dp"
+        >
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="50dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/add_new_customer"
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                android:background="@drawable/dashboard_frame"
+                android:padding="16dp"
+                android:text="@string/add_customer"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="normal|bold"
+
+                />
+
+            <Button
+                android:id="@+id/show_customer"
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/dashboard_frame"
+                android:padding="16dp"
+                android:text="@string/show_customer"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="normal|bold"
+
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="50dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/new_group"
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                android:background="@drawable/dashboard_frame"
+                android:padding="16dp"
+                android:text="@string/add_club"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="normal|bold" />
+
+            <Button
+                android:id="@+id/show_group"
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/dashboard_frame"
+                android:padding="16dp"
+                android:text="@string/show_club"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="normal|bold"
+
+                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            android:weightSum="1"
+           >
+
+
+
+            <Button
+                android:id="@+id/customerManagement_BTCancel"
+                style="@style/AppTheme.bt_dangers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textColor="#fff"
+                android:textSize="20dp" />
+
+
+        </LinearLayout>
+
+       </LinearLayout>
+
+  </LinearLayout>

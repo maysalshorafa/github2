@@ -1,12 +1,10 @@
-package com.pos.leaders.leaderspossystem;
+package com.pos.leaders.leaderspossystem.CustomerAndClub;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -16,7 +14,6 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
@@ -25,88 +22,82 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupAdapter;
 import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.Customer_M;
 import com.pos.leaders.leaderspossystem.Models.Group;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
+import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
-import com.pos.leaders.leaderspossystem.Tools.UtilityValidation;
 
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class AddNewCoustmer  extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     Intent intent ;
-    EditText etCoustmerFirstName ,etCoustmerLastName, etStreet, etJob, etEmail, etPhoneNo,etHouseNumber,etPostalCode,etCountry,etCountryCode;
-    Button btAddcoustmer,btCancel;
+    EditText etCustomerFirstName, etCustomerLastName, etStreet, etJob, etEmail, etPhoneNo,etHouseNumber,etPostalCode,etCountry,etCountryCode;
+    Button btAddCustomer,btCancel;
     Spinner selectCitySpinner, selectClubSpinner;
     CustomerDBAdapter customerDBAdapter;
-    Customer_M custmer;
-
+    Customer_M customer;
     private List<City> cityList=null;
     private List<Group> groupList=null;
-
+    ArrayList<Integer> permissions_name;
     RadioButton maleRadioButton, femaleRadioButton;
     RadioGroup radioGender ;
     String gender=null;
     final List<String> club = new ArrayList<String>();
-long clubID;
-
+    long clubID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // ActionBar Region
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_add_new_coustmer);
-
-
         TitleBar.setTitleBar(this);
-
-
-
         init();
-        custmer = null;
+        customer = null;
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
+            permissions_name = getIntent().getIntegerArrayListExtra("permissions_name");
+        }
+        if (bundle != null) {
            long i = (long) bundle.get("id");
-            custmer = customerDBAdapter.getCustmerByID(i);
-            etCoustmerFirstName.setText(custmer.getFirstName());
-            etCoustmerLastName.setText(custmer.getLastName());
-            etJob.setText(custmer.getJob());
-            etEmail.setText(custmer.getEmail());
-            etPhoneNo.setText(custmer.getPhoneNumber());
-            etStreet.setText(custmer.getStreet());
-            etHouseNumber.setText(custmer.getHouseNumber());
-            etPostalCode.setText(custmer.getPostalCode());
-            etCountry.setText(custmer.getCountry());
-            etCountryCode.setText(custmer.getCountryCode());
-            btAddcoustmer.setText(getResources().getText(R.string.edit));
+            customer = customerDBAdapter.getCustmerByID(i);
+            etCustomerFirstName.setText(customer.getFirstName());
+            etCustomerLastName.setText(customer.getLastName());
+            etJob.setText(customer.getJob());
+            etEmail.setText(customer.getEmail());
+            etPhoneNo.setText(customer.getPhoneNumber());
+            etStreet.setText(customer.getStreet());
+            etHouseNumber.setText(customer.getHouseNumber());
+            etPostalCode.setText(customer.getPostalCode());
+            etCountry.setText(customer.getCountry());
+            etCountryCode.setText(customer.getCountryCode());
+            btAddCustomer.setText(getResources().getText(R.string.edit));
             //The key argument here must match that used in the other activity
         }
 
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //// TODO: 22/10/2016 cancel and return to previous activity
-                Intent intent = new Intent(AddNewCoustmer.this, Coustmer.class);
-
-                startActivity(intent);
+                btCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onBackPressed();
+                    }
+                });
             }
         });
 
-        btAddcoustmer.setOnClickListener(new View.OnClickListener() {
+        btAddCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String _custmerName = etCoustmerFirstName.getText().toString();
+                String _custmerName = etCustomerFirstName.getText().toString();
                 Intent intent;
-                if (custmer == null) {
+                if (customer == null) {
                     if (_custmerName != "") {
                         if (customerDBAdapter.availableCustomerrName(_custmerName)) {
-                            if (etCoustmerFirstName.getText().toString().equals("")) {
+                            if (etCustomerFirstName.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), "Please insert First Name", Toast.LENGTH_LONG).show();
-                            } else if (etCoustmerLastName.getText().toString().equals("")) {
+                            } else if (etCustomerLastName.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), "Please insert Last Name", Toast.LENGTH_LONG).show();
                             }
                             else if (etEmail.getText().toString().equals("")) {
@@ -147,15 +138,15 @@ long clubID;
 
 
                                 }
-                                    long i = customerDBAdapter.insertEntry(etCoustmerFirstName.getText().toString(),
-                                            etCoustmerLastName.getText().toString(), gender,  etEmail.getText().toString(),
+                                    long i = customerDBAdapter.insertEntry(etCustomerFirstName.getText().toString(),
+                                            etCustomerLastName.getText().toString(), gender,  etEmail.getText().toString(),
                                             etJob.getText().toString(),etPhoneNo.getText().toString(),etStreet.getText().toString() ,
                                             (int) selectCitySpinner.getSelectedItemId(),clubID,
                                             etHouseNumber.getText().toString(),etPostalCode.getText().toString(),
                                             etCountry.getText().toString(),etCountryCode.getText().toString());
                                 if (i > 0) {
                                     Log.i("success", "adding new customer");
-                                    intent = new Intent(AddNewCoustmer.this, CustmerMangmentActivity.class);
+                                    intent = new Intent(AddNewCoustmer.this, CustmerManagementActivity.class);
                                     startActivity(intent);
                                     //// TODO: 17/10/2016 sucess to add entity
                                 } else {
@@ -171,10 +162,10 @@ long clubID;
                 } else {
                     // Edit mode
                     if (_custmerName != "") {
-                        if ((customerDBAdapter.availableCustomerrName(_custmerName)) || _custmerName == custmer.getCustmerName()) {
-                            if (etCoustmerFirstName.getText().toString().equals("")) {
+                        if ((customerDBAdapter.availableCustomerrName(_custmerName)) || _custmerName == customer.getCustmerName()) {
+                            if (etCustomerFirstName.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), "Please insert First Name", Toast.LENGTH_LONG).show();
-                            } else if (etCoustmerLastName.getText().toString().equals("")) {
+                            } else if (etCustomerLastName.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), "Please insert Last Name", Toast.LENGTH_LONG).show();
                             }
                             else if (etEmail.getText().toString().equals("")) {
@@ -208,19 +199,19 @@ long clubID;
                             }
                             else {
                                 try {
-                                    etCoustmerFirstName.setText(custmer.getFirstName());
-                                    etCoustmerLastName.setText(custmer.getLastName());
-                                    etJob.setText(custmer.getJob());
-                                    etEmail.setText(custmer.getEmail());
-                                    etPhoneNo.setText(custmer.getPhoneNumber());
-                                    etStreet.setText(custmer.getStreet());
-                                    etHouseNumber.setText(custmer.getHouseNumber());
-                                    etPostalCode.setText(custmer.getPostalCode());
-                                    etCountry.setText(custmer.getCountry());
-                                    etCountryCode.setText(custmer.getCountryCode());
-                                    customerDBAdapter.updateEntry(custmer);
-                                    Log.i("success Edit", custmer.toString());
-                                    intent = new Intent(AddNewCoustmer.this, CustmerMangmentActivity.class);
+                                    etCustomerFirstName.setText(customer.getFirstName());
+                                    etCustomerLastName.setText(customer.getLastName());
+                                    etJob.setText(customer.getJob());
+                                    etEmail.setText(customer.getEmail());
+                                    etPhoneNo.setText(customer.getPhoneNumber());
+                                    etStreet.setText(customer.getStreet());
+                                    etHouseNumber.setText(customer.getHouseNumber());
+                                    etPostalCode.setText(customer.getPostalCode());
+                                    etCountry.setText(customer.getCountry());
+                                    etCountryCode.setText(customer.getCountryCode());
+                                    customerDBAdapter.updateEntry(customer);
+                                    Log.i("success Edit", customer.toString());
+                                    intent = new Intent(AddNewCoustmer.this, CustmerManagementActivity.class);
                                     startActivity(intent);
                                 } catch (Exception ex) {
                                     Log.e("error can`t edit customer", ex.getMessage().toString());
@@ -242,8 +233,8 @@ long clubID;
         GroupAdapter groupAdapter = new GroupAdapter(AddNewCoustmer.this);
         groupAdapter.open();
 
-        etCoustmerFirstName = (EditText) findViewById(R.id.etCustomerFirstName);
-        etCoustmerLastName = (EditText) findViewById(R.id.etCustomerLastName);
+        etCustomerFirstName = (EditText) findViewById(R.id.etCustomerFirstName);
+        etCustomerLastName = (EditText) findViewById(R.id.etCustomerLastName);
         etStreet = (EditText) findViewById(R.id.etCustomerStreet);
         radioGender = (RadioGroup) findViewById(R.id.customerGender);
         maleRadioButton=(RadioButton)findViewById(R.id.male);
@@ -255,7 +246,7 @@ long clubID;
         etCountryCode = (EditText) findViewById(R.id.etCustomerCountryCode);
         etHouseNumber = (EditText) findViewById(R.id.etHouseNumber);
         etPostalCode = (EditText) findViewById(R.id.etCustomerPostalCode);
-        btAddcoustmer = (Button) findViewById(R.id.add_Custmer);
+        btAddCustomer = (Button) findViewById(R.id.add_Custmer);
         btCancel = (Button) findViewById(R.id.addCustmer_BTCancel);
 
 //        dateFormatter = new SimpleDateFormat(UtilityDateFormater.Format1);

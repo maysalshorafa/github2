@@ -39,7 +39,7 @@
         android:textColor="@color/white"
         app:layout_constraintHorizontal_bias="0.601"
         android:layout_weight="1"/>
-    \ <Button
+    <Button
     android:id="@+id/custmerManagement_BTCancel"
 
     android:text="@android:string/cancel"

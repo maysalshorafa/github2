@@ -1,28 +1,23 @@
-package com.pos.leaders.leaderspossystem;
+package com.pos.leaders.leaderspossystem.CustomerAndClub;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupAdapter;
 import com.pos.leaders.leaderspossystem.Models.Group;
+import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.ClubCatalogGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 
 public class ClubMangmentActivity extends AppCompatActivity  {
@@ -67,8 +62,7 @@ public class ClubMangmentActivity extends AppCompatActivity  {
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ClubMangmentActivity.this, Coustmer.class);
-                startActivity(intent);
+                onBackPressed();
             }
         });
 

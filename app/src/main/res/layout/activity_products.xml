@@ -1,6 +1,6 @@
-<ScrollView
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
 android:id="@+id/scrollView1"
 android:layout_width="fill_parent"
 android:layout_height="fill_parent"
@@ -72,7 +72,8 @@ android:background="@color/white">
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
-                android:paddingLeft="5dp" />
+                android:paddingLeft="5dp"
+                android:inputType="number"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -122,7 +123,8 @@ android:background="@color/white">
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
-                android:paddingLeft="5dp" />
+                android:paddingLeft="5dp"
+                android:inputType="number"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -148,7 +150,7 @@ android:background="@color/white">
                 android:background="@drawable/bubble"
                 android:paddingLeft="5dp"
                 android:id="@+id/ETCostPrice"
-                />
+                android:inputType="number"/>
 
 
         </LinearLayout>
@@ -219,7 +221,7 @@ android:background="@color/white">
                 android:layout_marginLeft="80dp"
                 android:layout_marginTop="16dp"
                 android:layout_weight="0.81"
-                android:background="@drawable/bt_green_enabled"
+                style="@style/AppTheme.bt_green"
                 android:gravity="center"
                 android:text="@string/add"
                 android:textColor="#fff"
@@ -235,9 +237,23 @@ android:background="@color/white">
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/btn_cancel"
+                style="@style/AppTheme.bt_dangers"
                 android:gravity="center"
                 android:text="@android:string/cancel"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+            <Button
+
+                android:id="@+id/productActivity_btnContinue"
+                android:layout_width="197dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="16dp"
+                style="@style/AppTheme.bt_normal"
+                android:gravity="center"
+                android:text="@string/_continue"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -291,4 +307,4 @@ android:background="@color/white">
 
 
 
-</ScrollView>
+</RelativeLayout>

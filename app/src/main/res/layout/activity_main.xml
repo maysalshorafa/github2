@@ -448,7 +448,7 @@
 
 
             <EditText
-                android:id="@+id/custmer_textview"
+                android:id="@+id/customer_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right" />
