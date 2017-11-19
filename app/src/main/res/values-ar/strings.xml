@@ -47,5 +47,92 @@
     <string name="checks">شيكات</string>
     <string name="z_number">تقرير Z:</string>
     <string name="general">عام</string>
-    <string name="extracting_files"></string>
+    <string name="extracting_files">استخراج الملفات</string>
+    <string name="first_name"> الاسم الاول</string>
+    <string name="last_name"> الاسم الاخير</string>
+    <string name="email"> البريد الالكتروني</string>
+    <string name="street"> الشارع</string>
+    <string name="country"> الدولة</string>
+    <string name="country_code"> رقم الدولة</string>
+    <string name="postal_code"> رقم البريد</string>
+    <string name="house_number"> رقم المنزل</string>
+    <string name="job"> المهنة </string>
+    <string name="add_customer_club"> اختر نادي الاعضاء </string>
+    <string name="add_to_city"> اختر مدينة </string>
+    <string name="gender"> الجنس</string>
+    <string name="male"> ذكر</string>
+    <string name="female"> انثى </string>
+    <string name="user_name"> اسم العامل </string>
+    <string name="password"> كلمة المرور </string>
+    <string name="hourly_wage">ساعات العمل </string>
+    <string name="present">النسبة </string>
+    <string name="backup_department"> انشاء نسخة احتياطية للاقسام </string>
+    <string name="backup_products_by_department"> انشاء نسخة احتياطية للمنتوجات باستخدام الاقسام </string>
+    <string name="Information">معلومات</string>
+    <string name="other_ways">طرق اخرى</string>
+    <string name="discount">خصم</string>
+    <string name="resume">استعادة</string>
+    <string name="pause">توقف</string>
+    <string name="credit_card">بطاقة الائتمان</string>
+    <string name="count">العدد</string>
+    <string name="search">بحث</string>
+    <string name="create_new_product">منتج جديد</string>
+    <string name="import_product">استيراد منتج</string>
+    <string name="department_name">اسم القسم</string>
+    <string name="name">الاسم</string>
+    <string name="barcode">الباركود</string>
+    <string name="cost_price">سعر التكلفة</string>
+    <string name="weighable">الوزن</string>
+    <string name="print">طباعة</string>
+    <string name="x_report_view">X عرض تقرير</string>
+    <string name="sales_history">سجل المبيعات</string>
+    <string name="report">تقارير</string>
+    <string name="view">عرض</string>
+    <string name="z_report_view">Z عرض تقرير </string>
+    <string name="sales_man">مساعدين البيع</string>
+    <string name="sales_man_report">تقارير مساعدين البيع</string>
+    <string name="x_report">X تقرير</string>
+    <string name="z_report">Z تقرير</string>
+    <string name="log_in">تسجيل الدخول</string>
+    <string name="confirmation">تأكيد</string>
+    <string name="credit">ائتمان</string>
+    <string name="save">حفظ</string>
+
+
+    <!--DashBord String-->
+    <string name="main_screen">شاشة المبيعات</string>
+    <string name="department">الاقسام</string>
+    <string name="back_up">النسخ الاحتياطي</string>
+    <string name="hours_of_work">ساعات العمل</string>
+    <string name="customer_club">نادي المستخدمين</string>
+    <string name="offers">العروض</string>
+    <string name="settings">الاعدادات</string>
+    <string name="log_out">تسجيل الخروج</string>
+    <string name="users">الموظفين</string>
+    <!--club and customer string-->
+    <string name="customer_name"> اسم المستخدم </string>
+    <string name="add_club"> اضافة نادي اعضاء</string>
+    <string name="add_customer">اضافة زبون </string>
+    <string name="show_club">عرض النوادي </string>
+    <string name="show_customer">عرض الزبائن </string>
+    <string name="group_name"> اسم النادي</string>
+    <string name="_description"> الوصف</string>
+    <string name="type"> النوع</string>
+    <string name="_amount">   المقدار</string>
+    <string name="point">  عدد النقاط</string>
+    <string name="discount_percentage">نسبة الخصم</string>
+
+    <!-- Example General settings -->
+    <string name="terminal_number">Terminal No</string>
+    <string name="private_company">P.C</string>
+    <string name="general_settings">اعدادات عامة </string>
+    <string name="pref_header_general">عامة</string>
+    <string name="invoice_note">ملاحظات الفاتورة</string>
+    <string name="company_name">اسم الشركة</string>
+    <!-- Cash Activity String -->
+    <string name="total_return">المبلغ الباقي</string>
+    <string name="total_paid"> المبلغ الدفوع</string>
+    <string name="edit">تعديل</string>
+    <string name="delete">حذف</string>
+
 </resources>

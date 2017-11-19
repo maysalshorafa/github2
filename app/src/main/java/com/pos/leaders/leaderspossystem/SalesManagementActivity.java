@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.graphics.Bitmap;
@@ -49,6 +50,7 @@ import POSSDK.POSSDK;
  * Editing by KARAM on 10/04/2017.
  */
 public class SalesManagementActivity extends AppCompatActivity {
+
     TextView customer;
     ListView lvSales;
     EditText etFrom, etTo;
@@ -58,6 +60,7 @@ public class SalesManagementActivity extends AppCompatActivity {
     private static final int DIALOG_FROM_DATE = 825;
     private static final int DIALOG_TO_DATE = 324;
     Date from, to;
+
     SaleManagementListViewAdapter adapter;
     View previousView = null;
 
@@ -74,9 +77,6 @@ public class SalesManagementActivity extends AppCompatActivity {
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sales_management);
-
-        TitleBar.setTitleBar(this);
-
 
         lvSales = (ListView) findViewById(R.id.saleManagement_LVSales);
         etFrom = (EditText) findViewById(R.id.saleManagement_ETFrom);

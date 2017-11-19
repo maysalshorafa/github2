@@ -43,7 +43,12 @@
     <string name="sales_history">Sales History</string>
     <string name="clear_cart">Clear Cart</string>
     <string name="_new">New</string>
-    <string name="sales_man">Sales Man</string>
+    <string name="sales_man">Sales Man</string>\
+    <string name="sales_man_report">Sales Man Report</string>
+    <string name="add_club"> Add Club</string>
+    <string name="add_customer"> Add Customer </string>
+    <string name="show_club">Show Club </string>
+    <string name="show_customer">Show Customer </string>
 
     <!--Product Management-->
     <string name="edit_product">Edit Product</string>
@@ -92,7 +97,6 @@
     <string name="reports">Reports</string>
     <string name="setting">Setting</string>
     <string name="backup">Backup</string>
-    <string name="custmer_club">CustmerClub</string>
 
     <!--Main Activity-->
     <string name="open">Open</string>
@@ -101,7 +105,6 @@
     <string name="other_ways">Other Ways</string>
     <string name="cash">Cash Payment</string>
     <string name="done">Done</string>
-    <string name="total_price">Total Price</string>
     <string name="total">Total</string>
     <string name="given">Given</string>
     <string name="returned">Returned</string>
@@ -156,6 +159,10 @@
     <!--Cash Activity-->
     <string name="cancel">Cancel</string>
     <string name="tendered">Tendered</string>
+    <string name="total_return">Total Return</string>
+    <string name="total_paid"> TOTAL PAID</string>
+    <string name="total_price"> TOTAL PRICE</string>
+
     <!--Checks Activity pop-up-->
     <string name="add_check">Add Check</string>
     <string name="check_pid_error">The total checks amount does not get the total price</string>
@@ -205,6 +212,7 @@
     <string name="valid_ID">Please insert valid identification number</string>
     <string name="valid_CCV">Please insert valid CCV 3 digit</string>
     <string name="error">Error</string>
+
 
     <!--Printer-->
     <string name="wait_for_finish_printing">Wait For Finish Printing</string>
@@ -334,7 +342,7 @@
     <string name="type"> Type</string>
     <string name="_amount">   Amount</string>
     <string name="point">  Point</string>
-    <string name="parcent">Parcent</string>
+    <string name="discount_percentage">discount percentage</string>
     <string name="group_name"> Club Name</string>
     <string name="add_group">    Add Group</string>
 
@@ -352,10 +360,14 @@
     <string name="phone">Phone</string>
     <string name="address">Address</string>
     <string name="add_to_city"> Add to City</string>
-    <string name="add_customer_club"> Add Club</string>
-    <string name="add_customer"> Add Customer</string>
     <string name="title_activity_temp_cash_activty">TempCashActivty</string>
-    <string name="title_activity_club_mangment_activty">ClubMangmentActivity</string>
+    <string name="title_activity_club_management">ClubManagementActivity</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="x_report_view">X REPORT VIEW</string>
+    <string name="z_report_view">Z REPORT VIEW</string>
+    <string name="x_report">X REPORT</string>
+    <string name="z_report">Z REPORT</string>
 
 
     <!--online setup -->

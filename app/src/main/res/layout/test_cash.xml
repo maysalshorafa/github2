@@ -42,7 +42,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
                 android:gravity="center"
-                android:text=" TOTAL PRICE"
+                android:text="@string/total_price"
                 android:textColor="@color/black"
                 android:textSize="40dp"
                 android:textStyle="bold" />
@@ -87,7 +87,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
                 android:gravity="center"
-                android:text="TOTAL PAID"
+                android:text="@string/total_paid"
                 android:textColor="@color/Green"
                 android:textSize="40dp"
                 android:textStyle="bold" />

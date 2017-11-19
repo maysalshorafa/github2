@@ -205,7 +205,7 @@ groupAdapter.open();
     }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (id==0){
+        if (id==1){
             tvParcent.setVisibility(View.VISIBLE);
             etParcent.setVisibility(View.VISIBLE);
             tvAmount.setVisibility(View.GONE);
@@ -216,7 +216,7 @@ groupAdapter.open();
             etAmount.setText("0");
 
         }
-        if (id==1) {
+        if (id==2) {
             etAmount.setVisibility(View.VISIBLE);
             etPoint.setVisibility(View.VISIBLE);
             tvPoint.setVisibility(View.VISIBLE);
@@ -226,7 +226,7 @@ groupAdapter.open();
             etParcent.setText("0.0");
 
         }
-        if (id==2) {
+        if (id==0) {
             etAmount.setVisibility(View.GONE);
             etPoint.setVisibility(View.GONE);
             etParcent.setVisibility(View.GONE);

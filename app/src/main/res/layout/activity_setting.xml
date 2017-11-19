@@ -62,11 +62,11 @@
 
             <EditText
                 android:id="@+id/settings_etCompanyName"
-                android:layout_width="fill_parent"
+                android:layout_width="500dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
-
+            android:layout_weight="1"
                 android:paddingLeft="5dp" />
 
         </LinearLayout>
@@ -90,12 +90,12 @@
 
             <EditText
                 android:id="@+id/settings_etPC"
-                android:layout_width="fill_parent"
+                android:layout_width="500dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
                 android:paddingLeft="5dp"
-                android:layout_weight="3"/>
+                android:layout_weight="1"/>
         </LinearLayout>
 
         <LinearLayout
@@ -117,12 +117,12 @@
 
             <EditText
                 android:id="@+id/settings_etTax"
-                android:layout_width="fill_parent"
+                android:layout_width="500dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
                 android:paddingLeft="5dp"
-                android:layout_weight="3"/>
+                android:layout_weight="1"/>
         </LinearLayout>
 
         <LinearLayout
@@ -145,11 +145,11 @@
 
             <EditText
                 android:id="@+id/settings_etInvoiceNote"
-                android:layout_width="fill_parent"
+                android:layout_width="500dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
-
+                android:layout_weight="1"
                 android:paddingLeft="5dp" />
 
 
@@ -194,12 +194,12 @@
 
             <EditText
                 android:id="@+id/settings_etTNum"
-                android:layout_width="fill_parent"
+                android:layout_width="500dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
                 android:paddingLeft="5dp"
-                android:layout_weight="3"/>
+                android:layout_weight="1"/>
         </LinearLayout>
 
         <LinearLayout
@@ -214,19 +214,19 @@
                 android:layout_height="62dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/terminal_password"
+                android:text="@string/password"
                 android:textColor="@color/black"
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/settings_etTPass"
-                android:layout_width="fill_parent"
+                android:layout_width="500dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
                 android:paddingLeft="5dp"
-                android:layout_weight="3"/>
+                android:layout_weight="1"/>
         </LinearLayout>
 
 
@@ -242,8 +242,8 @@
                 style="@style/AppTheme.bt_dangers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
                 android:layout_weight="3"
                 android:gravity="center"
                 android:text="@android:string/cancel"
@@ -254,10 +254,10 @@
                 android:id="@+id/settings_btSave"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
                 android:layout_marginTop="5dp"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:background="@drawable/bt_green_enabled"
                 android:gravity="center"
                 android:text="@string/save"

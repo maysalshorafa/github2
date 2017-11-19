@@ -12,29 +12,28 @@ android:layout_gravity="center"
     android:layout_marginRight="50dp" >
 
     <Button
-        android:id="@+id/add_new_coustmer"
+        android:id="@+id/add_new_customer"
         android:layout_width="200dp"
         android:layout_height="150dp"
-        android:text="Add Custmer"
-        android:background="@drawable/dashbord_frame"
+        android:text="@string/add_customer"
+        android:background="@drawable/dashboard_frame"
         android:padding="16dp"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="normal|bold"
 
         />
 
     <Button
-        android:id="@+id/show_coustmer"
+        android:id="@+id/show_customer"
         android:layout_width="200dp"
         android:layout_height="150dp"
         android:layout_marginTop="24dp"
-        android:background="@drawable/dashbord_frame"
+        android:background="@drawable/dashboard_frame"
         android:padding="16dp"
-        android:text="Show Custmer"
+        android:text="@string/show_customer"
         android:textColor="@color/white"
-
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="normal|bold"
 
         />
@@ -49,28 +48,25 @@ android:layout_gravity="center"
 
     <Button
         android:id="@+id/new_group"
-
         android:layout_width="200dp"
         android:layout_height="150dp"
-
-        android:background="@drawable/dashbord_frame"
+        android:background="@drawable/dashboard_frame"
         android:padding="16dp"
+        android:text="@string/add_club"
         android:textColor="@color/white"
-        android:textSize="24sp"
-        android:textStyle="normal|bold"
-        android:text="Add Club"
-        />
+        android:textSize="22sp"
+        android:textStyle="normal|bold" />
 
     <Button
         android:id="@+id/show_group"
         android:layout_width="200dp"
         android:layout_height="150dp"
         android:layout_marginTop="24dp"
-        android:background="@drawable/dashbord_frame"
+        android:background="@drawable/dashboard_frame"
         android:padding="16dp"
-        android:text="Show Club"
+        android:text="@string/show_club"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="normal|bold"
 
         />

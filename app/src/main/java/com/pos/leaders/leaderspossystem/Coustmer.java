@@ -1,21 +1,14 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 
 public class Coustmer extends AppCompatActivity {
@@ -34,8 +27,8 @@ public class Coustmer extends AppCompatActivity {
 
         TitleBar.setTitleBar(this);
 
-        btAddCoustmer = (Button) findViewById(R.id.add_new_coustmer);
-        btshowCoustmer = (Button) findViewById(R.id.show_coustmer);
+        btAddCoustmer = (Button) findViewById(R.id.add_new_customer);
+        btshowCoustmer = (Button) findViewById(R.id.show_customer);
         addgroup = (Button) findViewById(R.id.new_group);
         btShowGroup = (Button) findViewById(R.id.show_group);
         btAddCoustmer.setOnClickListener(new View.OnClickListener() {

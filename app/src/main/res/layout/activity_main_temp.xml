@@ -152,7 +152,7 @@
                         android:id="@+id/saleMan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Sales Man "
+                        android:text="@string/sales_man"
                         android:textColor="@color/black"/>
 
                 </LinearLayout>
