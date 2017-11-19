@@ -18,6 +18,7 @@ import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -164,6 +165,7 @@ public class InvoiceImg {
     }
 
     private List<Block> Head(){
+        String _customerName = SESSION._SALE.getCustomer_name();
         String customerName = "";
         List<Block> blocks = new ArrayList<Block>();
 
@@ -173,14 +175,14 @@ public class InvoiceImg {
         Block subTitle = new Block("\u200E " + context.getString(R.string.private_company) +
                 ": " + SETTINGS.companyID , 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
 
-        if (SETTINGS.customer_name == null) {
+        if(_customerName==null) {
                 customerName = context.getString(R.string.general_customer);
         }
-        else if(SETTINGS.customer_name.equals("")) {
+        else if(_customerName.equals("")) {
             customerName = context.getString(R.string.general_customer);
         }
         else{
-            customerName = SETTINGS.customer_name;
+            customerName = _customerName;
         }
 
         Block third_part = new Block("\u200E "  + context.getString(R.string.customer_name) +
