@@ -21,4 +21,7 @@ public class SETTINGS {
     public static boolean LOADED_DATA ;
 
 	public static String customer_name ;
+
+
+	public static PrinterType printer = PrinterType.SUNMI_T1;
 }

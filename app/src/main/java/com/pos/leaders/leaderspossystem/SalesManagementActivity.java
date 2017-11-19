@@ -1,20 +1,20 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
@@ -28,12 +28,13 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Sale;
-import com.pos.leaders.leaderspossystem.Printer.BitmapInvoice;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
+import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,10 +46,10 @@ import POSSDK.POSSDK;
 
 /**
  * Created by KARAM on 26/10/2016.
- * Editing by KARAM on 10/04/2016.
+ * Editing by KARAM on 10/04/2017.
  */
-public class SalesManagementActivity extends Activity {
-    TextView custmer;
+public class SalesManagementActivity extends AppCompatActivity {
+    TextView customer;
     ListView lvSales;
     EditText etFrom, etTo;
     SaleDBAdapter saleDBAdapter;
@@ -57,7 +58,6 @@ public class SalesManagementActivity extends Activity {
     private static final int DIALOG_FROM_DATE = 825;
     private static final int DIALOG_TO_DATE = 324;
     Date from, to;
-    String custmer_name;
     SaleManagementListViewAdapter adapter;
     View previousView = null;
 
@@ -68,21 +68,24 @@ public class SalesManagementActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+
+        // Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sales_management);
-        custmer = (TextView) findViewById(R.id.sales_custmer_name);
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            custmer_name=(String)extras.get("_custmer");
-            custmer.setText(custmer_name);
-        } else {
-            finish();
-        }
+
+        TitleBar.setTitleBar(this);
+
+
         lvSales = (ListView) findViewById(R.id.saleManagement_LVSales);
         etFrom = (EditText) findViewById(R.id.saleManagement_ETFrom);
+        etTo = (EditText) findViewById(R.id.saleManagement_ETTo);
+
         etFrom.setFocusable(false);
         etFrom.setText(DateConverter.getBeforeMonth().split(" ")[0]);
         from = DateConverter.stringToDate(DateConverter.getBeforeMonth());
-        etTo = (EditText) findViewById(R.id.saleManagement_ETTo);
+
         etTo.setFocusable(false);
         etTo.setText(DateConverter.currentDateTime().split(" ")[0]);
         to = DateConverter.stringToDate(DateConverter.currentDateTime());
@@ -102,9 +105,8 @@ public class SalesManagementActivity extends Activity {
         });
 
         saleDBAdapter = new SaleDBAdapter(this);
-        saleDBAdapter.open();
+
         userDBAdapter = new UserDBAdapter(this);
-        userDBAdapter.open();
         paymentDBAdapter = new PaymentDBAdapter(this);
         paymentDBAdapter.open();
 
@@ -113,10 +115,17 @@ public class SalesManagementActivity extends Activity {
 
     private void setDate() {
         //List<Sale> _saleList=new ArrayList<Sale>();
+        saleDBAdapter.open();
         final List<Sale> _saleList = saleDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime());
+        saleDBAdapter.close();
         for (Sale s : _saleList) {
+            userDBAdapter.open();
             s.setUser(userDBAdapter.getUserByID(s.getByUser()));
+            userDBAdapter.close();
+
+            paymentDBAdapter.open();
             s.setPayment(paymentDBAdapter.getPaymentBySaleID(s.getId()).get(0));
+            paymentDBAdapter.close();
         }
         Log.i("log", _saleList.toString());
 		/*for (Sale s : saleList) {
@@ -291,7 +300,9 @@ public class SalesManagementActivity extends Activity {
     };
 
     private void print(Bitmap bitmap) {
-        POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(SalesManagementActivity.this);
+        PrintTools printTools = new PrintTools(this);
+        printTools.PrintReport(bitmap);
+        /*POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(SalesManagementActivity.this);
 
         int i = posInterfaceAPI.OpenDevice();
         POSSDK pos = new POSSDK(posInterfaceAPI);
@@ -303,6 +314,6 @@ public class SalesManagementActivity extends Activity {
         pos.systemFeedLine(3);
         pos.systemCutPaper(66, 0);
 
-        posInterfaceAPI.CloseDevice();
+        posInterfaceAPI.CloseDevice();*/
     }
 }

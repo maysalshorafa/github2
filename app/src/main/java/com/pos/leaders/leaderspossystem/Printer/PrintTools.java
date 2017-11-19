@@ -26,11 +26,14 @@ import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
+import com.pos.leaders.leaderspossystem.Tools.HPRT_TP805;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import HPRTAndroidSDK.HPRTPrinterHelper;
 import POSAPI.POSInterfaceAPI;
 import POSAPI.POSUSBAPI;
 import POSSDK.POSSDK;
@@ -45,10 +48,10 @@ public class PrintTools {
     public PrintTools(Context context){
         this.context=context;
     }
-    public void PrintReport(Bitmap _bitmap){
 
+    private void Print_BTB880(Bitmap _bitmap){
         final POSInterfaceAPI posInterfaceAPI=new POSUSBAPI(context);
-       // final UsbPrinter printer = new UsbPrinter(1155, 30016);
+        // final UsbPrinter printer = new UsbPrinter(1155, 30016);
         final ProgressDialog dialog=new ProgressDialog(context);
         final Bitmap bitmap=_bitmap;
         dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
@@ -77,7 +80,7 @@ public class PrintTools {
                 pos.systemFeedLine(2);
                 pos.systemCutPaper(66,0);
 
-               // pos.cashdrawerOpen(0,20,20);
+                // pos.cashdrawerOpen(0,20,20);
 
                 posInterfaceAPI.CloseDevice();
                 dialog.cancel();
@@ -93,6 +96,57 @@ public class PrintTools {
         }.execute();
     }
 
+    private void Print_TP805(Bitmap _bitmap){
+        if (HPRT_TP805.connect(context)) {
+            final ProgressDialog dialog = new ProgressDialog(context);
+            dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
+            final Bitmap bitmap=_bitmap;
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    dialog.show();
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    try {
+                        HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    dialog.cancel();
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    byte b = 0;
+                    try {
+                        HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+
+        }else {
+            Toast.makeText(context, "Printer Connect Error!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void PrintReport(Bitmap _bitmap){
+
+        switch (SETTINGS.printer) {
+            case BTP880:
+                Print_BTB880(_bitmap);
+                break;
+            case HPRT_TP805:
+                Print_TP805(_bitmap);
+                break;
+        }
+    }
 
     public Bitmap createZReport(long id,long from,long to,boolean isCopy){
         double sheqle_plus=0,sheqle_minus=0;
