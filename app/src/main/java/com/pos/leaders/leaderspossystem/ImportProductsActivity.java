@@ -6,7 +6,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
@@ -35,8 +34,6 @@ import java.util.Map;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
-
-import static com.pos.leaders.leaderspossystem.ProductsActivity.lvDepatment;
 
 /**
  * Created by KARAM on 19/12/2016.

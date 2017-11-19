@@ -1,10 +1,8 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
@@ -14,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
@@ -25,9 +22,7 @@ import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +41,7 @@ public class ProductsActivity  extends AppCompatActivity {
     Button btSave,btnCancel;
     EditText etName,etBarcode,etDescription,etPrice,etCostPrice;
     Switch swWithTax,swWeighable;
-	static ListView lvDepatment;
+	static ListView lvDepartment;
     Map<String,Long> departmentMap=new HashMap<String,Long>();
 
 
@@ -74,7 +69,7 @@ public class ProductsActivity  extends AppCompatActivity {
         TitleBar.setTitleBar(this);
 
         // Get Refferences of Views
-        lvDepatment=(ListView)findViewById(R.id.LVDepartment);
+        lvDepartment =(ListView)findViewById(R.id.LVDepartment);
 
         btSave=(Button)findViewById(R.id.productActivity_btnSave);
 		btnCancel=(Button)findViewById(R.id.productActivity_btnCancel);
@@ -90,78 +85,12 @@ public class ProductsActivity  extends AppCompatActivity {
         productDBAdapter=new ProductDBAdapter(this);
         productDBAdapter.open();
 
-
-
-
         //region Add product button
-
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/**
-                WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
-            if (wifi.isWifiEnabled()) {
-                    final String send_name = etName.getText().toString();
-                    final String send_Barcode = etBarcode.getText().toString();
-                    final String send_Description = etDescription.getText().toString();
-                    final String send_Price = etPrice.getText().toString();
-                    final String send_CostPrice = etCostPrice.getText().toString();
-                    final String send_swWithTax = swWithTax.getText().toString();
-                    final String send_swWeighable = swWeighable.getText().toString();
-
-
-
-                    class Async extends AsyncTask<Void, Void, String> {
-
-                        ProgressDialog progressDialog;
-
-                        @Override
-                        protected void onPostExecute(String s) {
-                            super.onPostExecute(s);
-                            progressDialog.dismiss();
-                            Toast.makeText(getApplicationContext(), "up date", Toast.LENGTH_LONG).show();
-                            //  Toast.makeText(TestPHPandAndroid.this,s,Toast.LENGTH_LONG).show();
-
-
-                        }
-
-                        @Override
-                        protected void onPreExecute() {
-                            super.onPreExecute();
-
-                            progressDialog = ProgressDialog.show(ProductsActivity.this, "", "please waiiting", false, false);
-
-                        }
-
-                        @Override
-                        protected String doInBackground(Void... voids) {
-
-                            HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put(Config.PRODUCTS_NAME, send_name);
-                            hashMap.put(Config.PRODUCTS_BARCODE, send_Barcode);
-                            hashMap.put(Config.PRODUCTS_COSTPRICE, send_CostPrice);
-                            hashMap.put(Config.PRODUCTS_WEIGHABLE, send_swWeighable);
-                            hashMap.put(Config.PRODUCTS_WITHTAX, send_swWithTax);
-                            hashMap.put(Config.PRODUCTS_DESCRIPTION, send_Description);
-                            hashMap.put(Config.PRODUCTS_PRICE, send_Price);
-                            hashMap.put(Config.PRODUCTS_status, send_status);
-
-
-
-                            RequestHander requestHander = new RequestHander();
-                            String post = requestHander.sendPostRequest(Config.insert_Product_url, hashMap);
-
-                            return post;
-                        }
-                    }
-                    Async async = new Async();
-                    async.execute();
-
-
-//wifi is enabled}**/
-
-///to save on sqllite
+                ///to save on sqllite
                 if (etName.getText().toString().equals("")) {
                     return;
                 } else if (etBarcode.getText().toString().equals("")) {
@@ -173,16 +102,16 @@ public class ProductsActivity  extends AppCompatActivity {
 
                 if (editableProduct == null) {
                     if (selectedDepartment.equals("")) {
-                        Toast.makeText(getApplicationContext(), "please select an department", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.department_not_selected), Toast.LENGTH_LONG).show();
                     } else {
                         long check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
                                 etDescription.getText().toString(), Double.parseDouble(etPrice.getText().toString()),
                                 Double.parseDouble(etCostPrice.getText().toString()), swWithTax.isChecked(),
-                                swWeighable.isChecked(), departmentMap.get(selectedDepartment), SESSION._USER.getId(),with_pos,with_point_system);
+                                swWeighable.isChecked(), departmentMap.get(selectedDepartment), SESSION._USER.getId(), with_pos, with_point_system);
                         if (check > 0) {
-                            Toast.makeText(getApplicationContext(), "success to add product", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_product), Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(getApplicationContext(), "fail to add product", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.fail_to_add_product), Toast.LENGTH_LONG).show();
                         }
                     }
                 } else {
@@ -209,76 +138,8 @@ public class ProductsActivity  extends AppCompatActivity {
 
 
                 }
-
-       /**         else{
-
-                    send_status="0";
-                if (etName.getText().toString().equals("")) {
-                    return;
-                } else if (etBarcode.getText().toString().equals("")) {
-                    return;
-                } else if (etPrice.getText().toString().equals("") || etCostPrice.getText().toString().equals("")) {
-                    return;
-                }
-
-
-                if (editableProduct == null) {
-                    if (selectedDepartment.equals("")) {
-                        Toast.makeText(getApplicationContext(), "please select an department", Toast.LENGTH_LONG).show();
-                    } else {
-                        int check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
-                                etDescription.getText().toString(), Double.parseDouble(etPrice.getText().toString()),
-                                Double.parseDouble(etCostPrice.getText().toString()), swWithTax.isChecked(),
-                                swWeighable.isChecked(), departmentMap.get(selectedDepartment), SESSION._USER.getId());
-                        if (check == 1) {
-                            Toast.makeText(getApplicationContext(), "success to add product", Toast.LENGTH_LONG).show();
-
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), "fail to add product", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                } else {
-                    //// TODO: 27/10/2016 edit product
-                    editableProduct.setName(etName.getText().toString());
-                    editableProduct.setBarCode(etBarcode.getText().toString());
-                    editableProduct.setDescription(etDescription.getText().toString());
-                    editableProduct.setPrice(Double.parseDouble(etPrice.getText().toString()));
-                    editableProduct.setCostPrice(Double.parseDouble(etCostPrice.getText().toString()));
-                    editableProduct.setWithTax(swWithTax.isChecked());
-                    editableProduct.setWeighable(swWeighable.isChecked());
-                    editableProduct.setDepartmentId(departmentMap.get(selectedDepartment));
-                    try {
-                        productDBAdapter.updateEntry(editableProduct);
-                        Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.success_to_update_product), Toast.LENGTH_SHORT);
-                        onBackPressed();
-                    } catch (Exception ex) {
-                        Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.error_to_update_product), Toast.LENGTH_SHORT);
-                    }
-
-
-                    //gvProduct.setAdapter(adapter);
-                    //setNewProduct();
-             hashMap= productDBAdapter.getProductByStatus(send_status);
-
-
-
-
-
-
-                }**/
-
-
-
-                }
-
-
-
-
-
-
-
-            } );
+            }
+        });
 
         //endregion
 
@@ -292,60 +153,6 @@ public class ProductsActivity  extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
-
-/*
-		gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Log.i("item clicked",productsList.get(position).toString());
-
-				view.setSelected(true);
-
-				if (previouslySelectedProductItem != null)
-				{
-					previouslySelectedProductItem.setBackgroundColor(
-							getResources().getColor(R.color.transparent));
-				}
-				view.setBackgroundColor(getResources().getColor(R.color.pressed_color));
-				selectedProduct =gvProduct.getItemAtPosition(position).toString();
-				previouslySelectedProductItem = view;
-				editableProduct=productsList.get(position);
-
-
-				etName.setText(editableProduct.getName());
-				etBarcode.setText(editableProduct.getBarCode());
-				etDescription.setText(editableProduct.getDescription());
-				etCostPrice.setText(editableProduct.getCostPrice()+"");
-				etPrice.setText(editableProduct.getPrice()+"");
-				swWithTax.setChecked(editableProduct.isWithTax());
-				swWeighable.setChecked(editableProduct.isWeighable());
-				Department d=departmentDBAdapter.getDepartmentByID(editableProduct.getDepartmentId());
-				selectedDepartment=d.getName();
-				for (int i=0;i<lvDepatment.getChildCount();i++){
-					if(listDepartment.get(i).getName().equals(d.getName())){
-						selectItemDepartments(lvDepatment.getChildAt(i));
-					}
-				}
-				btAddProduct.setText(getResources().getText(R.string.edit_product));
-			}
-		});
-		*/
-
-/*		btNew.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setNewProduct();
-			}
-		});
-
-		btDelete.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-			}
-		});*/
-
         // Department list
         departmentDBAdapter = new DepartmentDBAdapter(this);
         departmentDBAdapter.open();
@@ -361,18 +168,18 @@ public class ProductsActivity  extends AppCompatActivity {
         }
 
         LAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,departmentsName);
-        lvDepatment.setAdapter(LAdapter);
-        lvDepatment.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        lvDepatment.setItemChecked(1,true);
+        lvDepartment.setAdapter(LAdapter);
+        lvDepartment.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        lvDepartment.setItemChecked(1,true);
 
 
-        lvDepatment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvDepartment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
                 view.setSelected(true);
 				selectItemDepartments(view);
 
-                selectedDepartment=lvDepatment.getItemAtPosition(position).toString();
+                selectedDepartment= lvDepartment.getItemAtPosition(position).toString();
 
 
             }
@@ -399,9 +206,9 @@ public class ProductsActivity  extends AppCompatActivity {
                 Department d=departmentDBAdapter.getDepartmentByID(editableProduct.getDepartmentId());
                 selectedDepartment=d.getName();
 
-                for (int i=0;i<lvDepatment.getChildCount();i++){
+                for (int i = 0; i< lvDepartment.getChildCount(); i++){
                     if(listDepartment.get(i).getName().equals(d.getName())){
-                        selectItemDepartments(lvDepatment.getChildAt(i));
+                        selectItemDepartments(lvDepartment.getChildAt(i));
                     }
                 }
 
@@ -409,45 +216,32 @@ public class ProductsActivity  extends AppCompatActivity {
 
             }
         }
-
-
     }
 
+	private void setNewProduct() {
+        if (previouslySelectedItem != null)
+            previouslySelectedItem.setBackgroundColor(
+                    getResources().getColor(R.color.transparent));
+        previouslySelectedItem = null;
+        if (previouslySelectedProductItem != null)
+            previouslySelectedProductItem.setBackgroundColor(
+                    getResources().getColor(R.color.transparent));
+        previouslySelectedProductItem = null;
+        etName.setText("");
+        etBarcode.setText("");
+        etDescription.setText("");
+        etPrice.setText("");
+        etCostPrice.setText("");
+        swWithTax.setChecked(false);
+        swWeighable.setChecked(false);
 
-	private void setNewProduct(){
-		if(previouslySelectedItem!=null)
-			previouslySelectedItem.setBackgroundColor(
-					getResources().getColor(R.color.transparent));
-		previouslySelectedItem=null;
-		if(previouslySelectedProductItem!=null)
-			previouslySelectedProductItem.setBackgroundColor(
-					getResources().getColor(R.color.transparent));
-		previouslySelectedProductItem=null;
-		etName.setText("");
-		etBarcode.setText("");
-		etDescription.setText("");
-		etPrice.setText("");
-		etCostPrice.setText("");
-		swWithTax.setChecked(false);
-		swWeighable.setChecked(false);
+        editableProduct = null;
+    }
 
-		editableProduct=null;
-	}
-
-	private void selectItemDepartments(View v){
-		if(previouslySelectedItem!=null)
-			previouslySelectedItem.setBackgroundColor(getResources().getColor(R.color.transparent));
-		previouslySelectedItem=v;
-		v.setBackgroundColor(getResources().getColor(R.color.pressed_color));
-
-
-	}
-
-
-
-
-
-
-
-
+	private void selectItemDepartments(View v) {
+        if (previouslySelectedItem != null)
+            previouslySelectedItem.setBackgroundColor(getResources().getColor(R.color.transparent));
+        previouslySelectedItem = v;
+        v.setBackgroundColor(getResources().getColor(R.color.pressed_color));
+    }
 }

@@ -17,8 +17,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:layout_weight="1"
+            android:layout_marginStart="16dp"
 
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <LinearLayout
@@ -30,10 +31,11 @@
 
                 <TextView
                     android:layout_width="120dp"
-                    android:layout_height="62dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="@string/name"
+                    android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold" />
@@ -41,10 +43,9 @@
                 <EditText
                     android:id="@+id/ETName"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/bubble"
-                    android:paddingLeft="5dp" />
+                    android:padding="8dp" />
             </LinearLayout>
 
 
@@ -57,11 +58,12 @@
 
                 <TextView
                     android:layout_width="120dp"
-                    android:layout_height="62dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
 
                     android:text="@string/barcode"
+                    android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold" />
@@ -69,10 +71,9 @@
                 <EditText
                     android:id="@+id/ETBarCode"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/bubble"
-                    android:paddingLeft="5dp" />
+                    android:padding="8dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -84,11 +85,12 @@
 
                 <TextView
                     android:layout_width="120dp"
-                    android:layout_height="62dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
 
                     android:text="@string/description"
+                    android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold" />
@@ -96,10 +98,9 @@
                 <EditText
                     android:id="@+id/ETDescription"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/bubble"
-                    android:paddingLeft="5dp" />
+                    android:padding="8dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -111,10 +112,11 @@
 
                 <TextView
                     android:layout_width="120dp"
-                    android:layout_height="62dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="@string/price"
+                    android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold" />
@@ -122,10 +124,9 @@
                 <EditText
                     android:id="@+id/ETPrice"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/bubble"
-                    android:paddingLeft="5dp" />
+                    android:padding="8dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -137,10 +138,11 @@
 
                 <TextView
                     android:layout_width="120dp"
-                    android:layout_height="62dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="@string/cost_price"
+                    android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold" />
@@ -148,10 +150,9 @@
                 <EditText
                     android:id="@+id/ETCostPrice"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/bubble"
-                    android:paddingLeft="5dp" />
+                    android:padding="8dp" />
 
 
             </LinearLayout>
@@ -165,10 +166,11 @@
 
                 <TextView
                     android:layout_width="120dp"
-                    android:layout_height="62dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="@string/with_tax"
+                    android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold" />
@@ -190,10 +192,11 @@
 
                 <TextView
                     android:layout_width="120dp"
-                    android:layout_height="62dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="@string/weighable"
+                    android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold" />
@@ -253,13 +256,14 @@
 
             <TextView
                 android:id="@+id/textView12"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
 
-                android:layout_height="62dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginTop="0dp"
+                android:layout_marginRight="20dp"
                 android:gravity="center"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"
                 android:text="@string/department_name"
                 android:textColor="@color/black"
                 android:textSize="20dp"
@@ -270,7 +274,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="40dp"
+                android:layout_marginRight="20dp"
                 android:textAlignment="center"
                 android:textFilterEnabled="true" />
 

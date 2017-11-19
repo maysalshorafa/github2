@@ -129,4 +129,78 @@
 
 
     <string name="general_customer">לקוח כללי</string>
+    <string name="main_screen">מסך ראשי</string>
+
+
+
+
+
+    <!--Product Management-->
+    <string name="edit_product">ערוך מוצר</string>
+    <string name="add_product">הוספת מוצר</string>
+    <string name="add">הוסף</string>
+    <string name="add_department">הוספת מחלקה</string>
+    <string name="edit_department">ערוך מחלקה</string>
+    <string name="permissions">הרשאות</string>
+    <string name="from">מ</string>
+    <string name="to">עד</string>
+    <string name="save">שמור</string>
+    <string name="_return">עודף</string>
+    <string name="view_sales">להציג מכירות</string>
+    <string name="account">חשבון</string>
+    <string name="import_product">ייבוא מוצרים</string>
+    <string name="create_new_product">צור מוצר חדש</string>
+    <string name="please_insert_department_name">הזן שם מחלקה.</string>
+    <string name="please_insert_another_department_name">שם המחלקה קיים, נא להזן שם אחר.</string>
+
+
+    <string name="user_name">שם משתמש</string>
+    <string name="total_amount">הכמות הכוללת</string>
+    <string name="sale_type">סוג המכירה</string>
+    <string name="sale_id">מס\' עסקה</string>
+    <string name="first_name">שם פרטי</string>
+    <string name="last_name">שם משפחה</string>
+    <string name="phone_number">מס\' נייד</string>
+    <string name="hourly_wage">שכר לשעה</string>
+    <string name="present">הנחה באחוזים</string>
+    <string name="log_out">להתנתק</string>
+    <string name="department_management">ניהול מחלקות</string>
+    <string name="product_management">ניהול פריטים</string>
+    <string name="offer_name">שם המבצע</string>
+    <string name="start_at">מתחיל ב</string>
+    <string name="end_at">נגמר ב</string>
+    <string name="rule">חוק ההנחה</string>
+
+    <string name="please_set_password">הגדר סיסמה.</string>
+    <string name="password_does_not_match">הסיסמה אינה שווה.</string>
+    <string name="please_insert_first_name">נא להזין שם פרטי.</string>
+    <string name="please_insert_present">נא להכניס הנחה באחוזים.</string>
+    <string name="please_insert_hourly_wage">נא להכניס שכר לשעה.</string>
+    <string name="can_not_edit_user_please_try_again">לא תוכל לבציע שינוי נא לנסות שוב.</string>
+    <string name="user_name_is_not_available_try_to_use_another_user_name">שם המשתמש אינו זמין, נסה להשתמש בשם משתמש אחר.</string>
+    <string name="can_not_add_user_please_try_again">לא ניתן להוסיף משתמש נסה שוב.</string>
+    <string name="success_adding_new_user">הצלחה, הוספת משתמש חדש.</string>
+    <string name="user_name_is_empty">שם משתמש רק.</string>
+
+
+
+
+    <!--Products -->
+    <string name="name">שם</string>
+    <string name="description">תיאור</string>
+    <string name="cost_price">מחיר עלות</string>
+    <string name="weighable">מוצר שקיל</string>
+    <string name="department_name">שם המחלקה</string>
+    <string name="success_to_update_product">המוצר עודכן!</string>
+    <string name="error_to_update_product">עדכון המוצר נכשל.</string>
+
+    <string name="wait_for_finish">המתן לסיום...</string>
+
+    <string name="import_wait">קורא את הקובץ</string>
+    <string name="saving_data">שומר נתונים</string>
+    <string name="department_not_selected">נא לבחור מחלקה.</string>
+    <string name="select_products">בחר מוצרים</string>
+    <string name="success_to_add_product">מוצר התוסף בהצלחה.</string>
+    <string name="fail_to_add_product">כשלון בהוספת מוצר חדש.</string>
+
 </resources>

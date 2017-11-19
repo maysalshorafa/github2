@@ -78,10 +78,7 @@ public class WorkerManagementActivity  extends AppCompatActivity {
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(WorkerManagementActivity.this, TempDashBord.class);
-                intent.putIntegerArrayListExtra("permissions_name", permissions_name);
-                intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, LogInActivity.LEADPOS_MAKE_A_REPORT);
-                startActivity(intent);
+               onBackPressed();
             }
         });
 
