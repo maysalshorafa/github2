@@ -1,10 +1,9 @@
 package com.pos.leaders.leaderspossystem;
 
-<<<<<<< HEAD
-=======
+
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
->>>>>>> master
+
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -97,55 +96,8 @@ public class ProductsActivity  extends AppCompatActivity {
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                ///to save on sqllite
-                if (etName.getText().toString().equals("")) {
-                    return;
-                } else if (etBarcode.getText().toString().equals("")) {
-                    return;
-                } else if (etPrice.getText().toString().equals("") || etCostPrice.getText().toString().equals("")) {
-                    return;
-                }
-
-
-                if (editableProduct == null) {
-                    if (selectedDepartment.equals("")) {
-                        Toast.makeText(getApplicationContext(), getString(R.string.department_not_selected), Toast.LENGTH_LONG).show();
-                    } else {
-                         check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
-                                etDescription.getText().toString(), Double.parseDouble(etPrice.getText().toString()),
-                                Double.parseDouble(etCostPrice.getText().toString()), swWithTax.isChecked(),
-                                swWeighable.isChecked(), departmentMap.get(selectedDepartment), SESSION._USER.getId(), with_pos, with_point_system);
-                        if (check > 0) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_product), Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), getString(R.string.fail_to_add_product), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                } else {
-                    //// TODO: 27/10/2016 edit product
-                    editableProduct.setName(etName.getText().toString());
-                    editableProduct.setBarCode(etBarcode.getText().toString());
-                    editableProduct.setDescription(etDescription.getText().toString());
-                    editableProduct.setPrice(Double.parseDouble(etPrice.getText().toString()));
-                    editableProduct.setCostPrice(Double.parseDouble(etCostPrice.getText().toString()));
-                    editableProduct.setWithTax(swWithTax.isChecked());
-                    editableProduct.setWeighable(swWeighable.isChecked());
-                    editableProduct.setDepartmentId(departmentMap.get(selectedDepartment));
-                    try {
-                        productDBAdapter.updateEntry(editableProduct);
-                        Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.success_to_update_product), Toast.LENGTH_SHORT);
-                        onBackPressed();
-                    } catch (Exception ex) {
-                        Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.error_to_update_product), Toast.LENGTH_SHORT);
-                    }
-
-
-                    //gvProduct.setAdapter(adapter);
-                    //setNewProduct();
-
-
-                }
+                addEditProduct();
+                onBackPressed();
             }
         });
 
@@ -162,76 +114,16 @@ public class ProductsActivity  extends AppCompatActivity {
                 onBackPressed();
             }
         });
-<<<<<<< HEAD
-=======
+
         btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              if(check>1){
-                  Intent intent = new Intent(ProductsActivity.this,ProductCatalogActivity.class);
-                  startActivity(intent);
-              }else {
-                  Toast.makeText(getApplicationContext(), getString(R.string.please_add_product_then_continue), Toast.LENGTH_LONG).show();
+                if(addEditProduct())
+                    setNewProduct();
 
-              }
             }
         });
 
-
-
-/*
-		gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Log.i("item clicked",productsList.get(position).toString());
-
-				view.setSelected(true);
-
-				if (previouslySelectedProductItem != null)
-				{
-					previouslySelectedProductItem.setBackgroundColor(
-							getResources().getColor(R.color.transparent));
-				}
-				view.setBackgroundColor(getResources().getColor(R.color.pressed_color));
-				selectedProduct =gvProduct.getItemAtPosition(position).toString();
-				previouslySelectedProductItem = view;
-				editableProduct=productsList.get(position);
-
-
-				etName.setText(editableProduct.getName());
-				etBarcode.setText(editableProduct.getBarCode());
-				etDescription.setText(editableProduct.getDescription());
-				etCostPrice.setText(editableProduct.getCostPrice()+"");
-				etPrice.setText(editableProduct.getPrice()+"");
-				swWithTax.setChecked(editableProduct.isWithTax());
-				swWeighable.setChecked(editableProduct.isWeighable());
-				Department d=departmentDBAdapter.getDepartmentByID(editableProduct.getDepartmentId());
-				selectedDepartment=d.getName();
-				for (int i=0;i<lvDepatment.getChildCount();i++){
-					if(listDepartment.get(i).getName().equals(d.getName())){
-						selectItemDepartments(lvDepatment.getChildAt(i));
-					}
-				}
-				btAddProduct.setText(getResources().getText(R.string.edit_product));
-			}
-		});
-		*/
-
-/*		btNew.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setNewProduct();
-			}
-		});
-
-		btDelete.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-			}
-		});*/
-
->>>>>>> master
         // Department list
         departmentDBAdapter = new DepartmentDBAdapter(this);
         departmentDBAdapter.open();
@@ -283,6 +175,7 @@ public class ProductsActivity  extends AppCompatActivity {
                 swWithTax.setChecked(editableProduct.isWithTax());
                 swWeighable.setChecked(editableProduct.isWeighable());
                 Department d=departmentDBAdapter.getDepartmentByID(editableProduct.getDepartmentId());
+                btnContinue.setVisibility(View.GONE);
                 selectedDepartment=d.getName();
 
                 for (int i = 0; i< lvDepartment.getChildCount(); i++){
@@ -295,6 +188,54 @@ public class ProductsActivity  extends AppCompatActivity {
 
             }
         }
+    }
+
+    private boolean addEditProduct() {
+        ///to save on sqlite
+        if (etName.getText().toString().equals("")) {
+            return false;
+        } else if (etBarcode.getText().toString().equals("")) {
+            return false;
+        } else if (etPrice.getText().toString().equals("") || etCostPrice.getText().toString().equals("")) {
+            return false;
+        }
+
+        if (editableProduct == null) {
+            if (selectedDepartment.equals("")) {
+                Toast.makeText(getApplicationContext(), getString(R.string.department_not_selected), Toast.LENGTH_LONG).show();
+            } else {
+                check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
+                        etDescription.getText().toString(), Double.parseDouble(etPrice.getText().toString()),
+                        Double.parseDouble(etCostPrice.getText().toString()), swWithTax.isChecked(),
+                        swWeighable.isChecked(), departmentMap.get(selectedDepartment), SESSION._USER.getId(), with_pos, with_point_system);
+                if (check > 0) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_product), Toast.LENGTH_LONG).show();
+                    return true;
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.fail_to_add_product), Toast.LENGTH_LONG).show();
+                }
+            }
+        } else {
+            //// TODO: 27/10/2016 edit product
+            editableProduct.setName(etName.getText().toString());
+            editableProduct.setBarCode(etBarcode.getText().toString());
+            editableProduct.setDescription(etDescription.getText().toString());
+            editableProduct.setPrice(Double.parseDouble(etPrice.getText().toString()));
+            editableProduct.setCostPrice(Double.parseDouble(etCostPrice.getText().toString()));
+            editableProduct.setWithTax(swWithTax.isChecked());
+            editableProduct.setWeighable(swWeighable.isChecked());
+            editableProduct.setDepartmentId(departmentMap.get(selectedDepartment));
+            try {
+                productDBAdapter.updateEntry(editableProduct);
+                Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.success_to_update_product), Toast.LENGTH_SHORT);
+                onBackPressed();
+                return true;
+            } catch (Exception ex) {
+                Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.error_to_update_product), Toast.LENGTH_SHORT);
+            }
+            //setNewProduct();
+        }
+        return false;
     }
 
 	private void setNewProduct() {
@@ -313,7 +254,7 @@ public class ProductsActivity  extends AppCompatActivity {
         etCostPrice.setText("");
         swWithTax.setChecked(false);
         swWeighable.setChecked(false);
-
+        btnContinue.setVisibility(View.VISIBLE);
         editableProduct = null;
     }
 

@@ -137,14 +137,9 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         btnSales.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(ReportsManagementActivity.this,SalesManagementActivity.class);
+                Intent intent = new Intent(ReportsManagementActivity.this, SalesManagementActivity.class);
                 startActivity(intent);
-<<<<<<< HEAD
-                finish();
             }
-=======
-                  }
->>>>>>> master
         });
 
         btnExFiles.setOnClickListener(new View.OnClickListener() {
