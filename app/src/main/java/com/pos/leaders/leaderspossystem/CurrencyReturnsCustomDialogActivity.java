@@ -32,6 +32,7 @@ import com.pos.leaders.leaderspossystem.Tools.TempCashActivty;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class CurrencyReturnsCustomDialogActivity extends Dialog implements  View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -89,7 +90,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog implements  View
         returnSpener.setAdapter(dataAdapter);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         template = preferences.getFloat(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_EXCESSVALUE, 0);
-        tvExcess.setText(template + "");
+        tvExcess.setText(String.format(new Locale("en"), "%.2f", template));
         valueForReturnValue = String.valueOf(template);
 
         returnSpener.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -105,7 +106,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog implements  View
                 }
                 returnSpenerId = returnSpener.getSelectedItemId();
                 template = (double) (Double.parseDouble(valueForReturnValue) / currency.getRate());
-                tvExcess.setText(template + "");
+                tvExcess.setText(String.format(new Locale("en"), "%.2f", template));
             }
 
             @Override

@@ -26,7 +26,7 @@ public class Sale {
 	private long customer_id;
 
 	@JsonIgnore
-    private String customer_name;
+	private String customer_name = null;
 	@JsonIgnore
 	private List<Order> orders;
     @JsonIgnore

@@ -37,6 +37,7 @@
                 android:visibility="gone" />
 
             <TextView
+                android:id="@+id/cashActivity_TVRequiredText"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
@@ -82,6 +83,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/cashActivity_TVTotalInsertedText"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
@@ -141,10 +143,10 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:gravity="center"
+                android:hint="0"
                 android:inputType="number"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:text="0"
                 android:textColor="@color/black"
                 android:textDirection="ltr"
                 android:textSize="20dp" />
@@ -199,8 +201,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:gravity="center"
+                android:hint="0"
                 android:inputType="number"
-                android:text="0"
                 android:textColor="@color/black"
                 android:textDirection="ltr"
                 android:textSize="20dp" />

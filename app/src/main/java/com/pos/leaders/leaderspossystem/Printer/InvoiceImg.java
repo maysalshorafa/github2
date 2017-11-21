@@ -174,7 +174,7 @@ public class InvoiceImg {
         Block subTitle = new Block("\u200E " + context.getString(R.string.private_company) +
                 ": " + SETTINGS.companyID , 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
 
-        if (sale.getCustomer_name().equals(null)) {
+        if (sale.getCustomer_name()==null) {
                 customerName = context.getString(R.string.general_customer);
         }
         else if(sale.getCustomer_name().equals("")) {

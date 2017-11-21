@@ -278,6 +278,12 @@ double SumForClub=0.0;
 
         TitleBar.setTitleBar(this);
 
+        if (!Util.isSyncServiceRunning(this)) {
+            Intent intent = new Intent(MainActivity.this, SyncMessage.class);
+            intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, "http://185.118.252.26:8080/leadBO/");
+            startService(intent);
+        }
+
 
 
         used_point=(ImageButton)findViewById(R.id.usedPoint);
@@ -725,12 +731,6 @@ usedpointDbAdapter.open();
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                Intent intent = new Intent(MainActivity.this, SyncMessage.class);
-                intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, "http://185.118.252.26:8080/leadBO/");
-                startService(intent);
-
                 barcodeScanned = etSearch.getText().toString();
                 if (!barcodeScanned.equals("")) {
                     enterKeyPressed();
@@ -2117,7 +2117,6 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 protected void onPreExecute() {
                     dialog.show();
                     SESSION._SALE.setTotalPrice(saleTotalPrice);
-
                 }
 
                 @Override
@@ -2189,6 +2188,18 @@ saleTotalPrice=saleTotalPrice-newPrice;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (Long.valueOf(SESSION._SALE.getCustomer_id())==0) {
+            if (SESSION._SALE.getCustomer_name() == null) {
+                if (customerName_EditText.getText().toString().equals("")) {
+                    SESSION._SALE.setCustomer_name("");
+                }else{
+                    SESSION._SALE.setCustomer_name(customerName_EditText.getText().toString());
+                }
+            }
+        }
+
         if (requestCode == REQUEST_CREDIT_CARD_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
 
@@ -2198,9 +2209,9 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 saleDBAdapter.open();
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
-if(club_id==2) {
-    sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
-}
+                if(club_id==2) {
+                    sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
+                }
                 /**  Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
                  cInformation= String.valueOf(Ppoint.getPoint());
                  information.setText(cInformation);**/

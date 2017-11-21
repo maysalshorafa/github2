@@ -47,7 +47,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
 
     TextView custmer_name;
-    TextView tv, tvTotalInserted;
+    TextView tv, tvTotalInserted,tvInsetText;
     EditText tvTotalInsertedForFirstCurrency, tvTotalInsertedForSecondCurrency;
     String custmer_nameS;
     Spinner spinnerForFirstCurrency, spinnerForSecondCurrency, spinnerForTotalPrice;
@@ -105,6 +105,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
         btnDone = (Button) findViewById(R.id.cashActivity_BTNDone);
         btnDone.setTextAppearance(getApplicationContext(), R.style.AppTheme_bt_dark);
         tv = (TextView) findViewById(R.id.cashActivity_TVRequired);
+        tvInsetText = (TextView) findViewById(R.id.cashActivity_TVTotalInsertedText);
         tvTotalInserted = (TextView) findViewById(R.id.cashActivity_TVTotalInserted);
         tvTotalInsertedForFirstCurrency = (EditText) findViewById(R.id.cashActivity_TVTotalInsertedForfirstCurrency);
         tvTotalInsertedForSecondCurrency = (EditText) findViewById(R.id.cashActivity_TVTotalInsertedForSecondCurrency);
@@ -155,6 +156,10 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
         } else {
             finish();
         }
+        tvInsetText.setTextColor(getResources().getColor(R.color.Red));
+        tvTotalInserted.setTextColor(getResources().getColor(R.color.Red));
+        btnDone.setEnabled(false);
+        btnDone.setBackground(getResources().getDrawable(R.drawable.bt_dangers_pressed));
 
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,10 +211,14 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                     firstCurruncyValue = 0; // your default value
                 }
                 tvTotalInserted.setText(Double.toString(firstCurruncyValue + secondCurrency));
-                if (firstCurruncyValue + secondCurrency >= totalPrice)
+                if (firstCurruncyValue + secondCurrency >= totalPrice) {
                     tvTotalInserted.setTextColor(getResources().getColor(R.color.Green));
-                else
+                    tvInsetText.setTextColor(getResources().getColor(R.color.Green));
+                }
+                else {
                     tvTotalInserted.setTextColor(getResources().getColor(R.color.Red));
+                    tvInsetText.setTextColor(getResources().getColor(R.color.Red));
+                }
 
                 exceesValue = (firstCurruncyValue + secondCurrency) - totalPrice;
                 if (exceesValue >= 0) {
@@ -217,7 +226,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                     btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
                 } else {
                     btnDone.setEnabled(false);
-                    btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
+                    btnDone.setBackground(getResources().getDrawable(R.drawable.bt_dangers_pressed));
                 }
             }
         });
@@ -252,10 +261,12 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                 tvTotalInserted.setText(Double.toString(firstCurruncyValue + secondCurrency));
                 if (firstCurruncyValue + secondCurrency >= totalPrice) {
                     tvTotalInserted.setTextColor(getResources().getColor(R.color.Green));
+                    tvInsetText.setTextColor(getResources().getColor(R.color.Green));
                 } else {
 
 
                     tvTotalInserted.setTextColor(getResources().getColor(R.color.Red));
+                    tvInsetText.setTextColor(getResources().getColor(R.color.Red));
                 }
                 exceesValue = (firstCurruncyValue + secondCurrency) - totalPrice;
                 if (exceesValue >= 0) {
@@ -263,7 +274,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                     btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
                 } else {
                     btnDone.setEnabled(false);
-                    btnDone.setBackground(getResources().getDrawable(R.drawable.btn_primary));
+                    btnDone.setBackground(getResources().getDrawable(R.drawable.bt_dangers_pressed));
                 }
             }
         });
