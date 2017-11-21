@@ -124,7 +124,6 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
         CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
         currencyDBAdapter.open();
-        final List<Double> cashValues = new ArrayList<Double>();
         final List<Currency> currencyList = currencyDBAdapter.getAllCurrency(currencyTypesList);
         Toast.makeText(TempCashActivty.this,currencyList.get(0).getName()+currencyList.get(0).getRate(),Toast.LENGTH_LONG).show();
 
@@ -163,12 +162,11 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
                 totalPid = (float) (firstCurruncyValue + secondCurrency);
                 //// TODO: 01/12/2016 return how match inserted money
-                cashValues.add(firstCurruncyValue);
                 Intent i = new Intent();
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY, totalPid);
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_FIRSTCURRENCY_AMOUNT, Double.parseDouble(tvTotalInserted.getText().toString()));
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_AMOUNT, firstCurruncyValue);
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_AMOUNT, secondCurrency);
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_AMOUNT, Double.parseDouble(tvTotalInsertedForFirstCurrency.getText().toString()));
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_AMOUNT, Double.parseDouble(tvTotalInsertedForSecondCurrency.getText().toString()));
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_ID_AMOUNT, firstCurrencyId);
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_ID_AMOUNT, secondCurrencyId);
                 setResult(RESULT_OK, i);
@@ -176,7 +174,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putFloat(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_EXCESSVALUE, (float) exceesValue);
                 editor.apply();
-                CurrencyReturnsCustomDialogActivity cdd = new CurrencyReturnsCustomDialogActivity(TempCashActivty.this,cashValues);
+                CurrencyReturnsCustomDialogActivity cdd = new CurrencyReturnsCustomDialogActivity(TempCashActivty.this);
                 cdd.show();
             }
         });

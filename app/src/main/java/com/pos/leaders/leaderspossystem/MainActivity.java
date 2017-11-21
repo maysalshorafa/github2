@@ -2350,15 +2350,17 @@ if(club_id==2) {
                 final double thirdCurrencyAmount = data.getDoubleExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_AMOUNT, 0.0f);
                 final long secondCurrencyId = data.getLongExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_ID_AMOUNT, 0);
                 final long thirdCurrencyId = data.getLongExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_ID_AMOUNT, 0);
-                if (firstCurrencyAmount>0) {
-                    cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, 0, new Date());
+
+                if (secondCurrencyAmount >0 && thirdCurrencyAmount >0 ){
+                    cashPaymentDBAdapter.insertEntry(saleIDforCash,secondCurrencyAmount,secondCurrencyId,new Date());
+                    cashPaymentDBAdapter.insertEntry(saleIDforCash,thirdCurrencyAmount,thirdCurrencyId,new Date());
                 }
-                if (secondCurrencyAmount>0){
+                else if (secondCurrencyAmount>0 ){
                     cashPaymentDBAdapter.insertEntry(saleIDforCash,secondCurrencyAmount,secondCurrencyId,new Date());
 
-
-                }if (thirdCurrencyAmount>0){
+                }else if (thirdCurrencyAmount>0){
                     cashPaymentDBAdapter.insertEntry(saleIDforCash,thirdCurrencyAmount,thirdCurrencyId,new Date());
+
                 }
                 cashPaymentDBAdapter.close();
                 currencyOperationDBAdapter.insertEntry(SESSION._SALE.getSaleDate(), saleIDforCash, "sale", SESSION._SALE.getTotalPaid(), 0);

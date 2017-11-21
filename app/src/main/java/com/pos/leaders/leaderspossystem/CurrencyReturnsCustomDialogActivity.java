@@ -49,7 +49,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog implements  View
     private List<CurrencyType> currencyTypesList=null;
     CurrencyReturnsDBAdapter currencyReturnsDBAdapter=new CurrencyReturnsDBAdapter(getContext());
     CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(getContext());
-    public CurrencyReturnsCustomDialogActivity(Activity a, List<Double> cashValues) {
+    public CurrencyReturnsCustomDialogActivity(Activity a) {
         super(a);
         // TODO Auto-generated constructor stub
         this.c = a;
