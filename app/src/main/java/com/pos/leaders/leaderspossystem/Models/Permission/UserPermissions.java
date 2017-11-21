@@ -1,5 +1,9 @@
 package com.pos.leaders.leaderspossystem.Models.Permission;
 
+import android.content.Context;
+import android.view.View;
+
+import com.pos.leaders.leaderspossystem.AddUserActivity;
 import com.pos.leaders.leaderspossystem.Models.User;
 
 import java.util.List;
@@ -9,6 +13,11 @@ import java.util.List;
  */
 
 public class UserPermissions {
+
+
+	public UserPermissions(Context context) {
+
+	}
 
 	public long getId() {
 		return id;

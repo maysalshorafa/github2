@@ -124,6 +124,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
         CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(TempCashActivty.this);
         currencyDBAdapter.open();
+        final List<Double> cashValues = new ArrayList<Double>();
         final List<Currency> currencyList = currencyDBAdapter.getAllCurrency(currencyTypesList);
         Toast.makeText(TempCashActivty.this,currencyList.get(0).getName()+currencyList.get(0).getRate(),Toast.LENGTH_LONG).show();
 
@@ -162,6 +163,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
 
                 totalPid = (float) (firstCurruncyValue + secondCurrency);
                 //// TODO: 01/12/2016 return how match inserted money
+                cashValues.add(firstCurruncyValue);
                 Intent i = new Intent();
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY, totalPid);
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_FIRSTCURRENCY_AMOUNT, Double.parseDouble(tvTotalInserted.getText().toString()));
@@ -174,7 +176,7 @@ public class TempCashActivty extends AppCompatActivity implements AdapterView.On
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putFloat(LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_EXCESSVALUE, (float) exceesValue);
                 editor.apply();
-                CurrencyReturnsCustomDialogActivity cdd = new CurrencyReturnsCustomDialogActivity(TempCashActivty.this);
+                CurrencyReturnsCustomDialogActivity cdd = new CurrencyReturnsCustomDialogActivity(TempCashActivty.this,cashValues);
                 cdd.show();
             }
         });

@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 public class CurrencyReturnsCustomDialogActivity extends Dialog implements  View.OnClickListener, AdapterView.OnItemSelectedListener {
 
 
@@ -47,7 +49,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog implements  View
     private List<CurrencyType> currencyTypesList=null;
     CurrencyReturnsDBAdapter currencyReturnsDBAdapter=new CurrencyReturnsDBAdapter(getContext());
     CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(getContext());
-    public CurrencyReturnsCustomDialogActivity(Activity a) {
+    public CurrencyReturnsCustomDialogActivity(Activity a, List<Double> cashValues) {
         super(a);
         // TODO Auto-generated constructor stub
         this.c = a;
@@ -123,12 +125,20 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog implements  View
             case R.id.btn_done:
                 currencyReturnsDBAdapter.insertEntry(SESSION._SALE.getId(),template , new Date(), returnSpenerId);
                 currencyReturnsDBAdapter.close();
+                Intent i= new Intent(getContext(), MainActivity.class);
+                i.putExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_FIRSTCURRENCY_AMOUNT,10 );
+                i.putExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_AMOUNT, 0);
+                i.putExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_AMOUNT, 0);
+                i.putExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_ID_AMOUNT, 0);
+                i.putExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_ID_AMOUNT, 0);
+                c.setResult(RESULT_OK, i);
+                c.startActivity(i);
                 c.finish();
                 break;
             case R.id.btn_cancel:
-                Intent i;
-                i = new Intent(getContext(), TempCashActivty.class);
-                c.startActivity(i);
+                Intent i1;
+                i1 = new Intent(getContext(), TempCashActivty.class);
+                c.startActivity(i1);
                 break;
             default:
                 break;

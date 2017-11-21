@@ -119,4 +119,9 @@ public class UserPermissionsDBAdapter {
 	public SQLiteDatabase getDatabaseInstance() {
 		return db;
 	}
+	public boolean deletePermissions(int permissions)
+	{
+		return db.delete(USERPERMISSIONS_TABLE_NAME, USERPERMISSIONS_COLUMN_PERMISSIONSID + "=" + permissions, null) > 0;
+	}
+
 }
