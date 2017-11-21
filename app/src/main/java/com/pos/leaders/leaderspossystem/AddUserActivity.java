@@ -21,6 +21,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
+import com.pos.leaders.leaderspossystem.Models.Permission.UserPermissions;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.PermissionsGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -83,7 +84,6 @@ public class AddUserActivity extends AppCompatActivity {
 		userDBAdapter = new UserDBAdapter(this);
 
 		final UserPermissionsDBAdapter userPermissionsDBAdapter = new UserPermissionsDBAdapter(this);
-
 		user = null;
 		PermissionsDBAdapter permissionsDBAdapter = new PermissionsDBAdapter(this);
 		permissionsDBAdapter.open();
@@ -170,7 +170,7 @@ public class AddUserActivity extends AppCompatActivity {
 									userPermissionAdapter.open();
 									for (Permissions p : permissionsList) {
 										if (p.isChecked()) {
-											userPermissionAdapter.insertEntry(p.getId(), user.getId());
+											userPermissionAdapter.insertEntry(p.getId(), i);
 										}
 									}
 									userPermissionAdapter.close();
@@ -213,8 +213,21 @@ public class AddUserActivity extends AppCompatActivity {
 								user.setPhoneNumber(etPhoneNumber.getText().toString());
 								user.setHourlyWage(Double.parseDouble(etHourlyWage.getText().toString()));
 								user.setPresent(Double.parseDouble(etPresent.getText().toString()));
-								//user.setPermissionsName(selectedFromList);
-
+								UserPermissionsDBAdapter userPermissionAdapter = new UserPermissionsDBAdapter(AddUserActivity.this);
+								userPermissionAdapter.open();
+								for (int i=0;i<=userPermissions.size()-1;i++){
+									for (Permissions p : permissionsList) {
+										if(p.getId()==userPermissions.get(i)){
+											userPermissionAdapter.deletePermissions((int) p.getId());
+										}
+									}
+								}
+								for (Permissions p : permissionsList) {
+									if (p.isChecked()) {
+										userPermissionAdapter.insertEntry(p.getId(), user.getId());
+									}
+								}
+								userPermissionAdapter.close();
 								userDBAdapter.updateEntry(user);
 								Log.i("success Edit", user.toString());
 								onBackPressed();

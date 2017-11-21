@@ -62,7 +62,7 @@
     <string name="gender"> الجنس</string>
     <string name="male"> ذكر</string>
     <string name="female"> انثى </string>
-    <string name="user_name"> اسم العامل </string>
+    <string name="user_name"> اسم الموظف </string>
     <string name="password"> كلمة المرور </string>
     <string name="hourly_wage">ساعات العمل </string>
     <string name="present">النسبة </string>
@@ -143,6 +143,18 @@
     <string name="insert_new_department_name_massage">ادخل اسم جديد للقسم.</string>
     <string name="description">وصف</string>
     <string name="please_add_product_then_continue">اضف المنتج ثم اكمل ..!</string>
+    <string name="please_set_password">الرجاء تعين كلمة المرور .</string>
+    <string name="password_does_not_match">كلمة المرور غير متطابقة.</string>
+    <string name="please_insert_first_name">الرجاء ادخال الاسم الاول.</string>
+    <string name="please_insert_present">الرجاء ادخال نسبة العامل.</string>
+    <string name="please_insert_hourly_wage">الرجاء ادخال ساعات عمل العامل.</string>
+    <string name="can_not_edit_user_please_try_again">لم يتم تعديل معلومات الموظف يرجى الاعادة.</string>
+    <string name="user_name_is_not_available_try_to_use_another_user_name">اسم الموظف غير متوفر..! يرجى المحاولة باسم جديد.</string>
+    <string name="can_not_add_user_please_try_again">لم يتم اضافة موظف يرجى المحاولة مرة اخرى.</string>
+    <string name="success_adding_new_user">تم اضافة موظف بنجاح .</string>
+    <string name="user_name_is_empty">يرجى تعبئة اسم الموظف .</string>
+    <string name="success_to_add_product">تم اضافة منتوج بنجاح.</string>
+    <string name="fail_to_add_product">فشلت عملية اضافة منتج.</string>
 
 
 </resources>

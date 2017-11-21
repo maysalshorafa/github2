@@ -29,7 +29,7 @@ public class CashPaymentDBAdapter {
     protected static final String CashPAYMENT_COLUMN_ID = "id";
     protected static final String CashPAYMENT_COLUMN_SALEID = "saleId";
     protected static final String CashPAYMENT_COLUMN_AMOUNT = "amount";
-    protected static final String CashPAYMENT_COLUMN_CurencyType = "currency_type";
+    protected static final String CashPAYMENT_COLUMN_CurrencyType = "currency_type";
     protected static final String CashPAYMENT_COLUMN_CREATEDATE = "createDate";
 
 
@@ -66,21 +66,18 @@ public class CashPaymentDBAdapter {
         try {
             return insertEntry(payment);
         } catch (SQLException ex) {
-            Log.e("Payment DB insert", "inserting Entry at " + CashPAYMENT_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("Cash Payment DB insert", "inserting Entry at " + CashPAYMENT_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
     }
-
     public long insertEntry(CashPayment payment){
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
         val.put(CashPAYMENT_COLUMN_ID, payment.getId());
-
-
         val.put(CashPAYMENT_COLUMN_SALEID, payment.getSaleId());
         val.put(CashPAYMENT_COLUMN_AMOUNT,payment.getAmount() );
-        val.put(CashPAYMENT_COLUMN_CurencyType, payment.getCurrency_type());
+        val.put(CashPAYMENT_COLUMN_CurrencyType, payment.getCurrency_type());
         val.put(CashPAYMENT_COLUMN_CREATEDATE, String.valueOf(payment.getCreateDate()));
 
         try {
@@ -90,6 +87,8 @@ public class CashPaymentDBAdapter {
             return -1;
         }
     }
+
+
 
     public List<CashPayment> getAllPayments() {
         List<CashPayment> paymentsList = new ArrayList<CashPayment>();
@@ -123,11 +122,11 @@ public class CashPaymentDBAdapter {
         return new CashPayment(Long.parseLong(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_ID))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_SALEID))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_AMOUNT))),
-                Long.parseLong(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CurencyType))),DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CREATEDATE))));
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CurrencyType))),DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CREATEDATE))));
     }
     public double getSumOftype(int currencyType, long from,long to) {
 
-          Cursor cur = db.rawQuery("SELECT SUM(amount) from " +  CashPAYMENT_TABLE_NAME + "  where "+ CashPAYMENT_COLUMN_CurencyType+"=" + currencyType +" and " + CashPAYMENT_COLUMN_SALEID +" <= " + to + " and " + CashPAYMENT_COLUMN_SALEID +" >= "+from, null);
+          Cursor cur = db.rawQuery("SELECT SUM(amount) from " +  CashPAYMENT_TABLE_NAME + "  where "+ CashPAYMENT_COLUMN_CurrencyType +"=" + currencyType +" and " + CashPAYMENT_COLUMN_SALEID +" <= " + to + " and " + CashPAYMENT_COLUMN_SALEID +" >= "+from, null);
         if (cur.moveToFirst()) {
             return cur.getLong(0);
         }
