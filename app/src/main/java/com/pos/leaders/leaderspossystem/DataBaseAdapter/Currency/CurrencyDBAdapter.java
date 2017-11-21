@@ -73,7 +73,7 @@ public class CurrencyDBAdapter {
 
     public long insertEntry(String name, String currency_code, String country, long rate,Date createDate) {
         Currency currency = new Currency(Util.idHealth(this.db, Currency_TABLE_NAME, Currency_COLUMN_ID), name, currency_code, country,rate,createDate);
-        sendToBroker(MessageType.ADD_CASH_PAYMENT, currency, this.context);
+        sendToBroker(MessageType.ADD_CURRENCY, currency, this.context);
 
         try {
             return insertEntry(currency);

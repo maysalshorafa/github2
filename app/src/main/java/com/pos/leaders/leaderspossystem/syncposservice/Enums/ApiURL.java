@@ -9,7 +9,7 @@ public interface ApiURL {
     String Authentication = "authentication";
 
     String Product = "Product";
-    String Club = "club";
+    String Club = "Club";
     String City = "City";
     String Customer = "Customer";
     String Users = "Users";

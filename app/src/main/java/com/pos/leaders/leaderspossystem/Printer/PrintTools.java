@@ -194,8 +194,8 @@ public class PrintTools {
     }
 
     public Bitmap createZReport(long id,long from,long to,boolean isCopy){
+        double aReportAmount =0 ;
         double sheqle_plus=0,sheqle_minus=0;
-
         double usd_plus=0,usd_minus=0;
         double eur_plus=0,eur_minus=0;
         double gbp_plus=0,gbp_minus=0;
@@ -209,47 +209,33 @@ public class PrintTools {
 
         List<Sale> sales=saleDBAdapter.getBetween(from,to);
         sheqle_plus=cashPaymentDBAdapter.getSumOftype(0,from,to)- currencyReturnsDBAdapter.getSumOftype(0,from,to);
-
         usd_plus=cashPaymentDBAdapter.getSumOftype(1,from,to)- currencyReturnsDBAdapter.getSumOftype(1,from,to);
         eur_plus=cashPaymentDBAdapter.getSumOftype(2,from,to)- currencyReturnsDBAdapter.getSumOftype(2,from,to);
         gbp_plus=cashPaymentDBAdapter.getSumOftype(3,from,to)- currencyReturnsDBAdapter.getSumOftype(3,from,to);
-
-
         saleDBAdapter.close();
         ZReportDBAdapter zReportDBAdapter=new ZReportDBAdapter(context);
         zReportDBAdapter.open();
-
         ZReport zReport=zReportDBAdapter.getByID(id);
         zReportDBAdapter.close();
         UserDBAdapter userDBAdapter=new UserDBAdapter(context);
         userDBAdapter.open();
         zReport.setUser(userDBAdapter.getUserByID((int)zReport.getByUser()));
         userDBAdapter.close();
-
         AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
         aReportDBAdapter.open();
         AReport aReport = aReportDBAdapter.getByLastZReport((int)id);
-
+        try {
+             aReportAmount = aReportDBAdapter.getLastRow().getAmount();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         aReportDBAdapter.close();
-
-
-
-
-
         List<Payment> payments = paymentList(sales);
-
         double cash_plus=0,cash_minus=0;
         double check_plus=0,check_minus=0;
         double creditCard_plus=0,creditCard_minus=0;
-
-
-
-
-
-
-cashPaymentDBAdapter.close();
+        cashPaymentDBAdapter.close();
         currencyReturnsDBAdapter.close();
-
 
         for (Payment p : payments) {
             int i=0;
@@ -277,7 +263,7 @@ cashPaymentDBAdapter.close();
         }
 
         try {
-            return BitmapInvoice.zPrint(context, zReport,usd_plus,usd_minus,eur_plus,eur_minus,gbp_plus,gbp_minus,sheqle_plus+500,sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, 500);
+            return BitmapInvoice.zPrint(context, zReport,usd_plus,usd_minus,eur_plus,eur_minus,gbp_plus,gbp_minus,sheqle_plus+aReportAmount,sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReportAmount);
             //return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
         }
         catch (Exception ex){
@@ -304,8 +290,7 @@ cashPaymentDBAdapter.close();
         double eur_plus=0,eur_minus=0;
         double gbp_plus=0,gbp_minus=0;
         double sheqle_plus=0,sheqle_minus=0;
-
-
+        double aReportAmount = 0;
         SaleDBAdapter saleDBAdapter=new SaleDBAdapter(context);
         saleDBAdapter.open();
 
@@ -315,7 +300,6 @@ cashPaymentDBAdapter.close();
         CurrencyReturnsDBAdapter currencyReturnsDBAdapter=new CurrencyReturnsDBAdapter(context);
         currencyReturnsDBAdapter.open();
         sheqle_plus=cashPaymentDBAdapter.getSumOftype(0,endSaleId,id)- currencyReturnsDBAdapter.getSumOftype(0,endSaleId,id);
-
         usd_plus=cashPaymentDBAdapter.getSumOftype(1,endSaleId,id)- currencyReturnsDBAdapter.getSumOftype(1,endSaleId,id);
         eur_plus=cashPaymentDBAdapter.getSumOftype(2,endSaleId,id)- currencyReturnsDBAdapter.getSumOftype(2,endSaleId,id);
         gbp_plus=cashPaymentDBAdapter.getSumOftype(3,endSaleId,id)- currencyReturnsDBAdapter.getSumOftype(3,endSaleId,id);
@@ -331,6 +315,11 @@ cashPaymentDBAdapter.close();
             aReport = aReportDBAdapter.getLastRow();
         }
         catch (Exception e){
+            e.printStackTrace();
+        }
+        try {
+            aReportAmount = aReportDBAdapter.getLastRow().getAmount();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         aReportDBAdapter.close();
@@ -366,6 +355,6 @@ cashPaymentDBAdapter.close();
             }
         }
 
-        return BitmapInvoice.xPrint(context,user,date.getTime(),usd_plus,usd_minus,eur_plus,eur_minus,gbp_plus,gbp_minus,sheqle_plus+aReport.getAmount(),sheqle_minus,cash_plus,cash_minus,check_plus,check_minus,creditCard_plus,creditCard_minus,aReport.getAmount());
+        return BitmapInvoice.xPrint(context,user,date.getTime(),usd_plus,usd_minus,eur_plus,eur_minus,gbp_plus,gbp_minus,sheqle_plus+aReportAmount,sheqle_minus,cash_plus,cash_minus,check_plus,check_minus,creditCard_plus,creditCard_minus,aReportAmount);
     }
 }

@@ -104,7 +104,7 @@ public interface MessageType{
     String UPDATE_CREDIT_CARD_PAYMENT = "UpdateCreditCardPayment";
     String DELETE_CREDIT_CARD_PAYMENT = "DeleteCreditCardPayment";
 
-    String ADD_CASH_PAYMENT = "ADDCashPayment";
+    String ADD_CASH_PAYMENT = "AddCashPayment";
     String UPDATE_CASH_PAYMENT = "UpdateCashPayment";
     String DELETE_CASH_PAYMENT = "DeleteCashPayment";
 
