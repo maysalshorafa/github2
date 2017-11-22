@@ -44,6 +44,8 @@
     <string name="invoice_with_tax">חש\' מס-קבלה</string>
     <string name="credit_invoice">חש\' זיכוי</string>
     <string name="replacement_invoice">פתק החלפה</string>
+    <string name="copyinvoice">עותק</string>
+    <string name="cancel_invoice">ביטול עסקה</string>
 
     <!--Z Report-->
     <string name="z_number">מספר Z:</string>
@@ -53,6 +55,7 @@
     <string name="refresh">רענון</string>
     <string name="returned">עודף</string>
     <string name="total_price">סה\'\'כ מחיר</string>
+    <string name="total_paid">סה\'\'כ הוכנס</string>
     <string name="total_saved">חסכת</string>
     <string name="transfer_credit_card">תעביר כרטיס אשראי</string>
     <string name="try_again">נסה שוב</string>
@@ -202,5 +205,6 @@
     <string name="select_products">בחר מוצרים</string>
     <string name="success_to_add_product">מוצר התוסף בהצלחה.</string>
     <string name="fail_to_add_product">כשלון בהוספת מוצר חדש.</string>
+    <string name="proportion">אחוז</string>
 
 </resources>

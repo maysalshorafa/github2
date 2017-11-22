@@ -56,7 +56,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapt
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
@@ -104,7 +103,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.TempCashActivty;
+import com.pos.leaders.leaderspossystem.Tools.CashActivity;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
@@ -134,6 +133,7 @@ public class MainActivity extends AppCompatActivity{
     private static final int REQUEST_CASH_ACTIVITY_CODE = 590;
     private static final int REQUEST_CHECKS_ACTIVITY_CODE = 753;
     private static final int REQUEST_CREDIT_CARD_ACTIVITY_CODE = 801;
+    public static final String COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE = "com_pos_leaders_cart_total_price";
     String transID="";
     String a ="";
     TextView salesMan;
@@ -278,6 +278,12 @@ double SumForClub=0.0;
 
         TitleBar.setTitleBar(this);
 
+        if (!Util.isSyncServiceRunning(this)) {
+            Intent intent = new Intent(MainActivity.this, SyncMessage.class);
+            intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, "http://185.118.252.26:8080/leadBO/");
+            startService(intent);
+        }
+
 
 
         used_point=(ImageButton)findViewById(R.id.usedPoint);
@@ -312,7 +318,7 @@ double SumForClub=0.0;
         //   lvcustmer.setVisibility(View.GONE);
         btnGrid = (ImageButton) findViewById(R.id.mainActivity_btnGrid);
         btnList = (ImageButton) findViewById(R.id.mainActivity_btnList);
-saleman=(TextView)findViewById(R.id.saleMan);
+        saleman=(TextView)findViewById(R.id.saleMan);
         //fragmentTouchPad = (FrameLayout) findViewById(R.id.mainActivity_fragmentTochPad);
 
         //region  Init cash drawer
@@ -725,12 +731,6 @@ usedpointDbAdapter.open();
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                Intent intent = new Intent(MainActivity.this, SyncMessage.class);
-                intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, "http://185.118.252.26:8080/leadBO/");
-                startService(intent);
-
                 barcodeScanned = etSearch.getText().toString();
                 if (!barcodeScanned.equals("")) {
                     enterKeyPressed();
@@ -1000,11 +1000,8 @@ usedpointDbAdapter.open();
             @Override
             public void onClick(View v) {
                 if(SESSION._ORDERS.size()>0) {
-                    a = customerName_EditText.getText().toString();
-                    Intent intent = new Intent(MainActivity.this, TempCashActivty.class);
-                    intent.putExtra("_Price", saleTotalPrice);
-                    intent.putExtra("_SaleId", saleIDforCash);
-                    intent.putExtra("_custmer", a);
+                    Intent intent = new Intent(MainActivity.this, CashActivity.class);
+                    intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, saleTotalPrice);
                     startActivityForResult(intent, REQUEST_CASH_ACTIVITY_CODE);
                 }
             }
@@ -2117,7 +2114,6 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 protected void onPreExecute() {
                     dialog.show();
                     SESSION._SALE.setTotalPrice(saleTotalPrice);
-
                 }
 
                 @Override
@@ -2184,11 +2180,26 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 printAndOpenCashBoxSUNMI_T1(mainAns, mainMer, mainCli);
                 break;
         }
-    }
 
+        currencyReturnsCustomDialogActivity.show();
+
+    }
+    private CurrencyReturnsCustomDialogActivity currencyReturnsCustomDialogActivity;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (Long.valueOf(SESSION._SALE.getCustomer_id())==0) {
+            if (SESSION._SALE.getCustomer_name() == null) {
+                if (customerName_EditText.getText().toString().equals("")) {
+                    SESSION._SALE.setCustomer_name("");
+                }else{
+                    SESSION._SALE.setCustomer_name(customerName_EditText.getText().toString());
+                }
+            }
+        }
+
         if (requestCode == REQUEST_CREDIT_CARD_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
 
@@ -2198,9 +2209,9 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 saleDBAdapter.open();
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
-if(club_id==2) {
-    sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
-}
+                if(club_id==2) {
+                    sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
+                }
                 /**  Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
                  cInformation= String.valueOf(Ppoint.getPoint());
                  information.setText(cInformation);**/
@@ -2326,44 +2337,40 @@ if(club_id==2) {
         }
         if (requestCode == REQUEST_CASH_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
-
-                CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(MainActivity.this);
-                currencyOperationDBAdapter.open();
                 CashPaymentDBAdapter cashPaymentDBAdapter=new CashPaymentDBAdapter(this);
                 cashPaymentDBAdapter.open();
-                final float result = data.getFloatExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY, 0.0f);
+                double totalPaid = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_TOTAL_PAID, 0.0f);
 
-                SESSION._SALE.setTotalPaid(result);
+                SESSION._SALE.setTotalPaid(totalPaid);
 
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 orderDBAdapter = new OrderDBAdapter(MainActivity.this);
                 custmerAssetDB = new CustomerAssetDB(MainActivity.this);
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
 
+
                 saleDBAdapter.open();
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
 
 
-                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
-                final double firstCurrencyAmount = data.getDoubleExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_FIRSTCURRENCY_AMOUNT, 0.0f);
-                final double secondCurrencyAmount = data.getDoubleExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_AMOUNT, 0.0f);
-                final double thirdCurrencyAmount = data.getDoubleExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_AMOUNT, 0.0f);
-                final long secondCurrencyId = data.getLongExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_SECONDCURRENCY_ID_AMOUNT, 0);
-                final long thirdCurrencyId = data.getLongExtra(TempCashActivty.LEAD_POS_RESULT_INTENT_CODE_Temp_CASH_ACTIVITY_THIRDCURRENCY_ID_AMOUNT, 0);
 
-                if (secondCurrencyAmount >0 && thirdCurrencyAmount >0 ){
-                    cashPaymentDBAdapter.insertEntry(saleIDforCash,secondCurrencyAmount,secondCurrencyId,new Date());
-                    cashPaymentDBAdapter.insertEntry(saleIDforCash,thirdCurrencyAmount,thirdCurrencyId,new Date());
+                double firstCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_AMOUNT, 0.0f);
+                double secondCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_AMOUNT, 0.0f);
+                double excess = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_EXCESS_VALUE, 0.0f);
+                currencyReturnsCustomDialogActivity  = new CurrencyReturnsCustomDialogActivity(this, excess);
+                long secondCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_ID, 0);
+                long firstCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID, 0);
+
+                saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
+
+                if (firstCurrencyAmount>0) {
+                    cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Date());
                 }
-                else if (secondCurrencyAmount>0 ){
+                if (secondCurrencyAmount>0){
                     cashPaymentDBAdapter.insertEntry(saleIDforCash,secondCurrencyAmount,secondCurrencyId,new Date());
-
-                }else if (thirdCurrencyAmount>0){
-                    cashPaymentDBAdapter.insertEntry(saleIDforCash,thirdCurrencyAmount,thirdCurrencyId,new Date());
 
                 }
                 cashPaymentDBAdapter.close();
-                currencyOperationDBAdapter.insertEntry(SESSION._SALE.getSaleDate(), saleIDforCash, "sale", SESSION._SALE.getTotalPaid(), 0);
                 if(club_id==2){
                 sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);}
                 saleDBAdapter.close();
@@ -2407,17 +2414,16 @@ if(club_id==2) {
                     custmerAssetDB.insertEntry(saleIDforCash,custmerAssetstId,SESSION._SALE.getTotalPrice(),0,"Sale",SESSION._SALE.getSaleDate().getTime());
                 }
                 orderDBAdapter.close();
+                custmerAssetDB.close();
                 paymentDBAdapter.open();
 
                 long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash);
-                currencyOperationDBAdapter.insertEntry(SESSION._SALE.getSaleDate(), paymentID, "payment_cash", saleTotalPrice, 0);
 
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
 
                 SESSION._SALE.setPayment(payment);
 
                 paymentDBAdapter.close();
-                currencyOperationDBAdapter.close();
 
                 printAndOpenCashBox("", "", "");
                 return;

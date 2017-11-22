@@ -207,6 +207,8 @@
     <string name="invoice_with_tax">Invoice</string>
     <string name="credit_invoice">Credit Invoice</string>
     <string name="replacement_invoice">Replacement Invoice</string>
+    <string name="copyinvoice">Duplicate Invoice</string>
+    <string name="cancel_invoice">Cancel Invoice</string>
 
     <!--Credit Card-->
     <string name="credit_card_number">Credit Card Number</string>

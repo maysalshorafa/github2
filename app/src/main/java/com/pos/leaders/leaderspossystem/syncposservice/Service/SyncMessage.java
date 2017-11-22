@@ -107,7 +107,7 @@ public class SyncMessage extends Service {
     private Broker broker;
     private MessageTransmit messageTransmit;
 
-    private long LOOP_TIME = 1 * 10 * 1000;
+    private long LOOP_TIME = 5 * 60 * 1000;
 
     private boolean isRunning = false;
     private Context context;
@@ -196,7 +196,7 @@ public class SyncMessage extends Service {
                         }
 
                         try {
-                            Thread.sleep(LOOP_TIME);//2 min thread sleep
+                            Thread.sleep(LOOP_TIME);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

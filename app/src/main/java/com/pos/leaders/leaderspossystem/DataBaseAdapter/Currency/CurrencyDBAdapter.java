@@ -10,7 +10,6 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
-import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -137,18 +136,18 @@ public class CurrencyDBAdapter {
         Cursor cursor=null;
         String name="";
         for (int i=0; i<=currency.size()-1;i++) {
-           name=currency.get(i).getType();
-           cursor = db.rawQuery("select * from " + Currency_TABLE_NAME + " where  name='" + name + "'"+ " order by id desc", null);
+            name = currency.get(i).getType();
+            cursor = db.rawQuery("select * from " + Currency_TABLE_NAME + " where  name='" + name + "'" + " order by id desc", null);
             cursor.moveToFirst();
-            while(!cursor.isAfterLast()){
-                currencyList.add(createNewCurrency(cursor));
+            while (!cursor.isAfterLast()) {
+                currencyList.add(build(cursor));
                 cursor.moveToNext();
-            } }
-
-
+            }
+        }
         return currencyList;
     }
-    private Currency createNewCurrency(Cursor cursor) {
+
+    private Currency build(Cursor cursor) {
         return new Currency(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Currency_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(Currency_COLUMN_Name)),
                 cursor.getString(cursor.getColumnIndex(Currency_COLUMN_CurrencyCode)),

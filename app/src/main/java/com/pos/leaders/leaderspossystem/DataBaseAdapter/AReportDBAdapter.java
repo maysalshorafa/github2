@@ -129,7 +129,7 @@ public class AReportDBAdapter {
         if (cursor.getCount() < 1) // zReport Not Exist
         {
             cursor.close();
-            throw new Exception("there is no rows on Z Report Table");
+             throw new Exception("there is no rows on Z Report Table");
         }
         cursor.moveToFirst();
         aReport = makeAReport(cursor);
