@@ -25,18 +25,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/custmer_name"
-                android:layout_width="400dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/customer_name"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
-            <TextView
                 android:id="@+id/cashActivity_TVRequiredText"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
@@ -138,13 +126,13 @@
                 android:id="@+id/cashActivity_TVTotalInsertedForfirstCurrency"
                 style="@style/AppTheme.EditText_input"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:gravity="center"
                 android:hint="0"
-                android:inputType="number"
+                android:inputType="numberSigned"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:textColor="@color/black"
@@ -196,13 +184,13 @@
                 android:id="@+id/cashActivity_TVTotalInsertedForSecondCurrency"
                 style="@style/AppTheme.EditText_input"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:gravity="center"
                 android:hint="0"
-                android:inputType="number"
+                android:inputType="numberSigned"
                 android:textColor="@color/black"
                 android:textDirection="ltr"
                 android:textSize="20dp" />

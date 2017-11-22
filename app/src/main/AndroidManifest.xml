@@ -63,7 +63,7 @@
         <activity android:name=".LogInActivity" />
         <activity android:name=".MainActivity" />
         <activity
-            android:name=".Tools.CashActivity"
+            android:name=".Tools.OldCashActivity"
             android:theme="@style/AppTheme.PopUp" />
         <activity
             android:name=".CreditCard.CreditCardActivity"
@@ -108,7 +108,7 @@
         <activity android:name=".MainTempActivity" />
         <activity android:name=".SetupNewPOSOnlineActivity" />
         <activity
-            android:name=".Tools.TempCashActivty"
+            android:name=".Tools.CashActivity"
             android:label="@string/title_activity_temp_cash_activty"
             android:theme="@style/AppTheme.PopUp" />
         <activity

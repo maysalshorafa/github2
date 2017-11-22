@@ -61,6 +61,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     ArrayList<Permissions> permissions = new ArrayList<Permissions>();
     ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
     Intent i;
+    Sale lastSale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,7 +201,6 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         btZReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Sale lastSale;
                 ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(TempDashBord.this);
                 zReportDBAdapter.open();
                 ZReport lastZReport = getLastZReport();
@@ -209,10 +209,6 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                     lastZReport = new ZReport();
                     lastZReport.setEndSaleId(0);
                 }
-                SaleDBAdapter saleDBAdapter = new SaleDBAdapter(TempDashBord.this);
-                saleDBAdapter.open();
-                lastSale = saleDBAdapter.getLast();
-                saleDBAdapter.close();
 
                 ZReport z=new ZReport(0, DateConverter.stringToDate(DateConverter.currentDateTime()) , SESSION._USER,lastZReport.getEndSaleId()+1,lastSale);
                 z.setByUser(SESSION._USER.getId());
@@ -321,8 +317,12 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                         btZReport.setEnabled(false);
                         mainScreen.setEnabled(false);
                     } else {
+                        if(lastSale==null){
+                            btZReport.setEnabled(false);
+                        }
+                        else
+                            btZReport.setEnabled(true);
                         btAReport.setEnabled(false);
-                        btZReport.setEnabled(true);
                         mainScreen.setEnabled(true);
                     }
                     break;
@@ -358,6 +358,11 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     @Override
     protected void onResume() {
         super.onResume();
+
+        SaleDBAdapter saleDBAdapter = new SaleDBAdapter(TempDashBord.this);
+        saleDBAdapter.open();
+        lastSale = saleDBAdapter.getLast();
+        saleDBAdapter.close();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.pos.leaders.leaderspossystem.Tools.TempCashActivty"
+    tools:context="com.pos.leaders.leaderspossystem.Tools.CashActivity"
     tools:showIn="@layout/activity_temp_cash_activty">
 
 </android.support.constraint.ConstraintLayout>
