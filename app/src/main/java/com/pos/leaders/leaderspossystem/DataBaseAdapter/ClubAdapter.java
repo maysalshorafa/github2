@@ -8,8 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.City;
-import com.pos.leaders.leaderspossystem.Models.Customer_M;
 import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -23,7 +21,7 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
  * Created by Win8.1 on 6/21/2017.
  */
 
-public class GroupAdapter {
+public class ClubAdapter {
     public static final String Group_TABLE_NAME = "club";
     // Column Names
     protected static final String Group_COLUMN_Name = "name";
@@ -46,13 +44,13 @@ public class GroupAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
-    public GroupAdapter(Context context) {
+    public ClubAdapter(Context context) {
         this.context = context;
         this.dbHelper = new DbHelper(context);
     }
 
 
-    public GroupAdapter open() throws SQLException {
+    public ClubAdapter open() throws SQLException {
         this.db = dbHelper.getWritableDatabase();
         return this;
     }
@@ -182,7 +180,7 @@ public class GroupAdapter {
     }
     public List<Group> getAllGroup() {
         List<Group> groups = new ArrayList<Group>();
-        Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME , null);
+        Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME + " where " + Group_COLUMN_DISENABLED + "=0 order by id desc", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             groups.add(createNewGroup(cursor));

@@ -12,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.ClubCatalogGridViewAdapter;
@@ -20,15 +20,16 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.util.List;
 
-public class ClubMangmentActivity extends AppCompatActivity  {
+public class ClubManagementActivity extends AppCompatActivity {
     android.support.v7.app.ActionBar actionBar;
 
     List<Group> groups;
-    GroupAdapter groupAdapter;
+    ClubAdapter groupAdapter;
     GridView gvGroup;
-    Button btAddGroup,btCancel;
+    Button btAddGroup, btCancel;
     private static final int CHANGE_PASSWORD_DIALOG = 656;
     Group group;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +45,6 @@ public class ClubMangmentActivity extends AppCompatActivity  {
         TitleBar.setTitleBar(this);
 
 
-
         gvGroup = (GridView) findViewById(R.id.clubManagement_GVClub);
         btAddGroup = (Button) findViewById(R.id.clubManagement_BTNewClub);
         btCancel = (Button) findViewById(R.id.clubManagement_BTCancel);
@@ -54,7 +54,7 @@ public class ClubMangmentActivity extends AppCompatActivity  {
         btAddGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ClubMangmentActivity.this, Coustmer_Group.class);
+                Intent intent = new Intent(ClubManagementActivity.this, Coustmer_Group.class);
                 startActivity(intent);
             }
         });
@@ -71,7 +71,7 @@ public class ClubMangmentActivity extends AppCompatActivity  {
         //endregion
 
 
-        groupAdapter= new GroupAdapter(this);
+        groupAdapter = new ClubAdapter(this);
         groupAdapter.open();
         groups = groupAdapter.getAllGroup();
         group = null;
@@ -87,28 +87,28 @@ public class ClubMangmentActivity extends AppCompatActivity  {
                         getString(R.string.edit),
                         getString(R.string.delete),
                 };
-                AlertDialog.Builder builder = new AlertDialog.Builder(ClubMangmentActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ClubManagementActivity.this);
                 builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         Intent intent;
                         switch (item) {
                             case 0:
-                                intent = new Intent(ClubMangmentActivity.this, Coustmer_Group.class);
+                                intent = new Intent(ClubManagementActivity.this, Coustmer_Group.class);
                                 intent.putExtra("id", groups.get(position).getId());
 
 
                                 startActivity(intent);
                             case 1:
-                                intent = new Intent(ClubMangmentActivity.this, Coustmer_Group.class);
+                                intent = new Intent(ClubManagementActivity.this, Coustmer_Group.class);
                                 intent.putExtra("id", groups.get(position).getId());
                                 startActivity(intent);
                                 break;
 
                             case 2:
-                                new AlertDialog.Builder(ClubMangmentActivity.this)
-                                        .setTitle("Delete Club")
-                                        .setMessage("Are you want to delete this Club?")
+                                new AlertDialog.Builder(ClubManagementActivity.this)
+                                        .setTitle(getString(R.string.delete)+" "+getString(R.string.club))
+                                        .setMessage(getString(R.string.delete_club_message))
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 groupAdapter.deleteEntry(groups.get(position).getId());

@@ -120,6 +120,13 @@
     <string name="_amount">   المقدار</string>
     <string name="point">  عدد النقاط</string>
     <string name="discount_percentage">نسبة الخصم</string>
+    <string name="please_insert_club_name">الرجاء ادخال اسم نادي الاعضاء ..</string>
+    <string name="please_insert_club_description"> الرجاء ادخال الوصف الخاص بهذا النادي </string>
+    <string name="please_insert_club_percentage">قم بادخال نسبة الخصم</string>
+    <string name="success_adding_new_club">تم اضافة نادي اعضاء بنجاح</string>
+    <string name="can_not_add_club_please_try_again">لم يتم اضافة نادي اعضاء بنجاح قم بالمحاولة مرة اخرى</string>
+    <string name="club_name_is_not_available_try_to_use_another_club_name">اسم نادي الاعضاء غير متوفر يرجى ادخال اسم جديد.</string>
+    <string name="can_not_edit_club_please_try_again">لم يتم تعديل معلومات نادي الاعضاء يرجى المحاولة مرة اخرى</string>
 
     <!-- Example General settings -->
     <string name="terminal_number">Terminal No</string>
@@ -145,7 +152,6 @@
     <string name="please_add_product_then_continue">اضف المنتج ثم اكمل ..!</string>
     <string name="please_set_password">الرجاء تعين كلمة المرور .</string>
     <string name="password_does_not_match">كلمة المرور غير متطابقة.</string>
-    <string name="please_insert_first_name">الرجاء ادخال الاسم الاول.</string>
     <string name="please_insert_present">الرجاء ادخال نسبة العامل.</string>
     <string name="please_insert_hourly_wage">الرجاء ادخال ساعات عمل العامل.</string>
     <string name="can_not_edit_user_please_try_again">لم يتم تعديل معلومات الموظف يرجى الاعادة.</string>
@@ -155,6 +161,33 @@
     <string name="user_name_is_empty">يرجى تعبئة اسم الموظف .</string>
     <string name="success_to_add_product">تم اضافة منتوج بنجاح.</string>
     <string name="fail_to_add_product">فشلت عملية اضافة منتج.</string>
-
+    <!-- OldCustomer Message -->
+    <string name="please_insert_first_name">الرجاء ادخال الاسم الاول.</string>
+    <string name="please_insert_last_name">الرجاء ادخال الاسم الاخير.</string>
+    <string name="please_insert_email"> الرجاء ادخال البريد الالكتروني.</string>
+    <string name="please_insert_gender"> الرجاء تحديد جنس الزبون.</string>
+    <string name="please_insert_job"> الرجاء تحديدالمهنة.</string>
+    <string name="please_insert_phone_no">الرجاء ادخال رقم الهاتف .</string>
+    <string name="please_insert_street">الرجاء ادخال اسم الشارع .</string>
+    <string name="please_insert_club"> الرجاء تحديد نادي الاعضاء</string>
+    <string name="please_insert_city"> الرجاء تحديد اسم المدينة</string>
+    <string name="please_insert_house_number"> الرجاء تحديد رقم المنزل</string>
+    <string name="please_insert_postal_code"> الرجاء تحديد رقم البريد .</string>
+    <string name="please_insert_country"> قم بتحديد الدولة</string>
+    <string name="please_insert_country_code"> قم بتحديد رقم الدولة</string>
+    <string name="can_not_edit_customer_please_try_again">لم يتم تعديل معلومات الزبون يرجى الاعادة.</string>
+    <string name="customer_name_is_not_available_try_to_use_another_customer_name">اسم الزبون غير متوفر..! يرجى المحاولة باسم جديد.</string>
+    <string name="can_not_add_customer_please_try_again">لم يتم اضافة الزبون يرجى المحاولة مرة اخرى.</string>
+    <string name="success_adding_new_customer">تم اضافة الزبون بنجاح .</string>
+    <string name="success_edit_customer">تم تعديل معلومات الزبون بنجاح.</string>
+    <string name="club_general_type">نادي أعضاء.</string>
+    <string name="club_parcent">نادي اعضاء بنظام نسبة خصم معينة.</string>
+    <string name="club_point_amount">نادي اعضاء بنظام النقاط .</string>
+    <string name="delete_user_message"> هل تريد حذف هذا الموظف من النظام ؟</string>
+    <string name="delete_customer_message"> هل تريد حذف هذا الزبون من النظام ؟</string>
+    <string name="delete_club_message"> هل تريد حذف هذا النادي من النظام ؟</string>
+    <string name="customer">زبون</string>
+    <string name="club">نادي اعضاء</string>
+    <string name="make_your_selection"></string>
 
 </resources>

@@ -11,7 +11,7 @@ public interface ApiURL {
     String Product = "Product";
     String Club = "Club";
     String City = "City";
-    String Customer = "Customer";
+    String Customer = "OldCustomer";
     String Users = "Users";
     String Order = "Order";
     String AReport = "AReport";

@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.Models.Customer_M;
 import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.R;
 
@@ -100,7 +99,7 @@ public class ClubCatalogGridViewAdapter  extends BaseAdapter {
 
         tvClubName.setText(groups.get(position).getname());
         //   tvFullName.setText(customers.get(position).getFullName());
-        tcClubType.setText(""+groups.get(position).getType());
+        tcClubType.setText(""+groups.get(position).getDescription());
 
         return gridView;
     }

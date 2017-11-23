@@ -81,7 +81,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
         db.execSQL(AReportDBAdapter.DATABASE_CREATE);
         db.execSQL(CityDbAdapter.DATABASE_CREATE);
-        db.execSQL(GroupAdapter.DATABASE_CREATE);//Club
+        db.execSQL(ClubAdapter.DATABASE_CREATE);//Club
         db.execSQL(CustomerDBAdapter.DATABASE_CREATE);
         db.execSQL(UsedPointDBAdapter.DATABASE_CREATE);
         db.execSQL(Sum_PointDbAdapter.DATABASE_CREATE);
@@ -159,9 +159,9 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'test1','test1','female','11/8/1994','example@gmail.com','coder','123','tt','1',1,1,'1',1,'1');");
 
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (0,'Hifa');");
-        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (1,'type1','type1',1,.2,0,0,0);");
-        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (2,'type2','type2',2,0,50,200,0);");
-        db.execSQL("insert into "+GroupAdapter.Group_TABLE_NAME+"  values (3,'type3','type3',3,0,0,0,0);");
+        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (1,'type1','type1',1,.2,0,0,0);");
+        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (2,'type2','type2',2,0,50,200,0);");
+        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (3,'type3','type3',3,0,0,0,0);");
         db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (4,'test1','test1','test1','"+new Date().getTime()+"','12',0,046316969,20,35);");
 
         List<String> tblNames = tablesName(db);

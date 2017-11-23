@@ -43,7 +43,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 
-import com.pos.leaders.leaderspossystem.Models.Customer_M;
+import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule11;
@@ -481,8 +481,8 @@ public class SyncMessage extends Service {
 
                 //region CUSTOMER
                 case MessageType.ADD_CUSTOMER:
-                    Customer_M customer = null;
-                    customer = objectMapper.readValue(msgData, Customer_M.class);
+                    Customer customer = null;
+                    customer = objectMapper.readValue(msgData, Customer.class);
 
                     CustomerDBAdapter customerDBAdapter = new CustomerDBAdapter(this);
                     customerDBAdapter.open();

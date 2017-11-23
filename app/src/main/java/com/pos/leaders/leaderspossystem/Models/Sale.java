@@ -1,7 +1,5 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import android.graphics.Path;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -34,7 +32,7 @@ public class Sale {
     @JsonIgnore
 	private Payment payment;
 	@JsonIgnore
-	private Customer_M customer;
+	private Customer customer;
 
     @JsonIgnore
     private Locale locale = new Locale("en");
@@ -256,7 +254,7 @@ public class Sale {
 
 
 		return "C100" + String.format(locale, "%09d", rowNumber) + pc + recordType + String.format(locale, "%020d", id) + DateConverter.getYYYYMMDD(saleDate) + DateConverter.getHHMM(saleDate)
-				+ String.format(locale, "%50s", "Customer") + Util.spaces(50) + Util.spaces(10) + Util.spaces(30) + Util.spaces(8) + Util.spaces(30) + Util.spaces(2) + Util.spaces(15) + Util.spaces(9)
+				+ String.format(locale, "%50s", "OldCustomer") + Util.spaces(50) + Util.spaces(10) + Util.spaces(30) + Util.spaces(8) + Util.spaces(30) + Util.spaces(2) + Util.spaces(15) + Util.spaces(9)
 				+ DateConverter.getYYYYMMDD(saleDate) + Util.spaces(15) + Util.spaces(3)
 				+ OP + Util.x12V99(totalPriceBeforeDiscount/(1+(SETTINGS.tax/100)))
 				+ mOP + Util.x12V99(((totalSaved)/(1+(SETTINGS.tax/100))))

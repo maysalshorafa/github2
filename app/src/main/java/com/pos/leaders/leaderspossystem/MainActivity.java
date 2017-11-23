@@ -49,7 +49,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
-import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCoustmer;
+import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
@@ -59,7 +59,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAd
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
@@ -75,7 +75,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.Models.Check;
-import com.pos.leaders.leaderspossystem.Models.Customer_M;
+import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
@@ -96,7 +96,7 @@ import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.CustmerAssestCatlogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.CustmerCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
@@ -164,10 +164,10 @@ public class MainActivity extends AppCompatActivity{
     View prseedButtonDepartments;
     List<Product> productList;
     List<Product> All_productsList;
-    List<Customer_M>custmer_List;
-    List<Customer_M> All_custmerList;
+    List<Customer>custmer_List;
+    List<Customer> All_custmerList;
     CustomerDBAdapter customerDBAdapter;
-    GroupAdapter groupDbAdapter;
+    ClubAdapter groupDbAdapter;
     Group group=new Group(this);
     Sum_PointDbAdapter sum_pointDbAdapter;
     UsedPointDBAdapter usedpointDbAdapter;
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity{
 
     long _custmer_id;
     ProductCatalogGridViewAdapter productCatalogGridViewAdapter;
-    CustmerCatalogGridViewAdapter custmerCatalogGridViewAdapter;
+    CustomerCatalogGridViewAdapter custmerCatalogGridViewAdapter;
     //ProductCatalogListViewAdapter productCatalogListViewAdapter;
     String barcodeScanned = "";
     ListView lvOrder;
@@ -355,7 +355,7 @@ double SumForClub=0.0;
         departmentDBAdapter = new DepartmentDBAdapter(this);
         productDBAdapter = new ProductDBAdapter(this);
         customerDBAdapter=new CustomerDBAdapter(this);
-        groupDbAdapter=new GroupAdapter(this);
+        groupDbAdapter=new ClubAdapter(this);
         valueOfPointDB =new ValueOfPointDB(this);
         sum_pointDbAdapter=new Sum_PointDbAdapter(this);
         usedpointDbAdapter=new UsedPointDBAdapter(this);
@@ -1295,7 +1295,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                         finish();
                         break;
                     case R.id.menuItem_Custmer_Club:
-                        intent = new Intent(MainActivity.this, Customer.class);
+                        intent = new Intent(MainActivity.this, OldCustomer.class);
                         startActivity(intent);
                         finish();
                         break;
@@ -2510,7 +2510,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
                     public void onClick(View arg0) {
-                        Intent intent = new Intent(MainActivity.this, AddNewCoustmer.class);
+                        Intent intent = new Intent(MainActivity.this, AddNewCustomer.class);
                         startActivity(intent);
 
                         popupWindow.dismiss();
@@ -2548,10 +2548,10 @@ saleTotalPrice=saleTotalPrice-newPrice;
             }
         });
 
-        custmer_List = customerDBAdapter.getTopCustmer(0, 50);
+        custmer_List = customerDBAdapter.getTopCustomer(0, 50);
         All_custmerList = custmer_List;
 
-        custmerCatalogGridViewAdapter = new CustmerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
+        custmerCatalogGridViewAdapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
 
         gvCustomer.setAdapter(custmerCatalogGridViewAdapter);
 
@@ -2610,11 +2610,11 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
             @Override
             public void afterTextChanged(Editable s) {
-                custmer_List = new ArrayList<Customer_M>();
+                custmer_List = new ArrayList<Customer>();
                 String word = custmer_id.getText().toString();
 
                 if (!word.equals("")) {
-                    for (Customer_M c : All_custmerList) {
+                    for (Customer c : All_custmerList) {
 
                         if (c.getCustmerName().toLowerCase().contains(word.toLowerCase()) ||
                                 c.getPhoneNumber().toLowerCase().contains(word.toLowerCase()) ||
@@ -2627,7 +2627,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 else {
                     custmer_List=All_custmerList;
                 }
-                CustmerCatalogGridViewAdapter adapter = new CustmerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
+                CustomerCatalogGridViewAdapter adapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
                 gvCustomer.setAdapter(adapter);
                 // Log.i("products", productList.toString());
 
