@@ -202,6 +202,7 @@ public class PrintTools {
         Log.i("CZREPO", "id:" + id+ " ,from:" + from + " ,to" + to+"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         SaleDBAdapter saleDBAdapter=new SaleDBAdapter(context);
         saleDBAdapter.open();
+
         CashPaymentDBAdapter cashPaymentDBAdapter=new CashPaymentDBAdapter(context);
         cashPaymentDBAdapter.open();
         CurrencyReturnsDBAdapter currencyReturnsDBAdapter=new CurrencyReturnsDBAdapter(context);

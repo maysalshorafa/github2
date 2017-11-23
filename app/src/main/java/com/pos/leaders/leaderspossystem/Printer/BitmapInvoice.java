@@ -314,10 +314,10 @@ public class BitmapInvoice {
         invoiceD.setColor(Color.BLACK);
         invoiceD.setTypeface(bold);
 
-        invoiceD.setTextSize(30);
+        invoiceD.setTextSize(28);
 
 
-        StaticLayout sInvoiceD = new StaticLayout("פריט        \t\t\t\t\t\t\t\t\t נכנס  \t\t\t\t\t זיכוי \t\t\t סה''כ", invoiceD,
+        StaticLayout sInvoiceD = new StaticLayout("פריט \t\t\t\t\t\t\t\t נכנס  \t\t\t\t\t זיכוי \t\t\t סה''כ", invoiceD,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
 
         TextPaint orderTP = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
@@ -328,16 +328,12 @@ public class BitmapInvoice {
         orderTP.setTextAlign(Paint.Align.LEFT);
         orderTP.setLinearText(true);
 
-
-        //// TODO: 09/01/2017   flag
         String names = "", in = "", out = "", total = "";
+        names +=  "מזומן" + "\n" + "אשראי" + "\n" + "המחאות"+"\n"+"קרן"+"\n"+"סה''כ";
 
-        names +=   "USD " + "\n" + "EUR" + "\n" + "GBP" + "\n" +  "SHEKEL" + "\n" + "מזומן" + "\n" + "אשראי" + "\n" + "המחאות"+"\n"+"קרן"+"\n"+"סה''כ";
-
-
-        in += dTS(usa_plus) +"\n" +dTS(eur_plus) +"\n" +dTS(gbp_plus) +"\n" +dTS(sheqle_plus) +"\n" +dTS(cash_plus) + "\n" + dTS(creditCard_plus) + "\n" + dTS(check_plus)+"\n"+"~"+"\n"+dTS(cash_plus+check_plus+creditCard_plus);
-        out += dTS(usa_minus) + "\n" +dTS(eur_minus) + "\n" +dTS(gbp_minus) +  "\n" +dTS(sheqle_minus) + "\n" +dTS(cash_minus) + "\n" + dTS(creditCard_minus) + "\n" + dTS(check_minus)+"\n"+"~"+"\n"+dTS(cash_minus+check_minus+creditCard_minus);
-        total += dTS(0 + 0) + "\n" +dTS(0 + 0) + "\n" + dTS(0 + 0) + "\n" + dTS(0 + 0) + "\n" +  dTS(cash_plus + cash_minus) + "\n" +dTS(creditCard_plus + creditCard_minus) + "\n" + dTS(check_plus + check_minus) + "\n" + starterAmount + "\n" +
+        in += dTS(cash_plus) + "\n" + dTS(creditCard_plus) + "\n" + dTS(check_plus)+"\n"+"~"+"\n"+dTS(cash_plus+check_plus+creditCard_plus);
+        out += dTS(cash_minus) + "\n" + dTS(creditCard_minus) + "\n" + dTS(check_minus)+"\n"+"~"+"\n"+dTS(cash_minus+check_minus+creditCard_minus);
+        total += dTS(cash_plus + cash_minus) + "\n" +dTS(creditCard_plus + creditCard_minus) + "\n" + dTS(check_plus + check_minus) + "\n" + starterAmount + "\n" +
             dTS(cash_plus + cash_minus+creditCard_plus + creditCard_minus+check_plus + check_minus+starterAmount);
 
         StaticLayout slNames = new StaticLayout(names, orderTP,
@@ -356,10 +352,32 @@ public class BitmapInvoice {
         StaticLayout sNewLine = new StaticLayout("-----------------------------", invoiceHead,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
 
+
+            String currN = "USD " + "\n" + "EUR" + "\n" + "GBP" + "\n" + "SHEKEL" + "\n";
+            String cIn = "", cOut = "", cTotal = "";
+            cIn = dTS(usa_plus) + "\n" + dTS(eur_plus) + "\n" + dTS(gbp_plus) + "\n" + dTS(sheqle_plus);
+            cOut = dTS(usa_minus) + "\n" + dTS(eur_minus) + "\n" + dTS(gbp_minus) + "\n" + dTS(sheqle_minus);
+            cTotal = dTS(usa_plus + usa_minus) + "\n" + dTS(eur_plus + eur_minus) + "\n" + dTS(gbp_plus + gbp_minus) + "\n" + dTS(sheqle_plus + sheqle_minus);
+
+            StaticLayout cSlNames = new StaticLayout(currN, orderTP, (int) (PAGE_WIDTH * 0.4), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+            StaticLayout cSlIn = new StaticLayout(cIn, orderTP,
+                    (int) (PAGE_WIDTH * 0.2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+            StaticLayout cSlOut = new StaticLayout(cOut, orderTP,
+                    (int) (PAGE_WIDTH * 0.2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+            StaticLayout cSlTotal = new StaticLayout(cTotal, orderTP,
+                    (int) (PAGE_WIDTH * 0.2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+
+
+
+
         // invoiceD.setTextAlign(Paint.Align.CENTER);
         // Create bitmap and canvas to draw to
         //RGB_565
-        int Page_Height = sHead.getHeight() + sInvoiceHead.getHeight()+sInvoiceD.getHeight()+slNames.getHeight()+sNewLine.getHeight();
+        int Page_Height = 0;
+        if (SETTINGS.enableCurrencies)
+            Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight() + cSlNames.getHeight() + sNewLine.getHeight();
+        else
+            Page_Height = sHead.getHeight() + sInvoiceHead.getHeight()+sInvoiceD.getHeight()+slNames.getHeight()+sNewLine.getHeight();
         Bitmap b = Bitmap.createBitmap(PAGE_WIDTH, Page_Height, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
 
@@ -391,6 +409,20 @@ public class BitmapInvoice {
 
         c.translate(-(int)(PAGE_WIDTH*0.60),slNames.getHeight());
         sNewLine.draw(c);
+
+        if (SETTINGS.enableCurrencies) {
+            c.translate(0,sNewLine.getHeight());
+            cSlTotal.draw(c);
+            c.translate(cSlTotal.getWidth(),0);
+            cSlOut.draw(c);
+            c.translate(cSlOut.getWidth(),0);
+            cSlIn.draw(c);
+            c.translate(cSlIn.getWidth(),0);
+            cSlNames.draw(c);
+
+            c.translate(-(int)(PAGE_WIDTH*0.60),cSlNames.getHeight());
+            sNewLine.draw(c);
+        }
 
 
         c.restore();
