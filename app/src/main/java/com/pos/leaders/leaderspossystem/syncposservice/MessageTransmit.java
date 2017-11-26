@@ -34,6 +34,7 @@ public class MessageTransmit {
         if(c!='/')
             domainURL += "/";}
         this.domainURL = domainURL;
+        this.domainURL = "http://172.16.0.44:8080/leadBO/webapi/";
         this.domainURL = "http://185.118.252.26:8080/leadBO/webapi/";
         client = new OkHttpClient();
     }

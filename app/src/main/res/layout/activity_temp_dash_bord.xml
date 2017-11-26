@@ -161,7 +161,7 @@
             android:layout_weight="1"
             android:drawableTop="@drawable/dash_report"
             android:gravity="center_horizontal"
-            android:text="@string/report"
+            android:text="@string/reports"
             android:textSize="20dp"
             android:textStyle="bold" />
 

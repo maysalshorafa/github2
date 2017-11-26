@@ -23,5 +23,6 @@ public class SETTINGS {
 	public static String customer_name ;
 
 
-	public static PrinterType printer = PrinterType.SUNMI_T1;
+	public static PrinterType printer = PrinterType.HPRT_TP805;
+	public static boolean enableCurrencies = false;
 }
