@@ -150,6 +150,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
         String posPass = null, posPrefix = null;
         try {
             initRes = messageTransmit.post(ApiURL.InitConnection, MessagesCreator.initConnection(key, uniqueID));
+            Log.e("messageResult", initRes);
             JSONObject jsonObject = new JSONObject(initRes);
             posPass = jsonObject.getString(MessageKey.PosPass);
             posPrefix = jsonObject.getString(MessageKey.PosId);

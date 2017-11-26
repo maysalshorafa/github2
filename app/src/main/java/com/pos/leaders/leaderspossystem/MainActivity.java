@@ -2348,11 +2348,8 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 custmerAssetDB = new CustomerAssetDB(MainActivity.this);
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
 
-
                 saleDBAdapter.open();
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
-
-
 
                 double firstCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_AMOUNT, 0.0f);
                 double secondCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_AMOUNT, 0.0f);
@@ -2368,12 +2365,12 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 }
                 if (secondCurrencyAmount>0){
                     cashPaymentDBAdapter.insertEntry(saleIDforCash,secondCurrencyAmount,secondCurrencyId,new Date());
-
                 }
                 cashPaymentDBAdapter.close();
                 if(club_id==2){
                 sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);}
                 saleDBAdapter.close();
+
                 if (equleUsedPoint) {
                     saleTotalPrice = 0.0;
 
