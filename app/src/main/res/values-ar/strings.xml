@@ -108,6 +108,8 @@
     <string name="settings">الاعدادات</string>
     <string name="log_out">تسجيل الخروج</string>
     <string name="users">الموظفين</string>
+    <string name="reports">التقارير</string>
+
     <!--club and customer string-->
     <string name="customer_name"> اسم المستخدم </string>
     <string name="add_club"> اضافة نادي اعضاء</string>
@@ -120,6 +122,7 @@
     <string name="_amount">   المقدار</string>
     <string name="point">  عدد النقاط</string>
     <string name="discount_percentage">نسبة الخصم</string>
+    <string name="wait_for_finish">انتظر..</string>
     <string name="please_insert_club_name">الرجاء ادخال اسم نادي الاعضاء ..</string>
     <string name="please_insert_club_description"> الرجاء ادخال الوصف الخاص بهذا النادي </string>
     <string name="please_insert_club_percentage">قم بادخال نسبة الخصم</string>
@@ -196,5 +199,7 @@
     <string name="customer">زبون</string>
     <string name="club">نادي اعضاء</string>
     <string name="make_your_selection"></string>
+    <string name="success_to_save_settings">تم حفظ اعدادات الشركة</string>
+
 
 </resources>

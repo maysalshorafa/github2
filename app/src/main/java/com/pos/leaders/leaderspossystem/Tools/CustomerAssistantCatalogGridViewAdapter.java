@@ -16,12 +16,12 @@ import java.util.List;
  * Created by Win8.1 on 8/27/2017.
  */
 
-public class CustmerAssestCatlogGridViewAdapter extends BaseAdapter {
+public class CustomerAssistantCatalogGridViewAdapter extends BaseAdapter {
     private Context context;
     private List<User> customersAssest;
     private LayoutInflater inflater;
 
-    public CustmerAssestCatlogGridViewAdapter(Context context, List<User> customersAssest) {
+    public CustomerAssistantCatalogGridViewAdapter(Context context, List<User> customersAssest) {
         this.context = context;
         this.customersAssest = customersAssest;
     }

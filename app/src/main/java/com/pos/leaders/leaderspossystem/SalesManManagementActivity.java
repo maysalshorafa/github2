@@ -57,8 +57,7 @@ public class SalesManManagementActivity extends AppCompatActivity {
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SalesManManagementActivity.this, ReportsManagementActivity.class);
-                startActivity(intent);
+               onBackPressed();
             }
         });
 

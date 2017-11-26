@@ -35,7 +35,7 @@
 
 
         <ListView
-            android:id="@+id/custmerAssest_list_view"
+            android:id="@+id/customerAssistant_list_view"
             android:layout_width="fill_parent"
             android:layout_height="450dp" />
 
