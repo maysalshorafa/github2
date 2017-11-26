@@ -152,6 +152,13 @@
     <string name="please_add_product_then_continue">اضف المنتج ثم اكمل ..!</string>
     <string name="please_set_password">الرجاء تعين كلمة المرور .</string>
     <string name="password_does_not_match">كلمة المرور غير متطابقة.</string>
+    <string name="please_insert_department_name">الرجاء ادخال اسم القسم .</string>
+    <string name="please_insert_another_department_name">الرجاء ادخال اسم جديد للقسم .</string>
+    <string name="department_not_selected">لم يتم تحديد اسم القسم .</string>
+    <string name="error_to_update_product">لم يتم تعديل معلومات المنتج.</string>
+    <string name="success_to_update_product">تم تعديل معلومات المنتج ...!</string>
+
+
     <string name="please_insert_present">الرجاء ادخال نسبة العامل.</string>
     <string name="please_insert_hourly_wage">الرجاء ادخال ساعات عمل العامل.</string>
     <string name="can_not_edit_user_please_try_again">لم يتم تعديل معلومات الموظف يرجى الاعادة.</string>
