@@ -24,7 +24,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCoustmer;
+import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.Coustmer_Group;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.CustmerManagementActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
@@ -71,7 +71,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
             "BackUp",
             "Tax",
             "Hours Of Work",
-            "Customer Club",
+            "OldCustomer Club",
             "Log Out"
 
     };
@@ -237,7 +237,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
                             Intent intent;
                             switch (item) {
                                 case 0:
-                                    intent = new Intent(DashBoard.this, AddNewCoustmer.class);
+                                    intent = new Intent(DashBoard.this, AddNewCustomer.class);
                                     startActivity(intent);
                                     break;
                                 case 1:

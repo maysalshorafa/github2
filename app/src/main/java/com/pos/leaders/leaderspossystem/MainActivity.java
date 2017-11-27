@@ -49,7 +49,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
-import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCoustmer;
+import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
@@ -59,7 +59,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAd
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
@@ -75,7 +75,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.Models.Check;
-import com.pos.leaders.leaderspossystem.Models.Customer_M;
+import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
@@ -93,10 +93,11 @@ import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
-import com.pos.leaders.leaderspossystem.Tools.CustmerAssestCatlogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
+import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.CustmerCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
@@ -129,24 +130,24 @@ import static java.lang.Thread.sleep;
  * Created by Karam on 21/11/2016.
  */
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CASH_ACTIVITY_CODE = 590;
     private static final int REQUEST_CHECKS_ACTIVITY_CODE = 753;
     private static final int REQUEST_CREDIT_CARD_ACTIVITY_CODE = 801;
     public static final String COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE = "com_pos_leaders_cart_total_price";
-    String transID="";
-    String a ="";
+    String transID = "";
+    String a = "";
     TextView salesMan;
-    TextView custmer_name, club_name,information;
+    TextView custmer_name, club_name, information;
     private DrawerLayout drawerLayout;
-   //private ActionBarDrawerToggle actionBarDrawerToggle;//
-   // private NavigationView navigationView;
+    //private ActionBarDrawerToggle actionBarDrawerToggle;//
+    // private NavigationView navigationView;
 
     //ImageButton    btnLastSales;
-    Button btnPercentProduct,btnPauseSale,btnResumeSale;
+    Button btnPercentProduct, btnPauseSale, btnResumeSale;
     ImageButton search_person;
-    Button btnCancel, btnCash, btnCreditCard, btnOtherWays   ;
-    TextView tvTotalPrice, tvTotalSaved , saleman;
+    Button btnCancel, btnCash, btnCreditCard, btnOtherWays;
+    TextView tvTotalPrice, tvTotalSaved, salesSaleMan;
     EditText etSearch;
     ImageButton btnDone;
     ImageButton btnGrid, btnList, used_point;
@@ -164,56 +165,54 @@ public class MainActivity extends AppCompatActivity{
     View prseedButtonDepartments;
     List<Product> productList;
     List<Product> All_productsList;
-    List<Customer_M>custmer_List;
-    List<Customer_M> All_custmerList;
+    List<Customer> custmer_List;
+    List<Customer> All_custmerList;
     CustomerDBAdapter customerDBAdapter;
-    GroupAdapter groupDbAdapter;
-    Group group=new Group(this);
+    ClubAdapter groupDbAdapter;
+    Group group = new Group(this);
     Sum_PointDbAdapter sum_pointDbAdapter;
     UsedPointDBAdapter usedpointDbAdapter;
     ValueOfPointDB valueOfPointDB;
-    int newPoint=0;
-    int aPoint=0;
-    int unUsedPointForCustmer=0 ;
+    int newPoint = 0;
+    int aPoint = 0;
+    int unUsedPointForCustmer = 0;
     int amount;
     int type;
-    int point ;
-    double offerAmount=0;
-    long saleIDforCash ;
+    int point;
+    double offerAmount = 0;
+    long saleIDforCash;
     String cInformation;
-    double parcent=0.0;
+    double parcent = 0.0;
 
 
     static List<Integer> offersIDsList;
 
-    boolean equleUsedPoint=false;
-    boolean biggerUsedPoint=false;
-    boolean lessUsedPoint=false;
+    boolean equleUsedPoint = false;
+    boolean biggerUsedPoint = false;
+    boolean lessUsedPoint = false;
     List<Offer> offersList;
 
     long _custmer_id;
     ProductCatalogGridViewAdapter productCatalogGridViewAdapter;
-    CustmerCatalogGridViewAdapter custmerCatalogGridViewAdapter;
+    CustomerCatalogGridViewAdapter custmerCatalogGridViewAdapter;
     //ProductCatalogListViewAdapter productCatalogListViewAdapter;
     String barcodeScanned = "";
     ListView lvOrder;
     static Sale sale;
     SaleDetailsListViewAdapter saleDetailsListViewAdapter;
     View selectedIteminCartList;
-    Order selectedOrderOnCart =null;
+    Order selectedOrderOnCart = null;
     private List<User> custmerAssestList;
     private List<User> AllCustmerAssestList;
-    private  ListView lvcustmerAssest;
-    private  EditText custmerAssest;
-    public CustomerAssetDB custmerAssetDB ;
-    public CustmerAssestCatlogGridViewAdapter custmerAssestCatlogGridViewAdapter;
+    public CustomerAssetDB custmerAssetDB;
+    public CustomerAssistantCatalogGridViewAdapter custmerAssestCatlogGridViewAdapter;
     private boolean isGrid = true;
     double saleTotalPrice = 0.0;
     double totalSaved = 0.0;
-    double secondPrice= 0.0;
-    boolean userScrolled=false;
-    int productLoadItemOffset=0;
-    int productCountLoad=60;
+    double secondPrice = 0.0;
+    boolean userScrolled = false;
+    int productLoadItemOffset = 0;
+    int productCountLoad = 60;
     POSSDK pos;
     Button btn_cancel;
     LinearLayout ll;
@@ -227,44 +226,45 @@ public class MainActivity extends AppCompatActivity{
     //Drw drw=null;
     //String devicePath="/dev/ttySAC1";
     EditText customerName_EditText;
-////offer varible
-    boolean SumForRule3Status=false;
-    int SumForRule3=0;
-    boolean clubStatusForRule3=false;
-    boolean clubStatusForRule7=false;
-    boolean clubStatusForRule8=false;
-    boolean clubStatusForRule11=false;
+    ////offer varible
+    boolean SumForRule3Status = false;
+    int SumForRule3 = 0;
+    boolean clubStatusForRule3 = false;
+    boolean clubStatusForRule7 = false;
+    boolean clubStatusForRule8 = false;
+    boolean clubStatusForRule11 = false;
 
-    int SumClubForRule3=0;
-    int SumClubForRule7=0;
-    int SumClubForRule8=0;
-    int SumClubForRule11=0;
-double SumForClub=0.0;
-    boolean SumForRule11Status=false;
-    int SumForRule11=0;
+    int SumClubForRule3 = 0;
+    int SumClubForRule7 = 0;
+    int SumClubForRule8 = 0;
+    int SumClubForRule11 = 0;
+    double SumForClub = 0.0;
+    boolean SumForRule11Status = false;
+    int SumForRule11 = 0;
 
-    Boolean availableRule3=false;
-    double parcentForRule3=0.0;
+    Boolean availableRule3 = false;
+    double parcentForRule3 = 0.0;
     double priceFoeRule7;
     double priceFoeRule8;
 
     long productIDForRule7;
-    Boolean availableRule11=false;
-    double amountForRule11=0;
-    double DiscountamountForRule11=0;
-    double ParcentForRule8=0.0;
+    Boolean availableRule11 = false;
+    double amountForRule11 = 0;
+    double DiscountamountForRule11 = 0;
+    double ParcentForRule8 = 0.0;
     long productIDForRule8;
     int priceForRule5;
     long productIdForRule5;
     long giftProductIdForRule5;
-    boolean stausForRule5=false;
+    boolean stausForRule5 = false;
     int Ppoint;
-    double i=0.0;
+    double i = 0.0;
     String str;
-    boolean forSaleMan=false;
-    boolean forOrderSaleMan=false;
+    boolean forSaleMan = false;
+    boolean forOrderSaleMan = false;
 
     long custmerAssetstId;
+    TextView orderSalesMan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -285,24 +285,23 @@ double SumForClub=0.0;
         }
 
 
-
-        used_point=(ImageButton)findViewById(R.id.usedPoint);
-        custmer_name=(TextView)findViewById(R.id.cName);
-        club_name=(TextView)findViewById(R.id.cClubName);
-        information=(TextView)findViewById(R.id.cInformation);
-        customerName_EditText =(EditText) findViewById(R.id.customer_textView);
+        used_point = (ImageButton) findViewById(R.id.usedPoint);
+        custmer_name = (TextView) findViewById(R.id.cName);
+        club_name = (TextView) findViewById(R.id.cClubName);
+        information = (TextView) findViewById(R.id.cInformation);
+        customerName_EditText = (EditText) findViewById(R.id.customer_textView);
         //a=customerName_EditText.getText().toString();
 
-        search_person=(ImageButton)findViewById(R.id.searchPerson);
+        search_person = (ImageButton) findViewById(R.id.searchPerson);
         drawerLayout = (DrawerLayout) findViewById(R.id.mainActivity_drawerLayout);
-     //   navigationView = (NavigationView) findViewById(R.id.mainActivity_navigationView);
+        //   navigationView = (NavigationView) findViewById(R.id.mainActivity_navigationView);
         //((MenuItem)(navigationView.findViewById(R.id.menuItem_ZReport))).setTitle("Z"+getString(R.string.reports));
 
         //region Init
         btnPauseSale = (Button) findViewById(R.id.mainActivity_BTNGeneralProduct);
         btnResumeSale = (Button) findViewById(R.id.mainActivity_BTNMultProduct);
         btnPercentProduct = (Button) findViewById(R.id.mainActivity_BTNPercentProduct);
-      //  btnLastSales = (ImageButton) findViewById(R.id.mainActivity_BTNLastSales);
+        //  btnLastSales = (ImageButton) findViewById(R.id.mainActivity_BTNLastSales);
         btnCancel = (Button) findViewById(R.id.mainActivity_btnCancel);
         lvOrder = (ListView) findViewById(R.id.mainScreen_LVOrder);
 
@@ -318,7 +317,7 @@ double SumForClub=0.0;
         //   lvcustmer.setVisibility(View.GONE);
         btnGrid = (ImageButton) findViewById(R.id.mainActivity_btnGrid);
         btnList = (ImageButton) findViewById(R.id.mainActivity_btnList);
-        saleman=(TextView)findViewById(R.id.saleMan);
+        salesSaleMan = (TextView) findViewById(R.id.salesSaleMan);
         //fragmentTouchPad = (FrameLayout) findViewById(R.id.mainActivity_fragmentTochPad);
 
         //region  Init cash drawer
@@ -354,12 +353,12 @@ double SumForClub=0.0;
         llDepartments = (LinearLayout) findViewById(R.id.mainActivity_LLDepartment);
         departmentDBAdapter = new DepartmentDBAdapter(this);
         productDBAdapter = new ProductDBAdapter(this);
-        customerDBAdapter=new CustomerDBAdapter(this);
-        groupDbAdapter=new GroupAdapter(this);
-        valueOfPointDB =new ValueOfPointDB(this);
-        sum_pointDbAdapter=new Sum_PointDbAdapter(this);
-        usedpointDbAdapter=new UsedPointDBAdapter(this);
-usedpointDbAdapter.open();
+        customerDBAdapter = new CustomerDBAdapter(this);
+        groupDbAdapter = new ClubAdapter(this);
+        valueOfPointDB = new ValueOfPointDB(this);
+        sum_pointDbAdapter = new Sum_PointDbAdapter(this);
+        usedpointDbAdapter = new UsedPointDBAdapter(this);
+        usedpointDbAdapter.open();
         sum_pointDbAdapter.open();
 
         customerDBAdapter.open();
@@ -428,10 +427,10 @@ usedpointDbAdapter.open();
                 gvProducts.setVisibility(View.GONE);
             }
         });
-        saleman.setOnClickListener(new View.OnClickListener() {
+        salesSaleMan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              callPopupForSalesMan();
+                callPopupForSalesMan();
             }
         });
 
@@ -443,7 +442,7 @@ usedpointDbAdapter.open();
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parcent=0;
+                parcent = 0;
                 Context c = MainActivity.this;
                 if (SESSION._ORDERS.size() > 0)
                     new AlertDialog.Builder(c)
@@ -528,7 +527,7 @@ usedpointDbAdapter.open();
         //region Departments
         Button btAll = new Button(this);
         LinearLayout.LayoutParams btAllParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
-        btAllParams.setMargins(5,5,5,5);
+        btAllParams.setMargins(5, 5, 5, 5);
         btAll.setId(0);
         btAll.setText(getResources().getText(R.string.all));
         btAll.setTextAppearance(this, R.style.TextAppearance);
@@ -557,17 +556,17 @@ usedpointDbAdapter.open();
 
         List<Department> departments = departmentDBAdapter.getAllDepartments();
         int co = 2;
-        for(int k=0,r=0,c=0;k<departments.size();k++){
-            if(k%2==1){
+        for (int k = 0, r = 0, c = 0; k < departments.size(); k++) {
+            if (k % 2 == 1) {
                 LinearLayout ll = new LinearLayout(this);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
                 LinearLayout.LayoutParams btParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
-                btParams.setMargins(5,5,5,5);
+                btParams.setMargins(5, 5, 5, 5);
                 ll.setLayoutParams(params);
 
                 Button bt = new Button(this);
-                bt.setText(departments.get(k-1).getName());
-                bt.setTag(departments.get(k-1));
+                bt.setText(departments.get(k - 1).getName());
+                bt.setTag(departments.get(k - 1));
 
                 bt.setLayoutParams(btParams);
                 bt.setTextAppearance(this, R.style.TextAppearance);
@@ -582,7 +581,7 @@ usedpointDbAdapter.open();
                         v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                         prseedButtonDepartments = v;
-                        productList = productDBAdapter.getAllProductsByDepartment(((Department)v.getTag()).getId(), productLoadItemOffset, productCountLoad);
+                        productList = productDBAdapter.getAllProductsByDepartment(((Department) v.getTag()).getId(), productLoadItemOffset, productCountLoad);
                         All_productsList = productList;
                         productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                         gvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -606,7 +605,7 @@ usedpointDbAdapter.open();
                         v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                         prseedButtonDepartments = v;
-                        productList = productDBAdapter.getAllProductsByDepartment(((Department)v.getTag()).getId(), productLoadItemOffset, productCountLoad);
+                        productList = productDBAdapter.getAllProductsByDepartment(((Department) v.getTag()).getId(), productLoadItemOffset, productCountLoad);
                         All_productsList = productList;
                         productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                         gvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -623,16 +622,16 @@ usedpointDbAdapter.open();
             }
         }
 
-        if(departments.size()%2==1){
+        if (departments.size() % 2 == 1) {
             LinearLayout ll = new LinearLayout(this);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,1.0f);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
             LinearLayout.LayoutParams btParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
-            btParams.setMargins(5,5,5,5);
+            btParams.setMargins(5, 5, 5, 5);
             ll.setLayoutParams(params);
 
             Button bt = new Button(this);
-            bt.setText(departments.get(departments.size()-1).getName());
-            bt.setTag(departments.get(departments.size()-1));
+            bt.setText(departments.get(departments.size() - 1).getName());
+            bt.setTag(departments.get(departments.size() - 1));
             bt.setLayoutParams(btParams);
             bt.setTextAppearance(this, R.style.TextAppearance);
             bt.setBackground(getResources().getDrawable(R.drawable.bt_normal));
@@ -646,7 +645,7 @@ usedpointDbAdapter.open();
                     v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                     prseedButtonDepartments = v;
-                    productList = productDBAdapter.getAllProductsByDepartment(((Department)v.getTag()).getId(), productLoadItemOffset, productCountLoad);
+                    productList = productDBAdapter.getAllProductsByDepartment(((Department) v.getTag()).getId(), productLoadItemOffset, productCountLoad);
                     All_productsList = productList;
                     productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                     gvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -746,10 +745,10 @@ usedpointDbAdapter.open();
 
         //endregion
 /**
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
-       drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-**/
+ actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+ drawerLayout.addDrawerListener(actionBarDrawerToggle);
+ actionBarDrawerToggle.syncState();
+ **/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //region Order List View
@@ -763,19 +762,18 @@ usedpointDbAdapter.open();
 
         if (SESSION._ORDERS != null) {
             lvOrder.setFocusable(false);
-            offerDBAdapter=new OfferDBAdapter(this);
+            offerDBAdapter = new OfferDBAdapter(this);
             offerDBAdapter.open();
-            List<Offer>offerList=offerDBAdapter.getAllOffersByStatus(1);
+            List<Offer> offerList = offerDBAdapter.getAllOffersByStatus(1);
 
-                  //  Offer offer=offerDBAdapter.getAllValidOffers();
+            //  Offer offer=offerDBAdapter.getAllValidOffers();
 
 
-            if(offerList!=null){
+            if (offerList != null) {
                 calculateTotalPriceWithOffers(offerList);
+            } else {
+                calculateTotalPrice();
             }
-
-           else{
-                calculateTotalPrice();}
         } else {
             SESSION._ORDERS = new ArrayList<Order>();
         }
@@ -785,11 +783,12 @@ usedpointDbAdapter.open();
 
         lvOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
 
                 removeOrderItemSelection();
                 view.findViewById(R.id.rowSaleDetails_LLMethods).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.saleManLayout).setVisibility(View.VISIBLE);;
+                view.findViewById(R.id.saleManLayout).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.discountLayout).setVisibility(View.VISIBLE);
 
                 selectedIteminCartList = view;
                 selectedOrderOnCart = SESSION._ORDERS.get(position);
@@ -805,14 +804,14 @@ usedpointDbAdapter.open();
                     }
                 });
 
-                salesMan = (TextView) view.findViewById(R.id.saleMan);
-               salesMan.
-                       setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        callPopupOrderSalesMan();
-                    }
-                });
+                orderSalesMan = (TextView) view.findViewById(R.id.orderSaleMan);
+                orderSalesMan.
+                        setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                callPopupOrderSalesMan();
+                            }
+                        });
 
 
                 Button btnPlusOne = (Button) view.findViewById(R.id.rowSaleDetails_MethodsPlusOne);
@@ -894,6 +893,9 @@ usedpointDbAdapter.open();
                     public void onClick(View v) {
                         if (selectedIteminCartList != null) {
                             if (SESSION._ORDERS.contains(selectedOrderOnCart)) {
+                                final TextView discountPercentage = (TextView) view.findViewById(R.id.discountPercentage);
+                                final TextView tvDiscountPercentage = (TextView) view.findViewById(R.id.tvDiscountPercentageAmount);
+                                tvDiscountPercentage.setText(getString(R.string.discount_percentage));
                                 final Dialog cashDialog = new Dialog(MainActivity.this);
                                 cashDialog.setTitle(R.string.multi_count);
                                 cashDialog.setContentView(R.layout.cash_payment_dialog);
@@ -924,6 +926,7 @@ usedpointDbAdapter.open();
                                 cashBTOk.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        discountPercentage.setText(cashETCash.getText().toString());
                                         String str = cashETCash.getText().toString();
                                         int indexOfItem = SESSION._ORDERS.indexOf(selectedOrderOnCart);
                                         double X = SESSION._USER.getPresent();
@@ -982,16 +985,16 @@ usedpointDbAdapter.open();
 
         //endregion
 
-        offerDBAdapter=new OfferDBAdapter(this);
+        offerDBAdapter = new OfferDBAdapter(this);
         offerDBAdapter.open();
-       // Offer offer=offerDBAdapter.getAllValidOffers();
-        List<Offer>offerList=offerDBAdapter.getAllOffersByStatus(1);
+        // Offer offer=offerDBAdapter.getAllValidOffers();
+        List<Offer> offerList = offerDBAdapter.getAllOffersByStatus(1);
 
-        if(offerList!=null){
+        if (offerList != null) {
             calculateTotalPriceWithOffers(offerList);
+        } else {
+            calculateTotalPrice();
         }
-        else{
-            calculateTotalPrice();}
         //region Payment
 
         //region Cash
@@ -999,10 +1002,16 @@ usedpointDbAdapter.open();
         btnCash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(SESSION._ORDERS.size()>0) {
-                    Intent intent = new Intent(MainActivity.this, CashActivity.class);
-                    intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, saleTotalPrice);
-                    startActivityForResult(intent, REQUEST_CASH_ACTIVITY_CODE);
+                if (SESSION._ORDERS.size() > 0) {
+                    if (SETTINGS.enableCurrencies) {
+                        Intent intent = new Intent(MainActivity.this, CashActivity.class);
+                        intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, saleTotalPrice);
+                        startActivityForResult(intent, REQUEST_CASH_ACTIVITY_CODE);
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, OldCashActivity.class);
+                        intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, saleTotalPrice);
+                        startActivityForResult(intent, REQUEST_CASH_ACTIVITY_CODE);
+                    }
                 }
             }
         });
@@ -1010,33 +1019,33 @@ usedpointDbAdapter.open();
         used_point.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                double unusedPointMoney=0.0;
-                ValueOfPoint valueOfPoint=valueOfPointDB.getValue();
-                double value= valueOfPoint.getValue();
-                Toast.makeText(MainActivity.this,"value Of Point "+value,Toast.LENGTH_LONG).show();
-                double newPrice=aPoint*value;
-                if(saleTotalPrice==newPrice){
-                   equleUsedPoint=true;
-                    newPoint= (int) (saleTotalPrice/value);
-                    saleTotalPrice=0;
-                    tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",0.0) + " " + getString(R.string.ins));
+                double unusedPointMoney = 0.0;
+                ValueOfPoint valueOfPoint = valueOfPointDB.getValue();
+                double value = valueOfPoint.getValue();
+                Toast.makeText(MainActivity.this, "value Of Point " + value, Toast.LENGTH_LONG).show();
+                double newPrice = aPoint * value;
+                if (saleTotalPrice == newPrice) {
+                    equleUsedPoint = true;
+                    newPoint = (int) (saleTotalPrice / value);
+                    saleTotalPrice = 0;
+                    tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", 0.0) + " " + getString(R.string.ins));
                 }
-                if(saleTotalPrice<newPrice){
-lessUsedPoint=true;
- unusedPointMoney=newPrice-saleTotalPrice;
-                    Toast.makeText(MainActivity.this,"uou have money more than sale totale price"+"   "+unusedPointMoney,Toast.LENGTH_LONG).show();
-                     newPoint= (int) (saleTotalPrice/value);
-                    saleTotalPrice=0;
-                    tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
+                if (saleTotalPrice < newPrice) {
+                    lessUsedPoint = true;
+                    unusedPointMoney = newPrice - saleTotalPrice;
+                    Toast.makeText(MainActivity.this, "uou have money more than sale totale price" + "   " + unusedPointMoney, Toast.LENGTH_LONG).show();
+                    newPoint = (int) (saleTotalPrice / value);
+                    saleTotalPrice = 0;
+                    tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
                 }
-                if(saleTotalPrice>newPrice){
-                    biggerUsedPoint=true;
-saleTotalPrice=saleTotalPrice-newPrice;
-                    unusedPointMoney=newPrice-saleTotalPrice;
-                    Toast.makeText(MainActivity.this,"uou have money more than sale totale price"+unusedPointMoney,Toast.LENGTH_LONG).show();
-                    tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
+                if (saleTotalPrice > newPrice) {
+                    biggerUsedPoint = true;
+                    saleTotalPrice = saleTotalPrice - newPrice;
+                    unusedPointMoney = newPrice - saleTotalPrice;
+                    Toast.makeText(MainActivity.this, "uou have money more than sale totale price" + unusedPointMoney, Toast.LENGTH_LONG).show();
+                    tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
                 }
-   }
+            }
         });
         //endregion
 
@@ -1250,14 +1259,13 @@ saleTotalPrice=saleTotalPrice-newPrice;
         //region last sale button
 
 /**        btnLastSales.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, SalesManagementActivity.class);
-                i.putExtra("_custmer", a);
+@Override public void onClick(View v) {
+Intent i = new Intent(MainActivity.this, SalesManagementActivity.class);
+i.putExtra("_custmer", a);
 
-                startActivity(i);
-            }
-        });**/
+startActivity(i);
+}
+});**/
 
         //endregion last sale button
 
@@ -1295,7 +1303,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                         finish();
                         break;
                     case R.id.menuItem_Custmer_Club:
-                        intent = new Intent(MainActivity.this, Customer.class);
+                        intent = new Intent(MainActivity.this, OldCustomer.class);
                         startActivity(intent);
                         finish();
                         break;
@@ -1326,9 +1334,9 @@ saleTotalPrice=saleTotalPrice-newPrice;
         super.onResume();
 
         Bundle extras = getIntent().getExtras();
-       /** if (extras != null) {
-             str = extras.getString("permissions_name");
-        }*/
+        /** if (extras != null) {
+         str = extras.getString("permissions_name");
+         }*/
     }
     //region fragment Touch Pad
 
@@ -1337,7 +1345,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
         GridView gridView = new GridView(this);
         final Dialog builder = new Dialog(this);
 
-        List<Integer>  mList = new ArrayList<Integer>();
+        List<Integer> mList = new ArrayList<Integer>();
         for (int i = 0; i < SESSION._SALES.size(); i++) {
             mList.add(SESSION._SALES.get(i).first);
         }
@@ -1348,7 +1356,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 resumeSale(SESSION._SALES.get(position).second);
-                Toast.makeText(MainActivity.this, getString(R.string.resume_deal_number)+" "+(SESSION._SALES.get(position).first), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.resume_deal_number) + " " + (SESSION._SALES.get(position).first), Toast.LENGTH_SHORT).show();
                 SESSION._SALES.remove(SESSION._SALES.get(position));
 
                 builder.cancel();
@@ -1364,30 +1372,29 @@ saleTotalPrice=saleTotalPrice-newPrice;
         builder.show();
     }
 
-    public void quickPriceButtonClick(View view){
+    public void quickPriceButtonClick(View view) {
         String str = ((Button) view).getText().toString();
-        if(str.equals("")){
+        if (str.equals("")) {
             return;
         }
-        if(Double.parseDouble(str)!=0)
+        if (Double.parseDouble(str) != 0)
             addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._USER.getId()));
     }
 
-     private void showQuickPricePad(){
-         QuickPricePadFragment fTP = new QuickPricePadFragment();
-         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-         transaction.add(R.id.mainActivity_fragmentQuickPricePad, fTP);
-         transaction.commit();
-     }
+    private void showQuickPricePad() {
+        QuickPricePadFragment fTP = new QuickPricePadFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.mainActivity_fragmentQuickPricePad, fTP);
+        transaction.commit();
+    }
 
     private void showTouchPad(boolean b) {
-        if(!b) {
+        if (!b) {
             TouchPadFragment fTP = new TouchPadFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.mainActivity_fragmentTochPad, fTP);
             transaction.commit();
-        }
-        else {
+        } else {
             HorizontalScrollView hsv = (HorizontalScrollView) findViewById(R.id.mainActivity_svDepartment);
         }
     }
@@ -1425,56 +1432,56 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 touchPadPressed += 9;
                 break;
             case R.id.touchPadFragment_btCE:
-                if(!touchPadPressed.equals(""))
+                if (!touchPadPressed.equals(""))
                     touchPadPressed = Util.removeLastChar(touchPadPressed);
                 removeOrderItemSelection();
                 refreshCart();
                 break;
             case R.id.touchPadFragment_btEnter:
-                if(!touchPadPressed.equals(""))
+                if (!touchPadPressed.equals(""))
                     addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._USER.getId()));
                 touchPadPressed = "";
                 break;
             case R.id.touchPadFragment_btDot:
-                if(touchPadPressed.indexOf(".")<0)
+                if (touchPadPressed.indexOf(".") < 0)
                     touchPadPressed += ".";
                 break;
         }
-        TextView tirh=(TextView)this.findViewById(R.id.touchPadFragment_tvView);
+        TextView tirh = (TextView) this.findViewById(R.id.touchPadFragment_tvView);
         tirh.setText(touchPadPressed);
     }
 
     //endregion
-/**
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {//
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-**/
-    private void removeOrderItemSelection(){
-       saleDetailsListViewAdapter.setSelected(-1);
-        if(selectedIteminCartList!=null) {
-            selectedIteminCartList.findViewById(R.id.rowSaleDetails_LLMethods).setVisibility(View.GONE);
-            selectedIteminCartList.findViewById(R.id.saleMan).setVisibility(View.GONE);
 
+    /**
+     * @Override public boolean onOptionsItemSelected(MenuItem item) {//
+     * if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+     * return true;
+     * }
+     * return super.onOptionsItemSelected(item);
+     * }
+     **/
+    private void removeOrderItemSelection() {
+        saleDetailsListViewAdapter.setSelected(-1);
+        if (selectedIteminCartList != null) {
+            selectedIteminCartList.findViewById(R.id.rowSaleDetails_LLMethods).setVisibility(View.GONE);
+            selectedIteminCartList.findViewById(R.id.saleManLayout).setVisibility(View.GONE);
+            selectedIteminCartList.findViewById(R.id.discountLayout).setVisibility(View.GONE);
             selectedIteminCartList.setBackgroundColor(getResources().getColor(R.color.white));
-           selectedOrderOnCart=null;
+            selectedOrderOnCart = null;
         }
     }
 
     public void clearCart() {
-        parcent=0;
-        point=0;
-        amount=0;
-        Ppoint=0;
-        saleman.setText("Sales Man");
+        parcent = 0;
+        point = 0;
+        amount = 0;
+        Ppoint = 0;
+        salesSaleMan.setText(getString(R.string.sales_man));
         SESSION._Rest();
         club_name.setText("");
         custmer_name.setText("");
-       information.setText("");
+        information.setText("");
         customerName_EditText.setText("");
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
@@ -1512,9 +1519,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
     }
 
 
-
-
-    protected void calculateTotalPriceWithOffers(List <Offer>offers) {
+    protected void calculateTotalPriceWithOffers(List<Offer> offers) {
 
         availableRule3 = false;
         parcentForRule3 = 0.0;
@@ -1795,9 +1800,9 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
 
     protected void scanOffers() throws Exception {
-        for (Order o : SESSION._ORDERS){
-            if(o.getProduct().getOffersIDs()!=null){
-                offersList.get(o.getProduct().getOffersIDs().get(0)).getRule().execute(SESSION._ORDERS,offersList.get(0));
+        for (Order o : SESSION._ORDERS) {
+            if (o.getProduct().getOffersIDs() != null) {
+                offersList.get(o.getProduct().getOffersIDs().get(0)).getRule().execute(SESSION._ORDERS, offersList.get(0));
             }
         }
     }
@@ -1808,55 +1813,50 @@ saleTotalPrice=saleTotalPrice-newPrice;
         //scanOffers();
 
 
-
-        if(club_id==0){
+        if (club_id == 0) {
             saleTotalPrice = 0;
-            double SaleOriginalityPrice=0;
+            double SaleOriginalityPrice = 0;
             for (Order o : SESSION._ORDERS) {
                 saleTotalPrice += o.getItemTotalPrice();
 
                 SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
             }
-            totalSaved =(SaleOriginalityPrice-saleTotalPrice);
-            tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
-            tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
+            totalSaved = (SaleOriginalityPrice - saleTotalPrice);
+            tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
+            tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
             SESSION._SALE.setTotalPrice(saleTotalPrice);
 
-        }
-        else {
+        } else {
 
             saleTotalPrice = 0;
-            double SaleOriginalityPrice=0;
+            double SaleOriginalityPrice = 0;
             for (Order o : SESSION._ORDERS) {
                 saleTotalPrice += o.getItemTotalPrice();
                 SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
             }
 
-            if(type==1){
+            if (type == 1) {
 
-                saleTotalPrice=saleTotalPrice-(int)saleTotalPrice*parcent;
-                totalSaved =(SaleOriginalityPrice-saleTotalPrice);
+                saleTotalPrice = saleTotalPrice - (int) saleTotalPrice * parcent;
+                totalSaved = (SaleOriginalityPrice - saleTotalPrice);
 
-                tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
-                tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
+                tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
+                tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
 
                 SESSION._SALE.setTotalPrice(saleTotalPrice);
-            }
+            } else if (type == 2) {
 
-            else if(type==2) {
-
-                tvTotalPrice.setText(String.format(new Locale("en"),"%.2f",saleTotalPrice) + " " + getString(R.string.ins));
+                tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
 
 
-                totalSaved =(SaleOriginalityPrice-saleTotalPrice);
-                tvTotalSaved.setText(String.format(new Locale("en"),"%.2f",(totalSaved))+" "+ getString(R.string.ins));
+                totalSaved = (SaleOriginalityPrice - saleTotalPrice);
+                tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
                 //  point=  ( (int)(sale/amount)*point);
 
                 SESSION._SALE.setTotalPrice(saleTotalPrice);
 
             }
         }
-
 
 
     }
@@ -1894,35 +1894,37 @@ saleTotalPrice=saleTotalPrice-newPrice;
         // getOffers();
         saleDetailsListViewAdapter.notifyDataSetChanged();
         //lvOrder.setAdapter(saleDetailsListViewAdapter);
-        offerDBAdapter=new OfferDBAdapter(this);
+        offerDBAdapter = new OfferDBAdapter(this);
         offerDBAdapter.open();
-       // Offer offer=offerDBAdapter.getAllValidOffers();
-        List<Offer>offerList=offerDBAdapter.getAllOffersByStatus(1);
-        offerList=null;
-        if(offerList!=null){
+        // Offer offer=offerDBAdapter.getAllValidOffers();
+        List<Offer> offerList = offerDBAdapter.getAllOffersByStatus(1);
+        offerList = null;
+        if (offerList != null) {
 
             calculateTotalPriceWithOffers(offerList);
-        }
-        else{
+        } else {
 
-            calculateTotalPrice();}
+            calculateTotalPrice();
+        }
 
     }
 
-    /**   private boolean getOffers(){
-        for (Offer o : offersList) {//offer list
-            if (o.getRuleId() == 0) {//offer type x on price y
-                for (Order or : SESSION._ORDERS) {//loop into all product at cart
-                    //if (o.getProducts().contains(or.getProduct())) {//product is in the offer
-                    if (or.getCount() >= o.getX()) {//count > x
-                        or.getProduct().setPrice(o.getY() / o.getX());//set the new price
-                    }
-                    //}
-                }
-            }
-        }
-        return false;
-    }**/
+    /**
+     * private boolean getOffers(){
+     * for (Offer o : offersList) {//offer list
+     * if (o.getRuleId() == 0) {//offer type x on price y
+     * for (Order or : SESSION._ORDERS) {//loop into all product at cart
+     * //if (o.getProducts().contains(or.getProduct())) {//product is in the offer
+     * if (or.getCount() >= o.getX()) {//count > x
+     * or.getProduct().setPrice(o.getY() / o.getX());//set the new price
+     * }
+     * //}
+     * }
+     * }
+     * }
+     * return false;
+     * }
+     **/
 
 
     private void enterKeyPressed() {
@@ -1952,13 +1954,13 @@ saleTotalPrice=saleTotalPrice-newPrice;
         barcodeScanned = "";
     }
 
-    private void loadMoreProduct(){
-        productLoadItemOffset+=productCountLoad;
-        final int id=prseedButtonDepartments.getId();
-        final ProgressDialog dialog=new ProgressDialog(MainActivity.this);
+    private void loadMoreProduct() {
+        productLoadItemOffset += productCountLoad;
+        final int id = prseedButtonDepartments.getId();
+        final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
         dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish));
 
-        new AsyncTask<Void,Void,Void>(){
+        new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 dialog.show();
@@ -1966,18 +1968,17 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                All_productsList=productList;
+                All_productsList = productList;
                 productCatalogGridViewAdapter.notifyDataSetChanged();
                 dialog.cancel();
             }
 
             @Override
             protected Void doInBackground(Void... params) {
-                if(id==0){
-                    productList.addAll(productDBAdapter.getTopProducts(productLoadItemOffset,productCountLoad));
-                }
-                else{
-                    productList.addAll(productDBAdapter.getAllProductsByDepartment(id,productLoadItemOffset,productCountLoad));
+                if (id == 0) {
+                    productList.addAll(productDBAdapter.getTopProducts(productLoadItemOffset, productCountLoad));
+                } else {
+                    productList.addAll(productDBAdapter.getAllProductsByDepartment(id, productLoadItemOffset, productCountLoad));
                 }
                 return null;
             }
@@ -1985,7 +1986,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
     }
 
 
-    private void printAndOpenCashBoxBTP880(String mainAns, final String mainMer, final String mainCli){
+    private void printAndOpenCashBoxBTP880(String mainAns, final String mainMer, final String mainCli) {
         final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(MainActivity.this);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
 
@@ -2032,7 +2033,8 @@ saleTotalPrice=saleTotalPrice-newPrice;
         }.execute();
     }
 
-    private static HPRTPrinterHelper HPRTPrinter=new HPRTPrinterHelper();
+    private static HPRTPrinterHelper HPRTPrinter = new HPRTPrinterHelper();
+
     private void printAndOpenCashBoxHPRT_TP805(String mainAns, final String mainMer, final String mainCli) {
         if (HPRT_TP805.connect(this)) {
             final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
@@ -2103,9 +2105,9 @@ saleTotalPrice=saleTotalPrice-newPrice;
         }
     }
 
-    private void printAndOpenCashBoxSUNMI_T1(String mainAns,final String mainMer,final String mainCli){
+    private void printAndOpenCashBoxSUNMI_T1(String mainAns, final String mainMer, final String mainCli) {
         AidlUtil.getInstance().connectPrinterService(this);
-        if(AidlUtil.getInstance().isConnect()){
+        if (AidlUtil.getInstance().isConnect()) {
             final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
             dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
 
@@ -2162,14 +2164,13 @@ saleTotalPrice=saleTotalPrice-newPrice;
                     return null;
                 }
             }.execute();
-        }
-        else {
+        } else {
             Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
         }
     }
 
     private void printAndOpenCashBox(String mainAns, final String mainMer, final String mainCli) {
-        switch (SETTINGS.printer){
+        switch (SETTINGS.printer) {
             case BTP880:
                 printAndOpenCashBoxBTP880(mainAns, mainMer, mainCli);
                 break;
@@ -2180,21 +2181,22 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 printAndOpenCashBoxSUNMI_T1(mainAns, mainMer, mainCli);
                 break;
         }
-
         currencyReturnsCustomDialogActivity.show();
 
     }
+
     private CurrencyReturnsCustomDialogActivity currencyReturnsCustomDialogActivity;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
 
-        if (Long.valueOf(SESSION._SALE.getCustomer_id())==0) {
+        if (Long.valueOf(SESSION._SALE.getCustomer_id()) == 0) {
             if (SESSION._SALE.getCustomer_name() == null) {
                 if (customerName_EditText.getText().toString().equals("")) {
                     SESSION._SALE.setCustomer_name("");
-                }else{
+                } else {
                     SESSION._SALE.setCustomer_name(customerName_EditText.getText().toString());
                 }
             }
@@ -2203,13 +2205,13 @@ saleTotalPrice=saleTotalPrice-newPrice;
         if (requestCode == REQUEST_CREDIT_CARD_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
 
-                if(data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote).equals("anyType{}"))
-                SESSION._SALE.setTotalPaid(SESSION._SALE.getTotalPrice());
+                if (data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote).equals("anyType{}"))
+                    SESSION._SALE.setTotalPaid(SESSION._SALE.getTotalPrice());
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
-                if(club_id==2) {
+                if (club_id == 2) {
                     sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
                 }
                 /**  Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
@@ -2218,21 +2220,21 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 saleDBAdapter.close();
 
                 orderDBAdapter = new OrderDBAdapter(MainActivity.this);
-                custmerAssetDB=new CustomerAssetDB(MainActivity.this);
+                custmerAssetDB = new CustomerAssetDB(MainActivity.this);
                 orderDBAdapter.open();
                 custmerAssetDB.open();
                 SESSION._SALE.setId(saleID);
                 for (Order o : SESSION._ORDERS) {
-                    long orderid=orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
 
                     //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
-                    if(forOrderSaleMan){
+                    if (forOrderSaleMan) {
                         o.setCustmerAssestId(custmerAssetstId);
-                        custmerAssetDB.insertEntry(orderid,o.getCustmerAssestId(),o.getPrice(),0,"Order",SESSION._SALE.getSaleDate().getTime());
+                        custmerAssetDB.insertEntry(orderid, o.getCustmerAssestId(), o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
                     }
                 }
-                if (forSaleMan){
-                    custmerAssetDB.insertEntry(saleID,custmerAssetstId,SESSION._SALE.getTotalPrice(),0,"Sale",SESSION._SALE.getSaleDate().getTime());
+                if (forSaleMan) {
+                    custmerAssetDB.insertEntry(saleID, custmerAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
 
                 }
                 orderDBAdapter.close();
@@ -2290,24 +2292,25 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 saleDBAdapter.open();
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
-                if(club_id==2){
-                sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);}
+                if (club_id == 2) {
+                    sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
+                }
                 saleDBAdapter.close();
 
                 orderDBAdapter = new OrderDBAdapter(MainActivity.this);
-                custmerAssetDB=new CustomerAssetDB(MainActivity.this);
+                custmerAssetDB = new CustomerAssetDB(MainActivity.this);
                 orderDBAdapter.open();
                 custmerAssetDB.open();
                 SESSION._SALE.setId(saleID);
                 for (Order o : SESSION._ORDERS) {
-                    long orderid=orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
-                    if(forOrderSaleMan){
-                    o.setCustmerAssestId(custmerAssetstId);
-                        custmerAssetDB.insertEntry(orderid,o.getCustmerAssestId(),o.getPrice(),0,"Order",SESSION._SALE.getSaleDate().getTime());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
+                    if (forOrderSaleMan) {
+                        o.setCustmerAssestId(custmerAssetstId);
+                        custmerAssetDB.insertEntry(orderid, o.getCustmerAssestId(), o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
                     }
                 }
-                if (forSaleMan){
-                    custmerAssetDB.insertEntry(saleID,custmerAssetstId,SESSION._SALE.getTotalPrice(),0,"Sale",SESSION._SALE.getSaleDate().getTime());
+                if (forSaleMan) {
+                    custmerAssetDB.insertEntry(saleID, custmerAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
 
                 }
 
@@ -2326,7 +2329,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(this);
                 checksDBAdapter.open();
                 for (Check check : SESSION._CHECKS_HOLDER) {
-                    checksDBAdapter.insertEntry(check.getCheckNum(), check.getBankNum(), check.getBranchNum(), check.getAccountNum(), check.getAmount(),check.getDate(), saleID);
+                    checksDBAdapter.insertEntry(check.getCheckNum(), check.getBankNum(), check.getBranchNum(), check.getAccountNum(), check.getAmount(), check.getDate(), saleID);
                 }
                 checksDBAdapter.close();
 
@@ -2337,38 +2340,43 @@ saleTotalPrice=saleTotalPrice-newPrice;
         }
         if (requestCode == REQUEST_CASH_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
-                CashPaymentDBAdapter cashPaymentDBAdapter=new CashPaymentDBAdapter(this);
-                cashPaymentDBAdapter.open();
-                double totalPaid = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_TOTAL_PAID, 0.0f);
-
-                SESSION._SALE.setTotalPaid(totalPaid);
-
+                CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
+                PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 orderDBAdapter = new OrderDBAdapter(MainActivity.this);
                 custmerAssetDB = new CustomerAssetDB(MainActivity.this);
-                PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
-
+                cashPaymentDBAdapter.open();
                 saleDBAdapter.open();
+                double totalPaidWithCurrency = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_TOTAL_PAID, 0.0f);
+                double totalPaidWithOutCurrency = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_TOTAL_PAID, 0.0f);
+                if (SETTINGS.enableCurrencies) {
+                    SESSION._SALE.setTotalPaid(totalPaidWithCurrency);
+                    double firstCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_AMOUNT, 0.0f);
+                    double secondCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_AMOUNT, 0.0f);
+                    double excess = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_EXCESS_VALUE, 0.0f);
+                    currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess);
+                    long secondCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_ID, 0);
+                    long firstCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID, 0);
+                    if (firstCurrencyAmount > 0) {
+                        cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Date());
+                    }
+                    if (secondCurrencyAmount > 0) {
+                        cashPaymentDBAdapter.insertEntry(saleIDforCash, secondCurrencyAmount, secondCurrencyId, new Date());
+                    }
+                    cashPaymentDBAdapter.close();
+
+                }
+                if (!SETTINGS.enableCurrencies) {
+                    SESSION._SALE.setTotalPaid(totalPaidWithOutCurrency);
+                    double excess = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE, 0.0f);
+                    currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess);
+
+                }
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
-
-                double firstCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_AMOUNT, 0.0f);
-                double secondCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_AMOUNT, 0.0f);
-                double excess = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_EXCESS_VALUE, 0.0f);
-                currencyReturnsCustomDialogActivity  = new CurrencyReturnsCustomDialogActivity(this, excess);
-                long secondCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_ID, 0);
-                long firstCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID, 0);
-
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
-
-                if (firstCurrencyAmount>0) {
-                    cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Date());
+                if (club_id == 2) {
+                    sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);
                 }
-                if (secondCurrencyAmount>0){
-                    cashPaymentDBAdapter.insertEntry(saleIDforCash,secondCurrencyAmount,secondCurrencyId,new Date());
-                }
-                cashPaymentDBAdapter.close();
-                if(club_id==2){
-                sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);}
                 saleDBAdapter.close();
 
                 if (equleUsedPoint) {
@@ -2377,13 +2385,11 @@ saleTotalPrice=saleTotalPrice-newPrice;
                     SESSION._SALE.setTotalPaid(0.0);
                     saleDBAdapter.updateEntry(SESSION._SALE);
 
-                    usedpointDbAdapter.insertEntry(saleIDforCash,newPoint,_custmer_id);
-                }
-                else if(biggerUsedPoint){
-                    usedpointDbAdapter.insertEntry(saleIDforCash,aPoint,_custmer_id);
-                }
-                else if(lessUsedPoint) {
-                    saleTotalPrice=0.0;
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, _custmer_id);
+                } else if (biggerUsedPoint) {
+                    usedpointDbAdapter.insertEntry(saleIDforCash, aPoint, _custmer_id);
+                } else if (lessUsedPoint) {
+                    saleTotalPrice = 0.0;
 
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, _custmer_id);
                 } else if (biggerUsedPoint) {
@@ -2400,15 +2406,15 @@ saleTotalPrice=saleTotalPrice-newPrice;
                 SESSION._SALE.setId(saleIDforCash);
 
                 for (Order o : SESSION._ORDERS) {
-                    long orderid=orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
 
-                    if(forOrderSaleMan){
+                    if (forOrderSaleMan) {
                         o.setCustmerAssestId(custmerAssetstId);
-                        custmerAssetDB.insertEntry(orderid,o.getCustmerAssestId(),o.getPrice(),0, "Order",SESSION._SALE.getSaleDate().getTime());
+                        custmerAssetDB.insertEntry(orderid, o.getCustmerAssestId(), o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
                     }
                 }
-                if (forSaleMan){
-                    custmerAssetDB.insertEntry(saleIDforCash,custmerAssetstId,SESSION._SALE.getTotalPrice(),0,"Sale",SESSION._SALE.getSaleDate().getTime());
+                if (forSaleMan) {
+                    custmerAssetDB.insertEntry(saleIDforCash, custmerAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
                 }
                 orderDBAdapter.close();
                 custmerAssetDB.close();
@@ -2450,15 +2456,15 @@ saleTotalPrice=saleTotalPrice-newPrice;
         view.requestFocus();
         inputMethodManager.showSoftInput(view, 0);
     }
-/**
-    @Override
-    public void onBackPressed() {
-        if(enableBackButton){
-            //stop all moves
-        }
-        //do not move from here :)
-    }**/
 
+    /**
+     * @Override public void onBackPressed() {
+     * if(enableBackButton){
+     * //stop all moves
+     * }
+     * //do not move from here :)
+     * }
+     **/
 
 
     private void callPopup() {
@@ -2493,7 +2499,7 @@ saleTotalPrice=saleTotalPrice-newPrice;
         final GridView gvCustomer = (GridView) popupView.findViewById(R.id.popUp_gvCustomer);
         gvCustomer.setNumColumns(3);
 
-        btn_cancel=(Button) popupView.findViewById(R.id.btn_cancel) ;
+        btn_cancel = (Button) popupView.findViewById(R.id.btn_cancel);
 
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2507,14 +2513,14 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
                     public void onClick(View arg0) {
-                        Intent intent = new Intent(MainActivity.this, AddNewCoustmer.class);
+                        Intent intent = new Intent(MainActivity.this, AddNewCustomer.class);
                         startActivity(intent);
 
                         popupWindow.dismiss();
 
 
-                    } });
-
+                    }
+                });
 
 
         custmer_id.setText("");
@@ -2545,22 +2551,22 @@ saleTotalPrice=saleTotalPrice-newPrice;
             }
         });
 
-        custmer_List = customerDBAdapter.getTopCustmer(0, 50);
+        custmer_List = customerDBAdapter.getTopCustomer(0, 50);
         All_custmerList = custmer_List;
 
-        custmerCatalogGridViewAdapter = new CustmerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
+        custmerCatalogGridViewAdapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
 
         gvCustomer.setAdapter(custmerCatalogGridViewAdapter);
 
         gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                parcent=0;
-                a= custmer_List.get(position).getCustmerName();
-                  customerName_EditText.setText(a);
+                parcent = 0;
+                a = custmer_List.get(position).getCustmerName();
+                customerName_EditText.setText(a);
                 custmer_name.setText(a);
 
-                _custmer_id =custmer_List.get(position).getId();
+                _custmer_id = custmer_List.get(position).getId();
                 club_id = (int) custmer_List.get(position).getClub();
                 if (club_id != 0) {
                     Group group = groupDbAdapter.getGroupInfo(club_id);
@@ -2592,7 +2598,6 @@ saleTotalPrice=saleTotalPrice-newPrice;
         });
 
 
-
         custmer_id.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -2603,15 +2608,15 @@ saleTotalPrice=saleTotalPrice-newPrice;
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-        }
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
-                custmer_List = new ArrayList<Customer_M>();
+                custmer_List = new ArrayList<Customer>();
                 String word = custmer_id.getText().toString();
 
                 if (!word.equals("")) {
-                    for (Customer_M c : All_custmerList) {
+                    for (Customer c : All_custmerList) {
 
                         if (c.getCustmerName().toLowerCase().contains(word.toLowerCase()) ||
                                 c.getPhoneNumber().toLowerCase().contains(word.toLowerCase()) ||
@@ -2620,14 +2625,12 @@ saleTotalPrice=saleTotalPrice-newPrice;
 
                         }
                     }
+                } else {
+                    custmer_List = All_custmerList;
                 }
-                else {
-                    custmer_List=All_custmerList;
-                }
-                CustmerCatalogGridViewAdapter adapter = new CustmerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
+                CustomerCatalogGridViewAdapter adapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
                 gvCustomer.setAdapter(adapter);
                 // Log.i("products", productList.toString());
-
 
 
             }
@@ -2637,26 +2640,21 @@ saleTotalPrice=saleTotalPrice-newPrice;
     }
 
     public void callPopupOrderSalesMan() {
-        UserDBAdapter userDB=new UserDBAdapter(this);
+        UserDBAdapter userDB = new UserDBAdapter(this);
         userDB.open();
-        final CustomerAssetDB custmerAssetDB=new CustomerAssetDB(this);
-        custmerAssetDB.open();
+        final CustomerAssetDB customerAssistantDB = new CustomerAssetDB(this);
+        customerAssistantDB.open();
 
-        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
-                .getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.custmer_assest_popup, null);
-        popupWindow = new PopupWindow(popupView, 800, ActionBar.LayoutParams.WRAP_CONTENT,
-                true);
-
+        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = layoutInflater.inflate(R.layout.custmer_assest_popup, null);
+        popupWindow = new PopupWindow(popupView, 800, ActionBar.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-        custmerAssest = (EditText) popupView.findViewById(R.id.customerAssest_name);
-
-        lvcustmerAssest=(ListView) popupView.findViewById(R.id.custmerAssest_list_view);
-
-        Button  btn_cancel=(Button) popupView.findViewById(R.id.btn_cancel) ;
-        Button  btnDelete=(Button) popupView.findViewById(R.id.btn_delete) ;
+        final EditText customerAssistant = (EditText) popupView.findViewById(R.id.customerAssest_name);
+        ListView lvCustomerAssistant = (ListView) popupView.findViewById(R.id.customerAssistant_list_view);
+        Button btn_cancel = (Button) popupView.findViewById(R.id.btn_cancel);
+        Button btnDelete = (Button) popupView.findViewById(R.id.btn_delete);
 
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2667,8 +2665,107 @@ saleTotalPrice=saleTotalPrice-newPrice;
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                forOrderSaleMan=false;
-                salesMan.setText(getString(R.string.sales_man));
+                forOrderSaleMan = false;
+                orderSalesMan.setText(getString(R.string.sales_man));
+            }
+        });
+
+        ((Button) popupView.findViewById(R.id.btn_add))
+                .setOnClickListener(new View.OnClickListener() {
+
+                    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+                    public void onClick(View arg0) {
+                        Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
+                        startActivity(intent);
+
+                        popupWindow.dismiss();
+                    }
+                });
+
+
+        customerAssistant.setText("");
+        customerAssistant.setHint("Search..");
+
+        customerAssistant.setFocusable(true);
+        customerAssistant.requestFocus();
+        customerAssistant.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                customerAssistant.setFocusable(true);
+            }
+        });
+
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        lvCustomerAssistant.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                forOrderSaleMan = true;
+                custmerAssetstId = custmerAssestList.get(position).getId();
+                orderSalesMan.setText(custmerAssestList.get(position).getFullName());
+                popupWindow.dismiss();
+            }
+        });
+        lvCustomerAssistant.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    userScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (userScrolled && firstVisibleItem + visibleItemCount == totalItemCount) {
+
+                    userScrolled = false;
+                    //  loadMoreProduct();
+                }
+            }
+        });
+
+        custmerAssestList = userDB.getAllSalesMAn();
+        AllCustmerAssestList = custmerAssestList;
+
+
+        CustomerAssistantCatalogGridViewAdapter adapter = new CustomerAssistantCatalogGridViewAdapter(getApplicationContext(), custmerAssestList);
+        lvCustomerAssistant.setAdapter(adapter);
+
+
+    }
+
+    public void callPopupForSalesMan() {
+        UserDBAdapter userDB = new UserDBAdapter(this);
+        userDB.open();
+        final CustomerAssetDB customerAssistantDb = new CustomerAssetDB(this);
+        customerAssistantDb.open();
+
+        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
+                .getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View popupView = layoutInflater.inflate(R.layout.custmer_assest_popup, null);
+        popupWindow = new PopupWindow(popupView, 800, ActionBar.LayoutParams.WRAP_CONTENT,
+                true);
+
+        popupWindow.setTouchable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+        final EditText customerAssistant = (EditText) popupView.findViewById(R.id.customerAssest_name);
+
+        ListView lvCustomerAssistant = (ListView) popupView.findViewById(R.id.customerAssistant_list_view);
+
+        Button btn_cancel = (Button) popupView.findViewById(R.id.btn_cancel);
+        Button btnDelete = (Button) popupView.findViewById(R.id.btn_delete);
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                forSaleMan = false;
+                salesSaleMan.setText(getString(R.string.sales_man));
             }
         });
 
@@ -2683,33 +2780,33 @@ saleTotalPrice=saleTotalPrice-newPrice;
                         popupWindow.dismiss();
 
 
-                    } });
+                    }
+                });
 
 
+        customerAssistant.setText("");
+        customerAssistant.setHint("Search..");
 
-        custmerAssest.setText("");
-        custmerAssest.setHint("Search..");
-
-        custmerAssest.setFocusable(true);
-        custmerAssest.requestFocus();
-        custmerAssest.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        customerAssistant.setFocusable(true);
+        customerAssistant.requestFocus();
+        customerAssistant.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                custmerAssest.setFocusable(true);
+                customerAssistant.setFocusable(true);
             }
         });
 
         //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        lvcustmerAssest.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvCustomerAssistant.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                forOrderSaleMan=true;
-                custmerAssetstId=custmerAssestList.get(position).getId();
-                salesMan.setText(custmerAssestList.get(position).getFullName());
+                forSaleMan = true;
+                custmerAssetstId = custmerAssestList.get(position).getId();
+                salesSaleMan.setText(custmerAssestList.get(position).getFullName());
                 popupWindow.dismiss();
             }
         });
-        lvcustmerAssest.setOnScrollListener(new AbsListView.OnScrollListener() {
+        lvCustomerAssistant.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
@@ -2731,115 +2828,11 @@ saleTotalPrice=saleTotalPrice-newPrice;
         AllCustmerAssestList = custmerAssestList;
 
 
-        CustmerAssestCatlogGridViewAdapter adapter = new CustmerAssestCatlogGridViewAdapter(getApplicationContext(), custmerAssestList);
-        lvcustmerAssest.setAdapter(adapter);
-
-
-
-    }
-
-    public void callPopupForSalesMan() {
-        UserDBAdapter userDB=new UserDBAdapter(this);
-        userDB.open();
-        final CustomerAssetDB custmerAssetDB=new CustomerAssetDB(this);
-        custmerAssetDB.open();
-
-        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
-                .getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.custmer_assest_popup, null);
-        popupWindow = new PopupWindow(popupView, 800, ActionBar.LayoutParams.WRAP_CONTENT,
-                true);
-
-        popupWindow.setTouchable(true);
-        popupWindow.setFocusable(true);
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-        custmerAssest = (EditText) popupView.findViewById(R.id.customerAssest_name);
-
-        lvcustmerAssest=(ListView) popupView.findViewById(R.id.custmerAssest_list_view);
-
-      Button  btn_cancel=(Button) popupView.findViewById(R.id.btn_cancel) ;
-        Button  btnDelete=(Button) popupView.findViewById(R.id.btn_delete) ;
-
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-            }
-        });
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-     forSaleMan=false;
-                saleman.setText("Sales Man");
-            }
-        });
-
-        ((Button) popupView.findViewById(R.id.btn_add))
-                .setOnClickListener(new View.OnClickListener() {
-
-                    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-                    public void onClick(View arg0) {
-                        Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
-                       startActivity(intent);
-
-                        popupWindow.dismiss();
-
-
-                    } });
-
-
-
-        custmerAssest.setText("");
-        custmerAssest.setHint("Search..");
-
-        custmerAssest.setFocusable(true);
-        custmerAssest.requestFocus();
-        custmerAssest.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                custmerAssest.setFocusable(true);
-            }
-        });
-
-        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        lvcustmerAssest.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                forSaleMan=true;
-                custmerAssetstId=custmerAssestList.get(position).getId();
-                 saleman.setText(custmerAssestList.get(position).getFullName());
-popupWindow.dismiss();
-            }
-        });
-        lvcustmerAssest.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    userScrolled = true;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (userScrolled && firstVisibleItem + visibleItemCount == totalItemCount) {
-
-                    userScrolled = false;
-                    //  loadMoreProduct();
-                }
-            }
-        });
-
-        custmerAssestList = userDB.getAllSalesMAn();
-        AllCustmerAssestList = custmerAssestList;
-
-
-        CustmerAssestCatlogGridViewAdapter adapter = new CustmerAssestCatlogGridViewAdapter(getApplicationContext(), custmerAssestList);
-        lvcustmerAssest.setAdapter(adapter);
-
+        CustomerAssistantCatalogGridViewAdapter adapter = new CustomerAssistantCatalogGridViewAdapter(getApplicationContext(), custmerAssestList);
+        lvCustomerAssistant.setAdapter(adapter);
 
 
     }
-
 
 
 }

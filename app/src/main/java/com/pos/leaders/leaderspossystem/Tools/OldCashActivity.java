@@ -13,7 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.MainActivity;
 import com.pos.leaders.leaderspossystem.R;
+
+import static java.security.AccessController.getContext;
 
 /**
  * Created by Karam on 26/11/2016.
@@ -21,21 +24,24 @@ import com.pos.leaders.leaderspossystem.R;
 
 //AppCompatActivity
 public class OldCashActivity extends AppCompatActivity implements View.OnTouchListener {
-    public static final String LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY = "LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_TOTAL_PAID";
+    public static final String LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_TOTAL_PAID = "LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_TOTAL_PAID";
+    public static final String LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE = "LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE";
+
     ImageView iv_20, iv_50, iv_100, iv_200;
     TextView tvB20, tvB50, tvB100, tvB200;
     TextView custmer_name;
 
     ImageView cent10, cent50, cent100, cent200, cent500, cent1000;
     TextView tvC10, tvC50, tvC100, tvC200, tvC500, tvC1000;
-    TextView tv, tvTotalInserted, tvExcess;
+    TextView tv, tvTotalInserted;
+    //, tvExcess;
     String custmer_nameS;
 
     Button btnDone;
 
     double totalPrice = 0.0;
-    float totalPid = 0.0f;
-
+    double totalPid = 0.0f;
+    double deltaPrice;
     private float x1, x2;
     private float y1, y2;
     static final int MIN_DISTANCE = 50;
@@ -65,7 +71,7 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
         int height = dm.heightPixels;
 
         getWindow().setLayout((int) (width * 0.9), (int) (height * 0.95));
-        custmer_name=(TextView)findViewById(R.id.custmer_name);
+        custmer_name = (TextView) findViewById(R.id.custmer_name);
 
         iv_20 = (ImageView) findViewById(R.id.cashActivity_Bill20);
         iv_20.setOnTouchListener(this);
@@ -99,11 +105,11 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
         cent1000.setOnTouchListener(this);
         tvC1000 = (TextView) findViewById(R.id.cashActivity_TVDC1000);
 
-        btnDone=(Button)findViewById(R.id.cashActivity_BTNDone);
+        btnDone = (Button) findViewById(R.id.cashActivity_BTNDone);
         tv = (TextView) findViewById(R.id.cashActivity_TVRequired);
-        tvExcess = (TextView) findViewById(R.id.cashActivity_TVExcess);
-        tvExcess.setText(0 + " " + getResources().getText(R.string.ins));
-        tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));
+        /** tvExcess = (TextView) findViewById(R.id.cashActivity_TVExcess);
+         tvExcess.setText(0 + " " + getResources().getText(R.string.ins));
+         tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));**/
         tvTotalInserted = (TextView) findViewById(R.id.cashActivity_TVTotalInserted);
         tvTotalInserted.setText(0.0 + " " + getResources().getText(R.string.ins));
 
@@ -112,24 +118,21 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
             @Override
             public void onClick(View v) {
                 tvTotalInserted.setText(tv.getText());
-                tvExcess.setText(0 + " " + getResources().getText(R.string.ins));
-                tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));
+                // tvExcess.setText(0 + " " + getResources().getText(R.string.ins));
+                //tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));
                 btnDone.setEnabled(true);
                 btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
-                btnDone.setPadding(50,10,50,10);
+                btnDone.setPadding(50, 10, 50, 10);
             }
         });
 
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            totalPrice = (double) extras.get("_Price");
-            Toast.makeText(OldCashActivity.this,"total price"+totalPrice,Toast.LENGTH_LONG).show();
-            custmer_nameS= (String) extras.get("_custmer");
+            totalPrice = (double) extras.get(MainActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE);
+            custmer_nameS = (String) extras.get("_custmer");
             tv.setText(totalPrice + " " + getResources().getText(R.string.ins));
-
-
             custmer_name.setText(custmer_nameS);
-            custmer_nameS="";
+            custmer_nameS = "";
         } else {
             finish();
         }
@@ -141,10 +144,11 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
             @Override
             public void onClick(View v) {
                 //// TODO: 01/12/2016 return how match inserted money
-                Intent i=new Intent();
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY,totalPid);
-                setResult(RESULT_OK,i);
-              finish();
+                Intent i = new Intent();
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_TOTAL_PAID, totalPid);
+                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE, deltaPrice);
+                setResult(RESULT_OK, i);
+                finish();
             }
         });
     }
@@ -184,22 +188,22 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
                 incDecOnView(tvB200, inc);
                 break;
             case R.id.cashActivity_Cent10:
-                incDecOnView(tvC10,inc);
+                incDecOnView(tvC10, inc);
                 break;
             case R.id.cashActivity_Cent50:
-                incDecOnView(tvC50,inc);
+                incDecOnView(tvC50, inc);
                 break;
             case R.id.cashActivity_Cent100:
-                incDecOnView(tvC100,inc);
+                incDecOnView(tvC100, inc);
                 break;
             case R.id.cashActivity_Cent200:
-                incDecOnView(tvC200,inc);
+                incDecOnView(tvC200, inc);
                 break;
             case R.id.cashActivity_Cent500:
-                incDecOnView(tvC500,inc);
+                incDecOnView(tvC500, inc);
                 break;
             case R.id.cashActivity_Cent1000:
-                incDecOnView(tvC1000,inc);
+                incDecOnView(tvC1000, inc);
                 break;
         }
         calcTotalInserted();
@@ -233,18 +237,18 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
         totalPid += (Integer.parseInt(tvC1000.getText().toString()) * 10.0);
         tvTotalInserted.setText(totalPid + " " + getResources().getText(R.string.ins));
 
-        float deltaPrice = (float)(totalPid -(float)totalPrice );
+        deltaPrice = (float) (totalPid - (float) totalPrice);
         if (deltaPrice >= 0) {
             btnDone.setEnabled(true);
             btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
-            btnDone.setPadding(50,10,50,10);
-            tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));
+            btnDone.setPadding(50, 10, 50, 10);
+            //  tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));
         } else {
             btnDone.setEnabled(false);
-            btnDone.setBackground(getResources().getDrawable(R.drawable.btn_secondary));
-            btnDone.setPadding(50,10,50,10);
-            tvExcess.setTextColor(getResources().getColor(R.color.dangerColor));
+            btnDone.setBackground(getResources().getDrawable(R.drawable.bt_dangers_pressed));
+            btnDone.setPadding(50, 10, 50, 10);
+            // tvExcess.setTextColor(getResources().getColor(R.color.dangerColor));
         }
-        tvExcess.setText(String.format("%.2f",deltaPrice) + " " + getResources().getText(R.string.ins));
+        //  tvExcess.setText(String.format("%.2f",deltaPrice) + " " + getResources().getText(R.string.ins));
     }
 }

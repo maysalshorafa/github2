@@ -12,8 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.Models.Customer_M;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.R;
 
 import java.util.List;
@@ -22,12 +21,12 @@ import java.util.List;
      * Created by Win8.1 on 7/6/2017.
      */
 
-    public class CustmerCatalogGridViewAdapter extends BaseAdapter {
+    public class CustomerCatalogGridViewAdapter extends BaseAdapter {
         private Context context;
-        private List<Customer_M> customers;
+        private List<Customer> customers;
         private LayoutInflater inflater;
 
-        public CustmerCatalogGridViewAdapter(Context context,List<Customer_M> customers) {
+        public CustomerCatalogGridViewAdapter(Context context, List<Customer> customers) {
             this.context = context;
             this.customers = customers;
         }
@@ -53,7 +52,7 @@ import java.util.List;
          * @return The data at the specified position.
          */
         @Override
-        public Customer_M getItem(int position) {
+        public Customer getItem(int position) {
             return customers.get(position);
         }
 

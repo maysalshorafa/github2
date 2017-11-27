@@ -139,7 +139,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="TextView"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        />
 
                     <TextView
                         android:id="@+id/mainActivity_tvTotalPrice"
@@ -147,13 +150,18 @@
                         android:layout_height="wrap_content"
                         android:text="TextView"
                         android:textStyle="bold"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black"
+                        android:textSize="24sp"
+                        />
                     <TextView
-                        android:id="@+id/saleMan"
+                        android:id="@+id/salesSaleMan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/sales_man"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        />
 
                 </LinearLayout>
 

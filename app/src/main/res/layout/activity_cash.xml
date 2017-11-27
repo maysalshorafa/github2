@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/cashActivity_TVRequired"
-        android:textSize="36sp"
+        android:textSize="55sp"
         android:layout_marginEnd="16dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="16dp"
@@ -21,7 +21,9 @@
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toTopOf="parent"
         android:textColor="@color/secondaryColor"
-        android:textStyle="normal|bold" />
+        android:textStyle="normal|bold"
+        android:maxLength="10"
+        android:minLines="1"/>
 
 
 
@@ -86,75 +88,73 @@
 
     <android.support.constraint.Guideline
         android:layout_width="0dp"
-        android:layout_height="888dp"
+        android:layout_height="1dp"
         android:id="@+id/ca_gl1"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.12520514"
-        tools:layout_editor_absoluteX="171dp"
+        tools:layout_editor_absoluteX="128dp"
         tools:layout_editor_absoluteY="0dp" />
 
     <android.support.constraint.Guideline
         android:layout_width="0dp"
-        android:layout_height="888dp"
+        android:layout_height="1dp"
         android:id="@+id/ca_gl2"
         android:orientation="vertical"
 
         app:layout_constraintGuide_percent="0.25014287"
-        tools:layout_editor_absoluteX="341dp"
+        tools:layout_editor_absoluteX="256dp"
         tools:layout_editor_absoluteY="0dp" />
 
     <android.support.constraint.Guideline
         android:layout_width="0dp"
-        android:layout_height="888dp"
+        android:layout_height="1dp"
         android:id="@+id/ca_gl3"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.3749524"
-        tools:layout_editor_absoluteX="512dp"
+        tools:layout_editor_absoluteX="384dp"
         tools:layout_editor_absoluteY="0dp" />
 
     <android.support.constraint.Guideline
         android:layout_width="0dp"
-        android:layout_height="888dp"
+        android:layout_height="1dp"
         android:id="@+id/ca_gl4"
         android:orientation="vertical"
         tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="691dp"
+        tools:layout_editor_absoluteX="519dp"
         app:layout_constraintGuide_percent="0.50622714" />
 
     <android.support.constraint.Guideline
         android:layout_width="0dp"
-        android:layout_height="888dp"
+        android:layout_height="1dp"
         android:id="@+id/ca_gl6"
         android:orientation="vertical"
         tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="1024dp"
+        tools:layout_editor_absoluteX="768dp"
         app:layout_constraintGuide_percent="0.7500271" />
 
     <android.support.constraint.Guideline
-        android:layout_width="1365dp"
+        android:layout_width="1dp"
         android:layout_height="wrap_content"
         android:id="@+id/ca_gl7"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteY="265dp"
+        tools:layout_editor_absoluteY="189dp"
         tools:layout_editor_absoluteX="0dp"
         app:layout_constraintGuide_percent="0.2984234" />
 
     <android.support.constraint.Guideline
-        android:layout_width="1365dp"
+        android:layout_width="1dp"
         android:layout_height="0dp"
         android:id="@+id/ca_gl5"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteY="487dp"
+        tools:layout_editor_absoluteY="346dp"
         tools:layout_editor_absoluteX="0dp"
         app:layout_constraintGuide_percent="0.5484234" />
     <android.support.constraint.Guideline
-        android:layout_width="1365dp"
+        android:layout_width="1dp"
         android:layout_height="wrap_content"
         android:id="@+id/ca_gl8"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteY="707dp"
-        tools:layout_editor_absoluteX="0dp"
-        app:layout_constraintGuide_percent="0.7961712" />
+        app:layout_constraintGuide_percent="0.71" />
 
     <ImageView
         android:layout_width="0dp"
@@ -259,39 +259,27 @@
         android:textColor="@color/black" />
 
     <TextView
-        android:text="0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/cashActivity_TVTotalInserted"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/ca_gl4"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintTop_toTopOf="@+id/ca_gl8"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:textSize="36sp"
-        android:textStyle="normal|bold"
-        android:textColor="@color/black" />
-
-    <TextView
-        android:text="0"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/cashActivity_TVExcess"
-        app:layout_constraintLeft_toLeftOf="@+id/ca_gl4"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="8dp"
-        app:layout_constraintTop_toTopOf="@+id/ca_gl8"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:textSize="36sp"
-        android:textStyle="normal|bold" />
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:text="0"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="55sp"
+        android:textStyle="normal|bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ca_gl8"
+        app:layout_constraintVertical_bias="0.218" />
+
+
 
     <TextView
         android:text="0"
@@ -354,26 +342,26 @@
         android:textColor="@color/black" />
 
     <Button
-        android:text="@string/done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/cashActivity_BTNDone"
-        android:background="@drawable/btn_primary"
+        style="@style/AppTheme.bt_dark"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp"
+        android:background="@drawable/btn_primary"
+        android:paddingBottom="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:text="@string/done"
         android:textSize="24sp"
         android:textStyle="normal|bold"
-        style="@style/TextAppearance" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/custmer_name"
@@ -387,10 +375,9 @@
         app:layout_constraintBottom_toTopOf="@+id/cashActivity_Bill20"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
-        app:layout_constraintRight_toLeftOf="@+id/ca_gl2"
-        android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="8dp" />
 
 
 </android.support.constraint.ConstraintLayout>

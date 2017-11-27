@@ -13,13 +13,13 @@ public class Accounting {
     int trialBalance;
     String trialBalanceDescription;
     int customerID;
-    Customer customer;
+    OldCustomer customer;
     public double totalRequired, totalCredit;
 
     public Accounting() {
     }
 
-    public Accounting(int id, int key, String name, int trialBalance, String trialBalanceDescription, Customer customer) {
+    public Accounting(int id, int key, String name, int trialBalance, String trialBalanceDescription, OldCustomer customer) {
         this.id = id;
         this.key = key;
         this.name = name;
@@ -55,7 +55,7 @@ public class Accounting {
         return customerID;
     }
 
-    public Customer getCustomer() {
+    public OldCustomer getCustomer() {
         return customer;
     }
     //endregion Getters
@@ -85,7 +85,7 @@ public class Accounting {
         this.customerID = customerID;
     }
 
-    public void setCustomer(Customer customer) {
+    public void setCustomer(OldCustomer customer) {
         this.customer = customer;
     }
     //endregion Setters

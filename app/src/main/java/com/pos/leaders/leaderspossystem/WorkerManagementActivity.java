@@ -128,8 +128,8 @@ public class WorkerManagementActivity  extends AppCompatActivity {
                                 break;
                             case 3:
                                 new AlertDialog.Builder(WorkerManagementActivity.this)
-                                        .setTitle("Delete User")
-                                        .setMessage("Are you want to delete this user?")
+                                        .setTitle(getString(R.string.delete)+" "+getString(R.string.users))
+                                        .setMessage(getString(R.string.delete_user_message))
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 userDBAdapter.deleteEntry(users.get(position).getId());

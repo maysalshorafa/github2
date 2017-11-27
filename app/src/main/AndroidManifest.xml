@@ -96,7 +96,7 @@
             <!-- Main Activity -->
         </activity>
         <activity android:name=".CustomerAndClub.Customer" />
-        <activity android:name=".CustomerAndClub.AddNewCoustmer" />
+        <activity android:name=".CustomerAndClub.AddNewCustomer" />
         <activity android:name=".CustomerAndClub.Coustmer_Group" />
         <activity android:name=".CustomerAndClub.CustmerManagementActivity" />
 
@@ -112,7 +112,7 @@
             android:label="@string/title_activity_temp_cash_activty"
             android:theme="@style/AppTheme.PopUp" />
         <activity
-            android:name=".CustomerAndClub.ClubMangmentActivity"
+            android:name=".CustomerAndClub.ClubManagementActivity"
             android:label="@string/title_activity_temp_cash_activty" />
         <activity android:name=".TempDashBord" />
         <activity android:name=".SalesManManagementActivity" />

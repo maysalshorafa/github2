@@ -14,7 +14,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Accounting;
 import com.pos.leaders.leaderspossystem.Models.Check;
-import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.OldCustomer;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
@@ -91,12 +91,12 @@ public class BKMVDATA {
 
     public int make(DateTime from, DateTime to) throws IOException {
         setDATA(from, to);
-        Accounting accountingGeneralCustomer = new Accounting(1, 30001, "General Customer", 100, "", new Customer());
-        Accounting accountingSalesRevenue = new Accounting(2, 50001, "Sales Revenue", 500, "", new Customer());
-        Accounting accountingSalesTax = new Accounting(3, 60003, "Sales Tax", 600, "", new Customer());
-        Accounting accountingCashFund = new Accounting(4, 61001, "Cash Fund", 310, "", new Customer());
-        Accounting accountingChecksFund = new Accounting(5, 61002, "Checks Fund", 310, "", new Customer());
-        Accounting accountingCreditCardFund = new Accounting(5, 61004, "CreditCard Fund", 310, "", new Customer());
+        Accounting accountingGeneralCustomer = new Accounting(1, 30001, "General OldCustomer", 100, "", new OldCustomer());
+        Accounting accountingSalesRevenue = new Accounting(2, 50001, "Sales Revenue", 500, "", new OldCustomer());
+        Accounting accountingSalesTax = new Accounting(3, 60003, "Sales Tax", 600, "", new OldCustomer());
+        Accounting accountingCashFund = new Accounting(4, 61001, "Cash Fund", 310, "", new OldCustomer());
+        Accounting accountingChecksFund = new Accounting(5, 61002, "Checks Fund", 310, "", new OldCustomer());
+        Accounting accountingCreditCardFund = new Accounting(5, 61004, "CreditCard Fund", 310, "", new OldCustomer());
 
 
         for (Sale s : sales) {

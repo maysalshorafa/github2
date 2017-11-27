@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class Customer extends AppCompatActivity {
 
-    Button btAddCustomer, btShowCustomer, addGroup,btShowGroup,btCancel;
+    Button btAddCustomer, btShowCustomer, addGroup, btShowGroup, btCancel;
     ArrayList<Integer> permissions_name;
 
     @Override
@@ -42,7 +42,7 @@ public class Customer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //// TODO: 22/10/2016 cancel and return to previous activity
-                Intent intent = new Intent(Customer.this, AddNewCoustmer.class);
+                Intent intent = new Intent(Customer.this, AddNewCustomer.class);
                 //userDBAdapter.close();
                 startActivity(intent);
             }
@@ -51,17 +51,17 @@ public class Customer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //// TODO: 22/10/2016 cancel and return to previous activity
-                Intent intent = new Intent(Customer.this,Coustmer_Group.class);
+                Intent intent = new Intent(Customer.this, Coustmer_Group.class);
                 //userDBAdapter.close();
 
                 startActivity(intent);
             }
         });
-       btShowCustomer.setOnClickListener(new View.OnClickListener() {
+        btShowCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //// TODO: 22/10/2016 cancel and return to previous activity
-                Intent intent = new Intent(Customer.this,CustmerManagementActivity.class);
+                Intent intent = new Intent(Customer.this, CustmerManagementActivity.class);
                 startActivity(intent);
             }
         });
@@ -69,7 +69,7 @@ public class Customer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //// TODO: 22/10/2016 cancel and return to previous activity
-                Intent intent = new Intent(Customer.this,ClubMangmentActivity.class);
+                Intent intent = new Intent(Customer.this, ClubManagementActivity.class);
                 //userDBAdapter.close();
 
                 startActivity(intent);
@@ -81,7 +81,6 @@ public class Customer extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
 
 
     }
