@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
@@ -40,7 +41,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog{
     private TextView tvExcess;
     private Spinner returnSpener;
     private double excess =0;
-
+    Currency rCurrency;
     public CurrencyReturnsCustomDialogActivity(Activity a,double excess) {
         super(a);
         this.c = a;
@@ -63,6 +64,11 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog{
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(getContext());
+                currencyReturnsDBAdapter.open();
+               double returnCurrencyValue = Double.parseDouble(tvExcess.getText().toString());
+                currencyReturnsDBAdapter.insertEntry(SESSION._SALE.getId(),returnCurrencyValue , new Date(), rCurrency.getId());
+                currencyReturnsDBAdapter.close();
                 cancel();
             }
         });
@@ -84,6 +90,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog{
 
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        rCurrency = currencyList.get(0);
 
         // attaching data adapter to spinner
         returnSpener.setAdapter(dataAdapter);
@@ -97,6 +104,8 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog{
                                        int arg2, long arg3) {
                 Currency currency = currencyList.get(arg2);
                 tvExcess.setText(Util.makePrice(excess/ currency.getRate()));
+                rCurrency = currencyList.get(arg2);
+
             }
 
             @Override

@@ -95,6 +95,7 @@ import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
+import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 
@@ -263,7 +264,8 @@ public class MainActivity extends AppCompatActivity {
     boolean forOrderSaleMan = false;
 
     long custmerAssetstId;
-    TextView orderSalesMan ;
+    TextView orderSalesMan;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1001,9 +1003,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (SESSION._ORDERS.size() > 0) {
-                    Intent intent = new Intent(MainActivity.this, CashActivity.class);
-                    intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, saleTotalPrice);
-                    startActivityForResult(intent, REQUEST_CASH_ACTIVITY_CODE);
+                    if (SETTINGS.enableCurrencies) {
+                        Intent intent = new Intent(MainActivity.this, CashActivity.class);
+                        intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, saleTotalPrice);
+                        startActivityForResult(intent, REQUEST_CASH_ACTIVITY_CODE);
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, OldCashActivity.class);
+                        intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, saleTotalPrice);
+                        startActivityForResult(intent, REQUEST_CASH_ACTIVITY_CODE);
+                    }
                 }
             }
         });
@@ -2173,7 +2181,6 @@ startActivity(i);
                 printAndOpenCashBoxSUNMI_T1(mainAns, mainMer, mainCli);
                 break;
         }
-
         currencyReturnsCustomDialogActivity.show();
 
     }
@@ -2334,35 +2341,39 @@ startActivity(i);
         if (requestCode == REQUEST_CASH_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
                 CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
-                cashPaymentDBAdapter.open();
-                double totalPaid = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_TOTAL_PAID, 0.0f);
-
-                SESSION._SALE.setTotalPaid(totalPaid);
-
+                PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 orderDBAdapter = new OrderDBAdapter(MainActivity.this);
                 custmerAssetDB = new CustomerAssetDB(MainActivity.this);
-                PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
-
+                cashPaymentDBAdapter.open();
                 saleDBAdapter.open();
+                double totalPaidWithCurrency = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_TOTAL_PAID, 0.0f);
+                double totalPaidWithOutCurrency = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_TOTAL_PAID, 0.0f);
+                if (SETTINGS.enableCurrencies) {
+                    SESSION._SALE.setTotalPaid(totalPaidWithCurrency);
+                    double firstCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_AMOUNT, 0.0f);
+                    double secondCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_AMOUNT, 0.0f);
+                    double excess = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_EXCESS_VALUE, 0.0f);
+                    currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess);
+                    long secondCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_ID, 0);
+                    long firstCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID, 0);
+                    if (firstCurrencyAmount > 0) {
+                        cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Date());
+                    }
+                    if (secondCurrencyAmount > 0) {
+                        cashPaymentDBAdapter.insertEntry(saleIDforCash, secondCurrencyAmount, secondCurrencyId, new Date());
+                    }
+                    cashPaymentDBAdapter.close();
+
+                }
+                if (!SETTINGS.enableCurrencies) {
+                    SESSION._SALE.setTotalPaid(totalPaidWithOutCurrency);
+                    double excess = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE, 0.0f);
+                    currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess);
+
+                }
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
-
-                double firstCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_AMOUNT, 0.0f);
-                double secondCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_AMOUNT, 0.0f);
-                double excess = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_EXCESS_VALUE, 0.0f);
-                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess);
-                long secondCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_ID, 0);
-                long firstCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID, 0);
-
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
-
-                if (firstCurrencyAmount > 0) {
-                    cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Date());
-                }
-                if (secondCurrencyAmount > 0) {
-                    cashPaymentDBAdapter.insertEntry(saleIDforCash, secondCurrencyAmount, secondCurrencyId, new Date());
-                }
-                cashPaymentDBAdapter.close();
                 if (club_id == 2) {
                     sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);
                 }
@@ -2635,13 +2646,13 @@ startActivity(i);
         customerAssistantDB.open();
 
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-      View popupView = layoutInflater.inflate(R.layout.custmer_assest_popup, null);
+        View popupView = layoutInflater.inflate(R.layout.custmer_assest_popup, null);
         popupWindow = new PopupWindow(popupView, 800, ActionBar.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-        final EditText  customerAssistant = (EditText) popupView.findViewById(R.id.customerAssest_name);
-        ListView lvCustomerAssistant  = (ListView) popupView.findViewById(R.id.customerAssistant_list_view);
+        final EditText customerAssistant = (EditText) popupView.findViewById(R.id.customerAssest_name);
+        ListView lvCustomerAssistant = (ListView) popupView.findViewById(R.id.customerAssistant_list_view);
         Button btn_cancel = (Button) popupView.findViewById(R.id.btn_cancel);
         Button btnDelete = (Button) popupView.findViewById(R.id.btn_delete);
 
@@ -2737,7 +2748,7 @@ startActivity(i);
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-       final EditText customerAssistant = (EditText) popupView.findViewById(R.id.customerAssest_name);
+        final EditText customerAssistant = (EditText) popupView.findViewById(R.id.customerAssest_name);
 
         ListView lvCustomerAssistant = (ListView) popupView.findViewById(R.id.customerAssistant_list_view);
 
