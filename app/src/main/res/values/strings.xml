@@ -49,7 +49,9 @@
     <string name="add_customer"> Add Customer </string>
     <string name="show_club">Show Club </string>
     <string name="show_customer">Show Customer </string>
-    <string name="discount_percentage">Discount Percentage</string>\
+    <string name="discount_percentage">Percentage</string>
+    <string name="add_customer_club"> Add Customer Club </string>
+
 
     <!--Product Management-->
     <string name="edit_product">Edit Product</string>
