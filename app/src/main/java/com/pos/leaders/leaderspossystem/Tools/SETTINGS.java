@@ -24,5 +24,5 @@ public class SETTINGS {
 
 
 	public static PrinterType printer = PrinterType.HPRT_TP805;
-	public static boolean enableCurrencies = false;
+	public static boolean enableCurrencies = true;
 }

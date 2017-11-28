@@ -81,6 +81,10 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 
 			holder.llMethods=(RelativeLayout)convertView.findViewById(R.id.rowSaleDetails_LLMethods);
 			holder.llSalesMan=(LinearLayout) convertView.findViewById(R.id.saleManLayout);
+			holder.discountLayout=(LinearLayout) convertView.findViewById(R.id.discountLayout);
+			holder.tvPercentage=(TextView)convertView.findViewById(R.id.tvDiscountPercentageAmount);
+			holder.tvPercentageAmount=(TextView)convertView.findViewById(R.id.discountPercentage);
+
 			convertView.setTag(holder);
 		}
 		else{
@@ -88,12 +92,16 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 		}
 		int count;
 		double price;
+		double discount = orderList.get(position).getDiscount();
 		price=orderList.get(position).getPrice();
 		count=orderList.get(position).getCount();
 		holder.tvName.setText(_Substring(orderList.get(position).getProduct().getName()));
 		holder.tvPrice.setText(String.format(new Locale("en"),"%.2f",price)+" "+ context.getString(R.string.ins));
 		holder.tvCount.setText(count+"");
 		holder.tvTotal.setText(String.format(new Locale("en"),"%.2f",(price*count))+ " " + context.getString(R.string.ins));
+		holder.tvPercentage.setText(R.string.discount_percentage);
+		holder.tvPercentageAmount.setText(String.format(new Locale("en"),"%.2f",(discount))+ " %");
+
 
 		//	callPopup();
 
@@ -101,12 +109,16 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 		if(selected==position&&selected!=-1){
 			holder.llMethods.setVisibility(View.VISIBLE);
 			holder.llSalesMan.setVisibility(View.VISIBLE);
-			convertView.setBackgroundColor(context.getResources().getColor(R.color.list_background_color));
+            holder.discountLayout.setVisibility(View.VISIBLE);
+
+            convertView.setBackgroundColor(context.getResources().getColor(R.color.list_background_color));
 		}
 		else {
 			holder.llMethods.setVisibility(View.GONE);
 			holder.llSalesMan.setVisibility(View.GONE);
-			convertView.setBackgroundColor(context.getResources().getColor(R.color.white));
+            holder.discountLayout.setVisibility(View.GONE);
+
+            convertView.setBackgroundColor(context.getResources().getColor(R.color.white));
 		}
 		return convertView;
 	}
@@ -120,6 +132,9 @@ public 	class ViewHolder{
 		private TextView tvTotal;
 		private RelativeLayout llMethods;
 		private LinearLayout llSalesMan;
+		private LinearLayout discountLayout;
+		private TextView tvPercentage;
+		private TextView tvPercentageAmount;
 
 
 	}

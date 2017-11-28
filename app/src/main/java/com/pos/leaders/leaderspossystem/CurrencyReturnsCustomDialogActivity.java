@@ -25,6 +25,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.CashActivity;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
@@ -34,15 +35,16 @@ import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
-public class CurrencyReturnsCustomDialogActivity extends Dialog{
+public class CurrencyReturnsCustomDialogActivity extends Dialog {
 
     private Activity c;
     private Button done;
     private TextView tvExcess;
     private Spinner returnSpener;
-    private double excess =0;
+    private double excess = 0;
     Currency rCurrency;
-    public CurrencyReturnsCustomDialogActivity(Activity a,double excess) {
+
+    public CurrencyReturnsCustomDialogActivity(Activity a, double excess) {
         super(a);
         this.c = a;
         this.excess = excess;
@@ -59,16 +61,19 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog{
         setCanceledOnTouchOutside(false);
         tvExcess = (TextView) findViewById(R.id.cashActivity_TVExcess);
         returnSpener = (Spinner) findViewById(R.id.spinnerForReturnValue);
+        if (!SETTINGS.enableCurrencies) {
+            returnSpener.setVisibility(View.INVISIBLE);
+        }
         CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this.c);
         currencyTypeDBAdapter.open();
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(getContext());
-                currencyReturnsDBAdapter.open();
-               double returnCurrencyValue = Double.parseDouble(tvExcess.getText().toString());
-                currencyReturnsDBAdapter.insertEntry(SESSION._SALE.getId(),returnCurrencyValue , new Date(), rCurrency.getId());
-                currencyReturnsDBAdapter.close();
+                /**    CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(getContext());
+                 currencyReturnsDBAdapter.open();
+                 double returnCurrencyValue = Double.parseDouble(tvExcess.getText().toString());
+                 currencyReturnsDBAdapter.insertEntry(SESSION._SALE.getId(),returnCurrencyValue , new Date(), rCurrency.getId());
+                 currencyReturnsDBAdapter.close();**/
                 cancel();
             }
         });
@@ -103,7 +108,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog{
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
                 Currency currency = currencyList.get(arg2);
-                tvExcess.setText(Util.makePrice(excess/ currency.getRate()));
+                tvExcess.setText(Util.makePrice(excess / currency.getRate()));
                 rCurrency = currencyList.get(arg2);
 
             }
