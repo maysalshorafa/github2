@@ -2169,7 +2169,7 @@ startActivity(i);
         }
     }
 
-    private void printAndOpenCashBox(String mainAns, final String mainMer, final String mainCli) {
+    private void printAndOpenCashBox(String mainAns, final String mainMer, final String mainCli,int source) {
         switch (SETTINGS.printer) {
             case BTP880:
                 printAndOpenCashBoxBTP880(mainAns, mainMer, mainCli);
@@ -2181,7 +2181,8 @@ startActivity(i);
                 printAndOpenCashBoxSUNMI_T1(mainAns, mainMer, mainCli);
                 break;
         }
-        currencyReturnsCustomDialogActivity.show();
+        if(source==REQUEST_CASH_ACTIVITY_CODE)
+            currencyReturnsCustomDialogActivity.show();
 
     }
 
@@ -2260,7 +2261,7 @@ startActivity(i);
 
                 printAndOpenCashBox(data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY),
                         data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote),
-                        data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
+                        data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote),REQUEST_CREDIT_CARD_ACTIVITY_CODE);
 
                 //get the invoice plugin
                 //print invoice
@@ -2334,7 +2335,7 @@ startActivity(i);
                 checksDBAdapter.close();
 
 
-                printAndOpenCashBox("", "", "");
+                printAndOpenCashBox("", "", "",REQUEST_CHECKS_ACTIVITY_CODE);
                 return;
             }
         }
@@ -2428,7 +2429,7 @@ startActivity(i);
 
                 paymentDBAdapter.close();
 
-                printAndOpenCashBox("", "", "");
+                printAndOpenCashBox("", "", "",REQUEST_CASH_ACTIVITY_CODE);
                 return;
             }
 

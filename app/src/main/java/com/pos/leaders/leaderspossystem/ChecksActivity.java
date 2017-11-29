@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,6 +31,7 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -121,6 +124,22 @@ public class ChecksActivity extends AppCompatActivity {
         adapter = new ChecksListViewAdapter(this, R.layout.list_adapter_row_checks, checkList);
         lvChecks.setAdapter(adapter);
 		setListeners();
+
+		final Calendar myCalendar = Calendar.getInstance();
+		DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear,
+								  int dayOfMonth) {
+				// TODO Auto-generated method stub
+				myCalendar.set(Calendar.YEAR, year);
+				myCalendar.set(Calendar.MONTH, monthOfYear);
+				myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+			}
+
+		};
+
 	}
 
     private double getTotalPid(){
