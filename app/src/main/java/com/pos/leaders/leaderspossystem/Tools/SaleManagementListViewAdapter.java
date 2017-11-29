@@ -65,9 +65,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		}
 		double price;
 		price = salesList.get(position).getTotalPrice();
-		String string =""+salesList.get(position).getId() + "";
-		String res = string.substring(15, string.length());
-		holder.tvID.setText(res + "");
+		holder.tvID.setText(salesList.get(position).getId() + "");
 		holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
 		holder.tvPaid.setText(Util.makePrice(salesList.get(position).getTotalPaid()) + " " + context.getString(R.string.ins));
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");

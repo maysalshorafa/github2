@@ -295,7 +295,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                 if (!word.equals("")) {
                     for (Sale c : All_sales) {
 
-                        if (c.getUser().getUserName().toLowerCase().contains(word.toLowerCase()) || (c.getTotalPaid() + "").contains(word.toLowerCase()) ||  (c.getTotalPrice() + "").contains(word.toLowerCase()) ||(c.getId() + "").contains(word.toLowerCase())
+                        if (c.getUser().getUserName().toLowerCase().contains(word.toLowerCase()) ||(c.getId() + "").contains(word.toLowerCase())
                                 || (c.getSaleDate() + "").contains(word.toLowerCase())) {
                             _saleList.add(c);
 

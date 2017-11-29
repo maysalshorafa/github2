@@ -27,9 +27,7 @@
         android:layout_height="0dp"
         android:id="@+id/guideline25"
         android:orientation="vertical"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp"
-        app:layout_constraintGuide_percent="0.859375"/>
+        app:layout_constraintGuide_percent="0.62"/>
 
     <TextView
         android:text="TextView"
@@ -50,9 +48,7 @@
         android:layout_height="0dp"
         android:id="@+id/guideline26"
         android:orientation="vertical"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp"
-        app:layout_constraintGuide_percent="0.5"/>
+        app:layout_constraintGuide_percent="0.44"/>
 
     <TextView
         android:text="TextView"
@@ -75,9 +71,7 @@
         android:id="@+id/guideline29"
 
         android:orientation="vertical"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp"
-        app:layout_constraintGuide_percent="0.35546875"/>
+        app:layout_constraintGuide_percent="0.29"/>
 
     <TextView
         android:text="TextView"
@@ -99,9 +93,7 @@
         android:layout_height="0dp"
         android:id="@+id/guideline28"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.20052083"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp"/>
+        app:layout_constraintGuide_percent="0.15" />
 
     <TextView
         android:text="TextView"

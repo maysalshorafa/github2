@@ -24,8 +24,8 @@ public class SETTINGS {
 
 
 
-	public static PrinterType printer = PrinterType.HPRT_TP805;
+	public static PrinterType printer = PrinterType.SUNMI_T1;
 	public static boolean enableCurrencies = true;
-	public static int decimalNumbers =3 ;
+	public static int decimalNumbers = 1 ;
 
 }
