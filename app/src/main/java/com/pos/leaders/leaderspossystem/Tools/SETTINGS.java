@@ -27,5 +27,4 @@ public class SETTINGS {
 	public static PrinterType printer = PrinterType.HPRT_TP805;
 	public static boolean enableCurrencies = true;
 	public static int decimalNumbers =3 ;
-
 }
