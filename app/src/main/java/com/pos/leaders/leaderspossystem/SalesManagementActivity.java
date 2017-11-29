@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -26,6 +28,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
@@ -36,6 +39,7 @@ import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.SalesManDetailsGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.util.ArrayList;
@@ -61,13 +65,14 @@ public class SalesManagementActivity extends AppCompatActivity {
     private static final int DIALOG_FROM_DATE = 825;
     private static final int DIALOG_TO_DATE = 324;
     Date from, to;
-
+    EditText etSearch;
     SaleManagementListViewAdapter adapter;
     View previousView = null;
 
-
+    List<Sale> _saleList;
     List<Order> orders;
     List<Check> checks;
+    List<Sale> All_sales;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +90,11 @@ public class SalesManagementActivity extends AppCompatActivity {
 
         etFrom.setFocusable(false);
         etFrom.setText(DateConverter.getBeforeMonth().split(" ")[0]);
+        etSearch = (EditText) findViewById(R.id.etSearch);
+        etSearch.setText("");
+        etSearch.setHint("Search..");
+        etSearch.setFocusable(true);
+        etSearch.requestFocus();
         from = DateConverter.stringToDate(DateConverter.getBeforeMonth());
 
         etTo.setFocusable(false);
@@ -110,14 +120,15 @@ public class SalesManagementActivity extends AppCompatActivity {
         userDBAdapter = new UserDBAdapter(this);
         paymentDBAdapter = new PaymentDBAdapter(this);
         paymentDBAdapter.open();
-
         setDate();
+
     }
 
     private void setDate() {
         //List<Sale> _saleList=new ArrayList<Sale>();
         saleDBAdapter.open();
-        final List<Sale> _saleList = saleDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime());
+        _saleList = saleDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime());
+        All_sales = _saleList;
         saleDBAdapter.close();
         for (Sale s : _saleList) {
             userDBAdapter.open();
@@ -129,7 +140,7 @@ public class SalesManagementActivity extends AppCompatActivity {
             paymentDBAdapter.close();
         }
         Log.i("log", _saleList.toString());
-		/*for (Sale s : saleList) {
+        /*for (Sale s : saleList) {
 			if(DateConverter.dateBetweenTwoDates(from, to, s.getSaleDate())) {
 				_saleList.add(s);
 			}
@@ -242,7 +253,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                         else
                             print(invoiceImg.cancelingInvoice(sale, false, null));
                         sale.setPayment(new Payment(payments.get(0)));
-                        long sID = saleDBAdapter.insertEntry(SESSION._USER.getId(), new Date(), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaid() * -1,sale.getCustomer_id(),sale.getCustomer_name());
+                        long sID = saleDBAdapter.insertEntry(SESSION._USER.getId(), new Date(), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaid() * -1, sale.getCustomer_id(), sale.getCustomer_name());
 
                         saleDBAdapter.close();
                         PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(SalesManagementActivity.this);
@@ -258,6 +269,47 @@ public class SalesManagementActivity extends AppCompatActivity {
                 previousView.setBackgroundColor(getResources().getColor(R.color.list_background_color));
             }
         });
+        etSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                etSearch.setFocusable(true);
+            }
+        });
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                lvSales.setTextFilterEnabled(true);
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                _saleList = new ArrayList<Sale>();
+                String word = etSearch.getText().toString();
+
+                if (!word.equals("")) {
+                    for (Sale c : All_sales) {
+
+                        if (c.getUser().getUserName().toLowerCase().contains(word.toLowerCase()) || (c.getTotalPaid() + "").contains(word.toLowerCase()) ||  (c.getTotalPrice() + "").contains(word.toLowerCase()) ||(c.getId() + "").contains(word.toLowerCase())
+                                || (c.getSaleDate() + "").contains(word.toLowerCase())) {
+                            _saleList.add(c);
+
+                        }
+                    }
+                } else {
+                    _saleList = All_sales;
+                }
+                adapter = new SaleManagementListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_sales_management, _saleList);
+
+                lvSales.setAdapter(adapter);
+            }
+        });
+
     }
 
 

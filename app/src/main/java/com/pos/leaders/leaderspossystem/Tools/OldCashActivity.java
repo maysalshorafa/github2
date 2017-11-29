@@ -113,19 +113,6 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
         tvTotalInserted = (TextView) findViewById(R.id.cashActivity_TVTotalInserted);
         tvTotalInserted.setText(0.0 + " " + getResources().getText(R.string.ins));
 
-
-        tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvTotalInserted.setText(tv.getText());
-                // tvExcess.setText(0 + " " + getResources().getText(R.string.ins));
-                //tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));
-                btnDone.setEnabled(true);
-                btnDone.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
-                btnDone.setPadding(50, 10, 50, 10);
-            }
-        });
-
         final Bundle extras = getIntent().getExtras();
         if (extras != null) {
             totalPrice = (double) extras.get(MainActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE);

@@ -8,7 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="12dp"
@@ -59,7 +58,15 @@
                 android:layout_marginTop="40dp"></Spinner>
 
         </LinearLayout>
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -99,6 +106,44 @@
 
 
         </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="6dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:background="@drawable/layout_border"
+                >
+
+
+
+                <TextView
+                    android:id="@+id/cashActivity_TVRequiredAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:maxLength="14"
+                    android:minLines="1"
+                    android:text="0"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="50dp"
+                    android:textStyle="bold" />
+                <Spinner
+                    android:id="@+id/cashActivity_SPRequiredAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"></Spinner>
+
+
+            </LinearLayout>
+            </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -107,7 +152,7 @@
         android:layout_gravity="bottom"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/layout_border"
         android:orientation="horizontal"
         android:weightSum="2">
@@ -216,7 +261,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginBottom="50dp"
         android:layout_marginLeft="50dp"
@@ -232,7 +277,8 @@
             android:layout_gravity="bottom|center"
             android:background="@drawable/btn_primary"
             android:text="@string/done"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:layout_marginTop="8dp"/>
     </LinearLayout>
 
 </LinearLayout>

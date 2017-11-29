@@ -13,6 +13,9 @@ import android.widget.TextView;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -62,10 +65,13 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		}
 		double price;
 		price = salesList.get(position).getTotalPrice();
-		holder.tvID.setText(salesList.get(position).getId() + "");
-		holder.tvPrice.setText((price) + " " + context.getString(R.string.ins));
-		holder.tvPaid.setText(salesList.get(position).getTotalPaid() + " " + context.getString(R.string.ins));
-		holder.tvDate.setText(DateConverter.DateToString(salesList.get(position).getSaleDate()));
+		String string =""+salesList.get(position).getId() + "";
+		String res = string.substring(15, string.length());
+		holder.tvID.setText(res + "");
+		holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
+		holder.tvPaid.setText(Util.makePrice(salesList.get(position).getTotalPaid()) + " " + context.getString(R.string.ins));
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		holder.tvDate.setText(format.format(salesList.get(position).getSaleDate()));
 		holder.tvUseName.setText(salesList.get(position).getUser().getFullName());
 		holder.FL.setVisibility(View.GONE);
 
