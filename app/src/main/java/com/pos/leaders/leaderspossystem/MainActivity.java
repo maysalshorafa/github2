@@ -2186,7 +2186,7 @@ startActivity(i);
                 printAndOpenCashBoxSUNMI_T1(mainAns, mainMer, mainCli);
                 break;
         }
-        if(source==REQUEST_CASH_ACTIVITY_CODE)
+        if(source==REQUEST_CASH_ACTIVITY_CODE||source==REQUEST_CASH_ACTIVITY_WITH_CURRENCY_CODE)
             currencyReturnsCustomDialogActivity.show();
 
     }
@@ -2408,7 +2408,7 @@ startActivity(i);
 
                 paymentDBAdapter.close();
 
-                printAndOpenCashBox("", "", "");
+                printAndOpenCashBox("", "", "",REQUEST_CASH_ACTIVITY_CODE);
                 saleDBAdapter.close();
                 return;
             }
