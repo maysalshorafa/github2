@@ -104,7 +104,7 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
         String userName=userDBAdapter.getUserName(customerAssests.get(position).getCustmerAssestID());
       //  saleManId.setText(userName);
         salesCase.setText(""+customerAssests.get(position).getSalescase());
-        tvSalesAmount.setText(""+customerAssests.get(position).getAmount());
+        tvSalesAmount.setText(Util.makePrice(customerAssests.get(position).getAmount()));
         Date d = new Date(customerAssests.get(position).getSaleDate());
         salesDate.setText(""+d);
         String string =""+customerAssests.get(position).getOrder_id();

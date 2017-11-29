@@ -19,6 +19,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Tools.SalesManDetailsGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,7 +62,7 @@ public class SalesAssistantDetailesSalesMangmentActivity extends AppCompatActivi
         customerAssetDB.open();
         customerAssests = customerAssetDB.getBetweenTwoDates(userId,new Date().getTime());
         double amount=customerAssetDB.getTotalAmountForAssistant(userId);
-        etAmount.setText(""+amount);
+        etAmount.setText(Util.makePrice(amount));
         All_custmerAssestint = customerAssests;
         adapter = new SalesManDetailsGridViewAdapter(this, customerAssests);
         gvSalesMan.setAdapter(adapter);
