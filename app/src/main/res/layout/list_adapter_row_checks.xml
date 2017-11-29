@@ -26,12 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:ems="10"
-        android:inputType="date"
-        app:layout_constraintHorizontal_bias="0.66"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline36"
-        app:layout_constraintRight_toLeftOf="@+id/guideline38"
-        app:layout_constraintTop_toTopOf="@+id/listChecks_ETAmount" />
+        android:clickable="true"
+        android:editable="false"/>
 
     <EditText
         android:id="@+id/listChecks_ETCheckNumber"
