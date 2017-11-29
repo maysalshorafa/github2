@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -33,7 +34,7 @@ public class Util {
     public static String newline = System.getProperty("line.separator");
     public static Locale locale = new Locale("en");
 
-    public synchronized static boolean isFirstLaunch(Context context,boolean CreateFile) {
+    public synchronized static boolean isFirstLaunch(Context context, boolean CreateFile) {
         String sID = null;
         boolean launchFlag = false;
         if (sID == null) {
@@ -41,10 +42,9 @@ public class Util {
             try {
                 if (!installation.exists()) {
                     launchFlag = true;
-                    if(CreateFile)
+                    if (CreateFile)
                         writeInstallationFile(installation);
-                }
-                else
+                } else
                     sID = readInstallationFile(installation);
 
             } catch (Exception e) {
@@ -71,9 +71,8 @@ public class Util {
     }
 
 
-
     public static String removeLastChar(String str) {
-        return str.substring(0,str.length()-1);
+        return str.substring(0, str.length() - 1);
     }
 
 
@@ -100,69 +99,76 @@ public class Util {
         return file;
     }
 
-    public static String makePrice(double d){
-        return String.format(new Locale("en"), "%.2f", d);
+    public static String makePrice(double d) {
+        String format = "0.";
+        for (int i = SETTINGS.decimalNumbers; i > 0; i--) {
+            format += "0";
+        }
+        DecimalFormat form = new DecimalFormat(format);
+        return form.format(d);
     }
 
     public static String spaces(int num) {
         String s = "";
-        for (int i=0;i<num;i++){
+        for (int i = 0; i < num; i++) {
             s += "\u0020";
         }
         return s;
     }
 
-    public static String x12V99(double d){
+    public static String x12V99(double d) {
         double x = d;
-        if(d<0)
+        if (d < 0)
             x *= -1;
 
         String str = "";
-        str += (String.format(locale, "%012d", ((Double)x).intValue()));
-        int fl =  ((Double)((x - Math.floor(x) + 0.001) * 100)).intValue();
-        str += (String.format(locale, "%02d", fl));
-        return str;
-    }
-    public static String x9V99(double d){
-        double x = d;
-        if(d<0)
-            x *= -1;
-
-        String str = "";
-        str += (String.format(locale, "%09d", ((Double)x).intValue()));
-        int fl =  ((Double)((x - Math.floor(x) + 0.001) * 100)).intValue();
-        str += (String.format(locale, "%02d", fl));
-        return str;
-    }
-    public static String _8V99(double d){
-        double x = d;
-        if(d<0)
-            x *= -1;
-
-        String str = "";
-        str += (String.format(locale, "%08d", ((Double)x).intValue()));
-        int fl =  ((Double)((x - Math.floor(x) + 0.001) * 100)).intValue();
+        str += (String.format(locale, "%012d", ((Double) x).intValue()));
+        int fl = ((Double) ((x - Math.floor(x) + 0.001) * 100)).intValue();
         str += (String.format(locale, "%02d", fl));
         return str;
     }
 
-    public static File createFileFromInputStream(InputStream inputStream,String fileName) {
+    public static String x9V99(double d) {
+        double x = d;
+        if (d < 0)
+            x *= -1;
 
-        try{
+        String str = "";
+        str += (String.format(locale, "%09d", ((Double) x).intValue()));
+        int fl = ((Double) ((x - Math.floor(x) + 0.001) * 100)).intValue();
+        str += (String.format(locale, "%02d", fl));
+        return str;
+    }
+
+    public static String _8V99(double d) {
+        double x = d;
+        if (d < 0)
+            x *= -1;
+
+        String str = "";
+        str += (String.format(locale, "%08d", ((Double) x).intValue()));
+        int fl = ((Double) ((x - Math.floor(x) + 0.001) * 100)).intValue();
+        str += (String.format(locale, "%02d", fl));
+        return str;
+    }
+
+    public static File createFileFromInputStream(InputStream inputStream, String fileName) {
+
+        try {
             File f = new File(fileName);
             OutputStream outputStream = new FileOutputStream(f);
             byte buffer[] = new byte[1024];
             int length = 0;
 
-            while((length=inputStream.read(buffer)) > 0) {
-                outputStream.write(buffer,0,length);
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
             }
 
             outputStream.close();
             inputStream.close();
 
             return f;
-        }catch (IOException e) {
+        } catch (IOException e) {
             //Logging exception
         }
 
@@ -170,42 +176,40 @@ public class Util {
     }
 
     private static boolean checkID(long id) {
-        String sID = String.format(new Locale("en"),"%019d",id);
+        String sID = String.format(new Locale("en"), "%019d", id);
         String idPrefix = sID.substring(0, sID.length() - 16);
         return Long.parseLong(idPrefix) == SESSION.POS_ID_NUMBER;
     }
 
-    private static long getCurrentLastID(SQLiteDatabase db, String tableName, String idField){
+    private static long getCurrentLastID(SQLiteDatabase db, String tableName, String idField) {
         long i = 0;
-        Cursor cursor = db.rawQuery("select  "+tableName+"  from  "+IdsCounterDBAdapter.IDS_COUNTER_TABLE_NAME+";", null);
+        Cursor cursor = db.rawQuery("select  " + tableName + "  from  " + IdsCounterDBAdapter.IDS_COUNTER_TABLE_NAME + ";", null);
         if (cursor.getCount() < 1) // don`t have any sale yet
         {
             cursor.close();
             i = (long) SESSION.POS_ID_NUMBER * SESSION.firstIDOffset;
-        }
-        else {
+        } else {
             cursor.moveToFirst();
             i = Long.parseLong(cursor.getString(0));
         }
         ContentValues values = new ContentValues();
-        if(i==0){
+        if (i == 0) {
             i = (long) SESSION.POS_ID_NUMBER * SESSION.firstIDOffset;
-            values.put(tableName,i);
-        }
-        else{
+            values.put(tableName, i);
+        } else {
             i = i + 1;
-            values.put(tableName,i);
+            values.put(tableName, i);
         }
-        db.update(IdsCounterDBAdapter.IDS_COUNTER_TABLE_NAME,values, null, null);
+        db.update(IdsCounterDBAdapter.IDS_COUNTER_TABLE_NAME, values, null, null);
         return i;
 
     }
 
-    public static long idHealth(SQLiteDatabase db, String tableName, String idField){
-        return  getCurrentLastID(db,tableName,idField);
+    public static long idHealth(SQLiteDatabase db, String tableName, String idField) {
+        return getCurrentLastID(db, tableName, idField);
     }
 
-    private static boolean isMyServiceRunning(Class<?> serviceClass,Context context) {
+    private static boolean isMyServiceRunning(Class<?> serviceClass, Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {

@@ -41,17 +41,16 @@ public class CashActivity extends AppCompatActivity {
     public static final String LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID = "LEAD_POS_RESULT_INTENT_CODE_TEMP_CASH_ACTIVITY_FIRST_CURRENCY_ID";
     public static final String LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_EXCESS_VALUE = "LEAD_POS_RESULT_INTENT_CODE_TEMP_CASH_ACTIVITY_EXCESS_VALUE";
 
-    TextView tvTotalPrice, tvTotalPaid, tvTotalPaidText;
+    TextView tvTotalPrice, tvTotalPaid, tvTotalPaidText, tvRequiredAmount;
     EditText etFirstCurrency, etSecondCurrency;
-    Spinner sFirstCurrency, sSecondCurrency, spinnerForTotalPrice;
+    Spinner sFirstCurrency, sSecondCurrency, spinnerForTotalPrice, spinnerForRequiredAmount;
 
     Button btnDone;
 
     double totalPrice = 0.0;
     double totalPid = 0.0f;
-    double firstCurrencyInDefaultValue = 0, secondCurrencyInDefaultValue = 0, totalPriceInDefaultValue = 0;
+    double firstCurrencyInDefaultValue = 0, secondCurrencyInDefaultValue = 0, totalPriceInDefaultValue = 0, requiredAmount = 0;
     double excessValue;
-
 
 
     List<Currency> currenciesList;
@@ -60,6 +59,7 @@ public class CashActivity extends AppCompatActivity {
     Currency totalPriceCurrency;
     Currency fCurrency;
     Currency sCurrency;
+    Currency rCurrency;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,14 +108,14 @@ public class CashActivity extends AppCompatActivity {
         tvTotalPrice.setText(valueView(totalPrice));
         tvTotalPaidText = (TextView) findViewById(R.id.cashActivity_TVTotalInsertedText);
         tvTotalPaid = (TextView) findViewById(R.id.cashActivity_TVTotalInserted);
+        tvRequiredAmount = (TextView) findViewById(R.id.cashActivity_TVRequiredAmount);
         spinnerForTotalPrice = (Spinner) findViewById(R.id.spinnerForTotalPrice);
+        spinnerForRequiredAmount = (Spinner) findViewById(R.id.cashActivity_SPRequiredAmount);
 
         etFirstCurrency = (EditText) findViewById(R.id.cashActivity_TVTotalInsertedForfirstCurrency);
         etSecondCurrency = (EditText) findViewById(R.id.cashActivity_TVTotalInsertedForSecondCurrency);
         sFirstCurrency = (Spinner) findViewById(R.id.spinnerForFirstCurrency);
         sSecondCurrency = (Spinner) findViewById(R.id.spinnerForSecondCurrency);
-
-
 
 
         //Getting default currencies name and values
@@ -143,9 +143,10 @@ public class CashActivity extends AppCompatActivity {
         sFirstCurrency.setAdapter(dataAdapter);
         sSecondCurrency.setAdapter(dataAdapter);
         spinnerForTotalPrice.setAdapter(dataAdapter);
-
+        spinnerForRequiredAmount.setAdapter(dataAdapter);
         fCurrency = currenciesList.get(0);
         sCurrency = currenciesList.get(0);
+        rCurrency = currenciesList.get(0);
         totalPriceCurrency = currenciesList.get(0);
 
         //set listeners
@@ -187,6 +188,18 @@ public class CashActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
+        spinnerForRequiredAmount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                rCurrency = currenciesList.get(position);
+                spinnerChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         //endregion
 
@@ -213,16 +226,19 @@ public class CashActivity extends AppCompatActivity {
 
         etFirstCurrency.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (!etFirstCurrency.getText().toString().equals("")) {
                     firstCurrencyInDefaultValue = Double.parseDouble(etFirstCurrency.getText().toString()) * fCurrency.getRate();
-                }
-                else{
+
+                } else {
                     firstCurrencyInDefaultValue = 0;
                 }
                 calculatePaid();
@@ -231,16 +247,19 @@ public class CashActivity extends AppCompatActivity {
 
         etSecondCurrency.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (!etSecondCurrency.getText().toString().equals("")) {
                     secondCurrencyInDefaultValue = Double.parseDouble(etSecondCurrency.getText().toString()) * sCurrency.getRate();
-                }
-                else{
+
+                } else {
                     secondCurrencyInDefaultValue = 0;
                 }
                 calculatePaid();
@@ -249,14 +268,14 @@ public class CashActivity extends AppCompatActivity {
 
     }
 
-    private void illegalValue(){
+    private void illegalValue() {
         tvTotalPaidText.setTextColor(getResources().getColor(R.color.Red));
         tvTotalPaid.setTextColor(getResources().getColor(R.color.Red));
         btnDone.setEnabled(false);
         btnDone.setBackground(getResources().getDrawable(R.drawable.bt_dangers_pressed));
     }
 
-    private void legalValue(){
+    private void legalValue() {
         tvTotalPaidText.setTextColor(getResources().getColor(R.color.Green));
         tvTotalPaid.setTextColor(getResources().getColor(R.color.Green));
         btnDone.setEnabled(true);
@@ -267,7 +286,7 @@ public class CashActivity extends AppCompatActivity {
         return Util.makePrice(a);
     }
 
-    private void calculateExcess(){
+    private void calculateExcess() {
         excessValue = (firstCurrencyInDefaultValue + secondCurrencyInDefaultValue) - totalPriceInDefaultValue;
         if (excessValue >= 0)
             legalValue();
@@ -275,17 +294,25 @@ public class CashActivity extends AppCompatActivity {
             illegalValue();
     }
 
-    private void calculatePaid(){
+    private void calculatePaid() {
         tvTotalPaid.setText(valueView((firstCurrencyInDefaultValue + secondCurrencyInDefaultValue) / totalPriceCurrency.getRate()));
-
+        requiredAmount = totalPrice - (firstCurrencyInDefaultValue + secondCurrencyInDefaultValue);
+        if (requiredAmount > 0) {
+            tvRequiredAmount.setText(valueView(requiredAmount / rCurrency.getRate()));
+        } else {
+            requiredAmount = 0;
+            tvRequiredAmount.setText(valueView(requiredAmount / rCurrency.getRate()));
+        }
         calculateExcess();
     }
 
-    private void spinnerChanged(){
-        if(!etFirstCurrency.getText().toString().equals(""))
+    private void spinnerChanged() {
+        if (!etFirstCurrency.getText().toString().equals(""))
             firstCurrencyInDefaultValue = Double.parseDouble(etFirstCurrency.getText().toString()) * fCurrency.getRate();
-        if(!etSecondCurrency.getText().toString().equals(""))
+        if (!etSecondCurrency.getText().toString().equals(""))
             secondCurrencyInDefaultValue = Double.parseDouble(etSecondCurrency.getText().toString()) * sCurrency.getRate();
+        if (!tvRequiredAmount.getText().toString().equals(""))
+            requiredAmount = Double.parseDouble(tvRequiredAmount.getText().toString()) * rCurrency.getRate();
         calculatePaid();
     }
 
