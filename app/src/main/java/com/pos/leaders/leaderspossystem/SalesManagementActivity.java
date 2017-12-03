@@ -83,7 +83,7 @@ public class SalesManagementActivity extends AppCompatActivity {
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sales_management);
-
+        TitleBar.setTitleBar(this);
         lvSales = (ListView) findViewById(R.id.saleManagement_LVSales);
         etFrom = (EditText) findViewById(R.id.saleManagement_ETFrom);
         etTo = (EditText) findViewById(R.id.saleManagement_ETTo);
