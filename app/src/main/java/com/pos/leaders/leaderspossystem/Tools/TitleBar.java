@@ -41,7 +41,7 @@ public class TitleBar {
         actionBar.setCustomView(actionBarLayout);
         if (SESSION._USER == null) {
             //terminal stop
-            System.exit(0);
+            //System.exit(0);
         }
 
         long date;
