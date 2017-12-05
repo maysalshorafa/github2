@@ -12,4 +12,8 @@ public class CONSTANT {
     public static final String CHECKS = "checks";
     public static final String[] PAYMENTS_TYPE = {CASH, CREDIT_CARD, CHECKS};
     public static final int PRINTER_PAGE_WIDTH = 570;
+    public static final int Shekel = 0;
+    public static final int USD = 1;
+    public static final int GBP = 2 ;
+    public static final int EUR = 3;
 }

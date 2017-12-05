@@ -209,7 +209,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
             etParcent.setText("0.0");
 
         }
-        if (id == 0) {
+        if (id == 3) {
             etAmount.setVisibility(View.GONE);
             etPoint.setVisibility(View.GONE);
             etParcent.setVisibility(View.GONE);

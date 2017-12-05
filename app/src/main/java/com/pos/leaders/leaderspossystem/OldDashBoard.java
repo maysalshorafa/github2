@@ -49,7 +49,7 @@ import java.util.Date;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
 
-public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class OldDashBoard extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static final String PREFS_NAME = "Time_Pref";
     private boolean enableBackButton = true;
     DateFormat format;
@@ -131,7 +131,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
         Log.i("Token", SESSION.token);
 
         im = (ImageView) findViewById(R.id.home);
-        Dash_bord_adapter adapter = new Dash_bord_adapter(DashBoard.this, dashbord_text, imageId);
+        Dash_bord_adapter adapter = new Dash_bord_adapter(OldDashBoard.this, dashbord_text, imageId);
         aReportDBAdapter = new AReportDBAdapter(this);
         userDBAdapter = new UserDBAdapter(this);
         userDBAdapter.open();
@@ -141,7 +141,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
         grid.setAdapter(adapter);
         Bundle bundle = getIntent().getExtras();
         permissions_name = bundle.getString("permissions_name");
-        Toast.makeText(DashBoard.this, permissions_name, Toast.LENGTH_LONG).show();
+        Toast.makeText(OldDashBoard.this, permissions_name, Toast.LENGTH_LONG).show();
 
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent,
@@ -230,23 +230,23 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
                             "Show Custmer",
                             "ADD Club",
                     };
-                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(DashBoard.this);
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(OldDashBoard.this);
                     builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
                     builder.setItems(items, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int item) {
                             Intent intent;
                             switch (item) {
                                 case 0:
-                                    intent = new Intent(DashBoard.this, AddNewCustomer.class);
+                                    intent = new Intent(OldDashBoard.this, AddNewCustomer.class);
                                     startActivity(intent);
                                     break;
                                 case 1:
-                                    intent = new Intent(DashBoard.this, CustmerManagementActivity.class);
+                                    intent = new Intent(OldDashBoard.this, CustmerManagementActivity.class);
                                     intent.putExtra("permissions_name", permissions_name);
                                     startActivity(intent);
                                     break;
                                 case 2:
-                                    intent = new Intent(DashBoard.this, Coustmer_Group.class);
+                                    intent = new Intent(OldDashBoard.this, Coustmer_Group.class);
                                     startActivity(intent);
                                     break;
 
@@ -258,7 +258,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
                 }
                 break;
             case 10:
-                Intent intent = new Intent(DashBoard.this, LogInActivity.class);
+                Intent intent = new Intent(OldDashBoard.this, LogInActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 try {
@@ -345,7 +345,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
 
         //there is no a report after z report
         enableBackButton = false;
-        final Dialog discountDialog = new Dialog(DashBoard.this);
+        final Dialog discountDialog = new Dialog(OldDashBoard.this);
         discountDialog.setTitle(R.string.opening_report);
         discountDialog.setContentView(R.layout.cash_payment_dialog);
         discountDialog.setCancelable(false);
@@ -378,7 +378,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
                 String str = et.getText().toString();
                 if (!str.equals("")) {
                     aReport.setAmount(Double.parseDouble(str));
-                    AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBoard.this);
+                    AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(OldDashBoard.this);
                     aReportDBAdapter.open();
                     aReportDBAdapter.insertEntry(aReport.getCreationDate(),aReport.getByUserID(),aReport.getAmount(),aReport.getLastSaleID(),aReport.getLastZReportID());
                     aReportDBAdapter.close();
@@ -401,7 +401,7 @@ public class DashBoard extends AppCompatActivity implements AdapterView.OnItemSe
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         currencyType = parent.getSelectedItemId();
-        Toast.makeText(DashBoard.this, "mays" + currencyType, Toast.LENGTH_LONG).show();
+        Toast.makeText(OldDashBoard.this, "mays" + currencyType, Toast.LENGTH_LONG).show();
     }
 
     @Override

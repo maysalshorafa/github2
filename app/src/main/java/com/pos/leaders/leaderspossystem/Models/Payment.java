@@ -6,11 +6,14 @@ import android.widget.Switch;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -27,6 +30,10 @@ public class Payment {
 
 	@JsonIgnore
     private Locale locale = new Locale("en");
+	@JsonIgnore
+	private List<CashPayment> cashPayments = new ArrayList<>();
+	@JsonIgnore
+	private List<CurrencyReturns> currencyReturns = new ArrayList<>();
 
 	// Constructors
 	public Payment(long id, String paymentWay, double amount, long saleId) {
@@ -60,9 +67,33 @@ public class Payment {
 		return amount;
 	}
 
+	@JsonIgnore
+	public List<CashPayment> getCashPayments() {
+		return cashPayments;
+	}
+    @JsonIgnore
+	public List<CurrencyReturns> getCurrencyReturns() {
+		return currencyReturns;
+	}
+
+
+
+
 	//endregion
 
 	//region Setters
+
+	@JsonIgnore
+	public void setCashPayments(List<CashPayment> cashPayments) {
+		this.cashPayments = cashPayments;
+	}
+
+	@JsonIgnore
+	public void setCurrencyReturns(List<CurrencyReturns> currencyReturns) {
+		this.currencyReturns = currencyReturns;
+	}
+
+
 
 	public void setId(long id) {
 		this.id = id;

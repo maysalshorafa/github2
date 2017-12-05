@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.Intent;
 
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -14,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
@@ -23,8 +21,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapt
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
-import com.pos.leaders.leaderspossystem.Tools.CashActivity;
+import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -43,11 +40,13 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
     private Spinner returnSpener;
     private double excess = 0;
     Currency rCurrency;
+    private Sale sale;
 
-    public CurrencyReturnsCustomDialogActivity(Activity a, double excess) {
+    public CurrencyReturnsCustomDialogActivity(Activity a, double excess,Sale sale) {
         super(a);
         this.c = a;
         this.excess = excess;
+        this.sale = sale;
     }
 
     @Override
@@ -69,11 +68,13 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /**    CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(getContext());
-                 currencyReturnsDBAdapter.open();
-                 double returnCurrencyValue = Double.parseDouble(tvExcess.getText().toString());
-                 currencyReturnsDBAdapter.insertEntry(SESSION._SALE.getId(),returnCurrencyValue , new Date(), rCurrency.getId());
-                 currencyReturnsDBAdapter.close();**/
+                if (SETTINGS.enableCurrencies) {
+                    CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(getContext());
+                    currencyReturnsDBAdapter.open();
+                    double returnCurrencyValue = Double.parseDouble(tvExcess.getText().toString());
+                    currencyReturnsDBAdapter.insertEntry(sale.getId(), returnCurrencyValue, new Date(), rCurrency.getId());
+                    currencyReturnsDBAdapter.close();
+                }
                 cancel();
             }
         });

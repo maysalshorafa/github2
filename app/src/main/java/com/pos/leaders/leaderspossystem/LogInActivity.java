@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -194,7 +193,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 //open main screen
                 //// TODO: 01/06/2017 open dashboard screen
 
-                Intent intent = new Intent(getApplicationContext(), TempDashBord.class);
+                Intent intent = new Intent(getApplicationContext(), DashBord.class);
                 intent.putIntegerArrayListExtra("permissions_name", permissions);
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

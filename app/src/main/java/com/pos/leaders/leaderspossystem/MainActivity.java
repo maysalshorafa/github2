@@ -2344,8 +2344,8 @@ startActivity(i);
                 return;
             }
         }
-        //  Cash Activity WithOut Currency Region
 
+        //  Cash Activity WithOut Currency Region
         if (requestCode == REQUEST_CASH_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
@@ -2356,15 +2356,21 @@ startActivity(i);
                 orderDBAdapter.open();
                 custmerAssetDB.open();
                 paymentDBAdapter.open();
+
                 // Get data from CashActivityWithOutCurrency
                 double totalPaidWithOutCurrency = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_TOTAL_PAID, 0.0f);
-                SESSION._SALE.setTotalPaid(totalPaidWithOutCurrency);
                 double excess = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE, 0.0f);
-                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess);
+
+                SESSION._SALE.setTotalPaid(totalPaidWithOutCurrency);
+
+
                 // Customer Point Region
                 point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
                 SESSION._SALE.setId(saleIDforCash);
+
+                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Sale(SESSION._SALE));
+
                 if (club_id == 2) {
                     sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);
                 }
@@ -2427,15 +2433,22 @@ startActivity(i);
                 orderDBAdapter.open();
                 custmerAssetDB.open();
                 paymentDBAdapter.open();
+
+
                 // Get data from CashActivityWithCurrency and insert in Cash Payment
                 double totalPaidWithCurrency = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_TOTAL_PAID, 0.0f);
                 SESSION._SALE.setTotalPaid(totalPaidWithCurrency);
                 double firstCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_AMOUNT, 0.0f);
                 double secondCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_AMOUNT, 0.0f);
                 double excess = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_EXCESS_VALUE, 0.0f);
-                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess);
                 long secondCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_ID, 0);
                 long firstCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID, 0);
+
+                saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
+                SESSION._SALE.setId(saleIDforCash);
+                point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
+                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Sale(SESSION._SALE));
+
                 if (firstCurrencyAmount > 0) {
                     cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Date());
                 }
@@ -2446,9 +2459,6 @@ startActivity(i);
 
 
                 // Customer Point Region
-                point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
-                saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
-                SESSION._SALE.setId(saleIDforCash);
                 if (club_id == 2) {
                     sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);
                 }

@@ -80,6 +80,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(OfferDBAdapter.DATABASE_CREATE);
         db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
         db.execSQL(AReportDBAdapter.DATABASE_CREATE);
+        db.execSQL(AReportDetailsDBAdapter.DATABASE_CREATE);
         db.execSQL(CityDbAdapter.DATABASE_CREATE);
         db.execSQL(ClubAdapter.DATABASE_CREATE);//Club
         db.execSQL(CustomerDBAdapter.DATABASE_CREATE);

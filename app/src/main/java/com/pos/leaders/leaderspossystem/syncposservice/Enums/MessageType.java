@@ -12,6 +12,10 @@ public interface MessageType{
     String UPDATE_A_REPORT = "UpdateAreport";
     String DELETE_A_REPORT = "DeleteAreport";
 
+    String ADD_A_REPORT_DETAILS = "AddAreportDetails";
+    String UPDATE_A_REPORT_DETAILS = "UpdateAreportDetails";
+    String DELETE_A_REPORT_DETAILS = "DeleteAreportDetails";
+
     String ADD_CHECK = "AddCheck";
     String UPDATE_CHECK = "UpdateCheck";
     String DELETE_CHECK = "DeleteCheck";
