@@ -88,7 +88,9 @@ import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Printer.BitmapInvoice;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
+import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Models.Group;
@@ -2174,6 +2176,68 @@ startActivity(i);
         }
     }
 
+    private void printSMS230(Bitmap bitmap) {
+        String portSettings = "portable;escpos;l";
+        String port = "BT:";
+        int paperWidth = 576;
+        paperWidth = 832; // 4inch (832 dot)
+        paperWidth = 576; // 3inch (576 dot)1
+        paperWidth = 384; // 2inch (384 dot)
+        MiniPrinterFunctions.PrintBitmapImage(MainActivity.this, port,portSettings, bitmap, paperWidth, true, true);
+
+    }
+
+    private void printAndOpenCashBoxSM_S230I(String mainAns, final String mainMer, final String mainCli) {
+        if (true) {
+            final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+            dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
+
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    dialog.show();
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                   //feed paper
+
+                    dialog.cancel();
+                    clearCart();
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
+                    byte b = 0;
+                    try {
+                        if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
+                            Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer);
+
+                            printSMS230(bitmap);
+                            //cut
+                            Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli);
+                            printSMS230(bitmap2);
+                        } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
+                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER);
+                            printSMS230(bitmap);
+                        } else {
+                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null);
+                            printSMS230(bitmap);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+
+    }
+
+
     private void printAndOpenCashBox(String mainAns, final String mainMer, final String mainCli,int source) {
         switch (SETTINGS.printer) {
             case BTP880:
@@ -2184,6 +2248,9 @@ startActivity(i);
                 break;
             case SUNMI_T1:
                 printAndOpenCashBoxSUNMI_T1(mainAns, mainMer, mainCli);
+                break;
+            case SM_S230I:
+                printAndOpenCashBoxSM_S230I(mainAns, mainMer, mainCli);
                 break;
         }
         if(source==REQUEST_CASH_ACTIVITY_CODE||source==REQUEST_CASH_ACTIVITY_WITH_CURRENCY_CODE)

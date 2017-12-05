@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,8 @@ public class ImportProductsActivity extends Activity {
 
     Map<String,Long> departmentMap=new HashMap<String,Long>();
 
-    List<Product> lsProducts=new ArrayList<Product>();
+    List<Product> lsProducts = new ArrayList<Product>();
+    List<Department> lsDepartment = new ArrayList<Department>();
     ArrayList<String> departmentsName;
 
     @Override
@@ -124,6 +126,9 @@ public class ImportProductsActivity extends Activity {
                         }
                     }.execute();
                 }
+                if(lsDepartment.size()>0){
+                    insertDepartmentToDB();
+                }
             }
         });
         DepartmentDBAdapter db=new DepartmentDBAdapter(getBaseContext());
@@ -158,6 +163,47 @@ public class ImportProductsActivity extends Activity {
 
 
     }
+
+    private void insertDepartmentToDB(){
+        final ProgressDialog dialog = new ProgressDialog(ImportProductsActivity.this);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                ProductDBAdapter productDBAdapter = new ProductDBAdapter(getBaseContext());
+                DepartmentDBAdapter departmentDBAdapter = new DepartmentDBAdapter(getBaseContext());
+
+                for (Department d : lsDepartment) {
+                    departmentDBAdapter.open();
+                    long depID = departmentDBAdapter.insertEntry(d.getName(), d.getByUser());
+                    departmentDBAdapter.close();
+
+                    productDBAdapter.open();
+                    for (Product p : d.getProducts()) {
+                        productDBAdapter.insertEntry(p.getName(), p.getBarCode(), "", p.getPrice(), p.getCostPrice(), true, false, depID, p.getByUser(), 1, 1);
+                    }
+                    productDBAdapter.close();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                dialog.cancel();
+                if (x == 0) {
+                    tvStatus.setText("Success to add all the items");
+                } else {
+                    tvStatus.setText(String.format("Added %d,Error With %d Items", lsProducts.size() - x, x));
+                }
+            }
+
+            @Override
+            protected void onPreExecute() {
+                dialog.setTitle(getBaseContext().getString(R.string.saving_data));
+                dialog.show();
+            }
+        }.execute();
+    }
+
     static int x=0;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -179,7 +225,7 @@ public class ImportProductsActivity extends Activity {
                         @Override
                         protected void onPostExecute(Void aVoid) {
                             tvStatus.setText(msg);
-                            if(lsProducts.size()!=0) {
+                            if(lsProducts.size()!=0||lsDepartment.size()>0) {
                                 btnSave.setVisibility(View.VISIBLE);
                                 lvDepartment.setVisibility(View.VISIBLE);
                             }
@@ -191,8 +237,9 @@ public class ImportProductsActivity extends Activity {
                         @Override
                         protected Void doInBackground(Void... params) {
                             try {
-                                lsProducts=readProducts(FilePath);
-                                Log.i("",lsProducts.toString());
+                                //lsProducts=readProducts(FilePath);
+                                lsDepartment = readProductsWithDepartments(FilePath);
+                                Log.i("", lsDepartment.toString());
 
                             }
                             catch (IOException ioex){
@@ -208,6 +255,7 @@ public class ImportProductsActivity extends Activity {
 
     static int failImportItems=0;
     static String msg="";
+
     public List<Product> readProducts(String inputFile) throws IOException {
         List<Product> resultSet = new ArrayList<Product>();
         failImportItems=0;
@@ -264,6 +312,62 @@ public class ImportProductsActivity extends Activity {
             // resultSet.add("Data not found..!");
         }
         return resultSet;
+    }
+
+    public List<Department> readProductsWithDepartments(String inputFile) throws IOException {
+        List<Department> departments = new ArrayList<Department>();
+        failImportItems=0;
+        File inputWorkbook = new File(inputFile);
+        if(inputWorkbook.exists()){
+            Workbook w;
+            try {
+                w = Workbook.getWorkbook(inputWorkbook);
+                // Get the first sheet
+                int totalRows = 0;
+                for (Sheet sh:w.getSheets()) {
+                    totalRows += sh.getRows();
+                    Department d = new Department(sh.getName(), new Date(), SESSION._USER.getId());
+                    List<Product> products = new ArrayList<>();
+                    for (int row = 1; row < sh.getRows(); row++) {
+                        try {
+                            if(sh.getCell(1,row).getContents().toString().equals(""))
+                                break;
+                            String name,barcode,id,price,costPrice;
+                            name = sh.getCell(1, row).getContents().replaceAll("''", "``").replaceAll("'", "`").toString();
+                            barcode=new BigDecimal(sh.getCell(2, row).getContents().replaceAll(" ","")).toString();
+                            price=new BigDecimal(sh.getCell(3, row).getContents().replaceAll(" ","")).toString();
+                            costPrice = sh.getCell(4, row).getContents();
+                            if(costPrice.equals(""))
+                                costPrice = "0";
+                            products.add(new Product(name, Double.parseDouble(price), Double.parseDouble(costPrice), barcode, SESSION._USER.getId()));
+                        }
+                        catch (Exception ex){
+                            Log.e("",ex.getMessage());
+                            failImportItems++;
+                        }
+                        continue;
+                    }
+                    d.setProducts(products);
+                    departments.add(d);
+                }
+                msg = String.format("file have %d products, %d successfully to read, %d errors",totalRows-1,totalRows-1-failImportItems,failImportItems);
+                //Toast.makeText(getBaseContext(),"fail to add "+failImportItems,Toast.LENGTH_LONG);
+
+            } catch (BiffException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            // resultSet.add("File not found..!");
+        }
+        if(departments.size()==0){
+            //return null;
+            // resultSet.add("Data not found..!");
+        }
+        return departments;
     }
 
     private void selectItemDepartments(View v){

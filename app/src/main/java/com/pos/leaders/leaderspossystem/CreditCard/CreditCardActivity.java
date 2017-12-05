@@ -300,8 +300,9 @@ public class CreditCardActivity extends AppCompatActivity {
                                 } else if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER && !run) {
                                     run = true;
                                 } else {//enter pressed
-                                    if (run)
-                                        creditCardNumber += event.getNumber();
+                                    if (run){
+                                        Log.i("cc", creditCardNumber);
+                                        creditCardNumber += event.getNumber();}
                                 }
                                 return true;
                             }

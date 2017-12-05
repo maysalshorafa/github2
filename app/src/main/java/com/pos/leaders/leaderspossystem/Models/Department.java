@@ -24,9 +24,16 @@ public class Department {
     public Department(long id, String name, Date creatingDate, long byUser, boolean hide) {
         this.id = id;
         this.name = name;
-        CreatingDate = creatingDate;
+        this.CreatingDate = creatingDate;
         this.byUser = byUser;
         this.hide = hide;
+    }
+
+    public Department(String name, Date creatingDate, long byUser) {
+        this.name = name;
+        this.CreatingDate = creatingDate;
+        this.byUser = byUser;
+        this.hide = false;
     }
 
     public Department(Department d) {

@@ -33,7 +33,9 @@ import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Printer.BitmapInvoice;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
+import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
@@ -279,8 +281,18 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //using method
+                String portSettings = "portable;escpos;l";
+                String port = "BT:";
+                int paperWidth = 576;
+                paperWidth = 832; // 4inch (832 dot)
+                paperWidth = 576; // 3inch (576 dot)1
+                paperWidth = 384; // 2inch (384 dot)
+                MiniPrinterFunctions.PrintBitmapImage(TempDashBord.this, port,portSettings, BitmapInvoice.testPrinter(TempDashBord.this,paperWidth), paperWidth, true, true);
+
+                /*
                 i = new Intent(getApplicationContext(), SettingActivity.class);
-                startActivity(i);
+                startActivity(i);*/
             }
         });
         customerClub.setOnClickListener(new View.OnClickListener() {
