@@ -29,6 +29,7 @@ import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -223,21 +224,25 @@ public class PrintTools {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /** sheqle_plus = calculateAmount(0, from, to,aReportId);
-         usd_plus = calculateAmount(1, from, to,aReportId);
-         eur_plus = calculateAmount(2, from, to,aReportId);
-         gbp_plus = calculateAmount(3, from, to,aReportId);**/
+        double aReportDetailsForFirstCurrency=0;
+        double aReportDetailsForSecondCurrency=0;
+        double aReportDetailsForThirdCurrency=0;
+        double aReportDetailsForForthCurrency=0;
 
-        aReportDBAdapter.close();
         // get payment , cashPayment , returnList
         List<Payment> payments = paymentList(sales);
         List<CashPayment> cashPaymentList = cashPaymentList(sales);
         List<CurrencyReturns> currencyReturnList = returnPaymentList(sales);
-
+        AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
+        aReportDetailsDBAdapter.open();
+        aReportDetailsForFirstCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel,aReportId);
+        aReportDetailsForSecondCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.USD,aReportId);
+        aReportDetailsForThirdCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP,aReportId);
+        aReportDetailsForForthCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR,aReportId);
         double cash_plus = 0, cash_minus = 0;
         double check_plus = 0, check_minus = 0;
         double creditCard_plus = 0, creditCard_minus = 0;
-
+        aReportDBAdapter.close();
         for (Payment p : payments) {
             int i = 0;
             switch (p.getPaymentWay()) {
@@ -317,7 +322,7 @@ public class PrintTools {
 
         //endregion Currency summary
 
-        return BitmapInvoice.zPrint(context, zReport, usd_plus, usd_minus, eur_plus, eur_minus, gbp_plus, gbp_minus, sheqle_plus, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReportAmount);
+        return BitmapInvoice.zPrint(context, zReport, usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, Double.parseDouble(Util.makePrice(aReportAmount)));
         //return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
 
     }
@@ -373,6 +378,10 @@ public class PrintTools {
 
     public Bitmap createXReport(long endSaleId, long id, User user, Date date) {
         long aReportId = 0;
+        double aReportDetailsForFirstCurrency=0;
+        double aReportDetailsForSecondCurrency=0;
+        double aReportDetailsForThirdCurrency=0;
+        double aReportDetailsForForthCurrency=0;
         double usd_plus = 0, usd_minus = 0;
         double eur_plus = 0, eur_minus = 0;
         double gbp_plus = 0, gbp_minus = 0;
@@ -410,7 +419,12 @@ public class PrintTools {
         double cash_plus = 0, cash_minus = 0;
         double check_plus = 0, check_minus = 0;
         double creditCard_plus = 0, creditCard_minus = 0;
-
+AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
+        aReportDetailsDBAdapter.open();
+        aReportDetailsForFirstCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel,aReportId);
+        aReportDetailsForSecondCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.USD,aReportId);
+        aReportDetailsForThirdCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP,aReportId);
+        aReportDetailsForForthCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR,aReportId);
         for (Payment p : payments) {
             int i = 0;
             switch (p.getPaymentWay()) {
@@ -484,7 +498,7 @@ public class PrintTools {
                 }
             }
         }
-            return BitmapInvoice.xPrint(context, user, date.getTime(), usd_plus, usd_minus, eur_plus, eur_minus, gbp_plus, gbp_minus, sheqle_plus, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, aReportAmount);
+            return BitmapInvoice.xPrint(context, user, date.getTime(), usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, Double.parseDouble(Util.makePrice(aReportAmount)));
 
     }
 

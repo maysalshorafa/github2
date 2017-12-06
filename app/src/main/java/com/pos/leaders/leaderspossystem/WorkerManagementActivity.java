@@ -175,7 +175,7 @@ public class WorkerManagementActivity  extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (etPassword.getText().toString().equals("")) {
-                            Toast.makeText(WorkerManagementActivity.this, "Please type new password.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(WorkerManagementActivity.this, "Please clubType new password.", Toast.LENGTH_LONG).show();
                             } else if (!(etPassword.getText().toString().equals(etRePassword.getText().toString()))) {
 
                             Toast.makeText(WorkerManagementActivity.this, "Password does`t match.", Toast.LENGTH_LONG).show();

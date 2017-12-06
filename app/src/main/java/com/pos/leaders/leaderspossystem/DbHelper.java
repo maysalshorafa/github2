@@ -56,7 +56,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<String> tablesName(SQLiteDatabase db){
-        Cursor c=db.rawQuery("SELECT name FROM sqlite_master WHERE type='table';", null);
+        Cursor c=db.rawQuery("SELECT name FROM sqlite_master WHERE clubType='table';", null);
         List<String> tablesNames=new ArrayList<String>();
         c.moveToFirst();
         while (!c.isAfterLast()){

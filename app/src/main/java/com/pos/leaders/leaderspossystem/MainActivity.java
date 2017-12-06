@@ -91,7 +91,7 @@ import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
-import com.pos.leaders.leaderspossystem.Models.Group;
+import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
@@ -137,9 +137,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CREDIT_CARD_ACTIVITY_CODE = 801;
     public static final String COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE = "com_pos_leaders_cart_total_price";
     String transID = "";
-    String a = "";
+
     TextView salesMan;
-    TextView custmer_name, club_name, information;
+    TextView customer_name, club_name, information , tvCustomerInformation;
     private DrawerLayout drawerLayout;
     //private ActionBarDrawerToggle actionBarDrawerToggle;//
     // private NavigationView navigationView;
@@ -166,34 +166,37 @@ public class MainActivity extends AppCompatActivity {
     View prseedButtonDepartments;
     List<Product> productList;
     List<Product> All_productsList;
-    List<Customer> custmer_List;
-    List<Customer> All_custmerList;
+    // Customer Variable
+    List<Customer> customerList;
+    List<Customer> AllCustmerList;
     CustomerDBAdapter customerDBAdapter;
     ClubAdapter groupDbAdapter;
-    Group group = new Group(this);
     Sum_PointDbAdapter sum_pointDbAdapter;
     UsedPointDBAdapter usedpointDbAdapter;
     ValueOfPointDB valueOfPointDB;
+    Customer customer;
+    long customerId=0;
+    long customerClubId=0;
+    String customerName = "";
+    // Club
     int newPoint = 0;
-    int aPoint = 0;
-    int unUsedPointForCustmer = 0;
-    int amount;
-    int type;
-    int point;
-    double offerAmount = 0;
-    long saleIDforCash;
-    String cInformation;
-    double parcent = 0.0;
-
-
-    static List<Integer> offersIDsList;
-
+    int totalCustomerPoint = 0;
+    int unUsedPointForCustomer = 0;
+    int clubAmount;
+    int clubType;
+    int clubPoint;
+    double clubDiscount = 0.0;
     boolean equleUsedPoint = false;
     boolean biggerUsedPoint = false;
     boolean lessUsedPoint = false;
+    //end
+    double offerAmount = 0;
+    long saleIDforCash;
+    static List<Integer> offersIDsList;
+
+
     List<Offer> offersList;
 
-    long _custmer_id;
     ProductCatalogGridViewAdapter productCatalogGridViewAdapter;
     CustomerCatalogGridViewAdapter custmerCatalogGridViewAdapter;
     //ProductCatalogListViewAdapter productCatalogListViewAdapter;
@@ -209,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
     public CustomerAssistantCatalogGridViewAdapter custmerAssestCatlogGridViewAdapter;
     private boolean isGrid = true;
     double saleTotalPrice = 0.0;
+
     double totalSaved = 0.0;
     double secondPrice = 0.0;
     boolean userScrolled = false;
@@ -218,12 +222,12 @@ public class MainActivity extends AppCompatActivity {
     Button btn_cancel;
     LinearLayout ll;
     ImageView imv;
-    int club_id;
+
     private String touchPadPressed = "";
     private boolean enableBackButton = true;
 
     PopupWindow popupWindow;
-    EditText custmer_id;
+    EditText customer_id;
     //Drw drw=null;
     //String devicePath="/dev/ttySAC1";
     EditText customerName_EditText;
@@ -287,11 +291,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         used_point = (ImageButton) findViewById(R.id.usedPoint);
-        custmer_name = (TextView) findViewById(R.id.cName);
+        customer_name = (TextView) findViewById(R.id.cName);
         club_name = (TextView) findViewById(R.id.cClubName);
         information = (TextView) findViewById(R.id.cInformation);
+        tvCustomerInformation = (TextView) findViewById(R.id.tvCustomerInformation);
+
         customerName_EditText = (EditText) findViewById(R.id.customer_textView);
-        //a=customerName_EditText.getText().toString();
+        //customerName=customerName_EditText.getText().toString();
 
         search_person = (ImageButton) findViewById(R.id.searchPerson);
         drawerLayout = (DrawerLayout) findViewById(R.id.mainActivity_drawerLayout);
@@ -443,7 +449,7 @@ public class MainActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parcent = 0;
+                clubDiscount = 0;
                 Context c = MainActivity.this;
                 if (SESSION._ORDERS.size() > 0)
                     new AlertDialog.Builder(c)
@@ -1028,7 +1034,7 @@ public class MainActivity extends AppCompatActivity {
                 ValueOfPoint valueOfPoint = valueOfPointDB.getValue();
                 double value = valueOfPoint.getValue();
                 Toast.makeText(MainActivity.this, "value Of Point " + value, Toast.LENGTH_LONG).show();
-                double newPrice = aPoint * value;
+                double newPrice = totalCustomerPoint * value;
                 if (saleTotalPrice == newPrice) {
                     equleUsedPoint = true;
                     newPoint = (int) (saleTotalPrice / value);
@@ -1081,7 +1087,7 @@ public class MainActivity extends AppCompatActivity {
                             .setNegativeButton(c.getResources().getString(R.string.by_phone), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    a = customerName_EditText.getText().toString();
+                                    customerName = customerName_EditText.getText().toString();
 
                                     Intent intent = new Intent(c, CreditCardActivity.class);
                                     intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
@@ -1108,10 +1114,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (SESSION._ORDERS.size() > 0) {
                     Intent intent = new Intent(MainActivity.this, ChecksActivity.class);
-                    a = customerName_EditText.getText().toString();
+                    customerName = customerName_EditText.getText().toString();
 
                     intent.putExtra("_Price", saleTotalPrice);
-                    intent.putExtra("_custmer", a);
+                    intent.putExtra("_custmer", customerName);
 
                     startActivityForResult(intent, REQUEST_CHECKS_ACTIVITY_CODE);
                 }
@@ -1266,7 +1272,7 @@ public class MainActivity extends AppCompatActivity {
 /**        btnLastSales.setOnClickListener(new View.OnClickListener() {
 @Override public void onClick(View v) {
 Intent i = new Intent(MainActivity.this, SalesManagementActivity.class);
-i.putExtra("_custmer", a);
+i.putExtra("_custmer", customerName);
 
 startActivity(i);
 }
@@ -1478,15 +1484,16 @@ startActivity(i);
     }
 
     public void clearCart() {
-        parcent = 0;
-        point = 0;
-        amount = 0;
+        clubDiscount = 0;
+        clubPoint = 0;
+        clubAmount = 0;
         Ppoint = 0;
         salesSaleMan.setText(getString(R.string.sales_man));
         SESSION._Rest();
         club_name.setText("");
-        custmer_name.setText("");
+        customer_name.setText("");
         information.setText("");
+        tvCustomerInformation.setText("");
         customerName_EditText.setText("");
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
@@ -1693,10 +1700,10 @@ startActivity(i);
         }
 
 
-        if (club_id != 0) {
-            if (type == 1) {
+        if (customerClubId != 0) {
+            if (clubType == 1) {
 
-                SumForClub = SumForClub * parcent;
+                SumForClub = SumForClub * clubDiscount;
 
 
                 saleTotalPrice = saleTotalPrice - SumForClub;
@@ -1818,7 +1825,7 @@ startActivity(i);
         //scanOffers();
 
 
-        if (club_id == 0) {
+        if (customerClubId == 0) {
             saleTotalPrice = 0;
             double SaleOriginalityPrice = 0;
             for (Order o : SESSION._ORDERS) {
@@ -1840,23 +1847,23 @@ startActivity(i);
                 SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
             }
 
-            if (type == 1) {
+            if (clubType == 1) {
 
-                saleTotalPrice = saleTotalPrice - (int) saleTotalPrice * parcent;
+                saleTotalPrice = saleTotalPrice - (int) saleTotalPrice * clubDiscount;
                 totalSaved = (SaleOriginalityPrice - saleTotalPrice);
 
                 tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
                 tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
 
                 SESSION._SALE.setTotalPrice(saleTotalPrice);
-            } else if (type == 2) {
+            } else if (clubType == 2) {
 
                 tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
 
 
                 totalSaved = (SaleOriginalityPrice - saleTotalPrice);
                 tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
-                //  point=  ( (int)(sale/amount)*point);
+                //  clubPoint=  ( (int)(sale/clubAmount)*clubPoint);
 
                 SESSION._SALE.setTotalPrice(saleTotalPrice);
 
@@ -1917,7 +1924,7 @@ startActivity(i);
     /**
      * private boolean getOffers(){
      * for (Offer o : offersList) {//offer list
-     * if (o.getRuleId() == 0) {//offer type x on price y
+     * if (o.getRuleId() == 0) {//offer clubType x on price y
      * for (Order or : SESSION._ORDERS) {//loop into all product at cart
      * //if (o.getProducts().contains(or.getProduct())) {//product is in the offer
      * if (or.getCount() >= o.getX()) {//count > x
@@ -2215,10 +2222,10 @@ startActivity(i);
                     SESSION._SALE.setTotalPaid(SESSION._SALE.getTotalPrice());
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
-                point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
-                long saleID = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
-                if (club_id == 2) {
-                    sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
+                clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
+                long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
+                if (customerClubId == 2) {
+                    sum_pointDbAdapter.insertEntry(saleID, clubPoint, customerId);
                 }
                 /**  Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
                  cInformation= String.valueOf(Ppoint.getPoint());
@@ -2296,10 +2303,10 @@ startActivity(i);
                 SESSION._SALE.setTotalPaid(result);
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
-                point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
-                long saleID = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
-                if (club_id == 2) {
-                    sum_pointDbAdapter.insertEntry(saleID, point, _custmer_id);
+                clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
+                long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
+                if (customerClubId == 2) {
+                    sum_pointDbAdapter.insertEntry(saleID, clubPoint, customerId);
                 }
                 saleDBAdapter.close();
 
@@ -2365,14 +2372,14 @@ startActivity(i);
 
 
                 // Customer Point Region
-                point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
-                saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
+                clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
+                saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 SESSION._SALE.setId(saleIDforCash);
 
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Sale(SESSION._SALE));
 
-                if (club_id == 2) {
-                    sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);
+                if (customerClubId == 2) {
+                    sum_pointDbAdapter.insertEntry(saleIDforCash, clubPoint, customerId);
                 }
                 if (equleUsedPoint) {
                     saleTotalPrice = 0.0;
@@ -2380,13 +2387,13 @@ startActivity(i);
                     SESSION._SALE.setTotalPaid(0.0);
                     saleDBAdapter.updateEntry(SESSION._SALE);
 
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, _custmer_id);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 } else if (biggerUsedPoint) {
-                    usedpointDbAdapter.insertEntry(saleIDforCash, aPoint, _custmer_id);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, totalCustomerPoint, customerId);
                 } else if (lessUsedPoint) {
                     SESSION._SALE.setTotalPaid(0.0);
                     saleDBAdapter.updateEntry(SESSION._SALE);
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, _custmer_id);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 // End Customer Point Region
 
@@ -2444,9 +2451,9 @@ startActivity(i);
                 long secondCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_ID, 0);
                 long firstCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID, 0);
 
-                saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, _custmer_id, a);
+                saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 SESSION._SALE.setId(saleIDforCash);
-                point = ((int) (SESSION._SALE.getTotalPrice() / amount) * point);
+                clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Sale(SESSION._SALE));
 
                 if (firstCurrencyAmount > 0) {
@@ -2459,8 +2466,8 @@ startActivity(i);
 
 
                 // Customer Point Region
-                if (club_id == 2) {
-                    sum_pointDbAdapter.insertEntry(saleIDforCash, point, _custmer_id);
+                if (customerClubId == 2) {
+                    sum_pointDbAdapter.insertEntry(saleIDforCash, clubPoint, customerId);
                 }
                 if (equleUsedPoint) {
                     saleTotalPrice = 0.0;
@@ -2468,13 +2475,13 @@ startActivity(i);
                     SESSION._SALE.setTotalPaid(0.0);
                     saleDBAdapter.updateEntry(SESSION._SALE);
 
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, _custmer_id);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 } else if (biggerUsedPoint) {
-                    usedpointDbAdapter.insertEntry(saleIDforCash, aPoint, _custmer_id);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, totalCustomerPoint, customerId);
                 } else if (lessUsedPoint) {
                     SESSION._SALE.setTotalPaid(0.0);
                     saleDBAdapter.updateEntry(SESSION._SALE);
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, _custmer_id);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 // End Customer Point Region
 
@@ -2572,7 +2579,7 @@ startActivity(i);
         popupWindow.setFocusable(true);
 
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-        custmer_id = (EditText) popupView.findViewById(R.id.customer_name);
+        customer_id = (EditText) popupView.findViewById(R.id.customer_name);
         final GridView gvCustomer = (GridView) popupView.findViewById(R.id.popUp_gvCustomer);
         gvCustomer.setNumColumns(3);
 
@@ -2600,8 +2607,8 @@ startActivity(i);
                 });
 
 
-        custmer_id.setText("");
-        custmer_id.setHint("Search..");
+        customer_id.setText("");
+        customer_id.setHint("Search..");
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -2628,54 +2635,53 @@ startActivity(i);
             }
         });
 
-        custmer_List = customerDBAdapter.getTopCustomer(0, 50);
-        All_custmerList = custmer_List;
+        customerList = customerDBAdapter.getTopCustomer(0, 50);
+        AllCustmerList = customerList;
 
-        custmerCatalogGridViewAdapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
+        custmerCatalogGridViewAdapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), customerList);
 
         gvCustomer.setAdapter(custmerCatalogGridViewAdapter);
 
         gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                parcent = 0;
-                a = custmer_List.get(position).getCustmerName();
-                customerName_EditText.setText(a);
-                custmer_name.setText(a);
-
-                _custmer_id = custmer_List.get(position).getId();
-                club_id = (int) custmer_List.get(position).getClub();
-                if (club_id != 0) {
-                    Group group = groupDbAdapter.getGroupInfo(club_id);
-                    type = group.getType();
-                    if (type == 1) {
-                        parcent = group.getParcent();
-
-                        club_name.setText(group.getname());
-                        information.setText(parcent + "");
-                    } else if (type == 2) {
+                clubDiscount = 0;
+                customer=customerList.get(position);
+                customerName =customer.getCustmerName();
+                customerClubId=customer.getClub();
+                customerId = customer.getId();
+                customerClubId = customer.getClub();
+                customerName_EditText.setText(customerName);
+                customer_name.setText(customerName);
+                // get club Information
+                    Club group = groupDbAdapter.getGroupInfo(customerClubId);
+                    clubType = group.getType();
+                    if (clubType == 1) {
+                        clubDiscount = group.getParcent();
 
                         club_name.setText(group.getname());
-                        amount = group.getAmount();
-                        point = group.getPoint();
-                        Ppoint = sum_pointDbAdapter.getPointInfo(_custmer_id);
+                        information.setText(clubDiscount + "");
+                    } else if (clubType == 2) {
 
-                        cInformation = String.valueOf(Ppoint);
+                        club_name.setText(group.getname());
+                        clubAmount = group.getAmount();
+                        clubPoint = group.getPoint();
+                        Ppoint = sum_pointDbAdapter.getPointInfo(customerId);
 
-                        unUsedPointForCustmer = usedpointDbAdapter.getUnusedPointInfo(_custmer_id);
-                        aPoint = Ppoint - unUsedPointForCustmer;
-                        information.setText(aPoint + " ");
-                    } else if (type == 3) {
+                        unUsedPointForCustomer = usedpointDbAdapter.getUnusedPointInfo(customerId);
+                        totalCustomerPoint = Ppoint - unUsedPointForCustomer;
+                        information.setText(totalCustomerPoint + " ");
+                    } else if (clubType == 3) {
                         club_name.setText(group.getname());
                         information.setText(getString(R.string.general));
                     }
-                }
+
                 popupWindow.dismiss();
             }
         });
 
 
-        custmer_id.addTextChangedListener(new TextWatcher() {
+        customer_id.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 gvCustomer.setTextFilterEnabled(true);
@@ -2689,23 +2695,23 @@ startActivity(i);
 
             @Override
             public void afterTextChanged(Editable s) {
-                custmer_List = new ArrayList<Customer>();
-                String word = custmer_id.getText().toString();
+                customerList = new ArrayList<Customer>();
+                String word = customer_id.getText().toString();
 
                 if (!word.equals("")) {
-                    for (Customer c : All_custmerList) {
+                    for (Customer c : AllCustmerList) {
 
                         if (c.getCustmerName().toLowerCase().contains(word.toLowerCase()) ||
                                 c.getPhoneNumber().toLowerCase().contains(word.toLowerCase()) ||
                                 c.getStreet().toLowerCase().contains(word.toLowerCase())) {
-                            custmer_List.add(c);
+                            customerList.add(c);
 
                         }
                     }
                 } else {
-                    custmer_List = All_custmerList;
+                    customerList = AllCustmerList;
                 }
-                CustomerCatalogGridViewAdapter adapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), custmer_List);
+                CustomerCatalogGridViewAdapter adapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), customerList);
                 gvCustomer.setAdapter(adapter);
                 // Log.i("products", productList.toString());
 

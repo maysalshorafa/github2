@@ -213,7 +213,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         });
 
 
-        //region a report button
+        //region customerName report button
         btAReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -238,7 +238,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
             }
         });
-        //endregion a report button
+        //endregion customerName report button
 
         //region z report button
         btZReport.setOnClickListener(new View.OnClickListener() {
@@ -465,7 +465,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
     private void ShowAReportDialog(final AReport aReport) {
 
-        //there is no a report after z report
+        //there is no customerName report after z report
         enableBackButton = false;
         // a_report Dialog WithOut Currency
         if (!SETTINGS.enableCurrencies) {

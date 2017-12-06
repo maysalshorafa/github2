@@ -20,8 +20,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.Models.City;
+import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.Customer;
-import com.pos.leaders.leaderspossystem.Models.Group;
 
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -37,7 +37,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     CustomerDBAdapter customerDBAdapter;
     Customer customer;
     private List<City> cityList = null;
-    private List<Group> groupList = null;
+    private List<Club> groupList = null;
     ArrayList<Integer> permissions_name;
     RadioButton maleRadioButton, femaleRadioButton;
     RadioGroup radioGender;
@@ -123,7 +123,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                 Toast.makeText(getApplicationContext(), getString(R.string.please_insert_country_code), Toast.LENGTH_LONG).show();
                             } else {
                                 for (int i = 0; i < groupList.size(); i++) {
-                                    Group group = groupList.get(i);
+                                    Club group = groupList.get(i);
                                     if (group.getname() == selectClubSpinner.getSelectedItem().toString()) {
                                         clubID = group.getId();
                                     }

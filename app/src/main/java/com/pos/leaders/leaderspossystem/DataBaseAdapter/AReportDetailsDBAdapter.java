@@ -94,20 +94,18 @@ public class AReportDetailsDBAdapter {
         }
     }
 
-    public AReportDetails getLastRow(int type,long aReportId) {
+    public Double getLastRow(int type,long aReportId) {
         AReportDetails aReportDetails = null;
-        Cursor cursor = null;
-
-        cursor = db.rawQuery("select * from " + A_REPORT_DETAILS_TABLE_NAME + " where  type='" + type +" and " + A_REPORT_DETAILS_A_REPORT_COLUMN_ID +" = " + aReportId + "'" + " order by id desc", null);
+        Cursor cursor = db.rawQuery("SELECT * from " +  A_REPORT_DETAILS_TABLE_NAME + "  where "+ A_REPORT_DETAILS_COLUMN_TYPE +"=" + type +" and " + A_REPORT_DETAILS_A_REPORT_COLUMN_ID +" = " + aReportId , null);
         if (cursor.getCount() < 1) {
             cursor.close();
-            return aReportDetails;
+            return 0.0;
         }
         cursor.moveToFirst();
         aReportDetails = new AReportDetails(makeAReportDetails(cursor));
 
         cursor.close();
-        return aReportDetails;
+        return aReportDetails.getAmount();
     }
 
     private AReportDetails makeAReportDetails(Cursor cursor) {

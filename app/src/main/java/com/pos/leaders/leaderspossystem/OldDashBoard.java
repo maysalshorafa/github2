@@ -321,7 +321,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
 
 
             if (aReport.getLastZReportID() == zReport.getId()) {
-                //its have a report
+                //its have customerName report
 
             } else {
                 _aReport.setLastZReportID(zReport.getId());
@@ -343,7 +343,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
     private void ShowAReportDialog(final AReport aReport) {
         CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
 
-        //there is no a report after z report
+        //there is no customerName report after z report
         enableBackButton = false;
         final Dialog discountDialog = new Dialog(OldDashBoard.this);
         discountDialog.setTitle(R.string.opening_report);

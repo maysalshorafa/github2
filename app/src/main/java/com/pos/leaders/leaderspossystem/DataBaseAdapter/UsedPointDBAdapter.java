@@ -19,25 +19,25 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
  */
 
 public class UsedPointDBAdapter {
-    public static final String UsedPoint_TabelName = "usedPoint";
+    public static final String USED_POINT_TABLE_NAME = "UsedPoint";
     // Column Names
-    protected static final String UsedPoint_COLUMN_Id = "id";
-    protected static final String UsedPoint_COLUMN_Sale_Id = "sale_id";
-    protected static final String UsedPoint_COLUMN_Point = "unUsedpoint_amount";
-    protected static final String UsedPoint_COLUMN_Custmer= "custmer_id";
+    protected static final String USED_POINT_COLUMN_ID = "id";
+    protected static final String USED_POINT_COLUMN_SALE_ID = "saleId";
+    protected static final String USED_POINT_COLUMN_POINT = "unUsedPointAmount";
+    protected static final String USED_POINT_COLUMN_CUSTOMER = "customerId";
 
 
-    public static final String DATABASE_CREATE = "CREATE TABLE usedPoint ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  , `sale_id` INTEGER ,`unUsedpoint_amount` INTEGER ,`custmer_id` INTEGER )";
+    public static final String DATABASE_CREATE = "CREATE TABLE UsedPoint ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  , `saleId` INTEGER ,`unUsedPointAmount` INTEGER ,`customerId` INTEGER ," +"FOREIGN KEY(`saleId`) REFERENCES `sales.id`)";
     private SQLiteDatabase db;
     private final Context context;
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
 
+// Sum Of UnUsed Point
+    public int getUnusedPointInfo(long customerId) {
 
-    public int getUnusedPointInfo(long _custmer_id) {
-
-        Cursor cur = db.rawQuery("SELECT SUM(unUsedpoint_amount) from " +  UsedPoint_TabelName + "  where custmer_id='" + _custmer_id + "'", null);
+        Cursor cur = db.rawQuery("SELECT SUM(unUsedPointAmount) from " + USED_POINT_TABLE_NAME + "  where customerId='" + customerId + "'", null);
 
         if (cur.moveToFirst()) {
             return (int) cur.getLong(0);
@@ -65,29 +65,29 @@ public class UsedPointDBAdapter {
 
 
     public long insertEntry( long saleId, int point,long custmerId) {
-        UsedPoint usedPoint = new UsedPoint(Util.idHealth(this.db, UsedPoint_TabelName, UsedPoint_COLUMN_Id),saleId, point,custmerId);
+        UsedPoint usedPoint = new UsedPoint(Util.idHealth(this.db, USED_POINT_TABLE_NAME, USED_POINT_COLUMN_ID),saleId, point,custmerId);
         sendToBroker(MessageType.ADD_USED_POINT, usedPoint, this.context);
 
         try {
             long insertResult = insertEntry(usedPoint);
             return insertResult;
         } catch (SQLException ex) {
-            Log.e("UsedPoint insertEntry", "inserting Entry at " + UsedPoint_TabelName + ": " + ex.getMessage());
+            Log.e("UsedPoint insertEntry", "inserting Entry at " + USED_POINT_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
     public long insertEntry(UsedPoint usedPoint){
         ContentValues val = new ContentValues();
-        val.put(UsedPoint_COLUMN_Id,usedPoint.getId());
+        val.put(USED_POINT_COLUMN_ID,usedPoint.getId());
         //Assign values for each row.
-        val.put(UsedPoint_COLUMN_Sale_Id, usedPoint.getSaleId());
-        val.put(UsedPoint_COLUMN_Point, usedPoint.getUnUsedpoint_amount());
-        val.put(UsedPoint_COLUMN_Custmer,usedPoint.getCustmerId());
+        val.put(USED_POINT_COLUMN_SALE_ID, usedPoint.getSaleId());
+        val.put(USED_POINT_COLUMN_POINT, usedPoint.getUnUsedpoint_amount());
+        val.put(USED_POINT_COLUMN_CUSTOMER,usedPoint.getCustmerId());
 
         try {
-            return db.insert(UsedPoint_TabelName, null, val);
+            return db.insert(USED_POINT_TABLE_NAME, null, val);
         } catch (SQLException ex) {
-            Log.e("UsedPoint DB insert", "inserting Entry at " + UsedPoint_TabelName + ": " + ex.getMessage());
+            Log.e("UsedPoint DB insert", "inserting Entry at " + USED_POINT_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }

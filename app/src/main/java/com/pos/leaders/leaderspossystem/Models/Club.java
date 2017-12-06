@@ -6,7 +6,7 @@ import android.content.Context;
  * Created by Win8.1 on 6/21/2017.
  */
 
-public class Group {
+public class Club {
 
     private long id;
     private String name ;
@@ -27,7 +27,7 @@ public class Group {
     private boolean hide;
 
 
-    public Group(long id, String name, String description, int type, float parcent, int amount, int point,boolean hide) {
+    public Club(long id, String name, String description, int type, float parcent, int amount, int point, boolean hide) {
         this.id=id;
         this.name=name;
         this.description=description;
@@ -37,10 +37,10 @@ public class Group {
         this.point=point;
     }
 
-    public Group(Context context) {
+    public Club(Context context) {
     }
 
-    public Group(String name) {
+    public Club(String name) {
         this.name = name;
     }
 

@@ -389,7 +389,7 @@
                                 android:paddingTop="2dp">
 
                                 <TextView
-                                    android:id="@+id/textView52"
+                                    android:id="@+id/tvCustomerInformation"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
@@ -472,7 +472,7 @@
                                 android:orientation="horizontal">
 
                                 <TextView
-                                    android:id="@+id/textView52"
+                                    android:id="@+id/tvCustomerInformation"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"

@@ -41,7 +41,7 @@ public class HomeActivity extends Activity {
 		}
 		if (prefs.getBoolean("firstrun", true)) {
 			// Do first run stuff here then set 'firstrun' as false
-			Toast.makeText(getApplicationContext(),"this is a first run",Toast.LENGTH_LONG);
+			Toast.makeText(getApplicationContext(),"this is customerName first run",Toast.LENGTH_LONG);
 			// using the following line to edit/commit prefs
 			prefs.edit().putBoolean("firstrun", false).commit();
 		}
@@ -98,7 +98,7 @@ public class HomeActivity extends Activity {
 					SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, u.getId(), new Date(), new Date());
 					/*
 					String message = "hello";
-                    intent.putExtra("a", message);
+                    intent.putExtra("customerName", message);
 					*/
 					startActivity(intent);
 				} else {

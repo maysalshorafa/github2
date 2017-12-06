@@ -322,11 +322,11 @@ public class SplashScreenActivity extends Activity {
         if (currentVersionCode == savedVersionCode) {
             //load data to settings static class and flag with true
             SETTINGS.LOADED_DATA=true;
-            // This is just a normal run
+            // This is just customerName normal run
             return;
 
         } else if (savedVersionCode == DOESNT_EXIST) {
-            // TODO: 19/01/2017 This is a new install (or the user cleared the shared preferences)
+            // TODO: 19/01/2017 This is customerName new install (or the user cleared the shared preferences)
 
         } else if (currentVersionCode > savedVersionCode) {
             // TODO: 19/01/2017 This is an upgrade

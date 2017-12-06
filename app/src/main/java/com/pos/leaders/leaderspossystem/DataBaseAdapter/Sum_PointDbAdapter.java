@@ -33,9 +33,9 @@ public class Sum_PointDbAdapter {
     private final Context context;
     // Database open/upgrade helper
     private DbHelper dbHelper;
-    public int getPointInfo(long _custmer_id) {
+    public int getPointInfo(long customerId) {
 
-        Cursor cur = db.rawQuery("SELECT SUM(pointAmount) from " + SUM_POINT_TABLE_NAME + "  where "+ SUM_POINT_COLUMN_CUSTOMER +"='" + _custmer_id + "'", null);
+        Cursor cur = db.rawQuery("SELECT SUM(pointAmount) from " + SUM_POINT_TABLE_NAME + "  where "+ SUM_POINT_COLUMN_CUSTOMER +"='" + customerId + "'", null);
         if (cur.moveToFirst()) {
             return cur.getInt(0);
         }

@@ -318,6 +318,8 @@ public class BitmapInvoice {
 
         StaticLayout sInvoiceD = new StaticLayout("פריט \t\t\t\t\t\t\t\t נכנס  \t\t\t\t\t זיכוי \t\t\t סה''כ", invoiceD,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
+        StaticLayout scInvoiceD = new StaticLayout(" " + "\t\t" + "Input" + "\t\t\t" + "OutPut" + "\t\t\t" + "Different"+"\t\t\t", invoiceD,
+                PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
 
         TextPaint orderTP = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
         orderTP.setStyle(Paint.Style.FILL);
@@ -372,7 +374,7 @@ public class BitmapInvoice {
         //RGB_565
         int Page_Height = 0;
         if (SETTINGS.enableCurrencies)
-            Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight() + cSlNames.getHeight() + sNewLine.getHeight();
+            Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight() + cSlNames.getHeight() + sNewLine.getHeight()+scInvoiceD.getHeight();
         else
             Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight();
         Bitmap b = Bitmap.createBitmap(PAGE_WIDTH, Page_Height, Bitmap.Config.ARGB_8888);
@@ -410,7 +412,11 @@ public class BitmapInvoice {
         if (SETTINGS.enableCurrencies) {
             c.translate(0, sNewLine.getHeight());
             cSlTotal.draw(c);
+            scInvoiceD.draw(c);
+
             c.translate(cSlTotal.getWidth(), 0);
+            c.translate(0,scInvoiceD.getHeight());
+
             cSlOut.draw(c);
             c.translate(cSlOut.getWidth(), 0);
             cSlIn.draw(c);
