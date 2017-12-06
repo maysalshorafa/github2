@@ -2155,9 +2155,15 @@ startActivity(i);
 
                             AidlUtil.getInstance().printBitmap(bitmap);
 
-                            HPRTPrinterHelper.FeedPaperToCutPosition(HPRTPrinterHelper.HPRT_FULL_CUT);
+                            Thread.sleep(100);
+
+                            AidlUtil.getInstance().feed();
+                            AidlUtil.getInstance().cut();
+                            Thread.sleep(100);
+
                             Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli);
                             AidlUtil.getInstance().printBitmap(bitmap2);
+                            Thread.sleep(100);
                         } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
                             Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER);
                             AidlUtil.getInstance().printBitmap(bitmap);

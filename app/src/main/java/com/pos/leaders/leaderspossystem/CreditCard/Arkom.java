@@ -20,8 +20,10 @@ import org.ksoap2.transport.HttpTransportSE;
 
 public class Arkom {
     static private final String NAMESPACE = "https://secure.arkom.co.il/";
+
     //For release mode
     //static private final String URL = "https://cc.arkom.co.il/MTS_WebService.asmx";
+
     //For test mode
     static private final String URL = "https://secure.arkom.co.il/wsdev/MTS_WebService.asmx";
 

@@ -1,20 +1,27 @@
 package com.pos.leaders.leaderspossystem.CreditCard;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +30,8 @@ import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 
 import org.ksoap2.serialization.SoapObject;
+
+import java.util.regex.Pattern;
 
 /**
  * Created by KARAM on 10/12/2016.
@@ -217,9 +226,9 @@ public class CreditCardActivity extends AppCompatActivity {
                     );
                     dialog_connection.show();
                 } else {
-                    final ProgressDialog dialog = new ProgressDialog(CreditCardActivity.this);
-                    final ProgressDialog dialog_connection = new ProgressDialog(CreditCardActivity.this);
 
+                    final ProgressDialog dialog_connection = new ProgressDialog(CreditCardActivity.this);
+                    final Dialog dialog = new Dialog(CreditCardActivity.this);
                     numberOfPayments = Integer.parseInt(etNumberOfPayments.getText().toString());
 
                     tvTotalPrice.setFocusable(false);
@@ -228,18 +237,21 @@ public class CreditCardActivity extends AppCompatActivity {
                     etNumberOfPayments.setFocusable(false);
                     sCreditType.setFocusable(false);
 
-                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            if (nextStep) {
-                                dialog_connection.setTitle(getBaseContext().getString(R.string.wait_for_accept));
-                                dialog_connection.show();
-                            }
-                        }
-                    });
+                    dialog.setContentView(R.layout.dialog_credit_card_reader);
+                    dialog.setTitle(CreditCardActivity.this.getString(R.string.transfer_credit_card));
+
+
+
                     dialog_connection.setOnShowListener(new DialogInterface.OnShowListener() {
                         @Override
                         public void onShow(DialogInterface dialog) {
+                            String str = creditCardNumber;
+
+                            if (str.contains("?;")) {
+                                creditCardNumber = str.split(Pattern.quote("?;"))[1];
+                            }
+
+                            creditCardNumber=creditCardNumber.replace("?", "");
                             creditCardNumber.replace("?", "");
                             creditCardNumber.replace(";", "");
                             creditCardNumber.replace("�", "");
@@ -282,6 +294,56 @@ public class CreditCardActivity extends AppCompatActivity {
                             }.execute();
                         }
                     });
+
+
+                    dialog.show();
+
+                    View view = CreditCardActivity.this.getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            if (nextStep) {
+                                dialog_connection.setTitle(getBaseContext().getString(R.string.wait_for_accept));
+                                dialog_connection.show();
+                            }
+                        }
+                    });
+
+                    final EditText editText = (EditText) dialog.findViewById(R.id.dialogCreditCardReader_etCardNumber);
+
+                    editText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                        }
+                    });
+
+                    final Button btOk = (Button) dialog.findViewById(R.id.dialogCreditCardReader_btOk);
+
+                    btOk.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            nextStep = true;
+                            creditCardNumber = editText.getText().toString();
+                            dialog.dismiss();
+                        }
+                    });
+
+/*
                     dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
                         boolean run = false;
 
@@ -291,9 +353,10 @@ public class CreditCardActivity extends AppCompatActivity {
                             if (event.getAction() == KeyEvent.ACTION_UP) {
                                 if (event.getKeyCode() == KeyEvent.KEYCODE_EQUALS && run) {
                                     creditCardNumber += "=";
+                                    editText.append("=");
                                 }
                                 else if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER && run) {
-                                    dialog.setMessage(creditCardNumber);
+                                    //dialog.setMessage(creditCardNumber);
                                     nextStep = true;
                                     //Log.e("read", creditCardNumber);
                                     dialog.dismiss();
@@ -302,15 +365,17 @@ public class CreditCardActivity extends AppCompatActivity {
                                 } else {//enter pressed
                                     if (run){
                                         Log.i("cc", creditCardNumber);
-                                        creditCardNumber += event.getNumber();}
+                                        creditCardNumber += event.getNumber();
+                                        editText.append(event.getNumber()+"");}
                                 }
                                 return true;
                             }
                             return false;
+
                         }
-                    });
-                    dialog.setTitle(getBaseContext().getString(R.string.transfer_credit_card));
-                    dialog.show();
+                    });*/
+
+
                 }
             }
         });
@@ -330,4 +395,5 @@ public class CreditCardActivity extends AppCompatActivity {
             finish();
         }
     }
+
 }

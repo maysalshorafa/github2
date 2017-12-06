@@ -131,6 +131,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                 AidlUtil.getInstance().connectPrinterService(this);
                 if(AidlUtil.getInstance().isConnect()){
                     Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
+                    AidlUtil.getInstance().initPrinter();
                 }
                 else {
                     Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
@@ -281,7 +282,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //using method
+                /*//using method
                 String portSettings = "portable;escpos;l";
                 String port = "BT:";
                 int paperWidth = 576;
@@ -290,9 +291,9 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                 paperWidth = 384; // 2inch (384 dot)
                 MiniPrinterFunctions.PrintBitmapImage(TempDashBord.this, port,portSettings, BitmapInvoice.testPrinter(TempDashBord.this,paperWidth), paperWidth, true, true);
 
-                /*
+                */
                 i = new Intent(getApplicationContext(), SettingActivity.class);
-                startActivity(i);*/
+                startActivity(i);
             }
         });
         customerClub.setOnClickListener(new View.OnClickListener() {
