@@ -22,6 +22,7 @@ import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
@@ -179,6 +180,48 @@ public class PrintTools {
         }
     }
 
+    private void Print_SM_S230I(Bitmap _bitmap) {
+        final Bitmap bitmap = _bitmap;
+        final ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                dialog.show();
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                //feed and cut
+
+                dialog.cancel();
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    printSMS230(bitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
+    }
+
+    private void printSMS230(Bitmap bitmap) {
+        String portSettings = "portable;escpos;l";
+        String port = "BT:";
+        int paperWidth = 576;
+        paperWidth = 832; // 4inch (832 dot)
+        paperWidth = 576; // 3inch (576 dot)1
+        paperWidth = 384; // 2inch (384 dot)
+        MiniPrinterFunctions.PrintBitmapImage(context, port,portSettings, bitmap, paperWidth, true, true);
+
+    }
+
+
     public void PrintReport(Bitmap _bitmap){
 
         switch (SETTINGS.printer) {
@@ -190,6 +233,10 @@ public class PrintTools {
                 break;
             case SUNMI_T1:
                 Print_SUNMI_T1(_bitmap);
+                break;
+            case SM_S230I:
+                Print_SM_S230I(_bitmap);
+                break;
         }
     }
 

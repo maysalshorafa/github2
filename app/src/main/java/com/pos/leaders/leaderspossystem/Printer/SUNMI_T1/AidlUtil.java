@@ -13,6 +13,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import com.pos.leaders.leaderspossystem.Printer.BitmapInvoice;
+import com.pos.leaders.leaderspossystem.Printer.PrintTools;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

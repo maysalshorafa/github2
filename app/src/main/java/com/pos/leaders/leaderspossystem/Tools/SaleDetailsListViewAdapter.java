@@ -44,7 +44,7 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
  */
 
 public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickListener {
-	private static final int MINCHARNUMBER = 7;
+	private static final int MINCHARNUMBER = 50;
 	private List<Order> orderList;
 	private int resource;
 	private LayoutInflater inflater;
