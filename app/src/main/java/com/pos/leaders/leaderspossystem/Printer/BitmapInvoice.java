@@ -21,6 +21,7 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -586,7 +587,84 @@ public class BitmapInvoice {
         return b;
     }
 
-    public Bitmap returnInvoice() {
+    public static Bitmap testPrinter(Context context,int pagewidth){
+        int PAGE_WIDTH = pagewidth;
+
+        Typeface plain = Typeface.createFromAsset(context.getAssets(), "carmelitregular.ttf");
+        Typeface normal = Typeface.create(plain, Typeface.NORMAL);
+        Typeface bold = Typeface.create(plain, Typeface.BOLD);
+
+        TextPaint head = new TextPaint(Paint.ANTI_ALIAS_FLAG
+                | Paint.LINEAR_TEXT_FLAG);
+        head.setStyle(Paint.Style.FILL);
+        head.setColor(Color.BLACK);
+        head.setTypeface(normal);
+        head.setTextSize(38);
+        StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID  +"\n\r"+DateConverter.dateToString(new Date().getTime())+"\n\r"+"קןפאי : "+"sadsd", head,
+                PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
+
+
+        TextPaint invoiceHead = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
+        invoiceHead.setStyle(Paint.Style.FILL);
+        invoiceHead.setColor(Color.BLACK);
+        invoiceHead.setTypeface(bold);
+        invoiceHead.setTextSize(38);
+        StaticLayout sInvoiceHead = new StaticLayout("---------------------------", invoiceHead,
+                PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
+
+
+        TextPaint invoiceD = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
+        invoiceD.setStyle(Paint.Style.FILL);
+        invoiceD.setColor(Color.BLACK);
+        invoiceD.setTypeface(bold);
+
+        invoiceD.setTextSize(30);
+
+
+        StaticLayout sInvoiceD = new StaticLayout("פעולה        \t\t\t\t\t\t\t\t\t נכנס  \t\t\t\t\t זיכוי \t\t\t סה''כ", invoiceD,
+                PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
+
+        TextPaint orderTP = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
+        orderTP.setStyle(Paint.Style.FILL);
+        orderTP.setColor(Color.BLACK);
+        orderTP.setTypeface(normal);
+        orderTP.setTextSize(30);
+        orderTP.setTextAlign(Paint.Align.LEFT);
+        orderTP.setLinearText(true);
+
+
+
+
+
+        // invoiceD.setTextAlign(Paint.Align.CENTER);
+        // Create bitmap and canvas to draw to
+        //RGB_565
+        int Page_Height = sHead.getHeight() + sInvoiceHead.getHeight()+sHead.getHeight();
+        Bitmap b = Bitmap.createBitmap(PAGE_WIDTH, Page_Height, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+
+
+        // Draw background
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG
+                | Paint.LINEAR_TEXT_FLAG);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.WHITE);
+        c.drawPaint(paint);
+
+        // Draw text
+        c.save();
+        c.translate(0, 0);
+        sHead.draw(c);
+        c.translate(0, sHead.getHeight());
+        sInvoiceHead.draw(c);
+        c.translate(0,sInvoiceHead.getHeight());
+        sInvoiceD.draw(c);
+
+        c.restore();
+        return b;
+    }
+
+    public Bitmap returnInvoice(){
         List<Block> blocks = new ArrayList<>();
 
         Block b = new Block("Hello", 40f, Color.BLACK);

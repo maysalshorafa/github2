@@ -10,59 +10,61 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:weightSum="1">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="1">
+
                 <TextView
                     android:layout_width="120dp"
                     android:layout_height="62dp"
-                    android:gravity="center"
                     android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
+                    android:gravity="center"
                     android:text="@string/total_price"
-                    />
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
                 <TextView
+                    android:id="@+id/creditCardActivity_tvTotalPrice"
                     android:layout_width="120dp"
                     android:layout_height="62dp"
-                    android:gravity="center"
-                    android:id="@+id/creditCardActivity_tvTotalPrice"
                     android:layout_gravity="center"
+                    android:gravity="center"
                     android:textColor="@color/black"
-                    android:textStyle="bold"
                     android:textSize="20dp"
-                    />
+                    android:textStyle="bold" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="1">
+
                 <TextView
                     android:layout_width="120dp"
                     android:layout_height="62dp"
-                    android:gravity="center"
                     android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
+                    android:gravity="center"
                     android:text="@string/customer_name"
-                    />
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/custmer_name"
                     android:layout_width="120dp"
@@ -87,23 +89,24 @@
             <TextView
                 android:layout_width="120dp"
                 android:layout_height="62dp"
+                android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/credit_type"
-                android:layout_gravity="center"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="20dp"/>
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/creditCardActivity_sCreditType"
                 android:layout_width="fill_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
-                android:paddingLeft="5dp"
+                android:background="@color/white"
                 android:entries="@array/credit_card_type"
-                android:prompt="@string/credit_type"
-                android:background="@color/white"    />
+                android:paddingLeft="5dp"
+                android:prompt="@string/credit_type" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -113,27 +116,29 @@
             <TextView
                 android:layout_width="120dp"
                 android:layout_height="62dp"
+                android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/number_of_payments"
-                android:layout_gravity="center"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="20dp"/>
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/creditCardActivity_etNumberOfPayments"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
+                android:inputType="number"
                 android:paddingLeft="5dp" />
 
 
         </LinearLayout>
+
         <FrameLayout
+            android:id="@+id/byPhoneFragment_fl"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/byPhoneFragment_fl">
+            android:layout_height="wrap_content">
 
 
         </FrameLayout>

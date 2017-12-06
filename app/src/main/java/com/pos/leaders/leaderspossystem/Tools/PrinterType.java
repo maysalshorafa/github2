@@ -7,5 +7,6 @@ package com.pos.leaders.leaderspossystem.Tools;
 public enum PrinterType {
     BTP880,
     HPRT_TP805,
-    SUNMI_T1
+    SUNMI_T1,
+    SM_S230I
 }

@@ -115,6 +115,15 @@ public class Product {
         this.byUser = byUser;
     }
 
+    public Product(String name,double price,double costPrice,String barCode,long byUser) {
+        this.name = name;
+        this.price = price;
+        this.costPrice = costPrice;
+        this.barCode=barCode;
+        this.withTax=true;
+        this.byUser = byUser;
+    }
+
     public Product(Product product){
         this(product.getId(),product.getName(),product.getBarCode(),product.getDescription(),
                 product.getPrice(),product.getCostPrice(),product.isWithTax(),product.isWeighable(),
