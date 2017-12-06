@@ -1,11 +1,15 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,6 +49,7 @@ import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
+import com.sunmi.aidl.MSCardService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,6 +70,9 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     Intent i;
     Sale lastSale;
 
+    private MSCardService sendservice;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +90,26 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         }
 
         TitleBar.setTitleBar(this);
+
+        //run MSR Service
+        Intent intent = new Intent();
+        intent.setPackage("com.sunmi.mscardservice");
+        intent.setAction("com.sunmi.mainservice.MainService");
+        bindService(intent, new ServiceConnection() {
+
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                sendservice = MSCardService.Stub.asInterface(service);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }}, BIND_AUTO_CREATE);
+
+
+
+        //sendable.run();
 
         AccessToken accessToken = new AccessToken(this);
         accessToken.execute(this);

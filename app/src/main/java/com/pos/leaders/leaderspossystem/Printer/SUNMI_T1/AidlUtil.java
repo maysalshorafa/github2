@@ -23,16 +23,40 @@ import java.util.List;
 import woyou.aidlservice.jiuiv5.ICallback;
 import woyou.aidlservice.jiuiv5.IWoyouService;
 
+import com.sunmi.aidl.*;
 
 public class AidlUtil {
     private static final String SERVICE＿PACKAGE = "woyou.aidlservice.jiuiv5";
     private static final String SERVICE＿ACTION = "woyou.aidlservice.jiuiv5.IWoyouService";
 
     private IWoyouService woyouService;
+
     private static AidlUtil mAidlUtil = new AidlUtil();
     private Context context;
 
     private AidlUtil() {
+        MSCardService msCardService=new MSCardService(){
+
+            @Override
+            public IBinder asBinder() {
+                return null;
+            }
+
+            @Override
+            public int getMSReaderStatus() throws RemoteException {
+                return 0;
+            }
+
+            @Override
+            public void readRawMSCard(int timeOut, callback call) throws RemoteException {
+
+            }
+
+            @Override
+            public boolean setTempFormat(String[] decorate, int[] order) throws RemoteException {
+                return false;
+            }
+        };
     }
 
     public static AidlUtil getInstance() {
