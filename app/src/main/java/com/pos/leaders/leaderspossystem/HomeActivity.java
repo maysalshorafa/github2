@@ -19,13 +19,8 @@ import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-
 
 
 public class HomeActivity extends Activity {
@@ -46,7 +41,7 @@ public class HomeActivity extends Activity {
 		}
 		if (prefs.getBoolean("firstrun", true)) {
 			// Do first run stuff here then set 'firstrun' as false
-			Toast.makeText(getApplicationContext(),"this is a first run",Toast.LENGTH_LONG);
+			Toast.makeText(getApplicationContext(),"this is customerName first run",Toast.LENGTH_LONG);
 			// using the following line to edit/commit prefs
 			prefs.edit().putBoolean("firstrun", false).commit();
 		}
@@ -94,7 +89,7 @@ public class HomeActivity extends Activity {
 					SESSION._USER = new User(u);
 					Log.i("HomeActivity", u.toString());
 					Toast.makeText(getApplicationContext(), "Hello " + u.getFullName() + " !!", Toast.LENGTH_SHORT).show();
-					Intent intent = new Intent(getApplicationContext(), DashBoard.class);
+					Intent intent = new Intent(getApplicationContext(), OldDashBoard.class);
 
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 					intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, str);
@@ -103,7 +98,7 @@ public class HomeActivity extends Activity {
 					SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, u.getId(), new Date(), new Date());
 					/*
 					String message = "hello";
-                    intent.putExtra("a", message);
+                    intent.putExtra("customerName", message);
 					*/
 					startActivity(intent);
 				} else {

@@ -101,8 +101,12 @@ public class Util {
 
     public static String makePrice(double d) {
         String format = "0.";
+        if(SETTINGS.decimalNumbers==0){
+            format="0";
+        }else {
         for (int i = SETTINGS.decimalNumbers; i > 0; i--) {
             format += "0";
+        }
         }
         DecimalFormat form = new DecimalFormat(format);
         return form.format(d);

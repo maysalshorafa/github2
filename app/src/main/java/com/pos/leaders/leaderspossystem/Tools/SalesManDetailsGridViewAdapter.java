@@ -11,6 +11,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.R;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -105,11 +106,9 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
       //  saleManId.setText(userName);
         salesCase.setText(""+customerAssests.get(position).getSalescase());
         tvSalesAmount.setText(Util.makePrice(customerAssests.get(position).getAmount()));
-        Date d = new Date(customerAssests.get(position).getSaleDate());
-        salesDate.setText(""+d);
-        String string =""+customerAssests.get(position).getOrder_id();
-        String res = string.substring(15, string.length());
-        saleId.setText(res);
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        salesDate.setText(format.format(customerAssests.get(position).getSaleDate()));
+        saleId.setText(customerAssests.get(position).getOrder_id()+"");
 
         return gridView;
     }}

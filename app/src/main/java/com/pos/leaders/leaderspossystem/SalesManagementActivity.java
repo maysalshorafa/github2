@@ -213,7 +213,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                 print.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //send a copy from the in voice
+                        //send customerName copy from the in voice
                         if (checks.size() > 0)
                             print(invoiceImg.normalInvoice(sale.getId(), orders, sale, true, SESSION._USER, checks));
                         else

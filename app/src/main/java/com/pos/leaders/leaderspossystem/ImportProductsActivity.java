@@ -76,7 +76,7 @@ public class ImportProductsActivity extends Activity {
                 try {
                     startActivityForResult(fileintent, CONSTANT.COM_POS_LEADERS_LEADPOS_CHOSEFILE);
                 } catch (ActivityNotFoundException e) {
-                    Log.e("tag", "No activity can handle picking a file. Showing alternatives.");
+                    Log.e("tag", "No activity can handle picking customerName file. Showing alternatives.");
                 }
             }
         });

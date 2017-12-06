@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Group;
+import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -70,19 +70,19 @@ public class ClubAdapter {
     }
 
     public long insertEntry( String name,String description, int type, float parcent, int amount, int point) {
-        Group group = new Group(Util.idHealth(this.db, Group_TABLE_NAME, Group_COLUMN__ID), name, description, type, parcent, amount, point, false );
+        Club group = new Club(Util.idHealth(this.db, Group_TABLE_NAME, Group_COLUMN__ID), name, description, type, parcent, amount, point, false );
         sendToBroker(MessageType.ADD_CLUB, group, this.context);
 
         try {
             long insertResult = insertEntry(group);
             return insertResult;
         } catch (SQLException ex) {
-            Log.e("Group insertEntry", "inserting Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("Club insertEntry", "inserting Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
 
-    public long insertEntry(Group group) {
+    public long insertEntry(Club group) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Group_COLUMN__ID, group.getId());
@@ -115,7 +115,7 @@ public class ClubAdapter {
             db.update(Group_TABLE_NAME,val,null,null);
             return 1;
         } catch (SQLException ex) {
-            Log.e("Group insertEntry", "inserting Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("Club insertEntry", "inserting Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
 
@@ -134,18 +134,18 @@ public class ClubAdapter {
     /*
     public void read(Cursor cursor) {
         cursor.moveToFirst();
-        Group.name= cursor.getString(cursor.getColumnIndex(Group_COLUMN_Name));
-        Group.description= cursor.getString(cursor.getColumnIndex(Group_COLUMN__Descrption));
-        Group.type= Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Type)));
-        Group.amount= Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Amount)));
-        Group.parcent=Integer.parseInt( cursor.getString(cursor.getColumnIndex(Group_COLUMN_Parcent)));
+        Club.name= cursor.getString(cursor.getColumnIndex(Group_COLUMN_Name));
+        Club.description= cursor.getString(cursor.getColumnIndex(Group_COLUMN__Descrption));
+        Club.type= Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Type)));
+        Club.amount= Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Amount)));
+        Club.parcent=Integer.parseInt( cursor.getString(cursor.getColumnIndex(Group_COLUMN_Parcent)));
 
 
         cursor.close();
     }*/
 
-    public  Group getGroupInfo(int club_id){
-            Group group = null;
+    public Club getGroupInfo(long club_id){
+            Club group = null;
             Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME + " where id='" + club_id + "'", null);
             if (cursor.getCount() < 1) // UserName Not Exist
         {
@@ -153,7 +153,7 @@ public class ClubAdapter {
             return group;
         }
             cursor.moveToFirst();
-            group = new Group(Long.parseLong(cursor.getString(cursor.getColumnIndex(Group_COLUMN__ID))),
+            group = new Club(Long.parseLong(cursor.getString(cursor.getColumnIndex(Group_COLUMN__ID))),
                     cursor.getString(cursor.getColumnIndex(Group_COLUMN_Name)),
                     cursor.getString(cursor.getColumnIndex(Group_COLUMN__Descrption)),
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Type))),
@@ -165,8 +165,8 @@ public class ClubAdapter {
             return group;
 
     }
-    public Group getGroupByID(long id) {
-        Group group = null;
+    public Club getGroupByID(long id) {
+        Club group = null;
         Cursor cursor = db.query(Group_TABLE_NAME, null, Group_COLUMN__ID + "=? ", new String[]{id + ""}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0)
@@ -178,8 +178,8 @@ public class ClubAdapter {
         cursor.close();
         return group;
     }
-    public List<Group> getAllGroup() {
-        List<Group> groups = new ArrayList<Group>();
+    public List<Club> getAllGroup() {
+        List<Club> groups = new ArrayList<Club>();
         Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME + " where " + Group_COLUMN_DISENABLED + "=0 order by id desc", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -189,8 +189,8 @@ public class ClubAdapter {
         return groups;
     }
 
-    private Group createNewGroup(Cursor cursor){
-        return  new Group(Long.parseLong(cursor.getString(cursor.getColumnIndex(Group_COLUMN__ID))),
+    private Club createNewGroup(Cursor cursor){
+        return  new Club(Long.parseLong(cursor.getString(cursor.getColumnIndex(Group_COLUMN__ID))),
                 cursor.getString(cursor.getColumnIndex(Group_COLUMN_Name)),
                 cursor.getString(cursor.getColumnIndex(Group_COLUMN__Descrption)),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Type))),
@@ -210,7 +210,7 @@ public class ClubAdapter {
             db.update(Group_TABLE_NAME, updatedValues, where, new String[]{id + ""});
             return 1;
         } catch (SQLException ex) {
-            Log.e("Group deleteEntry", "enable hide Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("Club deleteEntry", "enable hide Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }

@@ -253,7 +253,7 @@ public class CustomerDBAdapter {
     public List<Customer> getAllCustomerInClub(long id) {
         List<Customer> customerMs = new ArrayList<Customer>();
 
-        Cursor cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where clubId='" + id + "'", null);
+        Cursor cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where "+ CUSTOMER_COLUMN_CLUB +"=" +id +" and " + CUSTOMER_COLUMN_DISENABLED + "=0 order by id desc", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             customerMs.add(new Customer(Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_ID))),

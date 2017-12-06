@@ -124,13 +124,15 @@ public class CashPaymentDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_AMOUNT))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CurrencyType))),DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CREATEDATE))));
     }
-    public double getSumOftype(int currencyType, long from,long to) {
+    public double getSumOfType(int currencyType, long from, long to) {
+        double total=0;
+        Cursor cur = db.rawQuery("SELECT SUM(amount) from " +  CashPAYMENT_TABLE_NAME + "  where "+ CashPAYMENT_COLUMN_CurrencyType +"=" + currencyType +" and " + CashPAYMENT_COLUMN_SALEID +" <= " + to + " and " + CashPAYMENT_COLUMN_SALEID +" >= "+from, null);
+      if(cur.moveToFirst()){
+          cur.getString(cur.getColumnIndex("amount"));
+            // total = cur.getDouble(cur.getColumnIndex(0));// get final total
+           }
+            return total;
 
-          Cursor cur = db.rawQuery("SELECT SUM(amount) from " +  CashPAYMENT_TABLE_NAME + "  where "+ CashPAYMENT_COLUMN_CurrencyType +"=" + currencyType +" and " + CashPAYMENT_COLUMN_SALEID +" <= " + to + " and " + CashPAYMENT_COLUMN_SALEID +" >= "+from, null);
-        if (cur.moveToFirst()) {
-            return cur.getLong(0);
-        }
-        return  0;
     }
 
 

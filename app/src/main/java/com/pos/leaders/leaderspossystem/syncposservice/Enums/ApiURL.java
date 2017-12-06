@@ -15,6 +15,7 @@ public interface ApiURL {
     String Users = "Users";
     String Order = "Order";
     String AReport = "AReport";
+    String AReportDetails = "AReportDetails";
     String Check = "Check";
     String Department = "Department";
     String Offer = "Offer";

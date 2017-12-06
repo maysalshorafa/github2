@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.Models.Group;
+import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.R;
 
 import java.util.List;
@@ -18,10 +18,10 @@ import java.util.List;
 
 public class ClubCatalogGridViewAdapter  extends BaseAdapter {
     private Context context;
-    private List<Group> groups;
+    private List<Club> groups;
     private LayoutInflater inflater;
 
-    public ClubCatalogGridViewAdapter(Context context,List<Group> groups)  {
+    public ClubCatalogGridViewAdapter(Context context,List<Club> groups)  {
         this.context = context;
         this.groups = groups;
     }
@@ -47,7 +47,7 @@ public class ClubCatalogGridViewAdapter  extends BaseAdapter {
      * @return The data at the specified position.
      */
     @Override
-    public Group getItem(int position) {
+    public Club getItem(int position) {
         return groups.get(position);
     }
 

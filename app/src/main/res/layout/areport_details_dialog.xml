@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:background="@drawable/layout_border"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+
+        <EditText
+            android:id="@+id/aReportDetailsDialog_ETFirstCurrencyAmount"
+            style="@style/AppTheme.EditText_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight=".8"
+            android:background="@drawable/layout_border"
+            android:gravity="center"
+            android:hint="@string/amount"
+            android:inputType="numberDecimal"
+            android:textColor="@color/black"
+            android:textDirection="ltr"
+            android:textSize="20dp" />
+
+        <Spinner
+            android:id="@+id/aReportDetailsDialog_SPForFirstCurrency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"></Spinner>
+
+        <ImageView
+            android:id="@+id/addSecondCurrency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1.3"
+            android:background="@drawable/add_currency" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/secondCurrencyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:background="@drawable/layout_border"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="3">
+
+
+        <EditText
+            android:id="@+id/aReportDetailsDialog_ETSecondCurrencyAmount"
+            style="@style/AppTheme.EditText_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight=".8"
+            android:background="@drawable/layout_border"
+            android:gravity="center"
+            android:hint="@string/amount"
+            android:inputType="numberDecimal"
+            android:textColor="@color/black"
+            android:textDirection="ltr"
+            android:textSize="20dp" />
+
+        <Spinner
+            android:id="@+id/aReportDetailsDialog_SPForSecondCurrency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"></Spinner>
+
+        <ImageView
+            android:id="@+id/addThirdCurrency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1.3"
+            android:background="@drawable/add_currency" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/thirdCurrencyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:background="@drawable/layout_border"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="3">
+
+
+        <EditText
+            android:id="@+id/aReportDetailsDialog_ETThirdCurrencyAmount"
+            style="@style/AppTheme.EditText_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight=".8"
+            android:background="@drawable/layout_border"
+            android:gravity="center"
+            android:hint="@string/amount"
+            android:inputType="numberDecimal"
+            android:textColor="@color/black"
+            android:textDirection="ltr"
+            android:textSize="20dp" />
+
+        <Spinner
+            android:id="@+id/aReportDetailsDialog_SPForThirdCurrency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"></Spinner>
+
+        <ImageView
+            android:id="@+id/addForthCurrency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1.3"
+            android:background="@drawable/add_currency" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/forhCurrencyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:background="@drawable/layout_border"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="2">
+
+
+        <EditText
+            android:id="@+id/aReportDetailsDialog_ETForthCurrencyAmount"
+            style="@style/AppTheme.EditText_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/layout_border"
+            android:gravity="center"
+            android:hint="@string/amount"
+
+            android:inputType="numberDecimal"
+            android:textColor="@color/black"
+            android:textDirection="ltr"
+            android:textSize="20dp" />
+
+        <Spinner
+            android:id="@+id/aReportDetailsDialog_SPForForthCurrency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"></Spinner>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/aReportDetailsDialog_BTOK"
+            style="@style/AppTheme.bt_green"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@android:string/ok"
+            android:textColor="#fff"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

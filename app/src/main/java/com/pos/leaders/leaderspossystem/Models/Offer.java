@@ -34,7 +34,7 @@ public class Offer {
 	@JsonIgnore
     private List<Product> products;
 	@JsonIgnore
-    private List<Group> clubs;
+    private List<Club> clubs;
 	@JsonIgnore
     private User user;
 	@JsonIgnore
@@ -140,7 +140,7 @@ public class Offer {
         return products;
     }
 
-	public List<Group> getClubs() {
+	public List<Club> getClubs() {
 		return clubs;
 	}
 
@@ -196,7 +196,7 @@ public class Offer {
 		this.rule = rule;
 	}
 
-	public void setClubs(List<Group> clubs) {
+	public void setClubs(List<Club> clubs) {
 		this.clubs = clubs;
 	}
 

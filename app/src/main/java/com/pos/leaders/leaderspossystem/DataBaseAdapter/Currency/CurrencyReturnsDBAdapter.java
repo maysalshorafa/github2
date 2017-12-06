@@ -127,13 +127,12 @@ public class CurrencyReturnsDBAdapter {
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CurrencyReturns_COLUMN_CurencyType))));
     }
 
-    public double getSumOftype(int currencyType, long from,long to) {
-
-             Cursor cur = db.rawQuery("SELECT SUM(amount) from " +  CurrencyReturnsDBAdapterTabelName + "  where "+ CurrencyReturns_COLUMN_CurencyType+"=" + currencyType +" and " + CurrencyReturns_COLUMN_SALEID +" <= " + to + " and " + CurrencyReturns_COLUMN_SALEID +" >= "+from, null);
-        if (cur.moveToFirst()) {
-            return cur.getLong(0);
-
+    public double getSumOftype(long currencyType, long from,long to) {
+        double total=0;
+        Cursor cur = db.rawQuery("SELECT SUM(amount) from " +  CurrencyReturnsDBAdapterTabelName + "  where "+ CurrencyReturns_COLUMN_CurencyType+"=" + currencyType +" and " + CurrencyReturns_COLUMN_SALEID +" <= " + to + " and " + CurrencyReturns_COLUMN_SALEID +" >= "+from, null);
+        if(cur.moveToFirst()){
+            total =  cur.getDouble(0);// get final total
         }
-        return  0;
+        return total;
     }
 }

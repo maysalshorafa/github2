@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.GridView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
-import com.pos.leaders.leaderspossystem.Models.Group;
+import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.ClubCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -23,12 +23,12 @@ import java.util.List;
 public class ClubManagementActivity extends AppCompatActivity {
     android.support.v7.app.ActionBar actionBar;
 
-    List<Group> groups;
+    List<Club> groups;
     ClubAdapter groupAdapter;
     GridView gvGroup;
     Button btAddGroup, btCancel;
     private static final int CHANGE_PASSWORD_DIALOG = 656;
-    Group group;
+    Club group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

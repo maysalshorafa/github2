@@ -71,7 +71,7 @@ public class InitActivity extends AppCompatActivity {
                         try {
                             startActivityForResult(fileIntent, CONSTANT.COM_POS_LEADERS_LEADPOS_RESTORE_CHOSEFILE);
                         } catch (ActivityNotFoundException e) {
-                            Log.e("tag", "No activity can handle picking a file. Showing alternatives.");
+                            Log.e("tag", "No activity can handle picking customerName file. Showing alternatives.");
                         }
                         dialog.cancel();
                     }

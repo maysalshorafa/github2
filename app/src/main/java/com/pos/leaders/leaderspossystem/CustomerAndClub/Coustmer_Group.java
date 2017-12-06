@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.Models.Customer;
-import com.pos.leaders.leaderspossystem.Models.Group;
+import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -36,7 +36,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
 
     Button btAddGroup, btCancel;
     ClubAdapter groupAdapter = new ClubAdapter(this);
-    Group group;
+    Club group;
     List<Customer> custmers;
     CustomerDBAdapter customerDBAdapter;
     GridView gvcustmer;
@@ -126,7 +126,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
                                 long i = groupAdapter.insertEntry(etGroupName.getText().toString(), etDescription.getText().toString(), id, Float.valueOf(etParcent.getText().toString()), Integer.parseInt(etAmount.getText().toString()), Integer.parseInt(etPoint.getText().toString()));
 
                                 if (i > 0) {
-                                    Log.i("success", "adding new Group");
+                                    Log.i("success", "adding new Club");
 
                                     Toast.makeText(getApplicationContext(), getString(R.string.success_adding_new_club), Toast.LENGTH_LONG).show();
                                     try {
@@ -209,7 +209,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
             etParcent.setText("0.0");
 
         }
-        if (id == 0) {
+        if (id == 3) {
             etAmount.setVisibility(View.GONE);
             etPoint.setVisibility(View.GONE);
             etParcent.setVisibility(View.GONE);

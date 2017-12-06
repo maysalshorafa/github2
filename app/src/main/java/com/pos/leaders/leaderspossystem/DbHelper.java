@@ -56,7 +56,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<String> tablesName(SQLiteDatabase db){
-        Cursor c=db.rawQuery("SELECT name FROM sqlite_master WHERE type='table';", null);
+        Cursor c=db.rawQuery("SELECT name FROM sqlite_master WHERE clubType='table';", null);
         List<String> tablesNames=new ArrayList<String>();
         c.moveToFirst();
         while (!c.isAfterLast()){
@@ -80,6 +80,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(OfferDBAdapter.DATABASE_CREATE);
         db.execSQL(ZReportDBAdapter.DATABASE_CREATE);
         db.execSQL(AReportDBAdapter.DATABASE_CREATE);
+        db.execSQL(AReportDetailsDBAdapter.DATABASE_CREATE);
         db.execSQL(CityDbAdapter.DATABASE_CREATE);
         db.execSQL(ClubAdapter.DATABASE_CREATE);//Club
         db.execSQL(CustomerDBAdapter.DATABASE_CREATE);

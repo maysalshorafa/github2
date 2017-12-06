@@ -123,7 +123,8 @@
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="40dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:maxLines="1"/>
                 <Spinner
                     android:id="@+id/cashActivity_SPRequiredAmount"
                     android:layout_width="match_parent"
@@ -173,7 +174,7 @@
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:hint="0"
-                android:inputType="numberSigned"
+                android:inputType="numberDecimal"
                 android:textColor="@color/black"
                 android:textDirection="ltr"
                 android:textSize="20dp"
@@ -213,7 +214,7 @@
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:hint="0"
-                android:inputType="numberSigned"
+                android:inputType="numberDecimal"
                 android:textColor="@color/black"
                 android:textDirection="ltr"
                 android:textSize="20dp"

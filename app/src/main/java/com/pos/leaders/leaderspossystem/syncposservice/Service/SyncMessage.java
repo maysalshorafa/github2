@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
@@ -35,6 +36,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.AReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
@@ -270,6 +272,22 @@ public class SyncMessage extends Service {
                 case MessageType.DELETE_A_REPORT:
                     break;
                 //endregion A REPORT
+                //region A REPORT Details
+                case MessageType.ADD_A_REPORT_DETAILS:
+                    AReportDetails aReportDetails = null;
+                    aReportDetails = objectMapper.readValue(msgData, AReportDetails.class);
+
+                    AReportDetailsDBAdapter aReportDetailsDBAdapter = new AReportDetailsDBAdapter(this);
+                    aReportDetailsDBAdapter.open();
+                    rID=aReportDetailsDBAdapter.insertEntry(aReportDetails);
+                    aReportDetailsDBAdapter.close();
+
+                    break;
+                case MessageType.UPDATE_A_REPORT_DETAILS:
+                    break;
+                case MessageType.DELETE_A_REPORT_DETAILS:
+                    break;
+                //endregion A REPORT Details
 
                 //region CHECK
                 case MessageType.ADD_CHECK:
@@ -685,6 +703,17 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.AReport, jsonObject.getString(MessageKey.Data), token);
                 break;
             //endregion A REPORT
+            //region A REPORT Details
+            case MessageType.ADD_A_REPORT_DETAILS:
+                res = messageTransmit.authPost(ApiURL.AReportDetails, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_A_REPORT_DETAILS:
+                res = messageTransmit.authPut(ApiURL.AReportDetails, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_A_REPORT_DETAILS:
+                res = messageTransmit.authDelete(ApiURL.AReportDetails, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //endregion A REPORT Details
 
             //region CHECK
             case MessageType.ADD_CHECK:

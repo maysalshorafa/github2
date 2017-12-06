@@ -91,7 +91,7 @@
             android:name=".OpenFormatActivity"
             android:label="@string/title_activity_open_format"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DashBoard">
+        <activity android:name=".OldDashBoard">
 
             <!-- Main Activity -->
         </activity>
@@ -114,7 +114,7 @@
         <activity
             android:name=".CustomerAndClub.ClubManagementActivity"
             android:label="@string/title_activity_temp_cash_activty" />
-        <activity android:name=".TempDashBord" />
+        <activity android:name=".DashBord" />
         <activity android:name=".SalesManManagementActivity" />
         <activity android:name=".SalesAssistantDetailesSalesMangmentActivity" />
         <activity
