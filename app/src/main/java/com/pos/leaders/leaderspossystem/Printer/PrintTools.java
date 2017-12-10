@@ -100,6 +100,55 @@ public class PrintTools {
         }.execute();
     }
 
+
+    private void Print_WINTEC(Bitmap _bitmap) {
+        final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
+        // final UsbPrinter printer = new UsbPrinter(1155, 30016);
+        final ProgressDialog dialog = new ProgressDialog(context);
+        final Bitmap bitmap = _bitmap;
+        dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                dialog.show();
+                ////Hebrew 15 Windows-1255
+
+                int i = posInterfaceAPI.OpenDevice();
+                pos = new POSSDK(posInterfaceAPI);
+
+                pos.textSelectCharSetAndCodePage(POSSDK.CharacterSetUSA, 15);
+
+                pos.systemSelectPrintMode(0);
+
+                pos.systemFeedLine(1);
+                //printer.PRN_Init();
+                //printer.PRN_PrintAndFeedLine(11);
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                //printer.PRN_PrintAndFeedLine(11);
+                //printer.PRN_HalfCutPaper();
+                pos.systemFeedLine(2);
+                pos.systemCutPaper(66, 0);
+
+                // pos.cashdrawerOpen(0,20,20);
+
+                posInterfaceAPI.CloseDevice();
+                dialog.cancel();
+
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                pos.imageStandardModeRasterPrint(bitmap, CONSTANT.PRINTER_PAGE_WIDTH);
+                //printer.PRN_PrintDotBitmap(bitmap, 0);
+                return null;
+            }
+        }.execute();
+    }
+
+
     private void Print_TP805(Bitmap _bitmap) {
         if (HPRT_TP805.connect(context)) {
             final ProgressDialog dialog = new ProgressDialog(context);
@@ -280,12 +329,15 @@ public class PrintTools {
         List<Payment> payments = paymentList(sales);
         List<CashPayment> cashPaymentList = cashPaymentList(sales);
         List<CurrencyReturns> currencyReturnList = returnPaymentList(sales);
+        if (SETTINGS.enableCurrencies) {
         AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
         aReportDetailsDBAdapter.open();
-        aReportDetailsForFirstCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel,aReportId);
-        aReportDetailsForSecondCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.USD,aReportId);
-        aReportDetailsForThirdCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP,aReportId);
-        aReportDetailsForForthCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR,aReportId);
+
+            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReportId);
+            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReportId);
+            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReportId);
+            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReportId);
+        }
         double cash_plus = 0, cash_minus = 0;
         double check_plus = 0, check_minus = 0;
         double creditCard_plus = 0, creditCard_minus = 0;

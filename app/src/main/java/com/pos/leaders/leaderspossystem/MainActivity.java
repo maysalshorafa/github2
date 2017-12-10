@@ -1999,7 +1999,54 @@ startActivity(i);
         }.execute();
     }
 
+/*
+    private void printAndOpenCashBoxWINTEC(String mainAns, final String mainMer, final String mainCli) {
+        final UsbPrinter printer = new UsbPrinter(1155, 30016);
 
+        final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+        dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                dialog.show();
+                ////Hebrew 15 Windows-1255
+
+                SESSION._SALE.setTotalPrice(saleTotalPrice);
+                printer.PRN_Init();
+                printer.PRN_PrintAndFeedLine(11);
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                printer.PRN_PrintAndFeedLine(11);
+                printer.PRN_HalfCutPaper();
+
+                //pos.cashdrawerOpen(0,20,20);
+                dialog.cancel();
+                clearCart();
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
+                if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
+
+                    printer.PRN_PrintDotBitmap(invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer), 0);
+                    printer.PRN_PrintAndFeedLine(11);
+                    printer.PRN_HalfCutPaper();
+
+                    printer.PRN_PrintDotBitmap(invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli), 0);
+                } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
+                    printer.PRN_PrintDotBitmap(invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER), 0);
+                } else {
+                    printer.PRN_PrintDotBitmap(invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null), 0);
+                }
+                return null;
+            }
+        }.execute();
+    }
+*/
     private void printAndOpenCashBoxBTP880(String mainAns, final String mainMer, final String mainCli) {
         final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(MainActivity.this);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
@@ -2046,6 +2093,7 @@ startActivity(i);
             }
         }.execute();
     }
+
 
     private static HPRTPrinterHelper HPRTPrinter = new HPRTPrinterHelper();
 
@@ -2100,7 +2148,11 @@ startActivity(i);
 
                             HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
 
-                            HPRTPrinterHelper.FeedPaperToCutPosition(HPRTPrinterHelper.HPRT_FULL_CUT);
+                            try {
+                                HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli);
                             HPRTPrinterHelper.PrintBitmap(bitmap2, b, b, 300);
                         } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
@@ -2117,73 +2169,62 @@ startActivity(i);
                 }
             }.execute();
         }
+        else{
+            Toast.makeText(this, "Please connect the printer", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void printAndOpenCashBoxSUNMI_T1(String mainAns, final String mainMer, final String mainCli) {
-        AidlUtil.getInstance().connectPrinterService(this);
+        //AidlUtil.getInstance().connectPrinterService(this);
         if (AidlUtil.getInstance().isConnect()) {
             final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
             dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
 
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected void onPreExecute() {
-                    dialog.show();
-                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+            dialog.show();
+            SESSION._SALE.setTotalPrice(saleTotalPrice);
+            InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
+            byte b = 0;
+            try {
+                if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
+                    Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer);
+
+                    AidlUtil.getInstance().printBitmap(bitmap);
+
+                    //Thread.sleep(100);
+
+                    AidlUtil.getInstance().feed();
+                    AidlUtil.getInstance().cut();
+                    //Thread.sleep(100);
+
+                    Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli);
+                    AidlUtil.getInstance().printBitmap(bitmap2);
+                    //Thread.sleep(100);
+                } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
+                    Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER);
+                    AidlUtil.getInstance().printBitmap(bitmap);
+                } else {
+                    Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null);
+                    AidlUtil.getInstance().printBitmap(bitmap);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                //cut
+                AidlUtil.getInstance().print3Line();
+                AidlUtil.getInstance().cut();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    try {
-                        //cut
-                        AidlUtil.getInstance().feed();
-                        AidlUtil.getInstance().cut();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+            try {
+                AidlUtil.getInstance().openCashBox();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-                    try {
-                        AidlUtil.getInstance().openCashBox();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    dialog.cancel();
-                    clearCart();
-                }
-
-                @Override
-                protected Void doInBackground(Void... params) {
-                    InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
-                    byte b = 0;
-                    try {
-                        if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
-                            Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer);
-
-                            AidlUtil.getInstance().printBitmap(bitmap);
-
-                            Thread.sleep(100);
-
-                            AidlUtil.getInstance().feed();
-                            AidlUtil.getInstance().cut();
-                            Thread.sleep(100);
-
-                            Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli);
-                            AidlUtil.getInstance().printBitmap(bitmap2);
-                            Thread.sleep(100);
-                        } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER);
-                            AidlUtil.getInstance().printBitmap(bitmap);
-                        } else {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null);
-                            AidlUtil.getInstance().printBitmap(bitmap);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-            }.execute();
+            dialog.cancel();
+            clearCart();
         } else {
             Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
         }
@@ -2292,7 +2333,8 @@ startActivity(i);
             if (resultCode == RESULT_OK) {
 
                 if (data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote).equals("anyType{}"))
-                    SESSION._SALE.setTotalPaid(SESSION._SALE.getTotalPrice());
+                    return;
+                SESSION._SALE.setTotalPaid(SESSION._SALE.getTotalPrice());
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
@@ -2344,6 +2386,11 @@ startActivity(i);
                         "0000", "", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote), 0, 0, 0, "");
                 creditCardPaymentDBAdapter.close();
 
+                Log.w("mainAns", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY));
+                Log.w("mainMer", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote));
+                Log.w("mainCli", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
+
+
                 printAndOpenCashBox(data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY),
                         data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote),
                         data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote),REQUEST_CREDIT_CARD_ACTIVITY_CODE);
@@ -2351,9 +2398,7 @@ startActivity(i);
                 //get the invoice plugin
                 //print invoice
 
-                Log.w("mainAns", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY));
-                Log.w("mainMer", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote));
-                Log.w("mainCli", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
+
 
                 return;
             } else if (resultCode == RESULT_CANCELED) {
