@@ -8,5 +8,6 @@ public enum PrinterType {
     BTP880,
     HPRT_TP805,
     SUNMI_T1,
-    SM_S230I
+    SM_S230I,
+    WINTEC_BUILDIN
 }

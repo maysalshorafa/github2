@@ -163,7 +163,7 @@ public class AidlUtil {
         }
 
         try {
-            woyouService.setAlignment(1, null);
+            //woyouService.setAlignment(1, null);
             woyouService.printBitmap(bitmap, null);
             woyouService.lineWrap(3, null);
         } catch (RemoteException e) {
@@ -204,6 +204,19 @@ public class AidlUtil {
         }
         try {
             woyouService.openDrawer(null);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void print3Line(){
+        if (woyouService == null) {
+            Toast.makeText(context,"Printer Connect Error！",Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        try {
+            woyouService.lineWrap(3, null);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
