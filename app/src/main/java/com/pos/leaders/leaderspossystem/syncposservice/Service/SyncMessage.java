@@ -46,6 +46,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 
 import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasurement;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule11;
@@ -669,6 +670,17 @@ public class SyncMessage extends Service {
                     break;
                 //endregion Currency.
 
+                //region CustomerMeasurement
+                case MessageType.ADD_CUSTOMER_MEASUREMENT:
+                    CustomerMeasurement customerMeasurement = null;
+                    customerMeasurement = objectMapper.readValue(msgData, CustomerMeasurement.class);
+                   /** CustomerMeasurementDBAdapter customerMeasurementDBAdapter = new CustomerMeasurementDBAdapter(this);
+                    customerMeasurementDBAdapter.open();
+                    customerMeasurementDBAdapter.insertEntry(customerMeasurement);
+                    customerMeasurementDBAdapter.close();**/
+                    break;
+                //end
+
             }
         }else{
             //todo: does not have message type
@@ -991,6 +1003,17 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.CustomerAssistant, jsonObject.getString(MessageKey.Data), token);
                 break;
 
+            //CustomerMeasurement
+            case MessageType.ADD_CUSTOMER_MEASUREMENT:
+                res = messageTransmit.authPost(ApiURL.CustomerMeasurement, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_CUSTOMER_MEASUREMENT:
+                res = messageTransmit.authPut(ApiURL.CustomerMeasurement, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_CUSTOMER_MEASUREMENT:
+                res = messageTransmit.authDelete(ApiURL.CustomerMeasurement, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //End
 
 
 

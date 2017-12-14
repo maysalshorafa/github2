@@ -127,6 +127,17 @@ public interface MessageType{
     String ADD_CURRENCY_TYPE = "AddCurrencyType";
     String UPDATE_CURRENCY_TYPE = "UpdateCurrencyType";
     String DELETE_CURRENCY_TYPE = "DeleteCurrencyType";
+    // CustomerMeasurementModel Massage Type
+    String ADD_CUSTOMER_MEASUREMENT = "AddCustomerMeasurement";
+    String UPDATE_CUSTOMER_MEASUREMENT = "UpdateCustomerMeasurement";
+    String DELETE_CUSTOMER_MEASUREMENT = "DeleteCustomerMeasurement";
 
+    String ADD_MEASUREMENTS_DETAILS = "AddMeasurementsDetails";
+    String UPDATE_MEASUREMENTS_DETAILS = "UpdateMeasurementsDetails";
+    String DELETE_MEASUREMENTS_DETAILS = "DeleteMeasurementsDetails";
+
+    String ADD_MEASUREMENTS_DYNAMIC_VARIABLE = "AddMeasurementDynamicVariable";
+    String UPDATE_MEASUREMENTS_DYNAMIC_VARIABLE = "UpdateMeasurementDynamicVariable";
+    String DELETE_MEASUREMENTS_DYNAMIC_VARIABLE = "DeleteMeasurementDynamicVariable";
 
 }

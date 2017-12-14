@@ -29,7 +29,6 @@ public interface ApiURL {
     String Rule11 = "Rule11";
     String CurrencyReturn = "CurrencyReturn";
     String CurrencyOperation = "CurrencyOperation";
-
     String CashPayment = "CashPayment";
     String CreditCardPayment = "CreditCardPayment";
     String CustomerAssistant = "CustomerAssistant";
@@ -41,4 +40,8 @@ public interface ApiURL {
     String SumPoint="SumPoint";
     String ValueOfPoint="ValueOfPoint";
     String UsedPoint="UsedPoint";
+    String CustomerMeasurement="CustomerMeasurement";
+    String MeasurementsDetails="MeasurementsDetails";
+    String MeasurementDynamicVariable="MeasurementDynamicVariable";
+
 }
