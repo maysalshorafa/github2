@@ -23,6 +23,16 @@ public class MeasurementDynamicVariable {
         this.unit = unit;
         this.hide = hide;
     }
+
+    public MeasurementDynamicVariable(long id, String name, String type, String unit) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.unit = unit;
+    }
+    public MeasurementDynamicVariable(MeasurementDynamicVariable measurementDynamicVariable) {
+        this(measurementDynamicVariable.getId(),measurementDynamicVariable.getName(),measurementDynamicVariable.getType(),measurementDynamicVariable.getUnit());
+    }
     //end Constructors
     // Getters
 
@@ -42,9 +52,6 @@ public class MeasurementDynamicVariable {
         return unit;
     }
 
-    public boolean isHide() {
-        return hide;
-    }
     //end Getters
     //Setters
 
@@ -66,6 +73,9 @@ public class MeasurementDynamicVariable {
 
     public void setHide(boolean hide) {
         this.hide = hide;
+    }
+    public boolean isHide() {
+        return hide;
     }
     //end Setters
 

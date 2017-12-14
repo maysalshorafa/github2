@@ -23,6 +23,9 @@ public class CustomerMeasurement {
         this.userId = userId;
         this.visitDate = visitDate;
     }
+    public CustomerMeasurement(CustomerMeasurement customerMeasurement) {
+        this(customerMeasurement.getId(),customerMeasurement.getCustomerId(),customerMeasurement.getUserId(),customerMeasurement.getVisitDate());
+    }
     //end
     //Getters
     public long getId() {

@@ -25,6 +25,11 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBA
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasurement;
+import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDynamicVariable;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 
 
@@ -111,6 +116,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.execSQL(ScheduleWorkersDBAdapter.DATABASE_CREATE);
         db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
+        //CustomerMeasurement
+        db.execSQL(CustomerMeasurementDBAdapter.DATABASE_CREATE);
+        db.execSQL(MeasurementsDetailsDBAdapter.DATABASE_CREATE);
+        db.execSQL(MeasurementDynamicVariableDBAdapter.DATABASE_CREATE);
+
+
         db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
         db.execSQL(UserDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'user1','user','user','"+new Date().getTime()+"','1234',0,046316969,20,35);");

@@ -20,6 +20,9 @@ public class MeasurementsDetails {
         this.dynamicVarId = dynamicVarId;
         this.value = value;
     }
+    public MeasurementsDetails(MeasurementsDetails measurementsDetails) {
+        this(measurementsDetails.getId(),measurementsDetails.getMeasurementId(),measurementsDetails.getDynamicVarId(),measurementsDetails.getValue());
+    }
     // end
 
     //Getters
