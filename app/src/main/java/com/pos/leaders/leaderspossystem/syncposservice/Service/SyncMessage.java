@@ -21,6 +21,9 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperati
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
@@ -47,6 +50,8 @@ import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasurement;
+import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDynamicVariable;
+import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule11;
@@ -674,12 +679,33 @@ public class SyncMessage extends Service {
                 case MessageType.ADD_CUSTOMER_MEASUREMENT:
                     CustomerMeasurement customerMeasurement = null;
                     customerMeasurement = objectMapper.readValue(msgData, CustomerMeasurement.class);
-                   /** CustomerMeasurementDBAdapter customerMeasurementDBAdapter = new CustomerMeasurementDBAdapter(this);
+                    CustomerMeasurementDBAdapter customerMeasurementDBAdapter = new CustomerMeasurementDBAdapter(this);
                     customerMeasurementDBAdapter.open();
                     customerMeasurementDBAdapter.insertEntry(customerMeasurement);
-                    customerMeasurementDBAdapter.close();**/
+                    customerMeasurementDBAdapter.close();
                     break;
                 //end
+                //region MeasurementsDetails
+                case MessageType.ADD_MEASUREMENTS_DETAILS:
+                    MeasurementsDetails measurementsDetails = null;
+                    measurementsDetails = objectMapper.readValue(msgData, MeasurementsDetails.class);
+                    MeasurementsDetailsDBAdapter measurementsDetailsDBAdapter = new MeasurementsDetailsDBAdapter(this);
+                    measurementsDetailsDBAdapter.open();
+                    measurementsDetailsDBAdapter.insertEntry(measurementsDetails);
+                    measurementsDetailsDBAdapter.close();
+                    break;
+                //end
+                //region MeasurementDynamicVariable
+                case MessageType.ADD_MEASUREMENTS_DYNAMIC_VARIABLE:
+                    MeasurementDynamicVariable measurementDynamicVariable = null;
+                    measurementDynamicVariable = objectMapper.readValue(msgData, MeasurementDynamicVariable.class);
+                    MeasurementDynamicVariableDBAdapter measurementDynamicVariableDBAdapter = new MeasurementDynamicVariableDBAdapter(this);
+                    measurementDynamicVariableDBAdapter.open();
+                    measurementDynamicVariableDBAdapter.insertEntry(measurementDynamicVariable);
+                    measurementDynamicVariableDBAdapter.close();
+                    break;
+                //end
+
 
             }
         }else{
@@ -1014,6 +1040,29 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.CustomerMeasurement, jsonObject.getString(MessageKey.Data), token);
                 break;
             //End
+        //MeasurementsDetails
+            case MessageType.ADD_MEASUREMENTS_DETAILS:
+                res = messageTransmit.authPost(ApiURL.MeasurementsDetails, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_MEASUREMENTS_DETAILS:
+                res = messageTransmit.authPut(ApiURL.MeasurementsDetails, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_MEASUREMENTS_DETAILS:
+                res = messageTransmit.authDelete(ApiURL.MeasurementsDetails, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //End
+            //MeasurementDynamicVariable
+            case MessageType.ADD_MEASUREMENTS_DYNAMIC_VARIABLE:
+                res = messageTransmit.authPost(ApiURL.MeasurementDynamicVariable, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_MEASUREMENTS_DYNAMIC_VARIABLE:
+                res = messageTransmit.authPut(ApiURL.MeasurementDynamicVariable, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_MEASUREMENTS_DYNAMIC_VARIABLE:
+                res = messageTransmit.authDelete(ApiURL.MeasurementDynamicVariable, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //End
+
 
 
 
