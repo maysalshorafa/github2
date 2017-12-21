@@ -51,8 +51,6 @@
     <string name="show_customer">Show Customer </string>
     <string name="discount_percentage">Discount</string>
     <string name="add_customer_club"> Add Customer Club </string>
-
-
     <!--Product Management-->
     <string name="edit_product">Edit Product</string>
     <string name="add_product">Add Product</string>
@@ -351,7 +349,7 @@
 
     <string name="search">Search</string>
     <!--customer String -->
-    <string name="customer_name">Name</string>
+    <string name="customer_name">Customer Name</string>
     <string name="customer_id">Customer ID</string>
     <string name="gender">Gender</string>
     <string name="street">Street</string>
@@ -440,5 +438,15 @@
     <string name="can_not_add_club_please_try_again">Can`t add club please try again.</string>
     <string name="club_name_is_not_available_try_to_use_another_club_name">Club name is not available, try to use another Club name.</string>
     <string name="can_not_edit_club_please_try_again">Can`t edit club please try again.</string>
+    <!-- Customer Measurement String -->
+    <string name="customer_measurement">Customer Measurement</string>
+    <string name="add_customer_measurement">ADD Customer Measurement</string>
+    <string name="show_customer_measurement">Show Customer Measurement</string>
+    <string name="add_measurement">Add Measurement</string>
+    <string name="measurement_type">Type</string>
+    <string name="measurement_name">Name</string>
+    <string name="measurement_value">Value</string>
+    <string name="measurement_id">Id</string>
+
 
 </resources>

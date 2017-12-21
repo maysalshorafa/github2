@@ -14,6 +14,7 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
@@ -99,7 +100,7 @@ public class MeasurementDynamicVariableDBAdapter {
     // get MeasurementDynamicVariable by id
     public MeasurementDynamicVariable getMeasurementDynamicVariableByID(long id) {
         MeasurementDynamicVariable measurementDynamicVariable = null;
-        Cursor cursor = db.rawQuery("select * from " + MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME + " where id='" + id + "'", null);
+        Cursor cursor = db.rawQuery("select * from " + MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME + " where " + MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_ID + " = "+ id, null);
         if (cursor.getCount() < 1)
         {
             cursor.close();
@@ -128,18 +129,27 @@ public class MeasurementDynamicVariableDBAdapter {
     }
     //end
     // get All MeasurementDynamicVariable
-    public List<MeasurementDynamicVariable> getAllMeasurementDynamicVariable() {
-        List<MeasurementDynamicVariable> measurementDynamicVariableList = new ArrayList<MeasurementDynamicVariable>();
-        Cursor cursor = db.rawQuery("select * from " + MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME , null);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            measurementDynamicVariableList.add(new MeasurementDynamicVariable(Long.parseLong(cursor.getString(cursor.getColumnIndex(MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_ID))),
-                    cursor.getString(cursor.getColumnIndex(MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_NAME)),
-                    cursor.getString(cursor.getColumnIndex(MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_DYNAMIC_TYPE)),
-                    cursor.getString(cursor.getColumnIndex(MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_COLUMN_UNIT)), Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_COLUMN_HIDE)))));
-            cursor.moveToNext();
+    public ArrayList<HashMap<String, String>> getAllMeasurementDynamicVariable() {
+        ArrayList<HashMap<String, String>> storeList = new ArrayList<HashMap<String, String>>();
+
+        Cursor c = db.rawQuery("SELECT * FROM MeasurementDynamicVariable", null);
+
+        c.moveToFirst();
+
+        while (c.isAfterLast() == false) {
+
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put(MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_ID,  c.getString(c.getColumnIndex("id")));
+            map.put(MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_NAME,  c.getString(c.getColumnIndex("name")));
+            map.put(MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_DYNAMIC_TYPE, c.getString(c.getColumnIndex("type")));
+            map.put(MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_COLUMN_UNIT, c.getString(c.getColumnIndex("unit")));
+            storeList.add(map);
+
+            c.moveToNext();
+
         }
-        return measurementDynamicVariableList;
+  return storeList;
     }
+
     // end
 }

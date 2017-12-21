@@ -6,6 +6,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasurement;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -119,16 +120,25 @@ public class MeasurementsDetailsDBAdapter {
         }
     }
     //end
-    // get All MeasurementsDetails
-    public List<MeasurementsDetails> getAllMeasurementsDetails() {
+    // get All MeasurementsDetails To Customer
+    public List<MeasurementsDetails> getAllMeasurementsDetails(long CustomerId) {
+        CustomerMeasurementDBAdapter customerMeasurementDBAdapter = new CustomerMeasurementDBAdapter(context);
+        customerMeasurementDBAdapter.open();
+
         List<MeasurementsDetails> measurementsDetailsList = new ArrayList<MeasurementsDetails>();
         Cursor cursor = db.rawQuery("select * from " + MEASUREMENTS_DETAILS_TABLE_NAME , null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            measurementsDetailsList.add(new MeasurementsDetails(Long.parseLong(cursor.getString(cursor.getColumnIndex(MEASUREMENTS_DETAILS_COLUMN_ID))),
+            MeasurementsDetails measurementsDetails =new MeasurementsDetails(Long.parseLong(cursor.getString(cursor.getColumnIndex(MEASUREMENTS_DETAILS_COLUMN_ID))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(MEASUREMENTS_DETAILS_COLUMN_MEASUREMENTS_ID))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(MEASUREMENTS_DETAILS_COLUMN_DYNAMIC_VAR_ID))),
-                    cursor.getString(cursor.getColumnIndex(MEASUREMENTS_DETAILS_COLUMN_VALUE))));
+                    cursor.getString(cursor.getColumnIndex(MEASUREMENTS_DETAILS_COLUMN_VALUE)));
+            CustomerMeasurement customerMeasurement =customerMeasurementDBAdapter.getCustomerMeasurementByID(measurementsDetails.getMeasurementId());
+            if(customerMeasurement.getCustomerId()==CustomerId){
+                measurementsDetailsList.add(measurementsDetails);
+
+            }
+
             cursor.moveToNext();
         }
         return measurementsDetailsList;

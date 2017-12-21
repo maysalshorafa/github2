@@ -116,12 +116,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.execSQL(ScheduleWorkersDBAdapter.DATABASE_CREATE);
         db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
-        //CustomerMeasurement
-        db.execSQL(CustomerMeasurementDBAdapter.DATABASE_CREATE);
-        db.execSQL(MeasurementsDetailsDBAdapter.DATABASE_CREATE);
-        db.execSQL(MeasurementDynamicVariableDBAdapter.DATABASE_CREATE);
-
-
+        //method to updateDataBaseVersion2
+        updateDataBase(db);
+        //end
         db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
         db.execSQL(UserDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'user1','user','user','"+new Date().getTime()+"','1234',0,046316969,20,35);");
@@ -168,13 +165,15 @@ public class DbHelper extends SQLiteOpenHelper {
       
         db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Date().getTime()+"');");
         db.execSQL("insert into "+DepartmentDBAdapter.DEPARTMENTS_TABLE_NAME+" values(1, 'כללי','"+new Date().getTime()+"',1,0);");
-        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'test1','test1','female','11/8/1994','example@gmail.com','coder','123','tt','1',1,1,'1',1,'1');");
+        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'test1','test1','female','11/8/1994','example@gmail.com','coder','123',0,'1',1,1,'1',1,'1');");
 
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (0,'Hifa');");
         db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (1,'type1','type1',1,.2,0,0,0);");
         db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (2,'type2','type2',2,0,50,200,0);");
         db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (3,'type3','type3',3,0,0,0,0);");
         db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (4,'test1','test1','test1','"+new Date().getTime()+"','12',0,046316969,20,35);");
+
+
 
         List<String> tblNames = tablesName(db);
         String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
@@ -344,5 +343,18 @@ public class DbHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         return array_list;
+    }
+    // DataBase Version2
+    public void updateDataBase(SQLiteDatabase db){
+        //CustomerMeasurement
+        db.execSQL(CustomerMeasurementDBAdapter.DATABASE_CREATE);
+        db.execSQL(MeasurementsDetailsDBAdapter.DATABASE_CREATE);
+        db.execSQL(MeasurementDynamicVariableDBAdapter.DATABASE_CREATE);
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (1,'Wight','Double','E',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (2,'Price','Double','E',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (3,'Length','Integer','E',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (4,'Name','String','E',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (5,'True','Boolean','C',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (6,'False','Boolean','C',0);");
     }
 }
