@@ -132,7 +132,7 @@ public class MeasurementDynamicVariableDBAdapter {
     public ArrayList<HashMap<String, String>> getAllMeasurementDynamicVariable() {
         ArrayList<HashMap<String, String>> storeList = new ArrayList<HashMap<String, String>>();
 
-        Cursor c = db.rawQuery("SELECT * FROM MeasurementDynamicVariable", null);
+        Cursor c = db.rawQuery("SELECT * FROM MeasurementDynamicVariable"+ " where " + MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_COLUMN_HIDE + "=0 ", null);
 
         c.moveToFirst();
 
