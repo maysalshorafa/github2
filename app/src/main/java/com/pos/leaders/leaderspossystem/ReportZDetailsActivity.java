@@ -14,7 +14,9 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +53,7 @@ public class ReportZDetailsActivity extends Activity {
         }
         pt=new PrintTools(ReportZDetailsActivity.this);
         p=pt.createZReport(id,from,to,true);
+       // p=pt.createXReport(id,from, SESSION._USER,new java.util.Date()); // testing xReport
         ((ImageView)findViewById(R.id.reportZDetails_ivInvoice)).setImageBitmap(p);
 
         btCancel.setOnClickListener(new View.OnClickListener() {
