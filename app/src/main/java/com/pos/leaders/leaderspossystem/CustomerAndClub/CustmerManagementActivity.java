@@ -26,6 +26,8 @@ public class CustmerManagementActivity extends AppCompatActivity {
     GridView gvCustomer;
     Button btAddCustmer, btCancel;
     private static final int CHANGE_PASSWORD_DIALOG = 656;
+    public static int Customer_Management_View ;
+    public  static int  Customer_Management_Edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,8 @@ public class CustmerManagementActivity extends AppCompatActivity {
         gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                Customer_Management_View=0;
+                Customer_Management_Edit=0;
 
                 final String[] items = {
                         getString(R.string.view),
@@ -78,12 +82,12 @@ public class CustmerManagementActivity extends AppCompatActivity {
                         Intent intent;
                         switch (item) {
                             case 0:
+                                Customer_Management_View=9;
                                 intent = new Intent(CustmerManagementActivity.this, AddNewCustomer.class);
                                 intent.putExtra("id", customers.get(position).getId());
-
-
                                 startActivity(intent);
                             case 1:
+                                Customer_Management_Edit=10;
                                 intent = new Intent(CustmerManagementActivity.this, AddNewCustomer.class);
                                 intent.putExtra("id", customers.get(position).getId());
                                 startActivity(intent);
