@@ -24,6 +24,7 @@ public class SETTINGS {
 
 
 	public static PrinterType printer = PrinterType.HPRT_TP805;
-	public static boolean enableCurrencies = true;
-	public static int decimalNumbers = 0 ;
+	public static boolean enableCurrencies = false;
+	public static int decimalNumbers = 2 ;
+	public static boolean creditCardEnable = true;
 }

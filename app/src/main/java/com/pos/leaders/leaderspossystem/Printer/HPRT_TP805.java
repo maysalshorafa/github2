@@ -73,6 +73,13 @@ public class HPRT_TP805 {
                         device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                         if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false))
                         {
+                            int status=1;
+                            try {
+                                status = HPRTPrinterHelper.PortOpen(device);
+                            }
+                            catch (Exception e){
+                                e.printStackTrace();
+                            }
                             if(HPRTPrinterHelper.PortOpen(device)!=0)
                             {
                                 HPRTPrinter=null;

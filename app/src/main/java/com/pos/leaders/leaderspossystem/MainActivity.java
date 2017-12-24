@@ -49,6 +49,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
+import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 
@@ -75,6 +76,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Offer;
@@ -1068,8 +1070,13 @@ public class MainActivity extends AppCompatActivity {
         btnCreditCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SESSION._ORDERS.size() > 0) {
-                    final String __customerName = customerName_EditText.getText().toString();
+                if (SESSION._ORDERS.size() > 0 && SETTINGS.creditCardEnable) {
+                    //final String __customerName = customerName_EditText.getText().toString();
+                    Intent intent = new Intent(MainActivity.this, MainCreditCardActivity.class);
+                    intent.putExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
+                    startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
+
+                    /*
                     final Context c = MainActivity.this;
                     new AlertDialog.Builder(c)
                             .setTitle(c.getResources().getString(R.string.clearCartAlertTitle))
@@ -1101,7 +1108,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             })
                             .setIcon(android.R.drawable.sym_contact_card)
-                            .show();
+                            .show();*/
                 }
             }
         });
@@ -2346,6 +2353,14 @@ startActivity(i);
                  cInformation= String.valueOf(Ppoint.getPoint());
                  information.setText(cInformation);**/
                 saleDBAdapter.close();
+                CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
+                creditCardPaymentDBAdapter.open();
+                CreditCardPayment ccp = SESSION._TEMP_CREDITCARD_PAYMNET;
+
+                creditCardPaymentDBAdapter.insertEntry(saleID, ccp.getAmount(), ccp.getCreditCardCompanyName(), ccp.getTransactionType(), ccp.getLast4Digits(), ccp.getTransactionId(), ccp.getAnswer(), ccp.getPaymentsNumber()
+                        , ccp.getFirstPaymentAmount(), ccp.getOtherPaymentAmount(), ccp.getCreditCardCompanyName());
+
+                creditCardPaymentDBAdapter.close();
 
                 orderDBAdapter = new OrderDBAdapter(MainActivity.this);
                 custmerAssetDB = new CustomerAssetDB(MainActivity.this);
@@ -2380,11 +2395,6 @@ startActivity(i);
                 Payment payment = new Payment(paymentID, CREDIT_CARD, saleTotalPrice, saleID);
                 SESSION._SALE.setPayment(payment);
 
-                CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
-                creditCardPaymentDBAdapter.open();
-                creditCardPaymentDBAdapter.insertEntry(saleID, saleTotalPrice, "", CreditCardTransactionType.NORMAL,
-                        "0000", "", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote), 0, 0, 0, "");
-                creditCardPaymentDBAdapter.close();
 
                 Log.w("mainAns", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY));
                 Log.w("mainMer", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote));

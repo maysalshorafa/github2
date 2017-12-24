@@ -6,8 +6,6 @@ package com.pos.leaders.leaderspossystem.Tools;
 
 public abstract class CreditCardTransactionType {
     public static final int NORMAL         =   1;
-    public static final int PAYMENTS       =   2;
-    public static final int CREDIT         =   3;
-    public static final int DEFERRED_DEBIT =   4;
-    public static final int OTHER          =   5;
+    public static final int PAYMENTS       =   8;
+    public static final int CREDIT         =   6;
 }

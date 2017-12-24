@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.pos.leaders.leaderspossystem.LogInActivity;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
@@ -40,6 +42,10 @@ public class TitleBar {
         actionBarLayout.setLayoutParams(params);
         actionBar.setCustomView(actionBarLayout);
         if (SESSION._USER == null) {
+            Intent intent = new Intent(context, LogInActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            SESSION._LogOut();
+            context.startActivity(intent);
             //terminal stop
             //System.exit(0);
         }
@@ -55,6 +61,7 @@ public class TitleBar {
         actionBarTitle.setText(format.format(ca.getTime()));
         final TextView actionBarSent = (TextView) context.findViewById(R.id.posID);
         actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
+
 
 
         final TextView actionBarStaff = (TextView) context.findViewById(R.id.userName);
