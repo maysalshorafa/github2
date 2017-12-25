@@ -510,7 +510,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         if (type.equalsIgnoreCase("double")) // Double Number Case
         {
 
-            if (Util.isDouble(measurementValue)) {
+            if (Util.isDouble(measurementValue)||Util.isFloat(measurementValue)) {
 
                 return true;
             }
@@ -534,7 +534,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         }
         if (type.equalsIgnoreCase("decimal")) { //Decimal Number Case
 
-            if (Util.isDecimal(measurementValue)) { // calculate no of floating point in decimal number
+            if (Util.isDecimal(measurementValue)||Util.isDouble(measurementValue)||Util.isFloat(measurementValue)) { // calculate no of floating point in decimal number
                 int integerPlaces = measurementValue.indexOf('.');
                 int decimalPlaces = measurementValue.length() - integerPlaces - 1;
                 if (decimalPlaces <= 29) {
@@ -547,16 +547,10 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             return false;
         }
         if (type.equalsIgnoreCase("long")) { //Long Number Case
-            if(!Util.isString(measurementValue)) {
-
-                if (measurementValue.length()-1 <= 19) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-
-            return false;
+            if (Util.isLong(measurementValue))
+                return true;
+            else
+                return false;
         }
 
 
@@ -571,16 +565,12 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         }
 
         if (type.equalsIgnoreCase("string")) { // String Case
-            try {
-                if (measurementValue.contains("^[0-9]*$")) {
+            if (Util.isString(measurementValue)) {
 
-                    return false;
-                } else {
-                    return true;
-                }
-            } catch (NumberFormatException e) {
-                return false;
+                return true;
             }
+
+            return false;
 
         }
         if (type.equalsIgnoreCase("bit")) { //Bit Number Case

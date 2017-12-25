@@ -103,12 +103,12 @@ public class Util {
 
     public static String makePrice(double d) {
         String format = "0.";
-        if(SETTINGS.decimalNumbers==0){
-            format="0";
-        }else {
-        for (int i = SETTINGS.decimalNumbers; i > 0; i--) {
-            format += "0";
-        }
+        if (SETTINGS.decimalNumbers == 0) {
+            format = "0";
+        } else {
+            for (int i = SETTINGS.decimalNumbers; i > 0; i--) {
+                format += "0";
+            }
         }
         DecimalFormat form = new DecimalFormat(format);
         return form.format(d);
@@ -228,80 +228,79 @@ public class Util {
     public static boolean isSyncServiceRunning(Context context) {
         return isMyServiceRunning(SyncMessage.class, context);
     }
-// Methods To Test Input Value Type
-public static final boolean isDouble(String value)
-{
 
-    Pattern pattern = Pattern.compile("^(\\d+)(\\D)(\\d+)");
-    Matcher matcher = pattern.matcher(value);
-    boolean result=matcher.matches();
-    return result;
-
-}
-    public static final boolean isFloat(String value)
-    {
+    // Methods To Test Input Value Type
+    public static final boolean isDouble(String value) {
 
         Pattern pattern = Pattern.compile("^(\\d+)(\\D)(\\d+)");
         Matcher matcher = pattern.matcher(value);
-        boolean result=matcher.matches();
+        boolean result = matcher.matches();
         return result;
 
     }
-    public static final boolean isDecimal(String value)
-    {
 
+    public static final boolean isFloat(String value) {
         Pattern pattern = Pattern.compile("^(\\d+)(\\D)(\\d+)");
         Matcher matcher = pattern.matcher(value);
-        boolean result=matcher.matches();
+        boolean result = matcher.matches();
         return result;
 
     }
-    public static final boolean isBoolean(String value)
-    {
 
-       if(value.equals("1")||value.equals("0")){
-           return true;
-       }
+    public static final boolean isDecimal(String value) {
+        Pattern pattern = Pattern.compile("^(\\d+)(\\D)(\\d+)");
+        Matcher matcher = pattern.matcher(value);
+        boolean result = matcher.matches();
+        return result;
+
+    }
+
+    public static final boolean isBoolean(String value) {
+
+        if (value.equals("1") || value.equals("0")) {
+            return true;
+        }
         return false;
 
     }
-    public static final boolean isBit(String value)
-    {
 
+    public static final boolean isBit(String value) {
         Pattern pattern = Pattern.compile("^(0|1)$");
         Matcher matcher = pattern.matcher(value);
-        boolean result=matcher.matches();
+        boolean result = matcher.matches();
         return result;
 
     }
-    public static final boolean isInteger(String value)
-    {
-        // ^\\d+$
-        //Pattern pattern = Pattern.compile("^(\\d+)(\\D)(\\d+)");
+
+    public static final boolean isInteger(String value) {
+
         Pattern pattern = Pattern.compile("[+-]?\\b[0-9]+\\b");
         Matcher matcher = pattern.matcher(value);
-        boolean result=matcher.matches();
-        return result;
-    }
-    public static final boolean isString(String value)
-    {
-        // ^\\d+$
-        //Pattern pattern = Pattern.compile("^(\\d+)(\\D)(\\d+)");
-        Pattern pattern = Pattern.compile( "^[0-9]*$");
-        Matcher matcher = pattern.matcher(value);
-        boolean result=matcher.matches();
+        boolean result = matcher.matches();
         return result;
     }
 
-    public static final boolean isEmail(String value)
-    {
-        // ^\\d+$
-        //Pattern pattern = Pattern.compile("^(\\d+)(\\D)(\\d+)");
+    public static final boolean isString(String value) {
+        Pattern pattern = Pattern.compile("^((?!badword).)*$");
+        Matcher matcher = pattern.matcher(value);
+        boolean result = matcher.matches();
+        return result;
+    }
+
+    public static final boolean isEmail(String value) {
         Pattern pattern = Pattern.compile("/^\\w+([\\.-]?\\w+)@\\w+([\\.-]?\\w+)(\\.\\w{2,3})+$/");
 
         Matcher matcher = pattern.matcher(value);
-        boolean result=matcher.matches();
+        boolean result = matcher.matches();
         return result;
     }
+
+    public static final boolean isLong(String value) {
+        Pattern pattern = Pattern.compile("^-?\\d{1,19}$");
+        Matcher matcher = pattern.matcher(value);
+        boolean result = matcher.matches();
+        return result;
+    }
+
 
 }
