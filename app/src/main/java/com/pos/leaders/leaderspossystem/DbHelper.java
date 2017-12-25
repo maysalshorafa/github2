@@ -350,11 +350,11 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CustomerMeasurementDBAdapter.DATABASE_CREATE);
         db.execSQL(MeasurementsDetailsDBAdapter.DATABASE_CREATE);
         db.execSQL(MeasurementDynamicVariableDBAdapter.DATABASE_CREATE);
-     //   db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (1,'Wight','Double','E',0);");
-       // db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (2,'Price','Double','E',0);");
-        //db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (3,'Length','Integer','E',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (1,'Wight','Double','E',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (2,'Price','Double','E',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (3,'Length','Integer','E',0);");
         db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (4,'Name','String','E',0);");
-        //db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (5,'True','Boolean','C',0);");
-        //db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (6,'False','Boolean','C',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (5,'True','Boolean','C',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (6,'False','Boolean','C',0);");
     }
 }
