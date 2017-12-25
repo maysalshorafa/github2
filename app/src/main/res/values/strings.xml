@@ -448,6 +448,9 @@
     <string name="measurement_name">Name</string>
     <string name="measurement_value">Value</string>
     <string name="measurement_id">Id</string>
+    <string name="cancel_measurement">Cancel Measurement</string>
+    <string name="duplicate_measurement">Duplicate Measurement</string>
+    <string name="update_measurement">Update Measurement</string>
 
 
 <!-- Currency -->

@@ -11,27 +11,23 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.*;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasurement;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDynamicVariable;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
 import com.pos.leaders.leaderspossystem.R;
-import com.pos.leaders.leaderspossystem.Tools.SalesManDetailsGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
-import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,6 +45,10 @@ public class CustomerMeasurementManagementActivity  extends AppCompatActivity {
     TextView etCustomerName;
     List<MeasurementsDetails> All_MeasurementDetailsList;
     boolean userScrolled=true;
+    FrameLayout fr;
+    View selectedItem;
+    boolean valid;
+    long testInsert;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,8 +89,27 @@ public class CustomerMeasurementManagementActivity  extends AppCompatActivity {
         etSearch.setFocusable(true);
         etSearch.requestFocus();
         gvCustomerMeasurement.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                removeItemSelection();
+                view.findViewById(R.id.listCustomerMeasurement_FLMore).setVisibility(View.VISIBLE);
+                selectedItem = view;
+
+                Button btnCan = (Button) view.findViewById(R.id.listCustomerMeasurement_BTDeleteMeasurement);
+                btnCan.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MeasurementsDetailsDBAdapter measurementsDetailsDBAdapter = new MeasurementsDetailsDBAdapter(CustomerMeasurementManagementActivity.this);
+                        measurementsDetailsDBAdapter.open();
+                      valid =  measurementsDetailsDBAdapter.deleteCustomerMeasurement(measurementsDetailsList.get(position).getId());
+                        if (valid){
+                            Toast.makeText(CustomerMeasurementManagementActivity.this,"Success Delete Measurement",Toast.LENGTH_LONG).show();
+                        }
+                measurementsDetailsDBAdapter.close();
+                    }
+                });
+
 
             }
         });
@@ -161,6 +180,12 @@ public class CustomerMeasurementManagementActivity  extends AppCompatActivity {
         });
 
 
+    }
+    private void removeItemSelection() {
+        gvCustomerMeasurement.setSelection(-1);
+        if (selectedItem != null) {
+            selectedItem.findViewById(R.id.listCustomerMeasurement_FLMore).setVisibility(View.GONE);
+        }
     }
 }
 
