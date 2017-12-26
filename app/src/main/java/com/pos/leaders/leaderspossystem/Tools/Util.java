@@ -232,7 +232,7 @@ public class Util {
     // Methods To Test Input Value Type
     public static final boolean isDouble(String value) {
 
-        Pattern pattern = Pattern.compile("^(\\d+)(\\D)(\\d+)");
+        Pattern pattern = Pattern.compile("^[+-]?(\\d+)(\\D)(\\d+)");
         Matcher matcher = pattern.matcher(value);
         boolean result = matcher.matches();
         return result;
@@ -240,7 +240,7 @@ public class Util {
     }
 
     public static final boolean isFloat(String value) {
-        Pattern pattern = Pattern.compile("^(\\d+)(\\D)(\\d+)");
+        Pattern pattern = Pattern.compile("^[+-]?(\\d+)(\\D)(\\d+)");
         Matcher matcher = pattern.matcher(value);
         boolean result = matcher.matches();
         return result;
@@ -248,7 +248,7 @@ public class Util {
     }
 
     public static final boolean isDecimal(String value) {
-        Pattern pattern = Pattern.compile("^(\\d+)(\\D)(\\d+)");
+        Pattern pattern = Pattern.compile("^[+-]?(\\d+)(\\D)(\\d+)");
         Matcher matcher = pattern.matcher(value);
         boolean result = matcher.matches();
         return result;

@@ -389,7 +389,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 //end
 
                 //EditText Region
-                if(elementType.equals("E")){
+                if(elementType.equalsIgnoreCase("E")){
                     //draw dynamically text view and store it in layout using "name" parameter from json object
                     String eachData =jsonObject.getString("name");
                     TextView customOptionsName = new TextView(AddNewCustomer.this);
@@ -417,7 +417,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 //End EditText Region
 
                 //CheckBox
-                if(elementType.equals("C")){
+                if(elementType.equalsIgnoreCase("C")){
                     //draw dynamically CheckBox and store it in layout if type Parameter in json object is "C"
                     final CheckBox chk = new CheckBox(AddNewCustomer.this);
                     chk.setText(jsonObject.getString("name"));
@@ -431,7 +431,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
 
                 //end CheckBox
                 // Spinner Region
-                if(elementType.equals("S")){
+                if(elementType.equalsIgnoreCase("S")){
                     //draw dynamically text view and store it in layout using "name" parameter from json object
                     String eachData =jsonObject.getString("name");
                     TextView customOptionsName = new TextView(AddNewCustomer.this);
@@ -452,7 +452,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 //end Spinner Region
 
                 //RadioButton Region
-                if(elementType.equals("R")){
+                if(elementType.equalsIgnoreCase("R")){
                     //draw dynamically RadioButton and store it in layout if type Parameter in json object is "R"
                     RadioButton radioType = new RadioButton(AddNewCustomer.this);
                     radioType.setBackgroundColor(Color.parseColor("#FFFFFF"));
@@ -607,7 +607,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                    long   dynamicVariableId=jsonObject.getLong("id");  //json id
                     String type = jsonObject.getString("type");
                     String elementType =jsonObject.getString("unit");  // json unit (elementType)}
-                    if(elementType.equals("E")){
+                    if(elementType.equalsIgnoreCase("E")){
                         EditText e = editText.get(dynamicVariableId);
                      // add editText Value and id if it enable
                         measurementValueList.add(e.getText().toString());
@@ -615,7 +615,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                         measurementValueListValueType.add(type);
 
                     }
-                    if(elementType.equals("C")){
+                    if(elementType.equalsIgnoreCase("C")){
                         CheckBox checkBox = checkBoxes.get(dynamicVariableId);
                        if(checkBox.isChecked()) {
                            //if type is boolean the value insert must be 0 or 1 else if type is string or any thing the value inserted is the value of parameter "name" in json
