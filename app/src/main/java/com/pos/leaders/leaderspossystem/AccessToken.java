@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
@@ -23,7 +24,7 @@ public class AccessToken extends AsyncTask<Context,Void,String> {
     Context context;
     ProgressDialog progressDialog;
     public AccessToken(Context context){
-        messageTransmit = new MessageTransmit("");
+        messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         this.context = context;
         this.progressDialog = new ProgressDialog(context);
     }

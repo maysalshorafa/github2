@@ -136,14 +136,14 @@
     <string name="credit_type">Credit Type</string>
     <string name="transfer_credit_card">Transfer credit card</string>
     <string-array name="credit_card_type">
-        <item>רגיל</item>
+      <!--  <item>רגיל</item>
         <item>ישרא/אמקס קרדיט  ויזה/דיינרס עדיף \n\r    פלוס30 </item>
         <item>חיוב מיידי</item>
         <item> מועדון אשראי</item>
-        <item>סופר קרדיט</item>
-        <item>קרדיט/קרדיט בתשלומים קבועים</item>
+        <item>סופר קרדיט</item>-->
         <item>תשלומים</item>
-        <item>עסקת מועדון בתשלומים</item>
+        <item>קרדיט/קרדיט בתשלומים קבועים</item>
+      <!--  <item>עסקת מועדון בתשלומים</item>-->
     </string-array>
     <string name="wait_for_accept">Wait for accept</string>
     <string name="please_select_item">Please Select Item From The Cart</string>
@@ -440,7 +440,7 @@
     <string name="can_not_add_club_please_try_again">Can`t add club please try again.</string>
     <string name="club_name_is_not_available_try_to_use_another_club_name">Club name is not available, try to use another Club name.</string>
     <string name="can_not_edit_club_please_try_again">Can`t edit club please try again.</string>
-<!-- Currency -->
+    <!-- Currency -->
     <string name="different"> Different</string>
     <string name="out_put"> Out Put</string>
     <string name="in_put"> InPut</string>
@@ -449,5 +449,9 @@
     <string name="eur">EUR</string>
     <string name="gbp">GBP</string>
     <string name="shekel">SHEKEL</string>
+    <string name="advance">Advance</string>
+    <string name="clear">Clear</string>
+
+    <string name="invalid_payments_number">Please insert valid payments number between 2 and 36.</string>
 
 </resources>

@@ -136,7 +136,13 @@ public class SalesManagementActivity extends AppCompatActivity {
             userDBAdapter.close();
 
             paymentDBAdapter.open();
-            s.setPayment(paymentDBAdapter.getPaymentBySaleID(s.getId()).get(0));
+            try {
+                s.setPayment(paymentDBAdapter.getPaymentBySaleID(s.getId()).get(0));
+            }
+            catch (Exception ex){
+                //_saleList.remove(s);
+                ex.printStackTrace();
+            }
             paymentDBAdapter.close();
         }
         Log.i("log", _saleList.toString());

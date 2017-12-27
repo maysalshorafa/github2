@@ -160,26 +160,6 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         }
         permissionsDBAdapter.close();
 
-        switch (SETTINGS.printer) {
-            case HPRT_TP805:
-                if (HPRT_TP805.connect(this)) {
-                    Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
-                }
-                break;
-            case BTP880:
-                break;
-            case SUNMI_T1:
-                AidlUtil.getInstance().connectPrinterService(this);
-                if (AidlUtil.getInstance().isConnect()) {
-                    Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
-                }
-                break;
-
-        }
 
         mainScreen = (Button) findViewById(R.id.mainScreen);
         btAReport = (Button) findViewById(R.id.dashboard_btAreport);
@@ -413,6 +393,29 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             }
         }
         EnableButtons();
+
+        switch (SETTINGS.printer) {
+            case HPRT_TP805:
+                HPRT_TP805.setConnected(false);
+                if (HPRT_TP805.connect(this)) {
+                    Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case BTP880:
+                break;
+            case SUNMI_T1:
+                AidlUtil.getInstance().connectPrinterService(this);
+                if (AidlUtil.getInstance().isConnect()) {
+                    Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+                }
+                break;
+
+        }
+
     }
 
     private boolean needAReport() {

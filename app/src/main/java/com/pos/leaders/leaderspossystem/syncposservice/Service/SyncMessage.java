@@ -164,7 +164,12 @@ public class SyncMessage extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Log.i(TAG, "Service onStartCommand");
-        messageTransmit = new MessageTransmit(intent.getStringExtra(API_DOMAIN_SYNC_MESSAGE));
+        try {
+            messageTransmit = new MessageTransmit(intent.getStringExtra(API_DOMAIN_SYNC_MESSAGE));
+        }
+        catch (Exception ex){
+            this.onDestroy();
+        }
         //messageTransmit = new MessageTransmit("http://192.168.252.11:8080/webapi/");
 
         if(!isRunning) {
@@ -190,15 +195,19 @@ public class SyncMessage extends Service {
                                     //break;
                                     //don`t stop on fail
                                 }
-                            } catch (IOException | JSONException e) {
+                            } catch (IOException | JSONException | NullPointerException e) {
+                                isRunning = false;
                                 e.printStackTrace();
+                                stopSelf();
                             }
                         }
+
                         broker.close();
 
                         try {
                             getSync();
-                        } catch (IOException | JSONException e) {
+                        } catch (IOException | JSONException | NullPointerException e) {
+                            isRunning = false;
                             e.printStackTrace();
                             stopSelf();
                         }

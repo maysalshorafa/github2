@@ -30,6 +30,7 @@ public class ZReportActivity extends AppCompatActivity {
     public static final String COM_LEADPOS_ZREPORT_FORM = "COM_LEADPOS_ZREPORT_FORM";
     public static final String COM_LEADPOS_ZREPORT_TO = "COM_LEADPOS_ZREPORT_TO";
     public static final String COM_LEADPOS_ZREPORT_ID = "COM_LEADPOS_ZREPORT_ID";
+    public static final String COM_LEADPOS_ZREPORT_HISTORY = "COM_LEADPOS_ZREPORT_HISTORY";
     private ZReportListViewAdapter adapter;
     private List<ZReport> zReportList;
     private ZReportDBAdapter zReportDBAdapter;
@@ -84,14 +85,13 @@ public class ZReportActivity extends AppCompatActivity {
                 i.putExtra(COM_LEADPOS_ZREPORT_ID,zReportList.get(position).getId());
                 i.putExtra(COM_LEADPOS_ZREPORT_FORM,zReportList.get(position).getStartSaleId());
                 i.putExtra(COM_LEADPOS_ZREPORT_TO,zReportList.get(position).getEndSaleId());
+                i.putExtra(COM_LEADPOS_ZREPORT_HISTORY, true);
                 startActivity(i);
 
                 //finish();
 
             }
         });
-
-        //// TODO: 07/01/2017 display every z report and add option to print copy of the report, in first time creating zreport will print the orgenaly copy and show it after publishg it
     }
 
     @Override
@@ -107,8 +107,6 @@ public class ZReportActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             str = extras.getString("permissions_name");
-
-
         }
 
     }

@@ -49,6 +49,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
+import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 
@@ -75,6 +76,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Offer;
@@ -287,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (!Util.isSyncServiceRunning(this)) {
             Intent intent = new Intent(MainActivity.this, SyncMessage.class);
-            intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, "http://185.118.252.26:8080/leadBO/");
+            intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, SETTINGS.BO_SERVER_URL);
             startService(intent);
         }
 
@@ -1068,8 +1070,13 @@ public class MainActivity extends AppCompatActivity {
         btnCreditCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SESSION._ORDERS.size() > 0) {
-                    final String __customerName = customerName_EditText.getText().toString();
+                if (SESSION._ORDERS.size() > 0 && SETTINGS.creditCardEnable) {
+                    //final String __customerName = customerName_EditText.getText().toString();
+                    Intent intent = new Intent(MainActivity.this, MainCreditCardActivity.class);
+                    intent.putExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
+                    startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
+
+                    /*
                     final Context c = MainActivity.this;
                     new AlertDialog.Builder(c)
                             .setTitle(c.getResources().getString(R.string.clearCartAlertTitle))
@@ -1101,7 +1108,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             })
                             .setIcon(android.R.drawable.sym_contact_card)
-                            .show();
+                            .show();*/
                 }
             }
         });
@@ -1350,6 +1357,7 @@ startActivity(i);
         /** if (extras != null) {
          str = extras.getString("permissions_name");
          }*/
+
     }
     //region fragment Touch Pad
 
@@ -1531,7 +1539,6 @@ startActivity(i);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
         refreshCart();
     }
-
 
     protected void calculateTotalPriceWithOffers(List<Offer> offers) {
 
@@ -1812,7 +1819,6 @@ startActivity(i);
         offerDBAdapter.close();
     }
 
-
     protected void scanOffers() throws Exception {
         for (Order o : SESSION._ORDERS) {
             if (o.getProduct().getOffersIDs() != null) {
@@ -1820,7 +1826,6 @@ startActivity(i);
             }
         }
     }
-
 
     protected void calculateTotalPrice() {
 
@@ -1856,8 +1861,6 @@ startActivity(i);
 
                 tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
                 tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
-
-                SESSION._SALE.setTotalPrice(saleTotalPrice);
             } else if (clubType == 2) {
 
                 tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
@@ -1866,10 +1869,8 @@ startActivity(i);
                 totalSaved = (SaleOriginalityPrice - saleTotalPrice);
                 tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
                 //  clubPoint=  ( (int)(sale/clubAmount)*clubPoint);
-
-                SESSION._SALE.setTotalPrice(saleTotalPrice);
-
             }
+            SESSION._SALE.setTotalPrice(saleTotalPrice);
         }
 
 
@@ -2060,7 +2061,6 @@ startActivity(i);
                 dialog.show();
                 ////Hebrew 15 Windows-1255
 
-                SESSION._SALE.setTotalPrice(saleTotalPrice);
                 int i = posInterfaceAPI.OpenDevice();
                 pos = new POSSDK(posInterfaceAPI);
             }
@@ -2106,7 +2106,6 @@ startActivity(i);
                 @Override
                 protected void onPreExecute() {
                     dialog.show();
-                    SESSION._SALE.setTotalPrice(saleTotalPrice);
 
                 }
 
@@ -2181,7 +2180,6 @@ startActivity(i);
             dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
 
             dialog.show();
-            SESSION._SALE.setTotalPrice(saleTotalPrice);
             InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
             byte b = 0;
             try {
@@ -2250,8 +2248,6 @@ startActivity(i);
                 @Override
                 protected void onPreExecute() {
                     dialog.show();
-                    SESSION._SALE.setTotalPrice(saleTotalPrice);
-
                 }
 
                 @Override
@@ -2291,7 +2287,6 @@ startActivity(i);
 
     }
 
-
     private void printAndOpenCashBox(String mainAns, final String mainMer, final String mainCli,int source) {
         switch (SETTINGS.printer) {
             case BTP880:
@@ -2317,8 +2312,6 @@ startActivity(i);
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
         if (Long.valueOf(SESSION._SALE.getCustomer_id()) == 0) {
             if (SESSION._SALE.getCustomer_name() == null) {
                 if (customerName_EditText.getText().toString().equals("")) {
@@ -2329,6 +2322,7 @@ startActivity(i);
             }
         }
 
+        //region CreditCard
         if (requestCode == REQUEST_CREDIT_CARD_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
 
@@ -2346,6 +2340,14 @@ startActivity(i);
                  cInformation= String.valueOf(Ppoint.getPoint());
                  information.setText(cInformation);**/
                 saleDBAdapter.close();
+                CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
+                creditCardPaymentDBAdapter.open();
+                CreditCardPayment ccp = SESSION._TEMP_CREDITCARD_PAYMNET;
+
+                creditCardPaymentDBAdapter.insertEntry(saleID, ccp.getAmount(), ccp.getCreditCardCompanyName(), ccp.getTransactionType(), ccp.getLast4Digits(), ccp.getTransactionId(), ccp.getAnswer(), ccp.getPaymentsNumber()
+                        , ccp.getFirstPaymentAmount(), ccp.getOtherPaymentAmount(), ccp.getCreditCardCompanyName());
+
+                creditCardPaymentDBAdapter.close();
 
                 orderDBAdapter = new OrderDBAdapter(MainActivity.this);
                 custmerAssetDB = new CustomerAssetDB(MainActivity.this);
@@ -2380,11 +2382,6 @@ startActivity(i);
                 Payment payment = new Payment(paymentID, CREDIT_CARD, saleTotalPrice, saleID);
                 SESSION._SALE.setPayment(payment);
 
-                CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
-                creditCardPaymentDBAdapter.open();
-                creditCardPaymentDBAdapter.insertEntry(saleID, saleTotalPrice, "", CreditCardTransactionType.NORMAL,
-                        "0000", "", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote), 0, 0, 0, "");
-                creditCardPaymentDBAdapter.close();
 
                 Log.w("mainAns", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY));
                 Log.w("mainMer", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote));
@@ -2414,6 +2411,11 @@ startActivity(i);
                         .show();
             }
         }
+
+        //endregion
+
+        //region Checks
+
         if (requestCode == REQUEST_CHECKS_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
 
@@ -2469,8 +2471,9 @@ startActivity(i);
                 return;
             }
         }
+        //endregion
 
-        //  Cash Activity WithOut Currency Region
+        //region Cash Activity WithOut Currency Region
         if (requestCode == REQUEST_CASH_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
@@ -2545,7 +2548,9 @@ startActivity(i);
             }
 
         }
-        // Currency Cash Activity Region
+        //endregion
+
+        //region Currency Cash Activity Region
         if (requestCode == REQUEST_CASH_ACTIVITY_WITH_CURRENCY_CODE) {
             if (resultCode == RESULT_OK) {
                 CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
@@ -2632,8 +2637,8 @@ startActivity(i);
 
                 return;
             }
-
         }
+        //endregion
 
     }
 

@@ -493,7 +493,6 @@ public class BitmapInvoice {
         orderTP.setLinearText(true);
 
 
-        //// TODO: 09/01/2017   flag
         String names = "", in = "", out = "", total = "";
 
         names += context.getString(R.string.usd) + "\n" + context.getString(R.string.eur) + "\n" + context.getString(R.string.gbp) + "\n" + context.getString(R.string.shekel) + "\n" + "מזומן" + "\n" + "אשראי" + "\n" + "המחאות" + "\n" + "קרן" + "\n" + "סה''כ";
