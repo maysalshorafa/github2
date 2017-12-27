@@ -124,7 +124,11 @@
             android:theme="@style/AppTheme.PopUp" />
         <activity android:name=".PrinterStub" />
         <activity android:name=".WorkerManagementActivity" />
+
+        <activity android:name=".CustomerAndClub.CustomerMeasurementManagementActivity"></activity>
+
         <activity android:name=".CreditCard.MainCreditCardActivity"></activity>
+
     </application>
 
 </manifest>

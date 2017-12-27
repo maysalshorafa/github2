@@ -94,7 +94,7 @@ public class CustomerMeasurementDBAdapter {
     // get CustomerMeasurement by id
     public CustomerMeasurement getCustomerMeasurementByID(long id) {
         CustomerMeasurement customerMeasurement = null;
-        Cursor cursor = db.rawQuery("select * from " + CUSTOMER_MEASUREMENT_TABLE_NAME + " where id='" + id + "'", null);
+        Cursor cursor = db.rawQuery("select * from " + CUSTOMER_MEASUREMENT_TABLE_NAME + " where " + CUSTOMER_MEASUREMENT_COLUMN_ID + " = "+ id, null);
         if (cursor.getCount() < 1)
         {
             cursor.close();

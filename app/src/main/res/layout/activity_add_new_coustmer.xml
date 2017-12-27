@@ -14,8 +14,8 @@ android:background="@color/white">
 
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginBottom="30dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -23,6 +23,7 @@ android:background="@color/white">
         android:orientation="vertical"
 
         android:weightSum="1">
+
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -163,6 +164,13 @@ android:background="@color/white">
                     />
             </LinearLayout>
         </LinearLayout>
+        <!-- hide this layout if enable Customer Measurement and case is add Customer Measurement -->
+        <LinearLayout
+            android:id="@+id/secondCustomerInformation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+          >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -542,6 +550,48 @@ android:background="@color/white">
 
 
     </LinearLayout>
+        <LinearLayout
+            android:id="@+id/customOptionLL"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+           >
+
+            <Button
+                android:id="@+id/addMeasurement"
+                style="@style/AppTheme.bt_green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_measurement"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_weight="1"/>
+            <Button
+                android:id="@+id/cancelMeasurement"
+                style="@style/AppTheme.bt_dangers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_weight="1"/>
+
+
+        </LinearLayout>
+        </LinearLayout>
 
 
 
