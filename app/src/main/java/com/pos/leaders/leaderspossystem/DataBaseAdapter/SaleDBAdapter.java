@@ -218,17 +218,17 @@ public class SaleDBAdapter {
 	private Sale makeSale(Cursor cursor){
 		try {
 			return new Sale(Long.parseLong(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_ID))),
-					Integer.parseInt(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_BYUSER))),
+					Long.parseLong(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_BYUSER))),
 					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_SALEDATE))),
 					cursor.getInt(cursor.getColumnIndex(SALES_COLUMN_REPLACEMENTNOTE)),
 					Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CANCELED))),
 					cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPRICE)),
 					cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPAID)),
-					Integer.parseInt(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CUSTOMER_ID))),cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CUSTOMER_NAME)));
+					Long.parseLong(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CUSTOMER_ID))),cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CUSTOMER_NAME)));
 		}
 		catch (Exception ex){
 			return new Sale(Long.parseLong(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_ID))),
-					Integer.parseInt(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_BYUSER))),
+					Long.parseLong(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_BYUSER))),
 					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_SALEDATE))),
 					cursor.getInt(cursor.getColumnIndex(SALES_COLUMN_REPLACEMENTNOTE)),
 					Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CANCELED))),

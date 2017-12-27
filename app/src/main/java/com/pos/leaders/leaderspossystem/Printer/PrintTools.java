@@ -309,7 +309,7 @@ public class PrintTools {
         zReportDBAdapter.close();
         UserDBAdapter userDBAdapter = new UserDBAdapter(context);
         userDBAdapter.open();
-        zReport.setUser(userDBAdapter.getUserByID((int) zReport.getByUser()));
+        zReport.setUser(userDBAdapter.getUserByID(zReport.getByUser()));
         userDBAdapter.close();
         AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
         aReportDBAdapter.open();
