@@ -58,6 +58,23 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         if (bundle != null) {
             permissions_name = getIntent().getIntegerArrayListExtra("permissions_name");
         }
+        if(CustmerManagementActivity.Customer_Management_Edit==10){
+            btAddCustomer.setText(R.string.edit);
+        }
+        if(CustmerManagementActivity.Customer_Management_View==9){
+            btAddCustomer.setVisibility(View.GONE);
+            etCustomerFirstName.setEnabled(false);
+            etCustomerLastName.setEnabled(false);
+            etCountry.setEnabled(false);
+            etStreet.setEnabled(false);
+            etJob.setEnabled(false);
+            etEmail.setEnabled(false);
+            etPhoneNo.setEnabled(false);
+            etHouseNumber.setEnabled(false);
+            etPostalCode.setEnabled(false);
+            etCountryCode.setEnabled(false);
+
+        }
         if (bundle != null) {
             long i = (long) bundle.get("id");
             customer = customerDBAdapter.getCustomerByID(i);
