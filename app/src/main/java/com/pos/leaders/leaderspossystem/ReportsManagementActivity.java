@@ -77,6 +77,11 @@ public class ReportsManagementActivity  extends AppCompatActivity {
             else{
                 btnZ.setEnabled(true);
             }
+            // dis enable X Report if no row insert in ZReport Table
+            if (lastZReport==null){
+                btnX.setEnabled(false);
+            }
+
         } catch (Exception ex) {
             Log.e(ex.getLocalizedMessage(), ex.getMessage());
         }
@@ -119,9 +124,18 @@ public class ReportsManagementActivity  extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PrintTools pt=new PrintTools(ReportsManagementActivity.this);
+                if (lastZReport!=null){ // test if have at least i row in ZReportTable Then make XReport
+                Bitmap bmap = pt.createXReport(lastZReport.getEndSaleId()+1,lastSale.getId(),SESSION._USER,new Date());
 
-                //create and print x report
-                pt.PrintReport(pt.createXReport(lastZReport.getEndSaleId()+1,lastSale.getId(),SESSION._USER,new Date()));
+                    pt.PrintReport(bmap);
+                    //create and print x report
+/** test xReport use zActivity
+                    Intent i=new Intent(ReportsManagementActivity.this,ReportZDetailsActivity.class);
+                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID,lastZReport.getId());
+                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM,lastZReport.getStartSaleId());
+                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO,lastZReport.getEndSaleId());
+                    startActivity(i);**/}
+
 
             }
         });
