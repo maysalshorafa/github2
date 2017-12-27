@@ -285,7 +285,7 @@ public class Arkom {
                 0,"","","",1,"ILS",CreditType,ApprovalCode,fixedPayment,fixedPayment,numberOfPay,"",0,"","","");
 
             transactionAcknowledge=PutTransactionAcknowledge(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID);
-
+            soap.addProperty("TransactionID", TransactionID);
         return  soap;}
         catch (Exception ex){
           //  Log.e("error",ex.getMessage());

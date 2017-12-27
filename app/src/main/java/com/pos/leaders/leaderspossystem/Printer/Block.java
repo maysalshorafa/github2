@@ -83,5 +83,16 @@ public class Block {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "Block{" +
+                "text='" + text + '\'' +
+                ", textSize=" + textSize +
+                ", textWidth=" + textWidth +
+                ", textColor=" + textColor +
+                ", align=" + align +
+                ", width=" + width +
+                '}';
+    }
 }
 

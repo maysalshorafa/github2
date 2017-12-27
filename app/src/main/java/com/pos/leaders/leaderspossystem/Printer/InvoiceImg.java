@@ -140,6 +140,7 @@ public class InvoiceImg {
             a = Layout.Alignment.ALIGN_CENTER;
         }
 
+        Log.i("Build block", block.text);
         StaticLayout sNewLine = new StaticLayout(block.text, tPaint,
                 block.width, a,1.0f,1.0f,true);
 

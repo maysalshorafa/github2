@@ -29,6 +29,7 @@ public class ReportZDetailsActivity extends Activity {
     PrintTools pt;
     String str;
     long from=0,to=0,id=0;
+    boolean goBack = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +49,12 @@ public class ReportZDetailsActivity extends Activity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             id=(long)extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_ID);
-             from = (long) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_FORM);
-             to = (long) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_TO);
+            from = (long) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_FORM);
+            to = (long) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_TO);
+            if (extras.containsKey(ZReportActivity.COM_LEADPOS_ZREPORT_HISTORY)) {
+                goBack = extras.getBoolean(ZReportActivity.COM_LEADPOS_ZREPORT_HISTORY, false);
+
+            }
         }
         pt=new PrintTools(ReportZDetailsActivity.this);
         p=pt.createZReport(id,from,to,true);
@@ -70,13 +75,15 @@ public class ReportZDetailsActivity extends Activity {
             }
         });
     }
-    private void goHome(){
-        Intent intent = new Intent(ReportZDetailsActivity.this, LogInActivity.class);
-        intent.putExtra("permissions_name",str);
+    private void goHome() {
+        if (!goBack) {
+            Intent intent = new Intent(ReportZDetailsActivity.this, LogInActivity.class);
+            intent.putExtra("permissions_name", str);
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, LogInActivity.LEADPOS_MAKE_A_REPORT);
-        startActivity(intent);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, LogInActivity.LEADPOS_MAKE_A_REPORT);
+            startActivity(intent);
+        }
         finish();
     }
     @Override
