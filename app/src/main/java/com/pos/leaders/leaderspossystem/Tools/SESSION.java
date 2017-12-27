@@ -20,6 +20,7 @@ public class SESSION {
 	public static Sale _SALE;
 	public static ScheduleWorkers _SCHEDULEWORKERS;
 	public static UserPermissions _USERPERMISSIONS;
+	public static CreditCardPayment _TEMP_CREDITCARD_PAYMNET;
 	public static List<Product> _TEMPOFFERPRODUCTS;
 	public static List<Pair<Integer, Sale>> _SALES;
 	public static List<Check> _CHECKS_HOLDER;

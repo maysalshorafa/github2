@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -21,22 +20,20 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.pos.leaders.leaderspossystem.syncposservice.MessagesCreator;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
-import com.pos.leaders.leaderspossystem.syncposservice.SetupFragments.Token;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class SetupNewPOSOnlineActivity extends Activity {
     public final static String BO_CORE_ACCESS_AUTH = "BOCOREACCESSAUTH";
@@ -129,7 +126,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
     private MessageTransmit messageTransmit;
 
     StartConnection() {
-        messageTransmit = new MessageTransmit("");
+        messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
     }
 
     final ProgressDialog progressDialog = new ProgressDialog(SetupNewPOSOnlineActivity.context);
@@ -230,10 +227,20 @@ class StartConnection extends AsyncTask<String,Void,String> {
 
 
     private void updateSettings(String token) {
-        MessageTransmit messageTransmit = new MessageTransmit("");
+        MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
             String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
-            JSONObject jsonObject = new JSONObject(res);
+            JSONObject jsonObject;
+            try {
+                jsonObject = new JSONObject(res);
+            }
+            catch (JSONException e){
+                JSONArray jsonArray = new JSONArray(res);
+                jsonObject = jsonArray.getJSONObject(0);
+            }
+
+
+
 
 
             SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(SetupNewPOSOnlineActivity.context);

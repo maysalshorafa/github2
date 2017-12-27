@@ -100,8 +100,9 @@ public class AReportDBAdapter {
         AReport aReport;
         Cursor cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME + " where " + A_REPORT_COLUMN_LASTZREPORTID + "='" + (lastZReportID - 1) + "'", null);
         if (cursor.getCount() < 1) {
-            cursor.close();
-            return null;
+            //cursor.close();
+            cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME,null);
+            //return null;
         }
         cursor.moveToFirst();
         aReport = makeAReport(cursor);

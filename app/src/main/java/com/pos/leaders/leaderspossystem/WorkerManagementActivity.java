@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Reports.UserAttendanceReport;
+import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.WorkerGridViewAdapter;
@@ -42,6 +43,8 @@ public class WorkerManagementActivity  extends AppCompatActivity {
     GridView gvUsers;
     Button btAddUser,btCancel;
     private static final int CHANGE_PASSWORD_DIALOG = 656;
+    public static int User_Management_View ;
+    public  static int  User_Management_Edit;
     User user;
     public static final String LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME = "LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME";
     public String btnName="";
@@ -96,6 +99,8 @@ public class WorkerManagementActivity  extends AppCompatActivity {
         gvUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                User_Management_View=0;
+                User_Management_Edit=0;
                 final String[] items = {
                         getString(R.string.view),
                         getString(R.string.edit),
@@ -109,13 +114,13 @@ public class WorkerManagementActivity  extends AppCompatActivity {
                         Intent intent;
                         switch (item) {
                             case 0:
-                                btnName=getString(R.string.view);
+                              User_Management_View=7;
                                 intent = new Intent(WorkerManagementActivity.this, AddUserActivity.class);
                                 intent.putExtra("userId", users.get(position).getId());
                                 intent.putExtra(LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME, btnName);
                                 startActivity(intent);
                             case 1:
-                                btnName=getString(R.string.edit);
+                                User_Management_Edit=8;
                                 intent = new Intent(WorkerManagementActivity.this, AddUserActivity.class);
                                 intent.putExtra("userId", users.get(position).getId());
                                 intent.putExtra(LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME, btnName);

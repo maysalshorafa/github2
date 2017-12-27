@@ -290,9 +290,11 @@ public class PrintTools {
         }
     }
 
+
+
     public Bitmap createZReport(long id, long from, long to, boolean isCopy) {
-        double aReportAmount = 0;
-        long aReportId = 0;
+        /*double aReportAmount = 0;
+        long aReportId = 0;*/
         double sheqle_plus = 0, sheqle_minus = 0;
         double usd_plus = 0, usd_minus = 0;
         double eur_plus = 0, eur_minus = 0;
@@ -309,8 +311,187 @@ public class PrintTools {
         zReportDBAdapter.close();
         UserDBAdapter userDBAdapter = new UserDBAdapter(context);
         userDBAdapter.open();
-        zReport.setUser(userDBAdapter.getUserByID((int) zReport.getByUser()));
+        zReport.setUser(userDBAdapter.getUserByID(zReport.getByUser()));
         userDBAdapter.close();
+        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
+        aReportDBAdapter.open();
+        AReport aReport = aReportDBAdapter.getByLastZReport(id);
+        /*try {
+            aReportAmount = aReportDBAdapter.getLastRow().getAmount();
+            aReportId = aReportDBAdapter.getLastRow().getId();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+        double aReportDetailsForFirstCurrency=0;
+        double aReportDetailsForSecondCurrency=0;
+        double aReportDetailsForThirdCurrency=0;
+        double aReportDetailsForForthCurrency=0;
+
+        // get payment , cashPayment , returnList
+        List<Payment> payments = paymentList(sales);
+        List<CashPayment> cashPaymentList = cashPaymentList(sales);
+        List<CurrencyReturns> currencyReturnList = returnPaymentList(sales);
+        if (SETTINGS.enableCurrencies) {
+        AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
+        aReportDetailsDBAdapter.open();
+
+            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReport.getId());
+            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReport.getId());
+            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReport.getId());
+            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReport.getId());
+        }
+        double cash_plus = 0, cash_minus = 0;
+        double check_plus = 0, check_minus = 0;
+        double creditCard_plus = 0, creditCard_minus = 0;
+        aReportDBAdapter.close();
+        for (Payment p : payments) {
+            int i = 0;
+            switch (p.getPaymentWay()) {
+
+                case CONSTANT.CASH:
+                    if (p.getAmount() > 0)
+                        cash_plus += p.getAmount();
+                    else
+                        cash_minus += p.getAmount();
+                    break;
+                case CONSTANT.CREDIT_CARD:
+                    if (p.getAmount() > 0)
+                        creditCard_plus += p.getAmount();
+                    else
+                        creditCard_minus += p.getAmount();
+                    break;
+                case CONSTANT.CHECKS:
+                    if (p.getAmount() > 0)
+                        check_plus += p.getAmount();
+                    else
+                        check_minus += p.getAmount();
+                    break;
+            }
+        }
+
+
+//with Currency
+
+        if (SETTINGS.enableCurrencies) {
+
+            for (CashPayment cp : cashPaymentList) {
+                switch ((int) cp.getCurrency_type()) {
+
+                    case CONSTANT.Shekel:
+                        if (cp.getAmount() > 0)
+                            sheqle_plus += cp.getAmount();
+                        break;
+                    case CONSTANT.USD:
+                        if (cp.getAmount() > 0)
+                            usd_plus += cp.getAmount();
+                        break;
+                    case CONSTANT.EUR:
+                        if (cp.getAmount() > 0)
+                            eur_plus += cp.getAmount();
+
+                        break;
+                    case CONSTANT.GBP:
+                        if (cp.getAmount() > 0)
+                            gbp_plus += cp.getAmount();
+                        break;
+                }
+            }
+            for (CurrencyReturns cp : currencyReturnList) {
+                switch ((int) cp.getCurrency_type()) {
+
+                    case CONSTANT.Shekel:
+                        if (cp.getAmount() > 0)
+                            sheqle_minus += cp.getAmount();
+                        break;
+                    case CONSTANT.USD:
+                        if (cp.getAmount() > 0)
+                            usd_minus += cp.getAmount();
+                        break;
+                    case CONSTANT.EUR:
+                        if (cp.getAmount() > 0)
+                            eur_minus += cp.getAmount();
+
+                        break;
+                    case CONSTANT.GBP:
+                        if (cp.getAmount() > 0)
+                            gbp_minus += cp.getAmount();
+                        break;
+                }
+            }
+
+        }
+
+        //endregion Currency summary
+
+        return BitmapInvoice.zPrint(context, zReport, usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, Double.parseDouble(Util.makePrice(aReport.getAmount())));
+        //return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
+
+    }
+
+    // get Payment List
+    private List<Payment> paymentList(List<Sale> sales) {
+        List<Payment> pl = new ArrayList<Payment>();
+        PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(context);
+        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
+        CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(context);
+        paymentDBAdapter.open();
+        for (Sale s : sales) {
+            List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(s.getId());
+            /**
+             if (SETTINGS.enableCurrencies) {
+             for (Payment _p : payments) {
+             _p.setCashPayments(cashPaymentDBAdapter.getPaymentBySaleID(_p.getSaleId()));
+             _p.setCurrencyReturns(currencyReturnsDBAdapter.getCurencyReturnBySaleID(_p.getSaleId()));
+             }
+             }**/
+
+            pl.addAll(payments);
+        }
+        paymentDBAdapter.close();
+        return pl;
+    }
+
+    // get Cash Payment List
+    private List<CashPayment> cashPaymentList(List<Sale> sales) {
+        List<CashPayment> pl = new ArrayList<CashPayment>();
+        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
+        cashPaymentDBAdapter.open();
+        for (Sale s : sales) {
+            List<CashPayment> payments = cashPaymentDBAdapter.getPaymentBySaleID(s.getId());
+            pl.addAll(payments);
+        }
+        cashPaymentDBAdapter.close();
+        return pl;
+    }
+
+    // get Currency Return  List
+    private List<CurrencyReturns> returnPaymentList(List<Sale> sales) {
+        List<CurrencyReturns> pl = new ArrayList<CurrencyReturns>();
+        CurrencyReturnsDBAdapter currencyDBAdapter = new CurrencyReturnsDBAdapter(context);
+        currencyDBAdapter.open();
+        for (Sale s : sales) {
+            List<CurrencyReturns> payments = currencyDBAdapter.getCurencyReturnBySaleID(s.getId());
+            pl.addAll(payments);
+        }
+        currencyDBAdapter.close();
+        return pl;
+    }
+
+    public Bitmap createXReport(long endSaleId, long id, User user, Date date) {
+        long aReportId = 0;
+        double usd_plus = 0, usd_minus = 0;
+        double eur_plus = 0, eur_minus = 0;
+        double gbp_plus = 0, gbp_minus = 0;
+        double sheqle_plus = 0, sheqle_minus = 0;
+        double aReportAmount = 0;
+        SaleDBAdapter saleDBAdapter = new SaleDBAdapter(context);
+        saleDBAdapter.open();
+
+
+        List<Sale> sales = saleDBAdapter.getBetween(endSaleId, id);
+
+        saleDBAdapter.close();
+
         AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
         aReportDBAdapter.open();
         AReport aReport = aReportDBAdapter.getByLastZReport((int) id);
@@ -330,8 +511,8 @@ public class PrintTools {
         List<CashPayment> cashPaymentList = cashPaymentList(sales);
         List<CurrencyReturns> currencyReturnList = returnPaymentList(sales);
         if (SETTINGS.enableCurrencies) {
-        AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
-        aReportDetailsDBAdapter.open();
+            AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
+            aReportDetailsDBAdapter.open();
 
             aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReportId);
             aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReportId);
@@ -418,187 +599,7 @@ public class PrintTools {
             }
 
         }
-
-        //endregion Currency summary
-
-        return BitmapInvoice.zPrint(context, zReport, usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, Double.parseDouble(Util.makePrice(aReportAmount)));
-        //return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
+        return BitmapInvoice.xPrint(context, user, date.getTime(), usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, Double.parseDouble(Util.makePrice(aReportAmount)));
 
     }
-
-    // get Payment List
-    private List<Payment> paymentList(List<Sale> sales) {
-        List<Payment> pl = new ArrayList<Payment>();
-        PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(context);
-        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
-        CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(context);
-        paymentDBAdapter.open();
-        for (Sale s : sales) {
-            List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(s.getId());
-            /**
-             if (SETTINGS.enableCurrencies) {
-             for (Payment _p : payments) {
-             _p.setCashPayments(cashPaymentDBAdapter.getPaymentBySaleID(_p.getSaleId()));
-             _p.setCurrencyReturns(currencyReturnsDBAdapter.getCurencyReturnBySaleID(_p.getSaleId()));
-             }
-             }**/
-
-            pl.addAll(payments);
-        }
-        paymentDBAdapter.close();
-        return pl;
-    }
-
-    // get Cash Payment List
-    private List<CashPayment> cashPaymentList(List<Sale> sales) {
-        List<CashPayment> pl = new ArrayList<CashPayment>();
-        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
-        cashPaymentDBAdapter.open();
-        for (Sale s : sales) {
-            List<CashPayment> payments = cashPaymentDBAdapter.getPaymentBySaleID(s.getId());
-            pl.addAll(payments);
-        }
-        cashPaymentDBAdapter.close();
-        return pl;
-    }
-
-    // get Currency Return  List
-    private List<CurrencyReturns> returnPaymentList(List<Sale> sales) {
-        List<CurrencyReturns> pl = new ArrayList<CurrencyReturns>();
-        CurrencyReturnsDBAdapter currencyDBAdapter = new CurrencyReturnsDBAdapter(context);
-        currencyDBAdapter.open();
-        for (Sale s : sales) {
-            List<CurrencyReturns> payments = currencyDBAdapter.getCurencyReturnBySaleID(s.getId());
-            pl.addAll(payments);
-        }
-        currencyDBAdapter.close();
-        return pl;
-    }
-
-    public Bitmap createXReport(long endSaleId, long id, User user, Date date) {
-        long aReportId = 0;
-        double aReportDetailsForFirstCurrency=0;
-        double aReportDetailsForSecondCurrency=0;
-        double aReportDetailsForThirdCurrency=0;
-        double aReportDetailsForForthCurrency=0;
-        double usd_plus = 0, usd_minus = 0;
-        double eur_plus = 0, eur_minus = 0;
-        double gbp_plus = 0, gbp_minus = 0;
-        double sheqle_plus = 0, sheqle_minus = 0;
-        double aReportAmount = 0;
-        SaleDBAdapter saleDBAdapter = new SaleDBAdapter(context);
-        saleDBAdapter.open();
-
-
-        List<Sale> sales = saleDBAdapter.getBetween(endSaleId, id);
-
-        saleDBAdapter.close();
-
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
-        aReportDBAdapter.open();
-        AReport aReport = new AReport();
-        try {
-            aReport = aReportDBAdapter.getLastRow();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            aReportAmount = aReportDBAdapter.getLastRow().getAmount();
-            aReportId = aReportDBAdapter.getLastRow().getId();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        aReportDBAdapter.close();
-
-
-        List<Payment> payments = paymentList(sales);
-        List<CashPayment> cashPaymentList = cashPaymentList(sales);
-        List<CurrencyReturns> currencyReturnList = returnPaymentList(sales);
-        double cash_plus = 0, cash_minus = 0;
-        double check_plus = 0, check_minus = 0;
-        double creditCard_plus = 0, creditCard_minus = 0;
-AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
-        aReportDetailsDBAdapter.open();
-        aReportDetailsForFirstCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel,aReportId);
-        aReportDetailsForSecondCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.USD,aReportId);
-        aReportDetailsForThirdCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP,aReportId);
-        aReportDetailsForForthCurrency=aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR,aReportId);
-        for (Payment p : payments) {
-            int i = 0;
-            switch (p.getPaymentWay()) {
-
-                case CONSTANT.CASH:
-                    if (p.getAmount() > 0)
-                        cash_plus += p.getAmount();
-                    else
-                        cash_minus += p.getAmount();
-                    break;
-                case CONSTANT.CREDIT_CARD:
-                    if (p.getAmount() > 0)
-                        creditCard_plus += p.getAmount();
-                    else
-                        creditCard_minus += p.getAmount();
-                    break;
-                case CONSTANT.CHECKS:
-                    if (p.getAmount() > 0)
-                        check_plus += p.getAmount();
-                    else
-                        check_minus += p.getAmount();
-                    break;
-            }
-        }
-        //with Currency
-
-        if (SETTINGS.enableCurrencies) {
-
-            for (CashPayment cp : cashPaymentList) {
-                switch ((int) cp.getCurrency_type()) {
-
-                    case CONSTANT.Shekel:
-                        if (cp.getAmount() > 0)
-                            sheqle_plus += cp.getAmount();
-                        break;
-                    case CONSTANT.USD:
-                        if (cp.getAmount() > 0)
-                            usd_plus += cp.getAmount();
-                        break;
-                    case CONSTANT.EUR:
-                        if (cp.getAmount() > 0)
-                            eur_plus += cp.getAmount();
-
-                        break;
-                    case CONSTANT.GBP:
-                        if (cp.getAmount() > 0)
-                            gbp_plus += cp.getAmount();
-                        break;
-                }
-            }
-            for (CurrencyReturns cp : currencyReturnList) {
-                switch ((int) cp.getCurrency_type()) {
-
-                    case CONSTANT.Shekel:
-                        if (cp.getAmount() > 0)
-                            sheqle_minus += cp.getAmount();
-                        break;
-                    case CONSTANT.USD:
-                        if (cp.getAmount() > 0)
-                            usd_minus += cp.getAmount();
-                        break;
-                    case CONSTANT.EUR:
-                        if (cp.getAmount() > 0)
-                            eur_minus += cp.getAmount();
-
-                        break;
-                    case CONSTANT.GBP:
-                        if (cp.getAmount() > 0)
-                            gbp_minus += cp.getAmount();
-                        break;
-                }
-            }
-        }
-            return BitmapInvoice.xPrint(context, user, date.getTime(), usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, Double.parseDouble(Util.makePrice(aReportAmount)));
-
-    }
-
 }

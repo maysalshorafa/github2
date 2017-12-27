@@ -27,14 +27,14 @@
     <string name="cash">מזומן</string>
 
     <string-array name="credit_card_type">
-        <item>רגיל</item>
-        <item>ישרא/אמקס קרדיט  ויזה/דיינרס עדיף \n\r    פלוס30 </item>
+        <!--<item>רגיל</item>
+        <item>ישרא/אמקס קרדיט ויזה/דיינרס עדיף פלוס 30</item>
         <item>חיוב מיידי</item>
         <item> מועדון אשראי</item>
-        <item>סופר קרדיט</item>
+        <item>סופר קרדיט</item>-->
         <item>קרדיט/קרדיט בתשלומים קבועים</item>
         <item>תשלומים</item>
-        <item>עסקת מועדון בתשלומים</item>
+        <!--<item>עסקת מועדון בתשלומים</item>-->
     </string-array>
     <!--Invoice-->
     <string name="source_invoice">- מקור -</string>

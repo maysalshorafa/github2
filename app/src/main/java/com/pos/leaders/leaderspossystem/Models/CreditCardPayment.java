@@ -169,4 +169,23 @@ public class CreditCardPayment {
 
 
     //endregion Setters
+
+    @Override
+    public String toString() {
+        return "CreditCardPayment{" +
+                "id=" + id +
+                ", saleId=" + saleId +
+                ", amount=" + amount +
+                ", CreditCardCompanyName='" + CreditCardCompanyName + '\'' +
+                ", transactionType=" + transactionType +
+                ", last4Digits='" + last4Digits + '\'' +
+                ", transactionId='" + transactionId + '\'' +
+                ", answer='" + answer + '\'' +
+                ", paymentsNumber=" + paymentsNumber +
+                ", firstPaymentAmount=" + firstPaymentAmount +
+                ", otherPaymentAmount=" + otherPaymentAmount +
+                ", cardholder='" + cardholder + '\'' +
+                ", createDate=" + createDate +
+                '}';
+    }
 }

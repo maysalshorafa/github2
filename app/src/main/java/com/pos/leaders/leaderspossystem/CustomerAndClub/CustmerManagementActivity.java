@@ -28,6 +28,8 @@ public class CustmerManagementActivity extends AppCompatActivity {
     Button btAddCustmer, btCancel;
     public static int AddCustomerMeasurementConstant=0; //AddCustomerMeasurementCase Variable
     private static final int CHANGE_PASSWORD_DIALOG = 656;
+    public static int Customer_Management_View ;
+    public  static int  Customer_Management_Edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +69,15 @@ public class CustmerManagementActivity extends AppCompatActivity {
         gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                Customer_Management_View=0;
+                Customer_Management_Edit=0;
 
                 final String[] items = {
                         getString(R.string.view),
                         getString(R.string.edit),
                         getString(R.string.delete),
                 };
+//<<<<<<< CustomerMeasurementDesign
                 //List With CustomerMeasurement
                 final String[] itemsWithCustomerMeasurement = {
                         getString(R.string.view),
@@ -100,6 +105,45 @@ public class CustmerManagementActivity extends AppCompatActivity {
                                     intent.putExtra("id", customers.get(position).getId());
                                     startActivity(intent);
                                     break;
+//=======
+                AlertDialog.Builder builder = new AlertDialog.Builder(CustmerManagementActivity.this);
+                builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        Intent intent;
+                        switch (item) {
+                            case 0:
+                                Customer_Management_View=9;
+                                intent = new Intent(CustmerManagementActivity.this, AddNewCustomer.class);
+                                intent.putExtra("id", customers.get(position).getId());
+                                startActivity(intent);
+                            case 1:
+                                Customer_Management_Edit=10;
+                                intent = new Intent(CustmerManagementActivity.this, AddNewCustomer.class);
+                                intent.putExtra("id", customers.get(position).getId());
+                                startActivity(intent);
+                                break;
+
+                            case 2:
+                                new AlertDialog.Builder(CustmerManagementActivity.this)
+                                        .setTitle(getString(R.string.delete)+" "+getString(R.string.customer))
+                                        .setMessage(getString(R.string.delete_customer_message))
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                customerDBAdapter.deleteEntry(customers.get(position).getId());
+                                                customers.remove(customers.get(position));
+                                                gvCustomer.setAdapter(adapter);
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // do nothing
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                                break;
+//>>>>>>> master
 
                                 case 2:
                                     new AlertDialog.Builder(CustmerManagementActivity.this)

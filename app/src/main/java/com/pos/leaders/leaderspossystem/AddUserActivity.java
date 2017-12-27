@@ -105,18 +105,28 @@ public class AddUserActivity extends AppCompatActivity {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			long i = (long) extras.get("userId");
-			String btnName = extras.getString(WorkerManagementActivity.LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME);
-			btAdd.setText(btnName);
+			if(WorkerManagementActivity.User_Management_Edit==8){
+				btAdd.setText(R.string.edit);
+			}
+			if(WorkerManagementActivity.User_Management_View==7){
+				btAdd.setVisibility(View.GONE);
+				etPassword.setEnabled(false);
+				etREPassword.setEnabled(false);
+				etFirstName.setEnabled(false);
+				etUserName.setEnabled(false);
+				etLastName.setEnabled(false);
+				etPhoneNumber.setEnabled(false);
+				etHourlyWage.setEnabled(false);
+				etPresent.setEnabled(false);
 
+			}
 			userDBAdapter.open();
 			user = userDBAdapter.getUserByID(i);
 			userDBAdapter.close();
 
 			etUserName.setText(user.getUserName());
 			etPassword.setText(user.getPassword());
-			etPassword.setEnabled(false);
 			etREPassword.setText(user.getPassword());
-			etREPassword.setEnabled(false);
 			etFirstName.setText(user.getFirstName());
 			etLastName.setText(user.getLastName());
 			etPhoneNumber.setText(user.getPhoneNumber());

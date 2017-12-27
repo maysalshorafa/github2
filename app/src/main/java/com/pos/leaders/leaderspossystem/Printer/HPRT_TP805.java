@@ -26,36 +26,40 @@ public class HPRT_TP805 {
     private static UsbDevice device=null;
     private static PendingIntent mPermissionIntent=null;
     private static final String ACTION_USB_PERMISSION = "com.pos.leaders.leaderspossystem.Printer.HPRTSDKSample";
-
+    private static boolean connected = false;
 
     public static boolean connect(Context context){
-        mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), 0);
-        IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-        context.registerReceiver(mUsbReceiver, filter);
-        HPRTPrinter = new HPRTPrinterHelper(context, "TP805");
-        //USB not need call "iniPort"
-        UsbManager mUsbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
-        HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
-        Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+        if(!connected) {
+            mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), 0);
+            IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+            context.registerReceiver(mUsbReceiver, filter);
+            HPRTPrinter = new HPRTPrinterHelper(context, "TP805");
+            //USB not need call "iniPort"
+            UsbManager mUsbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
+            HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
+            Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
 
-        boolean HavePrinter = false;
-        while(deviceIterator.hasNext())
-        {
-            device = deviceIterator.next();
-            int count = device.getInterfaceCount();
-            for (int i = 0; i < count; i++)
-            {
-                UsbInterface intf = device.getInterface(i);
-                if (intf.getInterfaceClass() == 7)
-                {
-                    HavePrinter=true;
-                    mUsbManager.requestPermission(device, mPermissionIntent);
+            boolean HavePrinter = false;
+            while (deviceIterator.hasNext()) {
+                device = deviceIterator.next();
+                int count = device.getInterfaceCount();
+                for (int i = 0; i < count; i++) {
+                    UsbInterface intf = device.getInterface(i);
+                    if (intf.getInterfaceClass() == 7) {
+                        connected = true;
+                        HavePrinter = true;
+                        mUsbManager.requestPermission(device, mPermissionIntent);
+                    }
                 }
             }
+            return HavePrinter;
         }
-        return HavePrinter;
+        return true;
     }
 
+    public static void setConnected(boolean connected) {
+        HPRT_TP805.connected = connected;
+    }
 
     private static BroadcastReceiver mUsbReceiver = new BroadcastReceiver()
     {
@@ -73,6 +77,13 @@ public class HPRT_TP805 {
                         device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                         if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false))
                         {
+                            int status=1;
+                            try {
+                                status = HPRTPrinterHelper.PortOpen(device);
+                            }
+                            catch (Exception e){
+                                e.printStackTrace();
+                            }
                             if(HPRTPrinterHelper.PortOpen(device)!=0)
                             {
                                 HPRTPrinter=null;
