@@ -77,7 +77,6 @@ public class CustmerManagementActivity extends AppCompatActivity {
                         getString(R.string.edit),
                         getString(R.string.delete),
                 };
-//<<<<<<< CustomerMeasurementDesign
                 //List With CustomerMeasurement
                 final String[] itemsWithCustomerMeasurement = {
                         getString(R.string.view),
@@ -88,24 +87,6 @@ public class CustmerManagementActivity extends AppCompatActivity {
 
                 };
                 if(!SETTINGS.enableCustomerMeasurement){
-                    AlertDialog.Builder builder = new AlertDialog.Builder(CustmerManagementActivity.this);
-                    builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
-                    builder.setItems(items, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int item) {
-                            Intent intent;
-                            switch (item) {
-                                case 0:
-                                    intent = new Intent(CustmerManagementActivity.this, AddNewCustomer.class);
-                                    intent.putExtra("id", customers.get(position).getId());
-
-
-                                    startActivity(intent);
-                                case 1:
-                                    intent = new Intent(CustmerManagementActivity.this, AddNewCustomer.class);
-                                    intent.putExtra("id", customers.get(position).getId());
-                                    startActivity(intent);
-                                    break;
-//=======
                 AlertDialog.Builder builder = new AlertDialog.Builder(CustmerManagementActivity.this);
                 builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
                 builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -143,27 +124,6 @@ public class CustmerManagementActivity extends AppCompatActivity {
                                         .setIcon(android.R.drawable.ic_dialog_alert)
                                         .show();
                                 break;
-//>>>>>>> master
-
-                                case 2:
-                                    new AlertDialog.Builder(CustmerManagementActivity.this)
-                                            .setTitle(getString(R.string.delete)+" "+getString(R.string.customer))
-                                            .setMessage(getString(R.string.delete_customer_message))
-                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    customerDBAdapter.deleteEntry(customers.get(position).getId());
-                                                    customers.remove(customers.get(position));
-                                                    gvCustomer.setAdapter(adapter);
-                                                }
-                                            })
-                                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    // do nothing
-                                                }
-                                            })
-                                            .setIcon(android.R.drawable.ic_dialog_alert)
-                                            .show();
-                                    break;
 
                             }
                         }
