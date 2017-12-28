@@ -287,7 +287,15 @@ public class InvoiceImg {
         Block b_payment = new Block("\u200e"+context.getString(R.string.payment)+newLineL+strPaymentWay, 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
         Block b_total = new Block("\u200E"+context.getString(R.string.total)+"\n"+ Util.makePrice(sale.getTotalPrice()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
         Block b_given = new Block("\u200E"+context.getString(R.string.given)+"\n"+Util.makePrice(sale.getTotalPaid()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
-        double calcReturned = (sale.getTotalPaid() - sale.getTotalPrice());
+        double calcReturned=0;
+        if(sale.getTotalPrice()<0&&sale.getTotalPaid()>=0){
+             calcReturned = (sale.getTotalPrice() + sale.getTotalPaid());
+        }else {
+         calcReturned = (sale.getTotalPaid() - sale.getTotalPrice());
+            if(calcReturned<0){
+                calcReturned=0;
+            }
+        }
         Block b_returned = new Block("\u200E"+context.getString(R.string.returned)+"\n"+Util.makePrice(calcReturned), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
 
 

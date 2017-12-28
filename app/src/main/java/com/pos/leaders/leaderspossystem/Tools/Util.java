@@ -76,6 +76,10 @@ public class Util {
     public static String removeLastChar(String str) {
         return str.substring(0, str.length() - 1);
     }
+    public static double convertSign(Double d) {
+        return d*-1;
+    }
+
 
 
     /* Checks if external storage is available for read and write */

@@ -1467,6 +1467,12 @@ startActivity(i);
                 if (touchPadPressed.indexOf(".") < 0)
                     touchPadPressed += ".";
                 break;
+            case R.id.touchPadFragment_btCredit:
+                if (!touchPadPressed.equals("")){
+                  double newValue = Util.convertSign(Double.parseDouble(touchPadPressed));
+                    touchPadPressed= String.valueOf(newValue);
+                }
+                break;
         }
         TextView tirh = (TextView) this.findViewById(R.id.touchPadFragment_tvView);
         tirh.setText(touchPadPressed);
