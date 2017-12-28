@@ -133,7 +133,12 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
                 //// TODO: 01/12/2016 return how match inserted money
                 Intent i = new Intent();
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_TOTAL_PAID, totalPid);
+                if(totalPrice<0){
+                    i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE, 0);
+                }
+                else {
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE, deltaPrice);
+                }
                 setResult(RESULT_OK, i);
                 finish();
             }

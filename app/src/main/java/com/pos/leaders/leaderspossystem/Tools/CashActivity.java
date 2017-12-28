@@ -216,7 +216,12 @@ public class CashActivity extends AppCompatActivity {
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_AMOUNT, firstCurrencyInDefaultValue / fCurrency.getRate());
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_AMOUNT, secondCurrencyInDefaultValue / sCurrency.getRate());
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_ID, sCurrency.getId());
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_EXCESS_VALUE, excessValue);
+                if(totalPriceInDefaultValue<0){
+                    i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_EXCESS_VALUE, 0);
+
+                }else {
+                    i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_EXCESS_VALUE, excessValue);
+                }
 
                 setResult(RESULT_OK, i);
 
