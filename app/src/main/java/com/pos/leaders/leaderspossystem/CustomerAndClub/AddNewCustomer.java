@@ -582,6 +582,8 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         }
 
         if (type.equalsIgnoreCase("string")) { // String Case
+            if(measurementValue.equals(""))
+                return false;
             if (Util.isString(measurementValue)) {
 
                 return true;

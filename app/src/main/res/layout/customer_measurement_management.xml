@@ -68,19 +68,6 @@
             android:layout_height="1dip"
             android:background="@color/Gray" />
 
-        <com.pos.leaders.leaderspossystem.Elements.CustomEditText
-            android:id="@+id/etSearch"
-            style="@style/AppTheme.EditText_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/edit_text_search"
-            android:hint="@string/search"
-            android:inputType="textPersonName"
-            android:textSize="13dp"
-            app:drawableRightCompat="@drawable/ic_icons_leaders_search" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -92,27 +79,27 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:padding="20dp">
 
                 <GridView
                     android:id="@+id/Management_GVCustomerMeasurementDetails"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="10dp"
                     android:columnWidth="200dp"
                     android:horizontalSpacing="10dp"
                     android:layoutDirection="rtl"
                     android:numColumns="1"
                     android:verticalSpacing="10dp"
-                    android:padding="20dp" />
+                     />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:padding="20dp"
+                >
 
                 <ScrollView
                     android:id="@+id/scrollView1"
@@ -122,10 +109,10 @@
                     android:background="@color/white">
 
                     <LinearLayout
-                        android:id="@+id/test"
+                        android:id="@+id/customer_measurementLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:layout_gravity="center_horizontal"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="20dp"
