@@ -12,31 +12,31 @@ public class Currency {
     private long id;
     private String name;
     private String country;
-    private String currency_code;
+    private String currencyCode;
     private double rate;
 
-    public Currency(Context context) {
+    public Currency() {
 
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public Date getLastUpdate() {
+        return lastUpdate;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
-    private Date createDate;
+    private Date lastUpdate;
 
 
-    public Currency(long id, String name, String country, String currency_code, double rate, Date createDate) {
+    public Currency(long id, String name, String country, String currencyCode, double rate, Date lastUpdate) {
         this.id = id;
         this.name = name;
         this.country = country;
-        this.currency_code = currency_code;
+        this.currencyCode = currencyCode;
         this.rate = rate;
-        this.createDate=createDate;
+        this.lastUpdate = lastUpdate;
     }
 
     public long getId() {
@@ -63,12 +63,12 @@ public class Currency {
         this.country = country;
     }
 
-    public String getCurrency_code() {
-        return currency_code;
+    public String getCurrencyCode() {
+        return currencyCode;
     }
 
-    public void setCurrency_code(String currency_code) {
-        this.currency_code = currency_code;
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
     }
 
     public double getRate() {

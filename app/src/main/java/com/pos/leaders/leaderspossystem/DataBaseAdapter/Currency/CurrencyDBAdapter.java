@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -90,15 +91,15 @@ public class CurrencyDBAdapter {
 
 
         val.put(Currency_COLUMN_Name, currency.getName());
-        val.put(Currency_COLUMN_CurrencyCode, currency.getCurrency_code() );
+        val.put(Currency_COLUMN_CurrencyCode, currency.getCurrencyCode() );
         val.put(Currency_COLUMN_Country, currency.getCountry());
         val.put(CurrencyCOLUMN_Rate, currency.getRate());
 
-        val.put(CurrencyCOLUMN_createDate, String.valueOf(currency.getCreateDate()));
+        val.put(CurrencyCOLUMN_createDate, String.valueOf(currency.getLastUpdate()));
 
         try {
             return db.insert(Currency_TABLE_NAME, null, val);
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Log.e("Currency DB insert", "inserting Entry at " + Currency_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
@@ -122,9 +123,9 @@ public class CurrencyDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Currency_COLUMN_Name, currency.getName());
-        val.put(CurrencyCOLUMN_createDate, currency.getCreateDate().toString());
+        val.put(CurrencyCOLUMN_createDate, currency.getLastUpdate().toString());
         val.put(Currency_COLUMN_Country, currency.getCountry());
-        val.put(Currency_COLUMN_CurrencyCode, currency.getCurrency_code());
+        val.put(Currency_COLUMN_CurrencyCode, currency.getCurrencyCode());
         val.put(CurrencyCOLUMN_Rate, currency.getRate());
 
         String where = Currency_COLUMN_ID + " = ?";

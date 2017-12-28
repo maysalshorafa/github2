@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.syncposservice.Service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteConstraintException;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -77,6 +78,7 @@ import com.pos.leaders.leaderspossystem.syncposservice.Model.BrokerMessage;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.syncposservice.SetupFragments.Token;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -264,6 +266,21 @@ public class SyncMessage extends Service {
             String msgType = jsonObject.getString(MessageKey.MessageType);
             String msgData = jsonObject.getString(MessageKey.Data);
 
+            if(msgData.startsWith("[")) {
+                try {
+                    JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.Data);
+                    msgData = jsonArray.getJSONObject(0).toString();
+                }
+                catch (Exception e){
+                    try {
+                        msgData = jsonObject.getJSONObject(MessageKey.Data).toString();
+                    }
+                    catch (Exception ex){
+                        msgData = msgData.substring(1);
+                        msgData = msgData.substring(0, msgData.length() - 1);
+                    }
+                }
+            }
             ObjectMapper objectMapper = new ObjectMapper();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             objectMapper.setDateFormat(dateFormat);
@@ -603,7 +620,7 @@ public class SyncMessage extends Service {
 
                     CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(this);
                     currencyReturnsDBAdapter.open();
-                    currencyReturnsDBAdapter.insertEntry(c);
+                    rID=currencyReturnsDBAdapter.insertEntry(c);
                     currencyReturnsDBAdapter.close();
 
                     break;
@@ -621,7 +638,7 @@ public class SyncMessage extends Service {
 
                     CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(this);
                     currencyOperationDBAdapter.open();
-                    currencyOperationDBAdapter.insertEntry(currencyOperation);
+                    rID=currencyOperationDBAdapter.insertEntry(currencyOperation);
                     currencyOperationDBAdapter.close();
 
                     break;
@@ -639,7 +656,7 @@ public class SyncMessage extends Service {
 
                     CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
                     cashPaymentDBAdapter.open();
-                    cashPaymentDBAdapter.insertEntry(cashPayment);
+                    rID=cashPaymentDBAdapter.insertEntry(cashPayment);
                     cashPaymentDBAdapter.close();
 
                     break;
@@ -657,7 +674,7 @@ public class SyncMessage extends Service {
 
                     CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
                     creditCardPaymentDBAdapter.open();
-                    creditCardPaymentDBAdapter.insertEntry(creditCardPayment);
+                    rID=creditCardPaymentDBAdapter.insertEntry(creditCardPayment);
                     creditCardPaymentDBAdapter.close();
 
                     break;
@@ -675,7 +692,7 @@ public class SyncMessage extends Service {
 
                     CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(this);
                     currencyDBAdapter.open();
-                    currencyDBAdapter.insertEntry(currency);
+                    rID=currencyDBAdapter.insertEntry(currency);
                     currencyDBAdapter.close();
                     break;
                 case MessageType.UPDATE_CURRENCY:
@@ -690,7 +707,7 @@ public class SyncMessage extends Service {
                     customerMeasurement = objectMapper.readValue(msgData, CustomerMeasurement.class);
                     CustomerMeasurementDBAdapter customerMeasurementDBAdapter = new CustomerMeasurementDBAdapter(this);
                     customerMeasurementDBAdapter.open();
-                    customerMeasurementDBAdapter.insertEntry(customerMeasurement);
+                    rID=customerMeasurementDBAdapter.insertEntry(customerMeasurement);
                     customerMeasurementDBAdapter.close();
                     break;
                 //end
@@ -700,7 +717,7 @@ public class SyncMessage extends Service {
                     measurementsDetails = objectMapper.readValue(msgData, MeasurementsDetails.class);
                     MeasurementsDetailsDBAdapter measurementsDetailsDBAdapter = new MeasurementsDetailsDBAdapter(this);
                     measurementsDetailsDBAdapter.open();
-                    measurementsDetailsDBAdapter.insertEntry(measurementsDetails);
+                    rID=measurementsDetailsDBAdapter.insertEntry(measurementsDetails);
                     measurementsDetailsDBAdapter.close();
                     break;
                 //end
@@ -710,7 +727,7 @@ public class SyncMessage extends Service {
                     measurementDynamicVariable = objectMapper.readValue(msgData, MeasurementDynamicVariable.class);
                     MeasurementDynamicVariableDBAdapter measurementDynamicVariableDBAdapter = new MeasurementDynamicVariableDBAdapter(this);
                     measurementDynamicVariableDBAdapter.open();
-                    measurementDynamicVariableDBAdapter.insertEntry(measurementDynamicVariable);
+                    rID=measurementDynamicVariableDBAdapter.insertEntry(measurementDynamicVariable);
                     measurementDynamicVariableDBAdapter.close();
                     break;
                 //end

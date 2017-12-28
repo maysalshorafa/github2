@@ -26,8 +26,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.MainActivity;
+import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.PrinterType;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 
 import org.ksoap2.serialization.SoapObject;
 
@@ -379,6 +383,9 @@ public class CreditCardActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+
     }
 
     public void returnTo(SoapObject soap) {

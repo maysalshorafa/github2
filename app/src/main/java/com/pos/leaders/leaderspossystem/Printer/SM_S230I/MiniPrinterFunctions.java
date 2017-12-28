@@ -1,12 +1,15 @@
 package com.pos.leaders.leaderspossystem.Printer.SM_S230I;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
 import com.starmicronics.stario.StarIOPort;
 import com.starmicronics.stario.StarIOPortException;
 import com.starmicronics.stario.StarPrinterStatus;
@@ -19,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class MiniPrinterFunctions {
 	enum BarcodeWidth {
@@ -718,7 +722,9 @@ public class MiniPrinterFunctions {
 	 * @param portSettings
 	 *     Should be portable;escpos, the port settings portable;escpos is used for portable(ESC/POS) printers
 	 */
-	public static void MCRStart(final Context context, String portName, String portSettings) {
+	public static String ccnumber="";
+	public static String MCRStart(final Context context, String portName, String portSettings) {
+		final boolean[] status = {false};
 		try {
 			/*
 			 * using StarIOPort3.1.jar (support USB Port) Android OS Version: upper 2.2
@@ -745,7 +751,7 @@ public class MiniPrinterFunctions {
 					try {
 						portForMoreThanOneFunction.writePort(new byte[] { 0x04 }, 0, 1);
 						try {
-							Thread.sleep(3000);
+							Thread.sleep(1000);
 						} catch (InterruptedException e) {
 						}
 					} catch (StarIOPortException e) {
@@ -774,16 +780,20 @@ public class MiniPrinterFunctions {
 						byte[] mcrData = new byte[100];
 						portForMoreThanOneFunction.readPort(mcrData, 0, mcrData.length);
 
-						Builder dialog1 = new Builder(context);
+						/*Builder dialog1 = new Builder(context);
 						dialog1.setNegativeButton("Ok", null);
 						AlertDialog alert = dialog1.create();
 						alert.setTitle("");
 						alert.setMessage(new String(mcrData));
 						alert.show();
-						
+*/
+
+						MainCreditCardActivity.fillETCCNumber(new String(mcrData));
+						status[0] = true;
+						ccnumber = new String(mcrData);
 						portForMoreThanOneFunction.writePort(new byte[] { 0x04 }, 0, 1);
 						try {
-							Thread.sleep(3000);
+							Thread.sleep(1000);
 						} catch (InterruptedException e) {
 						}
 
@@ -802,6 +812,175 @@ public class MiniPrinterFunctions {
 			alert.show();
 		} catch (StarIOPortException e) {
 			Builder dialog = new Builder(context);
+			dialog.setNegativeButton("Ok", null);
+			AlertDialog alert = dialog.create();
+			alert.setTitle("Failure");
+			alert.setMessage("Failed to connect to printer");
+			alert.setCancelable(false);
+			alert.show();
+			status[0] = false;
+			if (portForMoreThanOneFunction != null) {
+				try {
+					StarIOPort.releasePort(portForMoreThanOneFunction);
+				} catch (StarIOPortException e1) {
+				}
+			}
+		} finally {
+
+		}
+		if (status[0]) {
+			return ccnumber;
+		}else
+			return "";
+	}
+
+
+
+	/**
+	 * This function shows how to read the MSR data(credit card) of a portable printer. The function first puts the printer into MSR read mode, then asks the user to swipe a credit card The function waits for a response from the user. The user can cancel MSR mode or have the printer read the card.
+	 *
+	 * @param context
+	 *     Activity for displaying messages to the user
+	 * @param portName
+	 *     Port name to use for communication. This should be (TCP:<IPAddress> or BT:<Device pair name>)
+	 * @param portSettings
+	 *     Should be portable as the port settings. It is used for portable printers
+	 */
+	public static void MCRStart2(final Context context, String portName, String portSettings) {
+		try {
+			/*
+			 * using StarIOPort3.1.jar (support USB Port) Android OS Version: upper 2.2
+			 */
+			portForMoreThanOneFunction = StarIOPort.getPort(portName, portSettings, 10000, context);
+			/*
+			 * using StarIOPort.jar Android OS Version: under 2.1 portForMoreThanOneFunction = StarIOPort.getPort(portName, portSettings, 10000);
+			 */
+
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+			}
+
+			portForMoreThanOneFunction.writePort(new byte[] { 0x1b, 0x4d, 0x45 }, 0, 3);
+
+			Builder dialog = new AlertDialog.Builder(context);
+			dialog.setNegativeButton("Cancel", new OnClickListener() {
+				// If the user cancels MSR mode, the character 0x04 is sent to the printer
+				// This function also closes the port
+				public void onClick(DialogInterface dialog, int which) {
+					((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+					((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setEnabled(false);
+					try {
+						portForMoreThanOneFunction.writePort(new byte[] { 0x04 }, 0, 1);
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+						}
+					} catch (StarIOPortException e) {
+
+					} finally {
+						if (portForMoreThanOneFunction != null) {
+							try {
+								StarIOPort.releasePort(portForMoreThanOneFunction);
+							} catch (StarIOPortException e1) {
+							}
+						}
+					}
+				}
+			});
+			AlertDialog alert = dialog.create();
+			alert.setTitle("");
+			alert.setMessage("Slide credit card");
+			alert.setCancelable(false);
+			alert.setButton("OK", new OnClickListener() {
+				// If the user presses ok then the magnetic stripe is read and displayed to the user
+				// This function also closes the port
+				public void onClick(DialogInterface dialog, int which) {
+					((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+					((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setEnabled(false);
+					try {
+						byte[] mcrData = new byte[256];
+						int counts = 0;
+
+						for (int i = 0; i < 5; i++) {
+							counts += portForMoreThanOneFunction.readPort(mcrData, counts, mcrData.length);
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+							}
+						}
+
+						byte[] headerPattern = new byte[]{0x02, 0x45, 0x31, 0x31, 0x1c, 0x1c};
+						byte[] footerPattern = new byte[]{0x1c, 0x03, 0x0d, 0x0a };
+						int headerPatternPos = -1;
+						int fotterPatternPos = -1;
+
+						byte[] data2 = new byte[headerPattern.length];
+						byte[] data3 = new byte[footerPattern.length];
+
+						//Check Start header position
+						for(int i = 0; i< (mcrData.length - headerPattern.length +1); i++){
+							System.arraycopy(mcrData, i, data2, 0, (headerPattern.length));
+
+							if(Arrays.equals(data2, headerPattern))
+							{
+								headerPatternPos = i;
+								break;
+							}
+						}
+
+						//Check Start fotter position
+						for(int i = headerPatternPos + headerPattern.length; i< (mcrData.length - footerPattern.length +1); i++){
+							System.arraycopy(mcrData, i, data3, 0, (footerPattern.length));
+
+							if(Arrays.equals(data3, footerPattern)){
+								fotterPatternPos = i;
+								break;
+							}
+						}
+
+						if((headerPatternPos < 0) || (fotterPatternPos < 0) ){
+							Builder dialog1 = new AlertDialog.Builder(context);
+							dialog1.setNegativeButton("Ok", null);
+							AlertDialog alert = dialog1.create();
+							alert.setTitle("No data");
+							alert.setMessage("There is nothing available data.");
+							alert.show();
+						} else {
+							byte[] reciveDataList = new byte[fotterPatternPos - headerPatternPos];
+
+							System.arraycopy(mcrData, headerPatternPos, reciveDataList, 0, fotterPatternPos - headerPatternPos);
+
+							/*Builder dialog1 = new AlertDialog.Builder(context);
+							dialog1.setNegativeButton("Ok", null);
+							AlertDialog alert = dialog1.create();
+							alert.setTitle("");
+							alert.setMessage(new String(reciveDataList));
+							alert.show();*/
+							MainCreditCardActivity.fillETCCNumber(new String(reciveDataList));
+						}
+
+						portForMoreThanOneFunction.writePort(new byte[] { 0x04 }, 0, 1);
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+						}
+
+					} catch (StarIOPortException e) {
+
+					} finally {
+						if (portForMoreThanOneFunction != null) {
+							try {
+								StarIOPort.releasePort(portForMoreThanOneFunction);
+							} catch (StarIOPortException e1) {
+							}
+						}
+					}
+				}
+			});
+			alert.show();
+		} catch (StarIOPortException e) {
+			Builder dialog = new AlertDialog.Builder(context);
 			dialog.setNegativeButton("Ok", null);
 			AlertDialog alert = dialog.create();
 			alert.setTitle("Failure");

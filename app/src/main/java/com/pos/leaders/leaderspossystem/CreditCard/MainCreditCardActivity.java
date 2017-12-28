@@ -30,9 +30,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
+import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
+import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -48,11 +51,13 @@ public class MainCreditCardActivity extends AppCompatActivity {
     public static final String LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY = "LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY";
     public static final String LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote = "LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote";
     public static final String LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote = "LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote";
+    private static String etCCValue2;
 
     Button btCancel, btDone, btByPhone, btAdvance, btClear;
     LinearLayout llAdvance, llByPhone;
     TextView tvTotalPrice, tvCCValue, tvMessage;
-    EditText etCCValue, etPaymentsNumber;
+    static EditText etCCValue;
+    EditText etPaymentsNumber;
     Spinner spCreditType;
 
     boolean advanceMode = false, byPhoneMode = false;
@@ -62,6 +67,9 @@ public class MainCreditCardActivity extends AppCompatActivity {
     //1:normal
     int creditType = CreditCardTransactionType.NORMAL;
     int numberOfPayments = 1;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -260,6 +268,24 @@ public class MainCreditCardActivity extends AppCompatActivity {
 
         //hide soft keyboard
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+
+        if (SETTINGS.printer == PrinterType.SM_S230I) {
+            String portSettings = "portable;escpos;l";
+            String port = "BT:";
+            MiniPrinterFunctions.MCRStart2(MainCreditCardActivity.this, port,portSettings);
+
+        }
+
+    }
+    public static void fillETCCNumber(String str) {
+        for (String s :str.split("\u001C")){
+            //"\u0002E11\u001C\u001CB0000000000000000^00000000000000000000000000^0000201000000000000000000000000\u001C12012548044640700=0360588178931119011"
+            if (s.contains("=")) {
+                etCCValue.setText(s);
+                return;
+            }
+        }
     }
 
 

@@ -1,18 +1,18 @@
-CREATE TABLE "CashPayment" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `saleId` INTEGER, `amount` REAL, `currency_type` INTEGER,'createDate' TEXT DEFAULT current_timestamp);
-CREATE TABLE "CurrencyReturns" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `saleId` INTEGER, `amount` REAL, 'createDate' TEXT DEFAULT current_timestamp,`currency_type` INTEGER, FOREIGN KEY(`saleId`) REFERENCES `sales.id` );
+CREATE TABLE "CashPayment" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `saleId` INTEGER, `amount` REAL, `currency_type` INTEGER,'lastUpdate' TEXT DEFAULT current_timestamp);
+CREATE TABLE "CurrencyReturns" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `saleId` INTEGER, `amount` REAL, 'lastUpdate' TEXT DEFAULT current_timestamp,`currency_type` INTEGER, FOREIGN KEY(`saleId`) REFERENCES `sales.id` );
 CREATE TABLE CurrencyType ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `type` TEXT );
-CREATE TABLE Currencys ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT,`currency_code` TEXT,`country`TEXT,`rate` INTEGER ,'createDate' TEXT DEFAULT current_timestamp);
+CREATE TABLE Currencys ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT,`currencyCode` TEXT,`country`TEXT,`rate` INTEGER ,'lastUpdate' TEXT DEFAULT current_timestamp);
 CREATE TABLE "Rule11" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `amount` INTEGER, `discountAmount` INTEGER, `contain` INTEGER, `club_contain` INTEGER );
 CREATE TABLE "Rule3" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `parcent` REAL, `contain` INTEGER );
 CREATE TABLE "Rule5" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `giftID` INTEGER ,'product_id' INTEGER,'price'INTEGER);
 CREATE TABLE "Rule7" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `price` REAL, `product_id` INTEGER, `contain_club` INTEGER );
 CREATE TABLE "Rule8" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `parcent` REAL, `product_id` INTEGER, `contain_club` INTEGER );
 CREATE TABLE "_order" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL, `productId` INTEGER, `counter` INTEGER, `saleId` TEXT, `price` REAL, `original_price` REAL, `discount` REAL, `custmerAssestID` INTEGER, FOREIGN KEY(`productId`) REFERENCES `products.id`, FOREIGN KEY(`saleId`) REFERENCES `sales.id` );
-CREATE TABLE a_report ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `createDate` TEXT DEFAULT current_timestamp, `byUser` INTEGER, `amount` REAL, `lastSaleID` INTEGER , `lastZReportID` INTEGER , FOREIGN KEY(`byUser`) REFERENCES `users.id` );
+CREATE TABLE a_report ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `lastUpdate` TEXT DEFAULT current_timestamp, `byUser` INTEGER, `amount` REAL, `lastSaleID` INTEGER , `lastZReportID` INTEGER , FOREIGN KEY(`byUser`) REFERENCES `users.id` );
 CREATE TABLE `checks` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `checkNum` INTEGER, `bankNum` INTEGER, `branchNum` INTEGER , `accountNum` INTEGER, `amount` REAL, `_date` TEXT DEFAULT current_timestamp, `isDeleted` INTEGER DEFAULT 0 , `saleId` INTEGER, FOREIGN KEY(`saleId`) REFERENCES `sales.id`);
 CREATE TABLE City( id INTEGER PRIMARY KEY, name TEXT );
 CREATE TABLE club ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,`name` TEXT NOT NULL,'description' Text ,'type' INTEGER , 'parcent' REAL DEFAULT 0 ,'amount' REAL DEFAULT 0, 'point' REAL DEFAULT 0 );
-CREATE TABLE currency_operation ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `createDate` TEXT DEFAULT current_timestamp, `operation_id` INTEGER, operation_type TEXT,`amount` REAL, `currency_type` INTEGER );
+CREATE TABLE currency_operation ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `lastUpdate` TEXT DEFAULT current_timestamp, `operation_id` INTEGER, operation_type TEXT,`amount` REAL, `currency_type` INTEGER );
 CREATE TABLE "custmerAssest" ( `order_id` INTEGER, `custmerAssestID` INTEGER, `amount` INTEGER, `type` INTEGER DEFAULT 0, `salescase` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT );
 CREATE TABLE `customer` ( `id` INTEGER, `name` TEXT NOT NULL, `birthday` TEXT NOT NULL, `gender` TEXT, `email` TEXT, `job` TEXT NOT NULL, `phoneNumber` TEXT, `address` TEXT NOT NULL, `hide` INTEGER DEFAULT 0, `city_id` INTEGER , `club_id` INTEGER , PRIMARY KEY(`id`) FOREIGN KEY(`city_id`) REFERENCES `city.id` FOREIGN KEY(`club_id`) REFERENCES `club.id` );
 CREATE TABLE departments ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE, `creatingDate` TEXT NOT NULL DEFAULT current_timestamp, `byUser` INTEGER, `hide` INTEGER DEFAULT 0, FOREIGN KEY(`byUser`) REFERENCES `users.id` )
@@ -28,8 +28,8 @@ CREATE TABLE "sumPoint" ( `sale_id` INTEGER, `point_amount` INTEGER, `custmer_id
 CREATE TABLE "usedPoint" ( `sale_id` INTEGER, `unUsedpoint_amount` INTEGER, `custmer_id` INTEGER, FOREIGN KEY(`sale_id`) REFERENCES `sales.id` );
 CREATE TABLE `userPermissions` ( `userId` INTEGER , `permissionId` INTEGER,FOREIGN KEY(`userId`) REFERENCES `users.id`,FOREIGN KEY(`permissionId`) REFERENCES `permissions.id`);
 CREATE TABLE "users" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `userName` TEXT UNIQUE, `firstName` TEXT NOT NULL, `lastName` TEXT, `visitDate` TEXT NOT NULL DEFAULT current_timestamp, `pwd` TEXT NOT NULL, `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, `hourlyWage` REAL DEFAULT 0.0, `permissions_name` TEXT );
-CREATE TABLE "value_ofPoint" ( `id` INTEGER, `value` INTEGER, `createDate` TEXT DEFAULT current_timestamp, PRIMARY KEY(`id`) );
-CREATE TABLE z_report ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `createDate` TEXT DEFAULT current_timestamp, `byUser` INTEGER, `startSaleID` INTEGER, `endSaleID` INTEGER , FOREIGN KEY(`byUser`) REFERENCES `users.id`);
+CREATE TABLE "value_ofPoint" ( `id` INTEGER, `value` INTEGER, `lastUpdate` TEXT DEFAULT current_timestamp, PRIMARY KEY(`id`) );
+CREATE TABLE z_report ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `lastUpdate` TEXT DEFAULT current_timestamp, `byUser` INTEGER, `startSaleID` INTEGER, `endSaleID` INTEGER , FOREIGN KEY(`byUser`) REFERENCES `users.id`);
 INSERT INTO `city` VALUES (0,'TULKAREM');
 INSERT INTO `city` VALUES (1,'NUBLUS');
 INSERT INTO `club` VALUES (1,'type1','type1',1,.2,0,0);

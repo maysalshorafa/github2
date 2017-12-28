@@ -21,7 +21,7 @@ public class SETTINGS {
     public static boolean LOADED_DATA ;
 
 	public static String customer_name ;
-	public static PrinterType printer = PrinterType.HPRT_TP805;
+	public static PrinterType printer = PrinterType.SM_S230I;
 	public static boolean enableCurrencies = true;
 	public static int decimalNumbers = 0 ;
 
