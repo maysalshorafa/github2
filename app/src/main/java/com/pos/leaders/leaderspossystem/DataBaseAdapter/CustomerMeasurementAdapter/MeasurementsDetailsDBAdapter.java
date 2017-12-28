@@ -11,6 +11,7 @@ import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsD
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
@@ -172,5 +173,26 @@ public class MeasurementsDetailsDBAdapter {
         db.update(MEASUREMENTS_DETAILS_TABLE_NAME, val, where, new String[]{measurementsDetails.getId() + ""});
     }
     //end
+    // get All MeasurementsDetails bu measurementId
+    public ArrayList<HashMap<String, String>> getAllMeasurementDetail(long measurementId) {
+        ArrayList<HashMap<String, String>> storeList = new ArrayList<HashMap<String, String>>();
 
+        Cursor c = db.rawQuery("SELECT * FROM MeasurementsDetails"+ " where " + MEASUREMENTS_DETAILS_COLUMN_MEASUREMENTS_ID + "="+measurementId, null);
+
+        c.moveToFirst();
+
+        while (c.isAfterLast() == false) {
+
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put(MEASUREMENTS_DETAILS_COLUMN_DYNAMIC_VAR_ID,  c.getString(c.getColumnIndex("dynamicVarId")));
+            map.put(MEASUREMENTS_DETAILS_COLUMN_VALUE,  c.getString(c.getColumnIndex("value")));
+            storeList.add(map);
+
+            c.moveToNext();
+
+        }
+        return storeList;
+    }
+
+    // end
 }

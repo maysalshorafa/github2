@@ -138,6 +138,18 @@ public class CustomerMeasurementDBAdapter {
                       return customerMeasurementList;
            }
     //end
+    public List<CustomerMeasurement> getCustomerMeasurementByCustomerId(long customerId) {
+        List<CustomerMeasurement> customerMeasurementList = new ArrayList<CustomerMeasurement>();
 
+        Cursor cursor = db.rawQuery("select * from " + CUSTOMER_MEASUREMENT_TABLE_NAME +" where "+CUSTOMER_MEASUREMENT_COLUMN_CUSTOMER_ID+"="+customerId, null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            customerMeasurementList.add(makeCustomerMeasurement(cursor));
+            cursor.moveToNext();
+        }
+
+        return customerMeasurementList;
+    }
 }
 
