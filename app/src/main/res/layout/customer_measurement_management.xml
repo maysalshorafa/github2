@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layoutDirection="ltr"
-        android:orientation="vertical"
-        android:padding="10dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-2dp">
+    android:layoutDirection="ltr"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:layout_editor_absoluteX="8dp"
+    tools:layout_editor_absoluteY="8dp">
 
         <LinearLayout
             android:layout_width="1007dp"
@@ -57,12 +51,12 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="15dp"
                         android:background="@drawable/bubble"
+                        android:gravity="center"
                         android:paddingLeft="5dp"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="20dp"
-                        android:textStyle="bold"
-                        android:gravity="center" />
+                        android:textStyle="bold" />
                 </LinearLayout>
 
 
@@ -74,39 +68,78 @@
             android:layout_height="1dip"
             android:background="@color/Gray" />
 
-                    <com.pos.leaders.leaderspossystem.Elements.CustomEditText
-                        android:id="@+id/etSearch"
-                        style="@style/AppTheme.EditText_input"
-                        android:layout_width="match_parent"
+        <com.pos.leaders.leaderspossystem.Elements.CustomEditText
+            android:id="@+id/etSearch"
+            style="@style/AppTheme.EditText_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edit_text_search"
+            android:hint="@string/search"
+            android:inputType="textPersonName"
+            android:textSize="13dp"
+            app:drawableRightCompat="@drawable/ic_icons_leaders_search" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <GridView
+                    android:id="@+id/Management_GVCustomerMeasurementDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="10dp"
+                    android:columnWidth="200dp"
+                    android:horizontalSpacing="10dp"
+                    android:layoutDirection="rtl"
+                    android:numColumns="1"
+                    android:verticalSpacing="10dp"
+                    android:padding="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ScrollView
+                    android:id="@+id/scrollView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/white">
+
+                    <LinearLayout
+                        android:id="@+id/test"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/edit_text_search"
-                        android:hint="@string/search"
-                        android:inputType="textPersonName"
-                        android:textSize="13dp"
-                        app:drawableRightCompat="@drawable/ic_icons_leaders_search" />
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="20dp"
+
+                        >
 
 
-    <GridView
-        android:id="@+id/Management_GVSalesManSalesDetails"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnWidth="200dp"
-        android:horizontalSpacing="10dp"
-        android:layoutDirection="rtl"
-        android:numColumns="1"
-
-        android:verticalSpacing="10dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="-13dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="10dp"    />
-
+                    </LinearLayout>
+                </ScrollView>
+            </LinearLayout>
 
         </LinearLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+    </LinearLayout>
+
+
