@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -29,6 +30,7 @@ import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Tools.ChecksListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,9 +53,7 @@ public class ChecksActivity extends AppCompatActivity {
 	static final int DELTA = 50;
     private double totalPrice;
 	String customer_name;
-
 	LinearLayout LlCustomer;
-
 	enum Direction {LEFT, RIGHT;}
 
 	@Override
@@ -64,9 +64,6 @@ public class ChecksActivity extends AppCompatActivity {
 		// Remove notification bar
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_checks);
-
-
-
 		Window window = getWindow();
 		WindowManager.LayoutParams wlp = window.getAttributes();
 		//wlp.gravity = Gravity.CENTER_VERTICAL;
@@ -81,7 +78,7 @@ public class ChecksActivity extends AppCompatActivity {
 		int height = dm.heightPixels;
         checkList = new ArrayList<Check>();
 
-		getWindow().setLayout((int) (width * 0.9), (int) (height * 0.95));
+		getWindow().setLayout((int) (width * 0.9), (int) (height * 0.75));
 
         tv = (TextView) findViewById(R.id.checksActivity_TVPrice);
 		tvCheckCustomer = (TextView) findViewById(R.id.custmer_name);
@@ -106,10 +103,10 @@ public class ChecksActivity extends AppCompatActivity {
 		btDone = (Button) findViewById(R.id.checksActivity_BTDone);
         btCancel = (Button) findViewById(R.id.checksActivity_BTCancel);
 		lvChecks = (ListView) findViewById(R.id.checksActivity_LVChecks);
-
+		lvChecks.setFocusable(true);
 		Check check = new Check();
 		checkList.add(check);
-
+		getTotal();
 
         //init checks list holder
         if(SESSION._CHECKS_HOLDER==null||SESSION._CHECKS_HOLDER.size()==0){
@@ -124,7 +121,6 @@ public class ChecksActivity extends AppCompatActivity {
         adapter = new ChecksListViewAdapter(this, R.layout.list_adapter_row_checks, checkList);
         lvChecks.setAdapter(adapter);
 		setListeners();
-
 		final Calendar myCalendar = Calendar.getInstance();
 		DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
@@ -149,6 +145,20 @@ public class ChecksActivity extends AppCompatActivity {
         }
         return d;
     }
+	private double getTotal(){
+		double d=0.0f;
+		for(Check c:checkList){
+			d += c.getAmount();
+			double t=totalPrice-d;
+			if(t>0){
+				tv.setText(Util.makePrice(t));
+			}else {
+				tv.setText(0+"");
+			}
+
+		}
+		return d;
+	}
 
 	private void setListeners() {
 		btDone.setOnClickListener(new View.OnClickListener() {
@@ -192,6 +202,7 @@ public class ChecksActivity extends AppCompatActivity {
 		btAdd.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
 				Check check=new Check();
                 int lsttchildID = lvChecks.getChildCount()-1;
                 if(lvChecks.getChildCount()>1) {
@@ -213,16 +224,12 @@ public class ChecksActivity extends AppCompatActivity {
                 }
 				checkList.add(newCheck);
 				lvChecks.setAdapter(adapter);
+				getTotal();
 			}
 		});
 
-		lvChecks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-			}
-		});
-
+/**
 		lvChecks.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -320,12 +327,21 @@ public class ChecksActivity extends AppCompatActivity {
 										500
 								);
 								return true;
-							}*/
+							}
 						}
 						return true;
 					default:
 						return false;
 				}
+			}
+		});**/
+		lvChecks.setOnTouchListener(new View.OnTouchListener() {
+			// Setting on Touch Listener for handling the touch inside ScrollView
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// Disallow the touch request for parent scroll on touch of child view
+				v.getParent().requestDisallowInterceptTouchEvent(true);
+				return false;
 			}
 		});
 	}
@@ -369,4 +385,15 @@ public class ChecksActivity extends AppCompatActivity {
 		outtoRight.setInterpolator(new AccelerateInterpolator());
 		return outtoRight;
 	}
+	public  void  delete(int pos){
+		adapter = new ChecksListViewAdapter(this, R.layout.list_adapter_row_checks, checkList);
+		lvChecks.setAdapter(adapter);
+		checkList.remove(pos);
+		adapter.remove(pos);
+		adapter.notifyDataSetChanged();
+		getTotal();
+
+	}
+
+
 }

@@ -13,69 +13,76 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:gravity="bottom"
         android:orientation="vertical"
-        android:weightSum="1">
-
+        android:weightSum="2">
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.20"
             android:orientation="horizontal"
-            android:weightSum="1">
+            android:weightSum="2">
 
             <TextView
-                android:layout_width="120dp"
-                android:layout_height="62dp"
+                android:id="@+id/textView3"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/total_price"
+                android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/checksActivity_TVPrice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+
                 android:gravity="center"
+                android:paddingLeft="5dp"
+                android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                android:textStyle="bold"
-
-
-                />
+                android:textStyle="bold" />
         </LinearLayout>
-
         <LinearLayout
             android:id="@+id/checkActivity_llCustomer"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.20"
             android:orientation="horizontal"
-            android:weightSum="1">
+            android:weightSum="2">
 
             <TextView
-                android:layout_width="120dp"
-                android:layout_height="62dp"
+                android:id="@+id/textView3"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/customer_name"
+                android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/custmer_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+
                 android:gravity="center"
+                android:paddingLeft="5dp"
+                android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="bold" />
-
         </LinearLayout>
+
 
     </LinearLayout>
 
@@ -84,20 +91,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="30dp">
 
         <ListView
             android:id="@+id/checksActivity_LVChecks"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-
-            tools:layout_constraintLeft_creator="1"
-            tools:layout_constraintRight_creator="1" />
+            android:layout_weight="1"
+            android:columnWidth="90dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10px"
+            android:nestedScrollingEnabled="true"
+            android:numColumns="1"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+             />
     </LinearLayout>
 
 
@@ -105,7 +114,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="10dp">
 
         <Button
             android:id="@+id/checksActivity_BTDone"

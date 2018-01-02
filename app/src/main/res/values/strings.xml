@@ -468,5 +468,5 @@
 
     <string name="invalid_payments_number">Please insert valid payments number between 2 and 36.</string>
 
-
+    <string name="delete_check">Delete Check</string>
 </resources>
