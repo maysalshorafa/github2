@@ -75,7 +75,7 @@ public class Currency {
         return rate;
     }
 
-    public void setRate(long rate) {
+    public void setRate(double rate) {
         this.rate = rate;
     }
 }

@@ -3,8 +3,6 @@ package com.pos.leaders.leaderspossystem;
 import android.app.Activity;
 import android.app.Dialog;
 
-import android.content.Intent;
-
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -30,7 +28,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static android.app.Activity.RESULT_OK;
 
 public class CurrencyReturnsCustomDialogActivity extends Dialog {
 
@@ -83,7 +80,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
         currencyTypeDBAdapter.close();
         CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(getContext());
         currencyDBAdapter.open();
-        final List<Currency> currencyList = currencyDBAdapter.getAllCurrency(currencyTypesList);
+        final List<Currency> currencyList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
         currencyDBAdapter.close();
 
         final List<String> currency = new ArrayList<String>();
