@@ -119,6 +119,7 @@ public class ChecksActivity extends AppCompatActivity {
 		ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_checks, lvChecks, false);
 		lvChecks.addHeaderView(header, null, false);
         adapter = new ChecksListViewAdapter(this, R.layout.list_adapter_row_checks, checkList);
+		getTotal();
         lvChecks.setAdapter(adapter);
 		setListeners();
 		final Calendar myCalendar = Calendar.getInstance();
