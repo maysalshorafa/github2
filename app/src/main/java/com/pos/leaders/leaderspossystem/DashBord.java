@@ -49,7 +49,6 @@ import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
-import com.pos.leaders.leaderspossystem.Tools.CashActivity;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
@@ -62,7 +61,6 @@ import com.sunmi.aidl.MSCardService;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
@@ -538,7 +536,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             currencyTypeDBAdapter.close();
             final CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(DashBord.this);
             currencyDBAdapter.open();
-            currenciesList = currencyDBAdapter.getAllCurrency(currencyTypesList);
+            currenciesList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
             currenciesNames = new ArrayList<String>();
             for (int i = 0; i < currencyTypesList.size(); i++) {
                 currenciesNames.add(currencyTypesList.get(i).getType());

@@ -1,9 +1,7 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,7 +16,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.CurrencyReturnsCustomDialogActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
@@ -30,7 +27,6 @@ import com.pos.leaders.leaderspossystem.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class CashActivity extends AppCompatActivity {
     private List<CurrencyType> currencyTypesList = null;
@@ -126,7 +122,7 @@ public class CashActivity extends AppCompatActivity {
 
         CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(CashActivity.this);
         currencyDBAdapter.open();
-        currenciesList = currencyDBAdapter.getAllCurrency(currencyTypesList);
+        currenciesList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
 
         currenciesNames = new ArrayList<String>();
         for (int i = 0; i < currencyTypesList.size(); i++) {

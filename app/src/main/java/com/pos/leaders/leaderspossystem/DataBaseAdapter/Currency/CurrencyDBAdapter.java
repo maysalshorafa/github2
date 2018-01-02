@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -27,23 +26,23 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 
 public class CurrencyDBAdapter {
 
-    public static final  String Currency_TABLE_NAME = "Currency";
+    public static final  String CURRENCY_TABLE_NAME = "Currency";
 
     // Column Names
-    protected static final String Currency_COLUMN_ID = "id";
-    protected static final String Currency_COLUMN_Name = "name";
+    protected static final String CURRENCY_COLUMN_ID = "id";
+    protected static final String CURRENCY_COLUMN_NAME = "name";
 
-    protected static final String Currency_COLUMN_CurrencyCode = "currency_code";
-    protected static final String Currency_COLUMN_Country = "country";
-    protected static final String CurrencyCOLUMN_Rate = "rate";
-    protected static final String CurrencyCOLUMN_createDate = "createDate";
+    protected static final String CURRENCY_COLUMN_CURRENCYCODE = "currency_code";
+    protected static final String CURRENCY_COLUMN_COUNTRY = "country";
+    protected static final String CURRENCYCOLUMN_RATE = "rate";
+    protected static final String CURRENCYCOLUMN_CREATEDATE = "createDate";
 
 
 
-    public static final String DATABASE_CREATE = "CREATE TABLE "+ Currency_TABLE_NAME
-            +" ( `"+ Currency_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ Currency_COLUMN_Name +"` TEXT ,  `"
-            + Currency_COLUMN_CurrencyCode +"` TEXT, `" + Currency_COLUMN_Country +"` TEXT, " +
-            " `"+ CurrencyCOLUMN_Rate +"` INTEGER,  `"  + CurrencyCOLUMN_createDate +"` TEXT DEFAULT current_timestamp)";
+    public static final String DATABASE_CREATE = "CREATE TABLE "+ CURRENCY_TABLE_NAME
+            +" ( `"+ CURRENCY_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ CURRENCY_COLUMN_NAME +"` TEXT ,  `"
+            + CURRENCY_COLUMN_CURRENCYCODE +"` TEXT, `" + CURRENCY_COLUMN_COUNTRY +"` TEXT, " +
+            " `"+ CURRENCYCOLUMN_RATE +"` REAL,  `"  + CURRENCYCOLUMN_CREATEDATE +"` TEXT DEFAULT current_timestamp)";
 
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -72,13 +71,13 @@ public class CurrencyDBAdapter {
 
 
     public long insertEntry(String name, String currency_code, String country, long rate,Date createDate) {
-        Currency currency = new Currency(Util.idHealth(this.db, Currency_TABLE_NAME, Currency_COLUMN_ID), name, currency_code, country,rate,createDate);
+        Currency currency = new Currency(Util.idHealth(this.db, CURRENCY_TABLE_NAME, CURRENCY_COLUMN_ID), name, currency_code, country,rate,createDate);
         sendToBroker(MessageType.ADD_CURRENCY, currency, this.context);
 
         try {
             return insertEntry(currency);
         } catch (SQLException ex) {
-            Log.e("Currency DB insert", "inserting Entry at " + Currency_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("Currency DB insert", "inserting Entry at " + CURRENCY_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
     }
@@ -87,20 +86,20 @@ public class CurrencyDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(Currency_COLUMN_ID, currency.getId());
+        val.put(CURRENCY_COLUMN_ID, currency.getId());
 
 
-        val.put(Currency_COLUMN_Name, currency.getName());
-        val.put(Currency_COLUMN_CurrencyCode, currency.getCurrencyCode() );
-        val.put(Currency_COLUMN_Country, currency.getCountry());
-        val.put(CurrencyCOLUMN_Rate, currency.getRate());
+        val.put(CURRENCY_COLUMN_NAME, currency.getName());
+        val.put(CURRENCY_COLUMN_CURRENCYCODE, currency.getCurrencyCode() );
+        val.put(CURRENCY_COLUMN_COUNTRY, currency.getCountry());
+        val.put(CURRENCYCOLUMN_RATE, currency.getRate());
 
-        val.put(CurrencyCOLUMN_createDate, String.valueOf(currency.getLastUpdate()));
+        val.put(CURRENCYCOLUMN_CREATEDATE, String.valueOf(currency.getLastUpdate()));
 
         try {
-            return db.insert(Currency_TABLE_NAME, null, val);
+            return db.insert(CURRENCY_TABLE_NAME, null, val);
         } catch (Exception ex) {
-            Log.e("Currency DB insert", "inserting Entry at " + Currency_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("Currency DB insert", "inserting Entry at " + CURRENCY_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
     }
@@ -109,12 +108,12 @@ public class CurrencyDBAdapter {
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
 
-        String where = Currency_COLUMN_ID + " = ?";
+        String where = CURRENCY_COLUMN_ID + " = ?";
         try {
-            db.update(Currency_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+            db.update(CURRENCY_TABLE_NAME, updatedValues, where, new String[]{id + ""});
             return 1;
         } catch (SQLException ex) {
-            Log.e("Currency DB delete", "enable hide Entry at " + Currency_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("Currency DB delete", "enable hide Entry at " + CURRENCY_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
@@ -122,23 +121,23 @@ public class CurrencyDBAdapter {
     public void updateEntry(Currency currency) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Currency_COLUMN_Name, currency.getName());
-        val.put(CurrencyCOLUMN_createDate, currency.getLastUpdate().toString());
-        val.put(Currency_COLUMN_Country, currency.getCountry());
-        val.put(Currency_COLUMN_CurrencyCode, currency.getCurrencyCode());
-        val.put(CurrencyCOLUMN_Rate, currency.getRate());
+        val.put(CURRENCY_COLUMN_NAME, currency.getName());
+        val.put(CURRENCYCOLUMN_CREATEDATE, currency.getLastUpdate().toString());
+        val.put(CURRENCY_COLUMN_COUNTRY, currency.getCountry());
+        val.put(CURRENCY_COLUMN_CURRENCYCODE, currency.getCurrencyCode());
+        val.put(CURRENCYCOLUMN_RATE, currency.getRate());
 
-        String where = Currency_COLUMN_ID + " = ?";
-        db.update(Currency_TABLE_NAME, val, where, new String[]{currency.getId() + ""});
+        String where = CURRENCY_COLUMN_ID + " = ?";
+        db.update(CURRENCY_TABLE_NAME, val, where, new String[]{currency.getId() + ""});
     }
 
-    public List<Currency> getAllCurrency(List<CurrencyType> currency) {
+    public List<Currency> getAllCurrencyLastUpdate(List<CurrencyType> currency) {
         List<Currency> currencyList = new ArrayList<Currency>();
         Cursor cursor=null;
         String name="";
-        for (int i=0; i<=currency.size()-1;i++) {
+        for (int i=0;i<currency.size();i++) {
             name = currency.get(i).getType();
-            cursor = db.rawQuery("select * from " + Currency_TABLE_NAME + " where  name='" + name + "'" + " order by id desc", null);
+            cursor = db.rawQuery("select * from " + CURRENCY_TABLE_NAME + " where  "+ CURRENCY_COLUMN_CURRENCYCODE +"='" + name + "'" + " order by id desc LIMIT 1", null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 currencyList.add(build(cursor));
@@ -149,11 +148,11 @@ public class CurrencyDBAdapter {
     }
 
     private Currency build(Cursor cursor) {
-        return new Currency(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Currency_COLUMN_ID))),
-                cursor.getString(cursor.getColumnIndex(Currency_COLUMN_Name)),
-                cursor.getString(cursor.getColumnIndex(Currency_COLUMN_CurrencyCode)),
-                cursor.getString(cursor.getColumnIndex(Currency_COLUMN_Country)),
-                Double.parseDouble( cursor.getString(cursor.getColumnIndex(CurrencyCOLUMN_Rate))),  DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(CurrencyCOLUMN_createDate))));
+        return new Currency(Integer.parseInt(cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_ID))),
+                cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_NAME)),
+                cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_CURRENCYCODE)),
+                cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_COUNTRY)),
+                Double.parseDouble( cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_RATE))),  DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_CREATEDATE))));
     }
 
 }
