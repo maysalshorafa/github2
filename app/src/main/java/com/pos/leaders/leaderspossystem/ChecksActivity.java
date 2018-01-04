@@ -45,7 +45,7 @@ public class ChecksActivity extends AppCompatActivity {
 	public static final String LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY = "LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY";
 	Button btAdd;
 	Button btDone,btCancel;
-    TextView tv , tvCheckCustomer;
+    TextView tv , tvCheckCustomer , tvChecksRequired;
 	ListView lvChecks;
 	static List<Check> checkList = new ArrayList<Check>();
 	ChecksListViewAdapter adapter;
@@ -81,6 +81,7 @@ public class ChecksActivity extends AppCompatActivity {
 		getWindow().setLayout((int) (width * 0.9), (int) (height * 0.75));
 
         tv = (TextView) findViewById(R.id.checksActivity_TVPrice);
+		tvChecksRequired = (TextView) findViewById(R.id.checksActivity_TVRequired);
 		tvCheckCustomer = (TextView) findViewById(R.id.custmer_name);
 
 		LlCustomer = (LinearLayout) findViewById(R.id.checkActivity_llCustomer);
@@ -152,9 +153,9 @@ public class ChecksActivity extends AppCompatActivity {
 			d += c.getAmount();
 			double t=totalPrice-d;
 			if(t>0){
-				tv.setText(Util.makePrice(t));
+				tvChecksRequired.setText(Util.makePrice(t)+ " " + getResources().getText(R.string.ins));
 			}else {
-				tv.setText(0+"");
+				tvChecksRequired.setText(0+" " + getResources().getText(R.string.ins));
 			}
 
 		}
