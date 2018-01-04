@@ -62,6 +62,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 			holder.etCheckNum = (EditText) convertView.findViewById(R.id.listChecks_ETCheckNumber);
 			holder.etDate = (EditText) convertView.findViewById(R.id.listChecks_ETDate);
 			holder.btnDelete = (ImageView) convertView.findViewById(R.id.btn_delete_check);
+
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -69,7 +70,6 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 
 		if (checks.get(position) != null) {
 			if(position==0){
-
 				holder.etAmount.setHint(checks.get(position).getAmount() + "");
 				holder.etBankNum.setHint(checks.get(position).getBankNum() + "");
 				holder.etBenchNum.setHint(checks.get(position).getBranchNum() + "");
@@ -158,7 +158,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 				return Double.parseDouble(etAmount.getText().toString());
 			}
 			if(amount>0){
-				etAmount.setText(Util.makePrice(amount));
+				etAmount.setHint(Util.makePrice(amount));
 				return Double.parseDouble(etAmount.getText().toString());
 			}
 			return Double.parseDouble(etAmount.getText().toString());
