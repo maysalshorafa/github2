@@ -38,7 +38,6 @@ import java.util.List;
  */
 
 public class ProductCatalogActivity extends AppCompatActivity {
-
     private Button btCreate, btImport;
     EditText etSearch;
     private GridView gvProducts;
@@ -57,7 +56,8 @@ public class ProductCatalogActivity extends AppCompatActivity {
     int productCountLoad=80;
     int departmentID=-1;
     ProductCatalogGridViewAdapter adapter;
-
+    public static int Product_Management_View ;
+    public  static int  Product_Management_Edit;
     public void CancelClickButton(View v){
         onBackPressed();
     }
@@ -221,10 +221,12 @@ public class ProductCatalogActivity extends AppCompatActivity {
         gvProducts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
+                Product_Management_Edit=0;
+                Product_Management_View=0;
                 final String[] items = {
                         getString(R.string.edit),
-                        getString(R.string.delete)};
+                        getString(R.string.delete),
+                        getString(R.string.view)  };
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProductCatalogActivity.this);
                 builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
                 builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -232,13 +234,36 @@ public class ProductCatalogActivity extends AppCompatActivity {
                         Intent intent;
                         switch (item) {
                             case 0:
+                                Product_Management_Edit=8;
                                 intent = new Intent(ProductCatalogActivity.this, ProductsActivity.class);
                                 intent.putExtra("productID", filter_productsList.get(position).getId());
                                 startActivity(intent);
                                 break;
                             case 1:
-                                //productDBAdapter.deleteEntry(filter_productsList.get(position).getId());
-                                //// TODO: 15/12/2016 Delete Product 
+                                  new AlertDialog.Builder(ProductCatalogActivity.this)
+                                    .setTitle(getString(R.string.delete)+" "+getString(R.string.product))
+                                    .setMessage(getString(R.string.delete_product_message))
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            productDBAdapter.deleteEntry(filter_productsList.get(position).getId());
+                                            productsList.remove(filter_productsList.get(position));
+                                            gvProducts.setAdapter(adapter);
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // do nothing
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                                break;
+                            case 2:
+                                Product_Management_View=9;
+                                intent = new Intent(ProductCatalogActivity.this, ProductsActivity.class);
+                                intent.putExtra("productID", filter_productsList.get(position).getId());
+                                startActivity(intent);
                                 break;
                              
                         }

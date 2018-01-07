@@ -15,7 +15,7 @@ public class Department {
     private Date CreatingDate;
     private long byUser;
     private boolean hide;
-
+    private boolean checked = false;
     @JsonIgnore
     private List<Product> products;
 
@@ -104,7 +104,12 @@ public class Department {
 	public int getProductCount(){
 		return products.size();
 	}
-
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+    public boolean isChecked() {
+        return checked;
+    }
 	//endregion
 
 	@Override

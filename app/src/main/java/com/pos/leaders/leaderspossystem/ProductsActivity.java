@@ -13,6 +13,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -23,8 +24,12 @@ import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Tools.DepartmentGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.PermissionsGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.ProductDepartmentGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
@@ -37,7 +42,7 @@ import java.util.Map;
  * Created by KARAM on 18/10/2016.
  */
 
-public class ProductsActivity  extends AppCompatActivity {
+public class ProductsActivity  extends AppCompatActivity  {
     private DepartmentDBAdapter departmentDBAdapter;
     private ProductDBAdapter productDBAdapter;
     ArrayAdapter<String> LAdapter;
@@ -62,6 +67,8 @@ public class ProductsActivity  extends AppCompatActivity {
 	ProductCatalogGridViewAdapter adapter;
 	private Product editableProduct;
     long check;
+    long depID;
+    boolean withTax , withWeighable=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,27 +138,53 @@ public class ProductsActivity  extends AppCompatActivity {
 
         departmentsName=new ArrayList<String>();
         listDepartment = departmentDBAdapter.getAllDepartments();
+        final ProductDepartmentGridViewAdapter departmentGridViewAdapter = new ProductDepartmentGridViewAdapter(this, listDepartment);
+
+        lvDepartment.setAdapter(departmentGridViewAdapter);
+        lvDepartment.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         //departmentDBAdapter.close();
 
         for (Department d : listDepartment) {
             departmentsName.add(d.getName());
             departmentMap.put(d.getName(),d.getId());
         }
-
+/**
         LAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,departmentsName);
         lvDepartment.setAdapter(LAdapter);
         lvDepartment.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         lvDepartment.setItemChecked(1,true);
-
+**/
 
         lvDepartment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
-                view.setSelected(true);
-				selectItemDepartments(view);
+                Department department = listDepartment.get(position);
+                department.setChecked(!department.isChecked());
+                listDepartment.set(position, department);
+                departmentGridViewAdapter.updateRecords(listDepartment);
+            }
+        });
+        swWithTax.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
 
-                selectedDepartment= lvDepartment.getItemAtPosition(position).toString();
+                if(isChecked){
+                    withTax=true; //edit here
+                }else{
+                    withTax=false; //edit here
+                }
 
+            }
+        });
+        swWeighable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+
+                if(isChecked){
+                    withWeighable=true; //edit here
+                }else{
+                    withWeighable=false; //edit here
+                }
 
             }
         });
@@ -172,17 +205,31 @@ public class ProductsActivity  extends AppCompatActivity {
                 etDescription.setText(editableProduct.getDescription());
                 etCostPrice.setText(editableProduct.getCostPrice()+"");
                 etPrice.setText(editableProduct.getPrice()+"");
+                Toast.makeText(getApplicationContext(),editableProduct.isWithTax()+"test", Toast.LENGTH_LONG).show();
                 swWithTax.setChecked(editableProduct.isWithTax());
                 swWeighable.setChecked(editableProduct.isWeighable());
                 Department d=departmentDBAdapter.getDepartmentByID(editableProduct.getDepartmentId());
                 btnContinue.setVisibility(View.GONE);
                 selectedDepartment=d.getName();
-
-                for (int i = 0; i< lvDepartment.getChildCount(); i++){
-                    if(listDepartment.get(i).getName().equals(d.getName())){
-                        selectItemDepartments(lvDepartment.getChildAt(i));
+                for (Department dep : listDepartment) {
+                    if (dep.getId()==(editableProduct.getDepartmentId())) {
+                        dep.setChecked(true);
                     }
                 }
+                departmentGridViewAdapter.updateRecords(listDepartment);
+                if(ProductCatalogActivity.Product_Management_Edit==8){
+                    btSave.setText(getString(R.string.edit));
+                }
+                if(ProductCatalogActivity.Product_Management_View==9){
+                    btSave.setVisibility(View.GONE);
+                    etName.setEnabled(false);
+                    etBarcode.setEnabled(false);
+                    etDescription.setEnabled(false);
+                    etCostPrice.setEnabled(false);
+                    etPrice.setEnabled(false);
+
+                }
+
 
             } catch (Exception ex) {
 
@@ -201,30 +248,42 @@ public class ProductsActivity  extends AppCompatActivity {
         }
 
         if (editableProduct == null) {
-            if (selectedDepartment.equals("")) {
-                Toast.makeText(getApplicationContext(), getString(R.string.department_not_selected), Toast.LENGTH_LONG).show();
-            } else {
-                check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
+                if(productDBAdapter.availableProductName(etName.getText().toString())){
+                    for (Department d : listDepartment) {
+                        if (d.isChecked()) {
+                            depID = d.getId();
+                        }
+                    }
+                    check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
                         etDescription.getText().toString(), Double.parseDouble(etPrice.getText().toString()),
-                        Double.parseDouble(etCostPrice.getText().toString()), swWithTax.isChecked(),
-                        swWeighable.isChecked(), departmentMap.get(selectedDepartment), SESSION._USER.getId(), with_pos, with_point_system);
+                        Double.parseDouble(etCostPrice.getText().toString()), withTax,
+                       withWeighable, depID, SESSION._USER.getId(), with_pos, with_point_system);
                 if (check > 0) {
                     Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_product), Toast.LENGTH_LONG).show();
                     return true;
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.fail_to_add_product), Toast.LENGTH_LONG).show();
                 }
-            }
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.product_name_not_available), Toast.LENGTH_LONG).show();
+
+                }
+
         } else {
+            for (Department d : listDepartment) {
+                if (d.isChecked()) {
+                depID = d.getId();               }
+            }
             //// TODO: 27/10/2016 edit product
             editableProduct.setName(etName.getText().toString());
             editableProduct.setBarCode(etBarcode.getText().toString());
             editableProduct.setDescription(etDescription.getText().toString());
             editableProduct.setPrice(Double.parseDouble(etPrice.getText().toString()));
             editableProduct.setCostPrice(Double.parseDouble(etCostPrice.getText().toString()));
-            editableProduct.setWithTax(swWithTax.isChecked());
-            editableProduct.setWeighable(swWeighable.isChecked());
-            editableProduct.setDepartmentId(departmentMap.get(selectedDepartment));
+            editableProduct.setWithTax(withTax);
+            editableProduct.setWeighable(withWeighable);
+            editableProduct.setDepartmentId(depID);
             try {
                 productDBAdapter.updateEntry(editableProduct);
                 Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.success_to_update_product), Toast.LENGTH_SHORT);
@@ -264,4 +323,6 @@ public class ProductsActivity  extends AppCompatActivity {
         previouslySelectedItem = v;
         v.setBackgroundColor(getResources().getColor(R.color.pressed_color));
     }
+
+
 }
