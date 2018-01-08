@@ -287,7 +287,7 @@ public class ProductDBAdapter {
         return p;
     }
     public boolean availableProductName(String productName) {
-        Cursor cursor = db.query(PRODUCTS_TABLE_NAME, null, PRODUCTS_COLUMN_PRICE + "=?", new String[]{productName}, null, null, null);
+        Cursor cursor = db.query(PRODUCTS_TABLE_NAME, null, PRODUCTS_COLUMN_NAME + "=?", new String[]{productName}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             //Product Name not available
