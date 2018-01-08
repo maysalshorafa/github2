@@ -270,7 +270,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
 
-        if (SETTINGS.printer == PrinterType.SM_S230I) {
+        if (SETTINGS.printer == PrinterType.SM_S230I.name()) {
             String portSettings = "portable;escpos;l";
             String port = "BT:";
             MiniPrinterFunctions.MCRStart2(MainCreditCardActivity.this, port,portSettings);

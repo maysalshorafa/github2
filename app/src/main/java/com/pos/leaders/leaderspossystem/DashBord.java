@@ -52,6 +52,7 @@ import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
+import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -63,6 +64,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.pos.leaders.leaderspossystem.SetUpManagement.POS_Management;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
 
@@ -86,6 +88,9 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     double aReportTotalAmount = 0;
     private MSCardService sendservice;
     long aReportId;
+    public static boolean  currencyEnable , creditCardEnable , customerMeasurementEnable ;
+    public static int floatPoint;
+    public static String printerType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,8 +144,65 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             String token = sharedpreferences.getString(MessageKey.Token, null);
             SESSION.token = token;
         }
+/// sharedPreferences for Setting
+        SharedPreferences cSharedPreferences = getSharedPreferences(POS_Management, MODE_PRIVATE);
+        if(cSharedPreferences!=null){
+        //CreditCard
+        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD)) {
+             creditCardEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD,false);
+            SETTINGS.creditCardEnable=creditCardEnable;
+        }
+        else {
+            Intent i = new Intent(DashBord.this, SetUpManagement.class);
+            startActivity(i);
+        }
+        // end CreditCard
+        //Currency
+        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY)) {
+            currencyEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY,false);
+            SETTINGS.enableCurrencies=currencyEnable;
 
+        }
+        else {
+            Intent i = new Intent(DashBord.this, SetUpManagement.class);
+            startActivity(i);
+        }
+        //end
+        //CustomerMeasurement
+        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT)) {
+            customerMeasurementEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT,false);
+            SETTINGS.enableCustomerMeasurement=customerMeasurementEnable;
+        }
+        else {
+            Intent i = new Intent(DashBord.this, SetUpManagement.class);
+            startActivity(i);
+        }
+        //end
+        //FloatPoint
+        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT)) {
+            floatPoint =cSharedPreferences.getInt(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT,2);
+            SETTINGS.decimalNumbers=floatPoint;
+        }
+        else {
+            Intent i = new Intent(DashBord.this, SetUpManagement.class);
+            startActivity(i);
+        }
+        //end
+        //PrinterType
+        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE)) {
+            printerType =cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE,PrinterType.HPRT_TP805.name());
+            SETTINGS.printer=printerType;
+        }
+        else {
+            Intent i = new Intent(DashBord.this, SetUpManagement.class);
+            startActivity(i);
+        }
+        }else {
+            Intent i = new Intent(DashBord.this, SetUpManagement.class);
+            startActivity(i);
+        }
 
+        //end
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             //   permissions_name = bundle.getString("permissions_name");
@@ -392,8 +454,26 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         }
         EnableButtons();
 
-        switch (SETTINGS.printer) {
-            case HPRT_TP805:
+        if (SETTINGS.printer == PrinterType.HPRT_TP805.name()) {
+            HPRT_TP805.setConnected(false);
+            if (HPRT_TP805.connect(this)) {
+                Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+            }
+        }else if(SETTINGS.printer == PrinterType.BTP880.name()){
+
+        }
+        else if(SETTINGS.printer == PrinterType.SUNMI_T1.name()){
+            AidlUtil.getInstance().connectPrinterService(this);
+            if (AidlUtil.getInstance().isConnect()) {
+                Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+            }
+        }
+ /**       switch (SETTINGS.printer) {
+            case "HPRT_TP805":
                 HPRT_TP805.setConnected(false);
                 if (HPRT_TP805.connect(this)) {
                     Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
@@ -401,9 +481,9 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
                 }
                 break;
-            case BTP880:
+            case "BTP880":
                 break;
-            case SUNMI_T1:
+            case "SUNMI_T1":
                 AidlUtil.getInstance().connectPrinterService(this);
                 if (AidlUtil.getInstance().isConnect()) {
                     Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
@@ -412,7 +492,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 }
                 break;
 
-        }
+        }**/
 
     }
 

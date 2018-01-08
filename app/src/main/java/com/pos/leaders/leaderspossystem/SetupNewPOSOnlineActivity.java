@@ -208,7 +208,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
                 protected void onPostExecute(Void aVoid) {
                     progressDialog2.cancel();
                     SetupNewPOSOnlineActivity.restart = true;
-                    final Intent i = new Intent(SetupNewPOSOnlineActivity.context, SplashScreenActivity.class);
+                    final Intent i = new Intent(SetupNewPOSOnlineActivity.context, SetUpManagement.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     SetupNewPOSOnlineActivity.context.startActivity(i);
 

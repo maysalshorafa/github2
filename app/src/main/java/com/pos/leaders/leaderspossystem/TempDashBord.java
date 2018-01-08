@@ -145,7 +145,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         permissionsDBAdapter.close();
 
         switch (SETTINGS.printer) {
-            case HPRT_TP805:
+            case "HPRT_TP805":
                 if (HPRT_TP805.connect(this)) {
                     Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
                 }
@@ -153,9 +153,9 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                     Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
                 }
                 break;
-            case BTP880:
+            case "BTP880":
                 break;
-            case SUNMI_T1:
+            case "SUNMI_T1":
                 AidlUtil.getInstance().connectPrinterService(this);
                 if(AidlUtil.getInstance().isConnect()){
                     Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();

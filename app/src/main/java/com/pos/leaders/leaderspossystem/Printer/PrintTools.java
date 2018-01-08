@@ -275,16 +275,16 @@ public class PrintTools {
 
     public void PrintReport(Bitmap _bitmap){
         switch (SETTINGS.printer) {
-            case BTP880:
+            case "BTP880":
                 Print_BTB880(_bitmap);
                 break;
-            case HPRT_TP805:
+            case "HPRT_TP805":
                 Print_TP805(_bitmap);
                 break;
-            case SUNMI_T1:
+            case "SUNMI_T1":
                 Print_SUNMI_T1(_bitmap);
                 break;
-            case SM_S230I:
+            case "SM_S230I":
                 Print_SM_S230I(_bitmap);
                 break;
         }

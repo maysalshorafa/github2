@@ -100,6 +100,7 @@ import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
+import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 
@@ -2294,20 +2295,33 @@ startActivity(i);
     }
 
     private void printAndOpenCashBox(String mainAns, final String mainMer, final String mainCli,int source) {
-        switch (SETTINGS.printer) {
-            case BTP880:
+        if (SETTINGS.printer == PrinterType.BTP880.name()) {
+            printAndOpenCashBoxBTP880(mainAns, mainMer, mainCli);
+
+        }else if(SETTINGS.printer == PrinterType.HPRT_TP805.name()){
+            printAndOpenCashBoxHPRT_TP805(mainAns, mainMer, mainCli);
+        }
+        else if(SETTINGS.printer == PrinterType.SUNMI_T1.name()){
+            printAndOpenCashBoxSUNMI_T1(mainAns, mainMer, mainCli);
+        }
+        else if(SETTINGS.printer == PrinterType.SM_S230I.name()){
+            printAndOpenCashBoxSM_S230I(mainAns, mainMer, mainCli);
+
+        }
+           /** switch (SETTINGS.printer) {
+            case "BTP880":
                 printAndOpenCashBoxBTP880(mainAns, mainMer, mainCli);
                 break;
-            case HPRT_TP805:
+            case "HPRT_TP805":
                 printAndOpenCashBoxHPRT_TP805(mainAns, mainMer, mainCli);
                 break;
-            case SUNMI_T1:
+            case "SUNMI_T1":
                 printAndOpenCashBoxSUNMI_T1(mainAns, mainMer, mainCli);
                 break;
-            case SM_S230I:
+            case "SM_S230I":
                 printAndOpenCashBoxSM_S230I(mainAns, mainMer, mainCli);
                 break;
-        }
+        }*/
         if(source==REQUEST_CASH_ACTIVITY_CODE||source==REQUEST_CASH_ACTIVITY_WITH_CURRENCY_CODE)
             currencyReturnsCustomDialogActivity.show();
 
