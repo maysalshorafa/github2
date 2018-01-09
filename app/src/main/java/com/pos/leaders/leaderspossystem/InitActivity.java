@@ -87,7 +87,7 @@ public class InitActivity extends AppCompatActivity {
     }
 
     public void setupNewPOS(View view){
-        Intent intent = new Intent(this, SetupNewPOSOnlineActivity.class);
+        Intent intent = new Intent(this, SetUpManagement.class);
         startActivity(intent);
         finish();
     }

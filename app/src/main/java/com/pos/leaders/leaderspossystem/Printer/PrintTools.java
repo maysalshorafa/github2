@@ -29,6 +29,7 @@ import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
+import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -275,16 +276,16 @@ public class PrintTools {
 
     public void PrintReport(Bitmap _bitmap){
         switch (SETTINGS.printer) {
-            case "BTP880":
+            case BTP880:
                 Print_BTB880(_bitmap);
                 break;
-            case "HPRT_TP805":
+            case HPRT_TP805:
                 Print_TP805(_bitmap);
                 break;
-            case "SUNMI_T1":
+            case SUNMI_T1:
                 Print_SUNMI_T1(_bitmap);
                 break;
-            case "SM_S230I":
+            case SM_S230I:
                 Print_SM_S230I(_bitmap);
                 break;
         }

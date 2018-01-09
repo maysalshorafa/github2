@@ -147,7 +147,7 @@ public class SetUpManagement extends AppCompatActivity {
                 editor.putInt(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT,noOfPoint);
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE,printerType);
                 editor.apply();
-                Intent i = new Intent(SetUpManagement.this, SplashScreenActivity.class);
+                Intent i = new Intent(SetUpManagement.this, SetupNewPOSOnlineActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
             }
