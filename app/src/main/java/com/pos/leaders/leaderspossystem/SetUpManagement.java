@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ public class SetUpManagement extends AppCompatActivity {
     CheckBox currencyCheckBox , creditCardCheckBox , customerMeasurementCheckBox ;
     Spinner printerTypeSpinner , floatPointSpinner;
     Button saveButton ;
+    ImageView currencyImage , customerMeasurementImage , creditCardImage ;
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT";
@@ -45,21 +47,14 @@ public class SetUpManagement extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_set_up_management);
         Window window = getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();
         //wlp.gravity = Gravity.CENTER_VERTICAL;
-        wlp.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-        wlp.dimAmount = (float) 0.6;
-        window.setAttributes(wlp);
-
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int width = dm.widthPixels;
-        int height = dm.heightPixels;
-        getWindow().setLayout((int) (width * 0.7), (int) (height * 0.55));
         context = this;
         SharedPreferences preferences = getSharedPreferences(POS_Management, MODE_PRIVATE);
         final SharedPreferences.Editor editor = preferences.edit();
@@ -69,6 +64,9 @@ public class SetUpManagement extends AppCompatActivity {
         floatPointSpinner= (Spinner) findViewById(R.id.setUpManagementFloatPointSpinner);
         printerTypeSpinner = (Spinner) findViewById(R.id.setUpManagementPrinterTypeSpinner);
         saveButton = (Button)findViewById(R.id.setUpManagementSaveButton);
+        currencyImage = (ImageView) findViewById(R.id.currencyImage);
+        creditCardImage = (ImageView) findViewById(R.id.creditCardImage);
+        customerMeasurementImage = (ImageView)findViewById(R.id.customerMeasurementImage);
         String printer[] = {PrinterType.BTP880.name(),PrinterType.HPRT_TP805.name(),PrinterType.SUNMI_T1.name(),PrinterType.SM_S230I.name(),PrinterType.WINTEC_BUILDIN.name()};
         final Integer []floatPoint = {0,1,2,3};
 
@@ -152,6 +150,24 @@ public class SetUpManagement extends AppCompatActivity {
                 Intent i = new Intent(SetUpManagement.this, SplashScreenActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
+            }
+        });
+        currencyImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              Toast.makeText(SetUpManagement.this,"If you want to active Currency Service in your Pos Check the Currency CheckBox",Toast.LENGTH_LONG).show();
+            }
+        });
+        creditCardImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(SetUpManagement.this,"If you want to active CreditCard Service in your Pos Check the CreditCard CheckBox",Toast.LENGTH_LONG).show();
+            }
+        });
+        customerMeasurementImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(SetUpManagement.this,"If you want to active CustomerMeasurement Service in your Pos Check the CustomerMeasurement CheckBox",Toast.LENGTH_LONG).show();
             }
         });
 
