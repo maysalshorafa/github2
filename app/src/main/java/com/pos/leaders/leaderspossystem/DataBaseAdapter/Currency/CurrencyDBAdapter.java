@@ -148,7 +148,7 @@ public class CurrencyDBAdapter {
     }
 
     private Currency build(Cursor cursor) {
-        return new Currency(Integer.parseInt(cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_ID))),
+        return new Currency(Long.parseLong(cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_NAME)),
                 cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_CURRENCYCODE)),
                 cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_COUNTRY)),
