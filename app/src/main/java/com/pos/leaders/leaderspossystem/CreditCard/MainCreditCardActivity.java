@@ -120,8 +120,8 @@ public class MainCreditCardActivity extends AppCompatActivity {
         btByPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                byPhoneMode = !byPhoneMode;
-                ByPhoneMode();
+                /*byPhoneMode = !byPhoneMode;
+                ByPhoneMode();*/
             }
         });
 
