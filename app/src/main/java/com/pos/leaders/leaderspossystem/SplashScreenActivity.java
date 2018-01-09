@@ -291,64 +291,7 @@ public class SplashScreenActivity extends Activity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    /// sharedPreferences for Setting
-                    SharedPreferences cSharedPreferences = getSharedPreferences(POS_Management, MODE_PRIVATE);
-                    if(cSharedPreferences!=null){
-                        //CreditCard
-                        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD)) {
-                            creditCardEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD,false);
-                            SETTINGS.creditCardEnable=creditCardEnable;
-                        }
-                        else {
-                            Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
-                            startActivity(i);
-                        }
-                        // end CreditCard
-                        //Currency
-                        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY)) {
-                            currencyEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY,false);
-                            SETTINGS.enableCurrencies=currencyEnable;
-
-                        }
-                        else {
-                            Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
-                            startActivity(i);
-                        }
-                        //end
-                        //CustomerMeasurement
-                        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT)) {
-                            customerMeasurementEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT,false);
-                            SETTINGS.enableCustomerMeasurement=customerMeasurementEnable;
-                        }
-                        else {
-                            Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
-                            startActivity(i);
-                        }
-                        //end
-                        //FloatPoint
-                        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT)) {
-                            floatPoint =cSharedPreferences.getInt(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT,2);
-                            SETTINGS.decimalNumbers=floatPoint;
-                        }
-                        else {
-                            Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
-                            startActivity(i);
-                        }
-                        //end
-                        //PrinterType
-                        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE)) {
-                            printerType =cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE,PrinterType.HPRT_TP805.name());
-                            PrinterType printer = PrinterType.valueOf(printerType);
-                            SETTINGS.printer=printer;
-                        }
-                        else {
-                            Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
-                            startActivity(i);
-                        }
-                    }else {
-                        Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
-                        startActivity(i);
-                    }
+                    newPosManagement();
                     //Redirect to login activity
                     SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(SplashScreenActivity.this);
                     settingsDBAdapter.open();
@@ -533,6 +476,66 @@ public class SplashScreenActivity extends Activity {
         mOutput.flush();
         mOutput.close();
         mInput.close();
+    }
+    private void newPosManagement() {
+        /// sharedPreferences for Setting
+        SharedPreferences cSharedPreferences = getSharedPreferences(POS_Management, MODE_PRIVATE);
+        if(cSharedPreferences!=null){
+            //CreditCard
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD)) {
+                creditCardEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD,false);
+                SETTINGS.creditCardEnable=creditCardEnable;
+            }
+            else {
+                Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
+                startActivity(i);
+            }
+            // end CreditCard
+            //Currency
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY)) {
+                currencyEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY,false);
+                SETTINGS.enableCurrencies=currencyEnable;
+
+            }
+            else {
+                Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
+                startActivity(i);
+            }
+            //end
+            //CustomerMeasurement
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT)) {
+                customerMeasurementEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT,false);
+                SETTINGS.enableCustomerMeasurement=customerMeasurementEnable;
+            }
+            else {
+                Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
+                startActivity(i);
+            }
+            //end
+            //FloatPoint
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT)) {
+                floatPoint =cSharedPreferences.getInt(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT,2);
+                SETTINGS.decimalNumbers=floatPoint;
+            }
+            else {
+                Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
+                startActivity(i);
+            }
+            //end
+            //PrinterType
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE)) {
+                printerType =cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE,PrinterType.HPRT_TP805.name());
+                PrinterType printer = PrinterType.valueOf(printerType);
+                SETTINGS.printer=printer;
+            }
+            else {
+                Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
+                startActivity(i);
+            }
+        }else {
+            Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
+            startActivity(i);
+        }
     }
 
 }
