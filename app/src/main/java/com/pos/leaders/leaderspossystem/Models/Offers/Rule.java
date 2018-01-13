@@ -32,7 +32,10 @@ public abstract class Rule {
     private long id;
     private String type;
 
-    public Rule(long id,String type){
+    public Rule() {
+    }
+
+    public Rule(long id, String type){
         this.id = id;
         this.type = type;
     }

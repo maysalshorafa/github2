@@ -21,6 +21,8 @@ public class Department {
 
     // region Constructor
 
+
+
     public Department(long id, String name, Date creatingDate, long byUser, boolean hide) {
         this.id = id;
         this.name = name;

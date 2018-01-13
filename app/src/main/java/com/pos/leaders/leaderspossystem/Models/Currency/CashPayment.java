@@ -19,6 +19,9 @@ public class CashPayment {
     private long saleId;
     private double amount;
 
+    public CashPayment() {
+    }
+
     public Date getCreateDate() {
         return createDate;
     }

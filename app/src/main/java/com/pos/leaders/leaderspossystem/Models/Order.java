@@ -102,7 +102,8 @@ public class Order {
 		return new Order(o.getId(), o.getProductId(), o.getCount(), o.getUserOffer(), o.getSaleId(),o.getCustmerAssestId());
 	}
 
-
+	public Order() {
+	}
 	//endregion Constructors
 
     //region Getters

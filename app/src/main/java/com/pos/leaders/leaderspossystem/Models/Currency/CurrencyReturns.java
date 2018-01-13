@@ -11,6 +11,9 @@ public class CurrencyReturns {
     private long saleId;
     private double amount;
 
+    public CurrencyReturns() {
+    }
+
     public Date getCreateDate() {
         return createDate;
     }

@@ -9,6 +9,9 @@ public class ValueOfPoint {
     public double value;
     public String create_Date ;
 
+    public ValueOfPoint() {
+    }
+
     public long getId() {
         return id;
     }
