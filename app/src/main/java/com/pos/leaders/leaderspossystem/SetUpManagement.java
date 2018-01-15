@@ -68,7 +68,7 @@ public class SetUpManagement extends AppCompatActivity {
         creditCardImage = (ImageView) findViewById(R.id.creditCardImage);
         customerMeasurementImage = (ImageView)findViewById(R.id.customerMeasurementImage);
         String printer[] = {PrinterType.BTP880.name(),PrinterType.HPRT_TP805.name(),PrinterType.SUNMI_T1.name(),PrinterType.SM_S230I.name(),PrinterType.WINTEC_BUILDIN.name()};
-        final Integer []floatPoint = {0,1,2,3};
+        final Integer []floatPoint = {2,0,1,3};
 
         spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item, printer);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view

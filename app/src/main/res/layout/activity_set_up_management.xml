@@ -1,173 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pos.leaders.leaderspossystem.SetUpManagement"
-    android:radius="5dp">
+    android:background="#F5F5F5"
+    android:layout_gravity="center"
 
-    <LinearLayout
-        android:layout_width="1008dp"
-        android:layout_height="615dp"
-        android:orientation="vertical"
-        android:padding="10dp"
-       >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Management POS "
-            android:textColor="@color/black"
-            android:textSize="35dp"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp" />
-
+    >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="0dp">
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:background="@drawable/set_up_management"
+            android:orientation="vertical"
+            android:paddingRight="25dp"
+            android:paddingLeft="25dp"
+            android:paddingTop="25dp"
+            android:layout_margin="100dp"
 
-            <CheckBox
-                android:id="@+id/setUpManagementCurrencyCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:text="@string/currency"
-                android:textColor="@color/black"
-                android:textSize="25dp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/currencyImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/exclamation_mark" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="0dp">
-
-            <CheckBox
-                android:id="@+id/setUpManagementCreditCardCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:text="@string/credit_card"
-                android:textColor="@color/black"
-                android:textSize="25dp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/creditCardImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/exclamation_mark" />
-            </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <CheckBox
-                android:id="@+id/setUpManagementCustomerMeasurementCheckBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:text="@string/customer_measurement"
-                android:textColor="@color/black"
-                android:textSize="25dp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/customerMeasurementImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/exclamation_mark" />
-            </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            >
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Choose No Of Float Point"
+                android:layout_gravity="center"
+                android:text="POS Setting "
                 android:textColor="@color/black"
-                android:textSize="25dp"
-                android:textStyle="bold"
-                android:layout_gravity="center"/>
+                android:textSize="35dp"
+                android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/setUpManagementFloatPointSpinner"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1" />
-        </LinearLayout>
+                android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+                <CheckBox
+                    android:id="@+id/setUpManagementCurrencyCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/currency"
+                    android:textColor="@color/black"
+                    android:textSize="25dp" />
 
-            <TextView
+                <ImageView
+                    android:id="@+id/currencyImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/exclamation_mark" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Choose Printer Type"
-                android:textColor="@color/black"
-                android:textSize="25dp"
-                android:textStyle="bold"
-                android:layout_gravity="center"/>
+                android:orientation="horizontal">
 
-            <Spinner
-                android:id="@+id/setUpManagementPrinterTypeSpinner"
+                <CheckBox
+                    android:id="@+id/setUpManagementCreditCardCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/credit_card"
+                    android:textColor="@color/black"
+                    android:textSize="25dp" />
+
+                <ImageView
+                    android:id="@+id/creditCardImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/exclamation_mark" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginRight="4dp"
-                android:layout_weight="1"
-                android:layout_gravity="center" />
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/setUpManagementCustomerMeasurementCheckBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/customer_measurement"
+                    android:textColor="@color/black"
+                    android:textSize="25dp" />
+
+                <ImageView
+                    android:id="@+id/customerMeasurementImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/exclamation_mark" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="@string/choose_no_of_float_point"
+                    android:textColor="@color/black"
+                    android:textSize="25dp" />
+
+                <Spinner
+                    android:id="@+id/setUpManagementFloatPointSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="@string/choose_printer_type"
+                    android:textColor="@color/black"
+                    android:textSize="25dp" />
+
+                <Spinner
+                    android:id="@+id/setUpManagementPrinterTypeSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/setUpManagementSaveButton"
+                style="@style/AppTheme.bt_green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"/>
         </LinearLayout>
-
-
-        <Button
-            android:id="@+id/setUpManagementSaveButton"
-            style="@style/AppTheme.bt_green"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:text="@string/save" />
-    </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
