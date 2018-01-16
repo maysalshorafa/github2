@@ -37,8 +37,22 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
-
-
+    /**
+     * 1 change database version no
+     step to rename column from exist table
+     1)rename the old table
+     2)create new table
+     3)copy all data from the pref to new table
+     4)delete the old
+     private static final String DATABASE_ALTER_TABLE_NAME = "ALTER TABLE " + "Rule1" + " RENAME TO " + "Rule1Old" ; // Alter table name to exist table
+     public static final String DATABASE_CREATE_TEST =  "CREATE TABLE `"+Rule1DBAdapter.RULE1_TABLE_NAME+"` ( `"+"id"+"` INTEGER PRIMARY KEY AUTOINCREMENT, " +
+     "`"+ "quantity" +"` INTEGER NOT NULL, `"+"test1"+"` REAL NOT NULL ,`"+"price"+"` REAL NOT NULL)";//create new table with the prev table name and with modify( column name , remove column add or remove constraints from a table)
+     public  static  final  String DATABASE_Insert_TEST ="INSERT INTO" +" Rule1 "+ "SELECT * FROM Rule1Old"; if the case is rename column rename table use this to insert from the prev table to new table
+     db.execSQL( " INSERT INTO Rule1( id , quantity , price ) " +"SELECT id , quantity , price  FROM Rule1Old"); use this insert if the case remove column
+     protected static final int DATABASE_VERSION = 3; // db version
+     private static final String DATABASE_ALTER_COLUMN_NAME = "ALTER TABLE " + "test" + " ADD COLUMN " + "date" + " string;"; // Add column to exist table
+     db.execSQL( "DROP TABLE IF EXISTS Rule1Old"); use to remove prev table after all operation
+     */
     protected static final String DATABASE_NAME = "POSDB.db";
     protected static final String CONTACTS_TABLE_NAME = "contacts";
     protected static final String CONTACTS_COLUMN_ID = "id";
@@ -71,7 +85,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        // if Version is one this method called
         //offers
         db.execSQL(Rule1DBAdapter.DATABASE_CREATE);
         db.execSQL(Rule3DbAdapter.DATABASE_CREATE);
@@ -145,6 +159,11 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(9,2,9);");
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(10,2,10);");
         db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(11,2,2);");
+      /**  db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(11,2,4.2,2.3);");
+        db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(12,2,3.2,2.3);");
+        db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(13,2,2.3,2.3);");**/
+
+
         // Currency Statment
 
         Date date=new Date();
@@ -155,12 +174,12 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (2 , 'Pound','GBP','Great Britain',4.5974,'"+DateConverter.toDate(date)+"');");
         db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (3 , 'Euro','EUR','Euro Member Countries',4.1002,'"+DateConverter.toDate(date)+"');");
 
-      //Currency Type
+        //Currency Type
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (0 , 'ILS');");
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (1 , 'USD');");
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (2 , 'GBP');");
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (3 , 'EUR');");
-      
+
         db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Date().getTime()+"');");
         db.execSQL("insert into "+DepartmentDBAdapter.DEPARTMENTS_TABLE_NAME+" values(1, 'כללי','"+new Date().getTime()+"',1,0);");
         db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'test1','test1','female','11/8/1994','example@gmail.com','coder','123',0,'1',1,1,'1',1,'1');");
@@ -178,7 +197,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(dbc);
         db.execSQL(IdsCounterDBAdapter.INIT(tblNames));
 
-      
+
         db.execSQL("INSERT INTO products (id, name,barcode,description,price,costPrice,depId,byUser,status) VALUES (8, 'Test',10,'Test',10,10,1,1,1);");
 
     }
@@ -206,11 +225,26 @@ public class DbHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // if Version is more than one this method called
+        if (oldVersion < 2) {
+         /**   db.execSQL(DATABASE_ALTER_TABLE_NAME);
+            db.execSQL(DATABASE_CREATE_TEST);
+            db.execSQL(DATABASE_Insert_TEST);
+            db.execSQL( " INSERT INTO Rule1( id , quantity , price ) " +
+                    "SELECT id , quantity , price  FROM Rule1Old");
+            db.execSQL( "DROP TABLE IF EXISTS Rule1Old");**/
+
+
+        }
+        if (oldVersion < 3) {
+
+        }
+
         // TODO Auto-generated method stub
         // Log the version upgrade.
         Log.w("TaskDBAdapter", "Upgrading from version " +oldVersion + " to " +newVersion + ", which will destroy all old data");
         //db.execSQL("DROP TABLE IF EXISTS contacts");
-        onCreate(db);
+          onCreate(db);
     }
 
     /*
@@ -238,17 +272,17 @@ public class DbHelper extends SQLiteOpenHelper {
         return true;
     }
 
-   /** public User getUserByID(int id){
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("select * from users where id='"+id+"'", null );
-        res.moveToFirst();
-        User user=null;
-        user=new User(getColumnValueInt("id",res),getColumnValue("userName",res),getColumnValue("pwd",res)
-                ,getColumnValue("firstName",res),getColumnValue("lastName",res), DateConverter.stringToDate(getColumnValue("visitDate",res))
-                ,getColumnValueBoolean("hide",res),getColumnValue("phoneNumber",res)
-                ,Double.parseDouble(getColumnValue("present",res)),Double.parseDouble(getColumnValue("hourlyWage",res),getColumnValue("")));
-        return user;
-    }**/
+    /** public User getUserByID(int id){
+     SQLiteDatabase db = this.getReadableDatabase();
+     Cursor res =  db.rawQuery("select * from users where id='"+id+"'", null );
+     res.moveToFirst();
+     User user=null;
+     user=new User(getColumnValueInt("id",res),getColumnValue("userName",res),getColumnValue("pwd",res)
+     ,getColumnValue("firstName",res),getColumnValue("lastName",res), DateConverter.stringToDate(getColumnValue("visitDate",res))
+     ,getColumnValueBoolean("hide",res),getColumnValue("phoneNumber",res)
+     ,Double.parseDouble(getColumnValue("present",res)),Double.parseDouble(getColumnValue("hourlyWage",res),getColumnValue("")));
+     return user;
+     }**/
 
     private boolean getColumnValueBoolean(String Column, Cursor cr) {
         int b=cr.getInt(cr.getColumnIndex(Column));
