@@ -429,7 +429,7 @@ public class PrintTools {
     }
 
     // get Payment List
-    private List<Payment> paymentList(List<Sale> sales) {
+    public List<Payment> paymentList(List<Sale> sales) {
         List<Payment> pl = new ArrayList<Payment>();
         PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(context);
         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);

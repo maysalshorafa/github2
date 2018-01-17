@@ -16,6 +16,8 @@ public class ZReport {
     @JsonIgnore
     private User user;
     private long startSaleId;
+    private double amount;
+    private double total_amount;
     @JsonIgnore
     private Sale startSale;
     private long endSaleId;
@@ -26,12 +28,14 @@ public class ZReport {
 
     }
 
-    public ZReport(long id, Date creationDate, long byUser, long startSaleId, long endSaleId) {
+    public ZReport(long id, Date creationDate, long byUser, long startSaleId, long endSaleId,double amount,double total_amount) {
         this.id = id;
         this.creationDate = creationDate;
         this.byUser = byUser;
         this.startSaleId = startSaleId;
         this.endSaleId = endSaleId;
+        this.amount=amount;
+        this.total_amount=total_amount;
     }
 
     public ZReport(long id, Date creationDate, User user, Sale startSale, Sale endSale) {
@@ -67,6 +71,8 @@ public class ZReport {
         this.byUser = zReport.byUser;
         this.startSaleId = zReport.startSaleId;
         this.endSaleId = zReport.endSaleId;
+        this.amount=zReport.amount;
+        this.total_amount=zReport.total_amount;
     }
 
     public long getId() {
@@ -133,8 +139,21 @@ public class ZReport {
         this.endSale = endSale;
     }
 
+    public double getAmount() {
+        return amount;
+    }
 
+    public double getTotal_amount() {
+        return total_amount;
+    }
 
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setTotal_amount(double total_amount) {
+        this.total_amount = total_amount;
+    }
     //region OpenFormat
 
     public String BKMVDATA(int rowNumber,String pc,int totalRows){

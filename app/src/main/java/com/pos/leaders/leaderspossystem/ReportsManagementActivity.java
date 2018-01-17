@@ -35,6 +35,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
     ZReport lastZReport=null;
     Sale lastSale;
     String str;
+    double totalZReportAmount =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +97,9 @@ public class ReportsManagementActivity  extends AppCompatActivity {
 
                 ZReport z=new ZReport(0,DateConverter.stringToDate(DateConverter.currentDateTime()) , SESSION._USER,lastZReport.getEndSaleId()+1,lastSale);
                 z.setByUser(SESSION._USER.getId());
-                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId());
+                double amount = zReportDBAdapter.getZReportAmount(lastZReport.getStartSaleId(), lastZReport.getEndSaleId());
+                totalZReportAmount+=amount;
+                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId(),amount,totalZReportAmount);
                 z.setId(zID);
                 lastZReport = new ZReport(z);
 

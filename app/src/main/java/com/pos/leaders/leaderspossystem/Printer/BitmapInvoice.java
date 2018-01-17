@@ -336,12 +336,12 @@ public class BitmapInvoice {
 
 
         String names = "", in = "", out = "", total = "";
-        names += "מזומן" + "\n" + "אשראי" + "\n" + "המחאות" + "\n" + "קרן" + "\n" + "סה''כ";
+        names += "מזומן" + "\n" + "אשראי" + "\n" + "המחאות" + "\n" + "קרן" + "\n" + "With AReport"+ "\n" + "With Out AReport";
 
-        in += dTS(cash_plus) + "\n" + dTS(creditCard_plus) + "\n" + dTS(check_plus) + "\n" + "~" + "\n" + dTS(cash_plus + check_plus + creditCard_plus);
-        out += dTS(cash_minus) + "\n" + dTS(creditCard_minus) + "\n" + dTS(check_minus) + "\n" + "~" + "\n" + dTS(cash_minus + check_minus + creditCard_minus);
+        in += dTS(cash_plus) + "\n" + dTS(creditCard_plus) + "\n" + dTS(check_plus) + "\n" + "~" + "\n" + dTS(cash_plus + check_plus + creditCard_plus)+ "\n" + dTS(cash_plus + check_plus + creditCard_plus);
+        out += dTS(cash_minus) + "\n" + dTS(creditCard_minus) + "\n" + dTS(check_minus) + "\n" + "~" + "\n" + dTS(cash_minus + check_minus + creditCard_minus)+ "\n" + dTS(cash_minus + check_minus + creditCard_minus);
         total += dTS(cash_plus + cash_minus) + "\n" + dTS(creditCard_plus + creditCard_minus) + "\n" + dTS(check_plus + check_minus) + "\n" + starterAmount + "\n" +
-                dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus + starterAmount);
+                dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus + starterAmount)+ "\n" +   dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus );
 
         StaticLayout slNames = new StaticLayout(names, orderTP,
                 (int) (PAGE_WIDTH * 0.4), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);

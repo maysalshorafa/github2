@@ -86,6 +86,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     double aReportTotalAmount = 0;
     private MSCardService sendservice;
     long aReportId;
+    double totalZReportAmount =0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,10 +231,11 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     lastZReport = new ZReport();
                     lastZReport.setEndSaleId(0);
                 }
-
                 ZReport z = new ZReport(0, DateConverter.stringToDate(DateConverter.currentDateTime()), SESSION._USER, lastZReport.getEndSaleId() + 1, lastSale);
                 z.setByUser(SESSION._USER.getId());
-                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId());
+                double amount = zReportDBAdapter.getZReportAmount(lastZReport.getStartSaleId(), lastZReport.getEndSaleId());
+                totalZReportAmount+=amount;
+                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId(),amount,totalZReportAmount);
                 z.setId(zID);
                 lastZReport = new ZReport(z);
                 zReportDBAdapter.close();
