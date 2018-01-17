@@ -42,6 +42,8 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     private ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
     private ZReport lastZReport;
     public static final String LEADPOS_MAKE_A_REPORT = "LEADPOS_make_a_report";
+    public static double LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT = 0.0;
+
 
     private SQLiteDatabase db;
 
@@ -212,7 +214,9 @@ public class LogInActivity extends Activity implements View.OnClickListener {
 
                 ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(LogInActivity.this);
                 zReportDBAdapter.open();
-
+                //get ZReport TotalAmount
+                LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT = zReportDBAdapter.zReportTotalAmount();
+                //end
                 try {
                     lastZReport = zReportDBAdapter.getLastRow();
                     if (lastZReport.getEndSaleId() == lastSale.getId()) {

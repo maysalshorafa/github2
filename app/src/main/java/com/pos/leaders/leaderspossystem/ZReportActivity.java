@@ -31,6 +31,8 @@ public class ZReportActivity extends AppCompatActivity {
     public static final String COM_LEADPOS_ZREPORT_TO = "COM_LEADPOS_ZREPORT_TO";
     public static final String COM_LEADPOS_ZREPORT_ID = "COM_LEADPOS_ZREPORT_ID";
     public static final String COM_LEADPOS_ZREPORT_HISTORY = "COM_LEADPOS_ZREPORT_HISTORY";
+    public static final String COM_LEADPOS_ZREPORT_TOTAL_AMOUNT = "COM_LEADPOS_ZREPORT_TOTAL_AMOUNT";
+
     private ZReportListViewAdapter adapter;
     private List<ZReport> zReportList;
     private ZReportDBAdapter zReportDBAdapter;

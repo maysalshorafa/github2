@@ -233,8 +233,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 }
                 ZReport z = new ZReport(0, DateConverter.stringToDate(DateConverter.currentDateTime()), SESSION._USER, lastZReport.getEndSaleId() + 1, lastSale);
                 z.setByUser(SESSION._USER.getId());
-                double amount = zReportDBAdapter.getZReportAmount(lastZReport.getStartSaleId(), lastZReport.getEndSaleId());
-                totalZReportAmount+=amount;
+                double amount = zReportDBAdapter.getZReportAmount(z.getStartSaleId(), z.getEndSaleId());
+                totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
                 long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId(),amount,totalZReportAmount);
                 z.setId(zID);
                 lastZReport = new ZReport(z);
@@ -242,7 +242,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 PrintTools pt = new PrintTools(DashBord.this);
 
                 //create and print z report
-                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false);
+                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false,totalZReportAmount);
                 if (bmap != null)
                     pt.PrintReport(bmap);
 
@@ -250,6 +250,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, lastZReport.getId());
                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, lastZReport.getStartSaleId());
                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, lastZReport.getEndSaleId());
+                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
+
                 startActivity(i);
                 btZReport.setEnabled(false);
             }

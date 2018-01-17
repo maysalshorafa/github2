@@ -277,7 +277,7 @@ public class BitmapInvoice {
         return b;
     }
 
-    public static Bitmap zPrint(Context context, ZReport zReport, double usa_plus, double usa_minus, double eur_plus, double eur_minus, double gbp_plus, double gbp_minus, double sheqle_plus, double sheqle_minus, double cash_plus, double cash_minus, double check_plus, double check_minus, double creditCard_plus, double creditCard_minus, boolean isCopy, double starterAmount) {
+    public static Bitmap zPrint(Context context, ZReport zReport, double usa_plus, double usa_minus, double eur_plus, double eur_minus, double gbp_plus, double gbp_minus, double sheqle_plus, double sheqle_minus, double cash_plus, double cash_minus, double check_plus, double check_minus, double creditCard_plus, double creditCard_minus, boolean isCopy, double starterAmount,double totalZReportAmount) {
         //miriam_libre_bold.ttf
         //miriam_libre_regular.ttf
         //carmelitregular.ttf
@@ -294,10 +294,20 @@ public class BitmapInvoice {
         head.setColor(Color.BLACK);
         head.setTypeface(normal);
         head.setTextSize(38);
+        TextPaint posSaleStyle =new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
+        posSaleStyle.setStyle(Paint.Style.FILL);
+        posSaleStyle.setColor(Color.BLACK);
+        posSaleStyle.setTypeface(normal);
+        posSaleStyle.setTextSize(28);
+        posSaleStyle.setTextAlign(Paint.Align.LEFT);
+        posSaleStyle.setLinearText(true);
+
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
-        StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" + DateConverter.dateToString(zReport.getCreationDate().getTime()) + "\n\r" + "קןפאי : " + zReport.getUser().getFullName(), head,
+        StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" + DateConverter.dateToString(zReport.getCreationDate().getTime()) + "\n\r" + "קןפאי : " + zReport.getUser().getFullName()+ status , head,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
+        StaticLayout posSales = new StaticLayout( "\n"  +context.getString(R.string.pos_sales)+" "+totalZReportAmount, posSaleStyle,
+                PAGE_WIDTH, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
 
 
         TextPaint invoiceHead = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
@@ -382,9 +392,9 @@ public class BitmapInvoice {
         //RGB_565
         int Page_Height = 0;
         if (SETTINGS.enableCurrencies)
-            Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight() + cSlNames.getHeight() + sNewLine.getHeight() + scInvoiceD.getHeight();
+            Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight() + cSlNames.getHeight() + sNewLine.getHeight() + scInvoiceD.getHeight()+ sNewLine.getHeight() +posSales.getHeight();
         else
-            Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight();
+            Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight()+posSales.getHeight();
         Bitmap b = Bitmap.createBitmap(PAGE_WIDTH, Page_Height, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
 
@@ -413,7 +423,6 @@ public class BitmapInvoice {
         slIn.draw(c);
         c.translate(slIn.getWidth(), 0);
         slNames.draw(c);
-
         c.translate(-(int) (PAGE_WIDTH * 0.60), slNames.getHeight());
         sNewLine.draw(c);
 
@@ -434,8 +443,8 @@ public class BitmapInvoice {
             c.translate(-(int) (PAGE_WIDTH * 0.60), cSlNames.getHeight());
             sNewLine.draw(c);
         }
-
-
+        posSales.draw(c);
+        c.translate(0, posSales.getHeight());
         c.restore();
         return b;
     }

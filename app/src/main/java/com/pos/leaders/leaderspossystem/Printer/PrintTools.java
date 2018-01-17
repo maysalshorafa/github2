@@ -292,7 +292,7 @@ public class PrintTools {
 
 
 
-    public Bitmap createZReport(long id, long from, long to, boolean isCopy) {
+    public Bitmap createZReport(long id, long from, long to, boolean isCopy , double totalZReportAmount ) {
         /*double aReportAmount = 0;
         long aReportId = 0;*/
         double sheqle_plus = 0, sheqle_minus = 0;
@@ -423,7 +423,7 @@ public class PrintTools {
 
         //endregion Currency summary
 
-        return BitmapInvoice.zPrint(context, zReport, usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, Double.parseDouble(Util.makePrice(aReport.getAmount())));
+        return BitmapInvoice.zPrint(context, zReport, usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, Double.parseDouble(Util.makePrice(aReport.getAmount())),totalZReportAmount);
         //return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
 
     }

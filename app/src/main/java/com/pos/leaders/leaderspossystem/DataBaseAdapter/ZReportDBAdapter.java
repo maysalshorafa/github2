@@ -207,5 +207,13 @@ public class ZReportDBAdapter {
         paymentDBAdapter.close();
         return pl;
     }
+    public double zReportTotalAmount(){
+        Cursor cursor = db.rawQuery(" select sum(amount) from " + Z_REPORT_TABLE_NAME , null);
+
+        if (cursor.moveToFirst()) {
+            return cursor.getDouble(0);
+        }
+        return  0;
+    }
 
 }
