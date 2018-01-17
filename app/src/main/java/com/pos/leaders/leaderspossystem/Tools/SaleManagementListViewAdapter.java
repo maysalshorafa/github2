@@ -73,14 +73,18 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		holder.tvUseName.setText(salesList.get(position).getUser().getFullName());
 		holder.FL.setVisibility(View.GONE);
 
-		if (salesList.get(position).getPayment().getPaymentWay().equals(CONSTANT.CREDIT_CARD)) {
-            convertView.setBackground(context.getResources().getDrawable(R.color.credit_card_bg));
-        } else if (salesList.get(position).getPayment().getPaymentWay().equals(CONSTANT.CHECKS)) {
-            convertView.setBackground(context.getResources().getDrawable(R.color.check_bg));
-        }
-        else{
-            convertView.setBackground(context.getResources().getDrawable(R.color.sale_bg));
-        }
+		try {
+			if (salesList.get(position).getPayment().getPaymentWay().equals(CONSTANT.CREDIT_CARD)) {
+				convertView.setBackground(context.getResources().getDrawable(R.color.credit_card_bg));
+			} else if (salesList.get(position).getPayment().getPaymentWay().equals(CONSTANT.CHECKS)) {
+				convertView.setBackground(context.getResources().getDrawable(R.color.check_bg));
+			} else {
+				convertView.setBackground(context.getResources().getDrawable(R.color.sale_bg));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			convertView.setBackground(context.getResources().getDrawable(R.color.sale_bg));
+		}
 
 		return convertView;
 	}

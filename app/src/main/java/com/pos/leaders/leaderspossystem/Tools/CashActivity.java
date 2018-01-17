@@ -188,7 +188,7 @@ public class CashActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 rCurrency = currenciesList.get(position);
-                spinnerChanged();
+                tvRequiredAmount.setText(valueView(((totalPriceInDefaultValue) - (firstCurrencyInDefaultValue + secondCurrencyInDefaultValue)) / rCurrency.getRate()));
             }
 
             @Override
@@ -297,13 +297,7 @@ public class CashActivity extends AppCompatActivity {
 
     private void calculatePaid() {
         tvTotalPaid.setText(valueView((firstCurrencyInDefaultValue + secondCurrencyInDefaultValue) / totalPriceCurrency.getRate()));
-        requiredAmount = totalPrice - (firstCurrencyInDefaultValue + secondCurrencyInDefaultValue);
-        if (requiredAmount > 0) {
-            tvRequiredAmount.setText(valueView(requiredAmount / rCurrency.getRate()));
-        } else {
-            requiredAmount = 0;
-            tvRequiredAmount.setText(valueView(requiredAmount / rCurrency.getRate()));
-        }
+        tvRequiredAmount.setText(valueView(((totalPriceInDefaultValue) - (firstCurrencyInDefaultValue + secondCurrencyInDefaultValue)) / rCurrency.getRate()));
         calculateExcess();
     }
 
@@ -312,8 +306,6 @@ public class CashActivity extends AppCompatActivity {
             firstCurrencyInDefaultValue = Double.parseDouble(etFirstCurrency.getText().toString()) * fCurrency.getRate();
         if (!etSecondCurrency.getText().toString().equals(""))
             secondCurrencyInDefaultValue = Double.parseDouble(etSecondCurrency.getText().toString()) * sCurrency.getRate();
-        if (!tvRequiredAmount.getText().toString().equals(""))
-            requiredAmount = Double.parseDouble(tvRequiredAmount.getText().toString()) * rCurrency.getRate();
         calculatePaid();
     }
 

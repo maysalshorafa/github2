@@ -25,16 +25,19 @@ public class SETTINGS {
     public static boolean LOADED_DATA ;
 
 	public static String customer_name ;
+
 	public static PrinterType printer ;
 	public static boolean enableCurrencies ;
 	public static int decimalNumbers  ;
+
 
 	public static boolean enableCustomerMeasurement;
 
 	public static boolean creditCardEnable;
 
 	//public static String BO_SERVER_URL = "http://172.16.0.44:8080/leadBO/webapi/";
-	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
-	public static String BO_SERVER_URL = "http://192.168.1.13:8080/webapi/";
+	public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
+	//public static String BO_SERVER_URL = "http:/ /192.168.1.106:8080/leadBO/webapi/";
+
 
 }

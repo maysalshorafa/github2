@@ -39,6 +39,9 @@ public class ScheduleWorkers {
         this(scheduleWorkers.getId(),scheduleWorkers.getUserId(),scheduleWorkers.getDate(),scheduleWorkers.getStartTime(),scheduleWorkers.getExitTime());
     }
 
+    public ScheduleWorkers() {
+    }
+
     // Getters
     public long getId() {
         return id;

@@ -8,6 +8,9 @@ public class PermissionNameClassObj {
     private String PermissionName;
     private Class<?> PermissionClass;
 
+    public PermissionNameClassObj() {
+    }
+
     public PermissionNameClassObj(String permissionName, Class<?> permissionClass) {
         PermissionName = permissionName;
         PermissionClass = permissionClass;

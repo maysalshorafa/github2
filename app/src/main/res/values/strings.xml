@@ -473,5 +473,5 @@
     <string name="choose_no_of_float_point"> Choose No Of Float Point</string>
     <string name="choose_printer_type">Choose Printer Type</string>
 
-
+    <string name="delete_check">Delete Check</string>
 </resources>

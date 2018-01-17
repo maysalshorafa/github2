@@ -13,6 +13,9 @@ public class CustomerAssistant {
         return saleDate;
     }
 
+    public CustomerAssistant() {
+    }
+
     public void setSaleDate(long saleDate) {
         this.saleDate = saleDate;
     }

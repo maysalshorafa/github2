@@ -10,6 +10,9 @@ import com.pos.leaders.leaderspossystem.MainActivity;
 
 public class OfferRule {
 
+    public OfferRule() {
+    }
+
     public OfferRule(Context context) {
     }
 

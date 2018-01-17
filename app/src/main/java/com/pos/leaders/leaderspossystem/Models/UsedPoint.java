@@ -10,6 +10,9 @@ public class UsedPoint {
     public int unUsedpoint_amount;
     public long custmerId;
 
+    public UsedPoint() {
+    }
+
     public UsedPoint(long id, long saleId, int unUsedpoint_amount, long custmerId) {
         this.id = id;
         this.saleId = saleId;

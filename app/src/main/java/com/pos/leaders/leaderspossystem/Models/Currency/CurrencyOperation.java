@@ -14,6 +14,9 @@ public class CurrencyOperation {
     private double amount;
     private long currency_type;
 
+    public CurrencyOperation() {
+    }
+
     public CurrencyOperation(long id, Date createDate, long operation_id, String operation_type, double amount, long currency_type) {
         this.id = id;
         this.createDate = createDate;

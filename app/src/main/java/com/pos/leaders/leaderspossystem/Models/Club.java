@@ -26,6 +26,8 @@ public class Club {
 
     private boolean hide;
 
+    public Club() {
+    }
 
     public Club(long id, String name, String description, int type, float parcent, int amount, int point, boolean hide) {
         this.id=id;

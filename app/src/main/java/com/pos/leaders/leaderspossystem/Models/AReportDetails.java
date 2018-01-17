@@ -11,6 +11,10 @@ public class AReportDetails {
     private long type;
     private  double amount_in_basic_currency ;
 
+
+    public AReportDetails() {
+    }
+
     public AReportDetails(long id, long a_report_id, double amount, long type, double amount_in_basic_currency) {
         this.id = id;
         this.a_report_id = a_report_id;

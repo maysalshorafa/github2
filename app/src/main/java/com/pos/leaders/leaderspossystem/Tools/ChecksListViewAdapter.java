@@ -1,16 +1,22 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.ChecksActivity;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.R;
 
@@ -29,6 +35,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 	private List<Check> checks;
 	private LayoutInflater inflater;
 	private int bgColor = 0;
+	private  double amount=0;
 
 	public ChecksListViewAdapter(Context context, int resource, List<Check> checks) {
 		super(context, resource, checks);
@@ -42,6 +49,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 	@NonNull
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
+
 		ViewHolder holder = null;
 		if (convertView == null) {
 			holder = new ViewHolder();
@@ -53,18 +61,33 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 			holder.etBenchNum = (EditText) convertView.findViewById(R.id.listChecks_ETBranchNum);
 			holder.etCheckNum = (EditText) convertView.findViewById(R.id.listChecks_ETCheckNumber);
 			holder.etDate = (EditText) convertView.findViewById(R.id.listChecks_ETDate);
+			holder.btnDelete = (ImageView) convertView.findViewById(R.id.btn_delete_check);
 
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
+
 		if (checks.get(position) != null) {
-			holder.etAccountNum.setText(checks.get(position).getAccountNum()+"");
-			holder.etAmount.setText(checks.get(position).getAmount() + "");
-			holder.etBankNum.setText(checks.get(position).getBankNum()+"");
-			holder.etBenchNum.setText(checks.get(position).getBranchNum()+"");
-			holder.etCheckNum.setText(checks.get(position).getCheckNum()+"");
-			holder.etDate.setText(DateConverter.toDate(checks.get(position).getDate()));
+			if(position==0){
+				holder.etAmount.setHint(checks.get(position).getAmount() + "");
+				holder.etBankNum.setHint(checks.get(position).getBankNum() + "");
+				holder.etBenchNum.setHint(checks.get(position).getBranchNum() + "");
+				holder.etCheckNum.setHint(checks.get(position).getCheckNum() + "");
+				holder.etDate.setText(DateConverter.toDate(checks.get(position).getDate()));
+				holder.etAccountNum.setHint(checks.get(position).getAccountNum() + "");
+				amount=checks.get(position).getAmount() ;
+
+
+			}else {
+				holder.etAccountNum.setText(checks.get(position).getAccountNum() + "");
+				holder.etAmount.setText(checks.get(position).getAmount() + "");
+				holder.etBankNum.setText(checks.get(position).getBankNum() + "");
+				holder.etBenchNum.setText(checks.get(position).getBranchNum() + "");
+				holder.etCheckNum.setText(checks.get(position).getCheckNum() + "");
+				holder.etDate.setText(DateConverter.toDate(checks.get(position).getDate()));
+
+			}
 		}
 		if(bgColor%2==0){
 			convertView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
@@ -95,6 +118,13 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 						myCalendar.get(Calendar.DAY_OF_MONTH)).show();
 			}
 		});
+		holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ChecksActivity checksActivity = (ChecksActivity)getContext();
+				checksActivity.delete(position);
+			}
+		});
 		return convertView;
 	}
 
@@ -110,28 +140,63 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		private EditText etBenchNum;
 		private EditText etAccountNum;
 		private EditText etCheckNum;
+		private ImageView btnDelete;
 
 		public int getEtAccountNum() {
+			if(etAccountNum.getText().toString().equals("")){
+				String s= "0";
+				etAccountNum.setText(s);
+				return Integer.parseInt(etAccountNum.getText().toString());
+			}
 			return Integer.parseInt(etAccountNum.getText().toString());
 		}
 
 		public Double getEtAmount() {
+			if(etAmount.getText().toString().equals("")){
+				String s= "0";
+				etAmount.setText(s);
+				return Double.parseDouble(etAmount.getText().toString());
+			}
+			if(amount>0){
+				etAmount.setHint(Util.makePrice(amount));
+				return Double.parseDouble(etAmount.getText().toString());
+			}
 			return Double.parseDouble(etAmount.getText().toString());
 		}
 
 		public int getEtBankNum() {
+			if(etBankNum.getText().toString().equals("")){
+				String s= "0";
+				etBankNum.setText(s);
+				return Integer.parseInt(etBankNum.getText().toString());
+			}
 			return Integer.parseInt(etBankNum.getText().toString());
 		}
 
 		public int getEtBenchNum() {
+			if(etBenchNum.getText().toString().equals("")){
+				String s= "0";
+				etBenchNum.setText(s);
+				return Integer.parseInt(etBenchNum.getText().toString());
+			}
 			return Integer.parseInt(etBenchNum.getText().toString());
 		}
 
 		public int getEtCheckNum() {
+			if(etCheckNum.getText().toString().equals("")){
+				String s= "0";
+				etCheckNum.setText(s);
+				return Integer.parseInt(etCheckNum.getText().toString());
+			}
 			return Integer.parseInt(etCheckNum.getText().toString());
 		}
 
 		public String getEtDate() {
+			if(etDate.equals("")){
+				String s= "0";
+				etDate.setText(s);
+				return etDate.getText().toString();
+			}
 			return etDate.getText().toString();
 		}
 	}

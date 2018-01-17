@@ -50,6 +50,9 @@ public class Permissions {
 	//region Constructors
 
 
+	public Permissions() {
+	}
+
 	public Permissions(long id, String name) {
 		this.id = id;
 		this.name = name;
