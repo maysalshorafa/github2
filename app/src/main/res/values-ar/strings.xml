@@ -202,6 +202,9 @@
     <string name="club">نادي اعضاء</string>
     <string name="make_your_selection"></string>
     <string name="success_to_save_settings">تم حفظ اعدادات الشركة</string>
-
+    <string name="currency">العملات</string>
+    <string name="customer_measurement">قياسات الزبون</string>
+    <string name="choose_no_of_float_point"> اختر عدد المنازل العشرية</string>
+    <string name="choose_printer_type">اختر نوع الطابعة</string>
 
 </resources>

@@ -1,6 +1,10 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 
 /**
  * Created by KARAM on 30/10/2016.
@@ -21,16 +25,19 @@ public class SETTINGS {
     public static boolean LOADED_DATA ;
 
 	public static String customer_name ;
-	public static PrinterType printer = PrinterType.HPRT_TP805;
-	public static boolean enableCurrencies = false;
-	public static int decimalNumbers = 2 ;
 
-	public static boolean enableCustomerMeasurement = true;
+	public static PrinterType printer ;
+	public static boolean enableCurrencies ;
+	public static int decimalNumbers  ;
 
-	public static boolean creditCardEnable = true;
+
+	public static boolean enableCustomerMeasurement;
+
+	public static boolean creditCardEnable;
 
 	//public static String BO_SERVER_URL = "http://172.16.0.44:8080/leadBO/webapi/";
-//	public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
-	public static String BO_SERVER_URL = "http:/ /192.168.1.106:8080/leadBO/webapi/";
+	public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
+	//public static String BO_SERVER_URL = "http:/ /192.168.1.106:8080/leadBO/webapi/";
+
 
 }
