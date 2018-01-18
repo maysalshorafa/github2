@@ -215,7 +215,6 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(LogInActivity.this);
                 zReportDBAdapter.open();
                 //get ZReport TotalAmount
-
                 if(DbHelper.DATABASE_ENABEL_ALTER_COLUMN){
                     zReportDBAdapter.test();
                     DbHelper.DATABASE_ENABEL_ALTER_COLUMN=false;

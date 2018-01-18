@@ -230,13 +230,25 @@ public class ZReportDBAdapter {
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
         zReportDBAdapter.open();
         List<ZReport> zReportList = calculateZReportAmount();
+        List<ZReport> zl = new ArrayList<ZReport>();
+        zl.addAll(zReportList);
         double totalAmount =0;
-        for (ZReport zReport1 : zReportList){
+        for (int  i= 0 ; i<zl.size();i++){
+            ZReport zReport1 = zl.get(i);
             double amount = zReportDBAdapter.getZReportAmount(zReport1.getStartSaleId(),zReport1.getEndSaleId());
             totalAmount+=amount;
-            zReport1.setAmount(amount);
-            zReport1.setTotal_amount(totalAmount);
+            ZReport zReport =new ZReport(zl.get(i).getId(),zl.get(i).getCreationDate(),zl.get(i).getByUser(),zl.get(i).getStartSaleId(),zl.get(i).getEndSaleId(),amount,totalAmount);
+            updateEntry(zReport);
         }
+    }
+    public void updateEntry(ZReport zReport) {
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(Z_REPORT_COLUMN_AMOUNT, zReport.getAmount());
+        val.put(Z_REPORT_COLUMN_TOTAL_AMOUNT, zReport.getTotal_amount());
+
+        String where = Z_REPORT_COLUMN_ID + " = ?";
+        db.update(Z_REPORT_TABLE_NAME, val, where, new String[]{zReport.getId() + ""});
     }
 
 }
