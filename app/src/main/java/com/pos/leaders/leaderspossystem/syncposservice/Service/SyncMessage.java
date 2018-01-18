@@ -209,9 +209,9 @@ public class SyncMessage extends Service {
                         try {
                             getSync();
                         } catch (IOException | JSONException | NullPointerException e) {
-                            isRunning = false;
+                            //isRunning = false;
                             e.printStackTrace();
-                            stopSelf();
+                            //stopSelf();
                         }
 
                         try {

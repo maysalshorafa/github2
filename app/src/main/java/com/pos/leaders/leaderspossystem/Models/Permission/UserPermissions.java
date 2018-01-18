@@ -15,6 +15,9 @@ import java.util.List;
 public class UserPermissions {
 
 
+	public UserPermissions() {
+	}
+
 	public UserPermissions(Context context) {
 
 	}

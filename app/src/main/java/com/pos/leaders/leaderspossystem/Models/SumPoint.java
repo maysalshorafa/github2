@@ -10,6 +10,10 @@ public class SumPoint {
     private int pointAmount;
     private long customer_id;
 
+
+    public SumPoint() {
+    }
+
     public SumPoint(long id, long saleId, int pointAmount, long customer_id) {
         this.id = id;
         this.saleId = saleId;

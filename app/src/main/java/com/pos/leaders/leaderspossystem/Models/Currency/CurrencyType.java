@@ -9,6 +9,9 @@ public class CurrencyType {
     private long id;
     private String type;
 
+    public CurrencyType() {
+    }
+
     public CurrencyType(long id, String type) {
         this.id = id;
         this.type = type;

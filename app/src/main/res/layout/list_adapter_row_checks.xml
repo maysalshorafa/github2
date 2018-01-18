@@ -7,65 +7,101 @@
     android:layout_height="match_parent"
     android:layoutDirection="rtl"
     android:orientation="horizontal"
-    android:paddingBottom="20dp"
-    android:paddingTop="20dp">
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
 
-    <EditText
-        android:id="@+id/listChecks_ETAmount"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline38"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_weight="3"
+        android:padding="10dp">
 
-    <EditText
-        android:id="@+id/listChecks_ETDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:editable="false"/>
+        <EditText
+            android:id="@+id/listChecks_ETAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="numberDecimal"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline38"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
 
-    <EditText
-        android:id="@+id/listChecks_ETCheckNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ems="10"
-        android:inputType="number"
-        tools:layout_editor_absoluteX="318dp"
-        tools:layout_editor_absoluteY="160dp" />
 
-    <EditText
-        android:id="@+id/listChecks_ETBankNum"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ems="10"
-        android:inputType="number"
-        tools:layout_editor_absoluteX="545dp"
-        tools:layout_editor_absoluteY="164dp" />
+            />
 
-    <EditText
-        android:id="@+id/listChecks_ETBranchNum"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ems="10"
-        android:inputType="number"
-        tools:layout_editor_absoluteX="512dp"
-        tools:layout_editor_absoluteY="401dp" />
+        <EditText
+            android:id="@+id/listChecks_ETDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:editable="false"
+            android:gravity="center" />
 
-    <EditText
-        android:id="@+id/listChecks_ETAccountNum"
-        android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/listChecks_ETCheckNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="number"
+            tools:layout_editor_absoluteX="318dp"
+            tools:layout_editor_absoluteY="160dp" />
+
+        <EditText
+            android:id="@+id/listChecks_ETBankNum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="number"
+            tools:layout_editor_absoluteX="545dp"
+            tools:layout_editor_absoluteY="164dp" />
+
+        <EditText
+            android:id="@+id/listChecks_ETBranchNum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="number"
+            tools:layout_editor_absoluteX="512dp"
+            tools:layout_editor_absoluteY="401dp" />
+
+        <EditText
+            android:id="@+id/listChecks_ETAccountNum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="number"
+            tools:layout_editor_absoluteX="33dp"
+            tools:layout_editor_absoluteY="223dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ems="10"
-        android:inputType="number"
-        tools:layout_editor_absoluteX="33dp"
-        tools:layout_editor_absoluteY="223dp" />
+        android:id="@+id/lLayout_delete_check"
+  >
+
+        <ImageView
+            android:id="@+id/btn_delete_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/delete_check"
+            android:layout_gravity="center"
+
+            android:src="@drawable/delete_button"
+          />
+    </LinearLayout>
 </LinearLayout>

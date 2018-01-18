@@ -25,9 +25,11 @@ public class SETTINGS {
     public static boolean LOADED_DATA ;
 
 	public static String customer_name ;
+
 	public static PrinterType printer ;
 	public static boolean enableCurrencies ;
 	public static int decimalNumbers  ;
+
 
 	public static boolean enableCustomerMeasurement;
 

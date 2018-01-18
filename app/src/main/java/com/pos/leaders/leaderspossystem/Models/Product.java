@@ -24,7 +24,9 @@ public class Product {
     private double costPrice;
     private boolean withTax;
     private boolean weighable;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+
     private Date creatingDate;
     private boolean hide;
     private long departmentId;
@@ -37,6 +39,8 @@ public class Product {
     public Product(int i, String string) {
 
     }
+
+
 
 
     //Product with -1 value on id this is a general product
