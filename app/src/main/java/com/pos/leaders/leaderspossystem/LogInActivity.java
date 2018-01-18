@@ -217,11 +217,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 //get ZReport TotalAmount
 
                 if(DbHelper.DATABASE_ENABEL_ALTER_COLUMN){
-                    try {
-                        zReportDBAdapter.calculateZReportAmount();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    zReportDBAdapter.test();
                     DbHelper.DATABASE_ENABEL_ALTER_COLUMN=false;
                 }
                 LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT = zReportDBAdapter.zReportTotalAmount();

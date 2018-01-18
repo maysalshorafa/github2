@@ -215,25 +215,28 @@ public class ZReportDBAdapter {
         }
         return  0;
     }
-    public void calculateZReportAmount(){
+    public List<ZReport> calculateZReportAmount(){
+        List<ZReport> zReportList = new ArrayList<ZReport>();
+        Cursor cursor = db.rawQuery("select * from "+Z_REPORT_TABLE_NAME,null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+                zReportList.add(makeZReport(cursor));
+            cursor.moveToNext();
+        }
+
+        return zReportList;
+    }
+    public void  test(){
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
         zReportDBAdapter.open();
+        List<ZReport> zReportList = calculateZReportAmount();
         double totalAmount =0;
-        List<ZReport> zReportList = new ArrayList<ZReport>();
-
-        Cursor cursor = db.rawQuery(" select * from " + Z_REPORT_TABLE_NAME , null);
-        cursor.moveToFirst();
-
-        while (!cursor.isAfterLast()) {
-            zReportList.add(makeZReport(cursor));
-        }
         for (ZReport zReport1 : zReportList){
-          double amount = zReportDBAdapter.getZReportAmount(zReport1.getStartSaleId(),zReport1.getEndSaleId());
+            double amount = zReportDBAdapter.getZReportAmount(zReport1.getStartSaleId(),zReport1.getEndSaleId());
             totalAmount+=amount;
             zReport1.setAmount(amount);
             zReport1.setTotal_amount(totalAmount);
         }
-        zReportDBAdapter.close();
     }
 
 }
