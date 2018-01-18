@@ -222,6 +222,7 @@ public class ZReportDBAdapter {
         List<ZReport> zReportList = new ArrayList<ZReport>();
 
         Cursor cursor = db.rawQuery(" select * from " + Z_REPORT_TABLE_NAME , null);
+        cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
             zReportList.add(makeZReport(cursor));
