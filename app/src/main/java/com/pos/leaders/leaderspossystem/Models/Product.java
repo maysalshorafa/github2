@@ -24,8 +24,9 @@ public class Product {
     private double costPrice;
     private boolean withTax;
     private boolean weighable;
-    @JsonFormat
-    (shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+
     private Date creatingDate;
     private boolean hide;
     private long departmentId;

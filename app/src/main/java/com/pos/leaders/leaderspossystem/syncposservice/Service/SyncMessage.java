@@ -239,15 +239,21 @@ public class SyncMessage extends Service {
                 JSONObject jsonObject = new JSONObject(res);
 
                 //todo: execute the command
-                if (executeMessage(jsonObject)) {
-                    String resp = messageTransmit.authPost(ApiURL.Sync, MessagesCreator.acknowledge(jsonObject.getInt(MessageKey.Ak)), token);
-                    Log.i(TAG, "getSync: " + resp);
-                    if (resp.equals(MessageResult.Invalid)) {
-                        //stop
-                        return;
-                    } else if (resp.equals(MessageResult.OK)) {
-                        getSync();
+                try {
+
+
+                    if (executeMessage(jsonObject)) {
+                        String resp = messageTransmit.authPost(ApiURL.Sync, MessagesCreator.acknowledge(jsonObject.getInt(MessageKey.Ak)), token);
+                        Log.i(TAG, "getSync: " + resp);
+                        if (resp.equals(MessageResult.Invalid)) {
+                            //stop
+                            return;
+                        } else if (resp.equals(MessageResult.OK)) {
+                            getSync();
+                        }
                     }
+                } catch (SQLiteConstraintException e) {
+                    e.printStackTrace();
                 }
             } else if (res.equals(MessageResult.Invalid)) {
                 //todo: there is no update is coming
@@ -259,7 +265,7 @@ public class SyncMessage extends Service {
         }
     }
 
-    private boolean executeMessage(JSONObject jsonObject) throws JSONException, IOException {
+    private boolean executeMessage(JSONObject jsonObject) throws JSONException, IOException ,SQLiteConstraintException {
         Log.i(TAG, jsonObject.toString());
         long rID = 0;
         if(jsonObject.has(MessageKey.MessageType)) {
@@ -569,7 +575,12 @@ public class SyncMessage extends Service {
 
                     ProductDBAdapter productDBAdapter = new ProductDBAdapter(this);
                     productDBAdapter.open();
-                    rID = productDBAdapter.insertEntry(p);
+                    try {
+                        rID = productDBAdapter.insertEntry(p);
+                    } catch (Exception ex) {
+                        rID = 0;
+                        ex.printStackTrace();
+                    }
                     productDBAdapter.close();
 
                     break;
