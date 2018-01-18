@@ -37,8 +37,7 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
-
-
+    protected static final int DATABASE_VERSION = 2;
     protected static final String DATABASE_NAME = "POSDB.db";
     protected static final String CONTACTS_TABLE_NAME = "contacts";
     protected static final String CONTACTS_COLUMN_ID = "id";
@@ -48,13 +47,14 @@ public class DbHelper extends SQLiteOpenHelper {
     protected static final String CONTACTS_COLUMN_CITY = "place";
     protected static final String CONTACTS_COLUMN_PHONE = "phone";
     private HashMap hp;
-
     private Context context;
-
+    private static final String DATABASE_ADD_COLUMN_AMOUNT = "ALTER TABLE " + "z_report" + " ADD COLUMN " + "amount" + " REAL;"; // Add column to exist table
+    private static final String DATABASE_ADD_COLUMN_TOTAL_AMOUNT = "ALTER TABLE " + "z_report" + " ADD COLUMN " + "total_amount" + " REAL;"; // Add column to exist table
+    public static boolean DATABASE_ENABEL_ALTER_COLUMN = false;
     //21
     public DbHelper(Context context)
     {
-        super(context, DATABASE_NAME ,null,1);
+        super(context, DATABASE_NAME ,null,DATABASE_VERSION);
         this.context = context;
     }
 
@@ -206,11 +206,17 @@ public class DbHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if(oldVersion<2){
+            db.execSQL(DATABASE_ADD_COLUMN_AMOUNT);
+            db.execSQL(DATABASE_ADD_COLUMN_TOTAL_AMOUNT);
+            DATABASE_ENABEL_ALTER_COLUMN=true;
+
+        }
         // TODO Auto-generated method stub
         // Log the version upgrade.
         Log.w("TaskDBAdapter", "Upgrading from version " +oldVersion + " to " +newVersion + ", which will destroy all old data");
         //db.execSQL("DROP TABLE IF EXISTS contacts");
-        onCreate(db);
+        //onCreate(db);
     }
 
     /*
@@ -355,4 +361,5 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (5,'True','Boolean','C',0);");
         db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (6,'False','Boolean','C',0);");
     }
+
 }
