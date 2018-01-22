@@ -151,5 +151,10 @@ public class CustomerMeasurementDBAdapter {
 
         return customerMeasurementList;
     }
+    public int noOfCustomerMeasurement(long customerId){
+        Cursor cursor = db.rawQuery("select * from " + CUSTOMER_MEASUREMENT_TABLE_NAME + " where " + CUSTOMER_MEASUREMENT_COLUMN_CUSTOMER_ID + " = "+ customerId, null);
+        int count = cursor.getCount();
+        return  count;
+    }
 }
 

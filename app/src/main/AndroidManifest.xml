@@ -126,9 +126,10 @@
         <activity android:name=".WorkerManagementActivity" />
         <activity android:name=".CustomerAndClub.CustomerMeasurementManagementActivity" />
         <activity android:name=".CreditCard.MainCreditCardActivity" />
-        <activity android:name=".SetUpManagement"
-            android:theme="@style/AppTheme.NoActionBar"
-           ></activity>
+        <activity
+            android:name=".SetUpManagement"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".CustomerAndClub.AddCustomerMeasurement"></activity>
     </application>
 
 </manifest>

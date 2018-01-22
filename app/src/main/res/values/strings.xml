@@ -134,14 +134,14 @@
     <string name="credit_type">Credit Type</string>
     <string name="transfer_credit_card">Transfer credit card</string>
     <string-array name="credit_card_type">
-      <!--  <item>רגיל</item>
+        <!--  <item>רגיל</item>
         <item>ישרא/אמקס קרדיט  ויזה/דיינרס עדיף \n\r    פלוס30 </item>
         <item>חיוב מיידי</item>
         <item> מועדון אשראי</item>
         <item>סופר קרדיט</item>-->
         <item>תשלומים</item>
         <item>קרדיט/קרדיט בתשלומים קבועים</item>
-      <!--  <item>עסקת מועדון בתשלומים</item>-->
+        <!--  <item>עסקת מועדון בתשלומים</item>-->
     </string-array>
     <string name="wait_for_accept">Wait for accept</string>
     <string name="please_select_item">Please Select Item From The Cart</string>
@@ -452,6 +452,7 @@
     <string name="cancel_measurement">Cancel Measurement</string>
     <string name="duplicate_measurement">Duplicate Measurement</string>
     <string name="update_measurement">Update Measurement</string>
+    <string name="no_of_measurement">No Of Measurement</string>
 
 
     <string name="different"> Different</string>

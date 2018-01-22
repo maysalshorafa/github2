@@ -147,19 +147,12 @@ public class MeasurementsDetailsDBAdapter {
     // end
 
     // get MeasurementsDetails by measurementsId
-    public MeasurementsDetails getMeasurementDetailsByMeasurementsId(long measurementId) {
+    public int getMeasurementDetailsByMeasurementsId(long measurementId) {
         MeasurementsDetails measurementsDetails = null;
         Cursor cursor = db.rawQuery("select * from " + MEASUREMENTS_DETAILS_TABLE_NAME + " where measurementId='" + measurementId + "'", null);
-        if (cursor.getCount() < 1)
-        {
-            cursor.close();
-            return measurementsDetails;
-        }
-        cursor.moveToFirst();
-        measurementsDetails = new MeasurementsDetails(makeMeasurementDetails(cursor));
-        cursor.close();
+            int count = cursor.getCount();
+            return  count;
 
-        return measurementsDetails;
     }
     // end
     // UPDate MeasurementsDetails

@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem.CustomerAndClub;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasurement;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDynamicVariable;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
@@ -25,12 +27,15 @@ public class CustomerMeasurementCatalogGridViewAdapter extends BaseAdapter {
     private Context context;
     private List<CustomerMeasurement> customerMeasurements;
     private LayoutInflater inflater;
-
-    public CustomerMeasurementCatalogGridViewAdapter(Context context, List<CustomerMeasurement> customerMeasurements) {
+    private int resource;
+    int bgColor =0;
+    public CustomerMeasurementCatalogGridViewAdapter(Context context, int resource, List<CustomerMeasurement> customerMeasurements) {
+        this.context = context;
+        this.resource = resource;
         this.context = context;
         this.customerMeasurements = customerMeasurements;
+        bgColor=0;
     }
-
 
     /**
      * How many items are in the data set represented by this Adapter.
@@ -97,38 +102,21 @@ public class CustomerMeasurementCatalogGridViewAdapter extends BaseAdapter {
             inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             gridView=inflater.inflate(R.layout.grid_view_item_customer_measurement,null);
         }
-        TextView tvMeasurementId=(TextView)gridView.findViewById(R.id.customerMeasurementGridView_TVMeasurementId);
-       // TextView tvMeasurementName=(TextView)gridView.findViewById(R.id.customerMeasurementGridView_TVMeasurementName);
-  //      TextView tvMeasurementType=(TextView)gridView.findViewById(R.id.customerMeasurementGridView_TVMeasurementType);
-    //    TextView tvMeasurementValue=(TextView)gridView.findViewById(R.id.customerMeasurementGridView_TVMeasurementValue);
-        TextView tvMeasurementVisitDate=(TextView)gridView.findViewById(R.id.customerMeasurementGridView_TVMeasurementVisitDate);
+        final TextView tvMeasurementId=(TextView)gridView.findViewById(R.id.customerMeasurementGridView_TVMeasurementId);
+        final TextView tvNoOfMeasurement=(TextView)gridView.findViewById(R.id.customerMeasurementGridView_TVNoOfMeasurement);
+        final TextView tvMeasurementVisitDate=(TextView)gridView.findViewById(R.id.customerMeasurementGridView_TVMeasurementVisitDate);
 
-        //Set AllValue
-        tvMeasurementId.setText(customerMeasurements.get(position).getId()+""); //MeasurementId
-        //Set Date
-     /**   CustomerMeasurementDBAdapter customerMeasurementDBAdapter = new CustomerMeasurementDBAdapter(context);
-        customerMeasurementDBAdapter.open();
-        CustomerMeasurement customerMeasurement = customerMeasurementDBAdapter.getCustomerMeasurementByID(customerMeasurements.get(position).getMeasurementId());**/
+        tvMeasurementId.setText((position+1)+""); //MeasurementId
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         tvMeasurementVisitDate.setText(format.format(customerMeasurements.get(position).getVisitDate()));
-        //end
-        // Set Name , type of measurementDynamicVariable
-     /**   MeasurementDynamicVariableDBAdapter measurementDynamicVariableDBAdapter = new MeasurementDynamicVariableDBAdapter(context);
-        measurementDynamicVariableDBAdapter.open();
-        MeasurementDynamicVariable measurementDynamicVariable = measurementDynamicVariableDBAdapter.getMeasurementDynamicVariableByID(customerMeasurements.get(position).getDynamicVarId());
-     //   tvMeasurementName.setText(measurementDynamicVariable.getName());
-       tvMeasurementType.setText(measurementDynamicVariable.getType());
-        if(measurementDynamicVariable.getType().equalsIgnoreCase("Boolean")){
-            if(customerMeasurements.get(position).getValue().equalsIgnoreCase("1")){
-                tvMeasurementValue.setText("True");
-
-            }else {
-                tvMeasurementValue.setText("False");
-
-            }
-        }else {
-        // end
-        tvMeasurementValue.setText(customerMeasurements.get(position).getValue());}**/
+        MeasurementsDetailsDBAdapter measurementsDetailsDBAdapter = new MeasurementsDetailsDBAdapter(context);
+        measurementsDetailsDBAdapter.open();
+        int noOfMeasurement = measurementsDetailsDBAdapter.getMeasurementDetailsByMeasurementsId(customerMeasurements.get(position).getId());
+        tvNoOfMeasurement.setText(noOfMeasurement+" ");
+        if(bgColor%2==0){
+            gridView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
+        }
+        bgColor++;
         return gridView;
     }
 
