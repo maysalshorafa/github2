@@ -29,7 +29,7 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 public class SetUpManagement extends AppCompatActivity {
     CheckBox currencyCheckBox, creditCardCheckBox, customerMeasurementCheckBox;
-    Spinner printerTypeSpinner, floatPointSpinner;
+    Spinner printerTypeSpinner, floatPointSpinner ,serverInfoSpinner;
     Button saveButton, editButton;
     ImageView currencyImage, customerMeasurementImage, creditCardImage;
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY";
@@ -37,12 +37,13 @@ public class SetUpManagement extends AppCompatActivity {
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO";
     boolean currencyEnable, creditCardEnable, customerMeasurementEnable = false;
     int noOfPoint;
-    String printerType;
+    String printerType , serverType;
     ArrayAdapter<String> spinnerArrayAdapter;
     ArrayAdapter<Integer> floatPointSpinnerArrayAdapter;
-
+    ArrayAdapter<String> serverSpinnerArrayAdapter;
     public final static String POS_Management = "POS_Management";
     public static Context context = null;
 
@@ -63,6 +64,7 @@ public class SetUpManagement extends AppCompatActivity {
         customerMeasurementCheckBox = (CheckBox) findViewById(R.id.setUpManagementCustomerMeasurementCheckBox);
         floatPointSpinner = (Spinner) findViewById(R.id.setUpManagementFloatPointSpinner);
         printerTypeSpinner = (Spinner) findViewById(R.id.setUpManagementPrinterTypeSpinner);
+        serverInfoSpinner = (Spinner)findViewById(R.id.setUpManagementServerTypeSpinner);
         saveButton = (Button) findViewById(R.id.setUpManagementSaveButton);
         editButton = (Button) findViewById(R.id.setUpManagementEditButton);
         currencyImage = (ImageView) findViewById(R.id.currencyImage);
@@ -76,13 +78,20 @@ public class SetUpManagement extends AppCompatActivity {
 
         String printer[] = {PrinterType.BTP880.name(), PrinterType.HPRT_TP805.name(), PrinterType.SUNMI_T1.name(), PrinterType.SM_S230I.name(), PrinterType.WINTEC_BUILDIN.name()};
         final Integer[] floatPoint = {2, 0, 1, 3};
+        String server[] = {"UM_EL_FAHEM","NABLUS"};
+
+        serverSpinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, server);
+        serverSpinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
 
         spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, printer);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+
         floatPointSpinnerArrayAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, floatPoint);
         floatPointSpinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+
         printerTypeSpinner.setAdapter(spinnerArrayAdapter);
         floatPointSpinner.setAdapter(floatPointSpinnerArrayAdapter);
+        serverInfoSpinner.setAdapter(serverSpinnerArrayAdapter);
         currencyCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -142,6 +151,18 @@ public class SetUpManagement extends AppCompatActivity {
 
             }
         });
+        serverInfoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                serverType = serverSpinnerArrayAdapter.getItem(position);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,6 +173,14 @@ public class SetUpManagement extends AppCompatActivity {
                 editor.putBoolean(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, customerMeasurementEnable);
                 editor.putInt(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, noOfPoint);
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, printerType);
+                if (serverType.equals("UM_EL_FAHEM")) {
+                    editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO, SETTINGS.BO_SERVER_UM_EL_FAHEM_URL);
+                }
+                else {
+                    editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO, SETTINGS.BO_SERVER_NABLUS_URL);
+
+                }
+
                 editor.apply();
                 Intent i = new Intent(SetUpManagement.this, SetupNewPOSOnlineActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -212,6 +241,18 @@ public class SetUpManagement extends AppCompatActivity {
                         editor.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, editPrinterType);
                         PrinterType printer = PrinterType.valueOf(editPrinterType);
                    SETTINGS.printer=printer;
+                    }
+                    //ServerType
+                    if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO)) {
+                        String editServerInfo = serverType;
+                        if (editServerInfo.equals("UM_EL_FAHEM")){
+                            editor.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO, SETTINGS.BO_SERVER_UM_EL_FAHEM_URL);
+                            SETTINGS.BO_SERVER_URL=SETTINGS.BO_SERVER_UM_EL_FAHEM_URL;                        }
+                        else {
+                            editor.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO, SETTINGS.BO_SERVER_NABLUS_URL);
+                            SETTINGS.BO_SERVER_URL=SETTINGS.BO_SERVER_NABLUS_URL;
+                        }
+
                     }
                 }
                 editor.apply();

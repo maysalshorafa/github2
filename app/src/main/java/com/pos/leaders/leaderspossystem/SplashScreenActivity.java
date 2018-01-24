@@ -56,7 +56,7 @@ public class SplashScreenActivity extends Activity {
     private ZReport lastZReport = null;
     public static boolean  currencyEnable , creditCardEnable , customerMeasurementEnable ;
     public static int floatPoint;
-    public static String printerType;
+    public static String printerType ,serverInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -527,6 +527,17 @@ public class SplashScreenActivity extends Activity {
                 printerType =cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE,PrinterType.HPRT_TP805.name());
                 PrinterType printer = PrinterType.valueOf(printerType);
                 SETTINGS.printer=printer;
+            }
+            else {
+                Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
+                startActivity(i);
+            }
+            //ServerType
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO)) {
+                serverInfo =cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO,SETTINGS.BO_SERVER_NABLUS_URL);
+
+                SETTINGS.BO_SERVER_URL=serverInfo;
+
             }
             else {
                 Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);

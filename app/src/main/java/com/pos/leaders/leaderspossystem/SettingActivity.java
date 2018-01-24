@@ -26,7 +26,7 @@ public class SettingActivity extends AppCompatActivity {
     EditText etCompanyName, etPrivateCompany, etTax, etTerminalNumber, etTerminalPassword,etInvoiceNote;
     Button btSave, btCancel , btnEditPosSetting;
     CheckBox currencyCheckBox , creditCardCheckBox , customerMeasurementCheckBox ;
-    TextView floatPointNo , printerTypeTv ;
+    TextView floatPointNo , printerTypeTv ,serverInfoTV ;
     public static final String LEAD_POS_RESULT_INTENT_SETTING_ENABLE_EDIT = "LEAD_POS_RESULT_INTENT_SETTING_ENABLE_EDIT";
 
     @Override
@@ -57,6 +57,12 @@ public class SettingActivity extends AppCompatActivity {
         customerMeasurementCheckBox = (CheckBox) findViewById(R.id.setUpManagementCustomerMeasurementCheckBox);
         floatPointNo = (TextView)findViewById(R.id.noOfFloatPoint);
         printerTypeTv = (TextView)findViewById(R.id.printerType);
+        serverInfoTV = (TextView)findViewById(R.id.serverInfo);
+        if(SETTINGS.BO_SERVER_URL.equals(SETTINGS.BO_SERVER_UM_EL_FAHEM_URL)){
+            serverInfoTV.setText("UM_EL_FAHEM Server");
+        }else {
+            serverInfoTV.setText("Nablus Server");
+        }
         floatPointNo.setText(SETTINGS.decimalNumbers+" ");
         printerTypeTv.setText(SETTINGS.printer.toString());
         if(SETTINGS.enableCurrencies){
