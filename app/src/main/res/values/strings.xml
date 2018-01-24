@@ -472,6 +472,7 @@
     <string name="active_customer_measurement_service_in_pos">If you want to active CustomerMeasurement Service in your Pos Check the CustomerMeasurement CheckBox</string>
     <string name="choose_no_of_float_point"> Choose No Of Float Point</string>
     <string name="choose_printer_type">Choose Printer Type</string>
-
+    <string name="success_edit_POS_setting">Success Edit POS Setting</string>
     <string name="delete_check">Delete Check</string>
+    <string name="pos_setting">POS Setting</string>
 </resources>

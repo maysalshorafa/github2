@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +24,10 @@ import java.util.Calendar;
 
 public class SettingActivity extends AppCompatActivity {
     EditText etCompanyName, etPrivateCompany, etTax, etTerminalNumber, etTerminalPassword,etInvoiceNote;
-    Button btSave, btCancel;
+    Button btSave, btCancel , btnEditPosSetting;
+    CheckBox currencyCheckBox , creditCardCheckBox , customerMeasurementCheckBox ;
+    TextView floatPointNo , printerTypeTv ;
+    public static final String LEAD_POS_RESULT_INTENT_SETTING_ENABLE_EDIT = "LEAD_POS_RESULT_INTENT_SETTING_ENABLE_EDIT";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -44,10 +49,25 @@ public class SettingActivity extends AppCompatActivity {
         etTerminalNumber.setEnabled(false);
         etTerminalPassword = (EditText) findViewById(R.id.settings_etTPass);
         etTerminalPassword.setEnabled(false);
-
         btSave = (Button) findViewById(R.id.settings_btSave);
-        btCancel = (Button) findViewById(R.id.settings_btCancel);
-
+        btnEditPosSetting = (Button)findViewById(R.id.settings_editPosSetting);
+       btCancel = (Button) findViewById(R.id.settings_btCancel);
+        currencyCheckBox = (CheckBox) findViewById(R.id.setUpManagementCurrencyCheckBox);
+        creditCardCheckBox = (CheckBox) findViewById(R.id.setUpManagementCreditCardCheckBox);
+        customerMeasurementCheckBox = (CheckBox) findViewById(R.id.setUpManagementCustomerMeasurementCheckBox);
+        floatPointNo = (TextView)findViewById(R.id.noOfFloatPoint);
+        printerTypeTv = (TextView)findViewById(R.id.printerType);
+        floatPointNo.setText(SETTINGS.decimalNumbers+" ");
+        printerTypeTv.setText(SETTINGS.printer.toString());
+        if(SETTINGS.enableCurrencies){
+            currencyCheckBox.setChecked(true);
+        }
+        if(SETTINGS.creditCardEnable){
+            creditCardCheckBox.setChecked(true);
+        }
+        if(SETTINGS.enableCustomerMeasurement){
+            customerMeasurementCheckBox.setChecked(true);
+        }
         getSettings();
 
         btSave.setOnClickListener(new View.OnClickListener() {
@@ -72,12 +92,20 @@ public class SettingActivity extends AppCompatActivity {
                 Toast.makeText(SettingActivity.this, getBaseContext().getString(R.string.success_to_save_settings), Toast.LENGTH_SHORT).show();
             }
         });
-
-        btCancel.setOnClickListener(new View.OnClickListener() {
+        btnEditPosSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent i = new Intent(SettingActivity.this, SetUpManagement.class);
+                i.putExtra(LEAD_POS_RESULT_INTENT_SETTING_ENABLE_EDIT,true);
+                startActivity(i);
             }
+        });
+
+      btCancel.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+        finish();
+        }
         });
     }
 
@@ -90,3 +118,4 @@ public class SettingActivity extends AppCompatActivity {
         etInvoiceNote.setText(SETTINGS.returnNote);
     }
 }
+
