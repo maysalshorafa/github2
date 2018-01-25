@@ -247,7 +247,7 @@
     <string name="pref_header_general">General</string>
     <string name="settings">Settings</string>
     <string name="success_to_save_settings">Success to save settings.</string>
-
+    <string name="fail_to_save_settings">Fail to save settings.</string>
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact
         based on your message history
@@ -478,5 +478,10 @@
     <string name="no_of_float_point">No Of Float Point:</string>
     <string name="printer_type">Printer Type:</string>
     <string name="server_info">Server Information:</string>
+    <string name="update_setting">Update Setting</string>
+    <string name="update_general_setting">Update General Setting</string>
+    <string name="if_you_want_to_update_general_setting_click_ok">If you want to update General Setting click OK</string>
+
+
 
 </resources>

@@ -1,9 +1,21 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -11,23 +23,40 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.CustomerAndClub.CustmerManagementActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
+import com.pos.leaders.leaderspossystem.syncposservice.MessagesCreator;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class SettingActivity extends AppCompatActivity {
     EditText etCompanyName, etPrivateCompany, etTax, etTerminalNumber, etTerminalPassword,etInvoiceNote;
-    Button btSave, btCancel , btnEditPosSetting;
+    Button btSave, btnEditPosSetting;
     CheckBox currencyCheckBox , creditCardCheckBox , customerMeasurementCheckBox ;
     TextView floatPointNo , printerTypeTv ,serverInfoTV ;
     public static final String LEAD_POS_RESULT_INTENT_SETTING_ENABLE_EDIT = "LEAD_POS_RESULT_INTENT_SETTING_ENABLE_EDIT";
+    protected static Context context = null;
+    public static final String LOG_TAG = "Json_Object";
+    public static JSONObject jsonObject;
+    public  CharSequence s ="";
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -39,25 +68,28 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
 
         TitleBar.setTitleBar(this);
-
+        context = this;
         etCompanyName = (EditText) findViewById(R.id.settings_etCompanyName);
+        etCompanyName.setEnabled(false);
         etPrivateCompany = (EditText) findViewById(R.id.settings_etPC);
         etPrivateCompany.setEnabled(false);
         etTax = (EditText) findViewById(R.id.settings_etTax);
+        etTax.setEnabled(false);
         etInvoiceNote = (EditText) findViewById(R.id.settings_etInvoiceNote);
+        etInvoiceNote.setEnabled(false);
         etTerminalNumber = (EditText) findViewById(R.id.settings_etTNum);
         etTerminalNumber.setEnabled(false);
         etTerminalPassword = (EditText) findViewById(R.id.settings_etTPass);
         etTerminalPassword.setEnabled(false);
         btSave = (Button) findViewById(R.id.settings_btSave);
         btnEditPosSetting = (Button)findViewById(R.id.settings_editPosSetting);
-       btCancel = (Button) findViewById(R.id.settings_btCancel);
         currencyCheckBox = (CheckBox) findViewById(R.id.setUpManagementCurrencyCheckBox);
         creditCardCheckBox = (CheckBox) findViewById(R.id.setUpManagementCreditCardCheckBox);
         customerMeasurementCheckBox = (CheckBox) findViewById(R.id.setUpManagementCustomerMeasurementCheckBox);
         floatPointNo = (TextView)findViewById(R.id.noOfFloatPoint);
         printerTypeTv = (TextView)findViewById(R.id.printerType);
         serverInfoTV = (TextView)findViewById(R.id.serverInfo);
+
         if(SETTINGS.BO_SERVER_URL.equals(SETTINGS.BO_SERVER_UM_EL_FAHEM_URL)){
             serverInfoTV.setText("UM_EL_FAHEM Server");
         }else {
@@ -79,23 +111,7 @@ public class SettingActivity extends AppCompatActivity {
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(SettingActivity.this);
-                settingsDBAdapter.open();
-
-                String CompanyName = etCompanyName.getText().toString();
-                String PrivateCompany = etPrivateCompany.getText().toString();
-
-                float Tax = Float.parseFloat(etTax.getText().toString());
-
-                String TerminalNumber = etTerminalNumber.getText().toString();
-                String TerminalPassword = etTerminalPassword.getText().toString();
-                String InvoiceNote = etInvoiceNote.getText().toString();
-                settingsDBAdapter.updateEntry(PrivateCompany, CompanyName, "", Tax,InvoiceNote , 0, TerminalNumber, TerminalPassword);
-                settingsDBAdapter.GetSettings();
-
-                settingsDBAdapter.close();
-                getSettings();
-                Toast.makeText(SettingActivity.this, getBaseContext().getString(R.string.success_to_save_settings), Toast.LENGTH_SHORT).show();
+                callPopup();
             }
         });
         btnEditPosSetting.setOnClickListener(new View.OnClickListener() {
@@ -107,12 +123,6 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-      btCancel.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-        finish();
-        }
-        });
     }
 
     public void getSettings() {
@@ -123,5 +133,143 @@ public class SettingActivity extends AppCompatActivity {
         etTerminalPassword.setText(SETTINGS.ccPassword);
         etInvoiceNote.setText(SETTINGS.returnNote);
     }
+    public  void callPopup() {
+        final StartSettingConnection s1 = new StartSettingConnection();
+        s1.onPostExecute("a");
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            final String  CompanyName =  SettingActivity.jsonObject.getString(MessageKey.companyName);
+            final String PrivateCompany =SettingActivity.jsonObject.getString(MessageKey.companyID);
+            final float Tax = (float) jsonObject.getDouble(MessageKey.tax);
+            final String TerminalNumber =   jsonObject.getString(MessageKey.CCUN);
+            final String TerminalPassword =jsonObject.getString(MessageKey.CCPW);
+            final int InvoiceNote =jsonObject.getInt(MessageKey.endOfReturnNote);
+
+            s =SettingActivity.context.getString(R.string.company_name)
+                    + ":"+CompanyName +"\n"+SettingActivity.context.getString(R.string.private_company)+":"+PrivateCompany +"\n"+SettingActivity.context.getString(R.string.tax)+":"+Tax+"\n"+SettingActivity.context.getString(R.string.terminal_number)+":"+TerminalNumber +"\n"
+                    +SettingActivity.context.getString(R.string.terminal_password)+":"+TerminalPassword +"\n"+ SettingActivity.context.getString(R.string.invoice_note)+ ":"+InvoiceNote;
+            new AlertDialog.Builder(SettingActivity.this)
+                    .setTitle(getString(R.string.update_general_setting))
+                    .setMessage(getString(R.string.if_you_want_to_update_general_setting_click_ok)+"\n"+s)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                           SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(SettingActivity.context);
+                             settingsDBAdapter.open();
+                             int i = settingsDBAdapter.updateEntry(PrivateCompany, CompanyName,  SESSION.POS_ID_NUMBER +"", Tax, String.valueOf(InvoiceNote), 0, TerminalNumber, TerminalPassword);
+                            settingsDBAdapter.close();
+
+                             if (i == 1) {
+                                 SETTINGS.companyName=CompanyName;
+                                 SETTINGS.companyID=PrivateCompany;
+                                 SETTINGS.tax=Tax;
+                                 SETTINGS.endOfInvoice=InvoiceNote;
+                                 SETTINGS.ccNumber=TerminalNumber;
+                                 SETTINGS.ccPassword=TerminalPassword;
+                                        Toast.makeText(SettingActivity.context,getString(R.string.success_to_save_settings), Toast.LENGTH_SHORT).show();
+                            finish();
+                             } else {
+                                Toast.makeText(SettingActivity.context,getString(R.string.fail_to_save_settings), Toast.LENGTH_SHORT).show();
+                             }
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void updateSettings(String token) {
+        JSONObject jsonObject = null;
+        MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+        try {
+            String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
+
+            try {
+                jsonObject = new JSONObject(res);
+                SettingActivity.jsonObject = jsonObject;
+                Log.i(SettingActivity.LOG_TAG, jsonObject.toString());
+
+            }
+            catch (JSONException e){
+                JSONArray jsonArray = new JSONArray(res);
+                jsonObject = jsonArray.getJSONObject(0);
+                SettingActivity.jsonObject = jsonObject;
+                 Log.i(SettingActivity.LOG_TAG, jsonObject.toString());
+
+            }
+
+
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
+class StartSettingConnection extends AsyncTask<String,Void,String> {
+
+    private MessageTransmit messageTransmit;
+
+    StartSettingConnection() {
+        messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+    }
+
+    @Override
+    protected String doInBackground(String... params) {
+        return null;
+    }
+
+
+
+    @Override
+    protected void onPreExecute() {
+
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+
+            final String token = SESSION.token;
+
+            //null response
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    SettingActivity.updateSettings(token);
+
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+
+                }
+            }.execute();
+
+
+        //endregion
+    }
+
+
+}
+
+
 

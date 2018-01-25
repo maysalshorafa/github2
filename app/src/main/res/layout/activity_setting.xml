@@ -267,21 +267,10 @@
                     android:layout_marginRight="12dp"
                     android:layout_marginTop="5dp"
                     android:gravity="center"
-                    android:text="@string/save"
+                    android:text="@string/update_setting"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
-                <Button
-                    android:id="@+id/settings_btCancel"
-                    style="@style/AppTheme.bt_dangers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center"
-                    android:text="@string/cancel"
-                    android:textSize="18sp" />
 
             </LinearLayout>
         </LinearLayout>
