@@ -134,11 +134,12 @@ public class ProductCatalogActivity extends AppCompatActivity {
                 filter_productsList = new ArrayList<Product>();
                 String word = etSearch.getText().toString();
                 if (!word.equals("")) {
-                    for (Product p : productsList) {
+                    filter_productsList=productDBAdapter.getAllProductsByHint(word,productLoadItemOffset,productCountLoad);
+                /**    for (Product p : productsList) {
                         if (p.getName().toLowerCase().contains(word.toLowerCase()) || p.getDescription().toLowerCase().contains(word.toLowerCase())) {
                             filter_productsList.add(p);
                         }
-                    }
+                    }**/
                 } else {
                     filter_productsList = productsList;
                 }
@@ -242,7 +243,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
                             case 1:
                                   new AlertDialog.Builder(ProductCatalogActivity.this)
                                     .setTitle(getString(R.string.delete)+" "+getString(R.string.product))
-                                    .setMessage(getString(R.string.delete_product_message))
+                                    .setMessage(getString(R.string.delete))
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             productDBAdapter.deleteEntry(filter_productsList.get(position).getId());
