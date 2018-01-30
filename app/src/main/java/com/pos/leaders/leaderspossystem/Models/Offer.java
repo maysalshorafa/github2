@@ -1,7 +1,9 @@
 package com.pos.leaders.leaderspossystem.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
+import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,8 +24,11 @@ public class Offer {
 	//region Attribute
 	private long id;
 	private String name;
+	@JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
 	private Date startDate;
+	@JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
 	private Date endDate;
+	@JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
 	private Date creatingDate;
 	private int status;
 	private long byUser;

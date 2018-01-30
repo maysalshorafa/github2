@@ -160,32 +160,34 @@ public class ProductsActivity  extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
 
         if(extras!=null) {
-            try {
-                etBarcode.setText(extras.getString("barcode"));
-            } catch (Exception ex) {
+            if(extras.containsKey("barcode")) {
+                try {
+                    etBarcode.setText(extras.getString("barcode"));
+                } catch (Exception ex) {
 
-            }
-            try {
-                editableProduct = productDBAdapter.getProductByID(extras.getLong("productID"));
-                etName.setText(editableProduct.getName());
-                etBarcode.setText(editableProduct.getBarCode());
-                etDescription.setText(editableProduct.getDescription());
-                etCostPrice.setText(editableProduct.getCostPrice()+"");
-                etPrice.setText(editableProduct.getPrice()+"");
-                swWithTax.setChecked(editableProduct.isWithTax());
-                swWeighable.setChecked(editableProduct.isWeighable());
-                Department d=departmentDBAdapter.getDepartmentByID(editableProduct.getDepartmentId());
-                btnContinue.setVisibility(View.GONE);
-                selectedDepartment=d.getName();
-
-                for (int i = 0; i< lvDepartment.getChildCount(); i++){
-                    if(listDepartment.get(i).getName().equals(d.getName())){
-                        selectItemDepartments(lvDepartment.getChildAt(i));
-                    }
                 }
+            } else if(extras.containsKey("productID")) {
+                try {
+                    editableProduct = productDBAdapter.getProductByID(extras.getLong("productID"));
+                    etName.setText(editableProduct.getName());
+                    etBarcode.setText(editableProduct.getBarCode());
+                    etDescription.setText(editableProduct.getDescription());
+                    etCostPrice.setText(editableProduct.getCostPrice() + "");
+                    etPrice.setText(editableProduct.getPrice() + "");
+                    swWithTax.setChecked(editableProduct.isWithTax());
+                    swWeighable.setChecked(editableProduct.isWeighable());
+                    Department d = departmentDBAdapter.getDepartmentByID(editableProduct.getDepartmentId());
+                    btnContinue.setVisibility(View.GONE);
+                    selectedDepartment = d.getName();
 
-            } catch (Exception ex) {
+                    for (int i = 0; i < lvDepartment.getChildCount(); i++) {
+                        if (listDepartment.get(i).getName().equals(d.getName())) {
+                            selectItemDepartments(lvDepartment.getChildAt(i));
+                        }
+                    }
+                } catch (Exception ex) {
 
+                }
             }
         }
     }

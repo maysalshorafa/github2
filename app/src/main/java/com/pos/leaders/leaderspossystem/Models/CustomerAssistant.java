@@ -1,17 +1,19 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import java.util.Date;
-
 /**
  * Created by Win8.1 on 9/28/2017.
  */
 
 public class CustomerAssistant {
     private long id ;
+    private long order_id;
+    private long customerAssistantID;
+    private double amount;
+    private int type;
+    private String salescase;
+    private long saleDate;
 
-    public long getSaleDate() {
-        return saleDate;
-    }
+
 
     public CustomerAssistant() {
     }
@@ -20,19 +22,16 @@ public class CustomerAssistant {
         this.saleDate = saleDate;
     }
 
-    private long saleDate;
-    public CustomerAssistant(long id, long order_id, long custmerAssestID, double amount, int type, String salescase, long saleDate) {
+
+    public CustomerAssistant(long id, long order_id, long customerAssistantID, double amount, int type, String salescase, long saleDate) {
         this.id = id;
         this.order_id = order_id;
-        this.custmerAssestID = custmerAssestID;
+        this.customerAssistantID = customerAssistantID;
         this.amount = amount;
         this.type = type;
         this.salescase = salescase;
         this.saleDate=saleDate;
     }
-
-    private long order_id;
-    private long custmerAssestID;
 
     public long getId() {
         return id;
@@ -46,16 +45,20 @@ public class CustomerAssistant {
         return order_id;
     }
 
+    public long getSaleDate() {
+        return saleDate;
+    }
+
+    public long getCustomerAssistantID() {
+        return customerAssistantID;
+    }
+
     public void setOrder_id(long order_id) {
         this.order_id = order_id;
     }
 
-    public long getCustmerAssestID() {
-        return custmerAssestID;
-    }
-
-    public void setCustmerAssestID(long custmerAssestID) {
-        this.custmerAssestID = custmerAssestID;
+    public void setCustomerAssistantID(long customerAssistantID) {
+        this.customerAssistantID = customerAssistantID;
     }
 
     public double getAmount() {
@@ -82,9 +85,7 @@ public class CustomerAssistant {
         this.salescase = salescase;
     }
 
-    private double amount;
-    private int type;
-    private String salescase;
+
 
 
 }

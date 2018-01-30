@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -83,7 +84,7 @@ public class UserDBAdapter {
         }
     }
 
-    public long insertEntry(User user) {
+    public long insertEntry(User user) throws  SQLException {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(USERS_COLUMN_ID, user.getId());
@@ -97,12 +98,9 @@ public class UserDBAdapter {
         val.put(USERS_COLUMN_DISCOUNTINPERCENTAGE, user.getPresent());
         val.put(USERS_COLUMN_HOURLYWAGE, user.getHourlyWage());
 
-        try {
-            return db.insert(USERS_TABLE_NAME, null, val);
-        } catch (SQLException ex) {
-            Log.e("UserDB insertEntry", "inserting Entry at " + USERS_TABLE_NAME + ": " + ex.getMessage());
-            return 0;
-        }
+        long id = db.insertOrThrow(USERS_TABLE_NAME, null, val);
+
+        return id;
     }
 
     public User getUserByID(long id) {

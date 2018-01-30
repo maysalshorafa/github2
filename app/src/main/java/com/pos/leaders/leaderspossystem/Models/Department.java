@@ -1,6 +1,9 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
 
 import java.util.Date;
 import java.util.List;
@@ -12,7 +15,10 @@ import java.util.List;
 public class Department {
     private long id;
     private String name;
-    private Date CreatingDate;
+
+    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
+    private Date creatingDate;
+
     private long byUser;
     private boolean hide;
 
@@ -26,14 +32,14 @@ public class Department {
     public Department(long id, String name, Date creatingDate, long byUser, boolean hide) {
         this.id = id;
         this.name = name;
-        this.CreatingDate = creatingDate;
+        this.creatingDate = creatingDate;
         this.byUser = byUser;
         this.hide = hide;
     }
 
     public Department(String name, Date creatingDate, long byUser) {
         this.name = name;
-        this.CreatingDate = creatingDate;
+        this.creatingDate = creatingDate;
         this.byUser = byUser;
         this.hide = false;
     }
@@ -45,7 +51,6 @@ public class Department {
     public Department() {
 
     }
-
     //endregion
 
 	// region Setters
@@ -63,7 +68,7 @@ public class Department {
     }
 
     public void setCreatingDate(Date creatingDate) {
-        CreatingDate = creatingDate;
+        this.creatingDate = creatingDate;
     }
 
     public void setByUser(long byUser) {
@@ -87,7 +92,7 @@ public class Department {
     }
 
     public Date getCreatingDate() {
-        return CreatingDate;
+        return creatingDate;
     }
 
     public long getByUser() {
@@ -115,7 +120,7 @@ public class Department {
 				"byUser=" + byUser +
 				", id=" + id +
 				", name='" + name + '\'' +
-				", CreatingDate=" + CreatingDate +
+				", creatingDate=" + creatingDate +
 				", hide=" + hide +
 				", products={" + products +
 				"}}";

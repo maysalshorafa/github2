@@ -230,6 +230,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
         MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
             String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
+            Log.e("CCC", res);
             JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(res);

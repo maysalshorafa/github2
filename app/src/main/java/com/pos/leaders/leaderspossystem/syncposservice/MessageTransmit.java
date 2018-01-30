@@ -65,9 +65,10 @@ public class MessageTransmit {
     }
 
     public String authGet(String url,String token) throws IOException {
+        Log.i("url", domainURL + url);
         Request request = new Request.Builder().url(domainURL + url).addHeader(AUTHORIZATION, token).build();
         Response response = client.newCall(request).execute();
-
+        Log.i("response code", response.code() + "");
         return response.body().string();
     }
 

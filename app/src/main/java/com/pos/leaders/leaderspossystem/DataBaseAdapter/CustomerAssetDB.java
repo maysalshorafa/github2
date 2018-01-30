@@ -9,8 +9,6 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
-import com.pos.leaders.leaderspossystem.Models.User;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -34,7 +32,7 @@ public class CustomerAssetDB {
     protected static final String CUSTMER_ASSEST_COLUMN_AMOUNT = "amount";
     protected static final String CUSTMER_ASSEST_COLUMN_TYPE = "type";
     protected static final String CUSTMER_ASSEST_COLUMN_CASE = "salescase";
-    protected static final String CustmerAssest_COLUMN_CEATEDATE= "saleDate";
+    protected static final String CustmerAssest_COLUMN_CEATEDATE = "saleDate";
 
 
     public static final String DATABASE_CREATE = "CREATE TABLE `"+CustmerAsset_TabelName+"` ( `"+ CUSTMER_ASSEST_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, "+
@@ -89,7 +87,7 @@ public class CustomerAssetDB {
 
         val.put(CUSTMER_ASSEST_ID, assest.getId());
         val.put(ORDER_ID, assest.getOrder_id());
-        val.put(CustmerAssest_COLUMN_ID,assest.getCustmerAssestID() );
+        val.put(CustmerAssest_COLUMN_ID,assest.getCustomerAssistantID() );
         val.put(CUSTMER_ASSEST_COLUMN_AMOUNT, assest.getAmount());
         val.put(CUSTMER_ASSEST_COLUMN_TYPE, assest.getType());
         val.put(CUSTMER_ASSEST_COLUMN_CASE, assest.getSalescase());
@@ -115,6 +113,7 @@ public class CustomerAssetDB {
 
         return customerAssestList;
     }
+
     private CustomerAssistant createNewAssistent(Cursor cursor){
         try {
             return new CustomerAssistant(Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTMER_ASSEST_ID))),
