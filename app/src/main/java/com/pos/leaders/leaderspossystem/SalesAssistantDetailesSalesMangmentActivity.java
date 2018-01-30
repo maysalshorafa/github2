@@ -1,7 +1,7 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -12,11 +12,11 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
+import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SalesManDetailsGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -35,6 +35,7 @@ public class SalesAssistantDetailesSalesMangmentActivity extends AppCompatActivi
   List <CustomerAssistant>salesMan;
     List<CustomerAssistant>All_custmerAssestint;
     boolean userScrolled=true;
+    Date to , from ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,8 +61,10 @@ public class SalesAssistantDetailesSalesMangmentActivity extends AppCompatActivi
         gvSalesMan = (GridView) findViewById(R.id.Management_GVSalesManSalesDetails);
         customerAssetDB= new CustomerAssetDB(this);
         customerAssetDB.open();
-        customerAssests = customerAssetDB.getBetweenTwoDates(userId,new Date().getTime());
-        double amount=customerAssetDB.getTotalAmountForAssistant(userId);
+        from= DateConverter.stringToDate(DateConverter.toDate(new Date()));
+        to = DateConverter.stringToDate(DateConverter.currentDateTime());
+        customerAssests = customerAssetDB.getBetweenTwoDates(userId,from.getTime(),to.getTime());
+        double amount=customerAssetDB.getTotalAmountForAssistant(userId,from.getTime(),to.getTime());
         etAmount.setText(Util.makePrice(amount));
         All_custmerAssestint = customerAssests;
         adapter = new SalesManDetailsGridViewAdapter(this, customerAssests);

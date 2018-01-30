@@ -100,9 +100,9 @@ public class CustomerAssetDB {
             return -1;
         }
     }
-    public List<CustomerAssistant> getBetweenTwoDates(long userId,long to){
+    public List<CustomerAssistant> getBetweenTwoDates(long userId,long from,long to){
         List<CustomerAssistant> customerAssestList = new ArrayList<CustomerAssistant>();
-        Cursor cursor = db.rawQuery("select * from " + CustmerAsset_TabelName + " where " + CustmerAssest_COLUMN_CEATEDATE + "<='" + to + "' and " + CustmerAssest_COLUMN_ID +
+        Cursor cursor = db.rawQuery("select * from " + CustmerAsset_TabelName + " where " + CustmerAssest_COLUMN_CEATEDATE + "<='" + to + "' and " +  CustmerAssest_COLUMN_CEATEDATE + ">='" + from + "' and " + CustmerAssest_COLUMN_ID +
                 "="+ userId   ,null);
         cursor.moveToFirst();
 
@@ -151,10 +151,10 @@ public class CustomerAssetDB {
 
         return users;
     }
-    public double getTotalAmountForAssistant( long id){
+    public double getTotalAmountForAssistant( long id,long from , long to){
         double amount = 0;
         CustomerAssistant customerAssistant=null;
-        Cursor cursor = db.rawQuery("select SUM(amount) from "+CustmerAsset_TabelName+" where "+CustmerAssest_COLUMN_ID+" = "+id,null);
+        Cursor cursor = db.rawQuery("select SUM(amount) from "+CustmerAsset_TabelName+" where "+CustmerAssest_COLUMN_ID+" = "+id+ " and " +  CustmerAssest_COLUMN_CEATEDATE + "<=" + to + " and " +  CustmerAssest_COLUMN_CEATEDATE + ">=" + from ,null);
         if (cursor.moveToFirst()) {
             return cursor.getInt(0);
         }
