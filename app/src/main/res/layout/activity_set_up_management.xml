@@ -154,31 +154,7 @@
                     android:layout_weight="1" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:text="@string/server_info"
-                    android:textColor="@color/black"
-                    android:textSize="25dp" />
-
-                <Spinner
-                    android:id="@+id/setUpManagementServerTypeSpinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="1" />
-            </LinearLayout>
             <Button
                 android:id="@+id/setUpManagementSaveButton"
                 style="@style/AppTheme.bt_green"

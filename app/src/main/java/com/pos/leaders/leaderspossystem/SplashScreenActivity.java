@@ -1,48 +1,24 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
-import com.pos.leaders.leaderspossystem.OpenFormat.BKMVDATA;
-import com.pos.leaders.leaderspossystem.OpenFormat.INI;
-import com.pos.leaders.leaderspossystem.OpenFormat.OpenFrmt;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
-import com.pos.leaders.leaderspossystem.syncposservice.SetupActivity;
 
-import org.joda.time.DateTime;
-
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
 
 import static com.pos.leaders.leaderspossystem.SetUpManagement.POS_Management;
 
@@ -56,7 +32,7 @@ public class SplashScreenActivity extends Activity {
     private ZReport lastZReport = null;
     public static boolean  currencyEnable , creditCardEnable , customerMeasurementEnable ;
     public static int floatPoint;
-    public static String printerType ,serverInfo;
+    public static String printerType ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -532,17 +508,7 @@ public class SplashScreenActivity extends Activity {
                 Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
                 startActivity(i);
             }
-            //ServerType
-            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO)) {
-                serverInfo =cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO,SETTINGS.BO_SERVER_NABLUS_URL);
 
-                SETTINGS.BO_SERVER_URL=serverInfo;
-
-            }
-            else {
-                Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
-                startActivity(i);
-            }
         }else {
             Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
             startActivity(i);

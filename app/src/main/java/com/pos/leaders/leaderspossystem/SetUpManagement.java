@@ -3,12 +3,8 @@ package com.pos.leaders.leaderspossystem;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.DisplayMetrics;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,19 +13,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
-import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 public class SetUpManagement extends AppCompatActivity {
     CheckBox currencyCheckBox, creditCardCheckBox, customerMeasurementCheckBox;
-    Spinner printerTypeSpinner, floatPointSpinner ,serverInfoSpinner;
+    Spinner printerTypeSpinner, floatPointSpinner;
     Button saveButton, editButton;
     ImageView currencyImage, customerMeasurementImage, creditCardImage;
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY";
@@ -37,13 +30,13 @@ public class SetUpManagement extends AppCompatActivity {
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE";
-    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO";
     boolean currencyEnable, creditCardEnable, customerMeasurementEnable = false;
     int noOfPoint;
-    String printerType , serverType;
+    String printerType;
     ArrayAdapter<String> spinnerArrayAdapter;
     ArrayAdapter<Integer> floatPointSpinnerArrayAdapter;
-    ArrayAdapter<String> serverSpinnerArrayAdapter;
+    Integer floatPoint[];
+    String printer[];
     public final static String POS_Management = "POS_Management";
     public static Context context = null;
 
@@ -64,25 +57,13 @@ public class SetUpManagement extends AppCompatActivity {
         customerMeasurementCheckBox = (CheckBox) findViewById(R.id.setUpManagementCustomerMeasurementCheckBox);
         floatPointSpinner = (Spinner) findViewById(R.id.setUpManagementFloatPointSpinner);
         printerTypeSpinner = (Spinner) findViewById(R.id.setUpManagementPrinterTypeSpinner);
-        serverInfoSpinner = (Spinner)findViewById(R.id.setUpManagementServerTypeSpinner);
         saveButton = (Button) findViewById(R.id.setUpManagementSaveButton);
         editButton = (Button) findViewById(R.id.setUpManagementEditButton);
         currencyImage = (ImageView) findViewById(R.id.currencyImage);
         creditCardImage = (ImageView) findViewById(R.id.creditCardImage);
         customerMeasurementImage = (ImageView) findViewById(R.id.customerMeasurementImage);
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            saveButton.setVisibility(View.GONE);
-            editButton.setVisibility(View.VISIBLE);
-            }
-
-        String printer[] = {PrinterType.BTP880.name(), PrinterType.HPRT_TP805.name(), PrinterType.SUNMI_T1.name(), PrinterType.SM_S230I.name(), PrinterType.WINTEC_BUILDIN.name()};
-        final Integer[] floatPoint = {2, 0, 1, 3};
-        String server[] = {"UM_EL_FAHEM","NABLUS"};
-
-        serverSpinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, server);
-        serverSpinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
-
+        printer = new String[]{PrinterType.BTP880.name(), PrinterType.HPRT_TP805.name(), PrinterType.SUNMI_T1.name(), PrinterType.SM_S230I.name(), PrinterType.WINTEC_BUILDIN.name()};
+        floatPoint = new Integer[]{2, 0, 1, 3};
         spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, printer);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
 
@@ -91,7 +72,12 @@ public class SetUpManagement extends AppCompatActivity {
 
         printerTypeSpinner.setAdapter(spinnerArrayAdapter);
         floatPointSpinner.setAdapter(floatPointSpinnerArrayAdapter);
-        serverInfoSpinner.setAdapter(serverSpinnerArrayAdapter);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            saveButton.setVisibility(View.GONE);
+            editButton.setVisibility(View.VISIBLE);
+            PosManagementValue();
+        }
         currencyCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -151,18 +137,6 @@ public class SetUpManagement extends AppCompatActivity {
 
             }
         });
-        serverInfoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                serverType = serverSpinnerArrayAdapter.getItem(position);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,14 +147,6 @@ public class SetUpManagement extends AppCompatActivity {
                 editor.putBoolean(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, customerMeasurementEnable);
                 editor.putInt(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, noOfPoint);
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, printerType);
-                if (serverType.equals("UM_EL_FAHEM")) {
-                    editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO, SETTINGS.BO_SERVER_UM_EL_FAHEM_URL);
-                }
-                else {
-                    editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO, SETTINGS.BO_SERVER_NABLUS_URL);
-
-                }
-
                 editor.apply();
                 Intent i = new Intent(SetUpManagement.this, SetupNewPOSOnlineActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -215,52 +181,102 @@ public class SetUpManagement extends AppCompatActivity {
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD)) {
                         boolean editCreditCardEnable = creditCardEnable;
                         editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, editCreditCardEnable);
-                       SETTINGS.creditCardEnable=editCreditCardEnable;
+                        SETTINGS.creditCardEnable = editCreditCardEnable;
                     }
                     //Currency
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY)) {
                         boolean editCurrencyEnable = currencyEnable;
                         editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, editCurrencyEnable);
-                      SETTINGS.enableCurrencies=editCurrencyEnable;
+                        SETTINGS.enableCurrencies = editCurrencyEnable;
                     }
                     //CustomerMeasurement
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT)) {
                         boolean editCustomerMeasurementEnable = customerMeasurementEnable;
                         editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, editCustomerMeasurementEnable);
-                      SETTINGS.enableCustomerMeasurement=editCustomerMeasurementEnable;
+                        SETTINGS.enableCustomerMeasurement = editCustomerMeasurementEnable;
                     }
                     //FloatPoint
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT)) {
                         int editNoOfPoint = noOfPoint;
                         editor.putInt(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, editNoOfPoint);
-                      SETTINGS.decimalNumbers=editNoOfPoint;
+                        SETTINGS.decimalNumbers = editNoOfPoint;
                     }
                     //PrinterType
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE)) {
                         String editPrinterType = printerType;
                         editor.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, editPrinterType);
                         PrinterType printer = PrinterType.valueOf(editPrinterType);
-                   SETTINGS.printer=printer;
+                        SETTINGS.printer = printer;
                     }
-                    //ServerType
-                    if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO)) {
-                        String editServerInfo = serverType;
-                        if (editServerInfo.equals("UM_EL_FAHEM")){
-                            editor.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO, SETTINGS.BO_SERVER_UM_EL_FAHEM_URL);
-                            SETTINGS.BO_SERVER_URL=SETTINGS.BO_SERVER_UM_EL_FAHEM_URL;                        }
-                        else {
-                            editor.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO, SETTINGS.BO_SERVER_NABLUS_URL);
-                            SETTINGS.BO_SERVER_URL=SETTINGS.BO_SERVER_NABLUS_URL;
-                        }
 
-                    }
                 }
                 editor.apply();
-                Toast.makeText(SetUpManagement.this,R.string.success_edit_POS_setting, Toast.LENGTH_LONG).show();
+                Toast.makeText(SetUpManagement.this, R.string.success_edit_POS_setting, Toast.LENGTH_LONG).show();
                 Intent i = new Intent(getApplicationContext(), LogInActivity.class);
                 startActivity(i);
             }
         });
 
+    }
+
+    private void PosManagementValue() {
+        /// sharedPreferences for Setting
+        SharedPreferences cSharedPreferences = getSharedPreferences(POS_Management, MODE_PRIVATE);
+        if (cSharedPreferences != null) {
+            //CreditCard
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD)) {
+                boolean creditCardEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, false);
+                if (creditCardEnable) {
+                    creditCardCheckBox.setChecked(true);
+                }
+            }
+
+            // end CreditCard
+            //Currency
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY)) {
+                boolean currencyEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, false);
+                if (currencyEnable) {
+                    currencyCheckBox.setChecked(true);
+                }
+            }
+
+            //end
+            //CustomerMeasurement
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT)) {
+                boolean customerMeasurementEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, false);
+                if (customerMeasurementEnable) {
+                    customerMeasurementCheckBox.setChecked(true);
+                }
+            }
+
+            //end
+            //FloatPoint
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT)) {
+                int floatP = cSharedPreferences.getInt(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, 2);
+                for (int i = 0; i < floatPoint.length; i++) {
+                    if (floatPoint[i] == floatP) {
+                        int spinnerPosition = floatPointSpinnerArrayAdapter.getPosition(floatP);
+                        floatPointSpinner.setSelection(spinnerPosition);
+
+                    }
+                }
+            }
+
+            //end
+            //PrinterType
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE)) {
+                String printerType = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, PrinterType.HPRT_TP805.name());
+                PrinterType p = PrinterType.valueOf(printerType);
+                for (int i = 0; i < printer.length; i++) {
+                    if (printer[i] == p.name()) {
+                        int spinnerPosition = spinnerArrayAdapter.getPosition(p.name());
+                        printerTypeSpinner.setSelection(spinnerPosition);
+
+                    }
+                }
+            }
+
+
+        }
     }
 }

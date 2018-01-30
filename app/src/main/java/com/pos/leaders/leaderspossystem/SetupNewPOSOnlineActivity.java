@@ -2,7 +2,6 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,8 +34,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.pos.leaders.leaderspossystem.SetUpManagement.POS_Management;
-
 public class SetupNewPOSOnlineActivity extends Activity {
     public final static String BO_CORE_ACCESS_AUTH = "BOCOREACCESSAUTH";
     public final static String BO_CORE_ACCESS_TOKEN = "BOCOREACCESSTOKEN";
@@ -49,7 +46,6 @@ public class SetupNewPOSOnlineActivity extends Activity {
 
     private EditText etKey;
     private Button btConnect;
-    String serverInfo ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,18 +59,6 @@ public class SetupNewPOSOnlineActivity extends Activity {
         btConnect = (Button) findViewById(R.id.setuponlinepos_btConnect);
 
         context = this;
-        SharedPreferences cSharedPreferences = getSharedPreferences(POS_Management, MODE_PRIVATE);
-        //ServerType
-        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO)) {
-            serverInfo =cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_INFO,SETTINGS.BO_SERVER_NABLUS_URL);
-
-            SETTINGS.BO_SERVER_URL=serverInfo;
-
-        }
-        else {
-            Intent i = new Intent(SetupNewPOSOnlineActivity.this, SetUpManagement.class);
-            startActivity(i);
-        }
         //region check internet connection
         if(!SyncMessage.isConnected(this)) {
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();

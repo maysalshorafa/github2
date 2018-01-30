@@ -1,56 +1,41 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.CustomerAndClub.CustmerManagementActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
-import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
-import com.pos.leaders.leaderspossystem.syncposservice.MessagesCreator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 public class SettingActivity extends AppCompatActivity {
     EditText etCompanyName, etPrivateCompany, etTax, etTerminalNumber, etTerminalPassword,etInvoiceNote;
     Button btSave, btnEditPosSetting;
     CheckBox currencyCheckBox , creditCardCheckBox , customerMeasurementCheckBox ;
-    TextView floatPointNo , printerTypeTv ,serverInfoTV ;
+    TextView floatPointNo , printerTypeTv ;
     public static final String LEAD_POS_RESULT_INTENT_SETTING_ENABLE_EDIT = "LEAD_POS_RESULT_INTENT_SETTING_ENABLE_EDIT";
     protected static Context context = null;
     public static final String LOG_TAG = "Json_Object";
@@ -88,13 +73,6 @@ public class SettingActivity extends AppCompatActivity {
         customerMeasurementCheckBox = (CheckBox) findViewById(R.id.setUpManagementCustomerMeasurementCheckBox);
         floatPointNo = (TextView)findViewById(R.id.noOfFloatPoint);
         printerTypeTv = (TextView)findViewById(R.id.printerType);
-        serverInfoTV = (TextView)findViewById(R.id.serverInfo);
-
-        if(SETTINGS.BO_SERVER_URL.equals(SETTINGS.BO_SERVER_UM_EL_FAHEM_URL)){
-            serverInfoTV.setText("UM_EL_FAHEM Server");
-        }else {
-            serverInfoTV.setText("Nablus Server");
-        }
         floatPointNo.setText(SETTINGS.decimalNumbers+" ");
         printerTypeTv.setText(SETTINGS.printer.toString());
         if(SETTINGS.enableCurrencies){
