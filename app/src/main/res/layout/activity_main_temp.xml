@@ -133,6 +133,13 @@
 
                         android:layout_weight="1"
                         android:transcriptMode="alwaysScroll" />
+                    <ImageView
+                        android:id="@+id/mainActivity_btnCancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/delete_check"
+                        android:src="@drawable/delete_button"
+                        />
 
                     <TextView
                         android:id="@+id/mainActivity_tvTotalSaved"
@@ -287,7 +294,6 @@
                             android:orientation="horizontal">
 
                             <Button
-                                android:id="@+id/mainActivity_btnCancel"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:visibility="gone" />
