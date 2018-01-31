@@ -10,6 +10,7 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -201,7 +202,7 @@ public class SaleDBAdapter {
 
 	public Sale getLast(){
 		Sale sale = null;
-		Cursor cursor = db.rawQuery("select * from " + SALES_TABLE_NAME + " order by id desc", null);
+		Cursor cursor = db.rawQuery("select * from " + SALES_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
 
 		if (cursor.getCount() < 1) // don`t have any sale yet
 		{

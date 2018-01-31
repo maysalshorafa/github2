@@ -81,8 +81,8 @@ public class UsedPointDBAdapter {
         val.put(USED_POINT_COLUMN_ID,usedPoint.getId());
         //Assign values for each row.
         val.put(USED_POINT_COLUMN_SALE_ID, usedPoint.getSaleId());
-        val.put(USED_POINT_COLUMN_POINT, usedPoint.getUnUsedpoint_amount());
-        val.put(USED_POINT_COLUMN_CUSTOMER,usedPoint.getCustmerId());
+        val.put(USED_POINT_COLUMN_POINT, usedPoint.getUnUsed_point_amount());
+        val.put(USED_POINT_COLUMN_CUSTOMER,usedPoint.getCustomer_id());
 
         try {
             return db.insert(USED_POINT_TABLE_NAME, null, val);

@@ -25,7 +25,7 @@ CREATE TABLE "products" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NO
 CREATE TABLE "sales" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byUser` INTEGER, `saleDate` TEXT DEFAULT current_timestamp, `replacementNote` INTEGER DEFAULT 0, `canceled` INTEGER DEFAULT 0, `totalPrice` REAL, `totalPaid` REAL, `custmer_id` INTEGER, `custmer_name` TEXT, FOREIGN KEY(`byUser`) REFERENCES `users.id` );
 CREATE TABLE "scheduleWorkers" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `userId` INTEGER, `date` TEXT DEFAULT current_timestamp, `startTime` TEXT DEFAULT current_timestamp, `exitTime` TEXT );
 CREATE TABLE "sumPoint" ( `sale_id` INTEGER, `point_amount` INTEGER, `custmer_id` INTEGER, FOREIGN KEY(`sale_id`) REFERENCES `sales.id` );
-CREATE TABLE "usedPoint" ( `sale_id` INTEGER, `unUsedpoint_amount` INTEGER, `custmer_id` INTEGER, FOREIGN KEY(`sale_id`) REFERENCES `sales.id` );
+CREATE TABLE "usedPoint" ( `sale_id` INTEGER, `unUsed_point_amount` INTEGER, `custmer_id` INTEGER, FOREIGN KEY(`sale_id`) REFERENCES `sales.id` );
 CREATE TABLE `userPermissions` ( `userId` INTEGER , `permissionId` INTEGER,FOREIGN KEY(`userId`) REFERENCES `users.id`,FOREIGN KEY(`permissionId`) REFERENCES `permissions.id`);
 CREATE TABLE "users" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `userName` TEXT UNIQUE, `firstName` TEXT NOT NULL, `lastName` TEXT, `visitDate` TEXT NOT NULL DEFAULT current_timestamp, `pwd` TEXT NOT NULL, `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, `hourlyWage` REAL DEFAULT 0.0, `permissions_name` TEXT );
 CREATE TABLE "value_ofPoint" ( `id` INTEGER, `value` INTEGER, `lastUpdate` TEXT DEFAULT current_timestamp, PRIMARY KEY(`id`) );

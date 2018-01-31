@@ -7,17 +7,17 @@ package com.pos.leaders.leaderspossystem.Models;
 public class UsedPoint {
     public long id;
     public long saleId ;
-    public int unUsedpoint_amount;
-    public long custmerId;
+    public int unUsed_point_amount;
+    public long customer_id;
 
     public UsedPoint() {
     }
 
-    public UsedPoint(long id, long saleId, int unUsedpoint_amount, long custmerId) {
+    public UsedPoint(long id, long saleId, int unUsed_point_amount, long customer_id) {
         this.id = id;
         this.saleId = saleId;
-        this.unUsedpoint_amount = unUsedpoint_amount;
-        this.custmerId = custmerId;
+        this.unUsed_point_amount = unUsed_point_amount;
+        this.customer_id = customer_id;
     }
 
     public long getId() {
@@ -37,19 +37,19 @@ public class UsedPoint {
         this.saleId = saleId;
     }
 
-    public int getUnUsedpoint_amount() {
-        return unUsedpoint_amount;
+    public int getUnUsed_point_amount() {
+        return unUsed_point_amount;
     }
 
-    public void setUnUsedpoint_amount(int unUsedpoint_amount) {
-        this.unUsedpoint_amount = unUsedpoint_amount;
+    public void setUnUsed_point_amount(int unUsed_point_amount) {
+        this.unUsed_point_amount = unUsed_point_amount;
     }
 
-    public long getCustmerId() {
-        return custmerId;
+    public long getCustomer_id() {
+        return customer_id;
     }
 
-    public void setCustmerId(long custmerId) {
-        this.custmerId = custmerId;
+    public void setCustomer_id(long customer_id) {
+        this.customer_id = customer_id;
     }
 }

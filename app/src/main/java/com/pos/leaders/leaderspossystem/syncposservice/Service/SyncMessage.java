@@ -38,6 +38,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
@@ -67,6 +68,7 @@ import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.Permission.UserPermissions;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
@@ -780,6 +782,18 @@ public class SyncMessage extends Service {
                     measurementDynamicVariableDBAdapter.open();
                     rID=measurementDynamicVariableDBAdapter.insertEntry(measurementDynamicVariable);
                     measurementDynamicVariableDBAdapter.close();
+                    break;
+                //end
+
+                //region UsedPoint
+                case MessageType.ADD_USED_POINT:
+                    UsedPoint up = null;
+                    up= objectMapper.readValue(msgData, UsedPoint.class);
+                    UsedPointDBAdapter usedPointDBAdapter = new UsedPointDBAdapter(this);
+
+                    usedPointDBAdapter.open();
+                    rID=usedPointDBAdapter.insertEntry(up);
+                    usedPointDBAdapter.close();
                     break;
                 //end
 
