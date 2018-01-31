@@ -10,7 +10,7 @@ public class CustomerAssistant {
     private long customerAssistantID;
     private double amount;
     private int type;
-    private String salescase;
+    private String salesCase;
     private long saleDate;
 
 
@@ -23,13 +23,13 @@ public class CustomerAssistant {
     }
 
 
-    public CustomerAssistant(long id, long order_id, long customerAssistantID, double amount, int type, String salescase, long saleDate) {
+    public CustomerAssistant(long id, long order_id, long customerAssistantID, double amount, int type, String salesCase, long saleDate) {
         this.id = id;
         this.order_id = order_id;
         this.customerAssistantID = customerAssistantID;
         this.amount = amount;
         this.type = type;
-        this.salescase = salescase;
+        this.salesCase = salesCase;
         this.saleDate=saleDate;
     }
 
@@ -77,12 +77,12 @@ public class CustomerAssistant {
         this.type = type;
     }
 
-    public String getSalescase() {
-        return salescase;
+    public String getSalesCase() {
+        return salesCase;
     }
 
-    public void setSalescase(String salescase) {
-        this.salescase = salescase;
+    public void setSalesCase(String salesCase) {
+        this.salesCase = salesCase;
     }
 
 

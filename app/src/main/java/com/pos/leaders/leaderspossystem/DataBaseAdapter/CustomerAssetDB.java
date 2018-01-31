@@ -90,7 +90,7 @@ public class CustomerAssetDB {
         val.put(CustmerAssest_COLUMN_ID,assest.getCustomerAssistantID() );
         val.put(CUSTMER_ASSEST_COLUMN_AMOUNT, assest.getAmount());
         val.put(CUSTMER_ASSEST_COLUMN_TYPE, assest.getType());
-        val.put(CUSTMER_ASSEST_COLUMN_CASE, assest.getSalescase());
+        val.put(CUSTMER_ASSEST_COLUMN_CASE, assest.getSalesCase());
         val.put(CustmerAssest_COLUMN_CEATEDATE, assest.getSaleDate());
 
         try {
