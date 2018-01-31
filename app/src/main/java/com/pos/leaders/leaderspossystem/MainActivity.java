@@ -11,8 +11,8 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -52,15 +52,12 @@ import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
-
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
-
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
-
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
@@ -69,6 +66,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule11DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule5DBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
@@ -76,6 +74,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Department;
@@ -84,35 +83,29 @@ import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule11;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule5;
+import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule8;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
-import com.pos.leaders.leaderspossystem.Printer.BitmapInvoice;
+import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
+import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
-import com.pos.leaders.leaderspossystem.Models.Club;
-import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
+import com.pos.leaders.leaderspossystem.Tools.CashActivity;
 import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
-import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
-import com.pos.leaders.leaderspossystem.Tools.PrinterType;
-import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
-
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
+import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
+import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.CashActivity;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
-import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
 import java.util.ArrayList;
@@ -128,7 +121,6 @@ import POSSDK.POSSDK;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CASH;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CHECKS;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CREDIT_CARD;
-import static java.lang.Thread.sleep;
 
 
 /**
@@ -152,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     //ImageButton    btnLastSales;
     Button btnPercentProduct, btnPauseSale, btnResumeSale;
     ImageButton search_person;
-    Button btnCancel, btnCash, btnCreditCard, btnOtherWays;
+    Button  btnCash, btnCreditCard, btnOtherWays;
     TextView tvTotalPrice, tvTotalSaved, salesSaleMan;
     EditText etSearch;
     ImageButton btnDone;
@@ -198,10 +190,7 @@ public class MainActivity extends AppCompatActivity {
     double offerAmount = 0;
     long saleIDforCash;
     static List<Integer> offersIDsList;
-
-
     List<Offer> offersList;
-
     ProductCatalogGridViewAdapter productCatalogGridViewAdapter;
     CustomerCatalogGridViewAdapter custmerCatalogGridViewAdapter;
     //ProductCatalogListViewAdapter productCatalogListViewAdapter;
@@ -226,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
     POSSDK pos;
     Button btn_cancel;
     LinearLayout ll;
-    ImageView imv;
+    ImageView imv ,btnCancel;
 
     private String touchPadPressed = "";
     private boolean enableBackButton = true;
@@ -314,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
         btnResumeSale = (Button) findViewById(R.id.mainActivity_BTNMultProduct);
         btnPercentProduct = (Button) findViewById(R.id.mainActivity_BTNPercentProduct);
         //  btnLastSales = (ImageButton) findViewById(R.id.mainActivity_BTNLastSales);
-        btnCancel = (Button) findViewById(R.id.mainActivity_btnCancel);
+        btnCancel = (ImageView) findViewById(R.id.mainActivity_btnCancel);
         lvOrder = (ListView) findViewById(R.id.mainScreen_LVOrder);
 
         btnCash = (Button) findViewById(R.id.mainActivity_btnCash);

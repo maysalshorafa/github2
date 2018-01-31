@@ -91,6 +91,7 @@ public class SalesManManagementActivity extends AppCompatActivity {
                         switch (item) {
 
                             case 0:
+                                WorkerManagementActivity.User_Management_View=7;
                                 intent = new Intent(SalesManManagementActivity.this, AddUserActivity.class);
                                 intent.putExtra("userId", users.get(position).getId());
                                 intent.putExtra(WorkerManagementActivity.LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME, getString(R.string.view));

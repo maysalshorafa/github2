@@ -12,84 +12,78 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        android:weightSum="2">
+        android:weightSum="2"
+        android:background="@drawable/bubble"
+        >
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="2"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:layout_gravity="center"
+
+            >
 
             <TextView
                 android:id="@+id/textView3"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/user_name"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+                android:textSize="20dp" />
 
             <TextView
                 android:id="@+id/etUserName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/bubble"
-                android:gravity="center"
-                android:padding="8dp"
-                android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                android:padding="4dp"/>
         </LinearLayout>
-
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="2"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:layout_gravity="center"
+
+            >
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/total_amount"
-                android:textAlignment="inherit"
+                android:textAlignment="textStart"
                 android:textColor="@color/black"
-
-                android:textSize="20dp"
-                android:textStyle="bold" />
+                android:textSize="20dp" />
 
             <TextView
                 android:id="@+id/etAmount"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/bubble"
-                android:gravity="center"
-                android:padding="8dp"
-                android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                android:padding="6dp"/>
         </LinearLayout>
     </LinearLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="@color/Gray" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -97,69 +91,68 @@
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
         android:layout_weight="1"
-        android:background="@drawable/edit_text_search"
         android:orientation="vertical"
         android:weightSum="3">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/item_view_frame"
-            android:orientation="horizontal">
-
-
-            <TextView
+        <!--   <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="@string/sale_id"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="20sp"></TextView>
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/item_view_frame"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/salesManGridView_TVSaleCase"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="@string/sale_type"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="20sp">
 
-            </TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="@string/sale_id"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"></TextView>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="@string/amount"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="20sp">
+                <TextView
+                    android:id="@+id/salesManGridView_TVSaleCase"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="@string/sale_type"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="20sp">
 
-            </TextView>
+                </TextView>
 
-            <TextView
-                android:id="@+id/salesManGridView_TVSaleDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="@string/date"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="20sp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="@string/amount"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="20sp">
 
-            </TextView>
-        </LinearLayout>
+                </TextView>
 
+                <TextView
+                    android:id="@+id/salesManGridView_TVSaleDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="@string/date"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="20sp">
+
+                </TextView>
+            </LinearLayout>
+    -->
         <com.pos.leaders.leaderspossystem.Elements.CustomEditText
             android:id="@+id/etSearch"
             style="@style/AppTheme.EditText_input"
@@ -176,10 +169,10 @@
             app:drawableRightCompat="@drawable/ic_icons_leaders_search" />
 
 
-        <GridView
+        <ListView
             android:id="@+id/Management_GVSalesManSalesDetails"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="10dp"

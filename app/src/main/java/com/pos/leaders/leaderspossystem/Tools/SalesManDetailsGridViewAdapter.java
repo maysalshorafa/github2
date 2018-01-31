@@ -22,11 +22,24 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
     private Context context;
     private List<CustomerAssistant> customerAssests;
     private LayoutInflater inflater;
-
-    public SalesManDetailsGridViewAdapter(Context context,List<CustomerAssistant> customerAssests) {
+    private int resource;
+    int bgColor =0;
+    public SalesManDetailsGridViewAdapter(Context context, int resource, List<CustomerAssistant> customerAssests) {
         this.context = context;
+        this.resource = resource;
+        this.context = context;
+        bgColor=0;
         this.customerAssests = customerAssests;
     }
+    public SalesManDetailsGridViewAdapter(Context context, List<CustomerAssistant> customerAssests) {
+        this.context = context;
+        this.resource = resource;
+        this.context = context;
+        bgColor=0;
+        this.customerAssests = customerAssests;
+    }
+
+
 
 
     /**
@@ -108,6 +121,9 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         salesDate.setText(format.format(customerAssests.get(position).getSaleDate()));
         saleId.setText(customerAssests.get(position).getOrder_id()+"");
-
+        if(bgColor%2==0){
+            gridView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
+        }
+        bgColor++;
         return gridView;
     }}
