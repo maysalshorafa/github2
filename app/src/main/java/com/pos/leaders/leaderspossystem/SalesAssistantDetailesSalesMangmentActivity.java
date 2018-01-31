@@ -4,13 +4,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
@@ -29,7 +31,7 @@ public class SalesAssistantDetailesSalesMangmentActivity extends AppCompatActivi
    SalesManDetailsGridViewAdapter adapter;
     List<CustomerAssistant> customerAssests;
     CustomerAssetDB customerAssetDB;
-    GridView gvSalesMan;
+    ListView gvSalesMan;
     EditText etSearch ;
     TextView etUserName, etAmount;
   List <CustomerAssistant>salesMan;
@@ -56,23 +58,26 @@ public class SalesAssistantDetailesSalesMangmentActivity extends AppCompatActivi
 
         etUserName=(TextView) findViewById(R.id.etUserName);
         etAmount=(TextView)findViewById(R.id.etAmount);
-        etUserName.setText(userName);
+        etUserName.setText(": "+userName);
         etSearch = (EditText) findViewById(R.id.etSearch);
-        gvSalesMan = (GridView) findViewById(R.id.Management_GVSalesManSalesDetails);
+        gvSalesMan = (ListView) findViewById(R.id.Management_GVSalesManSalesDetails);
         customerAssetDB= new CustomerAssetDB(this);
         customerAssetDB.open();
         from= DateConverter.stringToDate(DateConverter.toDate(new Date()));
         to = DateConverter.stringToDate(DateConverter.currentDateTime());
         customerAssests = customerAssetDB.getBetweenTwoDates(userId,from.getTime(),to.getTime());
         double amount=customerAssetDB.getTotalAmountForAssistant(userId,from.getTime(),to.getTime());
-        etAmount.setText(Util.makePrice(amount));
+        etAmount.setText(": "+Util.makePrice(amount));
         All_custmerAssestint = customerAssests;
-        adapter = new SalesManDetailsGridViewAdapter(this, customerAssests);
+        All_custmerAssestint = customerAssests;
+        LayoutInflater inflater = getLayoutInflater();
+        ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_customer_assistant_header, gvSalesMan, false);
+        gvSalesMan.addHeaderView(header, null, false);
+        adapter = new SalesManDetailsGridViewAdapter(this, R.layout.grid_view_item_sales_man,customerAssests);
         gvSalesMan.setAdapter(adapter);
-        All_custmerAssestint = customerAssests;
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         etSearch.setText("");
         etSearch.setHint("Search..");
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         etSearch.setFocusable(true);
         etSearch.requestFocus();
@@ -138,9 +143,10 @@ public class SalesAssistantDetailesSalesMangmentActivity extends AppCompatActivi
                    else {
                         customerAssests = All_custmerAssestint;
                     }
-         adapter = new SalesManDetailsGridViewAdapter(getApplicationContext(), customerAssests);
+                adapter = new SalesManDetailsGridViewAdapter(getApplicationContext(),customerAssests);
 
                 gvSalesMan.setAdapter(adapter);
+
             }
         });
 
