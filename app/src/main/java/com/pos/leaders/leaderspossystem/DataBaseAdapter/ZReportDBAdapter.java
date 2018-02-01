@@ -22,7 +22,11 @@ import com.pos.leaders.leaderspossystem.Printer.BitmapInvoice;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -154,7 +158,7 @@ public class ZReportDBAdapter {
 
     public ZReport getLastRow() throws Exception {
         ZReport zReport = null;
-        Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " order by id desc", null);
+        Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
         if (cursor.getCount() < 1) // zReport Not Exist
         {
             cursor.close();

@@ -250,20 +250,18 @@
 
     </LinearLayout>
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:gravity="bottom"
-        android:orientation="horizontal"
-        android:weightSum="3">
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/productActivity_btnSave"
             style="@style/AppTheme.bt_green"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/add"
@@ -271,11 +269,11 @@
             android:textSize="20dp" />
 
         <Button
+
             android:id="@+id/productActivity_btnContinue"
             style="@style/AppTheme.bt_yellow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/_continue"
@@ -283,17 +281,17 @@
             android:textSize="18sp" />
 
         <Button
+
             android:id="@+id/productActivity_btnCancel"
             style="@style/AppTheme.bt_dangers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@android:string/cancel"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
-
     </LinearLayout>
+
 </LinearLayout>

@@ -1,6 +1,8 @@
 package com.pos.leaders.leaderspossystem.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.Date;
@@ -11,6 +13,7 @@ import java.util.Date;
 
 public class ZReport {
     private long id;
+    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
     private Date creationDate;
     private long byUser;
     @JsonIgnore
@@ -60,7 +63,6 @@ public class ZReport {
         this.startSaleId=startSaleId;
         this.endSaleId=endSale.getId();
     }
-
 
     public ZReport(ZReport zReport) {
         this.id = zReport.id;
@@ -155,7 +157,6 @@ public class ZReport {
         this.total_amount = total_amount;
     }
     //region OpenFormat
-
     public String BKMVDATA(int rowNumber,String pc,int totalRows){
 
         String spaces = "";
@@ -164,7 +165,5 @@ public class ZReport {
         }
         return "Z900" + String.format(Util.locale,"%09d", rowNumber) + pc + String.format(Util.locale,"%015d", 1) + "&OF1.31&" + String.format(Util.locale,"%015d", totalRows) + spaces;
     }
-
     //endregion OpenFormat
-
 }

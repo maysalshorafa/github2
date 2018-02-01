@@ -1,5 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -16,6 +18,7 @@ public class Check {
 	private int branchNum;
 	private int accountNum;
 	private double amount;
+	@JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
 	private Date date;
 	private boolean deleted;
 	private long saleId;

@@ -6,10 +6,10 @@ package com.pos.leaders.leaderspossystem.Models;
 
 public class AReportDetails {
     private long id;
-    private  long a_report_id;
+    private long a_report_id;
     private double amount;
     private long type;
-    private  double amount_in_basic_currency ;
+    private double amount_in_basic_currency ;
 
 
     public AReportDetails() {

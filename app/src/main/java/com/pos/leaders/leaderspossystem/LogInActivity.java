@@ -25,6 +25,7 @@ import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,6 +63,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
         startActivity(intent);
         */
 
+        Util.killSyncService(this);
 
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.loginActivity_parentLayout);
         Random random = new Random();

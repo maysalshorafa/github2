@@ -52,6 +52,7 @@ import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
+import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -63,6 +64,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.pos.leaders.leaderspossystem.SetUpManagement.POS_Management;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
 
@@ -142,6 +144,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         }
 
 
+        //end
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             //   permissions_name = bundle.getString("permissions_name");
@@ -396,7 +399,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         }
         EnableButtons();
 
-        switch (SETTINGS.printer) {
+
+     switch (SETTINGS.printer) {
             case HPRT_TP805:
                 HPRT_TP805.setConnected(false);
                 if (HPRT_TP805.connect(this)) {

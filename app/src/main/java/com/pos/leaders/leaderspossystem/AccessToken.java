@@ -41,6 +41,7 @@ public class AccessToken extends AsyncTask<Context,Void,String> {
             //call api auth
             try {
                 String authRes = messageTransmit.post(ApiURL.Authentication, MessagesCreator.authentication(posID, posPass));
+                Log.i("result token", authRes);
                 JSONObject jsonObject = new JSONObject(authRes);
                 String token = jsonObject.getString(MessageKey.Token);
                 SharedPreferences sharedpreferences = context.getSharedPreferences(SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN, Context.MODE_PRIVATE);

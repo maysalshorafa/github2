@@ -11,7 +11,7 @@ public class CustomerMeasurement {
     private long customerId;
     private long userId;
     private long visitDate;
-    private  List<MeasurementsDetails>measurementsDetailsList;
+    private List<MeasurementsDetails>measurementsDetailsList;
     //Constructors
 
     public CustomerMeasurement() {

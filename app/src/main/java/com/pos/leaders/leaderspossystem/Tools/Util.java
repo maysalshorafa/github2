@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.Tools;
 import android.app.ActivityManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
@@ -231,6 +232,14 @@ public class Util {
 
     public static boolean isSyncServiceRunning(Context context) {
         return isMyServiceRunning(SyncMessage.class, context);
+    }
+    public static void killSyncService(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (SyncMessage.class.getName().equals(service.service.getClassName())) {
+                context.stopService(new Intent().setComponent(service.service));
+            }
+        }
     }
 
     // Methods To Test Input Value Type
