@@ -705,27 +705,38 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                productList = new ArrayList<Product>();
                 final String word = etSearch.getText().toString();
                 if (!word.equals("")) {
                     // Database query can be a time consuming task ..
                     // so its safe to call database query in another thread
                     // Handler, will handle this stuff
+                    new AsyncTask<Void, Void, Void>() {
 
-                    new Handler().post(new Runnable() {
                         @Override
-                        public void run() {
+                        protected void onPreExecute() {
+                            productList = new ArrayList<Product>();
+                            super.onPreExecute();
+                        }
+
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             productList=productDBAdapter.getAllProductsByHint(word,productLoadItemOffset,productCountLoad);
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
                             ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                             gvProducts.setAdapter(adapter);
                             lvProducts.setAdapter(adapter);
                         }
-                    });
-                    /**    for (Product p : productsList) {
-                     if (p.getName().toLowerCase().contains(word.toLowerCase()) || p.getDescription().toLowerCase().contains(word.toLowerCase())) {
-                     filter_productsList.add(p);
-                     }
-                     }**/
+                    }.execute();
                 } else {
                     productList = All_productsList;
                     ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);

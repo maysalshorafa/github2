@@ -130,26 +130,38 @@ public class ProductCatalogActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                filter_productsList = new ArrayList<Product>();
+
                 final String word = etSearch.getText().toString();
                 if (!word.equals("")) {
                     // Database query can be a time consuming task ..
                     // so its safe to call database query in another thread
                     // Handler, will handle this stuff
+                    new AsyncTask<Void, Void, Void>() {
 
-                    new Handler().post(new Runnable() {
                         @Override
-                        public void run() {
-                            filter_productsList=productDBAdapter.getAllProductsByHint(word,productLoadItemOffset,productCountLoad);
+                        protected void onPreExecute() {
+                            filter_productsList = new ArrayList<Product>();
+                            super.onPreExecute();
+                        }
+
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            filter_productsList = productDBAdapter.getAllProductsByHint(word, productLoadItemOffset, productCountLoad);
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
                             ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
                             gvProducts.setAdapter(adapter);
                         }
-                    });
-                /**    for (Product p : productsList) {
-                        if (p.getName().toLowerCase().contains(word.toLowerCase()) || p.getDescription().toLowerCase().contains(word.toLowerCase())) {
-                            filter_productsList.add(p);
-                        }
-                    }**/
+                    }.execute();
                 } else {
                     filter_productsList = productsList;
                     ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
