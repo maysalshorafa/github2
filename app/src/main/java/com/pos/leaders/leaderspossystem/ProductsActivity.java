@@ -193,43 +193,48 @@ public class ProductsActivity  extends AppCompatActivity  {
         Bundle extras = getIntent().getExtras();
 
         if(extras!=null) {
-            if(extras.containsKey("barcode")) {
+
+            if (extras.containsKey("barcode")) {
                 try {
                     etBarcode.setText(extras.getString("barcode"));
                 } catch (Exception ex) {
+                }
             }
-            try {
-                editableProduct = productDBAdapter.getProductByID(extras.getLong("productID"));
-                etName.setText(editableProduct.getName());
-                etBarcode.setText(editableProduct.getBarCode());
-                etDescription.setText(editableProduct.getDescription());
-                etCostPrice.setText(editableProduct.getCostPrice()+"");
-                etPrice.setText(editableProduct.getPrice()+"");
-                Toast.makeText(getApplicationContext(),editableProduct.isWithTax()+"test", Toast.LENGTH_LONG).show();
-                swWithTax.setChecked(editableProduct.isWithTax());
-                swWeighable.setChecked(editableProduct.isWeighable());
-                Department d=departmentDBAdapter.getDepartmentByID(editableProduct.getDepartmentId());
-                btnContinue.setVisibility(View.GONE);
-                selectedDepartment=d.getName();
-                for (Department dep : listDepartment) {
-                    if (dep.getId()==(editableProduct.getDepartmentId())) {
-                        dep.setChecked(true);
+
+            if (extras.containsKey("productID")) {
+                try {
+                    editableProduct = productDBAdapter.getProductByID(extras.getLong("productID"));
+                    etName.setText(editableProduct.getName());
+                    etBarcode.setText(editableProduct.getBarCode());
+                    etDescription.setText(editableProduct.getDescription());
+                    etCostPrice.setText(editableProduct.getCostPrice() + "");
+                    etPrice.setText(editableProduct.getPrice() + "");
+                    Toast.makeText(getApplicationContext(), editableProduct.isWithTax() + "test", Toast.LENGTH_LONG).show();
+                    swWithTax.setChecked(editableProduct.isWithTax());
+                    swWeighable.setChecked(editableProduct.isWeighable());
+                    Department d = departmentDBAdapter.getDepartmentByID(editableProduct.getDepartmentId());
+                    btnContinue.setVisibility(View.GONE);
+                    selectedDepartment = d.getName();
+                    for (Department dep : listDepartment) {
+                        if (dep.getId() == (editableProduct.getDepartmentId())) {
+                            dep.setChecked(true);
+                        }
                     }
-                }
-                departmentGridViewAdapter.updateRecords(listDepartment);
-                if(ProductCatalogActivity.Product_Management_Edit==8){
-                    btSave.setText(getString(R.string.edit));
-                }
-                if(ProductCatalogActivity.Product_Management_View==9){
-                    btSave.setVisibility(View.GONE);
-                    etName.setEnabled(false);
-                    etBarcode.setEnabled(false);
-                    etDescription.setEnabled(false);
-                    etCostPrice.setEnabled(false);
-                    etPrice.setEnabled(false);
+                    departmentGridViewAdapter.updateRecords(listDepartment);
+                    if (ProductCatalogActivity.Product_Management_Edit == 8) {
+                        btSave.setText(getString(R.string.edit));
+                    }
+                    if (ProductCatalogActivity.Product_Management_View == 9) {
+                        btSave.setVisibility(View.GONE);
+                        etName.setEnabled(false);
+                        etBarcode.setEnabled(false);
+                        etDescription.setEnabled(false);
+                        etCostPrice.setEnabled(false);
+                        etPrice.setEnabled(false);
 
-                }
-
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             }
         }

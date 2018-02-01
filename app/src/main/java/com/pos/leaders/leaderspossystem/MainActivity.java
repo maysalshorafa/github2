@@ -701,12 +701,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                final String word = etSearch.getText().toString();
+                String word = etSearch.getText().toString();
                 if (!word.equals("")) {
+                    productCountLoad = 80;
+                    productLoadItemOffset = 0;
                     // Database query can be a time consuming task ..
                     // so its safe to call database query in another thread
                     // Handler, will handle this stuff
-                    new AsyncTask<Void, Void, Void>() {
+                    new AsyncTask<String, Void, Void>() {
 
                         @Override
                         protected void onPreExecute() {
@@ -715,13 +717,13 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        protected Void doInBackground(Void... params) {
+                        protected Void doInBackground(String... params) {
                             try {
                                 Thread.sleep(500);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            productList=productDBAdapter.getAllProductsByHint(word,productLoadItemOffset,productCountLoad);
+                            productList=productDBAdapter.getAllProductsByHint(params[0],productLoadItemOffset,productCountLoad);
                             return null;
                         }
 
@@ -732,7 +734,7 @@ public class MainActivity extends AppCompatActivity {
                             gvProducts.setAdapter(adapter);
                             lvProducts.setAdapter(adapter);
                         }
-                    }.execute();
+                    }.execute(word);
                 } else {
                     productList = All_productsList;
                     ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
@@ -1989,6 +1991,7 @@ startActivity(i);
     private void loadMoreProduct() {
         productLoadItemOffset += productCountLoad;
         final int id = prseedButtonDepartments.getId();
+        final String searchWord = etSearch.getText().toString();
         final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
         dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish));
 
@@ -2001,13 +2004,17 @@ startActivity(i);
             @Override
             protected void onPostExecute(Void aVoid) {
                 All_productsList = productList;
-                productCatalogGridViewAdapter.notifyDataSetChanged();
+                ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), All_productsList);
+                lvProducts.setAdapter(adapter);
+                gvProducts.setAdapter(adapter);
                 dialog.cancel();
             }
 
             @Override
             protected Void doInBackground(Void... params) {
-                if (id == 0) {
+                if (!searchWord.equals("")) {
+                    productList.addAll(productDBAdapter.getAllProductsByHint(searchWord, productLoadItemOffset, productCountLoad));
+                }else if (id == 0) {
                     productList.addAll(productDBAdapter.getTopProducts(productLoadItemOffset, productCountLoad));
                 } else {
                     productList.addAll(productDBAdapter.getAllProductsByDepartment(id, productLoadItemOffset, productCountLoad));
