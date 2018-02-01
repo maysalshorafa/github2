@@ -7,10 +7,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -30,7 +30,6 @@ import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -132,9 +131,20 @@ public class ProductCatalogActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 filter_productsList = new ArrayList<Product>();
-                String word = etSearch.getText().toString();
+                final String word = etSearch.getText().toString();
                 if (!word.equals("")) {
-                    filter_productsList=productDBAdapter.getAllProductsByHint(word,productLoadItemOffset,productCountLoad);
+                    // Database query can be a time consuming task ..
+                    // so its safe to call database query in another thread
+                    // Handler, will handle this stuff
+
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            filter_productsList=productDBAdapter.getAllProductsByHint(word,productLoadItemOffset,productCountLoad);
+                            ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
+                            gvProducts.setAdapter(adapter);
+                        }
+                    });
                 /**    for (Product p : productsList) {
                         if (p.getName().toLowerCase().contains(word.toLowerCase()) || p.getDescription().toLowerCase().contains(word.toLowerCase())) {
                             filter_productsList.add(p);
@@ -142,9 +152,10 @@ public class ProductCatalogActivity extends AppCompatActivity {
                     }**/
                 } else {
                     filter_productsList = productsList;
+                    ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
+                    gvProducts.setAdapter(adapter);
                 }
-                ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
-                gvProducts.setAdapter(adapter);
+
             }
         });
 

@@ -1,7 +1,5 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
-import android.database.Cursor;
-
 /**
  * Created by KARAM on 30/10/2016.
  */
@@ -31,6 +29,6 @@ public class SETTINGS {
 
 	//public static String BO_SERVER_URL = "http://172.16.0.44:8080/leadBO/webapi/";
 	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
-	public static String BO_SERVER_URL = "http://192.168.1.11:8080/webapi/";
+	public static String BO_SERVER_URL = "http://192.168.1.13:8080/webapi/";
 
 }
