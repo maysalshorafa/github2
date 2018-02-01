@@ -89,7 +89,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
             SESSION.internetStatus = InternetStatus.ERROR;
         }
 
-        TitleBar.setTitleBar(this);
+
 
         //run MSR Service
         Intent intent = new Intent();
@@ -167,6 +167,8 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                 break;
 
         }
+
+        TitleBar.setTitleBar(this);
 
         mainScreen = (Button) findViewById(R.id.mainScreen);
         btAReport = (Button) findViewById(R.id.dashboard_btAreport);
@@ -416,13 +418,23 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     }
 
     private boolean needAReport(){
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         ZReport zReport = getLastZReport();
+        Log.e("zreport last", zReport.toString());
+
         AReport aReport = getLastAReport();
+        Log.e("areport last", aReport.toString());
+
 
 
         if (aReport != null && zReport != null) {
             if (aReport.getLastZReportID() == zReport.getId()) {
-
+                Toast.makeText(this, zReport.toString(), Toast.LENGTH_LONG).show();
+                Log.e("zreport id", zReport.getId()+"");
             } else {
                 return true;
             }
@@ -444,6 +456,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
             e.printStackTrace();
         }
         zReportDBAdapter.close();
+        Toast.makeText(this, zReport.toString(), Toast.LENGTH_LONG).show();
         return zReport;
     }
 
@@ -460,6 +473,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         }
 
         aReportDBAdapter.close();
+        Toast.makeText(this, aReport.toString(), Toast.LENGTH_LONG).show();
         return aReport;
     }
 

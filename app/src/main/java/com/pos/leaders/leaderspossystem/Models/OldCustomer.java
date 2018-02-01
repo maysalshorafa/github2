@@ -38,6 +38,7 @@ public class OldCustomer {
         this.countryCode = countryCode;
     }
 
+
     public int getId() {
         return id;
     }

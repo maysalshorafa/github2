@@ -7,7 +7,7 @@ package com.pos.leaders.leaderspossystem.Models.CustomerMeasurement;
 public class MeasurementsDetails {
     private long id;
     private long measurementId;
-    private  long dynamicVarId;
+    private long dynamicVarId;
     private String value;
     private MeasurementDynamicVariable measurementDynamicVariable;
     //Constructors

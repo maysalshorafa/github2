@@ -10,6 +10,9 @@ import com.pos.leaders.leaderspossystem.MainActivity;
 
 public class OfferRule {
 
+    public OfferRule() {
+    }
+
     public OfferRule(Context context) {
     }
 
@@ -33,8 +36,8 @@ public class OfferRule {
     // Constructor
     public OfferRule(int id, int rule,int product_id) {
         this.id = id;
-       this.rule = rule;
-        this.product_id=product_id;
+        this.rule = rule;
+        this.product_id = product_id;
     }
 
     // Getters

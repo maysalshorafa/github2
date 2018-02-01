@@ -12,7 +12,6 @@ import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.R;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,11 +22,24 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
     private Context context;
     private List<CustomerAssistant> customerAssests;
     private LayoutInflater inflater;
-
-    public SalesManDetailsGridViewAdapter(Context context,List<CustomerAssistant> customerAssests) {
+    private int resource;
+    int bgColor =0;
+    public SalesManDetailsGridViewAdapter(Context context, int resource, List<CustomerAssistant> customerAssests) {
         this.context = context;
+        this.resource = resource;
+        this.context = context;
+        bgColor=0;
         this.customerAssests = customerAssests;
     }
+    public SalesManDetailsGridViewAdapter(Context context, List<CustomerAssistant> customerAssests) {
+        this.context = context;
+        this.resource = resource;
+        this.context = context;
+        bgColor=0;
+        this.customerAssests = customerAssests;
+    }
+
+
 
 
     /**
@@ -102,13 +114,16 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
         TextView saleId=(TextView)gridView.findViewById(R.id.salesManGridView_TVSaleId);
         UserDBAdapter userDBAdapter=new UserDBAdapter(context);
         userDBAdapter.open();
-        String userName=userDBAdapter.getUserName(customerAssests.get(position).getCustmerAssestID());
+        String userName=userDBAdapter.getUserName(customerAssests.get(position).getCustomerAssistantID());
       //  saleManId.setText(userName);
-        salesCase.setText(""+customerAssests.get(position).getSalescase());
+        salesCase.setText(""+customerAssests.get(position).getSalesCase());
         tvSalesAmount.setText(Util.makePrice(customerAssests.get(position).getAmount()));
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         salesDate.setText(format.format(customerAssests.get(position).getSaleDate()));
         saleId.setText(customerAssests.get(position).getOrder_id()+"");
-
+        if(bgColor%2==0){
+            gridView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
+        }
+        bgColor++;
         return gridView;
     }}

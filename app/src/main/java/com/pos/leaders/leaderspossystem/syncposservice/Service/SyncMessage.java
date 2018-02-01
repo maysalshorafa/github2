@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.syncposservice.Service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -21,6 +22,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAd
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
@@ -36,6 +38,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
@@ -50,6 +53,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 
 import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasurement;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDynamicVariable;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
@@ -64,6 +68,7 @@ import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.Permission.UserPermissions;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
@@ -117,7 +122,7 @@ public class SyncMessage extends Service {
     private Broker broker;
     private MessageTransmit messageTransmit;
 
-    private long LOOP_TIME = 5 * 60 * 1000;
+    private long LOOP_TIME = 1 * 30 * 1000;
 
     private boolean isRunning = false;
     private Context context;
@@ -209,9 +214,9 @@ public class SyncMessage extends Service {
                         try {
                             getSync();
                         } catch (IOException | JSONException | NullPointerException e) {
-                            isRunning = false;
+                            //isRunning = false;
                             e.printStackTrace();
-                            stopSelf();
+                            //stopSelf();
                         }
 
                         try {
@@ -232,22 +237,49 @@ public class SyncMessage extends Service {
     }
 
     private void getSync() throws IOException, JSONException {
-        String res = messageTransmit.authGet(ApiURL.Sync, token);
+        String res = "";
+        try {
+            Log.i("token", token);
+            Log.i("sync", ApiURL.Sync);
+            res = messageTransmit.authGet(ApiURL.Sync, token);
+        } catch (Exception ex) {
+            Log.e("getsync exception", ex.getMessage());
+        }
+
+        Log.e("getsync result",res);
         if (res.length() != 0) {
             if (!res.equals(MessageResult.Invalid) && res.charAt(0) == '{') {
                 Log.w("getSync", res);
                 JSONObject jsonObject = new JSONObject(res);
 
                 //todo: execute the command
-                if (executeMessage(jsonObject)) {
-                    String resp = messageTransmit.authPost(ApiURL.Sync, MessagesCreator.acknowledge(jsonObject.getInt(MessageKey.Ak)), token);
-                    Log.i(TAG, "getSync: " + resp);
-                    if (resp.equals(MessageResult.Invalid)) {
-                        //stop
-                        return;
-                    } else if (resp.equals(MessageResult.OK)) {
-                        getSync();
+                try {
+
+                    if (executeMessage(jsonObject)) {
+                        String resp = messageTransmit.authPost(ApiURL.Sync, MessagesCreator.acknowledge(jsonObject.getInt(MessageKey.Ak)), token);
+                        Log.i(TAG, "getSync: " + resp);
+                        if (resp.equals(MessageResult.Invalid)) {
+                            //stop
+                            return;
+                        } else if (resp.equals(MessageResult.OK)) {
+                            getSync();
+                        }
                     }
+                } catch (SQLiteConstraintException e) {
+                    e.printStackTrace();
+                    Log.e("sync error", e.getMessage());
+                    if (e.getMessage().contains("UNIQUE constraint failed")) {
+                        String resp = messageTransmit.authPost(ApiURL.Sync, MessagesCreator.acknowledge(jsonObject.getInt(MessageKey.Ak)), token);
+                        Log.i(TAG, "getSync: " + resp);
+                        if (resp.equals(MessageResult.Invalid)) {
+                            //stop
+                            return;
+                        } else if (resp.equals(MessageResult.OK)) {
+                            getSync();
+                        }
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             } else if (res.equals(MessageResult.Invalid)) {
                 //todo: there is no update is coming
@@ -259,7 +291,7 @@ public class SyncMessage extends Service {
         }
     }
 
-    private boolean executeMessage(JSONObject jsonObject) throws JSONException, IOException {
+    private boolean executeMessage(JSONObject jsonObject) throws JSONException, IOException ,SQLiteConstraintException,SQLException {
         Log.i(TAG, jsonObject.toString());
         long rID = 0;
         if(jsonObject.has(MessageKey.MessageType)) {
@@ -569,7 +601,12 @@ public class SyncMessage extends Service {
 
                     ProductDBAdapter productDBAdapter = new ProductDBAdapter(this);
                     productDBAdapter.open();
-                    rID = productDBAdapter.insertEntry(p);
+                    try {
+                        rID = productDBAdapter.insertEntry(p);
+                    } catch (Exception ex) {
+                        rID = 0;
+                        ex.printStackTrace();
+                    }
                     productDBAdapter.close();
 
                     break;
@@ -684,6 +721,22 @@ public class SyncMessage extends Service {
                     break;
                 //endregion Credit Card Payment
 
+                //region Customer Assistant
+                case MessageType.ADD_CUSTOMER_ASSISTANT:
+                    CustomerAssistant customerAssistant = null;
+                    customerAssistant = objectMapper.readValue(msgData, CustomerAssistant.class);
+
+                    CustomerAssetDB customerAssetDB = new CustomerAssetDB(this);
+                    customerAssetDB.open();
+                    rID=customerAssetDB.insertEntry(customerAssistant);
+                    customerAssetDB.close();
+
+                    break;
+                case MessageType.UPDATE_CUSTOMER_ASSISTANT:
+                    break;
+                case MessageType.DELETE_CUSTOMER_ASSISTANT:
+                    break;
+                //endregion Customer Assistant
 
                 //region Currency
                 case MessageType.ADD_CURRENCY:
@@ -729,6 +782,18 @@ public class SyncMessage extends Service {
                     measurementDynamicVariableDBAdapter.open();
                     rID=measurementDynamicVariableDBAdapter.insertEntry(measurementDynamicVariable);
                     measurementDynamicVariableDBAdapter.close();
+                    break;
+                //end
+
+                //region UsedPoint
+                case MessageType.ADD_USED_POINT:
+                    UsedPoint up = null;
+                    up= objectMapper.readValue(msgData, UsedPoint.class);
+                    UsedPointDBAdapter usedPointDBAdapter = new UsedPointDBAdapter(this);
+
+                    usedPointDBAdapter.open();
+                    rID=usedPointDBAdapter.insertEntry(up);
+                    usedPointDBAdapter.close();
                     break;
                 //end
 
@@ -1093,6 +1158,7 @@ public class SyncMessage extends Service {
 
 
         }
+        Log.e("response message", res);
 
         try {
             if(res.toLowerCase().equals("false"))

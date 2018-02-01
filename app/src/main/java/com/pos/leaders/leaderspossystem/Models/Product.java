@@ -1,6 +1,9 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -23,6 +26,8 @@ public class Product {
     private double costPrice;
     private boolean withTax;
     private boolean weighable;
+
+    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
     private Date creatingDate;
     private boolean hide;
     private long departmentId;
@@ -35,6 +40,8 @@ public class Product {
     public Product(int i, String string) {
 
     }
+
+
 
 
     //Product with -1 value on id this is a general product

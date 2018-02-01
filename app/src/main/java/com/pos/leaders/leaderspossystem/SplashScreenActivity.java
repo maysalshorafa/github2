@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -27,10 +29,12 @@ import com.pos.leaders.leaderspossystem.OpenFormat.BKMVDATA;
 import com.pos.leaders.leaderspossystem.OpenFormat.INI;
 import com.pos.leaders.leaderspossystem.OpenFormat.OpenFrmt;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.SetupActivity;
 
+import io.fabric.sdk.android.Fabric;
 import org.joda.time.DateTime;
 
 import java.io.File;
@@ -42,6 +46,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 
+import static com.pos.leaders.leaderspossystem.SetUpManagement.POS_Management;
+
 /**
  * Created by KARAM on 19/11/2016.
  */
@@ -50,15 +56,20 @@ public class SplashScreenActivity extends Activity {
     // TODO: 21/11/2016 return splash time out to 2500 ms
     private static final int SPLASH_SCREEN_TIME_OUT = 1500;
     private ZReport lastZReport = null;
-
+    public static boolean  currencyEnable , creditCardEnable , customerMeasurementEnable ;
+    public static int floatPoint;
+    public static String printerType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Fabric.with(this, new Crashlytics());
         setContentView(R.layout.splash_screen);
         ImageView iv=(ImageView)findViewById(R.id.splashScreen_iv);
 
 
         iv.setImageResource(R.drawable.white_color_logo);
+        /// sharedPreferences for Setting
+
 /*
         try {
             importDatabase("/storage/emulated/0/POSDB.db");
@@ -280,20 +291,26 @@ public class SplashScreenActivity extends Activity {
 
         }
         else{
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //Redirect to login activity
-                    SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(SplashScreenActivity.this);
-                    settingsDBAdapter.open();
-                    settingsDBAdapter.GetSettings();
-                    settingsDBAdapter.close();
+            if(newPosManagement()) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
 
-                    Intent intent=new Intent(SplashScreenActivity.this,LogInActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }, SPLASH_SCREEN_TIME_OUT);
+                        //Redirect to login activity
+                        SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(SplashScreenActivity.this);
+                        settingsDBAdapter.open();
+                        settingsDBAdapter.GetSettings();
+                        settingsDBAdapter.close();
+
+                        Intent intent = new Intent(SplashScreenActivity.this, LogInActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, SPLASH_SCREEN_TIME_OUT);
+            } else {
+                Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
+                startActivity(i);
+            }
         }
     }
 
@@ -334,6 +351,8 @@ public class SplashScreenActivity extends Activity {
 
         // Update the shared preferences with the current version code
         prefs.edit().putInt(PREF_VERSION_CODE_KEY, currentVersionCode).commit();
+
+
 
     }
 
@@ -465,6 +484,61 @@ public class SplashScreenActivity extends Activity {
         mOutput.flush();
         mOutput.close();
         mInput.close();
+    }
+    private boolean newPosManagement() {
+        /// sharedPreferences for Setting
+        SharedPreferences cSharedPreferences = getSharedPreferences(POS_Management, MODE_PRIVATE);
+        if(cSharedPreferences!=null){
+            //CreditCard
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD)) {
+                creditCardEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD,false);
+                SETTINGS.creditCardEnable=creditCardEnable;
+            }
+            else {
+                return false;
+            }
+            // end CreditCard
+            //Currency
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY)) {
+                currencyEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY,false);
+                SETTINGS.enableCurrencies=currencyEnable;
+
+            }
+            else {
+                return false;
+            }
+            //end
+            //CustomerMeasurement
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT)) {
+                customerMeasurementEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT,false);
+                SETTINGS.enableCustomerMeasurement=customerMeasurementEnable;
+            }
+            else {
+                return false;
+            }
+            //end
+            //FloatPoint
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT)) {
+                floatPoint =cSharedPreferences.getInt(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT,2);
+                SETTINGS.decimalNumbers=floatPoint;
+            }
+            else {
+                return false;
+            }
+            //end
+            //PrinterType
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE)) {
+                printerType =cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE,PrinterType.HPRT_TP805.name());
+                PrinterType printer = PrinterType.valueOf(printerType);
+                SETTINGS.printer=printer;
+            }
+            else {
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

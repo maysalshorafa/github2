@@ -193,10 +193,10 @@ public class ProductsActivity  extends AppCompatActivity  {
         Bundle extras = getIntent().getExtras();
 
         if(extras!=null) {
-            try {
-                etBarcode.setText(extras.getString("barcode"));
-            } catch (Exception ex) {
-
+            if(extras.containsKey("barcode")) {
+                try {
+                    etBarcode.setText(extras.getString("barcode"));
+                } catch (Exception ex) {
             }
             try {
                 editableProduct = productDBAdapter.getProductByID(extras.getLong("productID"));
@@ -230,9 +230,7 @@ public class ProductsActivity  extends AppCompatActivity  {
 
                 }
 
-
-            } catch (Exception ex) {
-
+                }
             }
         }
     }

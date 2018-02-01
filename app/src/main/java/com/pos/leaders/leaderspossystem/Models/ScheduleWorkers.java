@@ -1,5 +1,8 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
+
 import java.util.Date;
 
 /**
@@ -9,8 +12,11 @@ import java.util.Date;
 public class ScheduleWorkers {
     private long id;
     private long userId;
+    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
     private Date date;
+    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
     private Date startTime;
+    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
     private Date exitTime;
 
     // Constructors
@@ -37,6 +43,9 @@ public class ScheduleWorkers {
 
     public ScheduleWorkers(ScheduleWorkers scheduleWorkers){
         this(scheduleWorkers.getId(),scheduleWorkers.getUserId(),scheduleWorkers.getDate(),scheduleWorkers.getStartTime(),scheduleWorkers.getExitTime());
+    }
+
+    public ScheduleWorkers() {
     }
 
     // Getters

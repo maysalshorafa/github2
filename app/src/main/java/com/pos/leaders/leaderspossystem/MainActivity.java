@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -145,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     //ImageButton    btnLastSales;
     Button btnPercentProduct, btnPauseSale, btnResumeSale;
     ImageButton search_person;
-    Button btnCancel, btnCash, btnCreditCard, btnOtherWays;
+    Button  btnCash, btnCreditCard, btnOtherWays;
     TextView tvTotalPrice, tvTotalSaved, salesSaleMan;
     EditText etSearch;
     ImageButton btnDone;
@@ -191,10 +190,7 @@ public class MainActivity extends AppCompatActivity {
     double offerAmount = 0;
     long saleIDforCash;
     static List<Integer> offersIDsList;
-
-
     List<Offer> offersList;
-
     ProductCatalogGridViewAdapter productCatalogGridViewAdapter;
     CustomerCatalogGridViewAdapter custmerCatalogGridViewAdapter;
     //ProductCatalogListViewAdapter productCatalogListViewAdapter;
@@ -219,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
     POSSDK pos;
     Button btn_cancel;
     LinearLayout ll;
-    ImageView imv;
+    ImageView imv ,btnCancel;
 
     private String touchPadPressed = "";
     private boolean enableBackButton = true;
@@ -307,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
         btnResumeSale = (Button) findViewById(R.id.mainActivity_BTNMultProduct);
         btnPercentProduct = (Button) findViewById(R.id.mainActivity_BTNPercentProduct);
         //  btnLastSales = (ImageButton) findViewById(R.id.mainActivity_BTNLastSales);
-        btnCancel = (Button) findViewById(R.id.mainActivity_btnCancel);
+        btnCancel = (ImageView) findViewById(R.id.mainActivity_btnCancel);
         lvOrder = (ListView) findViewById(R.id.mainScreen_LVOrder);
 
         btnCash = (Button) findViewById(R.id.mainActivity_btnCash);

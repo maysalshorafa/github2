@@ -1,5 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -16,13 +18,16 @@ public class Check {
 	private int branchNum;
 	private int accountNum;
 	private double amount;
+	@JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
 	private Date date;
-	private boolean isDeleted;
+	private boolean deleted;
 	private long saleId;
 
 	// region Constructors
 
-	public Check(long id, int checkNum, int bankNum, int branchNum, int accountNum, double amount, Date date, boolean isDeleted, long saleId) {
+
+
+	public Check(long id, int checkNum, int bankNum, int branchNum, int accountNum, double amount, Date date, boolean deleted, long saleId) {
 		this.accountNum = accountNum;
 		this.amount = amount;
 		this.bankNum = bankNum;
@@ -30,18 +35,18 @@ public class Check {
 		this.checkNum = checkNum;
 		this.date = date;
 		this.id = id;
-		this.isDeleted = isDeleted;
+		this.deleted = deleted;
 		this.saleId = saleId;
 	}
 
-	public Check(int checkNum, int bankNum, int branchNum, int accountNum, double amount, Date date, boolean isDeleted) {
+	public Check(int checkNum, int bankNum, int branchNum, int accountNum, double amount, Date date, boolean deleted) {
 		this.accountNum = accountNum;
 		this.amount = amount;
 		this.bankNum = bankNum;
 		this.branchNum = branchNum;
 		this.checkNum = checkNum;
 		this.date = date;
-		this.isDeleted = isDeleted;
+		this.deleted = deleted;
 	}
 
 	public Check(){
@@ -89,7 +94,7 @@ public class Check {
 	}
 
 	public boolean isDeleted() {
-		return isDeleted;
+		return deleted;
 	}
 
 	//endregion
@@ -124,7 +129,11 @@ public class Check {
 		this.date = date;
 	}
 
-	//endregion
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    //endregion
 
 	//region Methods
 

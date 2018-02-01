@@ -21,6 +21,10 @@ public class Customer {
     String country;
     String countryCode;
 
+
+    public Customer() {
+    }
+
     public Customer(long id, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode) {
         this.id = id;
         this.firstName = firstName;

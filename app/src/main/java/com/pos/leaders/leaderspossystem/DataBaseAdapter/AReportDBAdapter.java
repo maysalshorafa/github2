@@ -126,7 +126,7 @@ public class AReportDBAdapter {
 
     public AReport getLastRow() throws Exception {
         AReport aReport = null;
-        Cursor cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME + " order by id desc", null);
+        Cursor cursor = db.rawQuery("select * from " + A_REPORT_TABLE_NAME + " where id like '"+SESSION.POS_ID_NUMBER+"%' order by id desc", null);
         if (cursor.getCount() < 1) // zReport Not Exist
         {
             cursor.close();
