@@ -287,4 +287,29 @@ public class ProductDBAdapter {
         }
         return p;
     }
+    public boolean availableProductName(String productName) {
+        Cursor cursor = db.query(PRODUCTS_TABLE_NAME, null, PRODUCTS_COLUMN_NAME + "=?", new String[]{productName}, null, null, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+            //Product Name not available
+            return false;
+        }
+        // Product Name available
+        return true;
+    }
+    public List<Product> getAllProductsByHint(String hint , int from , int count ){
+        List<Product> productsList =new ArrayList<Product>();
+
+        Cursor cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
+                hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+ hint+"%'" +" order by id desc limit "+from+","+count, null );
+
+        cursor.moveToFirst();
+
+        while(!cursor.isAfterLast()){
+            productsList.add(makeProduct(cursor));
+            cursor.moveToNext();
+        }
+
+        return productsList;
+    }
 }

@@ -384,7 +384,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                offerDBAdapter.close();
+             //   offerDBAdapter.close();
                 productOfferDBAdapter.close();
 
             }
@@ -701,24 +701,45 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                productList = new ArrayList<Product>();
-                String word = etSearch.getText().toString();
-
+                final String word = etSearch.getText().toString();
                 if (!word.equals("")) {
-                    for (Product p : All_productsList) {
-                        if (p.getName().toLowerCase().contains(word.toLowerCase()) ||
-                                p.getDescription().toLowerCase().contains(word.toLowerCase()) ||
-                                p.getBarCode().toLowerCase().contains(word.toLowerCase())) {
-                            productList.add(p);
+                    // Database query can be a time consuming task ..
+                    // so its safe to call database query in another thread
+                    // Handler, will handle this stuff
+                    new AsyncTask<Void, Void, Void>() {
+
+                        @Override
+                        protected void onPreExecute() {
+                            productList = new ArrayList<Product>();
+                            super.onPreExecute();
                         }
-                    }
+
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            productList=productDBAdapter.getAllProductsByHint(word,productLoadItemOffset,productCountLoad);
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
+                            gvProducts.setAdapter(adapter);
+                            lvProducts.setAdapter(adapter);
+                        }
+                    }.execute();
                 } else {
                     productList = All_productsList;
+                    ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
+                    gvProducts.setAdapter(adapter);
+                    lvProducts.setAdapter(adapter);
+
                 }
-                // Log.i("products", productList.toString());
-                productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getBaseContext(), productList);
-                gvProducts.setAdapter(productCatalogGridViewAdapter);
-                lvProducts.setAdapter(productCatalogGridViewAdapter);
 
             }
         });
