@@ -88,6 +88,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     double aReportTotalAmount = 0;
     private MSCardService sendservice;
     long aReportId;
+    double totalZReportAmount =0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,17 +234,18 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     lastZReport = new ZReport();
                     lastZReport.setEndSaleId(0);
                 }
-
                 ZReport z = new ZReport(0, DateConverter.stringToDate(DateConverter.currentDateTime()), SESSION._USER, lastZReport.getEndSaleId() + 1, lastSale);
                 z.setByUser(SESSION._USER.getId());
-                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId());
+                double amount = zReportDBAdapter.getZReportAmount(z.getStartSaleId(), z.getEndSaleId());
+                totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
+                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId(),amount,totalZReportAmount);
                 z.setId(zID);
                 lastZReport = new ZReport(z);
                 zReportDBAdapter.close();
                 PrintTools pt = new PrintTools(DashBord.this);
 
                 //create and print z report
-                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false);
+                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false,totalZReportAmount);
                 if (bmap != null)
                     pt.PrintReport(bmap);
 
@@ -251,6 +253,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, lastZReport.getId());
                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, lastZReport.getStartSaleId());
                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, lastZReport.getEndSaleId());
+                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
+
                 startActivity(i);
                 btZReport.setEnabled(false);
             }

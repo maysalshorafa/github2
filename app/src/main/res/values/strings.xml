@@ -478,4 +478,5 @@
     <string name="choose_printer_type">Choose Printer Type</string>
 
     <string name="delete_check">Delete Check</string>
+    <string name="pos_sales">PosSales: </string>
 </resources>

@@ -69,6 +69,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
     Intent i;
     Sale lastSale;
+    double totalZReportAmount=0;
 
     private MSCardService sendservice;
 
@@ -245,14 +246,16 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
 
                 ZReport z=new ZReport(0, DateConverter.stringToDate(DateConverter.currentDateTime()) , SESSION._USER,lastZReport.getEndSaleId()+1,lastSale);
                 z.setByUser(SESSION._USER.getId());
-                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId());
+                double amount = zReportDBAdapter.getZReportAmount(z.getStartSaleId(), z.getEndSaleId());
+                totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
+                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId(),amount,totalZReportAmount);
                 z.setId(zID);
                 lastZReport = new ZReport(z);
                 zReportDBAdapter.close();
                 PrintTools pt = new PrintTools(TempDashBord.this);
 
                 //create and print z report
-                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false);
+                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false,totalZReportAmount);
                 if(bmap!=null)
                     pt.PrintReport(bmap);
 

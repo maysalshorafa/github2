@@ -37,22 +37,9 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
-    /**
-     * 1 change database version no
-     step to rename column from exist table
-     1)rename the old table
-     2)create new table
-     3)copy all data from the pref to new table
-     4)delete the old
-     private static final String DATABASE_ALTER_TABLE_NAME = "ALTER TABLE " + "Rule1" + " RENAME TO " + "Rule1Old" ; // Alter table name to exist table
-     public static final String DATABASE_CREATE_TEST =  "CREATE TABLE `"+Rule1DBAdapter.RULE1_TABLE_NAME+"` ( `"+"id"+"` INTEGER PRIMARY KEY AUTOINCREMENT, " +
-     "`"+ "quantity" +"` INTEGER NOT NULL, `"+"test1"+"` REAL NOT NULL ,`"+"price"+"` REAL NOT NULL)";//create new table with the prev table name and with modify( column name , remove column add or remove constraints from a table)
-     public  static  final  String DATABASE_Insert_TEST ="INSERT INTO" +" Rule1 "+ "SELECT * FROM Rule1Old"; if the case is rename column rename table use this to insert from the prev table to new table
-     db.execSQL( " INSERT INTO Rule1( id , quantity , price ) " +"SELECT id , quantity , price  FROM Rule1Old"); use this insert if the case remove column
-     protected static final int DATABASE_VERSION = 3; // db version
-     private static final String DATABASE_ALTER_COLUMN_NAME = "ALTER TABLE " + "test" + " ADD COLUMN " + "date" + " string;"; // Add column to exist table
-     db.execSQL( "DROP TABLE IF EXISTS Rule1Old"); use to remove prev table after all operation
-     */
+
+    protected static final int DATABASE_VERSION = 2;
+
     protected static final String DATABASE_NAME = "POSDB.db";
     protected static final String CONTACTS_TABLE_NAME = "contacts";
     protected static final String CONTACTS_COLUMN_ID = "id";
@@ -62,13 +49,14 @@ public class DbHelper extends SQLiteOpenHelper {
     protected static final String CONTACTS_COLUMN_CITY = "place";
     protected static final String CONTACTS_COLUMN_PHONE = "phone";
     private HashMap hp;
-
     private Context context;
-
+    private static final String DATABASE_ADD_COLUMN_AMOUNT = "ALTER TABLE " + "z_report" + " ADD COLUMN " + "amount" + " REAL;"; // Add column to exist table
+    private static final String DATABASE_ADD_COLUMN_TOTAL_AMOUNT = "ALTER TABLE " + "z_report" + " ADD COLUMN " + "total_amount" + " REAL;"; // Add column to exist table
+    public static boolean DATABASE_ENABEL_ALTER_COLUMN = false;
     //21
     public DbHelper(Context context)
     {
-        super(context, DATABASE_NAME ,null,1);
+        super(context, DATABASE_NAME ,null,DATABASE_VERSION);
         this.context = context;
     }
 
@@ -225,18 +213,11 @@ public class DbHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // if Version is more than one this method called
-        if (oldVersion < 2) {
-         /**   db.execSQL(DATABASE_ALTER_TABLE_NAME);
-            db.execSQL(DATABASE_CREATE_TEST);
-            db.execSQL(DATABASE_Insert_TEST);
-            db.execSQL( " INSERT INTO Rule1( id , quantity , price ) " +
-                    "SELECT id , quantity , price  FROM Rule1Old");
-            db.execSQL( "DROP TABLE IF EXISTS Rule1Old");**/
 
-
-        }
-        if (oldVersion < 3) {
+        if(oldVersion<2){
+            db.execSQL(DATABASE_ADD_COLUMN_AMOUNT);
+            db.execSQL(DATABASE_ADD_COLUMN_TOTAL_AMOUNT);
+            DATABASE_ENABEL_ALTER_COLUMN=true;
 
         }
 
@@ -244,7 +225,9 @@ public class DbHelper extends SQLiteOpenHelper {
         // Log the version upgrade.
         Log.w("TaskDBAdapter", "Upgrading from version " +oldVersion + " to " +newVersion + ", which will destroy all old data");
         //db.execSQL("DROP TABLE IF EXISTS contacts");
-          onCreate(db);
+
+        //onCreate(db);
+
     }
 
     /*
@@ -389,4 +372,5 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (5,'True','Boolean','C',0);");
         db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (6,'False','Boolean','C',0);");
     }
+
 }
