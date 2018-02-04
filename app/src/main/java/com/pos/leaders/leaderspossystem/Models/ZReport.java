@@ -20,6 +20,7 @@ public class ZReport {
     private User user;
     private long startSaleId;
     private double amount;
+    @JsonIgnore
     private double total_amount;
     @JsonIgnore
     private Sale startSale;
@@ -32,6 +33,16 @@ public class ZReport {
     }
 
     public ZReport(long id, Date creationDate, long byUser, long startSaleId, long endSaleId,double amount,double total_amount) {
+        this.id = id;
+        this.creationDate = creationDate;
+        this.byUser = byUser;
+        this.startSaleId = startSaleId;
+        this.endSaleId = endSaleId;
+        this.amount=amount;
+        this.total_amount=total_amount;
+    }
+
+    public ZReport(long id, Date creationDate, long byUser, long startSaleId, long endSaleId,double amount) {
         this.id = id;
         this.creationDate = creationDate;
         this.byUser = byUser;
