@@ -4,18 +4,26 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.City;
+import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasurement;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDynamicVariable;
 import com.pos.leaders.leaderspossystem.R;
@@ -36,12 +44,14 @@ public class CustomerMeasurementManagementActivity  extends AppCompatActivity {
     MeasurementsDetailsDBAdapter measurementsDetailsDBAdapter;
     MeasurementDynamicVariableDBAdapter measurementDynamicVariableDBAdapter;
     CustomerMeasurementDBAdapter customerMeasurementDBAdapter;
-    GridView gvCustomerMeasurement;
-    TextView etCustomerName ;
+    ListView gvCustomerMeasurement;
+    TextView etCustomerName , customerClubName , customerAddress , customerPhoneNumber , customerEmail , tvNoOfMeasurement;
     List<CustomerMeasurement> All_CustomerMeasurementList;
     boolean userScrolled=true;
     View selectedItem;
     ArrayList<HashMap<String, String>> storeList = new ArrayList<HashMap<String, String>>(); //List to store list of measurement
+    private List<Club> groupList = null;
+    private List<City> cityList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +63,6 @@ public class CustomerMeasurementManagementActivity  extends AppCompatActivity {
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.customer_measurement_management );
-
         TitleBar.setTitleBar(this);
         Bundle bundle = getIntent().getExtras();
         long customerId = (long) bundle.get("id");
@@ -65,21 +74,47 @@ public class CustomerMeasurementManagementActivity  extends AppCompatActivity {
         customerMeasurementDBAdapter = new CustomerMeasurementDBAdapter(CustomerMeasurementManagementActivity.this);
         customerMeasurementDBAdapter.open();
         etCustomerName =(TextView) findViewById(R.id.etCustomerName);
-        etCustomerName.setText(customer.getFirstName()+" "+customer.getLastName());
-        gvCustomerMeasurement = (GridView) findViewById(R.id.Management_GVCustomerMeasurementDetails);
+        customerClubName =(TextView) findViewById(R.id.etCustomerClubName);
+        customerAddress =(TextView) findViewById(R.id.etCustomerAddress);
+        customerPhoneNumber =(TextView) findViewById(R.id.etCustomerPhoneNumber);
+        customerEmail =(TextView)findViewById(R.id.etCustomerEmail);
+        tvNoOfMeasurement =(TextView)findViewById(R.id.noOfCustomerMeasurement);
+        etCustomerName.setText(": "+customer.getFirstName()+" "+customer.getLastName());
+        CityDbAdapter cityDbAdapter = new CityDbAdapter(CustomerMeasurementManagementActivity.this);
+        cityDbAdapter.open();
+        cityList = cityDbAdapter.getAllCity();
+        for (int i = 0; i < cityList.size(); i++) {
+            City city = cityList.get(i);
+            if (city.getId() == customer.getCity()) {
+                customerAddress.setText(customer.getHouseNumber()+"-"+customer.getStreet()+"-"+city.getName()+"-"+customer.getCountry());
+            }        }
+        customerPhoneNumber.setText(customer.getPhoneNumber());
+        ClubAdapter groupAdapter = new ClubAdapter(CustomerMeasurementManagementActivity.this);
+        groupAdapter.open();
+        groupList = groupAdapter.getAllGroup();
+        for (int i = 0; i < groupList.size(); i++) {
+            Club group = groupList.get(i);
+            if (group.getId() == customer.getClub()) {
+                customerClubName.setText(": "+group.getname());
+            }
+        }
+        customerEmail.setText(customer.getEmail());
+      int noOfMeasurement= customerMeasurementDBAdapter.noOfCustomerMeasurement(customer.getId());
+        tvNoOfMeasurement.setText(": "+noOfMeasurement);
+        gvCustomerMeasurement = (ListView) findViewById(R.id.Management_GVCustomerMeasurementDetails);
         measurementsDetailsDBAdapter = new MeasurementsDetailsDBAdapter(this);
         measurementsDetailsDBAdapter.open();
         customerMeasurementList = customerMeasurementDBAdapter.getCustomerMeasurementByCustomerId(customerId);
         All_CustomerMeasurementList = customerMeasurementList;
-        adapter = new CustomerMeasurementCatalogGridViewAdapter(this, customerMeasurementList);
+        LayoutInflater inflater = getLayoutInflater();
+        ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_customer_measurement_header, gvCustomerMeasurement, false);
+        gvCustomerMeasurement.addHeaderView(header, null, false);
+        adapter = new CustomerMeasurementCatalogGridViewAdapter(this, R.layout.grid_view_item_customer_measurement,customerMeasurementList);
         gvCustomerMeasurement.setAdapter(adapter);
-        gvCustomerMeasurement.setSelection(0);
-        All_CustomerMeasurementList = customerMeasurementList;
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         gvCustomerMeasurement.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                removeItemSelection();
                 LinearLayout viewElementLayout = (LinearLayout) findViewById(R.id.customer_measurementLayout); //to store element in it
                 viewElementLayout.setGravity(Gravity.CENTER);
@@ -88,7 +123,7 @@ public class CustomerMeasurementManagementActivity  extends AppCompatActivity {
                 viewElementLayout.setVisibility(View.VISIBLE);
                 view=viewElementLayout;
                 selectedItem = view;
-                long measurementId = customerMeasurementList.get(position).getId();
+                long measurementId = customerMeasurementList.get(position-1).getId();
                 storeList =measurementsDetailsDBAdapter.getAllMeasurementDetail(measurementId);
                 JSONObject jsonObject = new JSONObject();
                 //draw element dynamically using storeList
@@ -114,21 +149,18 @@ public class CustomerMeasurementManagementActivity  extends AppCompatActivity {
                         lLayout.setLayoutParams(lp);
                         TextView customOptionsName = new TextView(CustomerMeasurementManagementActivity.this);
                         customOptionsName.setTextSize(20);
-                        customOptionsName.setTypeface(null, Typeface.BOLD);
                         customOptionsName.setTextColor(Color.BLACK);
                         customOptionsName.setGravity(Gravity.CENTER);
                         customOptionsName.setText(name + " : ");
                         lLayout.addView(customOptionsName);
                         TextView customOptionsValue = new TextView(CustomerMeasurementManagementActivity.this);
                         customOptionsValue.setTextSize(20);
-                        customOptionsValue.setTypeface(null, Typeface.BOLD);
                         customOptionsValue.setTextColor(Color.BLACK);
                         customOptionsValue.setGravity(Gravity.CENTER);
                         customOptionsValue.setText(elementValue);
                         lLayout.addView(customOptionsValue);
                         viewElementLayout.addView(lLayout);
                         TextView line = new TextView(CustomerMeasurementManagementActivity.this);
-                        line.setTypeface(null, Typeface.BOLD);
                         line.setTextColor(Color.BLACK);
                         line.setText("----------------------------------------");
                         LinearLayout.LayoutParams lineLp = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT); // or set height to any fixed value you want
