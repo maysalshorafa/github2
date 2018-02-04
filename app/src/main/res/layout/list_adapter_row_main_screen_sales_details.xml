@@ -122,6 +122,18 @@
             android:paddingTop="5dp"
             android:paddingLeft="5dp"
             />
+        <ImageView
+            android:id="@+id/deleteOrderSalesMan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/delete_check"
+            android:layout_gravity="center"
+            android:src="@drawable/delete_button"
+           android:visibility="gone" />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/discountLayout"
