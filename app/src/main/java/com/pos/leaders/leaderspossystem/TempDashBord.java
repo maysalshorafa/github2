@@ -69,6 +69,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
     Intent i;
     Sale lastSale;
+    double totalZReportAmount=0;
 
     private MSCardService sendservice;
 
@@ -89,7 +90,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
             SESSION.internetStatus = InternetStatus.ERROR;
         }
 
-        TitleBar.setTitleBar(this);
+
 
         //run MSR Service
         Intent intent = new Intent();
@@ -168,6 +169,8 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
 
         }
 
+        TitleBar.setTitleBar(this);
+
         mainScreen = (Button) findViewById(R.id.mainScreen);
         btAReport = (Button) findViewById(R.id.dashboard_btAreport);
         btZReport = (Button) findViewById(R.id.dashboard_btZreport);
@@ -243,14 +246,16 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
 
                 ZReport z=new ZReport(0, DateConverter.stringToDate(DateConverter.currentDateTime()) , SESSION._USER,lastZReport.getEndSaleId()+1,lastSale);
                 z.setByUser(SESSION._USER.getId());
-                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId());
+                double amount = zReportDBAdapter.getZReportAmount(z.getStartSaleId(), z.getEndSaleId());
+                totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
+                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId(),amount,totalZReportAmount);
                 z.setId(zID);
                 lastZReport = new ZReport(z);
                 zReportDBAdapter.close();
                 PrintTools pt = new PrintTools(TempDashBord.this);
 
                 //create and print z report
-                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false);
+                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false,totalZReportAmount);
                 if(bmap!=null)
                     pt.PrintReport(bmap);
 
@@ -416,13 +421,23 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     }
 
     private boolean needAReport(){
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         ZReport zReport = getLastZReport();
+        Log.e("zreport last", zReport.toString());
+
         AReport aReport = getLastAReport();
+        Log.e("areport last", aReport.toString());
+
 
 
         if (aReport != null && zReport != null) {
             if (aReport.getLastZReportID() == zReport.getId()) {
-
+                Toast.makeText(this, zReport.toString(), Toast.LENGTH_LONG).show();
+                Log.e("zreport id", zReport.getId()+"");
             } else {
                 return true;
             }
@@ -444,6 +459,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
             e.printStackTrace();
         }
         zReportDBAdapter.close();
+        Toast.makeText(this, zReport.toString(), Toast.LENGTH_LONG).show();
         return zReport;
     }
 
@@ -460,6 +476,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         }
 
         aReportDBAdapter.close();
+        Toast.makeText(this, aReport.toString(), Toast.LENGTH_LONG).show();
         return aReport;
     }
 

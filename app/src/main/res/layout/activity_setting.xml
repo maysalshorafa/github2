@@ -226,6 +226,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
                 android:paddingLeft="5dp"
+                android:inputType="textPassword"
                 android:layout_weight="1"/>
         </LinearLayout>
 

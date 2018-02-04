@@ -7,10 +7,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -30,7 +30,6 @@ import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,7 +37,6 @@ import java.util.List;
  */
 
 public class ProductCatalogActivity extends AppCompatActivity {
-
     private Button btCreate, btImport;
     EditText etSearch;
     private GridView gvProducts;
@@ -57,7 +55,8 @@ public class ProductCatalogActivity extends AppCompatActivity {
     int productCountLoad=80;
     int departmentID=-1;
     ProductCatalogGridViewAdapter adapter;
-
+    public static int Product_Management_View ;
+    public  static int  Product_Management_Edit;
     public void CancelClickButton(View v){
         onBackPressed();
     }
@@ -131,19 +130,43 @@ public class ProductCatalogActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                filter_productsList = new ArrayList<Product>();
+
                 String word = etSearch.getText().toString();
                 if (!word.equals("")) {
-                    for (Product p : productsList) {
-                        if (p.getName().toLowerCase().contains(word.toLowerCase()) || p.getDescription().toLowerCase().contains(word.toLowerCase())) {
-                            filter_productsList.add(p);
+                    // Database query can be a time consuming task ..
+                    // so its safe to call database query in another thread
+                    // Handler, will handle this stuff
+                    new AsyncTask<String, Void, Void>() {
+                        @Override
+                        protected void onPreExecute() {
+                            filter_productsList = new ArrayList<Product>();
+                            super.onPreExecute();
                         }
-                    }
+
+                        @Override
+                        protected Void doInBackground(String... params) {
+                            try {
+                                Thread.sleep(200);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            filter_productsList = productDBAdapter.getAllProductsByHint(params[0], productLoadItemOffset, productCountLoad);
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
+                            gvProducts.setAdapter(adapter);
+                        }
+                    }.execute(word);
                 } else {
                     filter_productsList = productsList;
+                    ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
+                    gvProducts.setAdapter(adapter);
                 }
-                ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
-                gvProducts.setAdapter(adapter);
+
             }
         });
 
@@ -221,10 +244,12 @@ public class ProductCatalogActivity extends AppCompatActivity {
         gvProducts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
+                Product_Management_Edit=0;
+                Product_Management_View=0;
                 final String[] items = {
                         getString(R.string.edit),
-                        getString(R.string.delete)};
+                        getString(R.string.delete),
+                        getString(R.string.view)  };
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProductCatalogActivity.this);
                 builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
                 builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -232,13 +257,36 @@ public class ProductCatalogActivity extends AppCompatActivity {
                         Intent intent;
                         switch (item) {
                             case 0:
+                                Product_Management_Edit=8;
                                 intent = new Intent(ProductCatalogActivity.this, ProductsActivity.class);
                                 intent.putExtra("productID", filter_productsList.get(position).getId());
                                 startActivity(intent);
                                 break;
                             case 1:
-                                //productDBAdapter.deleteEntry(filter_productsList.get(position).getId());
-                                //// TODO: 15/12/2016 Delete Product 
+                                  new AlertDialog.Builder(ProductCatalogActivity.this)
+                                    .setTitle(getString(R.string.delete)+" "+getString(R.string.product))
+                                    .setMessage(getString(R.string.delete))
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            productDBAdapter.deleteEntry(filter_productsList.get(position).getId());
+                                            productsList.remove(filter_productsList.get(position));
+                                            gvProducts.setAdapter(adapter);
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // do nothing
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                                break;
+                            case 2:
+                                Product_Management_View=9;
+                                intent = new Intent(ProductCatalogActivity.this, ProductsActivity.class);
+                                intent.putExtra("productID", filter_productsList.get(position).getId());
+                                startActivity(intent);
                                 break;
                              
                         }

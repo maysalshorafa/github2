@@ -37,22 +37,9 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
-    /**
-     * 1 change database version no
-     step to rename column from exist table
-     1)rename the old table
-     2)create new table
-     3)copy all data from the pref to new table
-     4)delete the old
-     private static final String DATABASE_ALTER_TABLE_NAME = "ALTER TABLE " + "Rule1" + " RENAME TO " + "Rule1Old" ; // Alter table name to exist table
-     public static final String DATABASE_CREATE_TEST =  "CREATE TABLE `"+Rule1DBAdapter.RULE1_TABLE_NAME+"` ( `"+"id"+"` INTEGER PRIMARY KEY AUTOINCREMENT, " +
-     "`"+ "quantity" +"` INTEGER NOT NULL, `"+"test1"+"` REAL NOT NULL ,`"+"price"+"` REAL NOT NULL)";//create new table with the prev table name and with modify( column name , remove column add or remove constraints from a table)
-     public  static  final  String DATABASE_Insert_TEST ="INSERT INTO" +" Rule1 "+ "SELECT * FROM Rule1Old"; if the case is rename column rename table use this to insert from the prev table to new table
-     db.execSQL( " INSERT INTO Rule1( id , quantity , price ) " +"SELECT id , quantity , price  FROM Rule1Old"); use this insert if the case remove column
-     protected static final int DATABASE_VERSION = 3; // db version
-     private static final String DATABASE_ALTER_COLUMN_NAME = "ALTER TABLE " + "test" + " ADD COLUMN " + "date" + " string;"; // Add column to exist table
-     db.execSQL( "DROP TABLE IF EXISTS Rule1Old"); use to remove prev table after all operation
-     */
+
+    protected static final int DATABASE_VERSION = 2;
+
     protected static final String DATABASE_NAME = "POSDB.db";
     protected static final String CONTACTS_TABLE_NAME = "contacts";
     protected static final String CONTACTS_COLUMN_ID = "id";
@@ -62,13 +49,14 @@ public class DbHelper extends SQLiteOpenHelper {
     protected static final String CONTACTS_COLUMN_CITY = "place";
     protected static final String CONTACTS_COLUMN_PHONE = "phone";
     private HashMap hp;
-
     private Context context;
-
+    private static final String DATABASE_ADD_COLUMN_AMOUNT = "ALTER TABLE " + "z_report" + " ADD COLUMN " + "amount" + " REAL;"; // Add column to exist table
+    private static final String DATABASE_ADD_COLUMN_TOTAL_AMOUNT = "ALTER TABLE " + "z_report" + " ADD COLUMN " + "total_amount" + " REAL;"; // Add column to exist table
+    public static boolean DATABASE_ENABEL_ALTER_COLUMN = false;
     //21
     public DbHelper(Context context)
     {
-        super(context, DATABASE_NAME ,null,1);
+        super(context, DATABASE_NAME ,null,DATABASE_VERSION);
         this.context = context;
     }
 
@@ -128,9 +116,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.execSQL(ScheduleWorkersDBAdapter.DATABASE_CREATE);
         db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
-        //method to updateDataBaseVersion2
-        updateDataBase(db);
-        //end
+
         db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
         db.execSQL(UserDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'user1','user','user','"+new Date().getTime()+"','1234',0,046316969,20,35);");
@@ -225,168 +211,40 @@ public class DbHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // if Version is more than one this method called
-        if (oldVersion < 2) {
-         /**   db.execSQL(DATABASE_ALTER_TABLE_NAME);
-            db.execSQL(DATABASE_CREATE_TEST);
-            db.execSQL(DATABASE_Insert_TEST);
-            db.execSQL( " INSERT INTO Rule1( id , quantity , price ) " +
-                    "SELECT id , quantity , price  FROM Rule1Old");
-            db.execSQL( "DROP TABLE IF EXISTS Rule1Old");**/
 
+        if(oldVersion<2){
+            db.execSQL(DATABASE_ADD_COLUMN_AMOUNT);
+            db.execSQL(DATABASE_ADD_COLUMN_TOTAL_AMOUNT);
+            DATABASE_ENABEL_ALTER_COLUMN = true;
 
+            //method to updateDataBaseVersion2
+            updateDataBase(db);
+            //end
         }
-        if (oldVersion < 3) {
-
-        }
-
-        // TODO Auto-generated method stub
         // Log the version upgrade.
         Log.w("TaskDBAdapter", "Upgrading from version " +oldVersion + " to " +newVersion + ", which will destroy all old data");
-        //db.execSQL("DROP TABLE IF EXISTS contacts");
-          onCreate(db);
     }
 
-    /*
-    * users table
-    * insert to table
-    * get user by id
-    * get all users
-    * get by User Name and Password
-     */
-    public boolean insertUser (String userName, String firstName, String lastName, String creatingDate, String pwd,
-                               Integer hide,String phoneNumber,double present,double hourlyWage)
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("userName", userName);
-        contentValues.put("firstName", firstName);
-        contentValues.put("lastName", lastName);
-        contentValues.put("visitDate", creatingDate);
-        contentValues.put("pwd", pwd);
-        contentValues.put("hide", hide);
-        contentValues.put("phoneNumber", phoneNumber);
-        contentValues.put("present", present);
-        contentValues.put("hourlyWage", hourlyWage);
-        db.insert("users", null, contentValues);
-        return true;
-    }
-
-    /** public User getUserByID(int id){
-     SQLiteDatabase db = this.getReadableDatabase();
-     Cursor res =  db.rawQuery("select * from users where id='"+id+"'", null );
-     res.moveToFirst();
-     User user=null;
-     user=new User(getColumnValueInt("id",res),getColumnValue("userName",res),getColumnValue("pwd",res)
-     ,getColumnValue("firstName",res),getColumnValue("lastName",res), DateConverter.stringToDate(getColumnValue("visitDate",res))
-     ,getColumnValueBoolean("hide",res),getColumnValue("phoneNumber",res)
-     ,Double.parseDouble(getColumnValue("present",res)),Double.parseDouble(getColumnValue("hourlyWage",res),getColumnValue("")));
-     return user;
-     }**/
-
-    private boolean getColumnValueBoolean(String Column, Cursor cr) {
-        int b=cr.getInt(cr.getColumnIndex(Column));
-        if(b==0)
-            return false;
-        return true;
-    }
-
-    private String getColumnValue(String Column,Cursor cr){
-        return cr.getString(cr.getColumnIndex(Column));
-    }
-
-    private int getColumnValueInt(String Column, Cursor cr){
-        return cr.getInt(cr.getColumnIndex(Column));
-    }
-
-    public int numberOfRows(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
-        return numRows;
-    }
-
-    public boolean updateUser (Integer id, String userName, String firstName, String lastName, Date creatingDate, String pwd,
-                               Integer hide, String phoneNumber, double present, double hourlyWage)
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("userName", userName);
-        contentValues.put("firstName", firstName);
-        contentValues.put("lastName", lastName);
-        contentValues.put("visitDate", creatingDate.getTime());
-        contentValues.put("pwd", pwd);
-        contentValues.put("hide", hide);
-        contentValues.put("phoneNumber", phoneNumber);
-        contentValues.put("present", present);
-        contentValues.put("hourlyWage", hourlyWage);
-        db.update("users", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
-        return true;
-    }
-
-    public boolean deleteUser (Integer id)
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("hide", 1);
-        db.update("users",contentValues,"id = ? ",new String[]{Integer.toString(id)});
-        return true;
-    }
-    public int login(String userName,String Password){
-        SQLiteDatabase db=this.getReadableDatabase();
-        int id=0;
-
-        Cursor res;
-        try {
-            Log.w("user name is:",userName);
-            Log.w("password is :",Password);
-            res = db.rawQuery("select * from users where userName='" + userName + "' and pwd='" + Password+"'", null);
-            // res=db.query("users", new String[]{"id","userName","pwd"},"userName=? and pwd=?",new String[]{userName,Password},null,null,null);
-            res.moveToFirst();
-            Log.e("count of rows :",res.getCount()+"");
-
-            if(res.getCount()>0){
-                id=res.getInt(res.getColumnIndex("id"));
-                Log.i("user id",id+"");
-                res.close();
-                return id;
-            }
-            res.close();
-            return id;
-        }
-        catch (Exception sqlEX){
-
-            Log.e("error",sqlEX.getMessage());
-            ///// TODO: 17/10/2016 log error
-            return id;
-        }
-    }
-
-    public ArrayList<String> getAllUsers()
-    {
-        ArrayList<String> array_list = new ArrayList<String>();
-
-        //hp = new HashMap();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from users", null );
-        res.moveToFirst();
-
-        while(!res.isAfterLast()){
-            array_list.add(res.getString(res.getColumnIndex("firstName")));
-            res.moveToNext();
-        }
-        return array_list;
-    }
     // DataBase Version2
     public void updateDataBase(SQLiteDatabase db){
         //CustomerMeasurement
         db.execSQL(CustomerMeasurementDBAdapter.DATABASE_CREATE);
         db.execSQL(MeasurementsDetailsDBAdapter.DATABASE_CREATE);
         db.execSQL(MeasurementDynamicVariableDBAdapter.DATABASE_CREATE);
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (1,'Wight','Double','E',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (2,'Price','Double','E',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (3,'Length','Integer','E',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (4,'Name','String','E',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (5,'True','Boolean','C',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (6,'False','Boolean','C',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (1,'משקל','Double','KG',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (2,'יד ימין 1','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (3,'יד ימין 2','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (4,'יד סמאל 1','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (5,'יד סמאל 2','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (6,'אחוז שומן 1','Double','%',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (7,'אחוז שומן 2','Double','%',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (8,'מותניים','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (9,'חזה','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (10,'רגל ימין 1','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (11,'רגל ימין 2','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (12,'רגל סמאל 1','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (13,'רגל סמאל 2','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (14,'סוג חלבון','String','E',0);");
     }
+
 }

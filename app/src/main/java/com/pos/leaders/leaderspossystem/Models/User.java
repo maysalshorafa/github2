@@ -1,7 +1,9 @@
 package com.pos.leaders.leaderspossystem.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
+import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
 
 import java.util.Date;
 import java.util.List;
@@ -16,11 +18,13 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
+    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
     private Date creatingDate;
     private boolean hide;
     private String phoneNumber;
     private double present;
     private double hourlyWage;
+    private String permissionsName;
 
     @JsonIgnore
     private List<Permissions> permissionsList;
@@ -129,6 +133,22 @@ public class User {
 
     public void setPermissionsList(List<Permissions> permissionsList) {
         this.permissionsList = permissionsList;
+    }
+
+    public String getPermissionsName() {
+        return permissionsName;
+    }
+
+    public void setCreatingDate(Date creatingDate) {
+        this.creatingDate = creatingDate;
+    }
+
+    public void setHide(boolean hide) {
+        this.hide = hide;
+    }
+
+    public void setPermissionsName(String permissionsName) {
+        this.permissionsName = permissionsName;
     }
 
     @Override

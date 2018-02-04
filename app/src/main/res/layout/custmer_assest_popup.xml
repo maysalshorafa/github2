@@ -76,7 +76,8 @@
                 android:textSize="18dp"
                 android:text="@string/delete"
                 android:background="@drawable/bt_dark_enabled"
-                android:textColor="@color/AntiqueWhite"/>
+                android:textColor="@color/AntiqueWhite"
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 

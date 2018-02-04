@@ -30,6 +30,7 @@ public class ReportZDetailsActivity extends Activity {
     String str;
     long from=0,to=0,id=0;
     boolean goBack = false;
+    double totalZReportAmount =0.0 ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,13 +52,14 @@ public class ReportZDetailsActivity extends Activity {
             id=(long)extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_ID);
             from = (long) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_FORM);
             to = (long) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_TO);
+            totalZReportAmount =(double)extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT);
             if (extras.containsKey(ZReportActivity.COM_LEADPOS_ZREPORT_HISTORY)) {
                 goBack = extras.getBoolean(ZReportActivity.COM_LEADPOS_ZREPORT_HISTORY, false);
 
             }
         }
         pt=new PrintTools(ReportZDetailsActivity.this);
-        p=pt.createZReport(id,from,to,true);
+        p=pt.createZReport(id,from,to,true,totalZReportAmount);
        // p=pt.createXReport(id,from, SESSION._USER,new java.util.Date()); // testing xReport
         ((ImageView)findViewById(R.id.reportZDetails_ivInvoice)).setImageBitmap(p);
 

@@ -7,40 +7,25 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
+import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.R;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
- * Created by Win8.1 on 10/26/2017.
+ * Created by Win8.1 on 1/7/2018.
  */
 
-public class SalesManDetailsGridViewAdapter extends BaseAdapter {
+public class ProductDepartmentGridViewAdapter extends BaseAdapter {
     private Context context;
-    private List<CustomerAssistant> customerAssests;
+    private List<Department> departments;
     private LayoutInflater inflater;
-    private int resource;
-    int bgColor =0;
-    public SalesManDetailsGridViewAdapter(Context context, int resource, List<CustomerAssistant> customerAssests) {
+
+    public ProductDepartmentGridViewAdapter(Context context, List<Department> departments) {
         this.context = context;
-        this.resource = resource;
-        this.context = context;
-        bgColor=0;
-        this.customerAssests = customerAssests;
+        this.departments = departments;
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
-    public SalesManDetailsGridViewAdapter(Context context, List<CustomerAssistant> customerAssests) {
-        this.context = context;
-        this.resource = resource;
-        this.context = context;
-        bgColor=0;
-        this.customerAssests = customerAssests;
-    }
-
-
-
 
     /**
      * How many items are in the data set represented by this Adapter.
@@ -49,10 +34,8 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
      */
     @Override
     public int getCount() {
-        return customerAssests.size();
+        return departments.size();
     }
-
-
 
     /**
      * Get the data item associated with the specified position in the data set.
@@ -62,11 +45,9 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
      * @return The data at the specified position.
      */
     @Override
-    public CustomerAssistant getItem(int position) {
-        return customerAssests.get(position);
+    public Object getItem(int position) {
+        return departments.get(position);
     }
-
-
 
     /**
      * Get the row id associated with the specified position in the list.
@@ -76,10 +57,8 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
      */
     @Override
     public long getItemId(int position) {
-        return (long)customerAssests.get(position).getId();
+        return (long) departments.get(position).getId();
     }
-
-
 
     /**
      * Get a View that displays the data at the specified position in the data set. You can either
@@ -101,29 +80,38 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View gridView=convertView;
+        ProductDepartmentGridViewAdapter.ViewHolder holder = null;
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.grid_view_product_department, parent, false);
 
-        if(convertView==null){
-            inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            gridView=inflater.inflate(R.layout.grid_view_item_sales_man,null);
+            holder = new ProductDepartmentGridViewAdapter.ViewHolder();
+            holder.tvName = (TextView) convertView.findViewById(R.id.gridViewItemDepartment_TVName);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ProductDepartmentGridViewAdapter.ViewHolder) convertView.getTag();
         }
-       // TextView saleManId=(TextView)gridView.findViewById(R.id.salesManGridView_TVSaleManId);
-        TextView tvSalesAmount=(TextView)gridView.findViewById(R.id.salesManGridView_TVAmount);
-        TextView salesCase=(TextView)gridView.findViewById(R.id.salesManGridView_TVSaleCase);
-        TextView salesDate=(TextView)gridView.findViewById(R.id.salesManGridView_TVSaleDate);
-        TextView saleId=(TextView)gridView.findViewById(R.id.salesManGridView_TVSaleId);
-        UserDBAdapter userDBAdapter=new UserDBAdapter(context);
-        userDBAdapter.open();
-        String userName=userDBAdapter.getUserName(customerAssests.get(position).getCustomerAssistantID());
-      //  saleManId.setText(userName);
-        salesCase.setText(""+customerAssests.get(position).getSalesCase());
-        tvSalesAmount.setText(Util.makePrice(customerAssests.get(position).getAmount()));
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        salesDate.setText(format.format(customerAssests.get(position).getSaleDate()));
-        saleId.setText(customerAssests.get(position).getOrder_id()+"");
-        if(bgColor%2==0){
-            gridView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
+
+        Department dep = departments.get(position);
+
+        holder.tvName.setText(dep.getName());
+
+        if (dep.isChecked()) {
+            convertView.setBackgroundColor(convertView.getResources().getColor(R.color.pressed_color));
+        } else {
+            convertView.setBackgroundColor(convertView.getResources().getColor(R.color.transparent));
         }
-        bgColor++;
-        return gridView;
-    }}
+
+        return convertView;
+    }
+
+    public void updateRecords(List<Department> departments){
+        this.departments = departments;
+
+        notifyDataSetChanged();
+    }
+
+    private class ViewHolder {
+        TextView tvName;
+    }
+}
