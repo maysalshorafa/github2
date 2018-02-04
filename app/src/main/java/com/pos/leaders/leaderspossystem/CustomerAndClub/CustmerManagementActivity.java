@@ -140,19 +140,18 @@ public class CustmerManagementActivity extends AppCompatActivity {
                             Intent intent;
                             switch (item) {
                                 case 0:
-                                    AddCustomerMeasurementConstant=0;
+                                    Customer_Management_View=9;
                                     intent = new Intent(CustmerManagementActivity.this, AddNewCustomer.class);
                                     intent.putExtra("id", customers.get(position).getId());
                                     startActivity(intent);
                                 case 1:
-                                    AddCustomerMeasurementConstant=0;
+                                    Customer_Management_Edit=10;
                                     intent = new Intent(CustmerManagementActivity.this, AddNewCustomer.class);
                                     intent.putExtra("id", customers.get(position).getId());
                                     startActivity(intent);
                                     break;
 
                                 case 2:
-                                    AddCustomerMeasurementConstant=0;
                                     new AlertDialog.Builder(CustmerManagementActivity.this)
                                             .setTitle(getString(R.string.delete)+" "+getString(R.string.customer))
                                             .setMessage(getString(R.string.delete_customer_message))
@@ -172,13 +171,11 @@ public class CustmerManagementActivity extends AppCompatActivity {
                                             .show();
                                     break;
                                 case 3:
-                                    AddCustomerMeasurementConstant=7;
-                                    intent = new Intent(CustmerManagementActivity.this, AddNewCustomer.class);
+                                    intent = new Intent(CustmerManagementActivity.this, AddCustomerMeasurement.class);
                                     intent.putExtra("id", customers.get(position).getId());
                                     startActivity(intent);
                                     break;
                                 case 4 :
-                                    AddCustomerMeasurementConstant=0;
                                     intent = new Intent(CustmerManagementActivity.this, CustomerMeasurementManagementActivity.class);
                                     intent.putExtra("id", customers.get(position).getId());
                                     startActivity(intent);
