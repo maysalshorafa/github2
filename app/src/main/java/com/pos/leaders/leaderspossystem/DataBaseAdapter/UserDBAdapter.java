@@ -4,15 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
-import com.pos.leaders.leaderspossystem.Models.Sale;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -225,7 +222,7 @@ public class UserDBAdapter {
 
         Cursor cursor = null;
         for (int i = 0; i < salesManId.size(); i++) {
-            cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where  id='" + salesManId.get(i) + "'", null);
+            cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where  id='" + salesManId.get(i) + "'"+ " and " + USERS_COLUMN_DISENABLED + "=0", null);
             if (cursor != null) {
 
                 while (cursor.moveToNext()) {

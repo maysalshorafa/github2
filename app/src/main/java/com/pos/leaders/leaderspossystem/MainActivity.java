@@ -260,10 +260,12 @@ public class MainActivity extends AppCompatActivity {
     double i = 0.0;
     String str;
     boolean forSaleMan = false;
-    boolean forOrderSaleMan = false;
-
-    long custmerAssetstId;
+    List<Long> custmerAssetstIdList;
+    List<Order> orderIdList;
+    List<Long> orderId;
+    long custmerSaleAssetstId;
     TextView orderSalesMan;
+    ImageView deleteOrderSalesMan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -319,6 +321,9 @@ public class MainActivity extends AppCompatActivity {
         btnGrid = (ImageButton) findViewById(R.id.mainActivity_btnGrid);
         btnList = (ImageButton) findViewById(R.id.mainActivity_btnList);
         salesSaleMan = (TextView) findViewById(R.id.salesSaleMan);
+        custmerAssetstIdList = new ArrayList<Long>();
+        orderIdList=new ArrayList<Order>();
+        orderId=new ArrayList<Long>();
         //fragmentTouchPad = (FrameLayout) findViewById(R.id.mainActivity_fragmentTochPad);
 
         //region  Init cash drawer
@@ -833,13 +838,27 @@ public class MainActivity extends AppCompatActivity {
                         removeFromCart(position);
                     }
                 });
-
                 orderSalesMan = (TextView) view.findViewById(R.id.orderSaleMan);
+                deleteOrderSalesMan=(ImageView)view.findViewById(R.id.deleteOrderSalesMan);
                 orderSalesMan.
                         setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                callPopupOrderSalesMan();
+
+                                callPopupOrderSalesMan(selectedOrderOnCart);
+                            }
+                        });
+                deleteOrderSalesMan.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                for (int i=0 ; i<orderIdList.size();i++) {
+                                    if(orderIdList.get(i)==selectedOrderOnCart){
+                                    orderIdList.remove(i);
+                                    custmerAssetstIdList.remove(i);
+                                }
+                                }
+                                orderSalesMan.setText(getString(R.string.sales_man));
+                                deleteOrderSalesMan.setVisibility(View.GONE);
                             }
                         });
 
@@ -1526,6 +1545,9 @@ startActivity(i);
         customerName_EditText.setText("");
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
+        custmerAssetstIdList = new ArrayList<Long>();
+        orderIdList=new ArrayList<Order>();
+        orderId=new ArrayList<Long>();
         offerDBAdapter = new OfferDBAdapter(this);
         offerDBAdapter.open();
         // Offer offer=offerDBAdapter.getAllValidOffers();
@@ -2357,6 +2379,7 @@ startActivity(i);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
+                long tempSaleId=0;
                 if (customerClubId == 2) {
                     sum_pointDbAdapter.insertEntry(saleID, clubPoint, customerId);
                 }
@@ -2378,18 +2401,30 @@ startActivity(i);
                 orderDBAdapter.open();
                 custmerAssetDB.open();
                 SESSION._SALE.setId(saleID);
-                for (Order o : SESSION._ORDERS) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
-
-                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
-                    if (forOrderSaleMan) {
-                        o.setCustmerAssestId(custmerAssetstId);
-                        custmerAssetDB.insertEntry(orderid, o.getCustmerAssestId(), o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
-                    }
-                }
                 if (forSaleMan) {
-                    custmerAssetDB.insertEntry(saleID, custmerAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
-
+                    tempSaleId =saleID;
+                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
+                }
+                // insert order region
+                for (Order o : SESSION._ORDERS) {
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
+                    orderId.add(orderid);
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                }
+                // Order Sales man Region
+                for (int i=0;i<orderIdList.size();i++) {
+                    Order order = orderIdList.get(i);
+                    long customerAssestId= custmerAssetstIdList.get(i);
+                    for (int j = 0 ; j< SESSION._ORDERS.size();j++) {
+                        Order o = SESSION._ORDERS.get(j);
+                        long tempOrderId =orderId.get(i);
+                        if (o==order) {
+                            if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
+                                o.setCustmerAssestId(custmerAssetstIdList.get(i));
+                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
+                            }
+                        }
+                    }
                 }
                 orderDBAdapter.close();
                 custmerAssetDB.close();
@@ -2449,6 +2484,7 @@ startActivity(i);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
+                long tempSaleId=0;
                 if (customerClubId == 2) {
                     sum_pointDbAdapter.insertEntry(saleID, clubPoint, customerId);
                 }
@@ -2459,16 +2495,31 @@ startActivity(i);
                 orderDBAdapter.open();
                 custmerAssetDB.open();
                 SESSION._SALE.setId(saleID);
-                for (Order o : SESSION._ORDERS) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
-                    if (forOrderSaleMan) {
-                        o.setCustmerAssestId(custmerAssetstId);
-                        custmerAssetDB.insertEntry(orderid, o.getCustmerAssestId(), o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
-                    }
-                }
                 if (forSaleMan) {
-                    custmerAssetDB.insertEntry(saleID, custmerAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
+                    tempSaleId =saleID;
+                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
+                }
 
+                // insert order region
+                for (Order o : SESSION._ORDERS) {
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
+                    orderId.add(orderid);
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                }
+                // Order Sales man Region
+                for (int i=0;i<orderIdList.size();i++) {
+                    Order order = orderIdList.get(i);
+                    long customerAssestId= custmerAssetstIdList.get(i);
+                    for (int j = 0 ; j< SESSION._ORDERS.size();j++) {
+                        Order o = SESSION._ORDERS.get(j);
+                        long tempOrderId =orderId.get(i);
+                        if (o==order) {
+                            if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
+                                o.setCustmerAssestId(custmerAssetstIdList.get(i));
+                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
+                            }
+                        }
+                    }
                 }
 
                 orderDBAdapter.close();
@@ -2504,6 +2555,7 @@ startActivity(i);
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 orderDBAdapter = new OrderDBAdapter(MainActivity.this);
                 custmerAssetDB = new CustomerAssetDB(MainActivity.this);
+                long tempSaleId=0;
                 saleDBAdapter.open();
                 orderDBAdapter.open();
                 custmerAssetDB.open();
@@ -2543,16 +2595,30 @@ startActivity(i);
                 // End Customer Point Region
 
                 // insert in Order , CustomerAssistant
-                for (Order o : SESSION._ORDERS) {
-                    long orderId = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
-
-                    if (forOrderSaleMan) {
-                        o.setCustmerAssestId(custmerAssetstId);
-                        custmerAssetDB.insertEntry(orderId, o.getCustmerAssestId(), o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
-                    }
-                }
                 if (forSaleMan) {
-                    custmerAssetDB.insertEntry(saleIDforCash, custmerAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
+                    tempSaleId =saleIDforCash;
+                    custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
+                }
+                // insert order region
+                for (Order o : SESSION._ORDERS) {
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
+                    orderId.add(orderid);
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                }
+                // Order Sales man Region
+                for (int i=0;i<orderIdList.size();i++) {
+                    Order order = orderIdList.get(i);
+                    long customerAssestId= custmerAssetstIdList.get(i);
+                    for (int j = 0 ; j< SESSION._ORDERS.size();j++) {
+                        Order o = SESSION._ORDERS.get(j);
+                        long tempOrderId =orderId.get(i);
+                        if (o==order) {
+                            if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
+                                o.setCustmerAssestId(custmerAssetstIdList.get(i));
+                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
+                            }
+                        }
+                    }
                 }
                 orderDBAdapter.close();
                 custmerAssetDB.close();
@@ -2587,6 +2653,7 @@ startActivity(i);
                 orderDBAdapter.open();
                 custmerAssetDB.open();
                 paymentDBAdapter.open();
+                long tempSaleId=0;
 
 
                 // Get data from CashActivityWithCurrency and insert in Cash Payment
@@ -2631,19 +2698,31 @@ startActivity(i);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 // End Customer Point Region
-
-                // insert in Order , CustomerAssistant
-                for (Order o : SESSION._ORDERS) {
-                    long orderId = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
-
-                    if (forOrderSaleMan) {
-                        o.setCustmerAssestId(custmerAssetstId);
-                        custmerAssetDB.insertEntry(orderId, o.getCustmerAssestId(), o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
-                    }
-                }
                 if (forSaleMan) {
-                    custmerAssetDB.insertEntry(saleIDforCash, custmerAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
+                    tempSaleId =saleIDforCash;
+                    custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
                 }
+                // insert order region
+                for (Order o : SESSION._ORDERS) {
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
+                    orderId.add(orderid);
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                }
+                // Order Sales man Region
+                    for (int i=0;i<orderIdList.size();i++) {
+                        Order order = orderIdList.get(i);
+                        long customerAssestId= custmerAssetstIdList.get(i);
+                        for (int j = 0 ; j< SESSION._ORDERS.size();j++) {
+                            Order o = SESSION._ORDERS.get(j);
+                            long tempOrderId =orderId.get(i);
+                            if (o==order) {
+                                if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
+                                    o.setCustmerAssestId(custmerAssetstIdList.get(i));
+                                    custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
+                                }
+                            }
+                        }
+                    }
                 orderDBAdapter.close();
                 custmerAssetDB.close();
                 // End Order And CustomerAssistant Region
@@ -2869,7 +2948,7 @@ startActivity(i);
 
     }
 
-    public void callPopupOrderSalesMan() {
+    public void callPopupOrderSalesMan(final Order order) {
         UserDBAdapter userDB = new UserDBAdapter(this);
         userDB.open();
         final CustomerAssetDB customerAssistantDB = new CustomerAssetDB(this);
@@ -2884,7 +2963,6 @@ startActivity(i);
         final EditText customerAssistant = (EditText) popupView.findViewById(R.id.customerAssest_name);
         ListView lvCustomerAssistant = (ListView) popupView.findViewById(R.id.customerAssistant_list_view);
         Button btn_cancel = (Button) popupView.findViewById(R.id.btn_cancel);
-        Button btnDelete = (Button) popupView.findViewById(R.id.btn_delete);
 
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2892,13 +2970,7 @@ startActivity(i);
                 popupWindow.dismiss();
             }
         });
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                forOrderSaleMan = false;
-                orderSalesMan.setText(getString(R.string.sales_man));
-            }
-        });
+
 
         ((Button) popupView.findViewById(R.id.btn_add))
                 .setOnClickListener(new View.OnClickListener() {
@@ -2929,12 +3001,17 @@ startActivity(i);
         lvCustomerAssistant.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                forOrderSaleMan = true;
-                custmerAssetstId = custmerAssestList.get(position).getId();
+                 if(!orderIdList.contains(order)){
+                custmerAssetstIdList.add(custmerAssestList.get(position).getId());
+                orderIdList.add(order);
+                }
+
                 orderSalesMan.setText(custmerAssestList.get(position).getFullName());
+                deleteOrderSalesMan.setVisibility(View.VISIBLE);
                 popupWindow.dismiss();
-            }
-        });
+         }
+        }
+        );
         lvCustomerAssistant.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -2984,7 +3061,7 @@ startActivity(i);
 
         Button btn_cancel = (Button) popupView.findViewById(R.id.btn_cancel);
         Button btnDelete = (Button) popupView.findViewById(R.id.btn_delete);
-
+        btnDelete.setVisibility(View.VISIBLE);
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -3031,7 +3108,7 @@ startActivity(i);
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 forSaleMan = true;
-                custmerAssetstId = custmerAssestList.get(position).getId();
+                custmerSaleAssetstId = custmerAssestList.get(position).getId();
                 salesSaleMan.setText(custmerAssestList.get(position).getFullName());
                 popupWindow.dismiss();
             }
