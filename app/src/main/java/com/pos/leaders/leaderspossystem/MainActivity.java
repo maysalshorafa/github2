@@ -2377,6 +2377,12 @@ startActivity(i);
                     tempSaleId =saleID;
                     custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
                 }
+                // insert order region
+                for (Order o : SESSION._ORDERS) {
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
+                    orderId.add(orderid);
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                }
                 // Order Sales man Region
                 for (int i=0;i<orderIdList.size();i++) {
                     Order order = orderIdList.get(i);
@@ -2464,6 +2470,13 @@ startActivity(i);
                 if (forSaleMan) {
                     tempSaleId =saleID;
                     custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
+                }
+
+                // insert order region
+                for (Order o : SESSION._ORDERS) {
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
+                    orderId.add(orderid);
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
                 }
                 // Order Sales man Region
                 for (int i=0;i<orderIdList.size();i++) {
@@ -2557,6 +2570,12 @@ startActivity(i);
                 if (forSaleMan) {
                     tempSaleId =saleIDforCash;
                     custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
+                }
+                // insert order region
+                for (Order o : SESSION._ORDERS) {
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
+                    orderId.add(orderid);
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
                 }
                 // Order Sales man Region
                 for (int i=0;i<orderIdList.size();i++) {
@@ -2655,6 +2674,7 @@ startActivity(i);
                     tempSaleId =saleIDforCash;
                     custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
                 }
+                // insert order region
                 for (Order o : SESSION._ORDERS) {
                     long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
                     orderId.add(orderid);
