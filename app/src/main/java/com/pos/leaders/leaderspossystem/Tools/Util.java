@@ -18,8 +18,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -235,7 +233,9 @@ public class Util {
 
     // Methods To Test Input Value Type
     public static final boolean isDouble(String value) {
-
+        if (isInteger(value)) {
+            return true;
+        }
         Pattern pattern = Pattern.compile("^[+-]?(\\d+)(\\D)(\\d+)");
         Matcher matcher = pattern.matcher(value);
         boolean result = matcher.matches();
@@ -244,6 +244,9 @@ public class Util {
     }
 
     public static final boolean isFloat(String value) {
+        if (isInteger(value)) {
+            return true;
+        }
         Pattern pattern = Pattern.compile("^[+-]?(\\d+)(\\D)(\\d+)");
         Matcher matcher = pattern.matcher(value);
         boolean result = matcher.matches();

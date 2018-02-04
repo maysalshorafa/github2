@@ -1,9 +1,8 @@
 package com.pos.leaders.leaderspossystem.CustomerAndClub;
 
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
@@ -13,8 +12,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -122,119 +119,71 @@ public class AddCustomerMeasurement extends AppCompatActivity {
                 jsonObject = new JSONObject(storeList.get(noOfCustomOpt));
                 // get information from json
                 Long dynamicVariableId=jsonObject.getLong("id");  //json id
-                String elementType =jsonObject.getString("unit");  // json unit (elementType)
+                String elementType =jsonObject.getString("type");  // json type (elementType)
                 //end
-
-                //EditText Region
-                if(elementType.equalsIgnoreCase("E")){
-                    LinearLayout lLayout= new LinearLayout(getApplicationContext());
-                    lLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT); // or set height to any fixed value you want
-                    lp.setMargins(5,5,5,5);
-                    lLayout.setLayoutParams(lp);
-                    //draw dynamically text view and store it in layout using "name" parameter from json object
-                    String eachData =jsonObject.getString("name");
-                    TextView customOptionsName = new TextView(AddCustomerMeasurement.this);
-                    customOptionsName.setTextSize(20);
-                    customOptionsName.setTextColor(Color.BLACK);
-                    customOptionsName.setPadding(0, 15, 0, 15);
-                    customOptionsName.setText(eachData);
-                    final LinearLayout.LayoutParams TLParams = new LinearLayout.LayoutParams(80, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    customOptionsName.setLayoutParams(TLParams);
-                    lLayout.addView(customOptionsName);
-                    // end
-
-                    //draw dynamically Edit Text and store it in layout if type Parameter in json object is "E"
-                    final EditText editTextTypeOptions = new EditText(AddCustomerMeasurement.this);
-                    editTextTypeOptions.setTextSize(20);
-                    editTextTypeOptions.setTextColor(Color.BLACK);
-                    editTextTypeOptions.setBackground(getResources().getDrawable(R.drawable.bubble));
-                    final LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(400,50);
-                    lParams.gravity = Gravity.CENTER;
-                    editTextTypeOptions.setLayoutParams(lParams);
-                    editTextTypeOptions.setPadding(0, 15, 0, 15);
-                    lLayout.addView(editTextTypeOptions);
-                    if(editTextTypeOptions.getText().toString()!="") {
-                        editText.put(dynamicVariableId, editTextTypeOptions); // put edit text in edit text list
-                    }
-                    if((noOfCustomOpt%2)==0){
-                        viewElementLayoutEven.addView(lLayout);
-
-                    }
-                    else{
-                        viewElementLayout.addView(lLayout);
-                    }
-                    if(jsonObject.getString("type").equalsIgnoreCase("string")){
-                    editTextTypeOptions.setInputType(InputType.TYPE_CLASS_TEXT);
-                    }
-                    else {
-                        editTextTypeOptions.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
-
-                    }
-                }
-                //End EditText Region
-
                 //CheckBox
-                if(elementType.equalsIgnoreCase("C")){
+                if(elementType.equalsIgnoreCase("boolean")){
                     //draw dynamically CheckBox and store it in layout if type Parameter in json object is "C"
                     final CheckBox chk = new CheckBox(AddCustomerMeasurement.this);
                     chk.setText(jsonObject.getString("name"));
                     chk.setTextSize(20);
                     chk.setTextColor(Color.BLACK);
-                        viewElementLayoutEven.addView(chk);
-
-
+                    viewElementLayoutEven.addView(chk);
                     checkBoxes.put(dynamicVariableId,chk); // add check box to check box list
-
+                    //end CheckBox
                 }
-
-                //end CheckBox
-                // Spinner Region
-                if(elementType.equalsIgnoreCase("S")){
+                else {
+                    LinearLayout lLayout = new LinearLayout(getApplicationContext());
+                    lLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT); // or set height to any fixed value you want
+                    lLayout.setLayoutParams(lp);
+                    lLayout.setPadding(16, 16, 16, 16);
                     //draw dynamically text view and store it in layout using "name" parameter from json object
-                    String eachData =jsonObject.getString("name");
+                    String eachData = jsonObject.getString("name");
                     TextView customOptionsName = new TextView(AddCustomerMeasurement.this);
                     customOptionsName.setTextSize(20);
-                    customOptionsName.setTypeface(null, Typeface.BOLD);
                     customOptionsName.setTextColor(Color.BLACK);
-                    customOptionsName.setPadding(0, 15, 0, 15);
+                    customOptionsName.setPadding(16, 16, 16, 16);
                     customOptionsName.setText(eachData);
-                    final LinearLayout.LayoutParams TLParams = new LinearLayout.LayoutParams(400,80);
+                    final LinearLayout.LayoutParams TLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     customOptionsName.setLayoutParams(TLParams);
-                    viewElementLayout.addView(customOptionsName);
+                    lLayout.addView(customOptionsName);
                     // end
-                    //draw dynamically Spinner and store it in layout if type Parameter in json object is "S"
-                    Spinner spinnerTypeOptions = new Spinner(AddCustomerMeasurement.this);
-                    if((noOfCustomOpt%2)==0){
-                        viewElementLayoutEven.addView(spinnerTypeOptions);
+                    //draw dynamically Edit Text and store it in layout if type Parameter in json object is "E"
+                    final EditText editTextTypeOptions = new EditText(AddCustomerMeasurement.this);
+                    editTextTypeOptions.setTextSize(20);
+                    editTextTypeOptions.setTextColor(Color.BLACK);
+                    editTextTypeOptions.setBackground(getResources().getDrawable(R.drawable.bubble));
+                    final LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    lParams.gravity = Gravity.CENTER;
+                    lParams.gravity = Gravity.CENTER;
+                    editTextTypeOptions.setLayoutParams(lParams);
+                    editTextTypeOptions.setPadding(16, 16, 16, 16);
+                    lLayout.addView(editTextTypeOptions);
+                    if (editTextTypeOptions.getText().toString() != "") {
+                        editText.put(dynamicVariableId, editTextTypeOptions); // put edit text in edit text list
+                    }
+                    if ((noOfCustomOpt % 2) == 0) {
+                        viewElementLayoutEven.addView(lLayout);
+
+                    } else {
+                        viewElementLayout.addView(lLayout);
+                    }
+
+                    if (elementType.equalsIgnoreCase("string")) {
+                        editTextTypeOptions.setInputType(InputType.TYPE_CLASS_TEXT);
+                    } else if (elementType.equalsIgnoreCase("integer")) {
+                        editTextTypeOptions.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    } else {
+                        editTextTypeOptions.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
                     }
-                    else{
-                        viewElementLayout.addView(spinnerTypeOptions);
-                    }                    //end
                 }
-                //end Spinner Region
 
-                //RadioButton Region
-                if(elementType.equalsIgnoreCase("R")){
-                    //draw dynamically RadioButton and store it in layout if type Parameter in json object is "R"
-                    RadioButton radioType = new RadioButton(AddCustomerMeasurement.this);
-                    radioType.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                    radioType.setText(jsonObject.getString("name"));
-                    radioType.setTextSize(20);
-                    radioType.setTextColor(Color.BLACK);
-                    if((noOfCustomOpt%2)==0){
-                        viewElementLayoutEven.addView(radioType);
-
-                    }
-                    else{
-                        viewElementLayout.addView(radioType);
-                    }
-                    //end
-                }
-
+                //End EditText Region
             }
-        } catch (JSONException e) {
+            }
+        catch (JSONException e) {
 
             e.printStackTrace();
         }
@@ -244,30 +193,33 @@ public class AddCustomerMeasurement extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 add(); // add element to listsOfValue
-                Toast.makeText(AddCustomerMeasurement.this, measurementValueList.toString(), Toast.LENGTH_LONG).show();
                 // insert in data base
                 customerMeasurementDBAdapter.open();
                 measurementsDetailsDBAdapter.open();
-                long measurementId = customerMeasurementDBAdapter.insertEntry(customerId, SESSION._USER.getId(),new Date().getTime()); // insert in customerMeasurement Table
-                if(measurementId>0){
-                    for (int i=0 ; i<measurementValueList.size();i++){
-                        if(isValidValue(measurementValueList.get(i),measurementValueListValueType.get(i))) {
-                            measurementsDetailsDBAdapter.insertEntry(measurementId, measurementDynamicVariableId.get(i),measurementValueList.get(i)); //insert list of measurement in measurement details
-
-                        }else {
-                            Toast.makeText(AddCustomerMeasurement.this, "Fail Insert  "+measurementValueList.get(i) + " Please Insert Value In Type "+measurementValueListValueType.get(i), Toast.LENGTH_LONG).show();
+                        if(isValidValue(measurementValueList,measurementValueListValueType)) {
+                            long measurementId = customerMeasurementDBAdapter.insertEntry(customerId, SESSION._USER.getId(),new Date().getTime()); // insert in customerMeasurement Table
+                            if(measurementId>0){
+                                for (int a=0 ; a<measurementValueList.size();a++){
+                                    measurementsDetailsDBAdapter.insertEntry(measurementId, measurementDynamicVariableId.get(a),measurementValueList.get(a)); //insert list of measurement in measurement details
+                                    }
+                                }
+                            clear();
+                            customerMeasurementDBAdapter.close();
+                                measurementsDetailsDBAdapter.close();
+                            }
+                            else {
+                                Toast.makeText(AddCustomerMeasurement.this, "Fail Insert ...try again", Toast.LENGTH_LONG).show();
+                            measurementValueList= new ArrayList<String>(); //list of measured value
+                            measurementDynamicVariableId =new ArrayList<Long>(); //list of measured value id
+                            measurementValueListValueType= new ArrayList<String>(); //list of measured value type
 
                         }
-                    }
 
-                    customerMeasurementDBAdapter.close();
-                    measurementsDetailsDBAdapter.close();
-                }else {
-                    Toast.makeText(AddCustomerMeasurement.this, "Fail Insert ...try again", Toast.LENGTH_LONG).show();
-                }
+                        }
 
-                clear();
-            }
+
+
+
         });
         cancelMeasurement.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -276,16 +228,21 @@ public class AddCustomerMeasurement extends AppCompatActivity {
             }
         });
     }
-    public static boolean isValidValue(String measurementValue, String type) {  // this method to test if the value insert from customer valid with type value in json
-        if (type.equalsIgnoreCase("double")) // Double Number Case
-        {
-
+    public boolean isValidValue(List<String> measurementValueList, List<String> measurementValueListValueType) {  // this method to test if the value insert from customer valid with type value in json
+        for (int i=0 ; i<measurementValueList.size();i++){
+        String measurementValue = measurementValueList.get(i);
+        String type = measurementValueListValueType.get(i);
+            if(!measurementValue.equals("")){
+                if (type.equalsIgnoreCase("double")){ // Double Number Case
             if (Util.isDouble(measurementValue)||Util.isFloat(measurementValue)) {
 
-                return true;
+              //  return true;
             }
+            else {
+                Toast.makeText(AddCustomerMeasurement.this, "Fail Insert  " + measurementValueList.get(i) + " Please Insert Value In Type " + measurementValueListValueType.get(i), Toast.LENGTH_LONG).show();
 
-            return false;
+                return false;
+            }
         }
         if (type.equalsIgnoreCase("float"))  // Float Number Case
         {
@@ -294,8 +251,9 @@ public class AddCustomerMeasurement extends AppCompatActivity {
                 int integerPlaces = measurementValue.indexOf('.');
                 int decimalPlaces = measurementValue.length() - integerPlaces - 1;
                 if (decimalPlaces <= 7) {
-                    return true;
+                  //  return true;
                 } else {
+                    Toast.makeText(AddCustomerMeasurement.this, "Fail Insert  " + measurementValueList.get(i) + " Please Insert Value In Type " + measurementValueListValueType.get(i), Toast.LENGTH_LONG).show();
                     return false;
                 }
             }
@@ -308,8 +266,10 @@ public class AddCustomerMeasurement extends AppCompatActivity {
                 int integerPlaces = measurementValue.indexOf('.');
                 int decimalPlaces = measurementValue.length() - integerPlaces - 1;
                 if (decimalPlaces <= 29) {
-                    return true;
+                   // return true;
                 } else {
+                    Toast.makeText(AddCustomerMeasurement.this, "Fail Insert  " + measurementValueList.get(i) + " Please Insert Value In Type " + measurementValueListValueType.get(i), Toast.LENGTH_LONG).show();
+
                     return false;
                 }
             }
@@ -317,38 +277,51 @@ public class AddCustomerMeasurement extends AppCompatActivity {
             return false;
         }
         if (type.equalsIgnoreCase("long")) { //Long Number Case
-            if (Util.isLong(measurementValue))
-                return true;
-            else
+            if (Util.isLong(measurementValue)){
+               // return true;
+            }
+            else{
+                Toast.makeText(AddCustomerMeasurement.this, "Fail Insert  " + measurementValueList.get(i) + " Please Insert Value In Type " + measurementValueListValueType.get(i), Toast.LENGTH_LONG).show();
+
                 return false;
+            }
         }
 
 
         if (type.equalsIgnoreCase("integer")) { //Integer Number Case
 
-            if (Util.isInteger(measurementValue))
-                return true;
-            else
+            if (Util.isInteger(measurementValue)) {
+               // return true;
+            }
+            else {
+                Toast.makeText(AddCustomerMeasurement.this, "Fail Insert  " + measurementValueList.get(i) + " Please Insert Value In Type " + measurementValueListValueType.get(i), Toast.LENGTH_LONG).show();
                 return false;
-
-
+            }
         }
 
         if (type.equalsIgnoreCase("string")) { // String Case
-            if(measurementValue.equals(""))
+            if(measurementValue.equals("")){
+                Toast.makeText(AddCustomerMeasurement.this, "Fail Insert  " + measurementValueList.get(i) + " Please Insert Value In Type " + measurementValueListValueType.get(i), Toast.LENGTH_LONG).show();
+
                 return false;
+            }
             if (Util.isString(measurementValue)) {
 
-                return true;
+             //   return true;
             }
 
-            return false;
-
+            else {
+                Toast.makeText(AddCustomerMeasurement.this, "Fail Insert  " + measurementValueList.get(i) + " Please Insert Value In Type " + measurementValueListValueType.get(i), Toast.LENGTH_LONG).show();
+                return false;
+            }
         }
         if (type.equalsIgnoreCase("bit")) { //Bit Number Case
             if (Util.isBit(measurementValue)) {
 
-                return true;
+              //  return true;
+            }else {
+                Toast.makeText(AddCustomerMeasurement.this, "Fail Insert  " + measurementValueList.get(i) + " Please Insert Value In Type " + measurementValueListValueType.get(i), Toast.LENGTH_LONG).show();
+
             }
 
             return false;
@@ -359,17 +332,16 @@ public class AddCustomerMeasurement extends AppCompatActivity {
 
                 return true;
             }
-
-            return false;
-
+            else {
+                Toast.makeText(AddCustomerMeasurement.this, "Fail Insert  " + measurementValueList.get(i) + " Please Insert Value In Type " + measurementValueListValueType.get(i), Toast.LENGTH_LONG).show();
+           return false; }
         }
 
-        return false;
+    }
+        }
+    return true;
     }
     //End is Valid Method
-
-
-
     public  void add() {
         JSONObject  jsonObject ;
         try {
@@ -378,16 +350,7 @@ public class AddCustomerMeasurement extends AppCompatActivity {
                 // get information from json
                 long   dynamicVariableId=jsonObject.getLong("id");  //json id
                 String type = jsonObject.getString("type");
-                String elementType =jsonObject.getString("unit");  // json unit (elementType)}
-                if(elementType.equalsIgnoreCase("E")){
-                    EditText e = editText.get(dynamicVariableId);
-                    // add editText Value and id if it enable
-                    measurementValueList.add(e.getText().toString());
-                    measurementDynamicVariableId.add(dynamicVariableId);
-                    measurementValueListValueType.add(type);
-
-                }
-                if(elementType.equalsIgnoreCase("C")){
+                if(type.equalsIgnoreCase("boolean")){
                     CheckBox checkBox = checkBoxes.get(dynamicVariableId);
                     if(checkBox.isChecked()) {
                         //if type is boolean the value insert must be 0 or 1 else if type is string or any thing the value inserted is the value of parameter "name" in json
@@ -396,7 +359,7 @@ public class AddCustomerMeasurement extends AppCompatActivity {
                             measurementDynamicVariableId.add(dynamicVariableId);
                             measurementValueListValueType.add(type);
                         }
-                        else   if(jsonObject.getString("name").equalsIgnoreCase("False")){
+                        else if(jsonObject.getString("name").equalsIgnoreCase("False")){
                             measurementValueList.add("0");
                             measurementDynamicVariableId.add(dynamicVariableId);
                             measurementValueListValueType.add(type);
@@ -406,6 +369,15 @@ public class AddCustomerMeasurement extends AppCompatActivity {
                             measurementValueListValueType.add(type);
                         }
                     }
+                }
+                else {
+                    EditText e = editText.get(dynamicVariableId);
+                    // add editText Value and id if it enable
+                    if(!e.getText().equals("")){
+                    measurementValueList.add(e.getText().toString());
+                    measurementDynamicVariableId.add(dynamicVariableId);
+                    measurementValueListValueType.add(type);
+                }
                 }
 
             } }catch (JSONException e) {
@@ -426,24 +398,23 @@ public class AddCustomerMeasurement extends AppCompatActivity {
                 jsonObject = new JSONObject(storeList.get(noOfCustomOpt));
                 // get information from json
                 long   dynamicVariableId=jsonObject.getLong("id");  //json id
-                String type = jsonObject.getString("type");
-                String elementType =jsonObject.getString("unit");  // json unit (elementType)}
-                if(elementType.equals("E")){
-                    EditText e = editText.get(dynamicVariableId);
-                    // add editText Value and id if it enable
-                    e.setText("");
-
-                }
-                if(elementType.equals("C")){
+                String elementType =jsonObject.getString("type");  // json type (elementType)}
+                if(elementType.equalsIgnoreCase("boolean")){
                     CheckBox checkBox = checkBoxes.get(dynamicVariableId);
                     checkBox.setChecked(false);
                 }
+                if(editText.get(dynamicVariableId)!=null) {
+                    EditText e = editText.get(dynamicVariableId);
+                    e.setText("");
+                }
 
-            } }catch (JSONException e) {
+            }
+        }catch (JSONException e) {
 
             e.printStackTrace();
 
         }
+        onBackPressed();
 
     }
 }
