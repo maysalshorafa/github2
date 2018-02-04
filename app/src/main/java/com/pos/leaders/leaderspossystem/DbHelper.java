@@ -218,7 +218,7 @@ public class DbHelper extends SQLiteOpenHelper {
             DATABASE_ENABEL_ALTER_COLUMN = true;
 
             //method to updateDataBaseVersion2
-            updateDataBase(db);
+            //updateDataBase(db);
             //end
         }
         // Log the version upgrade.
