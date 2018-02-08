@@ -119,9 +119,9 @@ public class UserPermissionsDBAdapter {
 	public SQLiteDatabase getDatabaseInstance() {
 		return db;
 	}
-	public boolean deletePermissions(int permissions)
+	public boolean deletePermissions(long userId ,int permissions)
 	{
-		return db.delete(USERPERMISSIONS_TABLE_NAME, USERPERMISSIONS_COLUMN_PERMISSIONSID + "=" + permissions, null) > 0;
+		return db.delete(USERPERMISSIONS_TABLE_NAME, USERPERMISSIONS_COLUMN_PERMISSIONSID + "=" + permissions+ " and " + USERPERMISSIONS_COLUMN_USERID + "="+userId, null) > 0;
 	}
 
 }

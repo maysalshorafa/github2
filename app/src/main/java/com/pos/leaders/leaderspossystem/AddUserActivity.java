@@ -1,7 +1,6 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,9 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -21,7 +18,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
-import com.pos.leaders.leaderspossystem.Models.Permission.UserPermissions;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.PermissionsGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -228,7 +224,7 @@ public class AddUserActivity extends AppCompatActivity {
 								for (int i=0;i<=userPermissions.size()-1;i++){
 									for (Permissions p : permissionsList) {
 										if(p.getId()==userPermissions.get(i)){
-											userPermissionAdapter.deletePermissions((int) p.getId());
+											userPermissionAdapter.deletePermissions(user.getId(),(int) p.getId());
 										}
 									}
 								}
