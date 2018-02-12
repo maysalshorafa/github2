@@ -945,7 +945,7 @@ public class MainActivity extends AppCompatActivity {
                                 final TextView discountPercentage = (TextView) view.findViewById(R.id.discountPercentage);
                                 final TextView tvDiscountPercentage = (TextView) view.findViewById(R.id.tvDiscountPercentageAmount);
                                 final Dialog cashDialog = new Dialog(MainActivity.this);
-                                cashDialog.setTitle(R.string.multi_count);
+                                cashDialog.setTitle(R.string.please_select_discount_offer);
                                 cashDialog.setContentView(R.layout.cash_payment_dialog);
                                 cashDialog.show();
                                 final Button cashBTOk = (Button) cashDialog.findViewById(R.id.cashPaymentDialog_BTOk);
