@@ -106,6 +106,7 @@ public class AddUserActivity extends AppCompatActivity {
             long i = (long) extras.get("userId");
             if (WorkerManagementActivity.User_Management_Edit == 8) {
                 btAdd.setText(R.string.edit);
+                WorkerManagementActivity.User_Management_Edit =0;
             }
             if (WorkerManagementActivity.User_Management_View == 7) {
                 btAdd.setVisibility(View.GONE);
@@ -117,7 +118,7 @@ public class AddUserActivity extends AppCompatActivity {
                 etPhoneNumber.setEnabled(false);
                 etHourlyWage.setEnabled(false);
                 etPresent.setEnabled(false);
-
+                WorkerManagementActivity.User_Management_View =0;
             }
             userDBAdapter.open();
             user = userDBAdapter.getUserByID(i);
@@ -270,8 +271,9 @@ public class AddUserActivity extends AppCompatActivity {
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
-            }
+                Intent intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);             }
         });
 
         lvPermissions.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -27,7 +27,8 @@ public class ClubManagementActivity extends AppCompatActivity {
     ClubAdapter groupAdapter;
     GridView gvGroup;
     Button btAddGroup, btCancel;
-    private static final int CHANGE_PASSWORD_DIALOG = 656;
+    public static int Club_Management_View=0;
+    public  static int  Club_Management_Edit=0;
     Club group;
 
     @Override
@@ -55,6 +56,7 @@ public class ClubManagementActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ClubManagementActivity.this, Coustmer_Group.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });
@@ -81,7 +83,8 @@ public class ClubManagementActivity extends AppCompatActivity {
         gvGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
+                Club_Management_Edit=0;
+                Club_Management_View=0;
                 final String[] items = {
                         getString(R.string.view),
                         getString(R.string.edit),
@@ -94,12 +97,14 @@ public class ClubManagementActivity extends AppCompatActivity {
                         Intent intent;
                         switch (item) {
                             case 0:
+                                Club_Management_View=9;
                                 intent = new Intent(ClubManagementActivity.this, Coustmer_Group.class);
                                 intent.putExtra("id", groups.get(position).getId());
 
 
                                 startActivity(intent);
                             case 1:
+                                Club_Management_Edit=10;
                                 intent = new Intent(ClubManagementActivity.this, Coustmer_Group.class);
                                 intent.putExtra("id", groups.get(position).getId());
                                 startActivity(intent);
@@ -134,5 +139,5 @@ public class ClubManagementActivity extends AppCompatActivity {
         });
     }
 
-
 }
+

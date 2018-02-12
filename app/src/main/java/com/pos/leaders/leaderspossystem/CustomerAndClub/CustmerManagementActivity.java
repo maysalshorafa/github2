@@ -26,10 +26,8 @@ public class CustmerManagementActivity extends AppCompatActivity {
     CustomerDBAdapter customerDBAdapter;
     GridView gvCustomer;
     Button btAddCustmer, btCancel;
-    public static int AddCustomerMeasurementConstant=0; //AddCustomerMeasurementCase Variable
-    private static final int CHANGE_PASSWORD_DIALOG = 656;
-    public static int Customer_Management_View ;
-    public  static int  Customer_Management_Edit;
+    public static int Customer_Management_View=0 ;
+    public  static int  Customer_Management_Edit=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
