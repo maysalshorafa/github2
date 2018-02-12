@@ -1,12 +1,8 @@
 package com.pos.leaders.leaderspossystem.CustomerAndClub;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -14,39 +10,23 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.Customer;
-
 import com.pos.leaders.leaderspossystem.R;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
-import com.pos.leaders.leaderspossystem.Tools.Util;
-
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -80,6 +60,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         }
         if(CustmerManagementActivity.Customer_Management_Edit==10){
             btAddCustomer.setText(R.string.edit);
+            CustmerManagementActivity.Customer_Management_Edit=0;
         }
         if(CustmerManagementActivity.Customer_Management_View==9){
             btAddCustomer.setVisibility(View.GONE);
@@ -93,7 +74,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             etHouseNumber.setEnabled(false);
             etPostalCode.setEnabled(false);
             etCountryCode.setEnabled(false);
-
+            CustmerManagementActivity.Customer_Management_View=0;
         }
         if (bundle != null) {
              customerId = (long) bundle.get("id");
@@ -120,8 +101,9 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
-            }
+                Intent intent = new Intent(AddNewCustomer.this, CustmerManagementActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);             }
         });
 
         btAddCustomer.setOnClickListener(new View.OnClickListener() {
