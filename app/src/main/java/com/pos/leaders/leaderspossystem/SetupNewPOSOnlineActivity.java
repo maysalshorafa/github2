@@ -2,7 +2,6 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,7 +46,6 @@ public class SetupNewPOSOnlineActivity extends Activity {
 
     private EditText etKey;
     private Button btConnect;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +59,6 @@ public class SetupNewPOSOnlineActivity extends Activity {
         btConnect = (Button) findViewById(R.id.setuponlinepos_btConnect);
 
         context = this;
-
         //region check internet connection
         if(!SyncMessage.isConnected(this)) {
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -227,6 +224,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
 
 
     private void updateSettings(String token) {
+
         MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
             String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
