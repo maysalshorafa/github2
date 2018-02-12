@@ -1,5 +1,8 @@
 package com.pos.leaders.leaderspossystem.Models.Currency;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
+
 import java.util.Date;
 
 /**
@@ -8,6 +11,7 @@ import java.util.Date;
 
 public class CurrencyOperation {
     private long id;
+    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
     private Date createDate;
     private long operation_id;
     private String operation_type;

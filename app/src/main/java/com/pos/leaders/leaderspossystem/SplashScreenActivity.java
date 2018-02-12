@@ -7,13 +7,27 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
-
+import android.widget.Toast;
+import com.crashlytics.android.Crashlytics;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
-
+import com.pos.leaders.leaderspossystem.syncposservice.SetupActivity;
+import io.fabric.sdk.android.Fabric;
+import org.joda.time.DateTime;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,6 +50,7 @@ public class SplashScreenActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Fabric.with(this, new Crashlytics());
         setContentView(R.layout.splash_screen);
         ImageView iv=(ImageView)findViewById(R.id.splashScreen_iv);
 
@@ -264,21 +279,26 @@ public class SplashScreenActivity extends Activity {
 
         }
         else{
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    newPosManagement();
-                    //Redirect to login activity
-                    SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(SplashScreenActivity.this);
-                    settingsDBAdapter.open();
-                    settingsDBAdapter.GetSettings();
-                    settingsDBAdapter.close();
+            if(newPosManagement()) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
 
-                    Intent intent=new Intent(SplashScreenActivity.this,LogInActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }, SPLASH_SCREEN_TIME_OUT);
+                        //Redirect to login activity
+                        SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(SplashScreenActivity.this);
+                        settingsDBAdapter.open();
+                        settingsDBAdapter.GetSettings();
+                        settingsDBAdapter.close();
+
+                        Intent intent = new Intent(SplashScreenActivity.this, LogInActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, SPLASH_SCREEN_TIME_OUT);
+            } else {
+                Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
+                startActivity(i);
+            }
         }
     }
 
@@ -453,7 +473,7 @@ public class SplashScreenActivity extends Activity {
         mOutput.close();
         mInput.close();
     }
-    private void newPosManagement() {
+    private boolean newPosManagement() {
         /// sharedPreferences for Setting
         SharedPreferences cSharedPreferences = getSharedPreferences(POS_Management, MODE_PRIVATE);
         if(cSharedPreferences!=null){
@@ -463,8 +483,7 @@ public class SplashScreenActivity extends Activity {
                 SETTINGS.creditCardEnable=creditCardEnable;
             }
             else {
-                Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
-                startActivity(i);
+                return false;
             }
             // end CreditCard
             //Currency
@@ -474,8 +493,7 @@ public class SplashScreenActivity extends Activity {
 
             }
             else {
-                Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
-                startActivity(i);
+                return false;
             }
             //end
             //CustomerMeasurement
@@ -484,8 +502,7 @@ public class SplashScreenActivity extends Activity {
                 SETTINGS.enableCustomerMeasurement=customerMeasurementEnable;
             }
             else {
-                Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
-                startActivity(i);
+                return false;
             }
             //end
             //FloatPoint
@@ -494,8 +511,7 @@ public class SplashScreenActivity extends Activity {
                 SETTINGS.decimalNumbers=floatPoint;
             }
             else {
-                Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
-                startActivity(i);
+                return false;
             }
             //end
             //PrinterType
@@ -516,3 +532,4 @@ public class SplashScreenActivity extends Activity {
     }
 
 }
+

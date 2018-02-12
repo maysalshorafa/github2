@@ -1,5 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models.CustomerMeasurement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Created by Win8.1 on 12/14/2017.
  */
@@ -7,8 +9,9 @@ package com.pos.leaders.leaderspossystem.Models.CustomerMeasurement;
 public class MeasurementsDetails {
     private long id;
     private long measurementId;
-    private  long dynamicVarId;
+    private long dynamicVarId;
     private String value;
+    @JsonIgnore
     private MeasurementDynamicVariable measurementDynamicVariable;
     //Constructors
     public MeasurementsDetails() {

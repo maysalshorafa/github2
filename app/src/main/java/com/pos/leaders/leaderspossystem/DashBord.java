@@ -8,9 +8,10 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -47,12 +48,11 @@ import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
-import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -64,7 +64,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.pos.leaders.leaderspossystem.SetUpManagement.POS_Management;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
 
@@ -88,6 +87,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     double aReportTotalAmount = 0;
     private MSCardService sendservice;
     long aReportId;
+    double totalZReportAmount =0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,34 +225,52 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         btZReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(DashBord.this);
-                zReportDBAdapter.open();
-                ZReport lastZReport = getLastZReport();
+                new AlertDialog.Builder(DashBord.this)
+                        .setTitle(getString(R.string.create_z_report))
+                        .setMessage(getString(R.string.create_z_report_message))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(DashBord.this);
+                                zReportDBAdapter.open();
+                                ZReport lastZReport = getLastZReport();
 
-                if (lastZReport == null) {
-                    lastZReport = new ZReport();
-                    lastZReport.setEndSaleId(0);
-                }
+                                if (lastZReport == null) {
+                                    lastZReport = new ZReport();
+                                    lastZReport.setEndSaleId(0);
+                                }
+                                ZReport z = new ZReport(0, DateConverter.stringToDate(DateConverter.currentDateTime()), SESSION._USER, lastZReport.getEndSaleId() + 1, lastSale);
+                                z.setByUser(SESSION._USER.getId());
+                                double amount = zReportDBAdapter.getZReportAmount(z.getStartSaleId(), z.getEndSaleId());
+                                totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
+                                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId(),amount,totalZReportAmount);
+                                z.setId(zID);
+                                lastZReport = new ZReport(z);
+                                zReportDBAdapter.close();
+                                PrintTools pt = new PrintTools(DashBord.this);
 
-                ZReport z = new ZReport(0, DateConverter.stringToDate(DateConverter.currentDateTime()), SESSION._USER, lastZReport.getEndSaleId() + 1, lastSale);
-                z.setByUser(SESSION._USER.getId());
-                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId());
-                z.setId(zID);
-                lastZReport = new ZReport(z);
-                zReportDBAdapter.close();
-                PrintTools pt = new PrintTools(DashBord.this);
+                                //create and print z report
+                                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false,totalZReportAmount);
+                                if (bmap != null)
+                                    pt.PrintReport(bmap);
 
-                //create and print z report
-                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false);
-                if (bmap != null)
-                    pt.PrintReport(bmap);
+                                Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, lastZReport.getId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, lastZReport.getStartSaleId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, lastZReport.getEndSaleId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
 
-                Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
-                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, lastZReport.getId());
-                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, lastZReport.getStartSaleId());
-                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, lastZReport.getEndSaleId());
-                startActivity(i);
-                btZReport.setEnabled(false);
+                                startActivity(i);
+                                btZReport.setEnabled(false);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
             }
         });
         //endregion z report button

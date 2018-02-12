@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 public class SetUpManagement extends AppCompatActivity {
     CheckBox currencyCheckBox, creditCardCheckBox, customerMeasurementCheckBox;
@@ -148,9 +150,16 @@ public class SetUpManagement extends AppCompatActivity {
                 editor.putInt(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, noOfPoint);
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, printerType);
                 editor.apply();
-                Intent i = new Intent(SetUpManagement.this, SetupNewPOSOnlineActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(i);
+
+                if (Util.isFirstLaunch(SetUpManagement.this, false)) {
+                    Intent i = new Intent(SetUpManagement.this, SetupNewPOSOnlineActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(i);
+                } else {
+                    finish();
+                }
+
+
             }
         });
         currencyImage.setOnClickListener(new View.OnClickListener() {

@@ -1,6 +1,9 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -16,6 +19,7 @@ import java.util.Locale;
 public class Sale {
 	private long id;
 	private long byUser;
+	@JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
 	private Date saleDate;
 	private int replacementNote;
 	private boolean cancelling;

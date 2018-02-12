@@ -1,5 +1,8 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
+
 import java.util.Date;
 
 /**
@@ -19,6 +22,7 @@ public class CreditCardPayment {
     private double firstPaymentAmount;
     private double otherPaymentAmount;
     private String cardholder;
+    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
     private Date createDate;
 
 

@@ -273,7 +273,7 @@ public class ImportProductsActivity extends Activity {
                         String name,barcode,id,price;
                         id=sheet.getCell(0, row).getContents().replaceAll(" ","");
                         name=sheet.getCell(1, row).getContents();
-                        barcode=new BigDecimal(sheet.getCell(2, row).getContents().replaceAll(" ","")).toString();
+                        barcode=sheet.getCell(2, row).getContents();
                         price=new BigDecimal(sheet.getCell(4, row).getContents().replaceAll(" ","")).toString();
                         resultSet.add(new Product(Integer.parseInt(id),name,Double.parseDouble(price),barcode,1, SESSION._USER.getId()));
                     }
@@ -334,7 +334,7 @@ public class ImportProductsActivity extends Activity {
                                 break;
                             String name,barcode,id,price,costPrice;
                             name = sh.getCell(1, row).getContents().replaceAll("''", "``").replaceAll("'", "`").toString();
-                            barcode=new BigDecimal(sh.getCell(2, row).getContents().replaceAll(" ","")).toString();
+                            barcode=sh.getCell(2, row).getContents();
                             price=new BigDecimal(sh.getCell(3, row).getContents().replaceAll(" ","")).toString();
                             costPrice = sh.getCell(4, row).getContents();
                             if(costPrice.equals(""))

@@ -141,7 +141,7 @@ public class CustomerMeasurementDBAdapter {
     public List<CustomerMeasurement> getCustomerMeasurementByCustomerId(long customerId) {
         List<CustomerMeasurement> customerMeasurementList = new ArrayList<CustomerMeasurement>();
 
-        Cursor cursor = db.rawQuery("select * from " + CUSTOMER_MEASUREMENT_TABLE_NAME +" where "+CUSTOMER_MEASUREMENT_COLUMN_CUSTOMER_ID+"="+customerId, null);
+        Cursor cursor = db.rawQuery("select * from " + CUSTOMER_MEASUREMENT_TABLE_NAME +" where "+CUSTOMER_MEASUREMENT_COLUMN_CUSTOMER_ID+"="+customerId+ " order by " + CUSTOMER_MEASUREMENT_COLUMN_VISIT_DATE + " desc", null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
@@ -150,6 +150,11 @@ public class CustomerMeasurementDBAdapter {
         }
 
         return customerMeasurementList;
+    }
+    public int noOfCustomerMeasurement(long customerId){
+        Cursor cursor = db.rawQuery("select * from " + CUSTOMER_MEASUREMENT_TABLE_NAME + " where " + CUSTOMER_MEASUREMENT_COLUMN_CUSTOMER_ID + " = "+ customerId, null);
+        int count = cursor.getCount();
+        return  count;
     }
 }
 

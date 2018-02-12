@@ -271,8 +271,7 @@
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
-
-            </LinearLayout>
+ </LinearLayout>
         </LinearLayout>
 
         <View

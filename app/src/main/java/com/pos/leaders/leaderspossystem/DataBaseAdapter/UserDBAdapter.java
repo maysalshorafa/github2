@@ -8,10 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
-import com.pos.leaders.leaderspossystem.Models.Sale;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -83,7 +81,7 @@ public class UserDBAdapter {
         }
     }
 
-    public long insertEntry(User user) {
+    public long insertEntry(User user) throws  SQLException {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(USERS_COLUMN_ID, user.getId());
@@ -97,12 +95,9 @@ public class UserDBAdapter {
         val.put(USERS_COLUMN_DISCOUNTINPERCENTAGE, user.getPresent());
         val.put(USERS_COLUMN_HOURLYWAGE, user.getHourlyWage());
 
-        try {
-            return db.insert(USERS_TABLE_NAME, null, val);
-        } catch (SQLException ex) {
-            Log.e("UserDB insertEntry", "inserting Entry at " + USERS_TABLE_NAME + ": " + ex.getMessage());
-            return 0;
-        }
+        long id = db.insertOrThrow(USERS_TABLE_NAME, null, val);
+
+        return id;
     }
 
     public User getUserByID(long id) {
@@ -227,7 +222,7 @@ public class UserDBAdapter {
 
         Cursor cursor = null;
         for (int i = 0; i < salesManId.size(); i++) {
-            cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where  id='" + salesManId.get(i) + "'", null);
+            cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where  id='" + salesManId.get(i) + "'"+ " and " + USERS_COLUMN_DISENABLED + "=0", null);
             if (cursor != null) {
 
                 while (cursor.moveToNext()) {

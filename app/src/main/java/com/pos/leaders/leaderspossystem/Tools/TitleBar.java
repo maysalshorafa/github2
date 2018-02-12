@@ -10,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.LogInActivity;
+import com.pos.leaders.leaderspossystem.MainActivity;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
@@ -92,9 +94,36 @@ public class TitleBar {
                 if(Util.isSyncServiceRunning(context)){
                     SESSION.syncStatus = SyncStatus.ENABLED;
                 } else {
-                    SESSION.syncStatus = SyncStatus.DISABLED;
+                    Toast.makeText(context, "Reconnect, please wait...", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(context, SyncMessage.class);
+                    intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, SETTINGS.BO_SERVER_URL);
+                    context.startService(intent);
+
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (!Util.isSyncServiceRunning(context)) {
+                        SESSION.syncStatus = SyncStatus.DISABLED;
+                    }
+
+                    SESSION.syncStatus = SyncStatus.ENABLED;
                 }
                 refreshStatus(context);
+            }
+        });
+        ivSync.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                if (Util.isSyncServiceRunning(context)) {
+                    Util.killSyncService(context);
+                    SESSION.syncStatus = SyncStatus.DISABLED;
+                    refreshStatus(context);
+                    Toast.makeText(context, "Connection closed.", Toast.LENGTH_SHORT).show();
+                }
+                return true;
             }
         });
 
