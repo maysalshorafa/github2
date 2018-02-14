@@ -489,4 +489,7 @@
     <string name="update_general_setting">Update General Setting</string>
     <string name="if_you_want_to_update_general_setting_click_ok">If you want to update General Setting click OK</string>
     <string name="pos_sales">PosSales: </string>
+    <string name="customer_have_money_from_point_more_than_total_price"> Customer Have Money From Point More Than Total Price</string>
+    <string name="customer_have_money_from_point_equal_total_price"> Customer Have Money From Point Equal Total Price</string>
+    <string name="customer_have_money_from_point_less_then_total_price"> Customer Have Money From Point Less Than Total Price</string>
 </resources>

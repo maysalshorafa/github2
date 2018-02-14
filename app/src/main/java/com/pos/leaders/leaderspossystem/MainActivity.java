@@ -167,23 +167,23 @@ public class MainActivity extends AppCompatActivity {
     List<Customer> customerList;
     List<Customer> AllCustmerList;
     CustomerDBAdapter customerDBAdapter;
-    ClubAdapter groupDbAdapter;
+    ClubAdapter clubAdapter;
     Sum_PointDbAdapter sum_pointDbAdapter;
     UsedPointDBAdapter usedpointDbAdapter;
     ValueOfPointDB valueOfPointDB;
     Customer customer;
-    long customerId=0;
-    long customerClubId=0;
+    long customerId = 0;
+    long customerClubId = 0;
     String customerName = "";
     // Club
     int newPoint = 0;
-    int totalCustomerPoint = 0;
-    int unUsedPointForCustomer = 0;
     int clubAmount;
     int clubType;
     int clubPoint;
+    int pointFromSale = 0;
+    String clubName = "";
     double clubDiscount = 0.0;
-    boolean equleUsedPoint = false;
+    boolean equalUsedPoint = false;
     boolean biggerUsedPoint = false;
     boolean lessUsedPoint = false;
     //end
@@ -360,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
         departmentDBAdapter = new DepartmentDBAdapter(this);
         productDBAdapter = new ProductDBAdapter(this);
         customerDBAdapter = new CustomerDBAdapter(this);
-        groupDbAdapter = new ClubAdapter(this);
+        clubAdapter = new ClubAdapter(this);
         valueOfPointDB = new ValueOfPointDB(this);
         sum_pointDbAdapter = new Sum_PointDbAdapter(this);
         usedpointDbAdapter = new UsedPointDBAdapter(this);
@@ -370,7 +370,7 @@ public class MainActivity extends AppCompatActivity {
         customerDBAdapter.open();
         productDBAdapter.open();
         departmentDBAdapter.open();
-        groupDbAdapter.open();
+        clubAdapter.open();
         valueOfPointDB.open();
 
         offerDBAdapter = new OfferDBAdapter(this);
@@ -1066,31 +1066,44 @@ public class MainActivity extends AppCompatActivity {
         used_point.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                double unusedPointMoney = 0.0;
+                double unUsedMoneyFromPoint = 0.0;
+                // get the value of one Point
                 ValueOfPoint valueOfPoint = valueOfPointDB.getValue();
                 double value = valueOfPoint.getValue();
-                Toast.makeText(MainActivity.this, "value Of Point " + value, Toast.LENGTH_LONG).show();
-                double newPrice = totalCustomerPoint * value;
-                if (saleTotalPrice == newPrice) {
-                    equleUsedPoint = true;
+                // get Customer Used And UnUsedPoint
+                Sum_PointDbAdapter customerPointDbAdapter = new Sum_PointDbAdapter(getApplicationContext());
+                customerPointDbAdapter.open();
+                UsedPointDBAdapter customerUnUsedPointDBAdapter = new UsedPointDBAdapter(getApplicationContext());
+                customerUnUsedPointDBAdapter.open();
+                int totalCustomerPoint = customerPointDbAdapter.getPointInfo(customerId);
+                int unUsedCustomerPoint = customerUnUsedPointDBAdapter.getUnusedPointInfo(customerId);
+                int NOOfPoint = totalCustomerPoint - unUsedCustomerPoint;
+                // Total Money From Customer Point "in Basic Currency"
+                double moneyFromCustomerPoint = NOOfPoint * value;
+                // Customer Point Equal Sale Total Price
+                if (saleTotalPrice == moneyFromCustomerPoint) {
+                    equalUsedPoint = true;
+                    saleTotalPrice = 0.0;
                     newPoint = (int) (saleTotalPrice / value);
-                    saleTotalPrice = 0;
-                    tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", 0.0) + " " + getString(R.string.ins));
+                    Toast.makeText(MainActivity.this, getString(R.string.customer_have_money_from_point_equal_total_price) + unUsedMoneyFromPoint, Toast.LENGTH_LONG).show();
+                    tvTotalPrice.setText(Util.makePrice(0.0) + getString(R.string.ins));
                 }
-                if (saleTotalPrice < newPrice) {
+                // Customer Point Bigger Than Sale Total Price
+                if (saleTotalPrice < moneyFromCustomerPoint) {
                     lessUsedPoint = true;
-                    unusedPointMoney = newPrice - saleTotalPrice;
-                    Toast.makeText(MainActivity.this, "uou have money more than sale totale price" + "   " + unusedPointMoney, Toast.LENGTH_LONG).show();
+                    unUsedMoneyFromPoint = moneyFromCustomerPoint - saleTotalPrice;
                     newPoint = (int) (saleTotalPrice / value);
-                    saleTotalPrice = 0;
-                    tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
+                    saleTotalPrice=0.0;
+                    Toast.makeText(MainActivity.this, getString(R.string.customer_have_money_from_point_more_than_total_price) + unUsedMoneyFromPoint, Toast.LENGTH_LONG).show();
+                    tvTotalPrice.setText(Util.makePrice(0.0) + getString(R.string.ins));
                 }
-                if (saleTotalPrice > newPrice) {
+                // Customer Point Less Than Sale Total Price
+                if (saleTotalPrice > moneyFromCustomerPoint) {
                     biggerUsedPoint = true;
-                    saleTotalPrice = saleTotalPrice - newPrice;
-                    unusedPointMoney = newPrice - saleTotalPrice;
-                    Toast.makeText(MainActivity.this, "uou have money more than sale totale price" + unusedPointMoney, Toast.LENGTH_LONG).show();
-                    tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
+                    saleTotalPrice = saleTotalPrice - moneyFromCustomerPoint;
+                    newPoint = (int) (moneyFromCustomerPoint / value);
+                    Toast.makeText(MainActivity.this, getString(R.string.customer_have_money_from_point_less_then_total_price) + saleTotalPrice, Toast.LENGTH_LONG).show();
+                    tvTotalPrice.setText(Util.makePrice(saleTotalPrice) + getString(R.string.ins));
                 }
             }
         });
@@ -1896,17 +1909,13 @@ startActivity(i);
             }
 
             if (clubType == 1) {
-
                 saleTotalPrice = saleTotalPrice - (int) saleTotalPrice * clubDiscount;
                 totalSaved = (SaleOriginalityPrice - saleTotalPrice);
-
                 tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
                 tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
-            } else if (clubType == 2) {
-
+            }
+            else if (clubType == 2 || clubType == 0) {
                 tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
-
-
                 totalSaved = (SaleOriginalityPrice - saleTotalPrice);
                 tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
                 //  clubPoint=  ( (int)(sale/clubAmount)*clubPoint);
@@ -2380,12 +2389,29 @@ startActivity(i);
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 long tempSaleId=0;
-                if (customerClubId == 2) {
-                    sum_pointDbAdapter.insertEntry(saleID, clubPoint, customerId);
+                // Club with point and amount
+                if (clubType == 2) {
+                    pointFromSale = ((int) (SESSION._SALE.getTotalPrice() * clubPoint) / clubAmount);
+                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
                 }
-                /**  Point Ppoint=sum_pointDbAdapter.getPointInfo(saleID);
-                 cInformation= String.valueOf(Ppoint.getPoint());
-                 information.setText(cInformation);**/
+
+                if (equalUsedPoint) {
+                    saleTotalPrice = 0.0;
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+                    saleDBAdapter.updateEntry(SESSION._SALE);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                }
+                if (lessUsedPoint) {
+                    saleTotalPrice = 0.0;
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+                    saleDBAdapter.updateEntry(SESSION._SALE);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                }
+                if (biggerUsedPoint) {
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+                    saleDBAdapter.updateEntry(SESSION._SALE);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                }
                 saleDBAdapter.close();
                 CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
                 creditCardPaymentDBAdapter.open();
@@ -2485,8 +2511,28 @@ startActivity(i);
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 long tempSaleId=0;
-                if (customerClubId == 2) {
-                    sum_pointDbAdapter.insertEntry(saleID, clubPoint, customerId);
+                // Club with point and amount
+                if (clubType == 2) {
+                    pointFromSale = ((int) (SESSION._SALE.getTotalPrice() * clubPoint) / clubAmount);
+                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
+                }
+
+                if (equalUsedPoint) {
+                    saleTotalPrice = 0.0;
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+                    saleDBAdapter.updateEntry(SESSION._SALE);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                }
+                if (lessUsedPoint) {
+                    saleTotalPrice = 0.0;
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+                    saleDBAdapter.updateEntry(SESSION._SALE);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                }
+                if (biggerUsedPoint) {
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+                    saleDBAdapter.updateEntry(SESSION._SALE);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 saleDBAdapter.close();
 
@@ -2564,36 +2610,31 @@ startActivity(i);
                 // Get data from CashActivityWithOutCurrency
                 double totalPaidWithOutCurrency = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_TOTAL_PAID, 0.0f);
                 double excess = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE, 0.0f);
-
-                SESSION._SALE.setTotalPaid(totalPaidWithOutCurrency);
-
-
-                // Customer Point Region
-                clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
-                saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
-                SESSION._SALE.setId(saleIDforCash);
-
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Sale(SESSION._SALE));
-
-                if (customerClubId == 2) {
-                    sum_pointDbAdapter.insertEntry(saleIDforCash, clubPoint, customerId);
+                SESSION._SALE.setTotalPaid(totalPaidWithOutCurrency);
+                /// Club with point and amount
+                if (clubType == 2) {
+                    pointFromSale = ((int) (SESSION._SALE.getTotalPrice() * clubPoint) / clubAmount);
+                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
                 }
-                if (equleUsedPoint) {
+
+                if (equalUsedPoint) {
                     saleTotalPrice = 0.0;
-
-                    SESSION._SALE.setTotalPaid(0.0);
-                    saleDBAdapter.updateEntry(SESSION._SALE);
-
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
-                } else if (biggerUsedPoint) {
-                    usedpointDbAdapter.insertEntry(saleIDforCash, totalCustomerPoint, customerId);
-                } else if (lessUsedPoint) {
-                    SESSION._SALE.setTotalPaid(0.0);
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
-                // End Customer Point Region
-
+                if (lessUsedPoint) {
+                    saleTotalPrice = 0.0;
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+                    saleDBAdapter.updateEntry(SESSION._SALE);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                }
+                if (biggerUsedPoint) {
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+                    saleDBAdapter.updateEntry(SESSION._SALE);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                }
                 // insert in Order , CustomerAssistant
                 if (forSaleMan) {
                     tempSaleId =saleIDforCash;
@@ -2667,7 +2708,6 @@ startActivity(i);
 
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 SESSION._SALE.setId(saleIDforCash);
-                clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Sale(SESSION._SALE));
 
                 if (firstCurrencyAmount > 0) {
@@ -2679,25 +2719,29 @@ startActivity(i);
                 cashPaymentDBAdapter.close();
 
 
-                // Customer Point Region
-                if (customerClubId == 2) {
-                    sum_pointDbAdapter.insertEntry(saleIDforCash, clubPoint, customerId);
+                // Club with point and amount
+                if (clubType == 2) {
+                    pointFromSale = ((int) (SESSION._SALE.getTotalPrice() * clubPoint) / clubAmount);
+                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
                 }
-                if (equleUsedPoint) {
+
+                if (equalUsedPoint) {
                     saleTotalPrice = 0.0;
-
-                    SESSION._SALE.setTotalPaid(0.0);
-                    saleDBAdapter.updateEntry(SESSION._SALE);
-
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
-                } else if (biggerUsedPoint) {
-                    usedpointDbAdapter.insertEntry(saleIDforCash, totalCustomerPoint, customerId);
-                } else if (lessUsedPoint) {
-                    SESSION._SALE.setTotalPaid(0.0);
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
-                // End Customer Point Region
+                if (lessUsedPoint) {
+                    saleTotalPrice = 0.0;
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+                    saleDBAdapter.updateEntry(SESSION._SALE);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                }
+                if (biggerUsedPoint) {
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+                    saleDBAdapter.updateEntry(SESSION._SALE);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                }
                 if (forSaleMan) {
                     tempSaleId =saleIDforCash;
                     custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
@@ -2871,36 +2915,31 @@ startActivity(i);
         gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                clubDiscount = 0;
-                customer=customerList.get(position);
-                customerName =customer.getCustmerName();
-                customerClubId=customer.getClub();
-                customerId = customer.getId();
+                customer = customerList.get(position);
+                customerName = customer.getCustmerName();
                 customerClubId = customer.getClub();
+                customerId = customer.getId();
                 customerName_EditText.setText(customerName);
                 customer_name.setText(customerName);
                 // get club Information
-                    Club group = groupDbAdapter.getGroupInfo(customerClubId);
-                    clubType = group.getType();
-                    if (clubType == 1) {
-                        clubDiscount = group.getParcent();
+                Club club = clubAdapter.getGroupInfo(customerClubId);
+                clubType = club.getType();
+                clubName = club.getname();
+                club_name.setText(clubName);
+                if (clubType == 1) {
+                    clubDiscount = club.getParcent();
+                    tvCustomerInformation.setText(getString(R.string.discount));
+                    information.setText(clubDiscount + "");
+                } else if (clubType == 2) {
+                    used_point.setVisibility(View.VISIBLE);
+                    clubAmount = club.getAmount();
+                    clubPoint = club.getPoint();
+                    tvCustomerInformation.setText(getString(R.string.point) + ",\t" + getString(R.string.amount));
+                    information.setText(clubAmount + ",\t " + clubPoint + getResources().getText(R.string.ins));
+                } else if (clubType == 0) {
 
-                        club_name.setText(group.getname());
-                        information.setText(clubDiscount + "");
-                    } else if (clubType == 2) {
-
-                        club_name.setText(group.getname());
-                        clubAmount = group.getAmount();
-                        clubPoint = group.getPoint();
-                        Ppoint = sum_pointDbAdapter.getPointInfo(customerId);
-
-                        unUsedPointForCustomer = usedpointDbAdapter.getUnusedPointInfo(customerId);
-                        totalCustomerPoint = Ppoint - unUsedPointForCustomer;
-                        information.setText(totalCustomerPoint + " ");
-                    } else if (clubType == 3) {
-                        club_name.setText(group.getname());
-                        information.setText(getString(R.string.general));
-                    }
+                    information.setText(getString(R.string.general));
+                }
 
                 popupWindow.dismiss();
             }
