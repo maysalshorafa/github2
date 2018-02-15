@@ -10,9 +10,9 @@ import java.io.File;
 
 public class SendLog {
     public static void sendLogFile(){
-        String from = "heraajebara@gmail.com";
+        String from = "lead2018pos@gmail.com";
         String to ="mays94alshorafa@gmail.com";
-        final String password = "zxc-=,./123456";
+        final String password = "mais1234";
         String subject ="Log File for"+"Company Name :"+SETTINGS.companyName +"  "+ "to POS No:"+SETTINGS.posID+"  "+DateConverter.currentDateTime();
         String filename1="posexceptionfile.txt";
         File filelocation = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename1);
