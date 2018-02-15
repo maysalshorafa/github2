@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -52,20 +51,6 @@ public class WorkerManagementActivity  extends AppCompatActivity {
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_worker_management);
-        // Setup handler for uncaught exceptions.
-        Thread t = new Thread(new adminThread());
-
-        t.setDefaultUncaughtExceptionHandler (new Thread.UncaughtExceptionHandler()
-        {
-            @Override
-            public void uncaughtException (Thread thread, Throwable e)
-            {
-                Log.d("Alert","Lets See if it Works !!!");
-
-                handleUncaughtException (thread, e);
-            }
-        });
-        t.start();
         TitleBar.setTitleBar(this);
         gvUsers = (GridView) findViewById(R.id.workerManagement_GVWorkers);
         btAddUser = (Button) findViewById(R.id.workerManagement_BTNewUser);
@@ -217,17 +202,5 @@ public class WorkerManagementActivity  extends AppCompatActivity {
 
     }
 
-    public void handleUncaughtException (Thread thread, Throwable e)
-    {
-        e.printStackTrace(); // not all Android versions will print the stack trace automatically
-
-        Intent intent = new Intent ();
-        intent.setAction (".SEND_LOG"); // see step 5.
-        intent.setFlags (Intent.FLAG_ACTIVITY_NEW_TASK); // required when starting from Application
-        startActivity (intent);
-        Log.d("Test","Lets See if it Works !!!");
-
-        System.exit(1); // kill off the crashed app
-    }
 }
 
