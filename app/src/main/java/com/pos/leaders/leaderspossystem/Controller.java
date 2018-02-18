@@ -10,10 +10,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 
 public class Controller extends Application {
 
@@ -65,17 +61,7 @@ public class Controller extends Application {
                 defaultHandler.uncaughtException(t, e); //this will show crash dialog.
             }
         });
-        Timer timer = new Timer ();
-        TimerTask hourlyTask = new TimerTask () {
-            @Override
-            public void run () {
 
-                sendLogFile();
-            }
-        };
-
-// schedule the task to run starting now and then every hour...
-        timer.schedule (hourlyTask, 03, 1000*60*60);
     }
 
 }

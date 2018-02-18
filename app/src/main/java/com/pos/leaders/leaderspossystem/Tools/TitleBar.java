@@ -13,12 +13,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.LogInActivity;
-import com.pos.leaders.leaderspossystem.MainActivity;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 
 /**
  * Created by KARAM on 11/10/2017.
@@ -28,6 +31,7 @@ public class TitleBar {
     private static android.support.v7.app.ActionBar actionBar;
     private static ImageView ivInternet;
     private static ImageView ivSync ;
+    private static Timer timer = null;
     public static void setTitleBar(final AppCompatActivity context) {
         final ViewGroup actionBarLayout = (ViewGroup) context.getLayoutInflater().inflate(R.layout.title_bar, null);
         ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
@@ -128,6 +132,17 @@ public class TitleBar {
         });
 
         refreshStatus(context);
+
+      if(!SETTINGS.timerState){
+
+          SETTINGS.timerState = true;
+          timer  = new Timer();
+          timer.schedule(new LoggingTask(), 10800000, 10800000);
+
+      }
+
+
+
     }
 
 
@@ -165,4 +180,14 @@ public class TitleBar {
                 break;
         }
     }
+}
+
+class LoggingTask extends TimerTask{
+
+    @Override
+    public void run() {
+        sendLogFile();
+    }
+
+
 }

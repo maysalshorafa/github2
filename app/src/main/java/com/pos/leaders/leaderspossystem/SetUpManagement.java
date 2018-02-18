@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
-import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 public class SetUpManagement extends AppCompatActivity {
@@ -188,21 +187,33 @@ public class SetUpManagement extends AppCompatActivity {
                 if (cSharedPreferences != null) {
                     //CreditCard
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD)) {
-                        boolean editCreditCardEnable = creditCardEnable;
-                        editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, editCreditCardEnable);
-                        SETTINGS.creditCardEnable = editCreditCardEnable;
+                        if(creditCardCheckBox.isChecked()){
+                            creditCardEnable=true;
+                        }else {
+                            creditCardEnable=false;
+                        }
+                        editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, creditCardEnable);
+                        SETTINGS.creditCardEnable = creditCardEnable;
                     }
                     //Currency
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY)) {
-                        boolean editCurrencyEnable = currencyEnable;
-                        editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, editCurrencyEnable);
-                        SETTINGS.enableCurrencies = editCurrencyEnable;
+                        if(currencyCheckBox.isChecked()){
+                            currencyEnable=true;
+                        }else {
+                            currencyEnable=false;
+                        }
+                        editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, currencyEnable);
+                        SETTINGS.enableCurrencies = currencyEnable;
                     }
                     //CustomerMeasurement
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT)) {
-                        boolean editCustomerMeasurementEnable = customerMeasurementEnable;
-                        editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, editCustomerMeasurementEnable);
-                        SETTINGS.enableCustomerMeasurement = editCustomerMeasurementEnable;
+                        if(customerMeasurementCheckBox.isChecked()){
+                            customerMeasurementEnable=true;
+                        }else {
+                            customerMeasurementEnable=false;
+                        }
+                        editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, customerMeasurementEnable);
+                        SETTINGS.enableCustomerMeasurement = customerMeasurementEnable;
                     }
                     //FloatPoint
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT)) {
