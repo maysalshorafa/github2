@@ -306,7 +306,6 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         backUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendLogFile();
                 i = new Intent(getApplicationContext(), BackupActivity.class);
              startActivity(i);
             }

@@ -11,7 +11,7 @@ import java.io.File;
 public class SendLog {
     public static void sendLogFile(){
         String from = "lead2018pos@gmail.com";
-        String to ="mays94alshorafa@gmail.com";
+        String to ="lead2018pos@gmail.com";
         final String password = "mais1234";
         String subject ="Log File for"+"Company Name :"+SETTINGS.companyName +"  "+ "to POS No:"+SETTINGS.posID+"  "+DateConverter.currentDateTime();
         String filename1="posexceptionfile.txt";
