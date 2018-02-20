@@ -1,5 +1,53 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferRuleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule11DBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule1DBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule5DBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,27 +56,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.*;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
-
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
-
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 
 
 /**
@@ -173,7 +200,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (0,'Hifa');");
         db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (1,'type1','type1',1,.2,0,0,0);");
         db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (2,'type2','type2',2,0,50,200,0);");
-        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (3,'type3','type3',3,0,0,0,0);");
+        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (0,'type3','type3',0,0,0,0,0);");
         db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (4,'test1','test1','test1','"+new Date().getTime()+"','12',0,046316969,20,35);");
 
 

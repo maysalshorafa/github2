@@ -2,8 +2,6 @@ package com.pos.leaders.leaderspossystem;
 
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -19,15 +17,10 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.CustomerAndClub.CustmerManagementActivity;
-import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Department;
-import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Tools.DepartmentGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.PermissionsGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProductDepartmentGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -118,8 +111,9 @@ public class ProductsActivity  extends AppCompatActivity  {
                     departmentDBAdapter.close();
                     productDBAdapter.close();}
                 catch (Exception ex){}
-                onBackPressed();
-            }
+                Intent intent = new Intent(ProductsActivity.this, ProductCatalogActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);            }
         });
 
         btnContinue.setOnClickListener(new View.OnClickListener() {
@@ -209,7 +203,6 @@ public class ProductsActivity  extends AppCompatActivity  {
                     etDescription.setText(editableProduct.getDescription());
                     etCostPrice.setText(editableProduct.getCostPrice() + "");
                     etPrice.setText(editableProduct.getPrice() + "");
-                    Toast.makeText(getApplicationContext(), editableProduct.isWithTax() + "test", Toast.LENGTH_LONG).show();
                     swWithTax.setChecked(editableProduct.isWithTax());
                     swWeighable.setChecked(editableProduct.isWeighable());
                     Department d = departmentDBAdapter.getDepartmentByID(editableProduct.getDepartmentId());
@@ -223,6 +216,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                     departmentGridViewAdapter.updateRecords(listDepartment);
                     if (ProductCatalogActivity.Product_Management_Edit == 8) {
                         btSave.setText(getString(R.string.edit));
+                        ProductCatalogActivity.Product_Management_Edit =0;
                     }
                     if (ProductCatalogActivity.Product_Management_View == 9) {
                         btSave.setVisibility(View.GONE);
@@ -231,6 +225,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                         etDescription.setEnabled(false);
                         etCostPrice.setEnabled(false);
                         etPrice.setEnabled(false);
+                        ProductCatalogActivity.Product_Management_View =0;
 
                     }
                 } catch (Exception ex) {
