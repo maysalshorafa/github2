@@ -207,4 +207,6 @@
     <string name="fail_to_add_product">כשלון בהוספת מוצר חדש.</string>
     <string name="proportion">אחוז</string>
     <string name="advance">מתקדם</string>
+
+    <string name="pos_sales">כה\'\'כ מצטבר: </string>
 </resources>

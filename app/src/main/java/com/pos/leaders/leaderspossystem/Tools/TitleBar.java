@@ -16,9 +16,13 @@ import com.pos.leaders.leaderspossystem.LogInActivity;
 import com.pos.leaders.leaderspossystem.MainActivity;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
+import com.pos.leaders.leaderspossystem.updater.AutoUpdateApk;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by KARAM on 11/10/2017.
@@ -28,9 +32,13 @@ public class TitleBar {
     private static android.support.v7.app.ActionBar actionBar;
     private static ImageView ivInternet;
     private static ImageView ivSync ;
+    private static AutoUpdateApk aua = null;
+    private static long lastUpdateCheck;
     public static void setTitleBar(final AppCompatActivity context) {
         final ViewGroup actionBarLayout = (ViewGroup) context.getLayoutInflater().inflate(R.layout.title_bar, null);
         ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+
+
 
         // Set up your ActionBar
         actionBar = context.getSupportActionBar();
@@ -126,8 +134,26 @@ public class TitleBar {
                 return true;
             }
         });
-
         refreshStatus(context);
+
+        if(aua==null){
+            aua = new AutoUpdateApk(context);
+            aua.addObserver(new Observer() {
+                @Override
+                public void update(Observable o, Object data) {
+                    if( ((String)data).equalsIgnoreCase(AutoUpdateApk.AUTOUPDATE_GOT_UPDATE) ) {
+                        android.util.Log.i("AutoUpdateApkActivity", "Have just received update!");
+                    }
+                    if( ((String)data).equalsIgnoreCase(AutoUpdateApk.AUTOUPDATE_HAVE_UPDATE) ) {
+                        android.util.Log.i("AutoUpdateApkActivity", "There's an update available!");
+                    }
+                }
+            });
+            lastUpdateCheck=new Date().getTime();
+        } else if(new Date().getTime()-lastUpdateCheck>(1000)*(60)*(3)){
+            aua.checkUpdatesManually();
+            lastUpdateCheck=new Date().getTime();
+        }
     }
 
 
