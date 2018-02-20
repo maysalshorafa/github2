@@ -4,31 +4,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pos.leaders.leaderspossystem.Config;
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
-import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
-import com.pos.leaders.leaderspossystem.syncposservice.Model.BrokerMessage;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
@@ -119,7 +106,6 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_BYUSER, p.getByUser());
         val.put(PRODUCTS_COLUMN_with_pos,p.getWith_pos());
         val.put(PRODUCTS_COLUMN_with_point_system,p.getWith_point_system());
-
         try {
             return db.insert(PRODUCTS_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -264,6 +250,21 @@ public class ProductDBAdapter {
     }
 
     private Product makeProduct(Cursor cursor){
+        int withTaxValue = cursor.getInt(cursor.getColumnIndex(PRODUCTS_COLUMN_WITHTAX));
+        int weighableValue = cursor.getInt(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHABLE));
+
+        boolean withTaxStatus ,weighableStatus =false ;
+        if(withTaxValue==1){
+            withTaxStatus=true;
+        }else {
+            withTaxStatus=false;
+        }
+        if(weighableValue==1){
+            weighableStatus=true;
+        }else {
+            weighableStatus=false;
+        }
+
         Product p=new Product(
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_NAME)),
@@ -271,9 +272,7 @@ public class ProductDBAdapter {
                 cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DESCRIPTION)),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_COSTPRICE))),
-                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WITHTAX))),
-                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHABLE))),
-                DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
+                withTaxStatus, weighableStatus, DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))),

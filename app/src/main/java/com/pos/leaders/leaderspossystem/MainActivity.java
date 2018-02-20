@@ -1554,7 +1554,7 @@ startActivity(i);
         club_name.setText("");
         customer_name.setText("");
         information.setText("");
-        tvCustomerInformation.setText("");
+        tvCustomerInformation.setText(getString(R.string.Information));
         customerName_EditText.setText("");
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
         lvOrder.setAdapter(saleDetailsListViewAdapter);

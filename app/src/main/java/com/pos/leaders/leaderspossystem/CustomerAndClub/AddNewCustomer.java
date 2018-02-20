@@ -101,7 +101,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddNewCustomer.this, CustmerManagementActivity.class);
+                Intent intent = new Intent(AddNewCustomer.this, com.pos.leaders.leaderspossystem.CustomerAndClub.Customer.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);             }
         });

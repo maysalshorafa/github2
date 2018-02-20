@@ -66,7 +66,7 @@ public class TitleBar {
         final TextView actionBarTitle = (TextView) context.findViewById(R.id.date);
         actionBarTitle.setText(format.format(ca.getTime()));
         final TextView actionBarSent = (TextView) context.findViewById(R.id.posID);
-        actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
+        actionBarSent.setText("POSID  "+ SETTINGS.posID);
 
 
 
