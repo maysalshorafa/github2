@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.CustomerAndClub;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -65,6 +66,9 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
         btAddGroup = (Button) findViewById(R.id.add_group);
         gvCustomer = (GridView) findViewById(R.id.custmerManagement_GVCustmerClub);
         club = null;
+        etAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etPoint.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etPercent.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         final ArrayList<Integer> idForClubType = new ArrayList<Integer>();
         final ArrayList<String> hintForClubType = new ArrayList<String>();
         hintForClubType.add(getString(R.string.club_general_type));
@@ -210,7 +214,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Coustmer_Group.this, ClubManagementActivity.class);
+                Intent intent = new Intent(Coustmer_Group.this, com.pos.leaders.leaderspossystem.CustomerAndClub.Customer.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);            }
         });

@@ -380,7 +380,6 @@
                                 android:layout_marginRight="8dp"
                                 android:hint="@string/customer_name"
                                 android:inputType="textPersonName"
-                                android:textAlignment="textEnd"
                                 android:textSize="13dp"
                                  />
 

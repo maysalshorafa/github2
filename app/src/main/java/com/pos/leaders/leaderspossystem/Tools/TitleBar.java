@@ -13,16 +13,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.LogInActivity;
-import com.pos.leaders.leaderspossystem.MainActivity;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 import com.pos.leaders.leaderspossystem.updater.AutoUpdateApk;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
+
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
+
 
 /**
  * Created by KARAM on 11/10/2017.
@@ -32,6 +38,7 @@ public class TitleBar {
     private static android.support.v7.app.ActionBar actionBar;
     private static ImageView ivInternet;
     private static ImageView ivSync ;
+    private static Timer timer = null;
     private static AutoUpdateApk aua = null;
     private static long lastUpdateCheck;
     public static void setTitleBar(final AppCompatActivity context) {
@@ -70,7 +77,7 @@ public class TitleBar {
         final TextView actionBarTitle = (TextView) context.findViewById(R.id.date);
         actionBarTitle.setText(format.format(ca.getTime()));
         final TextView actionBarSent = (TextView) context.findViewById(R.id.posID);
-        actionBarSent.setText("POSID  "+ SESSION.POS_ID_NUMBER);
+        actionBarSent.setText("POSID  "+ SETTINGS.posID);
 
 
 
@@ -136,6 +143,14 @@ public class TitleBar {
         });
         refreshStatus(context);
 
+
+      if(!SETTINGS.timerState){
+
+          SETTINGS.timerState = true;
+          timer  = new Timer();
+          timer.schedule(new LoggingTask(), 10800000, 10800000);
+
+      }
         if(aua==null){
             aua = new AutoUpdateApk(context);
             aua.addObserver(new Observer() {
@@ -154,6 +169,7 @@ public class TitleBar {
             aua.checkUpdatesManually();
             lastUpdateCheck=new Date().getTime();
         }
+
     }
 
 
@@ -191,4 +207,14 @@ public class TitleBar {
                 break;
         }
     }
+}
+
+class LoggingTask extends TimerTask{
+
+    @Override
+    public void run() {
+        sendLogFile();
+    }
+
+
 }

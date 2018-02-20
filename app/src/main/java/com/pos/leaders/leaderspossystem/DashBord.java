@@ -66,6 +66,7 @@ import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
+import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 
 public class DashBord extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private boolean enableBackButton = true;
@@ -98,7 +99,6 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_temp_dash_bord);
-
         if (SyncMessage.isConnected(this)) {
             SESSION.internetStatus = InternetStatus.CONNECTED;
         } else {
@@ -307,7 +307,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             @Override
             public void onClick(View v) {
                 i = new Intent(getApplicationContext(), BackupActivity.class);
-                startActivity(i);
+             startActivity(i);
             }
         });
         users.setOnClickListener(new View.OnClickListener() {
@@ -820,6 +820,5 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
 
 }

@@ -2,16 +2,13 @@ package com.pos.leaders.leaderspossystem;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
@@ -22,8 +19,6 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public class ReportsManagementActivity  extends AppCompatActivity {
@@ -67,24 +62,28 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         zReportDBAdapter.open();
         saleDBAdapter.open();
         lastSale = saleDBAdapter.getLast();
+        if (lastSale == null) {
+            btnZ.setEnabled(false);
+            btnX.setEnabled(false);
+        }
+        else {
 
-        try {
-            lastZReport = zReportDBAdapter.getLastRow();
+            try {
+                lastZReport = zReportDBAdapter.getLastRow();
 
-            if (lastZReport.getEndSaleId() == lastSale.getId()){
-                btnZ.setEnabled(false);
+                if (lastZReport.getEndSaleId() == lastSale.getId()) {
+                    btnZ.setEnabled(false);
+                } else {
+                    btnZ.setEnabled(true);
+                }
+                // dis enable X Report if no row insert in ZReport Table
+                if (lastZReport == null) {
+                    btnX.setEnabled(false);
+                }
+
+            } catch (Exception ex) {
+                Log.e(ex.getLocalizedMessage(), ex.getMessage());
             }
-
-            else{
-                btnZ.setEnabled(true);
-            }
-            // dis enable X Report if no row insert in ZReport Table
-            if (lastZReport==null){
-                btnX.setEnabled(false);
-            }
-
-        } catch (Exception ex) {
-            Log.e(ex.getLocalizedMessage(), ex.getMessage());
         }
         btnZ.setOnClickListener(new View.OnClickListener() {
             @Override

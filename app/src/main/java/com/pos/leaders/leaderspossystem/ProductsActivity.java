@@ -1,6 +1,5 @@
 package com.pos.leaders.leaderspossystem;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -214,9 +213,11 @@ public class ProductsActivity  extends AppCompatActivity  {
                         }
                     }
                     departmentGridViewAdapter.updateRecords(listDepartment);
+
                     if (ProductCatalogActivity.Product_Management_Edit == 8) {
                         btSave.setText(getString(R.string.edit));
                         ProductCatalogActivity.Product_Management_Edit =0;
+
                     }
                     if (ProductCatalogActivity.Product_Management_View == 9) {
                         btSave.setVisibility(View.GONE);
