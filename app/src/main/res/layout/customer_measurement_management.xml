@@ -266,7 +266,8 @@
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="20dp"></LinearLayout>
+                    android:padding="20dp"
+                    android:textDirection="anyRtl"></LinearLayout>
             </ScrollView>
         </LinearLayout>
 

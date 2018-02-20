@@ -1,6 +1,6 @@
 package com.pos.leaders.leaderspossystem;
 
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -110,8 +110,9 @@ public class ProductsActivity  extends AppCompatActivity  {
                     departmentDBAdapter.close();
                     productDBAdapter.close();}
                 catch (Exception ex){}
-                onBackPressed();
-            }
+                Intent intent = new Intent(ProductsActivity.this, ProductCatalogActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);            }
         });
 
         btnContinue.setOnClickListener(new View.OnClickListener() {
@@ -226,6 +227,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                         etCostPrice.setEnabled(false);
                         etPrice.setEnabled(false);
                         ProductCatalogActivity.Product_Management_View =0;
+
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();

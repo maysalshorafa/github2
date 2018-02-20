@@ -49,10 +49,13 @@ import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
+import com.pos.leaders.leaderspossystem.updater.AutoUpdateApk;
 import com.sunmi.aidl.MSCardService;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
@@ -72,6 +75,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     double totalZReportAmount=0;
 
     private MSCardService sendservice;
+
 
 
     @Override
@@ -352,6 +356,8 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         btAReport.setEnabled(false);
         btZReport.setEnabled(false);
         mainScreen.setEnabled(false);
+
+
     }
 
     public void EnableButtons() {
@@ -418,6 +424,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
             }
         }
         EnableButtons();
+
     }
 
     private boolean needAReport(){
