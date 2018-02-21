@@ -65,7 +65,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    protected static final int DATABASE_VERSION = 3;
+    protected static final int DATABASE_VERSION = 2;
 
     protected static final String DATABASE_NAME = "POSDB.db";
     protected static final String CONTACTS_TABLE_NAME = "contacts";
@@ -244,7 +244,7 @@ public class DbHelper extends SQLiteOpenHelper {
             DATABASE_ENABEL_ALTER_COLUMN = true;
 
             //method to updateDataBaseVersion2
-            updateDataBase(db);
+            //updateDataBase(db);
             //end
         }
 /*
