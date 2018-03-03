@@ -2610,8 +2610,18 @@ startActivity(i);
                 // Get data from CashActivityWithOutCurrency
                 double totalPaidWithOutCurrency = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_TOTAL_PAID, 0.0f);
                 double excess = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE, 0.0f);
-                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Sale(SESSION._SALE));
+
                 SESSION._SALE.setTotalPaid(totalPaidWithOutCurrency);
+
+
+
+                // Customer Point Region
+                clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
+                saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
+                SESSION._SALE.setId(saleIDforCash);
+
+
+
                 /// Club with point and amount
                 if (clubType == 2) {
                     pointFromSale = ((int) (SESSION._SALE.getTotalPrice() * clubPoint) / clubAmount);

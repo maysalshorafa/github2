@@ -245,6 +245,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
             //method to updateDataBaseVersion2
             updateDataBase(db);
+            db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "CustomerMeasurement" + " INTEGER DEFAULT 0;");
+            db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "MeasurementsDetails" + " INTEGER DEFAULT 0;");
+            db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "MeasurementDynamicVariable" + " INTEGER DEFAULT 0;");
             //end
         }
 /*

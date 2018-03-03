@@ -62,7 +62,7 @@
             android:weightSum="2">
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/AC_tvReq"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -98,7 +98,7 @@
             android:weightSum="2">
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/AC_CUSTOMERNAME"
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

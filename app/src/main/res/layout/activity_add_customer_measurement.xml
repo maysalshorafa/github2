@@ -66,7 +66,7 @@
                 android:layout_gravity="center">
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/ACM_textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -96,7 +96,7 @@
                 android:layout_gravity="center">
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/ACM_NOM"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/no_of_measurement"
@@ -131,7 +131,7 @@
                 >
 
                 <ImageView
-                    android:id="@+id/textView3"
+                    android:id="@+id/ACM_tv3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -157,7 +157,7 @@
                 >
 
                 <ImageView
-                    android:id="@+id/textView3"
+                    android:id="@+id/ACM_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -183,7 +183,7 @@
                 >
 
                 <ImageView
-                    android:id="@+id/textView3"
+                    android:id="@+id/ACM_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -213,7 +213,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/ACM_acmtv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_customer_measurement"

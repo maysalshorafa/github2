@@ -3,7 +3,11 @@ package com.pos.leaders.leaderspossystem;
 import android.app.Activity;
 import android.app.Dialog;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -39,7 +43,21 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
     Currency rCurrency;
     private Sale sale;
 
-    public CurrencyReturnsCustomDialogActivity(Activity a, double excess,Sale sale) {
+    public CurrencyReturnsCustomDialogActivity() {
+        super(null);
+    }
+
+    public CurrencyReturnsCustomDialogActivity(@NonNull Context context, @StyleRes int themeResId, Activity c) {
+        super(context, themeResId);
+        this.c = c;
+    }
+
+    public CurrencyReturnsCustomDialogActivity(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, Activity c) {
+        super(context, cancelable, cancelListener);
+        this.c = c;
+    }
+
+    public CurrencyReturnsCustomDialogActivity(Activity a, double excess, Sale sale) {
         super(a);
         this.c = a;
         this.excess = excess;

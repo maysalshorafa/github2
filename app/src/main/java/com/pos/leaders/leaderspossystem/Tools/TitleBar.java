@@ -45,8 +45,6 @@ public class TitleBar {
         final ViewGroup actionBarLayout = (ViewGroup) context.getLayoutInflater().inflate(R.layout.title_bar, null);
         ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
 
-
-
         // Set up your ActionBar
         actionBar = context.getSupportActionBar();
         // TODO: Remove the redundant calls to getSupportActionBar()
