@@ -2613,14 +2613,11 @@ startActivity(i);
 
                 SESSION._SALE.setTotalPaid(totalPaidWithOutCurrency);
 
-
-
-                // Customer Point Region
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 SESSION._SALE.setId(saleIDforCash);
 
-
+                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Sale(SESSION._SALE));
 
                 /// Club with point and amount
                 if (clubType == 2) {

@@ -78,8 +78,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
         if (!SETTINGS.enableCurrencies) {
             returnSpener.setVisibility(View.INVISIBLE);
         }
-        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this.c);
-        currencyTypeDBAdapter.open();
+
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,45 +93,49 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
             }
         });
 
-        List<CurrencyType> currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
-        currencyTypeDBAdapter.close();
-        CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(getContext());
-        currencyDBAdapter.open();
-        final List<Currency> currencyList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
-        currencyDBAdapter.close();
+        if (SETTINGS.enableCurrencies) {
+            CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this.c);
+            currencyTypeDBAdapter.open();
 
-        final List<String> currency = new ArrayList<String>();
-        for (int i = 0; i < currencyTypesList.size(); i++) {
-            currency.add(currencyTypesList.get(i).getType());
+            List<CurrencyType> currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+            currencyTypeDBAdapter.close();
+            CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(getContext());
+            currencyDBAdapter.open();
+            final List<Currency> currencyList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
+            currencyDBAdapter.close();
+
+            final List<String> currency = new ArrayList<String>();
+            for (int i = 0; i < currencyTypesList.size(); i++) {
+                currency.add(currencyTypesList.get(i).getType());
+            }
+
+            // Creating adapter for spinner
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, currency);
+
+            // Drop down layout style - list view with radio button
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            rCurrency = currencyList.get(0);
+
+            // attaching data adapter to spinner
+            returnSpener.setAdapter(dataAdapter);
+            returnSpener.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                @Override
+                public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                           int arg2, long arg3) {
+                    Currency currency = currencyList.get(arg2);
+                    tvExcess.setText(Util.makePrice(excess / currency.getRate()));
+                    rCurrency = currencyList.get(arg2);
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> arg0) {
+
+                }
+            });
         }
 
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, currency);
-
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        rCurrency = currencyList.get(0);
-
-        // attaching data adapter to spinner
-        returnSpener.setAdapter(dataAdapter);
-
         tvExcess.setText(String.format(new Locale("en"), "%.2f", excess));
-
-        returnSpener.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                       int arg2, long arg3) {
-                Currency currency = currencyList.get(arg2);
-                tvExcess.setText(Util.makePrice(excess / currency.getRate()));
-                rCurrency = currencyList.get(arg2);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-
-            }
-        });
     }
 }

@@ -31,9 +31,10 @@ public class SETTINGS {
 	//public static String BO_SERVER_URL = "http://172.16.0.44:8080/leadBO/webapi/";
 	public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
 	//public static String BO_SERVER_URL = "http://192.168.1.13:8080/webapi/";
-	//public static final String API_URL = "http://192.168.1.106:8090/updateApk/";
-	//public static final String API_URL = "http://185.118.252.26:8091/updateApkNV/";
-	public static final String API_URL = "http://185.118.252.26:8090/updateApk/";
+	//public static final String UPDATER_API_URL_PATH = "http://192.168.1.106:8090/updateApk/";
+	//public static final String UPDATER_API_URL_PATH = "http://185.118.252.26:8091/updateApkNV/";
+	public static final String UPDATER_API_URL_PATH = "/updateApk/";
+	public static final String UPDATER_SERVER_URL = "http://185.118.252.26:8090";
 
 
 

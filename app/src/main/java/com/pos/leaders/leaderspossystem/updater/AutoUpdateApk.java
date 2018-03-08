@@ -59,7 +59,8 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
-import static com.pos.leaders.leaderspossystem.Tools.SETTINGS.API_URL;
+import static com.pos.leaders.leaderspossystem.Tools.SETTINGS.UPDATER_API_URL_PATH;
+import static com.pos.leaders.leaderspossystem.Tools.SETTINGS.UPDATER_SERVER_URL;
 
 public class AutoUpdateApk extends Observable {
 
@@ -145,7 +146,7 @@ public class AutoUpdateApk extends Observable {
     protected final static String TAG = "AutoUpdateApk";
 
     private final static String CONTENT_TYPE_ANDROID_PACKAGE = "application/vnd.android.package-archive";
-    //	private final static String API_URL = "http://auto-update-apk.appspot.com/check";
+    //	private final static String UPDATER_API_URL_PATH = "http://auto-update-apk.appspot.com/check";
 
 
     protected static Context context = null;
@@ -288,7 +289,7 @@ public class AutoUpdateApk extends Observable {
 
             HttpURLConnection urlConnection = null;
             try {
-                URL url = new URL(API_URL);
+                URL url = new URL(UPDATER_SERVER_URL+UPDATER_API_URL_PATH);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
                 Uri.Builder builder = new Uri.Builder()
@@ -324,7 +325,7 @@ public class AutoUpdateApk extends Observable {
                 conn.disconnect();
 
                 if( result.length > 1 && result[0].equalsIgnoreCase("have update") ) {
-                    url = new URL("http://192.168.1.106:8090"+result[1]);
+                    url = new URL(UPDATER_SERVER_URL + result[1]);
                     conn = (HttpURLConnection) url.openConnection();
                     // set the timeout in milliseconds until a connection is established
                     // the default value is zero, that means the timeout is not used
