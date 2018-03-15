@@ -93,7 +93,7 @@ public class ChecksDBAdapter {
 		val.put(CHECKS_COLUMN_BRANCHNUMBER, check.getBranchNum());
 		val.put(CHECKS_COLUMN_ACCOUNTNUMBER, check.getAccountNum());
 		val.put(CHECKS_COLUMN_AMOUNT,check.getAmount() );
-		val.put(CHECKS_COLUMN_DATE,DateConverter.DateToString(check.getDate()));
+		val.put(CHECKS_COLUMN_DATE,check.getDate().getTime());
         val.put(CHECKS_COLUMN_ISDELETED, check.isDeleted() ? 1 : 0);
         val.put(CHECKS_COLUMN_SALEID, check.getSaleId());
 		try {

@@ -31,13 +31,15 @@ public class MessagesCreator {
      *
      * @param posID
      * @param PosPass
+     * @param companyName
      * @return text json of authentication command
      * @throws JSONException
      */
-    public static String authentication(String posID,String PosPass) throws JSONException {
+    public static String authentication(String posID,String PosPass,String companyName) throws JSONException {
         JSONObject object = new JSONObject();
         object.put(MessageKey.PosID, posID);
         object.put(MessageKey.PosPass, PosPass);
+        object.put(MessageKey.companyName, companyName);
         return object.toString();
     }
 

@@ -86,7 +86,7 @@ public class DepartmentDBAdapter {
         val.put(DEPARTMENTS_COLUMN_ID, department.getId());
         val.put(DEPARTMENTS_COLUMN_NAME, department.getName());
         val.put(DEPARTMENTS_COLUMN_BYUSER, department.getByUser());
-        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, DateConverter.DateToString(department.getCreatingDate()));
+        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, department.getCreatingDate().getTime());
         val.put(DEPARTMENTS_COLUMN_DISENABLED, department.isHide() ? 1 : 0);
 
         try {
@@ -136,7 +136,7 @@ public class DepartmentDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(DEPARTMENTS_COLUMN_NAME, department.getName());
-        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, department.getCreatingDate().toString());
+        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, department.getCreatingDate().getTime());
         val.put(DEPARTMENTS_COLUMN_BYUSER, department.getByUser());
         val.put(DEPARTMENTS_COLUMN_DISENABLED, department.isHide());
 

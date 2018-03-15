@@ -39,9 +39,11 @@ public class SetupNewPOSOnlineActivity extends Activity {
     public final static String BO_CORE_ACCESS_TOKEN = "BOCOREACCESSTOKEN";
     protected static String posPass = null;
     protected static String posPrefix = null;
+    public static String companyName = null;
+    public static Integer syncNumber = null;
     protected static String uuid = null;
-    protected static boolean restart = false;
 
+    protected static boolean restart = false;
     protected static Context context = null;
 
     private EditText etKey;
@@ -86,7 +88,7 @@ public class SetupNewPOSOnlineActivity extends Activity {
             @Override
             public void onClick(View v) {
                 String key = etKey.getText().toString();
-                if((!key.equals(""))&&(key.length()==6)){
+                if((!key.equals(""))){
                     uuid = UUID.randomUUID().toString();
                     StartConnection startConnection = new StartConnection();
                     startConnection.execute(etKey.getText().toString(),uuid);
@@ -141,19 +143,29 @@ class StartConnection extends AsyncTask<String,Void,String> {
         String key = args[0];
         String uniqueID = args[1];
         String initRes = "";
-        String posPass = null, posPrefix = null;
+        String posPass = null, posPrefix = null, companyName = null;
+        Integer syncNumber = null;
+
         try {
             initRes = messageTransmit.post(ApiURL.InitConnection, MessagesCreator.initConnection(key, uniqueID));
             Log.e("messageResult", initRes);
             JSONObject jsonObject = new JSONObject(initRes);
-            posPass = jsonObject.getString(MessageKey.PosPass);
-            posPrefix = jsonObject.getString(MessageKey.PosId);
+
+            if (jsonObject.getInt(MessageKey.status) == 200) {
+                JSONObject responseBody = jsonObject.getJSONObject(MessageKey.responseBody);
+                posPass = responseBody.getString(MessageKey.PosPass);
+                posPrefix = responseBody.getString(MessageKey.PosID);
+                companyName = responseBody.getString(MessageKey.companyName);
+                syncNumber = responseBody.getInt(MessageKey.syncNumber);
+            }
 
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         SetupNewPOSOnlineActivity.posPass = posPass;
         SetupNewPOSOnlineActivity.posPrefix = posPrefix;
+        SetupNewPOSOnlineActivity.companyName = companyName;
+        SetupNewPOSOnlineActivity.syncNumber = syncNumber;
 
         return posPass;
     }
@@ -171,9 +183,13 @@ class StartConnection extends AsyncTask<String,Void,String> {
             editor.putString(MessageKey.PosID, SetupNewPOSOnlineActivity.uuid);
             editor.putString(MessageKey.PosPass, SetupNewPOSOnlineActivity.posPass);
             editor.putString(MessageKey.PosId, SetupNewPOSOnlineActivity.posPrefix);
+            editor.putString(MessageKey.companyName, SetupNewPOSOnlineActivity.companyName);
+            editor.putInt(MessageKey.syncNumber, SetupNewPOSOnlineActivity.syncNumber);
             editor.apply();
 
-            SESSION.POS_ID_NUMBER = Integer.parseInt(SetupNewPOSOnlineActivity.posPrefix);
+            //SESSION.POS_ID_NUMBER = Integer.parseInt(SetupNewPOSOnlineActivity.posPrefix);
+            SESSION.POS_ID_NUMBER = SetupNewPOSOnlineActivity.syncNumber;
+
 
             //call new activity //get access token
             AccessToken accessToken = new AccessToken(SetupNewPOSOnlineActivity.context);
@@ -237,22 +253,36 @@ class StartConnection extends AsyncTask<String,Void,String> {
                 JSONArray jsonArray = new JSONArray(res);
                 jsonObject = jsonArray.getJSONObject(0);
             }
+            if(jsonObject.getString(MessageKey.status).equals("200")) {
+                //03-11 16:18:47.482 20608-20721/com.pos.leaders.leaderspossystem E/CCC: {"logTag":"CompanyCredentials Resource","status":"200","responseType":"All objects are successfully returned","responseBody":[{"companyName":"LeadTest","companyID":1,"tax":17.0,"returnNote":"thanks","endOfReturnNote":14,"ccun":"null","ccpw":"null"},{"companyName":"LeadTest","companyID":2,"tax":17.0,"returnNote":"thanks","endOfReturnNote":14,"ccun":"null","ccpw":"null"}]}
 
+                JSONObject respnse;
 
+                try {
+                    respnse = jsonObject.getJSONObject(MessageKey.responseBody);
+                }
+                catch (JSONException e){
+                    JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.responseBody);
+                    respnse = jsonArray.getJSONObject(0);
+                }
 
-
-
-            SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(SetupNewPOSOnlineActivity.context);
-            settingsDBAdapter.open();
-            int i = settingsDBAdapter.updateEntry(jsonObject.getString(MessageKey.companyID), jsonObject.getString(MessageKey.companyName), SESSION.POS_ID_NUMBER + "",
-                    (float) jsonObject.getDouble(MessageKey.tax), jsonObject.getString(MessageKey.returnNote), jsonObject.getInt(MessageKey.endOfReturnNote),
-                    jsonObject.getString(MessageKey.CCUN), jsonObject.getString(MessageKey.CCPW));
-            settingsDBAdapter.close();
-            if (i == 1) {
-                Util.isFirstLaunch(SetupNewPOSOnlineActivity.context, true);
-                //finish();
-            } else {
-                Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again), Toast.LENGTH_SHORT).show();
+                SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(SetupNewPOSOnlineActivity.context);
+                settingsDBAdapter.open();
+                int i = settingsDBAdapter.updateEntry(respnse.getString(MessageKey.companyID), respnse.getString(MessageKey.companyName), SESSION.POS_ID_NUMBER + "",
+                        (float) respnse.getDouble(MessageKey.tax), respnse.getString(MessageKey.returnNote), respnse.getInt(MessageKey.endOfReturnNote),
+                        respnse.getString(MessageKey.CCUN), respnse.getString(MessageKey.CCPW));
+                settingsDBAdapter.close();
+                if (i == 1) {
+                    Util.isFirstLaunch(SetupNewPOSOnlineActivity.context, true);
+                    //finish();
+                } else {
+                    Log.e("setup",jsonObject.getString(MessageKey.responseType));
+                    //Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again), Toast.LENGTH_SHORT).show();
+                }
+            }
+            else {
+                Log.e("setup",jsonObject.getString(MessageKey.responseType));
+                //Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again)+": ", Toast.LENGTH_SHORT).show();
             }
 
         } catch (IOException | JSONException e) {

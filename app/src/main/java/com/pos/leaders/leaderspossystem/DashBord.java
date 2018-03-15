@@ -132,7 +132,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         //load pos id from shared file
         SharedPreferences sharedpreferences = getSharedPreferences(BO_CORE_ACCESS_AUTH, Context.MODE_PRIVATE);
         if (sharedpreferences.contains(MessageKey.PosId)) {
-            int posID = Integer.parseInt(sharedpreferences.getString(MessageKey.PosId, "1"));
+            int posID = sharedpreferences.getInt(MessageKey.syncNumber, 1);
             SESSION.POS_ID_NUMBER = posID;
         }
         //load token from shared file

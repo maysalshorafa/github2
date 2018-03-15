@@ -22,4 +22,13 @@ public interface MessageKey {
     String endOfReturnNote = "endOfReturnNote";
     String returnNote = "returnNote";
     String tax = "tax";
+
+    String syncNumber = "syncNumber";
+
+    String responseBody = "responseBody";
+    String status = "status";
+    String logTag = "logTag";
+    String responseType = "responseType";
+
+
 }
