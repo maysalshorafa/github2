@@ -1,10 +1,12 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,14 +23,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Check;
-import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
@@ -38,17 +38,13 @@ import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.SalesManDetailsGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import POSAPI.POSInterfaceAPI;
-import POSAPI.POSUSBAPI;
-import POSSDK.POSSDK;
 
 /**
  * Created by KARAM on 26/10/2016.
@@ -73,7 +69,6 @@ public class SalesManagementActivity extends AppCompatActivity {
     List<Order> orders;
     List<Check> checks;
     List<Sale> All_sales;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -220,10 +215,33 @@ public class SalesManagementActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         //send customerName copy from the in voice
-                        if (checks.size() > 0)
-                            print(invoiceImg.normalInvoice(sale.getId(), orders, sale, true, SESSION._USER, checks));
-                        else
-                            print(invoiceImg.normalInvoice(sale.getId(), orders, sale, true, SESSION._USER, null));
+                        new AlertDialog.Builder(SalesManagementActivity.this)
+                                .setTitle(getString(R.string.copyinvoice))
+                                .setMessage(getString(R.string.print_copy_invoice))
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (checks.size() > 0){
+                                            Intent i = new Intent(SalesManagementActivity.this, SalesHistoryCopySales.class);
+                                            SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(sale.getId(), orders, sale, true, SESSION._USER, checks);
+                                            startActivity(i);
+                                            // print(invoiceImg.normalInvoice(sale.getId(), orders, sale, true, SESSION._USER, checks));
+                                        }
+                                        else{
+                                            Intent i = new Intent(SalesManagementActivity.this, SalesHistoryCopySales.class);
+                                            SETTINGS.copyInvoiceBitMap =invoiceImg.normalInvoice(sale.getId(), orders, sale, true, SESSION._USER, null);
+                                            startActivity(i);
+                                         // print(invoiceImg.normalInvoice(sale.getId(), orders, sale, true, SESSION._USER, null));
+
+                                        }
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // do nothing
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
                     }
                 });
                 //endregion Print Button
@@ -374,4 +392,5 @@ public class SalesManagementActivity extends AppCompatActivity {
 
         posInterfaceAPI.CloseDevice();*/
     }
+
 }
