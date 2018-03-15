@@ -19,15 +19,13 @@ import com.pos.leaders.leaderspossystem.updater.AutoUpdateApk;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
+import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
-
-import java.util.Date;
-import java.util.Observable;
-import java.util.Observer;
 
 
 /**
@@ -80,8 +78,13 @@ public class TitleBar {
 
 
         final TextView actionBarStaff = (TextView) context.findViewById(R.id.userName);
-        actionBarStaff.setText(SESSION._USER.getFullName());
+        if(SESSION._USER==null){
+            actionBarStaff.setText("");
 
+        }else {
+            actionBarStaff.setText(SESSION._USER.getFullName());
+
+        }
         final TextView actionBarLocations = (TextView) context.findViewById(R.id.userPermtions);
       //  actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
 
