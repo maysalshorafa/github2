@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.Environment;
 import android.util.Log;
 
+import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 
 import java.io.File;
@@ -35,8 +36,8 @@ public class Controller extends Application {
                     {
                         FileOutputStream fOut = new FileOutputStream(myFile,true);
                         OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-                        myOutWriter.append("\n"+"New Exception :"+"\n");
-                        myOutWriter.append(e.toString());
+                        myOutWriter.append("\n"+"New Exception :"+ DateConverter.currentDateTime()+"\n"+Log.getStackTraceString(e));
+                        // myOutWriter.append("exception:"+e);
                         myOutWriter.close();
                         fOut.close();
                     } catch(Exception e1)
