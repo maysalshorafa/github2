@@ -74,6 +74,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             etHouseNumber.setEnabled(false);
             etPostalCode.setEnabled(false);
             etCountryCode.setEnabled(false);
+
             CustmerManagementActivity.Customer_Management_View=0;
         }
         if (bundle != null) {
@@ -96,6 +97,21 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 radioGender.check(R.id.female);
 
             }
+             for (int i = 0; i < groupList.size(); i++) {
+             Club group = groupList.get(i);
+             if (group.getId() == customer.getClub()) {
+             selectClubSpinner.setSelection(i);
+
+             }
+             }
+            for (int i = 0; i < cityList.size(); i++) {
+                City city = cityList.get(i);
+                if (city.getId() == customer.getCity()) {
+                    selectCitySpinner.setSelection(i);
+
+                }
+            }
+
         }
 
         btCancel.setOnClickListener(new View.OnClickListener() {
@@ -213,11 +229,26 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                 customer.setCountry(etCountry.getText().toString());
                                 customer.setCountryCode(etCountryCode.getText().toString());
                                 if (customer.getGender() == getString(R.string.male)) {
-                                    radioGender.check(R.id.male);
+                                    customer.setGender(getString(R.string.male));
                                 } else {
-                                    radioGender.check(R.id.female);
-
+                                    customer.setGender(getString(R.string.female));
                                 }
+                                for (int i = 0; i < groupList.size(); i++) {
+                                    Club group = groupList.get(i);
+                                    if (group.getname() == selectClubSpinner.getSelectedItem().toString()) {
+                                       long editingClubID = group.getId();
+                                        customer.setClub(editingClubID);
+                                    }
+                                }
+                                for (int i = 0; i < cityList.size(); i++) {
+                                    City city = cityList.get(i);
+                                    if (city.getName() == selectCitySpinner.getSelectedItem().toString()) {
+                                        long cityId = city.getId();
+                                        customer.setCity((int) cityId);
+                                    }
+                                }
+
+
                                 customerDBAdapter.updateEntry(customer);
                                 customerDBAdapter.updateEntry(customer);
                                 Toast.makeText(getApplicationContext(), getString(R.string.success_edit_customer), Toast.LENGTH_SHORT).show();

@@ -315,11 +315,9 @@ public class InvoiceImg {
         }
         blocks.add(new Block("\u200e" + context.getString(R.string.cashier) + ": " + user.getFullName(), 30.0f, Color.BLACK).Left());
 
-        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + format.format(sale.getSaleDate()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
         if (isCopy) {
-            Block bSourceDate = new Block("\u200E" + context.getString(R.string.source_date) + ": " + format.format(sale.getSaleDate()) , 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
-            blocks.add(bSourceDate.Left());
             Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
             blocks.add(bCopyDate.Left());
         }
