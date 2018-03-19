@@ -90,12 +90,26 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             etCountry.setText(customer.getCountry());
             etCountryCode.setText(customer.getCountryCode());
             btAddCustomer.setText(getResources().getText(R.string.edit));
-            if (customer.getGender() == getString(R.string.male)) {
+            if (customer.getGender().equalsIgnoreCase( getString(R.string.male)) ){
                 radioGender.check(R.id.male);
-            } else {
+            } else if(customer.getGender().equalsIgnoreCase( getString(R.string.female)) ){
                 radioGender.check(R.id.female);
-
             }
+             for (int i = 0; i < groupList.size(); i++) {
+             Club group = groupList.get(i);
+             if (group.getId() == customer.getClub()) {
+             selectClubSpinner.setSelection(i);
+
+             }
+             }
+            for (int i = 0; i < cityList.size(); i++) {
+                City city = cityList.get(i);
+                if (city.getId() == customer.getCity()) {
+                    selectCitySpinner.setSelection(i);
+
+                }
+            }
+
         }
 
         btCancel.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +157,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                             } else {
                                 for (int i = 0; i < groupList.size(); i++) {
                                     Club group = groupList.get(i);
-                                    if (group.getname() == selectClubSpinner.getSelectedItem().toString()) {
+                                    if (group.getname().equalsIgnoreCase( selectClubSpinner.getSelectedItem().toString())) {
                                         clubID = group.getId();
                                     }
 
@@ -212,15 +226,27 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                 customer.setPostalCode(etPostalCode.getText().toString());
                                 customer.setCountry(etCountry.getText().toString());
                                 customer.setCountryCode(etCountryCode.getText().toString());
-                                if (customer.getGender() == getString(R.string.male)) {
-                                    radioGender.check(R.id.male);
-                                } else {
-                                    radioGender.check(R.id.female);
-
+                                customer.setGender(gender);
+                                for (int i = 0; i < groupList.size(); i++) {
+                                    Club group = groupList.get(i);
+                                    if (group.getname() .equalsIgnoreCase(selectClubSpinner.getSelectedItem().toString())) {
+                                       long editingClubID = group.getId();
+                                        customer.setClub(editingClubID);
+                                    }
                                 }
+                                for (int i = 0; i < cityList.size(); i++) {
+                                    City city = cityList.get(i);
+                                    if (city.getName().equalsIgnoreCase(selectCitySpinner.getSelectedItem().toString())) {
+                                        long cityId = city.getId();
+                                        customer.setCity((int) cityId);
+                                    }
+                                }
+
+
                                 customerDBAdapter.updateEntry(customer);
                                 customerDBAdapter.updateEntry(customer);
                                 Toast.makeText(getApplicationContext(), getString(R.string.success_edit_customer), Toast.LENGTH_SHORT).show();
+
                                 Log.i("success Edit", customer.toString());
                                 onBackPressed();
                             } catch (Exception ex) {
@@ -294,30 +320,18 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
 
         // attaching data adapter to spinner
         selectClubSpinner.setAdapter(dataAdapter1);
-        radioGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
-            @Override
+        radioGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // TODO Auto-generated method stub
-                int childCount = group.getChildCount();
-                for (int x = 0; x < childCount; x++) {
-                    RadioButton btn = (RadioButton) group.getChildAt(x);
-
-
-                    if (btn.getId() == R.id.male) {
-                        btn.setText(getString(R.string.male));
-                    } else {
-                        btn.setText(getString(R.string.female));
-                    }
-                    if (btn.getId() == checkedId) {
-
-                        gender = btn.getText().toString();// here gender will contain M or F.
-
-                    }
+                switch(checkedId){
+                    case R.id.male:
+                        gender=getString(R.string.male);
+                        break;
+                    case R.id.female:
+                        gender=getString(R.string.female);
+                        break;
 
                 }
-
-                Log.e("Gender", gender);
             }
         });
 

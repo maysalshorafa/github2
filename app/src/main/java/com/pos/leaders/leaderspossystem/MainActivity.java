@@ -2675,11 +2675,9 @@ startActivity(i);
                 long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash);
 
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
-
                 SESSION._SALE.setPayment(payment);
-
+                SESSION._SALE.setSaleDate(new Date());
                 paymentDBAdapter.close();
-
                 printAndOpenCashBox("", "", "",REQUEST_CASH_ACTIVITY_CODE);
                 saleDBAdapter.close();
                 return;

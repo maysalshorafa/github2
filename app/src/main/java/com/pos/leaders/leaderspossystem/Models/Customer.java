@@ -73,7 +73,7 @@ public class Customer {
         return club;
     }
 
-    public void setClub(int club) {
+    public void setClub(long club) {
         this.club = club;
     }
 
