@@ -26,9 +26,7 @@ public class Product {
     private double costPrice;
     private boolean withTax;
     private boolean weighable;
-
-    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
-    private Date creatingDate;
+    private long creatingDate;
     private boolean hide;
     private long departmentId;
     private long byUser;
@@ -71,7 +69,7 @@ public class Product {
     // region Constructor
     public Product(long id, String name, String barCode, String description,
                    double price, double costPrice, boolean withTax, boolean weighable,
-                   Date creatingDate, boolean hide, long departmentId, long byUser , int with_pos, int with_point_system) {
+                   long creatingDate, boolean hide, long departmentId, long byUser , int with_pos, int with_point_system) {
         this.id = id;
         this.name = name;
         this.barCode = barCode;
@@ -90,7 +88,7 @@ public class Product {
 
     public Product(long id, String name, String barCode, String description,
                    double price, double costPrice, boolean withTax, boolean weighable,
-                   Date creatingDate, long departmentId, long byUser , int with_pos, int with_point_system) {
+                   long creatingDate, long departmentId, long byUser , int with_pos, int with_point_system) {
         this.id = id;
         this.name = name;
         this.barCode = barCode;
@@ -175,7 +173,7 @@ public class Product {
         return weighable;
     }
 
-    public Date getCreatingDate() {
+    public long getCreatingDate() {
         return creatingDate;
     }
 

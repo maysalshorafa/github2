@@ -81,9 +81,9 @@ public class OfferDBAdapter {
         val.put(OFFER_COLUMN_ID, offer.getId());
 
         val.put(OFFER_COLUMN_NAME, offer.getName());
-        val.put(OFFER_COLUMN_STARTDATE, offer.getStartDate().getTime());
-        val.put(OFFER_COLUMN_ENDDATE, offer.getEndDate().getTime());
-        val.put(OFFER_COLUMN_CREATINGDATE, offer.getCreatingDate().getTime());
+        val.put(OFFER_COLUMN_STARTDATE, offer.getStartDate());
+        val.put(OFFER_COLUMN_ENDDATE, offer.getEndDate());
+        val.put(OFFER_COLUMN_CREATINGDATE, offer.getCreatingDate());
         val.put(OFFER_COLUMN_STATUS, offer.getStatus());
         val.put(OFFER_COLUMN_BYUSER, offer.getByUser());
         val.put(OFFER_COLUMN_RULENAME, offer.getRuleName());
@@ -99,7 +99,7 @@ public class OfferDBAdapter {
 
 	public long insertEntry(String name,long startDate,long endDate,long createDate,int status,long byUser,String ruleName,long ruleID){
 
-        Offer offer = new Offer(Util.idHealth(this.db, OFFER_TABLE_NAME, OFFER_COLUMN_ID), name, new Date(startDate), new Date(endDate), new Date(createDate), status, byUser, ruleName, ruleID);
+        Offer offer = new Offer(Util.idHealth(this.db, OFFER_TABLE_NAME, OFFER_COLUMN_ID), name, startDate, endDate, createDate, status, byUser, ruleName, ruleID);
         sendToBroker(MessageType.ADD_OFFER, offer, this.context);
 
         try {
@@ -162,9 +162,9 @@ public class OfferDBAdapter {
 	public Offer createOfferObject(Cursor cursor) {
 		return new Offer(Long.parseLong(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))),
 				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_NAME)),
-				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STARTDATE))),
-				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ENDDATE))),
-				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_CREATINGDATE))),
+				cursor.getLong(cursor.getColumnIndex(OFFER_COLUMN_STARTDATE)),
+				cursor.getLong(cursor.getColumnIndex(OFFER_COLUMN_ENDDATE)),
+				cursor.getLong(cursor.getColumnIndex(OFFER_COLUMN_CREATINGDATE)),
 				cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_STATUS)),
 				cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_BYUSER)),
 				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)),
@@ -182,9 +182,9 @@ public class OfferDBAdapter {
 		else	if( cursor != null && cursor.moveToFirst() ){
 			offer= new Offer(Long.parseLong(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))),
 					cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_NAME)),
-					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STARTDATE))),
-					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ENDDATE))),
-					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_CREATINGDATE))),
+					cursor.getLong(cursor.getColumnIndex(OFFER_COLUMN_STARTDATE)),
+					cursor.getLong(cursor.getColumnIndex(OFFER_COLUMN_ENDDATE)),
+					cursor.getLong(cursor.getColumnIndex(OFFER_COLUMN_CREATINGDATE)),
 					Integer.parseInt(	cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_STATUS))),
 					Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_BYUSER))),cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)),
 					Long.parseLong(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULEID))));

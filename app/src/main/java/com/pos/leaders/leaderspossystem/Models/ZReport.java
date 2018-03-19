@@ -13,8 +13,7 @@ import java.util.Date;
 
 public class ZReport {
     private long id;
-    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
-    private Date creationDate;
+    private long creationDate;
     private long byUser;
     @JsonIgnore
     private User user;
@@ -32,7 +31,7 @@ public class ZReport {
 
     }
 
-    public ZReport(long id, Date creationDate, long byUser, long startSaleId, long endSaleId,double amount,double total_amount) {
+    public ZReport(long id, long creationDate, long byUser, long startSaleId, long endSaleId,double amount,double total_amount) {
         this.id = id;
         this.creationDate = creationDate;
         this.byUser = byUser;
@@ -42,7 +41,7 @@ public class ZReport {
         this.total_amount=total_amount;
     }
 
-    public ZReport(long id, Date creationDate, long byUser, long startSaleId, long endSaleId,double amount) {
+    public ZReport(long id, long creationDate, long byUser, long startSaleId, long endSaleId,double amount) {
         this.id = id;
         this.creationDate = creationDate;
         this.byUser = byUser;
@@ -52,7 +51,7 @@ public class ZReport {
         this.total_amount=total_amount;
     }
 
-    public ZReport(long id, Date creationDate, User user, Sale startSale, Sale endSale) {
+    public ZReport(long id, long creationDate, User user, Sale startSale, Sale endSale) {
         this.id = id;
         this.creationDate = creationDate;
         this.user = user;
@@ -64,7 +63,7 @@ public class ZReport {
         this.endSaleId=endSale.getId();
     }
 
-    public ZReport(long id, Date creationDate, User user, long startSaleId,Sale endSale) {
+    public ZReport(long id, long creationDate, User user, long startSaleId,Sale endSale) {
         this.id = id;
         this.creationDate = creationDate;
         this.user = user;
@@ -96,11 +95,11 @@ public class ZReport {
         this.id = id;
     }
 
-    public Date getCreationDate() {
+    public long getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(long creationDate) {
         this.creationDate = creationDate;
     }
 

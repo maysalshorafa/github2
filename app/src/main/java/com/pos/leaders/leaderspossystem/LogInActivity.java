@@ -204,7 +204,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, LogInActivity.LEADPOS_MAKE_A_REPORT);
 
                 long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getId());
-                SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, user.getId(), new Date(), new Date());
+                SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, user.getId(), new Date().getTime(), new Date().getTime());
                 userDBAdapter.close();
                 scheduleWorkersDBAdapter.close();
 

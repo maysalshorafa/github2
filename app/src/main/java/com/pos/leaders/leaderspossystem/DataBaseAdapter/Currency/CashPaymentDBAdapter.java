@@ -59,7 +59,7 @@ public class CashPaymentDBAdapter {
         return db;
     }
 
-    public long insertEntry(long saleId, double amount, long currency_type, Date createDate) {
+    public long insertEntry(long saleId, double amount, long currency_type, long createDate) {
         CashPayment payment = new CashPayment(Util.idHealth(this.db, CashPAYMENT_TABLE_NAME, CashPAYMENT_COLUMN_ID), saleId, amount, currency_type,createDate);
         sendToBroker(MessageType.ADD_CASH_PAYMENT, payment, this.context);
 
@@ -122,7 +122,8 @@ public class CashPaymentDBAdapter {
         return new CashPayment(Long.parseLong(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_ID))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_SALEID))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_AMOUNT))),
-                Long.parseLong(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CurrencyType))),DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CREATEDATE))));
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CurrencyType))),
+                cursor.getLong(cursor.getColumnIndex(CashPAYMENT_COLUMN_CREATEDATE)));
     }
     public double getSumOfType(int currencyType, long from, long to) {
         double total=0;

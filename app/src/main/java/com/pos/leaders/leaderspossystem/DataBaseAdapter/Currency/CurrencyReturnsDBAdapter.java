@@ -59,7 +59,7 @@ public class CurrencyReturnsDBAdapter {
         return db;
     }
 
-    public long insertEntry(long saleId, double amount, Date createDate , long currency_type) {
+    public long insertEntry(long saleId, double amount, long createDate , long currency_type) {
         CurrencyReturns returns = new CurrencyReturns(Util.idHealth(this.db, CurrencyReturnsDBAdapterTabelName, CurrencyReturns_COLUMN_ID), saleId, amount,createDate, currency_type);
         sendToBroker(MessageType.ADD_CURRENCY_RETURN, returns, this.context);
 
@@ -123,7 +123,7 @@ public class CurrencyReturnsDBAdapter {
         return new CurrencyReturns(Long.parseLong(cursor.getString(cursor.getColumnIndex(CurrencyReturns_COLUMN_ID))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CurrencyReturns_COLUMN_SALEID))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CurrencyReturns_COLUMN_AMOUNT))),
-                DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(CurrencyReturns_COLUMN_CREATEDATE))),
+                cursor.getLong(cursor.getColumnIndex(CurrencyReturns_COLUMN_CREATEDATE)),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CurrencyReturns_COLUMN_CurencyType))));
     }
 

@@ -18,19 +18,21 @@ public class CashPayment {
     private long id;
     private long saleId;
     private double amount;
+    private long currency_type;
+    private long createDate;
 
     public CashPayment() {
     }
 
-    public Date getCreateDate() {
+    public long getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(long createDate) {
         this.createDate = createDate;
     }
 
-    private Date createDate;
+
 
     public long getCurrency_type() {
         return currency_type;
@@ -40,11 +42,11 @@ public class CashPayment {
         this.currency_type = currency_type;
     }
 
-    private long currency_type;
+
 
 
     // Constructors
-    public CashPayment(long id,  long saleId, double amount,long currency_type,Date createDate) {
+    public CashPayment(long id,  long saleId, double amount,long currency_type,long createDate) {
         this.id = id;
         this.amount = amount;
         this.saleId = saleId;

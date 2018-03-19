@@ -277,7 +277,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                         else
                             print(invoiceImg.cancelingInvoice(sale, false, null));
                         sale.setPayment(new Payment(payments.get(0)));
-                        long sID = saleDBAdapter.insertEntry(SESSION._USER.getId(), new Date(), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaid() * -1, sale.getCustomer_id(), sale.getCustomer_name());
+                        long sID = saleDBAdapter.insertEntry(SESSION._USER.getId(), new Date().getTime(), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaid() * -1, sale.getCustomer_id(), sale.getCustomer_name());
 
                         saleDBAdapter.close();
                         PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(SalesManagementActivity.this);

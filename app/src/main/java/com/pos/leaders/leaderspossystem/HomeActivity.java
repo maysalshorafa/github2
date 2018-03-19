@@ -95,7 +95,7 @@ public class HomeActivity extends Activity {
 					intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, str);
 			//		intent.putExtra("permissions_name",u.getPermtionName());
 					long scheduleID = scheduleWorkersDBAdapter.insertEntry(u.getId());
-					SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, u.getId(), new Date(), new Date());
+					SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, u.getId(), new Date().getTime(), new Date().getTime());
 					/*
 					String message = "hello";
                     intent.putExtra("customerName", message);

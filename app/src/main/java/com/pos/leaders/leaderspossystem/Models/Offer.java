@@ -24,12 +24,9 @@ public class Offer {
 	//region Attribute
 	private long id;
 	private String name;
-	@JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
-	private Date startDate;
-	@JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
-	private Date endDate;
-	@JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
-	private Date creatingDate;
+	private long startDate;
+	private long endDate;
+	private long creatingDate;
 	private int status;
 	private long byUser;
     private String ruleName;
@@ -54,7 +51,7 @@ public class Offer {
 
     }
 
-	public Offer(long id, String name, Date startDate, Date endDate, Date creatingDate, int status, long byUser,String ruleName,long ruleID) {
+	public Offer(long id, String name, long startDate, long endDate, long creatingDate, int status, long byUser,String ruleName,long ruleID) {
 		this.id=id;
 		this.name = name;
 		this.startDate = startDate;
@@ -66,7 +63,7 @@ public class Offer {
         this.ruleID = ruleID;
     }
 
-    public Offer(String name, Date startDate, Date endDate, Date creatingDate, int status, long byUser,String ruleName,long ruleID) {
+    public Offer(String name, long startDate, long endDate, long creatingDate, int status, long byUser,String ruleName,long ruleID) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -84,7 +81,7 @@ public class Offer {
 
 	public boolean isValid() {
 		Date d = new Date();
-		if (d.after(startDate) && d.before(endDate)) {
+		if (d.after(new Date(startDate)) && d.before(new Date(endDate))) {
 			return true;
 		}
 		return false;
@@ -113,15 +110,15 @@ public class Offer {
 		return name;
 	}
 
-	public Date getStartDate() {
+	public long getStartDate() {
 		return startDate;
 	}
 
-	public Date getEndDate() {
+	public long getEndDate() {
 		return endDate;
 	}
 
-	public Date getCreatingDate() {
+	public long getCreatingDate() {
 		return creatingDate;
 	}
 
@@ -161,7 +158,7 @@ public class Offer {
 		this.status = status;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(long endDate) {
 		this.endDate = endDate;
 	}
 
@@ -177,7 +174,7 @@ public class Offer {
 		this.products = products;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(long startDate) {
 		this.startDate = startDate;
 	}
 
@@ -185,7 +182,7 @@ public class Offer {
         this.id = id;
     }
 
-    public void setCreatingDate(Date creatingDate) {
+    public void setCreatingDate(long creatingDate) {
         this.creatingDate = creatingDate;
     }
 

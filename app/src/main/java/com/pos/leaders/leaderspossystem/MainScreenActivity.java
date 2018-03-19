@@ -244,11 +244,11 @@ public class MainScreenActivity extends Activity {
 
 
 		if (SESSION._SALE != null) {
-			sale = new Sale(SESSION._USER.getId(), new Date(), 0, false, 0,0);
+			sale = new Sale(SESSION._USER.getId(), new Date().getTime(), 0, false, 0,0);
 		}
 		else
 		{
-			SESSION._SALE=new Sale(SESSION._USER.getId(), new Date(), 0, false, 0,0);
+			SESSION._SALE=new Sale(SESSION._USER.getId(), new Date().getTime(), 0, false, 0,0);
 		}
 
 		if (SESSION._ORDERS != null) {
@@ -402,7 +402,7 @@ public class MainScreenActivity extends Activity {
 
 				try {
 					scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getId(), new Date());
-					SESSION._SCHEDULEWORKERS.setExitTime(new Date());
+					SESSION._SCHEDULEWORKERS.setExitTime(new Date().getTime());
 					Log.i("Worker get out", SESSION._SCHEDULEWORKERS.toString());
 				}
 				catch (Exception ex) {

@@ -122,9 +122,9 @@ public class UserAttendanceReport extends Activity {
 
 		long r=0,h=0,m=0,s=0;
 		for (ScheduleWorkers sw : _scheduleWorkersList) {
-			if (DateConverter.dateBetweenTwoDates(from, to, sw.getDate())) {
+			if (DateConverter.dateBetweenTwoDates(from, to, new Date(sw.getDate()))) {
 				scheduleWorkersList.add(sw);
-				r+=DateConverter.getDateDiff(sw.getStartTime(),sw.getExitTime(), TimeUnit.MILLISECONDS);
+				r+=DateConverter.getDateDiff(new Date(sw.getStartTime()),new Date(sw.getExitTime()), TimeUnit.MILLISECONDS);
 			}
 		}
 		h=r/(1000*60*60);

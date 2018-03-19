@@ -34,6 +34,7 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -172,7 +173,7 @@ public class ChecksActivity extends AppCompatActivity {
 
                     checkList.get(lvChecks.getChildCount() - 2);
                     _check = new Check(lastItem.getEtCheckNum(), lastItem.getEtBankNum(), lastItem.getEtBenchNum(), lastItem.getEtAccountNum(),
-                            lastItem.getEtAmount(), DateConverter.stringToDate(lastItem.getEtDate()), false);
+                            lastItem.getEtAmount(), DateConverter.stringToDate(lastItem.getEtDate()).getTime(), false);
                     //lastItem.findViewById(R.id.listChecks_ETAmount);
                     checkList.set(lvChecks.getChildCount()-2,_check);
                 }
@@ -214,13 +215,13 @@ public class ChecksActivity extends AppCompatActivity {
                     checkList.get(lsttchildID-1);
 
                     check = new Check(lastItem.getEtCheckNum(), lastItem.getEtBankNum(), lastItem.getEtBenchNum(), lastItem.getEtAccountNum(),
-							lastItem.getEtAmount(), DateConverter.stringToDate(lastItem.getEtDate()), false);
+							lastItem.getEtAmount(), DateConverter.stringToDate(lastItem.getEtDate()).getTime(), false);
 					//lastItem.findViewById(R.id.listChecks_ETAmount);
 					checkList.set(lsttchildID-1,check);
 				}
 				Check newCheck=new Check(check);
-				if(check.getDate()!=null){
-					newCheck.setDate(DateConverter.getAfterMonth(check.getDate()));
+				if(check.getDate()!=0){
+					newCheck.setDate(DateConverter.getAfterMonth(new Date(check.getDate())).getTime());
                     newCheck.setCheckNum(check.getCheckNum()+1);
 
                 }

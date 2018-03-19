@@ -67,7 +67,7 @@ public class DepartmentDBAdapter {
 
 
     public long insertEntry(String name,long byUser) {
-        Department department = new Department(Util.idHealth(this.db, DEPARTMENTS_TABLE_NAME, DEPARTMENTS_COLUMN_ID), name, new Date(), byUser, false);
+        Department department = new Department(Util.idHealth(this.db, DEPARTMENTS_TABLE_NAME, DEPARTMENTS_COLUMN_ID), name, new Date().getTime(), byUser, false);
 
         sendToBroker(MessageType.ADD_DEPARTMENT, department, this.context);
 
@@ -86,7 +86,7 @@ public class DepartmentDBAdapter {
         val.put(DEPARTMENTS_COLUMN_ID, department.getId());
         val.put(DEPARTMENTS_COLUMN_NAME, department.getName());
         val.put(DEPARTMENTS_COLUMN_BYUSER, department.getByUser());
-        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, department.getCreatingDate().getTime());
+        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, department.getCreatingDate());
         val.put(DEPARTMENTS_COLUMN_DISENABLED, department.isHide() ? 1 : 0);
 
         try {
@@ -109,7 +109,7 @@ public class DepartmentDBAdapter {
         }
         cursor.moveToFirst();
         department =new Department(id,cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_NAME)),
-                DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_CREATINGDATE))),
+                cursor.getLong(cursor.getColumnIndex(DEPARTMENTS_COLUMN_CREATINGDATE)),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_BYUSER))),Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_DISENABLED))));
         cursor.close();
 
@@ -136,7 +136,7 @@ public class DepartmentDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(DEPARTMENTS_COLUMN_NAME, department.getName());
-        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, department.getCreatingDate().getTime());
+        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, department.getCreatingDate());
         val.put(DEPARTMENTS_COLUMN_BYUSER, department.getByUser());
         val.put(DEPARTMENTS_COLUMN_DISENABLED, department.isHide());
 
@@ -153,7 +153,7 @@ public class DepartmentDBAdapter {
         while(!cursor.isAfterLast()){
             departmentList.add(new Department(Long.parseLong(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_ID))),
                     cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_NAME)),
-                    DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_CREATINGDATE))),
+                    cursor.getLong(cursor.getColumnIndex(DEPARTMENTS_COLUMN_CREATINGDATE)),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_BYUSER))),
                     Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_DISENABLED)))));
             cursor.moveToNext();

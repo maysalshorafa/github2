@@ -103,7 +103,7 @@ public class BKMVDATA {
             addSale(s);
             addPayment(s);
             for (Order o : s.getOrders()) {
-                addOrders(o, s.getSaleDate());
+                addOrders(o, new Date(s.getSaleDate()));
             }
         }
         for (ZReport z : zReports) {
@@ -173,15 +173,16 @@ public class BKMVDATA {
                 accountingSalesTax.totalCredit += (payment.getAmount() - withoutTax);
 
                 cB100++;
+                Date sdo = new Date(_sale.getSaleDate());
 
                 switch (payment.getPaymentWay()) {
                     case CONSTANT.CASH:
                         paymentType = "1";
                         str += ("D120" + String.format(Util.locale, "%09d", counter) + SETTINGS.companyID + s + String.format(Util.locale, "%020d", payment.getSaleId()) + String.format(Util.locale, "%04d", payment.getSaleId()) +
-                                paymentType + Util.spaces(10) + Util.spaces(10) + Util.spaces(15) + Util.spaces(10) + DateConverter.getYYYYMMDD(_sale.getSaleDate()) + OP + Util.x12V99(payment.getAmount()) + Util.spaces(1) + Util.spaces(20) +
-                                "0" + Util.spaces(7) + DateConverter.getYYYYMMDD(_sale.getSaleDate()) + String.format(Util.locale, "%07d", payment.getSaleId()) + Util.spaces(60)) + "\r\n";
+                                paymentType + Util.spaces(10) + Util.spaces(10) + Util.spaces(15) + Util.spaces(10) + DateConverter.getYYYYMMDD(sdo) + OP + Util.x12V99(payment.getAmount()) + Util.spaces(1) + Util.spaces(20) +
+                                "0" + Util.spaces(7) + DateConverter.getYYYYMMDD(sdo) + String.format(Util.locale, "%07d", payment.getSaleId()) + Util.spaces(60)) + "\r\n";
                         accountingCashFund.totalRequired += payment.getAmount();
-                        str += CreateB100(++counter, SETTINGS.companyID, cB100, 5, _sale.getSaleDate(), accountingCashFund.getKey(), (short) 1, payment.getAmount()) + "\r\n";
+                        str += CreateB100(++counter, SETTINGS.companyID, cB100, 5, sdo, accountingCashFund.getKey(), (short) 1, payment.getAmount()) + "\r\n";
                         ++b100;
                         zTotal++;
                         break;
@@ -191,9 +192,9 @@ public class BKMVDATA {
                         checksDBAdapter.open();
                         int tempcount = 0;
                         for (Check c : checksDBAdapter.getPaymentBySaleID(payment.getSaleId())) {
-                            str += c.BKMVDATA(counter, SETTINGS.companyID, _sale.getSaleDate(), payment.getSaleId()) + "\r\n";
+                            str += c.BKMVDATA(counter, SETTINGS.companyID, sdo, payment.getSaleId()) + "\r\n";
                             accountingChecksFund.totalRequired += payment.getAmount();
-                            str += CreateB100(++counter, SETTINGS.companyID, cB100, 5+tempcount, _sale.getSaleDate(), accountingChecksFund.getKey(), (short) 1, payment.getAmount()) + "\r\n";
+                            str += CreateB100(++counter, SETTINGS.companyID, cB100, 5+tempcount, sdo, accountingChecksFund.getKey(), (short) 1, payment.getAmount()) + "\r\n";
                             ++b100;
                             tempcount++;
                         }
@@ -204,19 +205,19 @@ public class BKMVDATA {
                         paymentType = "3";
                         cardType = "1";
                         str += ("D120" + String.format(Util.locale, "%09d", counter) + SETTINGS.companyID + s + String.format(Util.locale, "%020d", payment.getSaleId()) + String.format(Util.locale, "%04d", payment.getSaleId()) +
-                                paymentType + Util.spaces(10) + Util.spaces(10) + Util.spaces(15) + Util.spaces(10) + DateConverter.getYYYYMMDD(_sale.getSaleDate()) + OP + Util.x12V99(payment.getAmount()) + cardType + Util.spaces(20) +
-                                "1" + Util.spaces(7) + DateConverter.getYYYYMMDD(_sale.getSaleDate()) + String.format(Util.locale, "%07d", payment.getSaleId()) + Util.spaces(60)) + "\r\n";
+                                paymentType + Util.spaces(10) + Util.spaces(10) + Util.spaces(15) + Util.spaces(10) + DateConverter.getYYYYMMDD(sdo) + OP + Util.x12V99(payment.getAmount()) + cardType + Util.spaces(20) +
+                                "1" + Util.spaces(7) + DateConverter.getYYYYMMDD(sdo) + String.format(Util.locale, "%07d", payment.getSaleId()) + Util.spaces(60)) + "\r\n";
                         accountingCreditCardFund.totalRequired += payment.getAmount();
-                        str += CreateB100(++counter, SETTINGS.companyID, cB100, 5, _sale.getSaleDate(), accountingCreditCardFund.getKey(), (short) 1, payment.getAmount()) + "\r\n";
+                        str += CreateB100(++counter, SETTINGS.companyID, cB100, 5, sdo, accountingCreditCardFund.getKey(), (short) 1, payment.getAmount()) + "\r\n";
                         zTotal++;
                         ++b100;
                         break;
                 }
 
-                str += CreateB100(++counter, SETTINGS.companyID, cB100, 1, _sale.getSaleDate(), accountingGeneralCustomer.getKey(), (short) 1, payment.getAmount()) + "\r\n";
-                str += CreateB100(++counter, SETTINGS.companyID, cB100, 2, _sale.getSaleDate(), accountingSalesRevenue.getKey(), (short) 2, withoutTax) + "\r\n";
-                str += CreateB100(++counter, SETTINGS.companyID, cB100, 3, _sale.getSaleDate(), accountingSalesRevenue.getKey(), (short) 2, (payment.getAmount() - withoutTax)) + "\r\n";
-                str += CreateB100(++counter, SETTINGS.companyID, cB100, 4, _sale.getSaleDate(), accountingGeneralCustomer.getKey(), (short) 2, payment.getAmount()) + "\r\n";
+                str += CreateB100(++counter, SETTINGS.companyID, cB100, 1, sdo, accountingGeneralCustomer.getKey(), (short) 1, payment.getAmount()) + "\r\n";
+                str += CreateB100(++counter, SETTINGS.companyID, cB100, 2, sdo, accountingSalesRevenue.getKey(), (short) 2, withoutTax) + "\r\n";
+                str += CreateB100(++counter, SETTINGS.companyID, cB100, 3, sdo, accountingSalesRevenue.getKey(), (short) 2, (payment.getAmount() - withoutTax)) + "\r\n";
+                str += CreateB100(++counter, SETTINGS.companyID, cB100, 4, sdo, accountingGeneralCustomer.getKey(), (short) 2, payment.getAmount()) + "\r\n";
                 b100+=4;
                 zTotal+=4;
 
@@ -308,7 +309,7 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return sale.getSaleDate();
+                return new Date(sale.getSaleDate());
             }
         });
     }
@@ -322,7 +323,7 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return new Date(payment.getSaleDate().getTime() + 1);
+                return new Date(payment.getSaleDate() + 1);
             }
         });
     }
@@ -350,7 +351,7 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return z.getCreationDate();
+                return new Date(z.getCreationDate());
             }
         });
     }

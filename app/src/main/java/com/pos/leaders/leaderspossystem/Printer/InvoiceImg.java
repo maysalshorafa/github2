@@ -23,6 +23,7 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -304,7 +305,7 @@ public class InvoiceImg {
             Block b_checks_amount = new Block(context.getString(R.string.amount), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
             for (Check check : checks) {
                 b_checks_number.text += newLineL + check.getCheckNum();
-                b_checks_date.text += "\n" + DateConverter.toDate(check.getDate());
+                b_checks_date.text += "\n" + DateConverter.toDate(new Date(check.getDate()));
                 b_checks_amount.text += "\n" + Util.makePrice(check.getAmount());
             }
             blocks.add(b_checks_amount.Left());
@@ -518,7 +519,7 @@ public class InvoiceImg {
             Block b_checks_amount = new Block(context.getString(R.string.amount), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
             for (Check check : checks) {
                 b_checks_number.text += newLineL + check.getCheckNum();
-                b_checks_date.text += "\n" + DateConverter.toDate(check.getDate());
+                b_checks_date.text += "\n" + DateConverter.toDate(new Date(check.getDate()));
                 b_checks_amount.text += "\n" + Util.makePrice(check.getAmount());
             }
             blocks.add(b_checks_amount.Left());
@@ -595,7 +596,7 @@ public class InvoiceImg {
 
         blocks.add(new Block("\u200e" + context.getString(R.string.cashier) + ": " + sale.getUser().getFullName(), 30.0f, Color.BLACK).Left());
 
-        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.dateToString(sale.getSaleDate().getTime()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.dateToString(sale.getSaleDate()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
 
 

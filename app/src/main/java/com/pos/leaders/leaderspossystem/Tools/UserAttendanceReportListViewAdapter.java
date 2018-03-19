@@ -58,10 +58,10 @@ public class UserAttendanceReportListViewAdapter extends ArrayAdapter {
 		Date d1, d2;
 		long diff;
 
-		d2 = scheduleWorkersesList.get(position).getExitTime();
-		d1 = scheduleWorkersesList.get(position).getStartTime();
+		d2 = new Date(scheduleWorkersesList.get(position).getExitTime());
+		d1 = new Date(scheduleWorkersesList.get(position).getStartTime());
 
-		holder.tvDate.setText(scheduleWorkersesList.get(position).getDate().toString());
+		holder.tvDate.setText(DateConverter.DateToString(new Date(scheduleWorkersesList.get(position).getDate())));
 		holder.tvStart.setText(DateConverter.getTime(d1));
 		holder.tvEnd.setText(DateConverter.getTime(d2));
 

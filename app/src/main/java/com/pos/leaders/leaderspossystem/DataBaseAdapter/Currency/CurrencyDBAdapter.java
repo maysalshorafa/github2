@@ -70,7 +70,7 @@ public class CurrencyDBAdapter {
     }
 
 
-    public long insertEntry(String name, String currency_code, String country, long rate,Date createDate) {
+    public long insertEntry(String name, String currency_code, String country, long rate,long createDate) {
         Currency currency = new Currency(Util.idHealth(this.db, CURRENCY_TABLE_NAME, CURRENCY_COLUMN_ID), name, currency_code, country,rate,createDate);
         sendToBroker(MessageType.ADD_CURRENCY, currency, this.context);
 
@@ -122,7 +122,7 @@ public class CurrencyDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(CURRENCY_COLUMN_NAME, currency.getName());
-        val.put(CURRENCYCOLUMN_CREATEDATE, currency.getLastUpdate().toString());
+        val.put(CURRENCYCOLUMN_CREATEDATE, currency.getLastUpdate());
         val.put(CURRENCY_COLUMN_COUNTRY, currency.getCountry());
         val.put(CURRENCY_COLUMN_CURRENCYCODE, currency.getCurrencyCode());
         val.put(CURRENCYCOLUMN_RATE, currency.getRate());
@@ -152,7 +152,8 @@ public class CurrencyDBAdapter {
                 cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_NAME)),
                 cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_CURRENCYCODE)),
                 cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_COUNTRY)),
-                Double.parseDouble( cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_RATE))),  DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_CREATEDATE))));
+                Double.parseDouble( cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_RATE))),
+                cursor.getLong(cursor.getColumnIndex(CURRENCYCOLUMN_CREATEDATE)));
     }
 
 }

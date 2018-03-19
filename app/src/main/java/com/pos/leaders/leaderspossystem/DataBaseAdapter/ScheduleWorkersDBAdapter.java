@@ -83,9 +83,9 @@ public class ScheduleWorkersDBAdapter {
         }
         cursor.moveToFirst();
         scheduleWorkers = new ScheduleWorkers(id,Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_USERID))),
-                DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_DATE))),
-                DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_STARTTIME))),
-                DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_EXITTIME))));
+                cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_DATE)),
+                cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_STARTTIME)),
+                cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_EXITTIME)));
 
         cursor.close();
 
@@ -96,9 +96,9 @@ public class ScheduleWorkersDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(SCHEDULEWORKERS_COLUMN_USERID, scheduleWorkers.getUserId());
-        val.put(SCHEDULEWORKERS_COLUMN_DATE, scheduleWorkers.getDate().getTime());
-        val.put(SCHEDULEWORKERS_COLUMN_STARTTIME, scheduleWorkers.getStartTime().getTime());
-        val.put(SCHEDULEWORKERS_COLUMN_EXITTIME, scheduleWorkers.getExitTime().getTime());
+        val.put(SCHEDULEWORKERS_COLUMN_DATE, scheduleWorkers.getDate());
+        val.put(SCHEDULEWORKERS_COLUMN_STARTTIME, scheduleWorkers.getStartTime());
+        val.put(SCHEDULEWORKERS_COLUMN_EXITTIME, scheduleWorkers.getExitTime());
 
         String where = SCHEDULEWORKERS_COLUMN_ID + " = ?";
         db.update(SCHEDULEWORKERS_TABLE_NAME, val, where, new String[]{scheduleWorkers.getId() + ""});
@@ -124,9 +124,9 @@ public class ScheduleWorkersDBAdapter {
             if(!cursor.isNull(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_EXITTIME)))
             scheduleWorkersList.add(new ScheduleWorkers(Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_ID))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_USERID))),
-                    DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_DATE))),
-                    DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_STARTTIME))),
-                    DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_EXITTIME)))));
+                    cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_DATE)),
+                    cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_STARTTIME)),
+                    cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_EXITTIME))));
             cursor.moveToNext();
         }
 

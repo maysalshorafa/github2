@@ -16,8 +16,7 @@ public class Department {
     private long id;
     private String name;
 
-    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
-    private Date creatingDate;
+    private long creatingDate;
 
     private long byUser;
     private boolean hide;
@@ -29,7 +28,7 @@ public class Department {
 
 
 
-    public Department(long id, String name, Date creatingDate, long byUser, boolean hide) {
+    public Department(long id, String name, long creatingDate, long byUser, boolean hide) {
         this.id = id;
         this.name = name;
         this.creatingDate = creatingDate;
@@ -37,7 +36,7 @@ public class Department {
         this.hide = hide;
     }
 
-    public Department(String name, Date creatingDate, long byUser) {
+    public Department(String name, long creatingDate, long byUser) {
         this.name = name;
         this.creatingDate = creatingDate;
         this.byUser = byUser;
@@ -67,7 +66,7 @@ public class Department {
         this.id = id;
     }
 
-    public void setCreatingDate(Date creatingDate) {
+    public void setCreatingDate(long creatingDate) {
         this.creatingDate = creatingDate;
     }
 
@@ -91,7 +90,7 @@ public class Department {
         return name;
     }
 
-    public Date getCreatingDate() {
+    public long getCreatingDate() {
         return creatingDate;
     }
 

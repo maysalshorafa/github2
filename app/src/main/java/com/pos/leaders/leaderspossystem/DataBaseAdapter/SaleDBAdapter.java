@@ -68,7 +68,7 @@ public class SaleDBAdapter {
 
 
 
-	public long insertEntry(long byUser, Date saleDate, int replacementNote, boolean canceled, double totalPrice,double totalPaid,long custmer_id,String custmer_name) {
+	public long insertEntry(long byUser, long saleDate, int replacementNote, boolean canceled, double totalPrice,double totalPaid,long custmer_id,String custmer_name) {
         Sale sale = new Sale(Util.idHealth(this.db, SALES_TABLE_NAME, SALES_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name);
 
         sendToBroker(MessageType.ADD_SALE, sale, this.context);
@@ -89,7 +89,7 @@ public class SaleDBAdapter {
         val.put(SALES_COLUMN_ID,sale.getId());
         //Assign values for each row.
         val.put(SALES_COLUMN_BYUSER, sale.getByUser());
-        val.put(SALES_COLUMN_SALEDATE, sale.getSaleDate().getTime());
+        val.put(SALES_COLUMN_SALEDATE, sale.getSaleDate());
         val.put(SALES_COLUMN_REPLACEMENTNOTE, sale.getReplacementNote());
         val.put(SALES_COLUMN_CANCELED, sale.isCancelling()?1:0);
         val.put(SALES_COLUMN_TOTALPRICE, sale.getTotalPrice());
@@ -139,7 +139,7 @@ public class SaleDBAdapter {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 		val.put(SALES_COLUMN_BYUSER, sale.getByUser());
-		val.put(SALES_COLUMN_SALEDATE, sale.getSaleDate().getTime());
+		val.put(SALES_COLUMN_SALEDATE, sale.getSaleDate());
 		val.put(SALES_COLUMN_REPLACEMENTNOTE, sale.getReplacementNote());
 		val.put(SALES_COLUMN_CANCELED, sale.isCancelling());
 		val.put(SALES_COLUMN_TOTALPRICE, sale.getTotalPrice());
@@ -220,7 +220,7 @@ public class SaleDBAdapter {
 		try {
 			return new Sale(Long.parseLong(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_ID))),
 					Long.parseLong(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_BYUSER))),
-					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_SALEDATE))),
+					cursor.getLong(cursor.getColumnIndex(SALES_COLUMN_SALEDATE)),
 					cursor.getInt(cursor.getColumnIndex(SALES_COLUMN_REPLACEMENTNOTE)),
 					Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CANCELED))),
 					cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPRICE)),
@@ -230,7 +230,7 @@ public class SaleDBAdapter {
 		catch (Exception ex){
 			return new Sale(Long.parseLong(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_ID))),
 					Long.parseLong(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_BYUSER))),
-					DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_SALEDATE))),
+					cursor.getLong(cursor.getColumnIndex(SALES_COLUMN_SALEDATE)),
 					cursor.getInt(cursor.getColumnIndex(SALES_COLUMN_REPLACEMENTNOTE)),
 					Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CANCELED))),
 					cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPRICE)),

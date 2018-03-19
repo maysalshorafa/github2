@@ -83,7 +83,7 @@ public class ZReportDBAdapter {
     }
 
     public long insertEntry(long creatingDate,long byUserID,long startSaleID,long endSaleID,double amount,double total_amount){
-        ZReport zReport = new ZReport(Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID), new Date(creatingDate), byUserID, startSaleID, endSaleID,amount,total_amount);
+        ZReport zReport = new ZReport(Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID),creatingDate, byUserID, startSaleID, endSaleID,amount,total_amount);
         sendToBroker(MessageType.ADD_Z_REPORT, zReport, this.context);
         try {
             return insertEntry(zReport);
@@ -98,7 +98,7 @@ public class ZReportDBAdapter {
         //Assign values for each row.
         val.put(Z_REPORT_COLUMN_ID, zReport.getId());
 
-        val.put(Z_REPORT_COLUMN_CREATEDATE, zReport.getCreationDate().getTime());
+        val.put(Z_REPORT_COLUMN_CREATEDATE, zReport.getCreationDate());
         val.put(Z_REPORT_COLUMN_BYUSER, zReport.getByUser());
         val.put(Z_REPORT_COLUMN_STARTSALEID, zReport.getStartSaleId());
         val.put(Z_REPORT_COLUMN_ENDSALEID, zReport.getEndSaleId());
@@ -173,7 +173,7 @@ public class ZReportDBAdapter {
 
     private ZReport makeZReport(Cursor c){
         return new ZReport(c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_ID)),
-                DateConverter.stringToDate(c.getString(c.getColumnIndex(Z_REPORT_COLUMN_CREATEDATE))),
+                c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_CREATEDATE)),
                 c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_BYUSER)),
                 c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_STARTSALEID)),
                 c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_ENDSALEID)),

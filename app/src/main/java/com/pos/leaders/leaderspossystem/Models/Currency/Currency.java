@@ -14,23 +14,24 @@ public class Currency {
     private String country;
     private String currencyCode;
     private double rate;
+    private long lastUpdate;
 
     public Currency() {
 
     }
 
-    public Date getLastUpdate() {
+    public long getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Date lastUpdate) {
+    public void setLastUpdate(long lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
-    private Date lastUpdate;
 
 
-    public Currency(long id, String name, String country, String currencyCode, double rate, Date lastUpdate) {
+
+    public Currency(long id, String name, String country, String currencyCode, double rate, long lastUpdate) {
         this.id = id;
         this.name = name;
         this.country = country;

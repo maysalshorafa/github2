@@ -326,7 +326,7 @@ public class ImportProductsActivity extends Activity {
                 int totalRows = 0;
                 for (Sheet sh:w.getSheets()) {
                     totalRows += sh.getRows();
-                    Department d = new Department(sh.getName(), new Date(), SESSION._USER.getId());
+                    Department d = new Department(sh.getName(), new Date().getTime(), SESSION._USER.getId());
                     List<Product> products = new ArrayList<>();
                     for (int row = 1; row < sh.getRows(); row++) {
                         try {

@@ -101,11 +101,11 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                     lastZReport.setEndSaleId(0);
                                 }
 
-                                ZReport z=new ZReport(0,DateConverter.stringToDate(DateConverter.currentDateTime()) , SESSION._USER,lastZReport.getEndSaleId()+1,lastSale);
+                                ZReport z=new ZReport(0,new Date().getTime() , SESSION._USER,lastZReport.getEndSaleId()+1,lastSale);
                                 z.setByUser(SESSION._USER.getId());
                                 double amount = zReportDBAdapter.getZReportAmount(z.getStartSaleId(), z.getEndSaleId());
                                 totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
-                                long zID = zReportDBAdapter.insertEntry(z.getCreationDate().getTime(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId(),amount,totalZReportAmount);
+                                long zID = zReportDBAdapter.insertEntry(z.getCreationDate(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId(),amount,totalZReportAmount);
                                 z.setId(zID);
                                 lastZReport = new ZReport(z);
 

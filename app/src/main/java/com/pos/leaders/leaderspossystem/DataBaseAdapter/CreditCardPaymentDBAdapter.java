@@ -79,7 +79,7 @@ public class CreditCardPaymentDBAdapter {
                             String last4Digit,String transactionId,String answer,int paymentsNumber,
                             double firstPaymentAmount,double otherPaymentAmount,String cardHolder) {
         CreditCardPayment payment = new CreditCardPayment(Util.idHealth(this.db, TABLE_NAME, ID), saleId, amount, cccName,transactionType,
-                last4Digit,transactionId,answer,paymentsNumber,firstPaymentAmount,otherPaymentAmount,cardHolder,new Date());
+                last4Digit,transactionId,answer,paymentsNumber,firstPaymentAmount,otherPaymentAmount,cardHolder,new Date().getTime());
         sendToBroker(MessageType.ADD_CREDIT_CARD_PAYMENT, payment, this.context);
 
         try {
@@ -110,7 +110,7 @@ public class CreditCardPaymentDBAdapter {
         val.put(OTHER_PAYMENT_AMOUNT, p.getOtherPaymentAmount());
         val.put(CARDHOLDER, p.getCardholder());
 
-        val.put(CREATEDATE, p.getCreateDate().getTime());
+        val.put(CREATEDATE, p.getCreateDate());
 
 
 
@@ -157,6 +157,6 @@ public class CreditCardPaymentDBAdapter {
                 cursor.getDouble(cursor.getColumnIndex(AMOUNT)), cursor.getString(cursor.getColumnIndex(CCC_NAME)), cursor.getInt(cursor.getColumnIndex(TRANSACTION_TYPE)),
                 cursor.getString(cursor.getColumnIndex(LAST_4DIGITS)), cursor.getString(cursor.getColumnIndex(TRANSACTION_ID)), cursor.getString(cursor.getColumnIndex(ANSWER)),
                 cursor.getInt(cursor.getColumnIndex(PAYMENTS_NUMBER)), cursor.getDouble(cursor.getColumnIndex(FIRST_PAYMENT_AMOUNT)), cursor.getDouble(cursor.getColumnIndex(OTHER_PAYMENT_AMOUNT)),
-                cursor.getString(cursor.getColumnIndex(CARDHOLDER)), new Date(cursor.getLong(cursor.getColumnIndex(CREATEDATE))));
+                cursor.getString(cursor.getColumnIndex(CARDHOLDER)),cursor.getLong(cursor.getColumnIndex(CREATEDATE)));
     }
 }

@@ -10,19 +10,20 @@ public class CurrencyReturns {
     private long id;
     private long saleId;
     private double amount;
-
+    private long currency_type;
+    private long createDate;
     public CurrencyReturns() {
     }
 
-    public Date getCreateDate() {
+    public long getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(long createDate) {
         this.createDate = createDate;
     }
 
-    private Date createDate;
+
     public long getCurrency_type() {
         return currency_type;
     }
@@ -31,11 +32,11 @@ public class CurrencyReturns {
         this.currency_type = currency_type;
     }
 
-    private long currency_type;
+
 
 
     // Constructors
-    public CurrencyReturns(long id,  long saleId, double amount,Date createDate,long currency_type) {
+    public CurrencyReturns(long id,  long saleId, double amount,long createDate,long currency_type) {
         this.id = id;
         this.amount = amount;
         this.saleId = saleId;

@@ -19,8 +19,7 @@ import java.util.Locale;
 public class Sale {
 	private long id;
 	private long byUser;
-	@JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
-	private Date saleDate;
+	private long saleDate;
 	private int replacementNote;
 	private boolean cancelling;
 	private double totalPrice;
@@ -47,7 +46,7 @@ public class Sale {
     public Sale() {
     }
 
-    public Sale(long id, long byUser, Date saleDate, int replacementNote, boolean cancelling, double totalPrice, double totalPaid, long customer_id, String customer_name) {
+    public Sale(long id, long byUser, long saleDate, int replacementNote, boolean cancelling, double totalPrice, double totalPaid, long customer_id, String customer_name) {
 		this.id = id;
 		this.byUser = byUser;
 		this.saleDate=saleDate;
@@ -59,7 +58,7 @@ public class Sale {
 		this.customer_name=customer_name;
 	}
 
-	public Sale(long byUser, Date saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid) {
+	public Sale(long byUser, long saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid) {
 		this.byUser = byUser;
 		this.saleDate=saleDate;
 		this.replacementNote = replacementNote;
@@ -68,7 +67,7 @@ public class Sale {
 		this.totalPaid=totalPaid;
 	}
 
-	public Sale(long id, Date saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid,User user) {
+	public Sale(long id, long saleDate, int replacementNote, boolean cancelling, double totalPrice,double totalPaid,User user) {
 		this.id = id;
 		this.byUser = user.getId();
 		this.saleDate=saleDate;
@@ -100,7 +99,7 @@ public class Sale {
         return byUser;
     }
 
-    public Date getSaleDate() {
+    public long getSaleDate() {
         return saleDate;
     }
 
@@ -150,7 +149,7 @@ public class Sale {
 	//region Setter
 
 
-    public void setSaleDate(Date saleDate) {
+    public void setSaleDate(long saleDate) {
         this.saleDate = saleDate;
     }
 
@@ -257,16 +256,16 @@ public class Sale {
 		}
 
 
-		return "C100" + String.format(locale, "%09d", rowNumber) + pc + recordType + String.format(locale, "%020d", id) + DateConverter.getYYYYMMDD(saleDate) + DateConverter.getHHMM(saleDate)
+		return "C100" + String.format(locale, "%09d", rowNumber) + pc + recordType + String.format(locale, "%020d", id) + DateConverter.getYYYYMMDD(new Date(saleDate)) + DateConverter.getHHMM(new Date(saleDate))
 				+ String.format(locale, "%50s", "OldCustomer") + Util.spaces(50) + Util.spaces(10) + Util.spaces(30) + Util.spaces(8) + Util.spaces(30) + Util.spaces(2) + Util.spaces(15) + Util.spaces(9)
-				+ DateConverter.getYYYYMMDD(saleDate) + Util.spaces(15) + Util.spaces(3)
+				+ DateConverter.getYYYYMMDD(new Date(saleDate)) + Util.spaces(15) + Util.spaces(3)
 				+ OP + Util.x12V99(totalPriceBeforeDiscount/(1+(SETTINGS.tax/100)))
 				+ mOP + Util.x12V99(((totalSaved)/(1+(SETTINGS.tax/100))))
 				+ OP + Util.x12V99(noTax)
 				+ OP + Util.x12V99(tax+0.004)
 				+ OP + Util.x12V99(totalPrice)
 				+ OP + String.format(locale, "%09.0f", 0.0f) + String.format(locale, "%02d", (int) ((0.0f - Math.floor(0.0f) + 0.001) * 100))
-				+ Util.spaces(13) + "a0" + Util.spaces(8) + "b0" + "0" + DateConverter.getYYYYMMDD(saleDate) + Util.spaces(7) + name + String.format(locale, "%07d", id)
+				+ Util.spaces(13) + "a0" + Util.spaces(8) + "b0" + "0" + DateConverter.getYYYYMMDD(new Date(saleDate)) + Util.spaces(7) + name + String.format(locale, "%07d", id)
 				+ Util.spaces(13);
 
 

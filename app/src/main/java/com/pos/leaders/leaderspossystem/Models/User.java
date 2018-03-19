@@ -18,8 +18,7 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
-    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
-    private Date creatingDate;
+    private long creatingDate;
     private boolean hide;
     private String phoneNumber;
     private double present;
@@ -35,7 +34,7 @@ public class User {
 
 
 
-    public User(long id, String userName, String password, String firstName, String lastName, Date creatingDate, boolean hide, String phoneNumber, double present, double hourlyWage ) {
+    public User(long id, String userName, String password, String firstName, String lastName, long creatingDate, boolean hide, String phoneNumber, double present, double hourlyWage ) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -86,7 +85,7 @@ public class User {
         return hide;
     }
 
-    public Date getCreatingDate() {
+    public long getCreatingDate() {
         return creatingDate;
     }
 
@@ -139,7 +138,7 @@ public class User {
         return permissionsName;
     }
 
-    public void setCreatingDate(Date creatingDate) {
+    public void setCreatingDate(long creatingDate) {
         this.creatingDate = creatingDate;
     }
 

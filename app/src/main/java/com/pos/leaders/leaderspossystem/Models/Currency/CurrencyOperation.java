@@ -11,8 +11,7 @@ import java.util.Date;
 
 public class CurrencyOperation {
     private long id;
-    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
-    private Date createDate;
+    private long createDate;
     private long operation_id;
     private String operation_type;
     private double amount;
@@ -21,7 +20,7 @@ public class CurrencyOperation {
     public CurrencyOperation() {
     }
 
-    public CurrencyOperation(long id, Date createDate, long operation_id, String operation_type, double amount, long currency_type) {
+    public CurrencyOperation(long id, long createDate, long operation_id, String operation_type, double amount, long currency_type) {
         this.id = id;
         this.createDate = createDate;
         this.operation_id = operation_id;
@@ -39,11 +38,11 @@ public class CurrencyOperation {
         this.id = id;
     }
 
-    public Date getCreateDate() {
+    public long getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(long createDate) {
         this.createDate = createDate;
     }
 

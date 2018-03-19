@@ -784,9 +784,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (SESSION._SALE != null) {
-            sale = new Sale(SESSION._USER.getId(), new Date(), 0, false, 0, 0);
+            sale = new Sale(SESSION._USER.getId(), new Date().getTime(), 0, false, 0, 0);
         } else {
-            SESSION._SALE = new Sale(SESSION._USER.getId(), new Date(), 0, false, 0, 0);
+            SESSION._SALE = new Sale(SESSION._USER.getId(), new Date().getTime(), 0, false, 0, 0);
         }
 
         if (SESSION._ORDERS != null) {
@@ -2429,7 +2429,7 @@ startActivity(i);
                 SESSION._SALE.setId(saleID);
                 if (forSaleMan) {
                     tempSaleId =saleID;
-                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
+                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate());
                 }
                 // insert order region
                 for (Order o : SESSION._ORDERS) {
@@ -2447,7 +2447,7 @@ startActivity(i);
                         if (o==order) {
                             if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
                                 o.setCustmerAssestId(custmerAssetstIdList.get(i));
-                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
+                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate());
                             }
                         }
                     }
@@ -2543,7 +2543,7 @@ startActivity(i);
                 SESSION._SALE.setId(saleID);
                 if (forSaleMan) {
                     tempSaleId =saleID;
-                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
+                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate());
                 }
 
                 // insert order region
@@ -2562,7 +2562,7 @@ startActivity(i);
                         if (o==order) {
                             if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
                                 o.setCustmerAssestId(custmerAssetstIdList.get(i));
-                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
+                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate());
                             }
                         }
                     }
@@ -2645,7 +2645,7 @@ startActivity(i);
                 // insert in Order , CustomerAssistant
                 if (forSaleMan) {
                     tempSaleId =saleIDforCash;
-                    custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
+                    custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate());
                 }
                 // insert order region
                 for (Order o : SESSION._ORDERS) {
@@ -2663,7 +2663,7 @@ startActivity(i);
                         if (o==order) {
                             if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
                                 o.setCustmerAssestId(custmerAssetstIdList.get(i));
-                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
+                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate());
                             }
                         }
                     }
@@ -2718,10 +2718,10 @@ startActivity(i);
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Sale(SESSION._SALE));
 
                 if (firstCurrencyAmount > 0) {
-                    cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Date());
+                    cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Date().getTime());
                 }
                 if (secondCurrencyAmount > 0) {
-                    cashPaymentDBAdapter.insertEntry(saleIDforCash, secondCurrencyAmount, secondCurrencyId, new Date());
+                    cashPaymentDBAdapter.insertEntry(saleIDforCash, secondCurrencyAmount, secondCurrencyId, new Date().getTime());
                 }
                 cashPaymentDBAdapter.close();
 
@@ -2751,7 +2751,7 @@ startActivity(i);
                 }
                 if (forSaleMan) {
                     tempSaleId =saleIDforCash;
-                    custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate().getTime());
+                    custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate());
                 }
                 // insert order region
                 for (Order o : SESSION._ORDERS) {
@@ -2769,7 +2769,7 @@ startActivity(i);
                             if (o==order) {
                                 if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
                                     o.setCustmerAssestId(custmerAssetstIdList.get(i));
-                                    custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate().getTime());
+                                    custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate());
                                 }
                             }
                         }
