@@ -8,10 +8,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -37,32 +36,26 @@ import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
-import com.pos.leaders.leaderspossystem.Printer.BitmapInvoice;
-import com.pos.leaders.leaderspossystem.Printer.PrintTools;
-import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
-import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
+import com.pos.leaders.leaderspossystem.Printer.PrintTools;
+import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
-import com.pos.leaders.leaderspossystem.updater.AutoUpdateApk;
 import com.sunmi.aidl.MSCardService;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Observable;
-import java.util.Observer;
 
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
 
 public class TempDashBord  extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private boolean enableBackButton = true;
-    Button mainScreen, report, product, department, users, backUp, customerClub, logOut, offers, settings;
+    Button mainScreen, report, product, department, users, backUp, customerClub, logOut, schedule_workers, settings;
     Button btZReport, btAReport;
     AReportDBAdapter aReportDBAdapter;
     User user = new User();
@@ -181,7 +174,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         report = (Button) findViewById(R.id.report);
         product = (Button) findViewById(R.id.product);
         department = (Button) findViewById(R.id.department);
-        offers = (Button) findViewById(R.id.offers);
+        schedule_workers = (Button) findViewById(R.id.schedule_workers);
         users = (Button) findViewById(R.id.users);
         backUp = (Button) findViewById(R.id.backUp);
         logOut = (Button) findViewById(R.id.logOut);
@@ -346,7 +339,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
 
         report.setEnabled(false);
         product.setEnabled(false);
-        offers.setEnabled(false);
+        schedule_workers.setEnabled(false);
         users.setEnabled(false);
         backUp.setEnabled(false);
         department.setEnabled(false);
@@ -391,8 +384,8 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                 case Permissions.PERMISSIONS_USER:
                     users.setEnabled(true);
                     break;
-                case Permissions.PERMISSIONS_OFFER:
-                    offers.setEnabled(true);
+                case Permissions.PERMISSIONS_SCHEDULE_WORKERS:
+                    schedule_workers.setEnabled(true);
                     break;
                 case Permissions.PERMISSIONS_BACK_UP:
                     backUp.setEnabled(true);

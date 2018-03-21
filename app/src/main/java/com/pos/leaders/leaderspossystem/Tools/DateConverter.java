@@ -1,16 +1,12 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.widget.DatePicker;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -211,6 +207,11 @@ public class DateConverter {
         return dateFormat.format(date);
     }
 
+    public static String geDate(Date date){
+        SimpleDateFormat localDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String d = localDateFormat.format(date);
+        return d;
+    }
     public static String getTime(Date date){
         SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm:ss",local);
         String time = localDateFormat.format(date);

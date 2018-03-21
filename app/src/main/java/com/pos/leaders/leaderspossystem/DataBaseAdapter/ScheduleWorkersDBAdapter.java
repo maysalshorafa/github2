@@ -8,10 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,9 +61,11 @@ public class ScheduleWorkersDBAdapter {
     public long insertEntry(long userId) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
-
         val.put(SCHEDULEWORKERS_COLUMN_ID, Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID));
         val.put(SCHEDULEWORKERS_COLUMN_USERID, userId);
+        val.put(SCHEDULEWORKERS_COLUMN_DATE,new Date().getTime());
+        val.put(SCHEDULEWORKERS_COLUMN_STARTTIME, new Date().getTime());
+
         try {
             long lastID = db.insert(SCHEDULEWORKERS_TABLE_NAME, null, val);
             return lastID;
@@ -121,7 +123,6 @@ public class ScheduleWorkersDBAdapter {
         cursor.moveToFirst();
 
         while(!cursor.isAfterLast()){
-            if(!cursor.isNull(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_EXITTIME)))
             scheduleWorkersList.add(new ScheduleWorkers(Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_ID))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_USERID))),
                     cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_DATE)),
@@ -133,13 +134,38 @@ public class ScheduleWorkersDBAdapter {
         return scheduleWorkersList;
     }
 
-    public List<ScheduleWorkers> getAllUserScheduleWork(int userId){
+    public List<ScheduleWorkers> getAllUserScheduleWorkBtweenToDate(long userId , Date from , Date to){
         List<ScheduleWorkers> userScheduleWorkerstList=new ArrayList<ScheduleWorkers>();
         List<ScheduleWorkers> scheduleWorkersList=getAllScheduleWorkers();
         for (ScheduleWorkers item:scheduleWorkersList) {
-            if(item.getUserId()==userId)
+            Log.d("time",item.getStartTime()+"  from :"+ from.getTime() +"to :"+to.getTime());
+
+            if(item.getUserId()==userId && item.getStartTime() >= from.getTime() && item.getExitTime()<=to.getTime() )
 				userScheduleWorkerstList.add(item);
         }
         return userScheduleWorkerstList;
     }
+    public List<ScheduleWorkers> getAllUserScheduleWork(long userId){
+        List<ScheduleWorkers> userScheduleWorkerstList=new ArrayList<ScheduleWorkers>();
+        List<ScheduleWorkers> scheduleWorkersList=getAllScheduleWorkers();
+        for (ScheduleWorkers item:scheduleWorkersList) {
+            if(item.getUserId()==userId)
+                userScheduleWorkerstList.add(item);
+        }
+        return userScheduleWorkerstList;
+    }
+
+    public ScheduleWorkers getScheduleWorkersByUserID(long userId) {
+        ScheduleWorkers scheduleWorkers = null;
+        List<ScheduleWorkers> scheduleWorkersList=getAllUserScheduleWork(userId);
+        for (ScheduleWorkers item:scheduleWorkersList) {
+            long val = item.getDate();
+            Date date=new Date(val);
+            SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yyyy");
+            if(df2.format(date).equals(df2.format(new Date())))
+                return item;
+        }
+        return scheduleWorkers;
+    }
+
 }

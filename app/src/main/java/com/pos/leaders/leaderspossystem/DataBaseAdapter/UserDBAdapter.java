@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.User;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -269,5 +268,36 @@ public class UserDBAdapter {
         );
         cursor.close();
         return user.getFullName();
+    }
+    public Boolean isValidPassword(String password) {
+        Cursor cursor = db.query(USERS_TABLE_NAME, null, USERS_COLUMN_PASSWORD + "=?", new String[]{password}, null, null, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+
+            return true;
+        }
+        return false;
+    }
+    public User getUserByPassword(String password) {
+        User user = null;
+        Cursor cursor = db.query(USERS_TABLE_NAME, null, USERS_COLUMN_PASSWORD + "=?", new String[]{password}, null, null, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() < 1) // UserName Not Exist
+        {
+            cursor.close();
+            return user;
+        }
+        cursor.moveToFirst();
+        user = new User(Long.parseLong(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_ID)))
+                , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_USERNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PASSWORD))
+                , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_FIRSTNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_LASTNAME))
+                , cursor.getLong(cursor.getColumnIndex(USERS_COLUMN_CREATINGDATE))
+                , Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISENABLED)))
+                , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PHONENUMBER))
+                , Double.parseDouble(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISCOUNTINPERCENTAGE)))
+                , Double.parseDouble(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_HOURLYWAGE)))
+        );
+        cursor.close();
+        return user;
     }
 }

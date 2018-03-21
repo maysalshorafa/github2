@@ -91,7 +91,7 @@
     <string name="TouchPad_9">9</string>
     <string name="empty_password">Please insert your password</string>
     <string name="wrong_password">Please insert valid password</string>
-
+    <string name="schedule_workers">Schedule Workers</string>
     <!--menu-->
     <string name="products">Products</string>
     <string name="departments">Departments</string>
@@ -495,8 +495,9 @@
     <string name="print_copy_invoice"> Are you want to Print Copy For this Invoice?</string>
     <string name="source_date">Source Date</string>
     <string name="copy_date">Copy Date</string>
-
-
-
-
+    <string name="thanks">Thanks </string>
+    <string name="welcome">Welcome </string>
+    <string name="the_number_of_hours_you_work_is">The number of hours you work is :</string>
+    <string name="we_wish_to_you_a_happy_business_day">We wish to you a happy business day !</string>
+    <string name="enter_user_password">Enter User Password</string>
 </resources>

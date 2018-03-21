@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.R;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -55,13 +55,15 @@ public class UserAttendanceReportListViewAdapter extends ArrayAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		Date d1, d2;
+		Date d1, d2 ;
 		long diff;
-
+		long val = scheduleWorkersesList.get(position).getDate();
+		Date date=new Date(val);
+		SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy");
 		d2 = new Date(scheduleWorkersesList.get(position).getExitTime());
 		d1 = new Date(scheduleWorkersesList.get(position).getStartTime());
-
-		holder.tvDate.setText(DateConverter.DateToString(new Date(scheduleWorkersesList.get(position).getDate())));
+		Log.d("Date",date+"");
+		holder.tvDate.setText(DateConverter.geDate(date));
 		holder.tvStart.setText(DateConverter.getTime(d1));
 		holder.tvEnd.setText(DateConverter.getTime(d2));
 

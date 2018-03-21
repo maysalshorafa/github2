@@ -1,16 +1,16 @@
 package com.pos.leaders.leaderspossystem.Reports;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.InputType;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,10 +18,10 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.UserAttendanceReportListViewAdapter;
 
-import org.w3c.dom.Text;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,16 +31,16 @@ import java.util.concurrent.TimeUnit;
  * Created by KARAM on 30/10/2016.
  */
 
-public class UserAttendanceReport extends Activity {
+public class UserAttendanceReport extends AppCompatActivity {
 
-	EditText etFromDate, etToDate;
+	TextView etFromDate, etToDate;
 	TextView tvTotalHour;
 	ListView lvReport;
 	ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
 	List<ScheduleWorkers> scheduleWorkersList, _scheduleWorkersList;
 	Date from, to;
 	int mYear, mMonth, mDay;
-	int userID;
+	long userID;
 	private static final int DIALOG_FROM_DATE = 825;
 	private static final int DIALOG_TO_DATE = 324;
 	UserAttendanceReportListViewAdapter adapter;
@@ -48,16 +48,15 @@ public class UserAttendanceReport extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.attendance_report_user);
-
-
-		etFromDate = (EditText) findViewById(R.id.userAttendanceReport_ETFrom);
-		etToDate = (EditText) findViewById(R.id.userAttendanceReport_ETTo);
+		TitleBar.setTitleBar(this);
+		etFromDate = (TextView) findViewById(R.id.userAttendanceReport_ETFrom);
+		etToDate = (TextView) findViewById(R.id.userAttendanceReport_ETTo);
 
 		tvTotalHour = (TextView) findViewById(R.id.userAttendanceReport_TVTotalHourlyWork);
 		lvReport = (ListView) findViewById(R.id.userAttendanceReport_LVReport);
-
-
 		//region Date
 		Date d = new Date();
 		Log.i("current date", d.toString());
@@ -105,37 +104,38 @@ public class UserAttendanceReport extends Activity {
 
 		scheduleWorkersDBAdapter = new ScheduleWorkersDBAdapter(this);
 		scheduleWorkersDBAdapter.open();
-
-		userID = 1;
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			userID = extras.getInt("userID");
+			userID = extras.getLong("userID");
 		}
+		LayoutInflater inflater = getLayoutInflater();
+		ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_user_attendence_report, lvReport, false);
+		lvReport.addHeaderView(header, null, false);
 		setReportDate();
 	}
 
 	private void setReportDate() {
 		scheduleWorkersList = new ArrayList<ScheduleWorkers>();
 
-		_scheduleWorkersList = scheduleWorkersDBAdapter.getAllUserScheduleWork(userID);
+		_scheduleWorkersList = scheduleWorkersDBAdapter.getAllUserScheduleWorkBtweenToDate(userID,from,to);
+		Log.d("scedule list",_scheduleWorkersList.toString());
 
 
 		long r=0,h=0,m=0,s=0;
 		for (ScheduleWorkers sw : _scheduleWorkersList) {
-			if (DateConverter.dateBetweenTwoDates(from, to, new Date(sw.getDate()))) {
 				scheduleWorkersList.add(sw);
 				r+=DateConverter.getDateDiff(new Date(sw.getStartTime()),new Date(sw.getExitTime()), TimeUnit.MILLISECONDS);
-			}
 		}
+
 		h=r/(1000*60*60);
 		m=((r-(h*1000*60*60))/(1000*60));
 		s=(r-(m*1000*60)-(h*1000*60*60))/(1000);
 
 		tvTotalHour.setText(String.format("%02d:%02d:%02d",h,m,s));
 
-
-		adapter = new UserAttendanceReportListViewAdapter(this, R.layout.list_adapter_row_attendance, scheduleWorkersList);
+		adapter = new UserAttendanceReportListViewAdapter(this, R.layout.list_adapter_row_attendance, _scheduleWorkersList);
 		lvReport.setAdapter(adapter);
+		adapter.notifyDataSetChanged();
 	}
 
 
@@ -159,25 +159,30 @@ public class UserAttendanceReport extends Activity {
 	private DatePickerDialog.OnDateSetListener onFromDateSetListener = new DatePickerDialog.OnDateSetListener() {
 		@Override
 		public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-			mYear = year;
-			mMonth = month;
-			mDay = dayOfMonth;
-			etFromDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
-			//yyyy-MM-dd HH:mm:ss
-			from = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
-			view.setMaxDate(to.getTime());
+			mYear = view.getYear();
+			mMonth = view.getMonth();
+			mDay = view.getDayOfMonth();
+			String s = mYear + "-" + mMonth+ "-" + mDay;
+			etFromDate.setText(s);
+			view.setMinDate(to.getTime());
+			SimpleDateFormat df2 = new SimpleDateFormat("HH:mm:ss");
+			String currentDateTimeString = df2.format(new Date());
+			from = DateConverter.stringToDate(s + " "+currentDateTimeString);
 			setReportDate();
 		}
 	};
 	private DatePickerDialog.OnDateSetListener onToDateSetListener = new DatePickerDialog.OnDateSetListener() {
 		@Override
 		public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-			mYear = year;
-			mMonth = month;
-			mDay = dayOfMonth;
-			etToDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
-			view.setMinDate(from.getTime());
-			to = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
+			mYear = view.getYear();
+			mMonth = view.getMonth();
+			mDay = view.getDayOfMonth();
+			String s = mYear + "-" + mMonth+ "-" + mDay;
+			etToDate.setText(s);
+			view.setMinDate(to.getTime());
+			SimpleDateFormat df2 = new SimpleDateFormat("HH:mm:ss");
+			String currentDateTimeString = df2.format(new Date());
+			to = DateConverter.stringToDate(s + " "+currentDateTimeString);
 			setReportDate();
 		}
 	};

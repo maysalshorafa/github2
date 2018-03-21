@@ -38,7 +38,7 @@ import java.util.Random;
 public class LogInActivity extends Activity implements View.OnClickListener {
     private Button btn_0, btn_1, btn_2, btn_3, btn_4, btn_5, btn_6, btn_7, btn_8, btn_9, btn_del;
     private EditText et;
-    private Button btn_login;
+    private Button btn_login , btn_schedule_workers;
     private UserDBAdapter userDBAdapter;
     private ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
     private ZReport lastZReport;
@@ -148,6 +148,8 @@ public class LogInActivity extends Activity implements View.OnClickListener {
         btn_del.setOnClickListener(this);
         btn_login = (Button) findViewById(R.id.loginActivity_btnLogin);
         btn_login.setOnClickListener(this);
+        btn_schedule_workers = (Button) findViewById(R.id.schedule_workers);
+        btn_schedule_workers.setOnClickListener(this);
         et = (EditText) findViewById(R.id.touchPad_et);
         et.setFocusable(false);
     }
@@ -288,6 +290,12 @@ public class LogInActivity extends Activity implements View.OnClickListener {
             case R.id.loginActivity_btnLogin:
                 login();
                 break;
+            case
+                    R.id.schedule_workers:
+                Intent intent = new Intent(LogInActivity.this,ScheduleWorkersActivity.class);
+                startActivity(intent);             }
+
         }
     }
-}
+
+
