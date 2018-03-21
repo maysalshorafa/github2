@@ -203,10 +203,9 @@ public class ChecksActivity extends AppCompatActivity {
 		btAdd.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getTotal();
-				if(requiredAmount<0){
+				if(getTotalPid() >= totalPrice){
 					btAdd.setEnabled(false);
-					Toast.makeText(ChecksActivity.this,"Don't need to add another Check!!",Toast.LENGTH_LONG).show();
+					Toast.makeText(ChecksActivity.this,getString(R.string.dont_need_to_add_another_check),Toast.LENGTH_LONG).show();
 
 				}else {
 

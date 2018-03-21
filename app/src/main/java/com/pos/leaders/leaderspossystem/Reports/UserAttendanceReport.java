@@ -160,7 +160,7 @@ public class UserAttendanceReport extends AppCompatActivity {
 		@Override
 		public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 			mYear = view.getYear();
-			mMonth = view.getMonth();
+			mMonth = view.getMonth()+1;
 			mDay = view.getDayOfMonth();
 			String s = mYear + "-" + mMonth+ "-" + mDay;
 			etFromDate.setText(s);
@@ -175,7 +175,7 @@ public class UserAttendanceReport extends AppCompatActivity {
 		@Override
 		public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 			mYear = view.getYear();
-			mMonth = view.getMonth();
+			mMonth = view.getMonth()+1;
 			mDay = view.getDayOfMonth();
 			String s = mYear + "-" + mMonth+ "-" + mDay;
 			etToDate.setText(s);

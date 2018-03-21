@@ -500,4 +500,7 @@
     <string name="the_number_of_hours_you_work_is">The number of hours you work is :</string>
     <string name="we_wish_to_you_a_happy_business_day">We wish to you a happy business day !</string>
     <string name="enter_user_password">Enter User Password</string>
+    <string name="dont_need_to_add_another_check">Dont need to add another Check!</string>
+
+
 </resources>
