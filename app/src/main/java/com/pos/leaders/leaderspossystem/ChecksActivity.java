@@ -204,7 +204,7 @@ public class ChecksActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 				if(getTotalPid() >= totalPrice){
-					btAdd.setEnabled(false);
+					//btAdd.setEnabled(false);
 					Toast.makeText(ChecksActivity.this,getString(R.string.dont_need_to_add_another_check),Toast.LENGTH_LONG).show();
 
 				}else {
