@@ -26,7 +26,7 @@ public class UserAttendanceReportListViewAdapter extends ArrayAdapter {
 	private int resource;
 	private LayoutInflater inflater;
 	private Context context;
-
+	int bgColor =0;
 
 	public UserAttendanceReportListViewAdapter(Context context, int resource, List<ScheduleWorkers> scheduleWorkersesList) {
 		super(context, resource, scheduleWorkersesList);
@@ -87,6 +87,10 @@ public class UserAttendanceReportListViewAdapter extends ArrayAdapter {
 		*/
 
 		holder.tvH.setText(String.format("%02d:%02d:%02d", h, m, s));
+		if(bgColor%2==0){
+			convertView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
+		}
+		bgColor++;
 		return convertView;
 	}
 

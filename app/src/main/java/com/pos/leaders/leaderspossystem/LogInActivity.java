@@ -21,14 +21,12 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Sale;
-import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Random;
 
 /**
@@ -204,11 +202,12 @@ public class LogInActivity extends Activity implements View.OnClickListener {
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, LogInActivity.LEADPOS_MAKE_A_REPORT);
-
-                long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getId());
-                SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, user.getId(), new Date().getTime(), new Date().getTime());
                 userDBAdapter.close();
-                scheduleWorkersDBAdapter.close();
+
+                /**
+                    long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getId());
+                    SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, user.getId(), new Date().getTime(), new Date().getTime());
+                    scheduleWorkersDBAdapter.close();**/
 
                 //// TODO: 12/04/2017 check if AReport is valid
                 SaleDBAdapter saleDBAdapter = new SaleDBAdapter(LogInActivity.this);

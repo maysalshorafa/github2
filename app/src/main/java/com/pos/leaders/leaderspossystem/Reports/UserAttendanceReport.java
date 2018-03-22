@@ -164,7 +164,6 @@ public class UserAttendanceReport extends AppCompatActivity {
 			mDay = view.getDayOfMonth();
 			String s = mYear + "-" + mMonth+ "-" + mDay;
 			etFromDate.setText(s);
-			view.setMinDate(to.getTime());
 			SimpleDateFormat df2 = new SimpleDateFormat("HH:mm:ss");
 			String currentDateTimeString = df2.format(new Date());
 			from = DateConverter.stringToDate(s + " "+currentDateTimeString);
@@ -179,7 +178,6 @@ public class UserAttendanceReport extends AppCompatActivity {
 			mDay = view.getDayOfMonth();
 			String s = mYear + "-" + mMonth+ "-" + mDay;
 			etToDate.setText(s);
-			view.setMinDate(to.getTime());
 			SimpleDateFormat df2 = new SimpleDateFormat("HH:mm:ss");
 			String currentDateTimeString = df2.format(new Date());
 			to = DateConverter.stringToDate(s + " "+currentDateTimeString);

@@ -43,8 +43,8 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScheduleWorkersActivity.this,LogInActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);             }
+                startActivity(intent);
+            }
         });
         userPassWord.addTextChangedListener(new TextWatcher() {
             @Override
@@ -97,6 +97,8 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
                 }
                 else {
                     //fail password
+                    Toast.makeText(ScheduleWorkersActivity.this,getString(R.string.please_remember_your_password),Toast.LENGTH_LONG).show();
+
                 }
 
                          }
