@@ -11,12 +11,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.MainActivity;
 import com.pos.leaders.leaderspossystem.R;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Created by Karam on 26/11/2016.
@@ -117,7 +114,7 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
         if (extras != null) {
             totalPrice = (double) extras.get(MainActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE);
             custmer_nameS = (String) extras.get("_custmer");
-            tv.setText(totalPrice + " " + getResources().getText(R.string.ins));
+            tv.setText(valueView(totalPrice) + " " + getResources().getText(R.string.ins));
             custmer_name.setText(custmer_nameS);
             custmer_nameS = "";
         } else {
@@ -243,4 +240,8 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
         }
         //  tvExcess.setText(String.format("%.2f",deltaPrice) + " " + getResources().getText(R.string.ins));
     }
+    private String valueView(double a) {
+        return Util.makePrice(a);
+    }
+
 }
