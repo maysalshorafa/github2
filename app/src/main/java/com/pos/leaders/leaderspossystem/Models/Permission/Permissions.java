@@ -12,7 +12,7 @@ public class Permissions {
 	public static final String PERMISSIONS_ROLE_POS = "pos";
 	public static final String PERMISSIONS_ROLE_PRODUCT_MANAGEMENT = "Product_Management";
 	public static final String PERMISSIONS_ROLE_DEPARTMENT_MANAGEMENT = "Department_Management";
-	public static final String PERMISSIONS_ROLE_USER = "Users";
+	public static final String PERMISSIONS_ROLE_USER = "User";
 	public static final String PERMISSIONS_ROLE_OFFERS = "Offers";
 	public static final String PERMISSIONS_ROLE_PERMISSIONS = "Permissions";
 	public static final String PERMISSIONS_ROLE_CANCELING_SALE = "CancelingSale";

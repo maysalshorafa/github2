@@ -88,7 +88,7 @@ public class AddCustomerMeasurement extends AppCompatActivity {
         for (int i = 0; i < groupList.size(); i++) {
             Club group = groupList.get(i);
             if (group.getId() == customer.getClub()) {
-                customerClubName.setText(": "+group.getname());
+                customerClubName.setText(": "+group.getName());
             }
         }
         customerEmail.setText(customer.getEmail());

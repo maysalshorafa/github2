@@ -157,7 +157,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                             } else {
                                 for (int i = 0; i < groupList.size(); i++) {
                                     Club group = groupList.get(i);
-                                    if (group.getname().equalsIgnoreCase( selectClubSpinner.getSelectedItem().toString())) {
+                                    if (group.getName().equalsIgnoreCase( selectClubSpinner.getSelectedItem().toString())) {
                                         clubID = group.getId();
                                     }
 
@@ -229,7 +229,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                 customer.setGender(gender);
                                 for (int i = 0; i < groupList.size(); i++) {
                                     Club group = groupList.get(i);
-                                    if (group.getname() .equalsIgnoreCase(selectClubSpinner.getSelectedItem().toString())) {
+                                    if (group.getName() .equalsIgnoreCase(selectClubSpinner.getSelectedItem().toString())) {
                                        long editingClubID = group.getId();
                                         customer.setClub(editingClubID);
                                     }
@@ -308,7 +308,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
 
         groupList = groupAdapter.getAllGroup();
         for (int i = 0; i < groupList.size(); i++) {
-            club.add(groupList.get(i).getname());
+            club.add(groupList.get(i).getName());
         }
 
         // Creating adapter for spinner

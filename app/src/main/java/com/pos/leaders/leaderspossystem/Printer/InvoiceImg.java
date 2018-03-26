@@ -196,7 +196,6 @@ public class InvoiceImg {
         blocks.addAll(Head(sale));
         Block lineR = new Block("\u200E" + line + "\u200E", 30.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
 
-        SimpleDateFormat format = new SimpleDateFormat();
         String status=context.getString(R.string.source_invoice);
         if(isCopy)
             status=context.getString(R.string.copy_invoice);
@@ -316,7 +315,7 @@ public class InvoiceImg {
         }
         blocks.add(new Block("\u200e" + context.getString(R.string.cashier) + ": " + user.getFullName(), 30.0f, Color.BLACK).Left());
 
-        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + format.format(sale.getSaleDate()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getSaleDate()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
         if (isCopy) {
             Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
@@ -418,8 +417,12 @@ public class InvoiceImg {
 
         blocks.add(new Block("\u200e" + context.getString(R.string.cashier) + ": " + sale.getUser().getFullName(), 30.0f, Color.BLACK).Left());
 
-        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getSaleDate()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
+        if(isCopy){
+            Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            blocks.add(bCopyDate.Left());
+        }
         if ((int) totalSaved != 0) {
             Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" + String.format(new Locale("en"), "%.2f", totalSaved) + " " + context.getString(R.string.ins), 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
             blocks.add(totSaved.Bold().Left());
@@ -528,8 +531,11 @@ public class InvoiceImg {
         }
         blocks.add(new Block("\u200e" + context.getString(R.string.cashier) + ": " + sale.getUser().getFullName(), 30.0f, Color.BLACK).Left());
 
-        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getSaleDate()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
+
+        Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        blocks.add(bCopyDate.Left());
 
 
         return make(blocks);
@@ -594,8 +600,11 @@ public class InvoiceImg {
 
         blocks.add(new Block("\u200e" + context.getString(R.string.cashier) + ": " + sale.getUser().getFullName(), 30.0f, Color.BLACK).Left());
 
-        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.dateToString(sale.getSaleDate()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getSaleDate()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
+
+        Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        blocks.add(bCopyDate.Left());
 
 
         return make(blocks);

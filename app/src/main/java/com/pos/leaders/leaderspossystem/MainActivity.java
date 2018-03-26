@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     //end
     double offerAmount = 0;
     long saleIDforCash;
-    static List<Integer> offersIDsList;
+    //static List<Integer> offersIDsList;
     List<Offer> offersList;
     ProductCatalogGridViewAdapter productCatalogGridViewAdapter;
     CustomerCatalogGridViewAdapter custmerCatalogGridViewAdapter;
@@ -378,6 +378,7 @@ public class MainActivity extends AppCompatActivity {
 
         offersList = new ArrayList<Offer>();
 
+        /*
         //// TODO: 25/12/2016 get all offer and make it on cart
         //// TODO: 25/12/2016 offer management activity
         new AsyncTask<Void, Void, Void>() {
@@ -400,7 +401,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
             }
         }.execute();
-
+*/
 
         //endregion
 
@@ -2387,6 +2388,7 @@ startActivity(i);
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
+                SESSION._SALE.setSaleDate(new Date().getTime());
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 long tempSaleId=0;
                 // Club with point and amount
@@ -2509,6 +2511,7 @@ startActivity(i);
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
+                SESSION._SALE.setSaleDate(new Date().getTime());
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 long tempSaleId=0;
                 // Club with point and amount
@@ -2614,6 +2617,7 @@ startActivity(i);
                 SESSION._SALE.setTotalPaid(totalPaidWithOutCurrency);
 
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
+                SESSION._SALE.setSaleDate(new Date().getTime());
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 SESSION._SALE.setId(saleIDforCash);
 
@@ -2676,7 +2680,6 @@ startActivity(i);
 
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
                 SESSION._SALE.setPayment(payment);
-                SESSION._SALE.setSaleDate(new Date());
                 paymentDBAdapter.close();
                 printAndOpenCashBox("", "", "",REQUEST_CASH_ACTIVITY_CODE);
                 saleDBAdapter.close();
@@ -2711,6 +2714,7 @@ startActivity(i);
                 long secondCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_ID, 0);
                 long firstCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID, 0);
 
+                SESSION._SALE.setSaleDate(new Date().getTime());
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 SESSION._SALE.setId(saleIDforCash);
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Sale(SESSION._SALE));
@@ -2920,30 +2924,34 @@ startActivity(i);
         gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                customer = customerList.get(position);
-                customerName = customer.getCustmerName();
-                customerClubId = customer.getClub();
-                customerId = customer.getId();
-                customerName_EditText.setText(customerName);
-                customer_name.setText(customerName);
-                // get club Information
-                Club club = clubAdapter.getGroupInfo(customerClubId);
-                clubType = club.getType();
-                clubName = club.getname();
-                club_name.setText(clubName);
-                if (clubType == 1) {
-                    clubDiscount = club.getParcent();
-                    tvCustomerInformation.setText(getString(R.string.discount));
-                    information.setText(clubDiscount + "");
-                } else if (clubType == 2) {
-                    used_point.setVisibility(View.VISIBLE);
-                    clubAmount = club.getAmount();
-                    clubPoint = club.getPoint();
-                    tvCustomerInformation.setText(getString(R.string.point) + ",\t" + getString(R.string.amount));
-                    information.setText(clubAmount + ",\t " + clubPoint + getResources().getText(R.string.ins));
-                } else if (clubType == 0) {
+                try {
+                    customer = customerList.get(position);
+                    customerName = customer.getCustmerName();
+                    customerClubId = customer.getClub();
+                    customerId = customer.getId();
+                    customerName_EditText.setText(customerName);
+                    customer_name.setText(customerName);
+                    // get club Information
+                    Club club = clubAdapter.getGroupInfo(customerClubId);
+                    clubType = club.getType();
+                    clubName = club.getName();
+                    club_name.setText(clubName);
+                    if (clubType == 1) {
+                        clubDiscount = club.getPercent();
+                        tvCustomerInformation.setText(getString(R.string.discount));
+                        information.setText(clubDiscount + "");
+                    } else if (clubType == 2) {
+                        used_point.setVisibility(View.VISIBLE);
+                        clubAmount = club.getAmount();
+                        clubPoint = club.getPoint();
+                        tvCustomerInformation.setText(getString(R.string.point) + ",\t" + getString(R.string.amount));
+                        information.setText(clubAmount + ",\t " + clubPoint + getResources().getText(R.string.ins));
+                    } else if (clubType == 0) {
 
-                    information.setText(getString(R.string.general));
+                        information.setText(getString(R.string.general));
+                    }
+                } catch (Exception ex) {
+                    Log.e("select club", ex.getMessage());
                 }
 
                 popupWindow.dismiss();

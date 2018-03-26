@@ -66,7 +66,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
             "Report",
             "Product",
             "Department",
-            "Users",
+            "User",
             "Offers",
             "BackUp",
             "Tax",

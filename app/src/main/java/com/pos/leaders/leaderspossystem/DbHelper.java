@@ -204,6 +204,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (4,'test1','test1','test1','"+new Date().getTime()+"','12',0,046316969,20,35);");
 
 
+        updateDataBase(db);
 
         List<String> tblNames = tablesName(db);
         String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
@@ -244,11 +245,11 @@ public class DbHelper extends SQLiteOpenHelper {
             DATABASE_ENABEL_ALTER_COLUMN = true;
 
             //method to updateDataBaseVersion2
-            updateDataBase(db);
+            /*updateDataBase(db);
             db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "CustomerMeasurement" + " INTEGER DEFAULT 0;");
             db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "MeasurementsDetails" + " INTEGER DEFAULT 0;");
             db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "MeasurementDynamicVariable" + " INTEGER DEFAULT 0;");
-
+*/
             //end
         }
 /*

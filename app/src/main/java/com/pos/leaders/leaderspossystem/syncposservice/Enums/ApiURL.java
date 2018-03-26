@@ -12,7 +12,7 @@ public interface ApiURL {
     String Club = "Club";
     String City = "City";
     String Customer = "Customer";
-    String Users = "Users";
+    String User = "User";
     String Order = "Order";
     String AReport = "AReport";
     String AReportDetails = "AReportDetails";

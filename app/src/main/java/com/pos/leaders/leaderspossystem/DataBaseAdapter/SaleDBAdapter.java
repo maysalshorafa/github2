@@ -188,7 +188,7 @@ public class SaleDBAdapter {
 
 	public List<Sale> getBetweenTwoDates(long from, long to){
 		List<Sale> saleList = new ArrayList<Sale>();
-		Cursor cursor = db.rawQuery("select * from "+SALES_TABLE_NAME+" where "+SALES_COLUMN_SALEDATE+" <= "+to+" and "+SALES_COLUMN_SALEDATE +" >= "+from,null);
+		Cursor cursor = db.rawQuery("select * from "+SALES_TABLE_NAME+" where "+SALES_COLUMN_SALEDATE+" <= "+to+" and "+SALES_COLUMN_SALEDATE +" >= "+from+" order by "+SALES_COLUMN_SALEDATE+" DESC",null);
 		cursor.moveToFirst();
 
 		while (!cursor.isAfterLast()) {

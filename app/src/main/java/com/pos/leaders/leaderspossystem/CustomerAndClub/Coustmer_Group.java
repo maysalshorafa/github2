@@ -92,9 +92,9 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
             customers = customerDBAdapter.getAllCustomerInClub(club.getId());
             final CustomerCatalogGridViewAdapter adapter = new CustomerCatalogGridViewAdapter(this, customers);
             gvCustomer.setAdapter(adapter);
-            etClubName.setText(club.getname());
+            etClubName.setText(club.getName());
             etDescription.setText(club.getDescription());
-            etPercent.setText("" + club.getParcent());
+            etPercent.setText("" + club.getPercent());
             etAmount.setText("" + club.getAmount());
             etPoint.setText("" + club.getPoint());
             clubType.setSelection(club.getType());
@@ -181,17 +181,17 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
                         } else {
                             try {
                                 if(club.getType()==0){
-                                    club.setname(etClubName.getText().toString());
+                                    club.setName(etClubName.getText().toString());
                                     club.setDescription(etDescription.getText().toString());
 
                                 }
                                 if(club.getType()==1){
-                                    club.setname(etClubName.getText().toString());
+                                    club.setName(etClubName.getText().toString());
                                     club.setDescription(etDescription.getText().toString());
-                                    club.setParcent(Float.parseFloat(etPercent.getText().toString()));
+                                    club.setPercent(Float.parseFloat(etPercent.getText().toString()));
                                 }
                                 if(club.getType()==2){
-                                    club.setname(etClubName.getText().toString());
+                                    club.setName(etClubName.getText().toString());
                                     club.setDescription(etDescription.getText().toString());
                                     club.setAmount(Integer.parseInt(etAmount.getText().toString()));
                                     club.setPoint(Integer.parseInt(etPoint.getText().toString()));

@@ -86,10 +86,10 @@ public class ClubAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Group_COLUMN__ID, group.getId());
-        val.put(Group_COLUMN_Name, group.getname());
+        val.put(Group_COLUMN_Name, group.getName());
         val.put(Group_COLUMN__Descrption, group.getDescription());
         val.put(Group_COLUMN_Type, group.getType());
-        val.put(Group_COLUMN_Parcent, group.getParcent());
+        val.put(Group_COLUMN_Parcent, group.getPercent());
         val.put(Group_COLUMN_Amount, group.getAmount());
         val.put(Group_COLUMN_Point, group.getPoint());
         val.put(Group_COLUMN_DISENABLED, group.isHide()?1:0);
@@ -104,10 +104,10 @@ public class ClubAdapter {
     public int updateEntry(Club club){
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Group_COLUMN_Name,club.getname());
+        val.put(Group_COLUMN_Name,club.getName());
         val.put(Group_COLUMN__Descrption,club.getDescription());
         val.put(Group_COLUMN_Type,club.getType());
-        val.put(Group_COLUMN_Parcent,club.getParcent());
+        val.put(Group_COLUMN_Parcent,club.getPercent());
         val.put(Group_COLUMN_Amount,club.getAmount());
         val.put(Group_COLUMN_Point,club.getPoint());
         try {

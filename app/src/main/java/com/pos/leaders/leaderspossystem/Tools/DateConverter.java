@@ -158,6 +158,10 @@ public class DateConverter {
         String date = dateFormat.format(d);
         return date;
     }
+    public static String DateToString(long d){
+
+        return DateToString(new Date(d));
+    }
     /*
 
 

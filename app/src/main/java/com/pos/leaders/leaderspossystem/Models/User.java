@@ -52,14 +52,12 @@ public class User {
     }
     public User(){}
 
+    @JsonIgnore
     public String getFullName(){
         return this.firstName+" "+this.lastName;
     }
     public String getUserName(){
         return this.userName;
-    }
-    public boolean getAvailableUser(){
-        return !hide;
     }
     public double getPresent(){
         return this.present;

@@ -17,6 +17,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
@@ -46,6 +47,7 @@ import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.AReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.City;
+import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
@@ -538,6 +540,13 @@ public class SyncMessage extends Service {
 
                 //region CLUB
                 case MessageType.ADD_CLUB:
+                    Club club = null;
+                    club = objectMapper.readValue(msgData, Club.class);
+
+                    ClubAdapter clubAdapter = new ClubAdapter(this);
+                    clubAdapter.open();
+                    rID = clubAdapter.insertEntry(club);
+                    clubAdapter.close();
                     break;
                 case MessageType.UPDATE_CLUB:
                     break;
@@ -1030,13 +1039,13 @@ public class SyncMessage extends Service {
 
 
             case MessageType.ADD_USER:
-                res = messageTransmit.authPost(ApiURL.Users, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authPost(ApiURL.User, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_USER:
-                res = messageTransmit.authPut(ApiURL.Users, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authPut(ApiURL.User, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.DELETE_USER:
-                res = messageTransmit.authDelete(ApiURL.Users, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authDelete(ApiURL.User, jsonObject.getString(MessageKey.Data), token);
                 break;
             //Currencies
 

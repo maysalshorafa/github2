@@ -32,13 +32,13 @@ public class SETTINGS {
 	public static boolean creditCardEnable;
 	public static boolean timerState = false;
 	//public static String BO_SERVER_URL = "http://172.16.0.44:8080/leadBO/webapi/";
-	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
-	public static String BO_SERVER_URL = "http://192.168.1.109:8080/leadBO/webapi/";
+	public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
+	//public static String BO_SERVER_URL = "http://192.168.1.109:8080/leadBO/webapi/";
 	//public static final String UPDATER_API_URL_PATH = "http://192.168.1.109:8090/updateApk/";
 	//public static final String UPDATER_API_URL_PATH = "http://185.118.252.26:8091/updateApkNV/";
 	public static final String UPDATER_API_URL_PATH = "/updateApk/";
-	//public static final String UPDATER_SERVER_URL = "http://185.118.252.26:8090";
-	public static final String UPDATER_SERVER_URL = "http://192.168.1.109:8090";
+	public static final String UPDATER_SERVER_URL = "http://185.118.252.26:8090";
+	//public static final String UPDATER_SERVER_URL = "http://192.168.1.109:8090";
 
 	public static Bitmap copyInvoiceBitMap ; // add here to avoid recycle bitmap exception when used reference between two different activity
 
