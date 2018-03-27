@@ -51,6 +51,7 @@ import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
+import com.pos.leaders.leaderspossystem.SettingsTab.SettingsTab;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -327,7 +328,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), SettingActivity.class);
+                i = new Intent(getApplicationContext(), SettingsTab.class);
                 startActivity(i);
             }
         });

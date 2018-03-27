@@ -29,6 +29,10 @@ public interface MessageKey {
     String status = "status";
     String logTag = "logTag";
     String responseType = "responseType";
+    String version = "version";
+    String dbVersion = "db-version";
+    String FEVersion = "FE-version";
+
 
 
 }

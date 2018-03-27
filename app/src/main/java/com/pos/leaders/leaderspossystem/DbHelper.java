@@ -65,7 +65,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    protected static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 3;
 
     protected static final String DATABASE_NAME = "POSDB.db";
     protected static final String CONTACTS_TABLE_NAME = "contacts";

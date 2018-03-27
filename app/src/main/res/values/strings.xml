@@ -502,5 +502,12 @@
     <string name="enter_user_password">Enter User Password</string>
     <string name="dont_need_to_add_another_check">Dont need to add another Check!</string>
     <string name="please_remember_your_password">Please Remember Your Password !</string>
+    <string name="version_info">Version Information</string>
+    <string name="pos_version_no">Pos Version No</string>
+    <string name="pos_db_version_no">Pos DB Version No</string>
+    <string name="bo_version_no">Bo Version No</string>
+    <string name="bo_db_version_no">Bo DB Version No</string>
+    <string name="FE_version_no">Front Version No</string>
+
 
 </resources>

@@ -142,7 +142,8 @@
 
         <activity android:name=".Controller" />
         <activity android:name=".SalesHistoryCopySales" />
-        <activity android:name=".ScheduleWorkersActivity"></activity>
+        <activity android:name=".ScheduleWorkersActivity" />
+        <activity android:name=".SettingsTab.SettingsTab"></activity>
     </application>
 
 </manifest>
