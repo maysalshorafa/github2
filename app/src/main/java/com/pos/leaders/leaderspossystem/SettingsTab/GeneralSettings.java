@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
@@ -20,6 +20,7 @@ import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.SettingActivity;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
@@ -35,7 +36,7 @@ import java.io.IOException;
  */
 
 public class GeneralSettings extends Fragment {
-    EditText etCompanyName, etPrivateCompany, etTax, etTerminalNumber, etTerminalPassword,etInvoiceNote;
+    TextView etCompanyName, etPrivateCompany, etTax, etTerminalNumber, etTerminalPassword,etInvoiceNote , returnNote;
     Button btSave ;
     public static JSONObject jsonObject;
     public  CharSequence s ="";
@@ -43,18 +44,19 @@ public class GeneralSettings extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v= inflater.inflate(R.layout.general_setting_fragment, container, false);
-        etCompanyName = (EditText) v.findViewById(R.id.settings_etCompanyName);
+        etCompanyName = (TextView) v.findViewById(R.id.settings_etCompanyName);
         etCompanyName.setEnabled(false);
-        etPrivateCompany = (EditText)  v.findViewById(R.id.settings_etPC);
+        etPrivateCompany = (TextView)  v.findViewById(R.id.settings_etPC);
         etPrivateCompany.setEnabled(false);
-        etTax = (EditText)  v.findViewById(R.id.settings_etTax);
+        etTax = (TextView)  v.findViewById(R.id.settings_etTax);
         etTax.setEnabled(false);
-        etInvoiceNote = (EditText)  v.findViewById(R.id.settings_etInvoiceNote);
+        etInvoiceNote = (TextView)  v.findViewById(R.id.settings_etInvoiceNote);
         etInvoiceNote.setEnabled(false);
-        etTerminalNumber = (EditText)  v.findViewById(R.id.settings_etTNum);
+        etTerminalNumber = (TextView)  v.findViewById(R.id.settings_etTNum);
         etTerminalNumber.setEnabled(false);
-        etTerminalPassword = (EditText)  v.findViewById(R.id.settings_etTPass);
+        etTerminalPassword = (TextView)  v.findViewById(R.id.settings_etTPass);
         etTerminalPassword.setEnabled(false);
+        returnNote = (TextView)  v.findViewById(R.id.settings_etTPass);
         btSave = (Button)  v.findViewById(R.id.settings_btSave);
         getSettings();
         btSave.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +71,7 @@ public class GeneralSettings extends Fragment {
     public void getSettings() {
         etCompanyName.setText(SETTINGS.companyName);
         etPrivateCompany.setText(SETTINGS.companyID);
-        etTax.setText(SETTINGS.tax + "");
+        etTax.setText(Util.makePrice(SETTINGS.tax));
         etTerminalNumber.setText(SETTINGS.ccNumber);
         etTerminalPassword.setText(SETTINGS.ccPassword);
         etInvoiceNote.setText(SETTINGS.returnNote);
@@ -95,9 +97,15 @@ public class GeneralSettings extends Fragment {
                                     final String TerminalNumber = jsonObject.getString(MessageKey.CCUN);
                                     final String TerminalPassword = jsonObject.getString(MessageKey.CCPW);
                                     final int InvoiceNote = jsonObject.getInt(MessageKey.endOfReturnNote);
-                                    s = getContext().getString(R.string.company_name)
-                                            + ":" + CompanyName + "\n" + getContext().getString(R.string.private_company) + ":" + PrivateCompany + "\n" + getContext().getString(R.string.tax) + ":" + Tax + "\n" + getContext().getString(R.string.terminal_number) + ":" + TerminalNumber + "\n"
-                                            + getContext().getString(R.string.terminal_password) + ":" + TerminalPassword + "\n" + getContext().getString(R.string.invoice_note) + ":" + InvoiceNote;
+                                    final String ReturnNote = jsonObject.getString(MessageKey.returnNote);
+
+                                    s = getContext().getString(R.string.company_name) + ":" + CompanyName + "\n"
+                                            + getContext().getString(R.string.private_company) + ":" + PrivateCompany + "\n" +
+                                             getContext().getString(R.string.invoice_note) + ":" + InvoiceNote  +  "\n"
+                                            +"Return Note" + ":" + ReturnNote + "\n"+
+                                            getContext().getString(R.string.tax) + ":" + Tax + "\n"
+                                            + getContext().getString(R.string.terminal_number) + ":" + TerminalNumber + "\n"+
+                                             getContext().getString(R.string.terminal_password) + ":" + TerminalPassword + "\n" ;
                                     new AlertDialog.Builder(getContext())
                                             .setTitle(getString(R.string.update_general_setting))
                                             .setMessage(getString(R.string.if_you_want_to_update_general_setting_click_ok) + "\n" + s)
@@ -105,7 +113,8 @@ public class GeneralSettings extends Fragment {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(getContext());
                                                     settingsDBAdapter.open();
-                                                    int i = settingsDBAdapter.updateEntry(PrivateCompany, CompanyName, SESSION.POS_ID_NUMBER + "", Tax, String.valueOf(InvoiceNote), 0, TerminalNumber, TerminalPassword);
+
+                                                    int i = settingsDBAdapter.updateEntry(PrivateCompany, CompanyName, SESSION.POS_ID_NUMBER + "", Tax, ReturnNote, InvoiceNote, TerminalNumber, TerminalPassword);
                                                     settingsDBAdapter.close();
 
                                                     if (i == 1) {
@@ -115,6 +124,7 @@ public class GeneralSettings extends Fragment {
                                                         SETTINGS.endOfInvoice = InvoiceNote;
                                                         SETTINGS.ccNumber = TerminalNumber;
                                                         SETTINGS.ccPassword = TerminalPassword;
+                                                        SETTINGS.returnNote=ReturnNote;
                                                         Toast.makeText(getContext(), getString(R.string.success_to_save_settings), Toast.LENGTH_SHORT).show();
                                                         //finish();
 

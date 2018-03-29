@@ -140,4 +140,8 @@ public interface MessageType{
     String UPDATE_MEASUREMENTS_DYNAMIC_VARIABLE = "UpdateMeasurementDynamicVariable";
     String DELETE_MEASUREMENTS_DYNAMIC_VARIABLE = "DeleteMeasurementDynamicVariable";
 
+    String ADD_SCHEDULE_WORKERS = "AddScheduleWorker";
+    String UPDATE_SCHEDULE_WORKERS = "UpdateScheduleWorker";
+    String DELETE_SCHEDULE_WORKERS = "DeleteScheduleWorker";
+
 }

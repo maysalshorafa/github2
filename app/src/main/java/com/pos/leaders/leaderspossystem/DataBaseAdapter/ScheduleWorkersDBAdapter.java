@@ -10,11 +10,14 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 19/10/2016.
@@ -113,7 +116,10 @@ public class ScheduleWorkersDBAdapter {
         val.put(SCHEDULEWORKERS_COLUMN_EXITTIME, exitTime.getTime());
 
         String where = SCHEDULEWORKERS_COLUMN_ID + " = ?";
-        db.update(SCHEDULEWORKERS_TABLE_NAME, val, where, new String[]{id + ""});
+        db.update(SCHEDULEWORKERS_TABLE_NAME, val, where, new String[]{id + ""} );
+        ScheduleWorkers scheduleWorkers = getScheduleWorkersByID(id);
+        sendToBroker(MessageType.ADD_SCHEDULE_WORKERS, scheduleWorkers, this.context);
+
     }
 
     public List<ScheduleWorkers> getAllScheduleWorkers(){
@@ -166,4 +172,19 @@ public class ScheduleWorkersDBAdapter {
         return scheduleWorkers;
     }
 
+    public long insertEntry(ScheduleWorkers scheduleWorkers) {
+        ContentValues val = new ContentValues();
+        val.put(SCHEDULEWORKERS_COLUMN_ID,scheduleWorkers.getId());
+        val.put(SCHEDULEWORKERS_COLUMN_USERID, scheduleWorkers.getUserId());
+        val.put(SCHEDULEWORKERS_COLUMN_DATE, scheduleWorkers.getDate());
+        val.put(SCHEDULEWORKERS_COLUMN_STARTTIME, scheduleWorkers.getStartTime());
+        val.put(SCHEDULEWORKERS_COLUMN_EXITTIME, scheduleWorkers.getExitTime());
+
+        try {
+            return db.insert(SCHEDULEWORKERS_TABLE_NAME, null, val);
+        } catch (SQLException ex) {
+            Log.e("SCHEDULEWORKERS DB insert", "inserting Entry at " + SCHEDULEWORKERS_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+    }
 }

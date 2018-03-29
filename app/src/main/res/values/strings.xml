@@ -508,6 +508,11 @@
     <string name="bo_version_no">Bo Version No</string>
     <string name="bo_db_version_no">Bo DB Version No</string>
     <string name="FE_version_no">Front Version No</string>
-
+    <string name="a_report_amount">A Report</string>
+    <string name="total_with_a_report_amount">Total Amount</string>
+    <string name="total_sales">Total Sales</string>
+    <string name="details">Details</string>
+    <string name="cashiers">Cashiers</string>
 
 </resources>
+

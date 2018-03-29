@@ -44,5 +44,6 @@ public interface ApiURL {
     String MeasurementsDetails="MeasurementsDetails";
     String MeasurementDynamicVariable="MeasurementDynamicVariable";
     String Version="Version";
+    String ScheduleWorker="ScheduleWorker";
 
 }
