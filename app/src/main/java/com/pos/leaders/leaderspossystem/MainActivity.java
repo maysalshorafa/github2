@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     //end
     double offerAmount = 0;
     long saleIDforCash;
-    //static List<Integer> offersIDsList;
+    static List<Integer> offersIDsList;
     List<Offer> offersList;
     ProductCatalogGridViewAdapter productCatalogGridViewAdapter;
     CustomerCatalogGridViewAdapter custmerCatalogGridViewAdapter;
@@ -378,7 +378,6 @@ public class MainActivity extends AppCompatActivity {
 
         offersList = new ArrayList<Offer>();
 
-        /*
         //// TODO: 25/12/2016 get all offer and make it on cart
         //// TODO: 25/12/2016 offer management activity
         new AsyncTask<Void, Void, Void>() {
@@ -390,18 +389,18 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-             //   offerDBAdapter.close();
+                //   offerDBAdapter.close();
                 productOfferDBAdapter.close();
 
             }
 
             @Override
             protected Void doInBackground(Void... params) {
-                offersIDsList = offerDBAdapter.getAllOffersIDsByStatus(Offer.Active);
+                // offersIDsList = offerDBAdapter.getAllOffersIDsByStatus(Offer.Active);
                 return null;
             }
         }.execute();
-*/
+
 
         //endregion
 
@@ -677,22 +676,22 @@ public class MainActivity extends AppCompatActivity {
 
         etSearch.setText("");
         etSearch.setHint("Search..");
-        etSearch.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == event.KEYCODE_ENTER && event.getAction() == event.ACTION_DOWN) {
-                    Log.i("pressed key", "Enter");
-                    btnDone.callOnClick();
-                    return true;
-                    //enterKeyPressed();
-                } else if (keyCode == event.KEYCODE_ENTER && event.getAction() == event.ACTION_UP)
-                    return true;
-                return false;
+        /**  etSearch.setOnKeyListener(new View.OnKeyListener() {
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (keyCode == event.KEYCODE_ENTER && event.getAction() == event.ACTION_DOWN) {
+        Log.i("pressed key", "Enter");
+        btnDone.callOnClick();
+        return true;
+        //enterKeyPressed();
+        } else if (keyCode == event.KEYCODE_ENTER && event.getAction() == event.ACTION_UP)
+        return true;
+        return false;
 
-                //else
-                //barcodeScanned +=event.getNumber();
-            }
-        });
+        //else
+        //barcodeScanned +=event.getNumber();
+        }
+        });**/
 
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -850,18 +849,18 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 deleteOrderSalesMan.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                for (int i=0 ; i<orderIdList.size();i++) {
-                                    if(orderIdList.get(i)==selectedOrderOnCart){
-                                    orderIdList.remove(i);
-                                    custmerAssetstIdList.remove(i);
-                                }
-                                }
-                                orderSalesMan.setText(getString(R.string.sales_man));
-                                deleteOrderSalesMan.setVisibility(View.GONE);
+                    @Override
+                    public void onClick(View v) {
+                        for (int i=0 ; i<orderIdList.size();i++) {
+                            if(orderIdList.get(i)==selectedOrderOnCart){
+                                orderIdList.remove(i);
+                                custmerAssetstIdList.remove(i);
                             }
-                        });
+                        }
+                        orderSalesMan.setText(getString(R.string.sales_man));
+                        deleteOrderSalesMan.setVisibility(View.GONE);
+                    }
+                });
 
 
                 Button btnPlusOne = (Button) view.findViewById(R.id.rowSaleDetails_MethodsPlusOne);
@@ -1515,7 +1514,7 @@ startActivity(i);
                 break;
             case R.id.touchPadFragment_btCredit:
                 if (!touchPadPressed.equals("")){
-                  double newValue = Util.convertSign(Double.parseDouble(touchPadPressed));
+                    double newValue = Util.convertSign(Double.parseDouble(touchPadPressed));
                     touchPadPressed= String.valueOf(newValue);
                 }
                 break;
@@ -2056,54 +2055,54 @@ startActivity(i);
         }.execute();
     }
 
-/*
-    private void printAndOpenCashBoxWINTEC(String mainAns, final String mainMer, final String mainCli) {
-        final UsbPrinter printer = new UsbPrinter(1155, 30016);
+    /*
+        private void printAndOpenCashBoxWINTEC(String mainAns, final String mainMer, final String mainCli) {
+            final UsbPrinter printer = new UsbPrinter(1155, 30016);
 
-        final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
-        dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
+            final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+            dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
 
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected void onPreExecute() {
-                dialog.show();
-                ////Hebrew 15 Windows-1255
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    dialog.show();
+                    ////Hebrew 15 Windows-1255
 
-                SESSION._SALE.setTotalPrice(saleTotalPrice);
-                printer.PRN_Init();
-                printer.PRN_PrintAndFeedLine(11);
-            }
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
+                    printer.PRN_Init();
+                    printer.PRN_PrintAndFeedLine(11);
+                }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                printer.PRN_PrintAndFeedLine(11);
-                printer.PRN_HalfCutPaper();
-
-                //pos.cashdrawerOpen(0,20,20);
-                dialog.cancel();
-                clearCart();
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
-                if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
-
-                    printer.PRN_PrintDotBitmap(invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer), 0);
+                @Override
+                protected void onPostExecute(Void aVoid) {
                     printer.PRN_PrintAndFeedLine(11);
                     printer.PRN_HalfCutPaper();
 
-                    printer.PRN_PrintDotBitmap(invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli), 0);
-                } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                    printer.PRN_PrintDotBitmap(invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER), 0);
-                } else {
-                    printer.PRN_PrintDotBitmap(invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null), 0);
+                    //pos.cashdrawerOpen(0,20,20);
+                    dialog.cancel();
+                    clearCart();
                 }
-                return null;
-            }
-        }.execute();
-    }
-*/
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
+                    if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
+
+                        printer.PRN_PrintDotBitmap(invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer), 0);
+                        printer.PRN_PrintAndFeedLine(11);
+                        printer.PRN_HalfCutPaper();
+
+                        printer.PRN_PrintDotBitmap(invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli), 0);
+                    } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
+                        printer.PRN_PrintDotBitmap(invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER), 0);
+                    } else {
+                        printer.PRN_PrintDotBitmap(invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null), 0);
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+    */
     private void printAndOpenCashBoxBTP880(String mainAns, final String mainMer, final String mainCli) {
         final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(MainActivity.this);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
@@ -2308,7 +2307,7 @@ startActivity(i);
 
                 @Override
                 protected void onPostExecute(Void aVoid) {
-                   //feed paper
+                    //feed paper
 
                     dialog.cancel();
                     clearCart();
@@ -2388,7 +2387,6 @@ startActivity(i);
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
-                SESSION._SALE.setSaleDate(new Date().getTime());
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 long tempSaleId=0;
                 // Club with point and amount
@@ -2511,7 +2509,6 @@ startActivity(i);
                 saleDBAdapter = new SaleDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
-                SESSION._SALE.setSaleDate(new Date().getTime());
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 long tempSaleId=0;
                 // Club with point and amount
@@ -2617,7 +2614,6 @@ startActivity(i);
                 SESSION._SALE.setTotalPaid(totalPaidWithOutCurrency);
 
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
-                SESSION._SALE.setSaleDate(new Date().getTime());
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 SESSION._SALE.setId(saleIDforCash);
 
@@ -2680,6 +2676,7 @@ startActivity(i);
 
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
                 SESSION._SALE.setPayment(payment);
+                SESSION._SALE.setSaleDate(new Date().getTime());
                 paymentDBAdapter.close();
                 printAndOpenCashBox("", "", "",REQUEST_CASH_ACTIVITY_CODE);
                 saleDBAdapter.close();
@@ -2714,7 +2711,6 @@ startActivity(i);
                 long secondCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_ID, 0);
                 long firstCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID, 0);
 
-                SESSION._SALE.setSaleDate(new Date().getTime());
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 SESSION._SALE.setId(saleIDforCash);
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Sale(SESSION._SALE));
@@ -2762,20 +2758,20 @@ startActivity(i);
                     //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
                 }
                 // Order Sales man Region
-                    for (int i=0;i<orderIdList.size();i++) {
-                        Order order = orderIdList.get(i);
-                        long customerAssestId= custmerAssetstIdList.get(i);
-                        for (int j = 0 ; j< SESSION._ORDERS.size();j++) {
-                            Order o = SESSION._ORDERS.get(j);
-                            long tempOrderId =orderId.get(i);
-                            if (o==order) {
-                                if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
-                                    o.setCustmerAssestId(custmerAssetstIdList.get(i));
-                                    custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate());
-                                }
+                for (int i=0;i<orderIdList.size();i++) {
+                    Order order = orderIdList.get(i);
+                    long customerAssestId= custmerAssetstIdList.get(i);
+                    for (int j = 0 ; j< SESSION._ORDERS.size();j++) {
+                        Order o = SESSION._ORDERS.get(j);
+                        long tempOrderId =orderId.get(i);
+                        if (o==order) {
+                            if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
+                                o.setCustmerAssestId(custmerAssetstIdList.get(i));
+                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate());
                             }
                         }
                     }
+                }
                 orderDBAdapter.close();
                 custmerAssetDB.close();
                 // End Order And CustomerAssistant Region
@@ -2924,34 +2920,30 @@ startActivity(i);
         gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                try {
-                    customer = customerList.get(position);
-                    customerName = customer.getCustmerName();
-                    customerClubId = customer.getClub();
-                    customerId = customer.getId();
-                    customerName_EditText.setText(customerName);
-                    customer_name.setText(customerName);
-                    // get club Information
-                    Club club = clubAdapter.getGroupInfo(customerClubId);
-                    clubType = club.getType();
-                    clubName = club.getName();
-                    club_name.setText(clubName);
-                    if (clubType == 1) {
-                        clubDiscount = club.getPercent();
-                        tvCustomerInformation.setText(getString(R.string.discount));
-                        information.setText(clubDiscount + "");
-                    } else if (clubType == 2) {
-                        used_point.setVisibility(View.VISIBLE);
-                        clubAmount = club.getAmount();
-                        clubPoint = club.getPoint();
-                        tvCustomerInformation.setText(getString(R.string.point) + ",\t" + getString(R.string.amount));
-                        information.setText(clubAmount + ",\t " + clubPoint + getResources().getText(R.string.ins));
-                    } else if (clubType == 0) {
+                customer = customerList.get(position);
+                customerName = customer.getCustmerName();
+                customerClubId = customer.getClub();
+                customerId = customer.getId();
+                customerName_EditText.setText(customerName);
+                customer_name.setText(customerName);
+                // get club Information
+                Club club = clubAdapter.getGroupInfo(customerClubId);
+                clubType = club.getType();
+                clubName = club.getName();
+                club_name.setText(clubName);
+                if (clubType == 1) {
+                    clubDiscount = club.getPercent();
+                    tvCustomerInformation.setText(getString(R.string.discount));
+                    information.setText(clubDiscount + "");
+                } else if (clubType == 2) {
+                    used_point.setVisibility(View.VISIBLE);
+                    clubAmount = club.getAmount();
+                    clubPoint = club.getPoint();
+                    tvCustomerInformation.setText(getString(R.string.point) + ",\t" + getString(R.string.amount));
+                    information.setText(clubAmount + ",\t " + clubPoint + getResources().getText(R.string.ins));
+                } else if (clubType == 0) {
 
-                        information.setText(getString(R.string.general));
-                    }
-                } catch (Exception ex) {
-                    Log.e("select club", ex.getMessage());
+                    information.setText(getString(R.string.general));
                 }
 
                 popupWindow.dismiss();
@@ -3051,18 +3043,18 @@ startActivity(i);
 
         //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         lvCustomerAssistant.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                 if(!orderIdList.contains(order)){
-                custmerAssetstIdList.add(custmerAssestList.get(position).getId());
-                orderIdList.add(order);
-                }
+                                                       @Override
+                                                       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                           if(!orderIdList.contains(order)){
+                                                               custmerAssetstIdList.add(custmerAssestList.get(position).getId());
+                                                               orderIdList.add(order);
+                                                           }
 
-                orderSalesMan.setText(custmerAssestList.get(position).getFullName());
-                deleteOrderSalesMan.setVisibility(View.VISIBLE);
-                popupWindow.dismiss();
-         }
-        }
+                                                           orderSalesMan.setText(custmerAssestList.get(position).getFullName());
+                                                           deleteOrderSalesMan.setVisibility(View.VISIBLE);
+                                                           popupWindow.dismiss();
+                                                       }
+                                                   }
         );
         lvCustomerAssistant.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -3191,6 +3183,27 @@ startActivity(i);
         lvCustomerAssistant.setAdapter(adapter);
 
 
+    }
+    int in=0;
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if  (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || (event.getKeyCode() >= 7 && event.getKeyCode() <= 16)) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                if (event.getAction() == KeyEvent.ACTION_UP){
+                    enterKeyPressed();
+
+                    // barcodeScanned = "";
+                }
+            } else {
+                if (event.getAction() == KeyEvent.ACTION_UP){
+                    barcodeScanned = barcodeScanned + (char)event.getUnicodeChar();
+                    Log.d("barcode",barcodeScanned);
+                }
+            }
+            return true;
+        } else {
+            return super.dispatchKeyEvent(event);
+        }
     }
 
 
