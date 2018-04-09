@@ -249,9 +249,9 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
                                 //create and print z report
                                 Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false,totalZReportAmount);
-                                if (bmap != null)
+                                /**if (bmap != null)
                                     pt.PrintReport(bmap);
-
+                                    **/
                                 Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, lastZReport.getId());
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, lastZReport.getStartSaleId());

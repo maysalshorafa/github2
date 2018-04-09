@@ -396,7 +396,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void... params) {
-                offersIDsList = offerDBAdapter.getAllOffersIDsByStatus(Offer.Active);
+               // offersIDsList = offerDBAdapter.getAllOffersIDsByStatus(Offer.Active);
                 return null;
             }
         }.execute();
@@ -676,7 +676,7 @@ public class MainActivity extends AppCompatActivity {
 
         etSearch.setText("");
         etSearch.setHint("Search..");
-        etSearch.setOnKeyListener(new View.OnKeyListener() {
+      /**  etSearch.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == event.KEYCODE_ENTER && event.getAction() == event.ACTION_DOWN) {
@@ -691,7 +691,7 @@ public class MainActivity extends AppCompatActivity {
                 //else
                 //barcodeScanned +=event.getNumber();
             }
-        });
+        });**/
 
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -2676,7 +2676,7 @@ startActivity(i);
 
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
                 SESSION._SALE.setPayment(payment);
-                SESSION._SALE.setSaleDate(new Date());
+                SESSION._SALE.setSaleDate(new Date().getTime());
                 paymentDBAdapter.close();
                 printAndOpenCashBox("", "", "",REQUEST_CASH_ACTIVITY_CODE);
                 saleDBAdapter.close();
@@ -3183,6 +3183,27 @@ startActivity(i);
         lvCustomerAssistant.setAdapter(adapter);
 
 
+    }
+    int in=0;
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if  (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || (event.getKeyCode() >= 7 && event.getKeyCode() <= 16)) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                if (event.getAction() == KeyEvent.ACTION_UP){
+                    enterKeyPressed();
+
+                   // barcodeScanned = "";
+                }
+            } else {
+                if (event.getAction() == KeyEvent.ACTION_UP){
+                    barcodeScanned = barcodeScanned + (char)event.getUnicodeChar();
+                    Log.d("barcode",barcodeScanned);
+                }
+            }
+            return true;
+        } else {
+            return super.dispatchKeyEvent(event);
+        }
     }
 
 

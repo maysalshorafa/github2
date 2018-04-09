@@ -1,0 +1,338 @@
+package com.pos.leaders.leaderspossystem;
+
+/**
+ * Created by Win8.1 on 3/28/2018.
+ */
+
+import android.content.Context;
+import android.os.Environment;
+import android.util.Log;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
+import com.pos.leaders.leaderspossystem.Models.Payment;
+import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Printer.PrintTools;
+import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
+import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.Util;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+/**
+ * Creates an accessible PDF with images and text.
+ */
+
+public class PdfUA {
+
+   public static PdfPTable currencyTable = new PdfPTable(4);
+    public static User user;
+   public static ZReport zReport;
+    public static void  createZReportPdf(Context context, long id, long from, long to, boolean isCopy, double totalZReportAmount) throws IOException, DocumentException {
+     Document document = new Document();
+
+        String status ="-Source-";
+        if(isCopy){
+            status="-Copy-";
+        }
+        String fileName = "randompdf.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+    if(file.exists()){
+        PrintWriter writer = new PrintWriter(file);
+        writer.print("");
+        writer.close();
+        }
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font urFontName = new Font(urName, 30);
+        BaseFont urName1 = BaseFont.createFont("assets/Rubik-Light.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName1, 24);
+
+        PdfPTable headingTable = new PdfPTable(1);
+        PdfPTable posTable = new PdfPTable(1);
+        posTable.setWidthPercentage(115f);
+
+        PdfPTable table = new PdfPTable(4);
+        createZReport(table,context,id,from,to,urFontName); // fill ZReport info
+        //heading table
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(headingTable, status , Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(headingTable, DateConverter.dateToString(zReport.getCreationDate()) , Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(headingTable, context.getString(R.string.cashiers) + user.getFullName() , Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(headingTable,  String.format("%06d", zReport.getId()) , Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, urFontName);
+        document.add(headingTable);
+        //end
+
+
+        document.add(table);
+
+        if(SETTINGS.enableCurrencies)// add space between two table
+        {
+            document.add(currencyTable);//add currency table
+        }
+        posTable.deleteBodyRows();
+        posTable.setRunDirection(0);
+        insertCell(posTable, context.getString(R.string.pos_sales)+" "+Util.makePrice(totalZReportAmount), Element.ALIGN_LEFT, 1, font);
+        document.add(posTable);
+
+            document.close();
+    }
+
+
+
+    public static void createZReport(PdfPTable table, Context context, long id, long from, long to,Font urFontName) throws IOException, DocumentException {
+        double sheqle_plus = 0, sheqle_minus = 0;
+        double usd_plus = 0, usd_minus = 0;
+        double eur_plus = 0, eur_minus = 0;
+        double gbp_plus = 0, gbp_minus = 0;
+        Log.i("CZREPO", "id:" + id + " ,from:" + from + " ,to" + to + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        SaleDBAdapter saleDBAdapter = new SaleDBAdapter(context);
+        saleDBAdapter.open();
+        List<Sale> sales = saleDBAdapter.getBetween(from, to);
+
+        saleDBAdapter.close();
+        ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
+        zReportDBAdapter.open();
+         zReport = zReportDBAdapter.getByID(id);
+        zReportDBAdapter.close();
+        UserDBAdapter userDBAdapter = new UserDBAdapter(context);
+        userDBAdapter.open();
+        user = userDBAdapter.getUserByID(zReport.getByUser());
+        zReport.setUser(userDBAdapter.getUserByID(zReport.getByUser()));
+        userDBAdapter.close();
+        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
+        aReportDBAdapter.open();
+        AReport aReport = aReportDBAdapter.getByLastZReport(id);
+        /*try {
+            aReportAmount = aReportDBAdapter.getLastRow().getAmount();
+            aReportId = aReportDBAdapter.getLastRow().getId();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+        double aReportDetailsForFirstCurrency=0;
+        double aReportDetailsForSecondCurrency=0;
+        double aReportDetailsForThirdCurrency=0;
+        double aReportDetailsForForthCurrency=0;
+
+        // get payment , cashPayment , returnList
+        List<Payment> payments = PrintTools.paymentList(sales);
+        List<CashPayment> cashPaymentList = PrintTools.cashPaymentList(sales);
+        List<CurrencyReturns> currencyReturnList = PrintTools.returnPaymentList(sales);
+        if (SETTINGS.enableCurrencies) {
+            AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
+            aReportDetailsDBAdapter.open();
+
+            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReport.getId());
+            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReport.getId());
+            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReport.getId());
+            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReport.getId());
+        }
+        double cash_plus = 0, cash_minus = 0;
+        double check_plus = 0, check_minus = 0;
+        double creditCard_plus = 0, creditCard_minus = 0;
+        aReportDBAdapter.close();
+        for (Payment p : payments) {
+            int i = 0;
+            switch (p.getPaymentWay()) {
+
+                case CONSTANT.CASH:
+                    if (p.getAmount() > 0)
+                        cash_plus += p.getAmount();
+                    else
+                        cash_minus += p.getAmount();
+                    break;
+                case CONSTANT.CREDIT_CARD:
+                    if (p.getAmount() > 0)
+                        creditCard_plus += p.getAmount();
+                    else
+                        creditCard_minus += p.getAmount();
+                    break;
+                case CONSTANT.CHECKS:
+                    if (p.getAmount() > 0)
+                        check_plus += p.getAmount();
+                    else
+                        check_minus += p.getAmount();
+                    break;
+            }
+        }
+
+
+//with Currency
+
+        if (SETTINGS.enableCurrencies) {
+
+
+            for (CashPayment cp : cashPaymentList) {
+                switch ((int) cp.getCurrency_type()) {
+
+                    case CONSTANT.Shekel:
+                        if (cp.getAmount() > 0)
+                            sheqle_plus += cp.getAmount();
+                        break;
+                    case CONSTANT.USD:
+                        if (cp.getAmount() > 0)
+                            usd_plus += cp.getAmount();
+                        break;
+                    case CONSTANT.EUR:
+                        if (cp.getAmount() > 0)
+                            eur_plus += cp.getAmount();
+
+                        break;
+                    case CONSTANT.GBP:
+                        if (cp.getAmount() > 0)
+                            gbp_plus += cp.getAmount();
+                        break;
+                }
+            }
+            for (CurrencyReturns cp : currencyReturnList) {
+                switch ((int) cp.getCurrency_type()) {
+
+                    case CONSTANT.Shekel:
+                        if (cp.getAmount() > 0)
+                            sheqle_minus += cp.getAmount();
+                        break;
+                    case CONSTANT.USD:
+                        if (cp.getAmount() > 0)
+                            usd_minus += cp.getAmount();
+                        break;
+                    case CONSTANT.EUR:
+                        if (cp.getAmount() > 0)
+                            eur_minus += cp.getAmount();
+
+                        break;
+                    case CONSTANT.GBP:
+                        if (cp.getAmount() > 0)
+                            gbp_minus += cp.getAmount();
+                        break;
+                }
+            }
+
+        }
+        table.setRunDirection(0);
+        table.setWidthPercentage(118f);
+        table.setWidths(new int[]{1, 1, 1,2});
+        BaseFont urName = BaseFont.createFont("assets/Rubik-Light.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 24);
+        //insert column headings;
+        insertCell(table, context.getString(R.string.total), Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(table, context.getString(R.string.out_put), Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(table, context.getString(R.string.in_put), Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(table, context.getString(R.string.details), Element.ALIGN_CENTER, 1, urFontName);
+
+        //insert an empty row
+        insertCell(table, Util.makePrice(cash_plus+cash_minus), Element.ALIGN_CENTER, 1, font);
+        insertCell(table, Util.makePrice(cash_minus), Element.ALIGN_CENTER, 1, font);
+        insertCell(table, Util.makePrice(cash_plus), Element.ALIGN_CENTER, 1, font);
+        insertCell(table, context.getString(R.string.cash), Element.ALIGN_RIGHT, 1, font);
+
+        insertCell(table, Util.makePrice(creditCard_plus+creditCard_minus), Element.ALIGN_CENTER, 1, font);
+        insertCell(table, Util.makePrice(creditCard_minus), Element.ALIGN_CENTER, 1, font);
+        insertCell(table, Util.makePrice(creditCard_plus), Element.ALIGN_CENTER, 1, font);
+        insertCell(table, context.getString(R.string.credit_card), Element.ALIGN_CENTER, 1, font);
+
+        insertCell(table,Util.makePrice(check_plus+cash_minus), Element.ALIGN_CENTER, 1, font);
+        insertCell(table,Util.makePrice(check_minus), Element.ALIGN_CENTER, 1, font);
+        insertCell(table, Util.makePrice(cash_plus), Element.ALIGN_CENTER, 1, font);
+        insertCell(table, context.getString(R.string.checks), Element.ALIGN_CENTER, 1, font);
+
+        insertCell(table,Util.makePrice(aReport.getAmount())+ "", Element.ALIGN_CENTER, 1, font);
+        insertCell(table, "~", Element.ALIGN_CENTER, 1, font);
+        insertCell(table,"~", Element.ALIGN_CENTER, 1, font);
+        insertCell(table, "AReport", Element.ALIGN_CENTER, 1, font);
+
+        insertCell(table,Util.makePrice(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus+Double.parseDouble(Util.makePrice(aReport.getAmount()))), Element.ALIGN_CENTER, 1, font);
+        insertCell(table,  Util.makePrice(cash_minus + check_minus + creditCard_minus), Element.ALIGN_CENTER, 1, font);
+        insertCell(table, Util.makePrice(cash_plus+check_plus+creditCard_plus), Element.ALIGN_CENTER, 1, font);
+        insertCell(table, context.getString(R.string.total_amount), Element.ALIGN_CENTER, 1, font);
+
+        insertCell(table,Util.makePrice(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus), Element.ALIGN_CENTER, 1, font);
+        insertCell(table,  Util.makePrice(cash_minus + check_minus + creditCard_minus), Element.ALIGN_CENTER, 1, font);
+        insertCell(table, Util.makePrice(cash_plus+check_plus+creditCard_plus), Element.ALIGN_CENTER, 1, font);
+        insertCell(table, context.getString(R.string.total_sales), Element.ALIGN_CENTER, 1, font);
+
+        insertCell(table,"----------------------------------------------", Element.ALIGN_CENTER, 4, font);
+
+        if(SETTINGS.enableCurrencies){
+            currencyTable.setRunDirection(0);
+            currencyTable.deleteBodyRows();
+            currencyTable.setWidthPercentage(118f);
+            currencyTable.setWidths(new int[]{1, 1, 1,2});
+            insertCell(currencyTable, context.getString(R.string.total), Element.ALIGN_CENTER, 1, urFontName);
+            insertCell(currencyTable, context.getString(R.string.out_put), Element.ALIGN_CENTER, 1, urFontName);
+            insertCell(currencyTable, context.getString(R.string.in_put), Element.ALIGN_CENTER, 1, urFontName);
+            insertCell(currencyTable, context.getString(R.string.currency), Element.ALIGN_CENTER, 1, urFontName);
+
+            insertCell(currencyTable, Util.makePrice(usd_plus-usd_minus), Element.ALIGN_CENTER, 1, font);
+            insertCell(currencyTable, Util.makePrice(usd_minus), Element.ALIGN_CENTER, 1, font);
+            insertCell(currencyTable,Util.makePrice(usd_plus), Element.ALIGN_CENTER, 1, font);
+            insertCell(currencyTable, context.getString(R.string.usd), Element.ALIGN_CENTER, 1, font);
+
+            insertCell(currencyTable, Util.makePrice(eur_plus-eur_minus), Element.ALIGN_CENTER, 1, font);
+            insertCell(currencyTable, Util.makePrice(eur_minus), Element.ALIGN_CENTER, 1, font);
+            insertCell(currencyTable, Util.makePrice(eur_plus), Element.ALIGN_CENTER, 1, font);
+            insertCell(currencyTable, context.getString(R.string.eur), Element.ALIGN_CENTER, 1, font);
+
+            insertCell(currencyTable,Util.makePrice(gbp_plus-gbp_minus), Element.ALIGN_CENTER, 1, font);
+            insertCell(currencyTable,Util.makePrice(gbp_minus), Element.ALIGN_CENTER, 1, font);
+            insertCell(currencyTable, Util.makePrice(gbp_plus), Element.ALIGN_CENTER, 1, font);
+            insertCell(currencyTable, context.getString(R.string.gbp), Element.ALIGN_CENTER, 1, font);
+
+            insertCell(currencyTable,Util.makePrice(sheqle_plus-sheqle_minus), Element.ALIGN_CENTER, 1, font);
+            insertCell(currencyTable, Util.makePrice(sheqle_minus), Element.ALIGN_CENTER, 1, font);
+            insertCell(currencyTable, Util.makePrice(sheqle_plus), Element.ALIGN_CENTER, 1, font);
+            insertCell(currencyTable, context.getString(R.string.shekel), Element.ALIGN_CENTER, 1, font);
+
+        }
+        insertCell(currencyTable,"----------------------------------------------", Element.ALIGN_CENTER, 4, font);
+    }
+
+
+    public static void insertCell(PdfPTable table, String text, int align, int colspan, Font font){
+        //create a new cell with the specified Text and Font
+        PdfPCell cell = new PdfPCell(new Phrase(text.trim(), font));
+        cell.setBorder(Rectangle.NO_BORDER);
+
+        //set the cell alignment
+        cell.setHorizontalAlignment(align);
+        //set the cell column span in case you want to merge two or more cells
+        cell.setColspan(colspan);
+        //in case there is no text and you wan to create an empty row
+        if(text.trim().equalsIgnoreCase("")){
+            cell.setMinimumHeight(12f);
+        }
+        //add the call to the table
+        table.addCell(cell);
+
+    }
+
+}
