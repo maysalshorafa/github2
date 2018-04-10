@@ -108,6 +108,7 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -766,7 +767,7 @@ public class MainActivity extends AppCompatActivity {
                     etSearch.setText("");
                     etSearch.requestFocus();
                 } else
-                    Toast.makeText(MainActivity.this, "Null", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Input is empty.", Toast.LENGTH_SHORT).show();
                 //OpenCashBox();
 
             }
@@ -2017,6 +2018,7 @@ startActivity(i);
                     .show();
         }
         barcodeScanned = "";
+        etSearch.setText("");
     }
 
     private void loadMoreProduct() {
@@ -3184,24 +3186,39 @@ startActivity(i);
 
 
     }
-    int in=0;
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-            if (event.getAction() == KeyEvent.ACTION_UP){
+        if(event.getAction()==KeyEvent.ACTION_UP) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                 enterKeyPressed();
                 // barcodeScanned = "";
                 return true;
+            } else {
+                Log.e("char", event.getDisplayLabel() + "");
+                Log.e("char key", (char) event.getUnicodeChar() + "");
+                if (validChar(event.getDisplayLabel())) {
+                    barcodeScanned = barcodeScanned + event.getDisplayLabel();
+                    Log.d("barcode", barcodeScanned);
+                    return false;
+                }
             }
-        } else {
-            if (event.getAction() == KeyEvent.ACTION_UP){
-               if (event.getUnicodeChar() != 0) {
-                barcodeScanned = barcodeScanned + (char)event.getUnicodeChar();
-                Log.d("barcode",barcodeScanned);
-                return false;
-            }
-            }
+            return super.dispatchKeyEvent(event);
         }
-        return true;
+        else return true;
+    }
+
+    public static int CharToASCII(final char character){
+        return (int)character;
+    }
+
+    public static char ASCIIToChar(final int ascii){
+        return (char)ascii;
+    }
+
+    public boolean validChar(char c)
+    {
+        //- (Dash), $ (Dollar), % (Percentage), (Space), . (Point), / (Slash), + (Plus)
+        String code39="AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789-$% ./+";
+        return code39.contains(c+"");
     }
 }
