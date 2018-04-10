@@ -3187,24 +3187,21 @@ startActivity(i);
     int in=0;
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if  (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || (event.getKeyCode() >= 7 && event.getKeyCode() <= 16)) {
-            if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                if (event.getAction() == KeyEvent.ACTION_UP){
-                    enterKeyPressed();
-
-                    // barcodeScanned = "";
-                }
-            } else {
-                if (event.getAction() == KeyEvent.ACTION_UP){
-                    barcodeScanned = barcodeScanned + (char)event.getUnicodeChar();
-                    Log.d("barcode",barcodeScanned);
-                }
+        if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+            if (event.getAction() == KeyEvent.ACTION_UP){
+                enterKeyPressed();
+                // barcodeScanned = "";
+                return true;
             }
-            return true;
         } else {
-            return super.dispatchKeyEvent(event);
+            if (event.getAction() == KeyEvent.ACTION_UP){
+               if (event.getUnicodeChar() != 0) {
+                barcodeScanned = barcodeScanned + (char)event.getUnicodeChar();
+                Log.d("barcode",barcodeScanned);
+                return false;
+            }
+            }
         }
+        return true;
     }
-
-
 }
