@@ -108,7 +108,6 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -3188,6 +3187,7 @@ startActivity(i);
     }
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        super.dispatchKeyEvent(event);
         if(event.getAction()==KeyEvent.ACTION_UP) {
             if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                 enterKeyPressed();
