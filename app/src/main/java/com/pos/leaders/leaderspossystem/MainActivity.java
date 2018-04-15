@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
     long custmerSaleAssetstId;
     TextView orderSalesMan;
     ImageView deleteOrderSalesMan;
-
+    String fromEditText="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -669,6 +669,7 @@ public class MainActivity extends AppCompatActivity {
         //region Search Box
 
         etSearch = (EditText) findViewById(R.id.mainActivity_etSearch);
+
        /* etSearch.setFocusable(false);
         etSearch.setEnabled(false);
         etSearch.setVisibility(EditText.VISIBLE);*/
@@ -706,7 +707,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String word = etSearch.getText().toString();
+             String word = etSearch.getText().toString();
                 if (!word.equals("")) {
                     productCountLoad = 80;
                     productLoadItemOffset = 0;
@@ -761,16 +762,21 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 barcodeScanned = etSearch.getText().toString();
                 if (!barcodeScanned.equals("")) {
-                    enterKeyPressed();
+                    enterKeyPressed(barcodeScanned);
                     barcodeScanned = "";
                     etSearch.setText("");
-                    etSearch.requestFocus();
+                    //etSearch.requestFocus();
                 } else
                     Toast.makeText(MainActivity.this, "Input is empty.", Toast.LENGTH_SHORT).show();
                 //OpenCashBox();
 
             }
         });
+      /**  etSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               etSearch.setFocusable(true);
+        }});**/
 
         //endregion
 /**
@@ -1992,7 +1998,7 @@ startActivity(i);
      **/
 
 
-    private void enterKeyPressed() {
+    private void enterKeyPressed(String barcodeScanned) {
         Product product = productDBAdapter.getProductByBarCode(barcodeScanned);
         final Intent intent = new Intent(MainActivity.this, ProductsActivity.class);
         intent.putExtra("barcode", barcodeScanned);
@@ -3185,26 +3191,44 @@ startActivity(i);
 
 
     }
-    @Override
+   @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        super.dispatchKeyEvent(event);
-        if(event.getAction()==KeyEvent.ACTION_UP) {
-            if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                enterKeyPressed();
-                // barcodeScanned = "";
-                return true;
-            } else {
-                Log.e("char", event.getDisplayLabel() + "");
-                Log.e("char key", (char) event.getUnicodeChar() + "");
-                if (validChar(event.getDisplayLabel())) {
-                    barcodeScanned = barcodeScanned + event.getDisplayLabel();
-                    Log.d("barcode", barcodeScanned);
-                    return false;
-                }
-            }
+        if(event.getSource()==257){
+            //barcode region
+           if(event.getAction()==KeyEvent.ACTION_UP) {
+               if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                   enterKeyPressed(barcodeScanned);
+                   barcodeScanned="";
+
+                   // barcodeScanned = "";
+                   return true;
+               } else {
+                   Log.e("char", event.getDisplayLabel() + "");
+                   Log.e("char key", (char) event.getUnicodeChar() + "");
+                   if (validChar(event.getDisplayLabel())) {
+                       barcodeScanned = barcodeScanned + event.getDisplayLabel();
+                       Log.d("barcode", barcodeScanned);
+                      return false;
+
+                   }
+               }
+               return super.dispatchKeyEvent(event);
+           }
+       }else {
+            //editText region
+           if (validChar(event.getDisplayLabel())) {
+               fromEditText = fromEditText + event.getDisplayLabel();
+               Log.d("fromEditText", fromEditText);
+
+           }
             return super.dispatchKeyEvent(event);
-        }
-        else return true;
+
+       }
+       if(event.getKeyCode()==KeyEvent.KEYCODE_BACK) {
+           return super.dispatchKeyEvent(event);
+       }
+
+        return true;
     }
 
     public static int CharToASCII(final char character){
