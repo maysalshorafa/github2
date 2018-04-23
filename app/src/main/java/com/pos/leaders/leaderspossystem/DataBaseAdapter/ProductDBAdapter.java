@@ -48,7 +48,7 @@ public class ProductDBAdapter {
     // TODO: Create public field for each column in your table.
     // SQL Statement to create a new database.
     public static final String DATABASE_CREATE="CREATE TABLE products ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, "+
-            "`name` TEXT NOT NULL, `barcode` TEXT NOT NULL, `description` TEXT,"+
+            "`name` TEXT NOT NULL, `barcode` TEXT , `description` TEXT,"+
             "`price` REAL NOT NULL, `costPrice` REAL, `withTax` INTEGER NOT NULL DEFAULT 1, "+
             "`weighable` INTEGER NOT NULL DEFAULT 0, `creatingDate` TEXT NOT NULL DEFAULT current_timestamp, "+
             "`hide` INTEGER DEFAULT 0, `depId` INTEGER NOT NULL, `byUser` INTEGER NOT NULL, `status` INTEGER NOT NULL DEFAULT 0 ,  `with_pos` INTEGER NOT NULL DEFAULT 1, `with_point_system` INTEGER NOT NULL DEFAULT 1,"+
@@ -85,7 +85,11 @@ public class ProductDBAdapter {
 
         long id = insertEntry(p);
         if (id > 0) {
-            sendToBroker(MessageType.ADD_PRODUCT, p, this.context);
+            Product boProduct=p;
+            boProduct.setName(Util.getString(boProduct.getName()));
+            boProduct.setDescription(Util.getString(boProduct.getDescription()));
+            boProduct.setBarCode(Util.getString(boProduct.getBarCode()));
+            sendToBroker(MessageType.ADD_PRODUCT, boProduct, this.context);
         }
         return id;
     }

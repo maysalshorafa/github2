@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.User;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -70,7 +69,13 @@ public class UserDBAdapter {
     public long insertEntry(String userName, String password, String firstName, String lastName, String phoneNumber, Double persent, Double hourlyWag) {
 
         User u = new User(Util.idHealth(this.db, USERS_TABLE_NAME, USERS_COLUMN_ID), userName, password, firstName, lastName, new Date().getTime(), false, phoneNumber, persent, hourlyWag);
-        sendToBroker(MessageType.ADD_USER, u, this.context);
+        User boUser = u;
+        boUser.setUserName(Util.getString(boUser.getUserName()));
+        boUser.setPassword(Util.getString(boUser.getPassword()));
+        boUser.setFirstName(Util.getString(boUser.getFirstName()));
+        boUser.setLastName(Util.getString(boUser.getLastName()));
+        boUser.setPhoneNumber(Util.getString(boUser.getPhoneNumber()));
+        sendToBroker(MessageType.ADD_USER, boUser, this.context);
 
         try {
             long insertResult = insertEntry(u);

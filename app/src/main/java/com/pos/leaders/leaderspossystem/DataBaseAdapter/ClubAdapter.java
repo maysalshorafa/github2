@@ -71,7 +71,10 @@ public class ClubAdapter {
 
     public long insertEntry( String name,String description, int type, float parcent, int amount, int point) {
         Club group = new Club(Util.idHealth(this.db, Group_TABLE_NAME, Group_COLUMN__ID), name, description, type, parcent, amount, point, false );
-        sendToBroker(MessageType.ADD_CLUB, group, this.context);
+        Club boClub=group;
+        boClub.setName(Util.getString(boClub.getName()));
+        boClub.setDescription(Util.getString(boClub.getDescription()));
+        sendToBroker(MessageType.ADD_CLUB, boClub, this.context);
 
         try {
             long insertResult = insertEntry(group);

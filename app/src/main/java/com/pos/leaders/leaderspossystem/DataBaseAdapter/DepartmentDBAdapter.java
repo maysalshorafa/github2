@@ -8,9 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.Department;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -35,7 +33,7 @@ public class DepartmentDBAdapter {
     protected static final String DEPARTMENTS_COLUMN_DISENABLED = "hide";
 
     public static final String DATABASE_CREATE="CREATE TABLE departments ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, "+
-            "`name` TEXT NOT NULL UNIQUE, `creatingDate` TEXT NOT NULL DEFAULT current_timestamp, "+
+            "`name` TEXT NOT NULL , `creatingDate` TEXT NOT NULL DEFAULT current_timestamp, "+
             "`byUser` INTEGER, `hide` INTEGER DEFAULT 0, FOREIGN KEY(`byUser`) REFERENCES `users.id` )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -68,8 +66,10 @@ public class DepartmentDBAdapter {
 
     public long insertEntry(String name,long byUser) {
         Department department = new Department(Util.idHealth(this.db, DEPARTMENTS_TABLE_NAME, DEPARTMENTS_COLUMN_ID), name, new Date().getTime(), byUser, false);
-
-        sendToBroker(MessageType.ADD_DEPARTMENT, department, this.context);
+        Department boDepartment=department;
+        boDepartment.setName(Util.getString(boDepartment.getName()));
+        Log.d("test",boDepartment.getName());
+        sendToBroker(MessageType.ADD_DEPARTMENT, boDepartment, this.context);
 
         try {
             return insertEntry(department);
