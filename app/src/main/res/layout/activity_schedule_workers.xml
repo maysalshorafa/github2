@@ -30,13 +30,21 @@
         android:layout_gravity="center"
         android:gravity="center">
         <Button
-            android:id="@+id/btn_done"
+            android:id="@+id/btn_log_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="@string/done"
-            style="@style/AppTheme.bt_normal"/>
+            android:text="@string/log_in"
+            style="@style/AppTheme.bt_green"/>
+        <Button
+            android:id="@+id/btn_log_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/log_out"
+            style="@style/AppTheme.bt_dark"/>
         <Button
             android:id="@+id/btn_cancel"
             android:layout_width="wrap_content"

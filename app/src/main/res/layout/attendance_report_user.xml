@@ -149,4 +149,21 @@ android:background="@color/white">
         android:paddingRight="20dp"
         />
 </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/attendance_report_print"
+            style="@style/AppTheme.bt_green"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/print"
+            android:textColor="#fff"
+            android:textSize="20dp" />
+        </LinearLayout>
 </LinearLayout>

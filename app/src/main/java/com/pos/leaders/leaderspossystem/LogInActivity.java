@@ -203,6 +203,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, LogInActivity.LEADPOS_MAKE_A_REPORT);
                 userDBAdapter.close();
+                long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getId());
 
                 /**
                     long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getId());

@@ -28,11 +28,13 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -40,7 +42,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Creates an accessible PDF with images and text.
@@ -49,9 +53,11 @@ import java.util.List;
 public class PdfUA {
 
    public static PdfPTable currencyTable = new PdfPTable(4);
+    public static PdfPTable userReportTable = new PdfPTable(4);
+
     public static User user;
    public static ZReport zReport;
-    public static void  createZReportPdf(Context context, long id, long from, long to, boolean isCopy, double totalZReportAmount) throws IOException, DocumentException {
+ /**   public static void  createZReportPdf(Context context, long id, long from, long to, boolean isCopy, double totalZReportAmount) throws IOException, DocumentException {
      Document document = new Document();
 
         String status ="-Source-";
@@ -106,6 +112,61 @@ public class PdfUA {
         document.add(posTable);
 
             document.close();
+    }**/
+    public static void  printUserReport(Context context, List<ScheduleWorkers>scheduleWorkersArrayList,long userId) throws IOException, DocumentException {
+        UserDBAdapter userDBAdapter = new UserDBAdapter(context);
+        userDBAdapter.open();
+        User user = userDBAdapter.getUserByID(userId);
+        Document document = new Document();
+        String fileName = "randompdf.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+        if(file.exists()){
+            PrintWriter writer = new PrintWriter(file);
+            writer.print("");
+            writer.close();
+        }
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font urFontName = new Font(urName, 28);
+        BaseFont urName1 = BaseFont.createFont("assets/Rubik-Light.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName1, 24);
+
+        PdfPTable headingTable = new PdfPTable(1);
+        PdfPTable posTable = new PdfPTable(1);
+        posTable.setWidthPercentage(115f);
+
+        PdfPTable table = new PdfPTable(4);
+        createUserReport(context,table,scheduleWorkersArrayList,urFontName);
+        //heading table
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+        long r=0,h=0,m=0,s=0;
+        for (int i=0;i<scheduleWorkersArrayList.size();i++){
+            ScheduleWorkers sw = scheduleWorkersArrayList.get(i);
+            if(sw.getExitTime()>0&&sw.getStartTime()>0) {
+                r += DateConverter.getDateDiff(new Date(sw.getStartTime()), new Date(sw.getExitTime()), TimeUnit.MILLISECONDS);
+            }
+        }
+
+        h=r/(1000*60*60);
+        m=((r-(h*1000*60*60))/(1000*60));
+        s=(r-(m*1000*60)-(h*1000*60*60))/(1000);
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(headingTable, context.getString(R.string.user_name)+":" + user.getFullName() , Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._USER.getFullName(), Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(headingTable, context.getString(R.string.total)+":" + String.format("%02d:%02d:%02d",h,m,s), Element.ALIGN_CENTER, 1, urFontName);
+
+        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, urFontName);
+        document.add(headingTable);
+        //end
+        document.add(table);
+        document.add(userReportTable);//add currency table
+        document.close();
     }
 
 
@@ -316,6 +377,62 @@ public class PdfUA {
         insertCell(currencyTable,"----------------------------------------------", Element.ALIGN_CENTER, 4, font);
     }
 
+
+    public static void createUserReport(Context context ,PdfPTable table , List<ScheduleWorkers>scheduleWorkersList,Font font) throws IOException, DocumentException {
+        Date date , startAt=null , endAt =null;
+        table.setRunDirection(0);
+        table.setWidthPercentage(118f);
+        table.setWidths(new int[]{1, 1, 1,2});
+        BaseFont urName = BaseFont.createFont("assets/Rubik-Light.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font urFontName1 = new Font(urName, 24);
+        Font urFontName = new Font(urName, 20);
+
+        //insert column headings;
+        insertCell(table, context.getString(R.string.date), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.start_at), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.end_at), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.total), Element.ALIGN_CENTER, 1, urFontName1);
+        for (int i=0;i<scheduleWorkersList.size();i++){
+            date= new Date(scheduleWorkersList.get(i).getDate());
+            insertCell(table, "  " +DateConverter.geDate(date), Element.ALIGN_CENTER, 1, urFontName);
+
+            if(scheduleWorkersList.get(i).getStartTime()>0){
+            startAt= new Date(scheduleWorkersList.get(i).getStartTime());
+                insertCell(table, DateConverter.getTime(startAt), Element.ALIGN_CENTER, 1, urFontName);
+            }else {
+                insertCell(table, "", Element.ALIGN_CENTER, 1, urFontName);
+
+            }
+            if(scheduleWorkersList.get(i).getExitTime()>0){
+                endAt= new Date(scheduleWorkersList.get(i).getExitTime());
+                insertCell(table, DateConverter.getTime(endAt), Element.ALIGN_CENTER, 1, urFontName);
+            }else {
+                insertCell(table, "", Element.ALIGN_CENTER, 1, urFontName);
+
+            }
+            if(scheduleWorkersList.get(i).getStartTime()>0 && scheduleWorkersList.get(i).getExitTime()>0){
+                long h, m, s, ms, d;
+                d = DateConverter.getDateDiff(startAt, endAt, TimeUnit.MILLISECONDS);
+                h = DateConverter.getDateDiff(startAt, endAt, TimeUnit.MILLISECONDS);
+                m = DateConverter.getDateDiff(startAt, endAt, TimeUnit.MILLISECONDS);
+                s = DateConverter.getDateDiff(startAt, endAt, TimeUnit.MILLISECONDS);
+                ms = DateConverter.getDateDiff(startAt, endAt, TimeUnit.MILLISECONDS);
+                d=d/(1000*60*60*24);
+                h=h/(1000*60*60);
+                m=((m-(h*1000*60*60))/(1000*60));
+                s=(s-(m*1000*60)-(h*1000*60*60))/(1000);
+                insertCell(table, String.format("%02d:%02d:%02d", h, m, s), Element.ALIGN_CENTER, 1, urFontName);
+
+            }else {
+                insertCell(table, String.format(""), Element.ALIGN_CENTER, 1, urFontName);
+
+            }
+
+        }
+        insertCell(userReportTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, urFontName);
+
+
+    }
 
     public static void insertCell(PdfPTable table, String text, int align, int colspan, Font font){
         //create a new cell with the specified Text and Font
