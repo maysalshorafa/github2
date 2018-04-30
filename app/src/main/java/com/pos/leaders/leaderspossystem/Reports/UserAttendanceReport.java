@@ -88,8 +88,6 @@ public class UserAttendanceReport extends AppCompatActivity {
 					pt.PrintReport(bitmapList.get(i));
 
 				}
-
-
 			}
 		});
 		//region Date
@@ -147,31 +145,6 @@ public class UserAttendanceReport extends AppCompatActivity {
 		ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_user_attendence_report, lvReport, false);
 		lvReport.addHeaderView(header, null, false);
 		setReportDate();
-		try {
-			PdfUA pdfUA = new PdfUA();
-
-			pdfUA.printUserReport(getApplicationContext(),_scheduleWorkersList,userID);
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (DocumentException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try
-		{
-			File path = new File( Environment.getExternalStorageDirectory(), getPackageName() );
-			File file = new File(path,SAMPLE_FILE);
-			RandomAccessFile f = new RandomAccessFile(file, "r");
-			byte[] data = new byte[(int)f.length()];
-			f.readFully(data);
-			pdfLoadImages(data);
-			//pdfLoadImages1(data);
-		}
-		catch(Exception ignored)
-		{
-		}
 	}
 
 	private void setReportDate() {
@@ -198,6 +171,31 @@ public class UserAttendanceReport extends AppCompatActivity {
 		adapter = new UserAttendanceReportListViewAdapter(this, R.layout.list_adapter_row_attendance, _scheduleWorkersList);
 		lvReport.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
+		try {
+			PdfUA pdfUA = new PdfUA();
+
+			pdfUA.printUserReport(getApplicationContext(),_scheduleWorkersList,userID,from,to);
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try
+		{
+			File path = new File( Environment.getExternalStorageDirectory(), getPackageName() );
+			File file = new File(path,SAMPLE_FILE);
+			RandomAccessFile f = new RandomAccessFile(file, "r");
+			byte[] data = new byte[(int)f.length()];
+			f.readFully(data);
+			pdfLoadImages(data);
+			//pdfLoadImages1(data);
+		}
+		catch(Exception ignored)
+		{
+		}
 	}
 
 
@@ -248,6 +246,7 @@ public class UserAttendanceReport extends AppCompatActivity {
 	};
 
 	private void pdfLoadImages(final byte[] data) {
+		bitmapList=new ArrayList<Bitmap>();
 		try {
 			// run async
 			new AsyncTask<Void, Void, String>() {
@@ -295,7 +294,7 @@ public class UserAttendanceReport extends AppCompatActivity {
 							html += "<img src=\"data:image/png;base64," + base64 + "\" hspace=10 vspace=10><br>";
 
 					}
-
+                     Log.d("bit",bitmapList.size()+"");
 						stream.close();
 						html += "</body></html>";
 						return html;

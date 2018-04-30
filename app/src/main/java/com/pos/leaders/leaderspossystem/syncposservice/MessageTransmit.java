@@ -67,7 +67,7 @@ public class MessageTransmit {
         JSONObject jsonObject;
         Request request;
         try {
-            jsonObject = new JSONObject(String.valueOf(body));
+            jsonObject = new JSONObject(json);
             request = new Request.Builder().url(domainURL + url+"/"+jsonObject.get("id")).put(body).addHeader(AUTHORIZATION, token).build();
         } catch (JSONException e) {
             e.printStackTrace();

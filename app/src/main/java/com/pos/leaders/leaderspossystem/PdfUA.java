@@ -53,8 +53,6 @@ import java.util.concurrent.TimeUnit;
 public class PdfUA {
 
    public static PdfPTable currencyTable = new PdfPTable(4);
-    public static PdfPTable userReportTable = new PdfPTable(4);
-
     public static User user;
    public static ZReport zReport;
  /**   public static void  createZReportPdf(Context context, long id, long from, long to, boolean isCopy, double totalZReportAmount) throws IOException, DocumentException {
@@ -113,10 +111,11 @@ public class PdfUA {
 
             document.close();
     }**/
-    public static void  printUserReport(Context context, List<ScheduleWorkers>scheduleWorkersArrayList,long userId) throws IOException, DocumentException {
+    public static void  printUserReport(Context context, List<ScheduleWorkers>scheduleWorkersArrayList,long userId,Date from ,Date to) throws IOException, DocumentException {
         UserDBAdapter userDBAdapter = new UserDBAdapter(context);
         userDBAdapter.open();
         User user = userDBAdapter.getUserByID(userId);
+        // create file , document region
         Document document = new Document();
         String fileName = "randompdf.pdf";
         final String APPLICATION_PACKAGE_NAME = context.getPackageName();
@@ -124,26 +123,31 @@ public class PdfUA {
         path.mkdirs();
         File file = new File(path, fileName);
         if(file.exists()){
-            PrintWriter writer = new PrintWriter(file);
+            PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
             writer.print("");
             writer.close();
         }
+
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
-        document.open();
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
-        Font urFontName = new Font(urName, 28);
-        BaseFont urName1 = BaseFont.createFont("assets/Rubik-Light.ttf", "Identity-H",true,BaseFont.EMBEDDED);
-        Font font = new Font(urName1, 24);
+        document.open();        //end region
 
-        PdfPTable headingTable = new PdfPTable(1);
-        PdfPTable posTable = new PdfPTable(1);
-        posTable.setWidthPercentage(115f);
-
-        PdfPTable table = new PdfPTable(4);
-        createUserReport(context,table,scheduleWorkersArrayList,urFontName);
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 30);
+        Font dateFont = new Font(urName, 24);
         //heading table
+        PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
         headingTable.setRunDirection(0);
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.user_name)+":" + user.getFullName() , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._USER.getFullName(), Element.ALIGN_CENTER, 1, font);
+        //end
+
+        //date table from , to
+        PdfPTable dateTable = new PdfPTable(4);
+        dateTable.setRunDirection(0);
+        dateTable.setWidthPercentage(108f);
         long r=0,h=0,m=0,s=0;
         for (int i=0;i<scheduleWorkersArrayList.size();i++){
             ScheduleWorkers sw = scheduleWorkersArrayList.get(i);
@@ -155,18 +159,30 @@ public class PdfUA {
         h=r/(1000*60*60);
         m=((r-(h*1000*60*60))/(1000*60));
         s=(r-(m*1000*60)-(h*1000*60*60))/(1000);
-        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, urFontName);
-        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, urFontName);
-        insertCell(headingTable, context.getString(R.string.user_name)+":" + user.getFullName() , Element.ALIGN_CENTER, 1, urFontName);
-        insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._USER.getFullName(), Element.ALIGN_CENTER, 1, urFontName);
-        insertCell(headingTable, context.getString(R.string.total)+":" + String.format("%02d:%02d:%02d",h,m,s), Element.ALIGN_CENTER, 1, urFontName);
-
-        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, urFontName);
-        document.add(headingTable);
+        insertCell(dateTable, context.getString(R.string.from)+":"+DateConverter.geDate(from), Element.ALIGN_LEFT, 2, dateFont);
+        insertCell(dateTable, context.getString(R.string.to)+":"+DateConverter.geDate(to) , Element.ALIGN_CENTER,2, dateFont);
+        insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
         //end
+
+        // schedule worker table
+        PdfPTable table = new PdfPTable(4);
+        createUserReport(context,table,scheduleWorkersArrayList);
+        //end
+
+        //total amount table
+        PdfPTable totalTable = new PdfPTable(1);
+        totalTable.setWidthPercentage(115f);
+        insertCell(totalTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
+        insertCell(totalTable, context.getString(R.string.total)+":" + String.format("%02d:%02d:%02d",h,m,s), Element.ALIGN_LEFT, 1, dateFont);
+        //end
+
+        //add table to document
+        document.add(headingTable);
+        document.add(dateTable);
         document.add(table);
-        document.add(userReportTable);//add currency table
+        document.add(totalTable);
         document.close();
+        //end :)
     }
 
 
@@ -378,14 +394,15 @@ public class PdfUA {
     }
 
 
-    public static void createUserReport(Context context ,PdfPTable table , List<ScheduleWorkers>scheduleWorkersList,Font font) throws IOException, DocumentException {
+    public static void createUserReport(Context context ,PdfPTable table , List<ScheduleWorkers>scheduleWorkersList) throws IOException, DocumentException {
         Date date , startAt=null , endAt =null;
         table.setRunDirection(0);
         table.setWidthPercentage(118f);
         table.setWidths(new int[]{1, 1, 1,2});
-        BaseFont urName = BaseFont.createFont("assets/Rubik-Light.ttf", "Identity-H",true,BaseFont.EMBEDDED);
-        Font urFontName1 = new Font(urName, 24);
-        Font urFontName = new Font(urName, 20);
+        BaseFont urName = BaseFont.createFont("assets/carmelitregular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font urFontName = new Font(urName, 24);
+        BaseFont urName1 = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font urFontName1 = new Font(urName1, 22);
 
         //insert column headings;
         insertCell(table, context.getString(R.string.date), Element.ALIGN_CENTER, 1, urFontName1);
@@ -394,7 +411,7 @@ public class PdfUA {
         insertCell(table, context.getString(R.string.total), Element.ALIGN_CENTER, 1, urFontName1);
         for (int i=0;i<scheduleWorkersList.size();i++){
             date= new Date(scheduleWorkersList.get(i).getDate());
-            insertCell(table, "  " +DateConverter.geDate(date), Element.ALIGN_CENTER, 1, urFontName);
+            insertCell(table, "  " +DateConverter.geDate(date), Element.ALIGN_CENTER, 1, urFontName); // insert date value
 
             if(scheduleWorkersList.get(i).getStartTime()>0){
             startAt= new Date(scheduleWorkersList.get(i).getStartTime());
@@ -429,7 +446,6 @@ public class PdfUA {
             }
 
         }
-        insertCell(userReportTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, urFontName);
 
 
     }
@@ -445,7 +461,7 @@ public class PdfUA {
         cell.setColspan(colspan);
         //in case there is no text and you wan to create an empty row
         if(text.trim().equalsIgnoreCase("")){
-            cell.setMinimumHeight(12f);
+            cell.setMinimumHeight(14f);
         }
         //add the call to the table
         table.addCell(cell);

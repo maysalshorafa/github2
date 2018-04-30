@@ -277,8 +277,7 @@ public class SplashScreenActivity extends Activity {
 
         }
         else{
-            File f = new File(
-                    "/data/data/com.pos.leaders.leaderspossystem/shared_prefs/BO_SETTING");
+            File f = new File("/data/data/com.pos.leaders.leaderspossystem/shared_prefs/BO_SETTING.xml");
             if (f.exists()) {
                 Log.d("TAG", "SharedPreferences BO_SETTING : exist");
             }
