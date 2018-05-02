@@ -19,9 +19,6 @@ import com.pos.leaders.leaderspossystem.updater.AutoUpdateApk;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -152,6 +149,7 @@ public class TitleBar {
           timer.schedule(new LoggingTask(), 10800000, 10800000);
 
       }
+      /**
         if(aua==null){
             aua = new AutoUpdateApk(context);
             aua.addObserver(new Observer() {
@@ -170,7 +168,7 @@ public class TitleBar {
             aua.checkUpdatesManually();
             lastUpdateCheck=new Date().getTime();
         }
-
+**/
     }
 
 

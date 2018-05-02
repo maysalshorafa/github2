@@ -205,4 +205,14 @@ public class DepartmentDBAdapter {
             return d;
         }
     }
+    public boolean availableDepartmentName(String departmentName) {
+        Cursor cursor = db.query(DEPARTMENTS_TABLE_NAME, null, DEPARTMENTS_COLUMN_NAME + "=?", new String[]{departmentName}, null, null, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+            // Department Name not available
+            return false;
+        }
+        // Department Name available
+        return true;
+    }
 }
