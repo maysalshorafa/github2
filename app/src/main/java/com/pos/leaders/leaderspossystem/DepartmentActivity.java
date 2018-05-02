@@ -1,28 +1,26 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.graphics.drawable.ColorDrawable;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Tools.DepartmentGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,125 +29,140 @@ import java.util.List;
 
 public class DepartmentActivity extends AppCompatActivity {
 
-	DepartmentDBAdapter departmentDBAdapter;
-	EditText etDepartmentName;
-	Button btAddDepartment,btnCancel;
-	//ListView lv;
-	//ArrayAdapter<String> LAdapter;
-	List<Department> listDepartment;
-	GridView gvDepartment;
-//	List<String> departmentsName;
+    DepartmentDBAdapter departmentDBAdapter;
+    EditText etDepartmentName;
+    Button btAddDepartment, btnCancel;
+    List<Department> listDepartment, filter_departmentList;
+    GridView gvDepartment;
 
-	Department editableDepartment = null;
-	View previousDepartmentView=null;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    DepartmentGridViewAdapter adapter;
 
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		// Remove notification bar
-		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.department_mangment);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-		TitleBar.setTitleBar(this);
+        // Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.department_mangment);
 
-		// Get Refferences of Views
-		gvDepartment = (GridView) findViewById(R.id.workerManagement_GVDEpartment);
-		etDepartmentName = (EditText) findViewById(R.id.ETdepartmentName);
-		btAddDepartment = (Button) findViewById(R.id.BTAddDepartment);
-	//	btNewDepartment=(Button)findViewById(R.id.BTNewDepartment);
-		btnCancel=(Button)findViewById(R.id.departmentActivity_btnCancel);
-		//lv = (ListView) findViewById(R.id.LVDepartment);
+        TitleBar.setTitleBar(this);
 
-		makeList();
+        // Get Refferences of Views
+        gvDepartment = (GridView) findViewById(R.id.workerManagement_GVDEpartment);
+        etDepartmentName = (EditText) findViewById(R.id.ETdepartmentName);
+        btAddDepartment = (Button) findViewById(R.id.BTAddDepartment);
+        btnCancel = (Button) findViewById(R.id.departmentActivity_btnCancel);
+        makeList();
 
-		btnCancel.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onBackPressed();
-			}
-		});
-
-		gvDepartment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent,
-									View v, int position, long id) {
-				editableDepartment = listDepartment.get(position);
-				if (previousDepartmentView != null)
-					previousDepartmentView.setBackground(getResources().getDrawable(R.drawable.bt_normal));
-				previousDepartmentView = v;
-                v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
-                btAddDepartment.setText(getResources().getText(R.string.edit_department));
-				addDepartmentOnClick(v);
-			}
-		});
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        gvDepartment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                final String[] items = {
+                        getString(R.string.edit),
+                        getString(R.string.delete)};
+                AlertDialog.Builder builder = new AlertDialog.Builder(DepartmentActivity.this);
+                builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        Intent intent;
+                        switch (item) {
+                            case 0:
+                                intent = new Intent(DepartmentActivity.this, AddNewDepartment.class);
+                                intent.putExtra("departmentID", listDepartment.get(position).getId());
+                                startActivity(intent);
+                                break;
+                            case 1:
+                                new AlertDialog.Builder(DepartmentActivity.this)
+                                        .setTitle(getString(R.string.delete) + " " + getString(R.string.product))
+                                        .setMessage(getString(R.string.delete))
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                departmentDBAdapter.deleteEntry(listDepartment.get(position).getId());
+                                                listDepartment.remove(listDepartment.get(position));
+                                                gvDepartment.setAdapter(adapter);
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // do nothing
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                                break;
+                        }
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
 
         btAddDepartment.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						addDepartmentOnClick(v);
-					}
-				});
-	}
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DepartmentActivity.this, AddNewDepartment.class);
+                startActivity(intent);
+            }
+        });
+        etDepartmentName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                etDepartmentName.setFocusable(true);
+            }
+        });
+        etDepartmentName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                gvDepartment.setTextFilterEnabled(true);
 
-	private void makeList(){
-		// Department Data adapter
-		departmentDBAdapter = new DepartmentDBAdapter(this);
-		departmentDBAdapter.open();
+            }
 
-		listDepartment = departmentDBAdapter.getAllDepartments();
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-		final DepartmentGridViewAdapter adapter = new DepartmentGridViewAdapter(this, listDepartment);
-		gvDepartment.setAdapter(adapter);
-	}
+            }
 
-	private void rest(){
-		if(previousDepartmentView!=null)
-			previousDepartmentView.setBackgroundColor(getResources().getColor(R.color.transparent));
-		previousDepartmentView=null;
-		editableDepartment=null;
-		etDepartmentName.setText("");
-		btAddDepartment.setText(getResources().getText(R.string.add_department));
-	}
+            @Override
+            public void afterTextChanged(Editable s) {
+                filter_departmentList = new ArrayList<Department>();
+                String word = etDepartmentName.getText().toString();
 
-	private void addDepartmentOnClick(View v) {
-		if (editableDepartment == null) {
-			if(etDepartmentName.getText().toString().equals("")) {
-				Toast.makeText(getApplicationContext(), getString(R.string.please_insert_department_name), Toast.LENGTH_LONG).show();
-			}
-			else {
-				boolean exist = false;
-				for (Department dep : listDepartment) {
-					if(dep.getName().equals(etDepartmentName.getText().toString())){
-						exist = true;
-						break;
-					}
-				}
-				if(!exist) {
-					long check = departmentDBAdapter.insertEntry(etDepartmentName.getText().toString(), SESSION._USER.getId());
-					if (check > 0) {
-						Log.i("success", "added department");
-					} else {
-						Log.e("error", " adding department");
-					}
-					rest();
-					makeList();
-				}
-				else{
-					Toast.makeText(getApplicationContext(), getString(R.string.please_insert_another_department_name), Toast.LENGTH_LONG).show();
-				}
-			}
-		}
-		else{
-			if(etDepartmentName.getText().toString().equals("")) {
-				Toast.makeText(getApplicationContext(), getString(R.string.please_insert_department_name), Toast.LENGTH_LONG).show();
-			}
-			else {
-				editableDepartment.setName(etDepartmentName.getText().toString());
-				departmentDBAdapter.updateEntry(editableDepartment);
-				rest();
-				makeList();
-			}
-		}
-	}
+                if (!word.equals("")) {
+                    for (Department d : listDepartment) {
+
+                        if (d.getName().toLowerCase().contains(word.toLowerCase())) {
+                            filter_departmentList.add(d);
+
+                        }
+                    }
+                } else {
+                    filter_departmentList = listDepartment;
+                }
+                adapter = new DepartmentGridViewAdapter(getApplicationContext(), filter_departmentList);
+
+                gvDepartment.setAdapter(adapter);
+            }
+        });
+    }
+
+    private void makeList() {
+        // Department Data adapter
+        departmentDBAdapter = new DepartmentDBAdapter(this);
+        departmentDBAdapter.open();
+
+        filter_departmentList = departmentDBAdapter.getAllDepartments();
+        listDepartment = filter_departmentList;
+        adapter = new DepartmentGridViewAdapter(this, listDepartment);
+        gvDepartment.setAdapter(adapter);
+    }
 }
