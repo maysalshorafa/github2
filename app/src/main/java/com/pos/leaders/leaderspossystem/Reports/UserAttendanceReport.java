@@ -3,7 +3,6 @@ package com.pos.leaders.leaderspossystem.Reports;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,19 +34,9 @@ import com.sun.pdfview.PDFPage;
 
 import net.sf.andpdf.nio.ByteBuffer;
 
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
@@ -65,7 +54,7 @@ public class UserAttendanceReport extends AppCompatActivity {
 	TextView etFromDate, etToDate;
 	TextView tvTotalHour;
 	ListView lvReport;
-	Button print,save;
+	Button print;
 	ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
 	List<ScheduleWorkers> scheduleWorkersList, _scheduleWorkersList;
 	Date from, to;
@@ -99,15 +88,6 @@ public class UserAttendanceReport extends AppCompatActivity {
 					pt.PrintReport(bitmapList.get(i));
 
 				}
-			}
-		});
-		save=(Button)findViewById(R.id.attendance_report_save);
-		save.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				saveExcelFile(getApplicationContext(),"mmmmmm");
-
 			}
 		});
 		//region Date
@@ -328,88 +308,5 @@ public class UserAttendanceReport extends AppCompatActivity {
 		} catch (Exception e) {
 			Log.d("error", e.toString());
 		}
-	}
-	private static boolean saveExcelFile(Context context, String fileName) {
-
-		// check if available and not read only
-		if (!isExternalStorageAvailable() || isExternalStorageReadOnly()) {
-			Log.e("tttt", "Storage not available or read only");
-			return false;
-		}
-
-		boolean success = false;
-
-		//New Workbook
-		Workbook wb = new HSSFWorkbook();
-
-		Cell c = null;
-
-		//Cell style for header row
-		CellStyle cs = wb.createCellStyle();
-		cs.setFillForegroundColor(HSSFColor.LIME.index);
-		cs.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-
-		//New Sheet
-		Sheet sheet1 = null;
-		sheet1 = wb.createSheet("myOrder");
-
-		// Generate column headings
-		Row row = sheet1.createRow(0);
-
-		c = row.createCell(0);
-		c.setCellValue("Item Number");
-		c.setCellStyle(cs);
-
-		c = row.createCell(1);
-		c.setCellValue("Quantity");
-		c.setCellStyle(cs);
-
-		c = row.createCell(2);
-		c.setCellValue("Price");
-		c.setCellStyle(cs);
-
-		sheet1.setColumnWidth(0, (15 * 500));
-		sheet1.setColumnWidth(1, (15 * 500));
-		sheet1.setColumnWidth(2, (15 * 500));
-
-		// Create a path where we will place our List of objects on external storage
-		File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName() );
-		path.mkdirs();
-		File file = new File(path, fileName);
-		FileOutputStream os = null;
-
-		try {
-			os = new FileOutputStream(file);
-			wb.write(os);
-			Log.w("FileUtils", "Writing file" + file);
-			success = true;
-		} catch (IOException e) {
-			Log.w("FileUtils", "Error writing " + file, e);
-		} catch (Exception e) {
-			Log.w("FileUtils", "Failed to save file", e);
-		} finally {
-			try {
-				if (null != os)
-					os.close();
-			} catch (Exception ex) {
-			}
-		}
-		return success;
-	}
-
-	public static boolean isExternalStorageReadOnly() {
-		String extStorageState = Environment.getExternalStorageState();
-		if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState)) {
-			return true;
-		}
-		return false;
-	}
-
-	public static boolean isExternalStorageAvailable() {
-		String extStorageState = Environment.getExternalStorageState();
-		if (Environment.MEDIA_MOUNTED.equals(extStorageState)) {
-			return true;
-		}
-		return false;
 	}
 }
