@@ -1,8 +1,8 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -16,12 +16,9 @@ import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
-import java.util.List;
-
 public class AddNewDepartment extends AppCompatActivity {
     Button addNewDepartment, cancel;
     EditText departmentName;
-    List<Department> listDepartment;
     DepartmentDBAdapter departmentDBAdapter;
     long departmentId;
     Department department;
@@ -40,7 +37,6 @@ public class AddNewDepartment extends AppCompatActivity {
         departmentName = (EditText) findViewById(R.id.etdepartmentName);
         departmentDBAdapter = new DepartmentDBAdapter(this);
         departmentDBAdapter.open();
-        listDepartment = departmentDBAdapter.getAllDepartments();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             //update case
@@ -63,44 +59,34 @@ public class AddNewDepartment extends AppCompatActivity {
                     if (departmentName.getText().toString().equals("")) {
                         Toast.makeText(getApplicationContext(), getString(R.string.please_insert_department_name), Toast.LENGTH_LONG).show();
                     } else {
-                        //input with spaces
-                        if (departmentName.getText().toString().contains(" ")) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_department_name_with_out_spaces), Toast.LENGTH_LONG).show();
-
-                        } else {
-                            //test if unique name or not
-                            boolean exist = false;
-                            for (Department dep : listDepartment) {
-                                if (dep.getName().equals(departmentName.getText().toString())) {
-                                    exist = true;
-                                    break;
-                                }
-                            }
-                            //unique name
-                            if (!exist) {
-                                long check = departmentDBAdapter.insertEntry(departmentName.getText().toString(), SESSION._USER.getId());
-                                if (check > 0) {
-                                    Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_new_department), Toast.LENGTH_LONG).show();
-                                    Log.i("success", "added department");
-                                } else {
-                                    Toast.makeText(getApplicationContext(), getString(R.string.failed_to_add_new_department), Toast.LENGTH_LONG).show();
-                                    Log.e("error", " adding department");
-                                }
-                                try {
-                                    Thread.sleep(500);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                Intent intent = new Intent(AddNewDepartment.this, DepartmentActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                                startActivity(intent);
-                            }
-                            //not unique
-                            else {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_another_department_name), Toast.LENGTH_LONG).show();
-                            }
+                        //test if unique name or not
+                        boolean exist = false;
+                        exist = departmentDBAdapter.availableDepartmentName(departmentName.getText().toString());
+                        //not unique name
+                        if (!exist) {
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_another_department_name), Toast.LENGTH_LONG).show();
                         }
+                        //unique
+                        else {
+                            long check = departmentDBAdapter.insertEntry(departmentName.getText().toString(), SESSION._USER.getId());
+                            if (check > 0) {
+                                Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_new_department), Toast.LENGTH_LONG).show();
+                                Log.i("success", "added department");
+                            } else {
+                                Toast.makeText(getApplicationContext(), getString(R.string.failed_to_add_new_department), Toast.LENGTH_LONG).show();
+                                Log.e("error", " adding department");
+                            }
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            Intent intent = new Intent(AddNewDepartment.this, DepartmentActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                            startActivity(intent);
+                        }
+
                     }
                 }
                 //end
@@ -112,37 +98,26 @@ public class AddNewDepartment extends AppCompatActivity {
                     if (departmentName.getText().toString().equals("")) {
                         Toast.makeText(getApplicationContext(), getString(R.string.please_insert_department_name), Toast.LENGTH_LONG).show();
                     } else {
-                        //input with spaces
-                        if (departmentName.getText().toString().contains(" ")) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_department_name_with_out_spaces), Toast.LENGTH_LONG).show();
+                        //test if unique name or not
+                        boolean exist = false;
+                        exist = departmentDBAdapter.availableDepartmentName(departmentName.getText().toString());
+                        if (!exist) {
+                            //not unique
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_another_department_name), Toast.LENGTH_LONG).show();
 
                         } else {
-                            //test if unique name or not
-                            boolean exist = false;
-                            for (Department dep : listDepartment) {
-                                if (dep.getName().equals(departmentName.getText().toString())) {
-                                    exist = true;
-                                    break;
-                                }
+                            //unique name
+                            department.setName(departmentName.getText().toString());
+                            departmentDBAdapter.updateEntry(department);
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
-                            if (!exist) {
-                                //unique name
-                                department.setName(departmentName.getText().toString());
-                                departmentDBAdapter.updateEntry(department);
-                                try {
-                                    Thread.sleep(500);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                Intent intent = new Intent(AddNewDepartment.this, DepartmentActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-                            } else {
-                                //not unique
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_another_department_name), Toast.LENGTH_LONG).show();
-                            }
+                            Intent intent = new Intent(AddNewDepartment.this, DepartmentActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                         }
-
                     }
                 }
                 //end
