@@ -321,13 +321,13 @@ public class Util {
     public static String getString(String value)  {
         ArrayList<String> test = new ArrayList<String>();
         for(int i= 0 ; i<value.length();i++){
-           /** if (String.valueOf(value.charAt(i)).equals("'")) {
+           if (String.valueOf(value.charAt(i)).equals("'")) {
                 test.add("\\\\'");
-            }**/
+           }
+           /*
            if (String.valueOf(value.charAt(i)).equals("י")) {
                 test.add("י\\");
-
-           }
+           }*/
            else  if(String.valueOf(value.charAt(i)).equals("\"")){
                test.add("\\\"");
 
