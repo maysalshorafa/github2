@@ -74,6 +74,14 @@
     <string name="make_your_selection">Make your selection</string>
     <string name="please_insert_department_name">Please insert department name.</string>
     <string name="please_insert_another_department_name">Please insert another department name.</string>
+    <string name="success_to_add_new_department">Success To Add New Department</string>
+    <string name="failed_to_add_new_department">Fail To Add New Department Please Try Again!</string>
+    <string name="update_department">Update Department</string>
+    <string name="please_insert_department_name_with_out_spaces">Please Insert Department Name WithOut Spaces.</string>
+
+
+
+
     <!--Splash Screen-->
 
     <!--Log In Screen-->
@@ -495,8 +503,6 @@
     <string name="print_copy_invoice"> Are you want to Print Copy For this Invoice?</string>
     <string name="source_date">Source Date</string>
     <string name="copy_date">Copy Date</string>
-
-
 
 
 </resources>

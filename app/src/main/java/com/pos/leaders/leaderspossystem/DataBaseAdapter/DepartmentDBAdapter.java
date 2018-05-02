@@ -32,8 +32,8 @@ public class DepartmentDBAdapter {
     protected static final String DEPARTMENTS_COLUMN_BYUSER = "byUser";
     protected static final String DEPARTMENTS_COLUMN_DISENABLED = "hide";
 
-    public static final String DATABASE_CREATE="CREATE TABLE departments ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, "+
-            "`name` TEXT NOT NULL , `creatingDate` TEXT NOT NULL DEFAULT current_timestamp, "+
+    public static final String DATABASE_CREATE = "CREATE TABLE departments ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "`name` TEXT NOT NULL , `creatingDate` TEXT NOT NULL DEFAULT current_timestamp, " +
             "`byUser` INTEGER, `hide` INTEGER DEFAULT 0, FOREIGN KEY(`byUser`) REFERENCES `users.id` )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -45,30 +45,28 @@ public class DepartmentDBAdapter {
 
     public DepartmentDBAdapter(Context context) {
         this.context = context;
-        this.dbHelper=new DbHelper(context);
+        this.dbHelper = new DbHelper(context);
     }
 
     public DepartmentDBAdapter open() throws SQLException {
-        this.db=dbHelper.getWritableDatabase();
+        this.db = dbHelper.getWritableDatabase();
         return this;
     }
 
-    public void close(){
+    public void close() {
         db.close();
     }
 
-    public  SQLiteDatabase getDatabaseInstance()
-    {
+    public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
 
 
-
-    public long insertEntry(String name,long byUser) {
+    public long insertEntry(String name, long byUser) {
         Department department = new Department(Util.idHealth(this.db, DEPARTMENTS_TABLE_NAME, DEPARTMENTS_COLUMN_ID), name, new Date().getTime(), byUser, false);
-        Department boDepartment=department;
+        Department boDepartment = department;
         boDepartment.setName(Util.getString(boDepartment.getName()));
-        Log.d("test",boDepartment.getName());
+        Log.d("test", boDepartment.getName());
         sendToBroker(MessageType.ADD_DEPARTMENT, boDepartment, this.context);
 
         try {
@@ -79,7 +77,7 @@ public class DepartmentDBAdapter {
         }
     }
 
-    public long insertEntry(Department department){
+    public long insertEntry(Department department) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -108,9 +106,9 @@ public class DepartmentDBAdapter {
             return department;
         }
         cursor.moveToFirst();
-        department =new Department(id,cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_NAME)),
+        department = new Department(id, cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_NAME)),
                 cursor.getLong(cursor.getColumnIndex(DEPARTMENTS_COLUMN_CREATINGDATE)),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_BYUSER))),Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_DISENABLED))));
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_BYUSER))), Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_DISENABLED))));
         cursor.close();
 
         return department;
@@ -144,13 +142,13 @@ public class DepartmentDBAdapter {
         db.update(DEPARTMENTS_TABLE_NAME, val, where, new String[]{department.getId() + ""});
     }
 
-    public List<Department> getAllDepartments(){
-        List<Department> departmentList =new ArrayList<Department>();
+    public List<Department> getAllDepartments() {
+        List<Department> departmentList = new ArrayList<Department>();
 
-        Cursor cursor =  db.rawQuery( "select * from "+DEPARTMENTS_TABLE_NAME, null );
+        Cursor cursor = db.rawQuery("select * from " + DEPARTMENTS_TABLE_NAME + " where " + DEPARTMENTS_COLUMN_DISENABLED + "=0 order by id desc", null);
         cursor.moveToFirst();
 
-        while(!cursor.isAfterLast()){
+        while (!cursor.isAfterLast()) {
             departmentList.add(new Department(Long.parseLong(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_ID))),
                     cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_NAME)),
                     cursor.getLong(cursor.getColumnIndex(DEPARTMENTS_COLUMN_CREATINGDATE)),
@@ -161,13 +159,50 @@ public class DepartmentDBAdapter {
 
         return departmentList;
     }
-    public List<Department> getAllUserDepartments(long userId){
-        List<Department> userDepartmentList=new ArrayList<Department>();
-        List<Department> departmentList=getAllDepartments();
-        for (Department d:departmentList) {
-            if(d.getByUser()==userId)
+
+    public List<Department> getAllUserDepartments(long userId) {
+        List<Department> userDepartmentList = new ArrayList<Department>();
+        List<Department> departmentList = getAllDepartments();
+        for (Department d : departmentList) {
+            if (d.getByUser() == userId)
                 userDepartmentList.add(d);
         }
         return userDepartmentList;
+    }
+
+    public List<Department> getAllDepartmentByHint(String hint) {
+        List<Department> departmentList = new ArrayList<Department>();
+
+        Cursor cursor = db.rawQuery("select * from " + DEPARTMENTS_TABLE_NAME + " where " + DEPARTMENTS_COLUMN_NAME + " like '%" +
+                hint + "%' " + "and " + DEPARTMENTS_COLUMN_DISENABLED + "=0 order by id desc  ", null);
+
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            departmentList.add(makeDepartment(cursor));
+            cursor.moveToNext();
+        }
+
+        return departmentList;
+    }
+
+    private Department makeDepartment(Cursor cursor) {
+        try {
+            Department d = new Department(new Department(Long.parseLong(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_ID))),
+                    cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_NAME)),
+                    cursor.getLong(cursor.getColumnIndex(DEPARTMENTS_COLUMN_CREATINGDATE)),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_BYUSER))),
+                    Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_DISENABLED)))));
+
+            return d;
+        } catch (Exception ex) {
+            Department d = new Department(new Department(Long.parseLong(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_ID))),
+                    cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_NAME)),
+                    cursor.getLong(cursor.getColumnIndex(DEPARTMENTS_COLUMN_CREATINGDATE)),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_BYUSER))),
+                    Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(DEPARTMENTS_COLUMN_DISENABLED)))));
+
+            return d;
+        }
     }
 }
