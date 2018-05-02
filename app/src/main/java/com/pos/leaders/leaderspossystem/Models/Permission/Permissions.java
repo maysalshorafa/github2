@@ -12,13 +12,8 @@ public class Permissions {
 	public static final String PERMISSIONS_ROLE_POS = "pos";
 	public static final String PERMISSIONS_ROLE_PRODUCT_MANAGEMENT = "Product_Management";
 	public static final String PERMISSIONS_ROLE_DEPARTMENT_MANAGEMENT = "Department_Management";
-<<<<<<< HEAD
-	public static final String PERMISSIONS_ROLE_USER = "User";
-	public static final String PERMISSIONS_ROLE_OFFERS = "Offers";
-=======
 	public static final String PERMISSIONS_ROLE_USER = "Users";
 	public static final String PERMISSIONS_ROLE_OFFERS = "Schedule Workers";
->>>>>>> origin/pos_bo_datebase_information_activity
 	public static final String PERMISSIONS_ROLE_PERMISSIONS = "Permissions";
 	public static final String PERMISSIONS_ROLE_CANCELING_SALE = "CancelingSale";
 	public static final String PERMISSIONS_ROLE_GENERAL_ITEM = "GeneralItem";
