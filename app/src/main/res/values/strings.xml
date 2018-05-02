@@ -99,7 +99,7 @@
     <string name="TouchPad_9">9</string>
     <string name="empty_password">Please insert your password</string>
     <string name="wrong_password">Please insert valid password</string>
-
+    <string name="schedule_workers">Schedule Workers</string>
     <!--menu-->
     <string name="products">Products</string>
     <string name="departments">Departments</string>
@@ -504,5 +504,24 @@
     <string name="source_date">Source Date</string>
     <string name="copy_date">Copy Date</string>
 
+    <string name="thanks">Thanks </string>
+    <string name="welcome">Welcome </string>
+    <string name="the_number_of_hours_you_work_is">The number of hours you work is :</string>
+    <string name="we_wish_to_you_a_happy_business_day">We wish to you a happy business day !</string>
+    <string name="enter_user_password">Enter User Password</string>
+    <string name="dont_need_to_add_another_check">Dont need to add another Check!</string>
+    <string name="please_remember_your_password">Please Remember Your Password !</string>
+    <string name="version_info">Version Information</string>
+    <string name="pos_version_no">Pos Version No</string>
+    <string name="pos_db_version_no">Pos DB Version No</string>
+    <string name="bo_version_no">Bo Version No</string>
+    <string name="bo_db_version_no">Bo DB Version No</string>
+    <string name="FE_version_no">Front Version No</string>
+    <string name="a_report_amount">A Report</string>
+    <string name="total_with_a_report_amount">Total Amount</string>
+    <string name="total_sales">Total Sales</string>
+    <string name="details">Details</string>
+    <string name="cashiers">Cashiers :</string>
 
 </resources>
+

@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.R;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,7 +26,7 @@ public class UserAttendanceReportListViewAdapter extends ArrayAdapter {
 	private int resource;
 	private LayoutInflater inflater;
 	private Context context;
-
+	int bgColor =0;
 
 	public UserAttendanceReportListViewAdapter(Context context, int resource, List<ScheduleWorkers> scheduleWorkersesList) {
 		super(context, resource, scheduleWorkersesList);
@@ -55,17 +55,27 @@ public class UserAttendanceReportListViewAdapter extends ArrayAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		Date d1, d2;
+		Date d1=null, d2=null ;
 		long diff;
+		long val = scheduleWorkersesList.get(position).getDate();
+		Date date=new Date(val);
+		SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy");
+		if(scheduleWorkersesList.get(position).getExitTime()>0){
+			d2 = new Date(scheduleWorkersesList.get(position).getExitTime());
+			holder.tvEnd.setText(DateConverter.getTime(d2));
+		}else {
+			holder.tvEnd.setText("");
+		}
+		if(scheduleWorkersesList.get(position).getStartTime()>0){
+			d1 = new Date(scheduleWorkersesList.get(position).getStartTime());
+			holder.tvStart.setText(DateConverter.getTime(d1));
+		}else {
+			holder.tvStart.setText("");
+		}
+		Log.d("Date",date+"");
+		holder.tvDate.setText(DateConverter.geDate(date));
 
-		d2 = new Date(scheduleWorkersesList.get(position).getExitTime());
-		d1 = new Date(scheduleWorkersesList.get(position).getStartTime());
-
-		holder.tvDate.setText(DateConverter.DateToString(new Date(scheduleWorkersesList.get(position).getDate())));
-		holder.tvStart.setText(DateConverter.getTime(d1));
-		holder.tvEnd.setText(DateConverter.getTime(d2));
-
-		//holder.tvH.setText(i+":"+String.format("%.0f",ii)+" Hour");
+		if(d2!=null&& d1!=null){
 		long h, m, s, ms, d;
 		d = DateConverter.getDateDiff(d1, d2, TimeUnit.MILLISECONDS);
 		h = DateConverter.getDateDiff(d1, d2, TimeUnit.MILLISECONDS);
@@ -76,15 +86,15 @@ public class UserAttendanceReportListViewAdapter extends ArrayAdapter {
 		h=h/(1000*60*60);
 		m=((m-(h*1000*60*60))/(1000*60));
 		s=(s-(m*1000*60)-(h*1000*60*60))/(1000);
-
-		/*
-		h = h - (d * 24);
-		m = m - (h * 60) - (d * 24);
-		s = s - (m * 60) - (h * 60) - (d * 24);
-		ms = ms - (s * 1000);
-		*/
-
 		holder.tvH.setText(String.format("%02d:%02d:%02d", h, m, s));
+		}else {
+			holder.tvH.setText(String.format(""));
+
+		}
+		if(bgColor%2==0){
+			convertView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
+		}
+		bgColor++;
 		return convertView;
 	}
 

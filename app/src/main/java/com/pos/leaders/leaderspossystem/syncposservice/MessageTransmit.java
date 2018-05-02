@@ -3,12 +3,11 @@ package com.pos.leaders.leaderspossystem.syncposservice;
 
 import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.UUID;
 
-import okhttp3.Authenticator;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -56,14 +55,28 @@ public class MessageTransmit {
         return response.body().string();
     }
 
-    public String authPut(String url, String json,String token) throws IOException {
+ /**   public String authPut(String url, String json,String token) throws IOException {
         RequestBody body = RequestBody.create(JSON, json);
         Request request = new Request.Builder().url(domainURL + url).put(body).addHeader(AUTHORIZATION, token).build();
         Response response = client.newCall(request).execute();
 
         return response.body().string();
-    }
+    }**/
+    public String authPut(String url, String json,String token) throws IOException {
+        RequestBody body = RequestBody.create(JSON, json);
+        JSONObject jsonObject;
+        Request request;
+        try {
+            jsonObject = new JSONObject(json);
+            request = new Request.Builder().url(domainURL + url+"/"+jsonObject.get("id")).put(body).addHeader(AUTHORIZATION, token).build();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Error";
+        }
+        Response response = client.newCall(request).execute();
 
+        return response.body().string();
+    }
     public String authGet(String url,String token) throws IOException {
         Log.i("url", domainURL + url);
         Request request = new Request.Builder().url(domainURL + url).addHeader(AUTHORIZATION, token).build();

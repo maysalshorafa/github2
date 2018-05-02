@@ -397,6 +397,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected Void doInBackground(Void... params) {
                 // offersIDsList = offerDBAdapter.getAllOffersIDsByStatus(Offer.Active);
+               // offersIDsList = offerDBAdapter.getAllOffersIDsByStatus(Offer.Active);
                 return null;
             }
         }.execute();
@@ -677,6 +678,7 @@ public class MainActivity extends AppCompatActivity {
 
         etSearch.setText("");
         etSearch.setHint("Search..");
+
         /**  etSearch.setOnKeyListener(new View.OnKeyListener() {
         @Override
         public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -692,6 +694,21 @@ public class MainActivity extends AppCompatActivity {
         //else
         //barcodeScanned +=event.getNumber();
         }
+      /**  etSearch.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == event.KEYCODE_ENTER && event.getAction() == event.ACTION_DOWN) {
+                    Log.i("pressed key", "Enter");
+                    btnDone.callOnClick();
+                    return true;
+                    //enterKeyPressed();
+                } else if (keyCode == event.KEYCODE_ENTER && event.getAction() == event.ACTION_UP)
+                    return true;
+                return false;
+
+                //else
+                //barcodeScanned +=event.getNumber();
+            }
         });**/
 
         etSearch.addTextChangedListener(new TextWatcher() {

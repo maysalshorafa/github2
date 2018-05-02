@@ -43,8 +43,6 @@ import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -125,6 +123,7 @@ public class SalesManagementActivity extends AppCompatActivity {
         //List<Sale> _saleList=new ArrayList<Sale>();
         saleDBAdapter.open();
         _saleList = saleDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime());
+       // Collections.sort(_saleList, new OutcomeDescComparator());
 
         All_sales = _saleList;
         saleDBAdapter.close();
@@ -397,3 +396,9 @@ public class SalesManagementActivity extends AppCompatActivity {
     }
 
 }
+/**class OutcomeDescComparator implements Comparator<Sale>
+{
+    public int compare(Sale fSale, Sale lSale) {
+        return lSale.getSaleDate().compareTo(fSale.getSaleDate());
+    }
+}*/

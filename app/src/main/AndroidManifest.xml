@@ -143,6 +143,8 @@
         <activity android:name=".Controller" />
         <activity android:name=".SalesHistoryCopySales" />
         <activity android:name=".AddNewDepartment"></activity>
+        <activity android:name=".ScheduleWorkersActivity" />
+        <activity android:name=".SettingsTab.SettingsTab"></activity>
     </application>
 
 </manifest>

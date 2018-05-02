@@ -8,13 +8,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 19/10/2016.
@@ -30,7 +33,7 @@ public class ScheduleWorkersDBAdapter {
     protected static final String SCHEDULEWORKERS_COLUMN_EXITTIME = "exitTime";
 
     public static final String DATABASE_CREATE="CREATE TABLE scheduleWorkers ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, "+
-            "`userId` INTEGER, `date` TEXT DEFAULT current_timestamp, `startTime` TEXT DEFAULT current_timestamp, `exitTime` TEXT, "+
+            "`userId` INTEGER, `date` TEXT DEFAULT current_timestamp, `startTime` TEXT, `exitTime` TEXT, "+
             "FOREIGN KEY(`userId`) REFERENCES `users.id` )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -57,21 +60,82 @@ public class ScheduleWorkersDBAdapter {
     {
         return db;
     }
-
+    //insert region
+    // normal insert region with start time
     public long insertEntry(long userId) {
-        ContentValues val = new ContentValues();
-        //Assign values for each row.
-
-        val.put(SCHEDULEWORKERS_COLUMN_ID, Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID));
-        val.put(SCHEDULEWORKERS_COLUMN_USERID, userId);
+        ScheduleWorkers scheduleWorkers = new ScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(),  new Date().getTime(),0);
+        sendToBroker(MessageType.ADD_SCHEDULE_WORKERS, scheduleWorkers, this.context);
         try {
-            long lastID = db.insert(SCHEDULEWORKERS_TABLE_NAME, null, val);
-            return lastID;
+            return insertEntry(scheduleWorkers);
         } catch (SQLException ex) {
-            Log.e("SchWorkersDB insert", "inserting Entry at " + SCHEDULEWORKERS_TABLE_NAME + ": " + ex.getMessage());
+            Log.e(SCHEDULEWORKERS_TABLE_NAME +" DB insert", "inserting Entry at " + SCHEDULEWORKERS_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
+
     }
+    // end
+    // insert exit time and last row have start and exit time first step insert new row with exit time then send it
+    public long insertEntryExitTime(long userId) {
+        ScheduleWorkers scheduleWorkers = new ScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(),  0,new Date().getTime());
+        sendToBroker(MessageType.ADD_SCHEDULE_WORKERS, scheduleWorkers, this.context);
+        try {
+            return insertEntry(scheduleWorkers);
+        } catch (SQLException ex) {
+            Log.e(SCHEDULEWORKERS_TABLE_NAME +" DB insert", "inserting Entry at " + SCHEDULEWORKERS_TABLE_NAME + ": " + ex.getMessage());
+            return -1;
+        }
+
+    }
+    //end
+
+    public long insertEntry(ScheduleWorkers scheduleWorkers) {
+        ContentValues val = new ContentValues();
+        val.put(SCHEDULEWORKERS_COLUMN_ID,scheduleWorkers.getId());
+        val.put(SCHEDULEWORKERS_COLUMN_USERID, scheduleWorkers.getUserId());
+        val.put(SCHEDULEWORKERS_COLUMN_DATE, scheduleWorkers.getDate());
+        val.put(SCHEDULEWORKERS_COLUMN_STARTTIME, scheduleWorkers.getStartTime());
+        val.put(SCHEDULEWORKERS_COLUMN_EXITTIME, scheduleWorkers.getExitTime());
+
+        try {
+            return db.insert(SCHEDULEWORKERS_TABLE_NAME, null, val);
+        } catch (SQLException ex) {
+            Log.e("SCHEDULEWORKERS DB insert", "inserting Entry at " + SCHEDULEWORKERS_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+    }
+    //end insert region for two cases
+    //update region
+    public void updateEntry(long userId,Date exitTime) {
+        ScheduleWorkersDBAdapter scheduleWorkersDBAdapter =new ScheduleWorkersDBAdapter(context);
+        scheduleWorkersDBAdapter.open();
+        ScheduleWorkers scheduleWorkers=scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(userId); //get last row insert for this user
+        ContentValues val = new ContentValues();
+        if(scheduleWorkers.getExitTime()>0){
+            Log.d("llllll",scheduleWorkers.toString());
+
+            //if row have exit and start time then insert new row
+            long scheduleID = scheduleWorkersDBAdapter.insertEntryExitTime(userId);
+            if(scheduleID>0){
+                ScheduleWorkers s=scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(userId);
+                Log.d("last row not empty for exit time",s.toString());
+                sendToBroker(MessageType.ADD_SCHEDULE_WORKERS, s, this.context);
+            }
+
+        }else {
+            Log.d("mmmmmm",scheduleWorkers.toString());
+
+            //normal update case when exit time didnt have value
+            val.put(SCHEDULEWORKERS_COLUMN_EXITTIME, exitTime.getTime());
+            String where = SCHEDULEWORKERS_COLUMN_ID + " = ?";
+            db.update(SCHEDULEWORKERS_TABLE_NAME, val, where, new String[]{scheduleWorkers.getId() + ""} );
+            ScheduleWorkers s=scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(userId);
+            Log.d("last row  empty for exit time",s.toString());
+            sendToBroker(MessageType.UPDATE_SCHEDULE_WORKERS, s, this.context);
+        }
+
+    }
+    //end
+
 
     public ScheduleWorkers getScheduleWorkersByID(long id) {
         ScheduleWorkers scheduleWorkers = null;
@@ -104,15 +168,7 @@ public class ScheduleWorkersDBAdapter {
         db.update(SCHEDULEWORKERS_TABLE_NAME, val, where, new String[]{scheduleWorkers.getId() + ""});
     }
 
-    public void updateEntry(long id,Date exitTime) {
-        ContentValues val = new ContentValues();
-        //Assign values for each row.
 
-        val.put(SCHEDULEWORKERS_COLUMN_EXITTIME, exitTime.getTime());
-
-        String where = SCHEDULEWORKERS_COLUMN_ID + " = ?";
-        db.update(SCHEDULEWORKERS_TABLE_NAME, val, where, new String[]{id + ""});
-    }
 
     public List<ScheduleWorkers> getAllScheduleWorkers(){
         List<ScheduleWorkers> scheduleWorkersList =new ArrayList<ScheduleWorkers>();
@@ -121,7 +177,6 @@ public class ScheduleWorkersDBAdapter {
         cursor.moveToFirst();
 
         while(!cursor.isAfterLast()){
-            if(!cursor.isNull(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_EXITTIME)))
             scheduleWorkersList.add(new ScheduleWorkers(Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_ID))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_USERID))),
                     cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_DATE)),
@@ -133,13 +188,57 @@ public class ScheduleWorkersDBAdapter {
         return scheduleWorkersList;
     }
 
-    public List<ScheduleWorkers> getAllUserScheduleWork(int userId){
+    public List<ScheduleWorkers> getAllUserScheduleWorkBtweenToDate(long userId , Date from , Date to){
         List<ScheduleWorkers> userScheduleWorkerstList=new ArrayList<ScheduleWorkers>();
         List<ScheduleWorkers> scheduleWorkersList=getAllScheduleWorkers();
         for (ScheduleWorkers item:scheduleWorkersList) {
-            if(item.getUserId()==userId)
+            if(item.getUserId()==userId && item.getExitTime()<=to.getTime() )
 				userScheduleWorkerstList.add(item);
         }
         return userScheduleWorkerstList;
     }
+    public List<ScheduleWorkers> getAllUserScheduleWork(long userId){
+        List<ScheduleWorkers> userScheduleWorkerstList=new ArrayList<ScheduleWorkers>();
+        List<ScheduleWorkers> scheduleWorkersList=getAllScheduleWorkers();
+        for (ScheduleWorkers item:scheduleWorkersList) {
+            if(item.getUserId()==userId)
+                userScheduleWorkerstList.add(item);
+        }
+        return userScheduleWorkerstList;
+    }
+
+    public ScheduleWorkers getScheduleWorkersByUserID(long userId) {
+        ScheduleWorkers scheduleWorkers = null;
+        List<ScheduleWorkers> scheduleWorkersList=getAllUserScheduleWork(userId);
+        for (ScheduleWorkers item:scheduleWorkersList) {
+            long val = item.getDate();
+            Date date=new Date(val);
+            SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yyyy");
+            if(df2.format(date).equals(df2.format(new Date())))
+                return item;
+        }
+        return scheduleWorkers;
+    }
+//get last row in table
+    public ScheduleWorkers getLastScheduleWorkersByUserID(long userId) {
+        ScheduleWorkers scheduleWorkers=null;
+        Cursor cursor =  db.rawQuery( "select * from "+SCHEDULEWORKERS_TABLE_NAME +" where "+SCHEDULEWORKERS_COLUMN_USERID+" = "+ userId+ " order by id desc", null );
+        cursor.moveToFirst();
+        if (cursor.getCount() < 1) // UserName Not Exist
+        {
+            cursor.close();
+            return scheduleWorkers;
+        }
+        cursor.moveToFirst();
+        scheduleWorkers=  new ScheduleWorkers(Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_ID))),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_USERID))),
+                    cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_DATE)),
+                    cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_STARTTIME)),
+                    cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_EXITTIME)));
+
+        cursor.close();
+        return scheduleWorkers;
+
+    }
+
 }

@@ -8,8 +8,8 @@ android {
         applicationId "com.pos.leaders.leaderspossystem"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 7
-        versionName "7.0"
+        versionCode 9
+        versionName "9.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
@@ -47,8 +47,6 @@ android {
     }
 }
 
-
-
 dependencies {
     compile fileTree(include: ['**/*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -64,5 +62,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.sun.mail:android-mail:1.5.5'
     compile 'com.sun.mail:android-activation:1.5.5'
+    compile 'com.github.barteksc:android-pdf-viewer:2.0.3'
     testCompile 'junit:junit:4.12'
+    compile files('libs/PdfViewer.jar')
 }

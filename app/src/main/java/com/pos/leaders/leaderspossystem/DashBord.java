@@ -14,7 +14,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -46,12 +45,13 @@ import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.SettingsTab.SettingsTab;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -66,11 +66,10 @@ import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
-import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 
 public class DashBord extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private boolean enableBackButton = true;
-    Button mainScreen, report, product, department, users, backUp, customerClub, logOut, offers, settings;
+    Button mainScreen, report, product, department, users, backUp, customerClub, logOut, offers, settings , schedule_workers;
     Button btZReport, btAReport;
     AReportDBAdapter aReportDBAdapter;
     User user = new User();
@@ -168,8 +167,9 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         report = (Button) findViewById(R.id.report);
         product = (Button) findViewById(R.id.product);
         department = (Button) findViewById(R.id.department);
-        offers = (Button) findViewById(R.id.offers);
+        //offers = (Button) findViewById(R.id.offers);
         users = (Button) findViewById(R.id.users);
+        schedule_workers = (Button) findViewById(R.id.schedule_workers);
         backUp = (Button) findViewById(R.id.backUp);
         logOut = (Button) findViewById(R.id.logOut);
         customerClub = (Button) findViewById(R.id.coustmerClub);
@@ -179,15 +179,19 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                scheduleWorkersDBAdapter=new ScheduleWorkersDBAdapter(getApplicationContext());
+                scheduleWorkersDBAdapter.open();
+                ScheduleWorkers scheduleWorkers = scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(SESSION._USER.getId());
+                scheduleWorkersDBAdapter.updateEntry(SESSION._USER.getId(),new Date());
                 Intent intent = new Intent(DashBord.this, LogInActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
+/**
                 try {
                     scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getId(), new Date());
                     SESSION._SCHEDULEWORKERS.setExitTime(new Date().getTime());
                     Log.i("Worker get out", SESSION._SCHEDULEWORKERS.toString());
                 } catch (Exception ex) {
-                }
+                }**/
                 SESSION._LogOut();
                 startActivity(intent);
             }
@@ -318,10 +322,17 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 startActivity(i);
             }
         });
+        schedule_workers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                i = new Intent(getApplicationContext(), ScheduleWorkersActivity.class);
+                startActivity(i);
+            }
+        });
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), SettingActivity.class);
+                i = new Intent(getApplicationContext(), SettingsTab.class);
                 startActivity(i);
             }
         });
@@ -337,7 +348,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
         report.setEnabled(false);
         product.setEnabled(false);
-        offers.setEnabled(false);
+        schedule_workers.setEnabled(false);
         users.setEnabled(false);
         backUp.setEnabled(false);
         department.setEnabled(false);
@@ -379,8 +390,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 case Permissions.PERMISSIONS_USER:
                     users.setEnabled(true);
                     break;
-                case Permissions.PERMISSIONS_OFFER:
-                    offers.setEnabled(true);
+                case Permissions.PERMISSIONS_SCHEDULE_WORKERS:
+                    schedule_workers.setEnabled(true);
                     break;
                 case Permissions.PERMISSIONS_BACK_UP:
                     backUp.setEnabled(true);

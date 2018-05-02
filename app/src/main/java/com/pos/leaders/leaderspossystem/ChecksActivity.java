@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -18,7 +17,6 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
@@ -56,7 +54,7 @@ public class ChecksActivity extends AppCompatActivity {
 	String customer_name;
 	LinearLayout LlCustomer;
 	enum Direction {LEFT, RIGHT;}
-
+	double requiredAmount=0;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -152,9 +150,9 @@ public class ChecksActivity extends AppCompatActivity {
 		double d=0.0f;
 		for(Check c:checkList){
 			d += c.getAmount();
-			double t=totalPrice-d;
-			if(t>0){
-				tvChecksRequired.setText(Util.makePrice(t)+ " " + getResources().getText(R.string.ins));
+			requiredAmount=totalPrice-d;
+			if(requiredAmount>0){
+				tvChecksRequired.setText(Util.makePrice(requiredAmount)+ " " + getResources().getText(R.string.ins));
 			}else {
 				tvChecksRequired.setText(0+" " + getResources().getText(R.string.ins));
 			}
@@ -205,29 +203,36 @@ public class ChecksActivity extends AppCompatActivity {
 		btAdd.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if(getTotalPid() >= totalPrice){
+					//btAdd.setEnabled(false);
+					Toast.makeText(ChecksActivity.this,getString(R.string.dont_need_to_add_another_check),Toast.LENGTH_LONG).show();
 
-				Check check=new Check();
-                int lsttchildID = lvChecks.getChildCount()-1;
-                if(lvChecks.getChildCount()>1) {
-					ChecksListViewAdapter.ViewHolder lastItem = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(lsttchildID).getTag();
+				}else {
 
-                    Log.i("LOOOGT", checkList.toString());
-                    checkList.get(lsttchildID-1);
+					Check check=new Check();
+					int lsttchildID = lvChecks.getChildCount()-1;
+					if(lvChecks.getChildCount()>1) {
+						ChecksListViewAdapter.ViewHolder lastItem = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(lsttchildID).getTag();
 
-                    check = new Check(lastItem.getEtCheckNum(), lastItem.getEtBankNum(), lastItem.getEtBenchNum(), lastItem.getEtAccountNum(),
-							lastItem.getEtAmount(), DateConverter.stringToDate(lastItem.getEtDate()).getTime(), false);
-					//lastItem.findViewById(R.id.listChecks_ETAmount);
-					checkList.set(lsttchildID-1,check);
+						Log.i("LOOOGT", checkList.toString());
+						checkList.get(lsttchildID-1);
+
+						check = new Check(lastItem.getEtCheckNum(), lastItem.getEtBankNum(), lastItem.getEtBenchNum(), lastItem.getEtAccountNum(),
+								lastItem.getEtAmount(), DateConverter.stringToDate(lastItem.getEtDate()).getTime(), false);
+						//lastItem.findViewById(R.id.listChecks_ETAmount);
+						checkList.set(lsttchildID-1,check);
+					}
+					Check newCheck=new Check(check);
+					if(check.getDate()!=0){
+						newCheck.setDate(DateConverter.getAfterMonth(new Date(check.getDate())).getTime());
+						newCheck.setCheckNum(check.getCheckNum()+1);
+
+					}
+					checkList.add(newCheck);
+					lvChecks.setAdapter(adapter);
+					getTotal();
 				}
-				Check newCheck=new Check(check);
-				if(check.getDate()!=0){
-					newCheck.setDate(DateConverter.getAfterMonth(new Date(check.getDate())).getTime());
-                    newCheck.setCheckNum(check.getCheckNum()+1);
 
-                }
-				checkList.add(newCheck);
-				lvChecks.setAdapter(adapter);
-				getTotal();
 			}
 		});
 
