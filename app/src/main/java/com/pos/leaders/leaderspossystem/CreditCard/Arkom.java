@@ -13,6 +13,8 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.util.Locale;
+
 /**
  * Created by KARAM on 08/12/2016.
  * Upgrading by KARAM on 11/04/2016.
@@ -279,10 +281,13 @@ public class Arkom {
                                     TransPoints,Last4Digits,CVV2,ID,TransCurrency,ISO_Currency,CreditType,ApprovalCode,FirstPayment,
                                     FixedPayment,NumOfFixedPayments,TransRef,J_Prm,Z_Prm,Q_Prm,R_Prm);*/
 
-        double fixedPayment=sumPrice/numberOfPay;
+        double totalPrice = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", sumPrice));
+        double fixedPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", totalPrice / numberOfPay));
+        double firstPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", totalPrice - (fixedPayment * (numberOfPay - 1))));
+
         try{
-        SoapObject soap=CCTransaction(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID,cardNumber,"",sumPrice,
-                0,"","","",1,"ILS",CreditType,ApprovalCode,fixedPayment,fixedPayment,numberOfPay,"",0,"","","");
+                SoapObject soap=CCTransaction(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID,cardNumber,"",totalPrice,
+                0,"","","",1,"ILS",CreditType,ApprovalCode,firstPayment,fixedPayment,numberOfPay,"",0,"","","");
 
             transactionAcknowledge=PutTransactionAcknowledge(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID);
             soap.addProperty("TransactionID", TransactionID);
@@ -323,7 +328,7 @@ public class Arkom {
         request.addProperty("CVV2", CVV2);
         request.addProperty("ID", ID);
         request.addProperty("TransCurrency", transCurrency);
-        request.addProperty("ISO_Currenc", ISO_Currenc);
+        request.addProperty("ISO_Currency", ISO_Currenc);
         request.addProperty("CreditType", creditType);
         request.addProperty("ApprovalCode", approvalCode);
         request.addProperty("FirstPayment", String.format("%.2f", firstPayment));
