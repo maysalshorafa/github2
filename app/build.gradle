@@ -66,6 +66,7 @@ dependencies {
     compile 'com.sun.mail:android-mail:1.5.5'
     compile 'com.sun.mail:android-activation:1.5.5'
     compile 'com.github.barteksc:android-pdf-viewer:2.0.3'
+    compile 'org.apache.poi:poi:3.9'
     testCompile 'junit:junit:4.12'
     compile files('libs/PdfViewer.jar')
 }
