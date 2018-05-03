@@ -168,6 +168,8 @@ public class CustomerDBAdapter {
 
 
     public void updateEntry(Customer customer) {
+        CustomerDBAdapter customerDBAdapter=new CustomerDBAdapter(context);
+        customerDBAdapter.open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(CUSTOMER_COLUMN_FIRST_NAME, customer.getFirstName());
@@ -186,6 +188,10 @@ public class CustomerDBAdapter {
         val.put(CUSTOMER_COLUMN_COUNTRY_CODE, customer.getCountryCode());
         String where = CUSTOMER_COLUMN_ID + " = ?";
         db.update(CUSTOMER_TABLE_NAME, val, where, new String[]{customer.getId() + ""});
+        Customer c=customerDBAdapter.getCustomerByID(customer.getId());
+        Log.d("Update Object",c.toString());
+        sendToBroker(MessageType.UPDATE_CUSTOMER, c, this.context);
+        customerDBAdapter.close();
 
     }
 

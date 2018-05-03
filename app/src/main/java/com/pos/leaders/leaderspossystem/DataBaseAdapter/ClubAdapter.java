@@ -102,6 +102,8 @@ public class ClubAdapter {
     }
 
     public int updateEntry(Club club){
+        ClubAdapter clubAdapter =new ClubAdapter(context);
+        clubAdapter.open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Group_COLUMN_Name,club.getname());
@@ -113,6 +115,10 @@ public class ClubAdapter {
         try {
             String where = Group_COLUMN__ID + " = ?";
             db.update(Group_TABLE_NAME, val, where, new String[]{club.getId() + ""});
+            Club c=clubAdapter.getGroupByID(club.getId());
+            Log.d("UpDate Object",c.toString());
+            sendToBroker(MessageType.UPDATE_CLUB, c, this.context);
+            clubAdapter.close();
             return 1;
         } catch (SQLException ex) {
             Log.e("Club insertEntry", "inserting Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());

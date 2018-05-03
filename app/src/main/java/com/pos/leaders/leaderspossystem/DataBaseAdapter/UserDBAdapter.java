@@ -167,6 +167,8 @@ public class UserDBAdapter {
     }
 
     public void updateEntry(User user) {
+        UserDBAdapter userDBAdapter = new UserDBAdapter(context);
+        userDBAdapter.open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(USERS_COLUMN_USERNAME, user.getUserName());
@@ -179,6 +181,10 @@ public class UserDBAdapter {
 
         String where = USERS_COLUMN_ID + " = ?";
         db.update(USERS_TABLE_NAME, val, where, new String[]{user.getId() + ""});
+        User u=userDBAdapter.getUserByID(user.getId());
+        Log.d("Update Object",u.toString());
+        sendToBroker(MessageType.UPDATE_USER, u, this.context);
+        userDBAdapter.close();
     }
 
     public boolean availableUserName(String userName) {
