@@ -29,7 +29,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".Controller"
         coreApp="true"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
@@ -140,7 +139,6 @@
             android:name="io.fabric.ApiKey"
             android:value="fc2345a479e793a78d4e617ce9a0fe1e2c8e93fc" />
 
-        <activity android:name=".Controller" />
         <activity android:name=".SalesHistoryCopySales" />
         <activity android:name=".AddNewDepartment"></activity>
         <activity android:name=".ScheduleWorkersActivity" />
