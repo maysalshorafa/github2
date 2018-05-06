@@ -111,8 +111,6 @@ public class ScheduleWorkersDBAdapter {
         ScheduleWorkers scheduleWorkers=scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(userId); //get last row insert for this user
         ContentValues val = new ContentValues();
         if(scheduleWorkers.getExitTime()>0){
-            Log.d("llllll",scheduleWorkers.toString());
-
             //if row have exit and start time then insert new row
             long scheduleID = scheduleWorkersDBAdapter.insertEntryExitTime(userId);
             if(scheduleID>0){
@@ -122,8 +120,6 @@ public class ScheduleWorkersDBAdapter {
             }
 
         }else {
-            Log.d("mmmmmm",scheduleWorkers.toString());
-
             //normal update case when exit time didnt have value
             val.put(SCHEDULEWORKERS_COLUMN_EXITTIME, exitTime.getTime());
             String where = SCHEDULEWORKERS_COLUMN_ID + " = ?";
@@ -132,6 +128,7 @@ public class ScheduleWorkersDBAdapter {
             Log.d("last row  empty for exit time",s.toString());
             sendToBroker(MessageType.UPDATE_SCHEDULE_WORKERS, s, this.context);
         }
+        scheduleWorkersDBAdapter.close();
 
     }
     //end

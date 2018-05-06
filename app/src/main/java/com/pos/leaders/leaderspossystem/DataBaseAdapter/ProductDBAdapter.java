@@ -179,6 +179,8 @@ public class ProductDBAdapter {
     }
 
     public void updateEntry(Product product) {
+        ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
+        productDBAdapter.open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(PRODUCTS_COLUMN_NAME, product.getName());
@@ -193,6 +195,10 @@ public class ProductDBAdapter {
 
         String where = PRODUCTS_COLUMN_ID + " = ?";
         db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getId() + ""});
+        Product p=productDBAdapter.getProductByID(product.getId());
+        Log.d("Update Object",p.toString());
+        sendToBroker(MessageType.UPDATE_PRODUCT, p, this.context);
+        productDBAdapter.close();
     }
 
     public List<Product> getAllProducts(){

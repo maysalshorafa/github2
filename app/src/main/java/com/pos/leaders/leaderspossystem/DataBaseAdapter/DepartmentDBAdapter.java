@@ -131,6 +131,8 @@ public class DepartmentDBAdapter {
     }
 
     public void updateEntry(Department department) {
+        DepartmentDBAdapter departmentDBAdapter = new DepartmentDBAdapter(context);
+        departmentDBAdapter.open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(DEPARTMENTS_COLUMN_NAME, department.getName());
@@ -140,6 +142,10 @@ public class DepartmentDBAdapter {
 
         String where = DEPARTMENTS_COLUMN_ID + " = ?";
         db.update(DEPARTMENTS_TABLE_NAME, val, where, new String[]{department.getId() + ""});
+        Department d=departmentDBAdapter.getDepartmentByID(department.getId());
+        Log.d("Update object",d.toString());
+        sendToBroker(MessageType.UPDATE_DEPARTMENT, d, this.context);
+        departmentDBAdapter.close();
     }
 
     public List<Department> getAllDepartments() {
