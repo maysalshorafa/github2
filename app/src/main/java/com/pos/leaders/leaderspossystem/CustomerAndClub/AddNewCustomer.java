@@ -127,7 +127,6 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 Intent intent;
                 if (customer == null) {
                     if (!_customerName.equals("")) {
-                        if (customerDBAdapter.availableCustomerName(_customerName)) {
                             if (etCustomerFirstName.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), getString(R.string.please_insert_first_name), Toast.LENGTH_LONG).show();
                             } else if (etCustomerLastName.getText().toString().equals("")) {
@@ -181,9 +180,6 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                     Toast.makeText(getApplicationContext(), getString(R.string.can_not_add_customer_please_try_again), Toast.LENGTH_SHORT).show();
                                 }
                             }
-                        } else {
-                            Toast.makeText(getApplicationContext(), getString(R.string.customer_name_is_not_available_try_to_use_another_customer_name), Toast.LENGTH_LONG).show();
-                        }
                     }
                 } else {
                     // Edit mode

@@ -1001,6 +1001,7 @@ public class MainActivity extends AppCompatActivity {
                                         int indexOfItem = SESSION._ORDERS.indexOf(selectedOrderOnCart);
                                         double X = SESSION._USER.getPresent();
                                         if (sw.isChecked()) {
+                                            if (!(str.equals(""))) {
                                             double d = Double.parseDouble(str);
                                             int count = SESSION._ORDERS.get(indexOfItem).getCount();
                                             double discount = (1 - (d / (SESSION._ORDERS.get(indexOfItem).getOriginal_price() * count)));
@@ -1012,7 +1013,7 @@ public class MainActivity extends AppCompatActivity {
                                             } else {
                                                 Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                             }
-                                        } else {
+                                        }} else {
                                             if (!(str.equals(""))) {
                                                 float val = Float.parseFloat(str);
                                                 if (val <= X) {
@@ -1294,6 +1295,7 @@ public class MainActivity extends AppCompatActivity {
                             String str = et.getText().toString();
                             double X = SESSION._USER.getPresent();
                             if (sw.isChecked()) {
+                                if (!(str.equals(""))) {
                                 double d = Double.parseDouble(str);
                                 double originalTotalPrice = 0;
                                 for (Order o : SESSION._ORDERS) {
@@ -1308,6 +1310,7 @@ public class MainActivity extends AppCompatActivity {
                                     discountDialog.cancel();
                                 } else {
                                     Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                }
                                 }
                             } else {
                                 if (!(str.equals(""))) {
