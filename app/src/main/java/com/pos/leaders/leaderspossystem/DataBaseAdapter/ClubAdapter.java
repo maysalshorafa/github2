@@ -129,6 +129,29 @@ public class ClubAdapter {
         }
 
     }
+    public long updateEntryBo(Club club){
+        ClubAdapter clubAdapter =new ClubAdapter(context);
+        clubAdapter.open();
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(Group_COLUMN_Name,club.getName());
+        val.put(Group_COLUMN__Descrption,club.getDescription());
+        val.put(Group_COLUMN_Type,club.getType());
+        val.put(Group_COLUMN_Parcent,club.getPercent());
+        val.put(Group_COLUMN_Amount,club.getAmount());
+        val.put(Group_COLUMN_Point,club.getPoint());
+        try {
+            String where = Group_COLUMN__ID + " = ?";
+            db.update(Group_TABLE_NAME, val, where, new String[]{club.getId() + ""});
+            Club c=clubAdapter.getGroupByID(club.getId());
+            Log.d("UpDate Object",c.toString());
+            clubAdapter.close();
+            return 1;
+        } catch (SQLException ex) {
+            return 0;
+        }
+
+    }
     public boolean availableGrouprName(String groupName){
         Cursor cursor=db.query(Group_TABLE_NAME,null,Group_COLUMN_Name+"=?",new String[]{groupName},null,null,null);
         cursor.moveToFirst();
@@ -217,6 +240,21 @@ public class ClubAdapter {
         String where = Group_COLUMN__ID + " = ?";
         try {
             db.update(Group_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+            return 1;
+        } catch (SQLException ex) {
+            Log.e("Club deleteEntry", "enable hide Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+    }
+    public long deleteEntryBo(Club club) {
+        // Define the updated row content.
+        ContentValues updatedValues = new ContentValues();
+        // Assign values for each row.
+        updatedValues.put(Group_COLUMN_DISENABLED, 1);
+
+        String where = Group_COLUMN__ID + " = ?";
+        try {
+            db.update(Group_TABLE_NAME, updatedValues, where, new String[]{club.getId() + ""});
             return 1;
         } catch (SQLException ex) {
             Log.e("Club deleteEntry", "enable hide Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());

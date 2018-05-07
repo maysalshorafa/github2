@@ -177,6 +177,21 @@ public class ProductDBAdapter {
             return 0;
         }
     }
+    public long deleteEntryBo(Product product) {
+        // Define the updated row content.
+        ContentValues updatedValues = new ContentValues();
+        // Assign values for each row.
+        updatedValues.put(PRODUCTS_COLUMN_DISENABLED, 1);
+
+        String where = PRODUCTS_COLUMN_ID + " = ?";
+        try {
+            db.update(PRODUCTS_TABLE_NAME, updatedValues, where, new String[]{product.getId() + ""});
+            return 1;
+        } catch (SQLException ex) {
+            Log.e("Product deleteEntry", "enable hide Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+    }
 
     public void updateEntry(Product product) {
         ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
@@ -199,6 +214,32 @@ public class ProductDBAdapter {
         Log.d("Update Object",p.toString());
         sendToBroker(MessageType.UPDATE_PRODUCT, p, this.context);
         productDBAdapter.close();
+    }
+    public long updateEntryBo(Product product) {
+        ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
+        productDBAdapter.open();
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(PRODUCTS_COLUMN_NAME, product.getName());
+        val.put(PRODUCTS_COLUMN_BARCODE, product.getBarCode());
+        val.put(PRODUCTS_COLUMN_DESCRIPTION, product.getDescription());
+        val.put(PRODUCTS_COLUMN_PRICE, product.getPrice());
+        val.put(PRODUCTS_COLUMN_COSTPRICE, product.getCostPrice());
+        val.put(PRODUCTS_COLUMN_WITHTAX, product.isWithTax());
+        val.put(PRODUCTS_COLUMN_WEIGHABLE, product.isWeighable());
+        val.put(PRODUCTS_COLUMN_DEPARTMENTID, product.getDepartmentId());
+        val.put(PRODUCTS_COLUMN_BYUSER, product.getByUser());
+
+        try {
+            String where = PRODUCTS_COLUMN_ID + " = ?";
+            db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getId() + ""});
+            Product p=productDBAdapter.getProductByID(product.getId());
+            Log.d("Update Object",p.toString());
+            productDBAdapter.close();
+            return 1;
+        } catch (SQLException ex) {
+            return 0;
+        }
     }
 
     public List<Product> getAllProducts(){
