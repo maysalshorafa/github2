@@ -247,7 +247,10 @@ public class ProductsActivity  extends AppCompatActivity  {
         }
 
         if (editableProduct == null) {
-                if(productDBAdapter.availableProductName(etName.getText().toString())){
+            boolean availableBarCode= productDBAdapter.isValidBarcode(etBarcode.getText().toString());
+            boolean availableProductName= productDBAdapter.availableProductName(etName.getText().toString());
+
+            if(availableProductName&&availableBarCode){
                     for (Department d : listDepartment) {
                         if (d.isChecked()) {
                             depID = d.getId();
@@ -265,7 +268,12 @@ public class ProductsActivity  extends AppCompatActivity  {
                 }
                 }
                 else {
+                if(!availableProductName) {
                     Toast.makeText(getApplicationContext(), getString(R.string.product_name_not_available), Toast.LENGTH_LONG).show();
+                }
+                if(!availableBarCode) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.product_barcode_not_available), Toast.LENGTH_LONG).show();
+                }
 
                 }
 
@@ -322,6 +330,4 @@ public class ProductsActivity  extends AppCompatActivity  {
         previouslySelectedItem = v;
         v.setBackgroundColor(getResources().getColor(R.color.pressed_color));
     }
-
-
 }

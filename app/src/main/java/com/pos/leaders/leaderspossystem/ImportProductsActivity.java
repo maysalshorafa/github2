@@ -179,8 +179,10 @@ public class ImportProductsActivity extends Activity {
 
                     productDBAdapter.open();
                     for (Product p : d.getProducts()) {
-                        productDBAdapter.insertEntry(p.getName(), p.getBarCode(), "", p.getPrice(), p.getCostPrice(), true, false, depID, p.getByUser(), 1, 1);
-                    }
+                        boolean availableBarCode = productDBAdapter.isValidBarcode(p.getBarCode());
+                        if(availableBarCode){
+                            productDBAdapter.insertEntry(p.getName(), p.getBarCode(), "", p.getPrice(), p.getCostPrice(), true, false, depID, p.getByUser(), 1, 1);
+                        }                    }
                     productDBAdapter.close();
                 }
                 return null;
