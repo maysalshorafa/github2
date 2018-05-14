@@ -1956,13 +1956,26 @@ startActivity(i);
     }
 
     private void addToCart(Product p) {
+        List<Order>orderList = new ArrayList<Order>();
         /*if(p.getOffersIDs()==null){
             ProductOfferDBAdapter productOfferDBAdapter = new ProductOfferDBAdapter(this);
             productOfferDBAdapter.open();
             p.setOffersIDs(productOfferDBAdapter.getProductOffers(p.getId(),offersIDsList));
             productOfferDBAdapter.close();
         }*/
-        SESSION._ORDERS.add(new Order(1, 0, p, p.getPrice(), p.getPrice(), 0));
+        //test if cart have this order before insert to cart and order have'nt discount
+        for(int i=0;i<SESSION._ORDERS.size();i++){
+            Order o = SESSION._ORDERS.get(i);
+            if(o.getProduct().equals(p)&&o.getDiscount()==0){
+                orderList.add(o);
+            }
+        }
+        if(orderList.size()>0){
+            orderList.get(0).setCount(orderList.get(0).getCount()+1);
+        }else {
+            SESSION._ORDERS.add(new Order(1, 0, p, p.getPrice(), p.getPrice(), 0));
+        }
+
         removeOrderItemSelection();
         refreshCart();
     }
