@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -14,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -36,6 +38,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
@@ -44,6 +47,7 @@ import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
+import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.User;
@@ -60,9 +64,16 @@ import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 import com.sunmi.aidl.MSCardService;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
 
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
@@ -325,8 +336,25 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         schedule_workers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), ScheduleWorkersActivity.class);
-                startActivity(i);
+                List<Product>lstPro= null;
+                try {
+                    long startTime = System.nanoTime();
+                    lstPro = readProducts();
+                    ProductDBAdapter productDBAdapter = new ProductDBAdapter(getBaseContext());
+                    productDBAdapter.open();
+                    Log.d("productsizelist ",lstPro.size()+"");
+                    for(int i = 0; i<lstPro.size(); i++){
+                        Product p=lstPro.get(i);
+                    productDBAdapter.insertEntry(p.getName(), p.getBarCode(), "", p.getPrice(), p.getCostPrice(), true, false, 1, p.getByUser(), 1, 1);
+                    }
+                    long endTime = System.nanoTime();
+                    long duration = (endTime - startTime); //divide by 1000000 to get milliseconds.
+                   Log.d("executiontime:",duration+"");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //i = new Intent(getApplicationContext(), ScheduleWorkersActivity.class);
+             //   startActivity(i);
             }
         });
         settings.setOnClickListener(new View.OnClickListener() {
@@ -832,4 +860,66 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
     }
 
+    static int failImportItems=0;
+    static String msg="";
+
+    public List<Product> readProducts() throws IOException {
+        List<Product> resultSet = new ArrayList<Product>();
+        failImportItems=0;
+        //File inputWorkbook = new File(inputFile);
+       // if(inputWorkbook.exists()){
+            Workbook w;
+            try {
+                int i=0;
+                AssetManager am = getAssets();
+                InputStream in = am.open("product2017.xls");
+                w = Workbook.getWorkbook(in);
+                Sheet sheet = w.getSheet(0);
+                // Loop over column and lines
+                Log.i("Row ","id \t name \t barcode \t price");
+                for (int row = 1; row < sheet.getRows(); row++) {
+                    try {
+                        String name,barcode,id,price;
+                        id=sheet.getCell(0, row).getContents().replaceAll(" ","");
+                        name=sheet.getCell(4, row).getContents();
+                        barcode=sheet.getCell(6, row).getContents();
+                        price=new BigDecimal(sheet.getCell(1, row).getContents().replaceAll(" ","")).toString();
+                        resultSet.add(new Product(i++,name,Double.parseDouble(price),barcode,1, SESSION._USER.getId()));
+                    }
+                    catch (Exception ex){
+                        Log.e("",ex.getMessage());
+                        failImportItems++;
+                    }
+
+
+                    /*for(int i=0; i<sheet.getColumns();i++){
+                        Cell cell = sheet.getCell(i, row);
+                    }
+
+                    if(cell.getContents().equalsIgnoreCase(key)){
+                        for (int i = 0; i < sheet.getColumns(); i++) {
+                            Cell cel = sheet.getCell(i, row);
+                            resultSet.add(cel.getContents());
+                        }
+                    }*/
+                    continue;
+                }
+                msg = String.format("file have %d products, %d successfully to read, %d errors",sheet.getRows()-1,sheet.getRows()-1-failImportItems,failImportItems);
+                //Toast.makeText(getBaseContext(),"fail to add "+failImportItems,Toast.LENGTH_LONG);
+
+            } catch (BiffException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        //}
+       // else
+      //  {
+            // resultSet.add("File not found..!");
+      //  }
+        if(resultSet.size()==0){
+            // resultSet.add("Data not found..!");
+        }
+        return resultSet;
+    }
 }
