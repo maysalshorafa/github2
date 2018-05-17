@@ -1201,6 +1201,12 @@ public class SyncMessage extends Service {
                 return false;
             else if(!res.toLowerCase().equals("true")){
                 JSONObject object = new JSONObject(res);
+                int status = (int) object.get("status");
+                if (status == 200 || status == 201) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         } catch (JSONException e) {
             return false;
