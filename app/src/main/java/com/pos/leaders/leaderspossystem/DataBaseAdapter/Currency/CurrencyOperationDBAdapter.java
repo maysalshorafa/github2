@@ -63,7 +63,7 @@ public class CurrencyOperationDBAdapter {
         return db;
     }
 
-    public long insertEntry(Date createDate, long operation_id, String operation_type, double amount, long currency_type) {
+    public long insertEntry(long createDate, long operation_id, String operation_type, double amount, long currency_type) {
 
         CurrencyOperation currency = new CurrencyOperation(Util.idHealth(this.db, CurrencyOperation_TABLE_NAME, CurrencyOperation_COLUMN_ID), createDate, operation_id,operation_type, amount, currency_type);
         //sendToBroker(MessageType.ADD_CURRENCY_OPERATION, currency, this.context);
@@ -84,7 +84,7 @@ public class CurrencyOperationDBAdapter {
         //Assign values for each row.
 
         val.put(CurrencyOperation_COLUMN_ID, currency.getId());
-        val.put(CurrencyOperation_TABLE_NAME, currency.getCreateDate().getTime());
+        val.put(CurrencyOperation_TABLE_NAME, currency.getCreateDate());
         val.put(CurrencyOperation_COLUMN_Operation_ID, currency.getOperation_id());
         val.put(CurrencyOperation_COLUMN_Operation_Type,currency.getOperation_type());
         val.put(CurrencyOperationCOLUMN_AMOUNT, currency.getAmount());

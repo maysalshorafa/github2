@@ -74,7 +74,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 				holder.etBankNum.setHint(checks.get(position).getBankNum() + "");
 				holder.etBenchNum.setHint(checks.get(position).getBranchNum() + "");
 				holder.etCheckNum.setHint(checks.get(position).getCheckNum() + "");
-				holder.etDate.setText(DateConverter.toDate(checks.get(position).getDate()));
+				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getDate())));
 				holder.etAccountNum.setHint(checks.get(position).getAccountNum() + "");
 				amount=checks.get(position).getAmount() ;
 
@@ -85,7 +85,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 				holder.etBankNum.setText(checks.get(position).getBankNum() + "");
 				holder.etBenchNum.setText(checks.get(position).getBranchNum() + "");
 				holder.etCheckNum.setText(checks.get(position).getCheckNum() + "");
-				holder.etDate.setText(DateConverter.toDate(checks.get(position).getDate()));
+				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getDate())));
 
 			}
 		}
@@ -104,7 +104,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 				myCalendar.set(Calendar.YEAR, year);
 				myCalendar.set(Calendar.MONTH, monthOfYear);
 				myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-				updateDate(position,myCalendar.getTime());
+				updateDate(position,myCalendar.getTime().getTime());
 			}
 
 		};
@@ -128,7 +128,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		return convertView;
 	}
 
-	public void updateDate(int position, Date date){
+	public void updateDate(int position, long date){
 		checks.get(position).setDate(date);
 		this.notifyDataSetChanged();
 	}

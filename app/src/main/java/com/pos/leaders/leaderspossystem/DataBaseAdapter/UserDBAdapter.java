@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.User;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -69,8 +68,14 @@ public class UserDBAdapter {
 
     public long insertEntry(String userName, String password, String firstName, String lastName, String phoneNumber, Double persent, Double hourlyWag) {
 
-        User u = new User(Util.idHealth(this.db, USERS_TABLE_NAME, USERS_COLUMN_ID), userName, password, firstName, lastName, new Date(), false, phoneNumber, persent, hourlyWag);
-        sendToBroker(MessageType.ADD_USER, u, this.context);
+        User u = new User(Util.idHealth(this.db, USERS_TABLE_NAME, USERS_COLUMN_ID), userName, password, firstName, lastName, new Date().getTime(), false, phoneNumber, persent, hourlyWag);
+        User boUser = u;
+        boUser.setUserName(Util.getString(boUser.getUserName()));
+        boUser.setPassword(Util.getString(boUser.getPassword()));
+        boUser.setFirstName(Util.getString(boUser.getFirstName()));
+        boUser.setLastName(Util.getString(boUser.getLastName()));
+        boUser.setPhoneNumber(Util.getString(boUser.getPhoneNumber()));
+        sendToBroker(MessageType.ADD_USER, boUser, this.context);
 
         try {
             long insertResult = insertEntry(u);
@@ -89,7 +94,7 @@ public class UserDBAdapter {
         val.put(USERS_COLUMN_PASSWORD, user.getPassword());
         val.put(USERS_COLUMN_FIRSTNAME, user.getFirstName());
         val.put(USERS_COLUMN_LASTNAME, user.getLastName());
-        val.put(USERS_COLUMN_CREATINGDATE, user.getCreatingDate().getTime());
+        val.put(USERS_COLUMN_CREATINGDATE, user.getCreatingDate());
         val.put(USERS_COLUMN_DISENABLED, user.isHide() ? 1 : 0);
         val.put(USERS_COLUMN_PHONENUMBER, user.getPhoneNumber());
         val.put(USERS_COLUMN_DISCOUNTINPERCENTAGE, user.getPresent());
@@ -168,6 +173,8 @@ public class UserDBAdapter {
     }
 
     public void updateEntry(User user) {
+        UserDBAdapter userDBAdapter = new UserDBAdapter(context);
+        userDBAdapter.open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(USERS_COLUMN_USERNAME, user.getUserName());
@@ -180,6 +187,10 @@ public class UserDBAdapter {
 
         String where = USERS_COLUMN_ID + " = ?";
         db.update(USERS_TABLE_NAME, val, where, new String[]{user.getId() + ""});
+        User u=userDBAdapter.getUserByID(user.getId());
+        Log.d("Update Object",u.toString());
+        sendToBroker(MessageType.UPDATE_USER, u, this.context);
+        userDBAdapter.close();
     }
 
     public boolean availableUserName(String userName) {
@@ -239,7 +250,7 @@ public class UserDBAdapter {
         return new User(Long.parseLong(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_ID)))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_USERNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PASSWORD))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_FIRSTNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_LASTNAME))
-                , DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_CREATINGDATE)))
+                , cursor.getLong(cursor.getColumnIndex(USERS_COLUMN_CREATINGDATE))
                 , Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISENABLED)))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PHONENUMBER))
                 , Double.parseDouble(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISCOUNTINPERCENTAGE)))
@@ -261,7 +272,7 @@ public class UserDBAdapter {
         user = new User(Long.parseLong(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_ID)))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_USERNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PASSWORD))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_FIRSTNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_LASTNAME))
-                , DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_CREATINGDATE)))
+                , cursor.getLong(cursor.getColumnIndex(USERS_COLUMN_CREATINGDATE))
                 , Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISENABLED)))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PHONENUMBER))
                 , Double.parseDouble(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISCOUNTINPERCENTAGE)))
@@ -269,5 +280,36 @@ public class UserDBAdapter {
         );
         cursor.close();
         return user.getFullName();
+    }
+    public Boolean isValidPassword(String password) {
+        Cursor cursor = db.query(USERS_TABLE_NAME, null, USERS_COLUMN_PASSWORD + "=?", new String[]{password}, null, null, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+
+            return true;
+        }
+        return false;
+    }
+    public User getUserByPassword(String password) {
+        User user = null;
+        Cursor cursor = db.query(USERS_TABLE_NAME, null, USERS_COLUMN_PASSWORD + "=?", new String[]{password}, null, null, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() < 1) // UserName Not Exist
+        {
+            cursor.close();
+            return user;
+        }
+        cursor.moveToFirst();
+        user = new User(Long.parseLong(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_ID)))
+                , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_USERNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PASSWORD))
+                , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_FIRSTNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_LASTNAME))
+                , cursor.getLong(cursor.getColumnIndex(USERS_COLUMN_CREATINGDATE))
+                , Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISENABLED)))
+                , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PHONENUMBER))
+                , Double.parseDouble(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISCOUNTINPERCENTAGE)))
+                , Double.parseDouble(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_HOURLYWAGE)))
+        );
+        cursor.close();
+        return user;
     }
 }

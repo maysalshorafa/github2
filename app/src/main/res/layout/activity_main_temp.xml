@@ -576,7 +576,6 @@
                             android:layout_gravity="center"
                             android:ems="10"
                             android:hint="@string/search"
-                            android:inputType="textPersonName"
                             android:textAlignment="textEnd"
                             android:textSize="13dp"
                             app:drawableLeftCompat="@drawable/ic_icons_leaders_search" />

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,7 +49,7 @@ public class ZReportListViewAdapter extends ArrayAdapter {
         }
 
         holder.tvZID.setText(context.getString(R.string.z_number)+" "+ZReportList.get(position).getId());
-        holder.tvZCreateDate.setText(DateConverter.DateToString(ZReportList.get(position).getCreationDate()));
+        holder.tvZCreateDate.setText(DateConverter.DateToString(new Date(ZReportList.get(position).getCreationDate())));
         holder.tvZUserName.setText("");
         if(ZReportList.get(position).getUser()!=null)
             holder.tvZUserName.setText(ZReportList.get(position).getUser().getFullName());

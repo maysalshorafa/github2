@@ -22,14 +22,13 @@ public class CreditCardPayment {
     private double firstPaymentAmount;
     private double otherPaymentAmount;
     private String cardholder;
-    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
-    private Date createDate;
+    private long createDate;
 
 
     public CreditCardPayment() {
     }
 
-    public CreditCardPayment(long saleId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, Date createDate) {
+    public CreditCardPayment(long saleId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, long createDate) {
         this.saleId = saleId;
         this.amount = amount;
         CreditCardCompanyName = creditCardCompanyName;
@@ -44,7 +43,7 @@ public class CreditCardPayment {
         this.createDate = createDate;
     }
 
-    public CreditCardPayment(long id, long saleId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, Date createDate) {
+    public CreditCardPayment(long id, long saleId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, long createDate) {
         this.id = id;
         this.saleId = saleId;
         this.amount = amount;
@@ -110,7 +109,7 @@ public class CreditCardPayment {
         return cardholder;
     }
 
-    public Date getCreateDate() {
+    public long getCreateDate() {
         return createDate;
     }
 
@@ -167,7 +166,7 @@ public class CreditCardPayment {
         this.cardholder = cardholder;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(long createDate) {
         this.createDate = createDate;
     }
 

@@ -65,7 +65,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    protected static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 3;
 
     protected static final String DATABASE_NAME = "POSDB.db";
     protected static final String CONTACTS_TABLE_NAME = "contacts";
@@ -155,7 +155,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (3 , 'product');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (4 , 'department');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (5 , 'user');");
-        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (6 , 'offer');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (6 , 'Schedule Workers');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (7 , 'back up');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (8 , 'settings');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (9 , 'user club');");
@@ -204,6 +204,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (4,'test1','test1','test1','"+new Date().getTime()+"','12',0,046316969,20,35);");
 
 
+        updateDataBase(db);
 
         List<String> tblNames = tablesName(db);
         String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
@@ -244,11 +245,11 @@ public class DbHelper extends SQLiteOpenHelper {
             DATABASE_ENABEL_ALTER_COLUMN = true;
 
             //method to updateDataBaseVersion2
-            updateDataBase(db);
+            /*updateDataBase(db);
             db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "CustomerMeasurement" + " INTEGER DEFAULT 0;");
             db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "MeasurementsDetails" + " INTEGER DEFAULT 0;");
             db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "MeasurementDynamicVariable" + " INTEGER DEFAULT 0;");
-
+*/
             //end
         }
 /*

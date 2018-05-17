@@ -7,7 +7,7 @@ package com.pos.leaders.leaderspossystem.Models;
 public class ValueOfPoint {
     public long id ;
     public double value;
-    public String create_Date ;
+    public long create_Date ;
 
     public ValueOfPoint() {
     }
@@ -28,15 +28,15 @@ public class ValueOfPoint {
         this.value = value;
     }
 
-    public String getCreate_Date() {
+    public long getCreate_Date() {
         return create_Date;
     }
 
-    public void setCreate_Date(String create_Date) {
+    public void setCreate_Date(long create_Date) {
         this.create_Date = create_Date;
     }
 
-    public ValueOfPoint(long id, double value, String create_Date) {
+    public ValueOfPoint(long id, double value, long create_Date) {
         this.id=id;
         this.value=value;
         this.create_Date=create_Date;

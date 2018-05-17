@@ -17,6 +17,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
@@ -38,6 +39,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
@@ -46,6 +48,7 @@ import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.AReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.City;
+import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
@@ -68,6 +71,7 @@ import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.Permission.UserPermissions;
@@ -538,6 +542,13 @@ public class SyncMessage extends Service {
 
                 //region CLUB
                 case MessageType.ADD_CLUB:
+                    Club club = null;
+                    club = objectMapper.readValue(msgData, Club.class);
+
+                    ClubAdapter clubAdapter = new ClubAdapter(this);
+                    clubAdapter.open();
+                    rID = clubAdapter.insertEntry(club);
+                    clubAdapter.close();
                     break;
                 case MessageType.UPDATE_CLUB:
                     break;
@@ -797,6 +808,20 @@ public class SyncMessage extends Service {
                     break;
                 //end
 
+                //region ScheduleWorker
+                case MessageType.ADD_SCHEDULE_WORKERS:
+                    ScheduleWorkers scheduleWorkers = null;
+                    scheduleWorkers= objectMapper.readValue(msgData, ScheduleWorkers.class);
+                    ScheduleWorkersDBAdapter scheduleWorkersDBAdapter = new ScheduleWorkersDBAdapter(this);
+
+                    scheduleWorkersDBAdapter.open();
+                    rID=scheduleWorkersDBAdapter.insertEntry(scheduleWorkers);
+                    scheduleWorkersDBAdapter.close();
+                    break;
+                //end
+
+
+
 
             }
         }else{
@@ -1030,13 +1055,13 @@ public class SyncMessage extends Service {
 
 
             case MessageType.ADD_USER:
-                res = messageTransmit.authPost(ApiURL.Users, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authPost(ApiURL.User, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_USER:
-                res = messageTransmit.authPut(ApiURL.Users, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authPut(ApiURL.User, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.DELETE_USER:
-                res = messageTransmit.authDelete(ApiURL.Users, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authDelete(ApiURL.User, jsonObject.getString(MessageKey.Data), token);
                 break;
             //Currencies
 
@@ -1151,6 +1176,17 @@ public class SyncMessage extends Service {
                 break;
             case MessageType.DELETE_MEASUREMENTS_DYNAMIC_VARIABLE:
                 res = messageTransmit.authDelete(ApiURL.MeasurementDynamicVariable, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //End
+            //ScheduleWorker
+            case MessageType.ADD_SCHEDULE_WORKERS:
+                res = messageTransmit.authPost(ApiURL.ScheduleWorker, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_SCHEDULE_WORKERS:
+                res = messageTransmit.authPut(ApiURL.ScheduleWorker, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.DELETE_SCHEDULE_WORKERS:
+                res = messageTransmit.authDelete(ApiURL.ScheduleWorker, jsonObject.getString(MessageKey.Data), token);
                 break;
             //End
 

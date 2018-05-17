@@ -15,7 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
+            android:layout_margin="8dp"
             android:layout_weight="1"
             android:orientation="vertical"
             android:padding="8dp">
@@ -249,14 +249,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="8dp"
                 android:orientation="horizontal">
 
 
                 <Button
                     android:id="@+id/settings_btSave"
                     style="@style/AppTheme.bt_green"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
@@ -266,7 +266,7 @@
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
- </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <View
@@ -285,7 +285,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="4dp"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
@@ -443,13 +443,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="8dp"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/settings_editPosSetting"
                     style="@style/AppTheme.bt_normal"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"

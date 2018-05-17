@@ -9,7 +9,6 @@ import android.graphics.Typeface;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Sale;
@@ -304,7 +303,7 @@ public class BitmapInvoice {
 
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
-        StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" + DateConverter.dateToString(zReport.getCreationDate().getTime()) + "\n\r" + "קןפאי : " + zReport.getUser().getFullName()+ status , head,
+        StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" + DateConverter.dateToString(zReport.getCreationDate()) + "\n\r" + "קןפאי : " + zReport.getUser().getFullName()+ status , head,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
         StaticLayout posSales = new StaticLayout( "\n"  +context.getString(R.string.pos_sales)+" "+totalZReportAmount, posSaleStyle,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
@@ -324,29 +323,33 @@ public class BitmapInvoice {
         invoiceD.setColor(Color.BLACK);
         invoiceD.setTypeface(bold);
         invoiceD.setTextSize(28);
+        invoiceD.setLinearText(true);
+
+        //invoiceD.setTextAlign(Paint.Align.LEFT);
 
         TextPaint invoiceCD = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
         invoiceCD.setStyle(Paint.Style.FILL);
         invoiceCD.setColor(Color.BLACK);
         invoiceCD.setTypeface(bold);
-        invoiceCD.setTextSize(25);
+        invoiceCD.setTextSize(28);
+        invoiceCD.setLinearText(true);
 
         TextPaint orderTP = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
         orderTP.setStyle(Paint.Style.FILL);
         orderTP.setColor(Color.BLACK);
         orderTP.setTypeface(normal);
         orderTP.setTextSize(25);
-        orderTP.setTextAlign(Paint.Align.LEFT);
         orderTP.setLinearText(true);
 
-        StaticLayout sInvoiceD = new StaticLayout("פריט \t\t\t\t\t\t\t\t נכנס  \t\t\t\t\t זיכוי \t\t\t סה''כ", invoiceD,
-                PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
-        StaticLayout scInvoiceD = new StaticLayout(context.getString(R.string.different) + "\t\t" + context.getString(R.string.out_put) + "\t" + context.getString(R.string.in_put) + "\t\t" + context.getString(R.string.currency) + "\t\t\t\t\t", invoiceCD,
-                PAGE_WIDTH, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
+        StaticLayout sInvoiceD = new StaticLayout("\u200F"+context.getString(R.string.details) +  "\t\t\t\t\t\t\t\t\t"+context.getString(R.string.in_put)+ "\t\t"+ context.getString(R.string.out_put) + "\t\t\t" + context.getString(R.string.total) , invoiceD,
+                PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+
+        StaticLayout scInvoiceD = new StaticLayout("\u200F"+context.getString(R.string.currency) +  "\t\t\t\t\t\t\t\t"+context.getString(R.string.in_put)+ "\t\t"+ context.getString(R.string.out_put) + "\t\t\t" + context.getString(R.string.total) , invoiceD,
+                PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
 
 
         String names = "", in = "", out = "", total = "";
-        names += "מזומן" + "\n" + "אשראי" + "\n" + "המחאות" + "\n" + "קרן" + "\n" + "סה''כ קופה"+ "\n" + "סה''כ עסקאות";
+        names +="\u200F"+context.getString(R.string.cash) + "\n" +"\u200F"+context.getString(R.string.credit_card)+ "\n" +"\u200F"+ context.getString(R.string.checks) + "\n"+ "\u200F"+context.getString(R.string.a_report_amount) + "\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount)+ "\n"+"\u200F"+context.getString(R.string.total_sales);
 
         in += dTS(cash_plus) + "\n" + dTS(creditCard_plus) + "\n" + dTS(check_plus) + "\n" + "~" + "\n" + dTS(cash_plus + check_plus + creditCard_plus)+ "\n" + dTS(cash_plus + check_plus + creditCard_plus);
         out += dTS(cash_minus) + "\n" + dTS(creditCard_minus) + "\n" + dTS(check_minus) + "\n" + "~" + "\n" + dTS(cash_minus + check_minus + creditCard_minus)+ "\n" + dTS(cash_minus + check_minus + creditCard_minus);
@@ -354,7 +357,7 @@ public class BitmapInvoice {
                 dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus + starterAmount)+ "\n" +   dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus );
 
         StaticLayout slNames = new StaticLayout(names, orderTP,
-                (int) (PAGE_WIDTH * 0.4), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+                (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
         StaticLayout slIn = new StaticLayout(in, orderTP,
                 (int) (PAGE_WIDTH * 0.2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
         StaticLayout slOut = new StaticLayout(out, orderTP,
@@ -367,10 +370,10 @@ public class BitmapInvoice {
 
 
         StaticLayout sNewLine = new StaticLayout("-----------------------------", invoiceHead,
-                PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
+                PAGE_WIDTH, Layout.Alignment.ALIGN_OPPOSITE, 1.0f, 1.0f, true);
 
 
-        names = context.getString(R.string.usd) + "\n" + context.getString(R.string.eur) + "\n" + context.getString(R.string.gbp) + "\n" + context.getString(R.string.shekel);
+        names = "\u200F"+context.getString(R.string.usd) + "\n"+"\u200F"+ context.getString(R.string.eur) + "\n" +"\u200F"+ context.getString(R.string.gbp) + "\n" +"\u200F"+ context.getString(R.string.shekel);
 
         String cIn = "", cOut = "", cTotal = "";
         cIn = dTS(usa_plus) + "\n" + dTS(eur_plus) + "\n" + dTS(gbp_plus) + "\n" + dTS(sheqle_plus);
@@ -378,7 +381,7 @@ public class BitmapInvoice {
         cTotal = "\n" + dTS(usa_plus - usa_minus) + "\n" + dTS(eur_plus - eur_minus) + "\n" + dTS(gbp_plus - gbp_minus) + "\n" + dTS(sheqle_plus - sheqle_minus);
 
         StaticLayout cSlNames = new StaticLayout(names, orderTP,
-                (int) (PAGE_WIDTH * 0.4), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+                (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
         StaticLayout cSlIn = new StaticLayout(cIn, orderTP,
                 (int) (PAGE_WIDTH * 0.2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
         StaticLayout cSlOut = new StaticLayout(cOut, orderTP,
@@ -414,6 +417,7 @@ public class BitmapInvoice {
         sInvoiceHead.draw(c);
         c.translate(0, sInvoiceHead.getHeight());
         sInvoiceD.draw(c);
+
 
         c.translate(0, sInvoiceD.getHeight());
         slTotal.draw(c);
@@ -509,7 +513,7 @@ public class BitmapInvoice {
                 PAGE_WIDTH, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
 
 
-       // names += context.getString(R.string.usd) + "\n" + context.getString(R.string.eur) + "\n" + context.getString(R.string.gbp) + "\n" + context.getString(R.string.shekel) + "\n" + "מזומן" + "\n" + "אשראי" + "\n" + "המחאות" + "\n" + "קרן" + "\n" + "סה''כ";
+        // names += context.getString(R.string.usd) + "\n" + context.getString(R.string.eur) + "\n" + context.getString(R.string.gbp) + "\n" + context.getString(R.string.shekel) + "\n" + "מזומן" + "\n" + "אשראי" + "\n" + "המחאות" + "\n" + "קרן" + "\n" + "סה''כ";
 
 
         String names = "", in = "", out = "", total = "";
@@ -707,3 +711,4 @@ public class BitmapInvoice {
         return null;//invoiceImg.make();
     }
 }
+

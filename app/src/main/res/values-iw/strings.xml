@@ -32,8 +32,8 @@
         <item>חיוב מיידי</item>
         <item> מועדון אשראי</item>
         <item>סופר קרדיט</item>-->
-        <item>קרדיט/קרדיט בתשלומים קבועים</item>
         <item>תשלומים</item>
+        <item>קרדיט/קרדיט בתשלומים קבועים</item>
         <!--<item>עסקת מועדון בתשלומים</item>-->
     </string-array>
     <!--Invoice-->
@@ -209,4 +209,16 @@
     <string name="advance">מתקדם</string>
 
     <string name="pos_sales">כה\'\'כ מצטבר: </string>
+
+    <string name="copy_date">תאריך הדפסה</string>
+
+    <string name="a_report_amount">קרן</string>
+    <string name="total_with_a_report_amount">כה\'\'כ קופה</string>
+    <string name="total_sales">סה\'\'כ עסקאות</string>
+    <string name="in_put">נכנס</string>
+    <string name="out_put">זיכוי</string>
+    <string name="details">פריט</string>
+    <string name="cashiers">קןפאי:</string>
+
+
 </resources>

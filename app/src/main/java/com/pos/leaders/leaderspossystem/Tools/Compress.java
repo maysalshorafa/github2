@@ -80,9 +80,9 @@ class customList<T,E> extends AbstractCollection<T> {
 class test{
     public static void main1(String[] args){
         String []s=new String[2]; //declare an array for storing the files i.e the path of your source files
-        s[0]="C:/Users/TOSHIBA/Desktop/11/clover-pos-station-front.jpg";    //Type the path of the files in here
-        s[1]="C:/Users/TOSHIBA/Desktop/11/shopify-pos-uk.jpg"; // path of the second file
-        new Compress(s,"C:/Users/TOSHIBA/Desktop/11/MyZipFolder.zip").zip();
+        s[0]="C:/User/TOSHIBA/Desktop/11/clover-pos-station-front.jpg";    //Type the path of the files in here
+        s[1]="C:/User/TOSHIBA/Desktop/11/shopify-pos-uk.jpg"; // path of the second file
+        new Compress(s,"C:/User/TOSHIBA/Desktop/11/MyZipFolder.zip").zip();
         //zip((s,"/mnt/sdcard/MyZipFolder.zip");    //call the zip function
     }
 

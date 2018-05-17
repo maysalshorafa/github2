@@ -12,15 +12,12 @@ import java.util.Date;
 public class ScheduleWorkers {
     private long id;
     private long userId;
-    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
-    private Date date;
-    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
-    private Date startTime;
-    @JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
-    private Date exitTime;
+    private long date;
+    private long startTime;
+    private long exitTime;
 
     // Constructors
-    public ScheduleWorkers(long id, long userId, Date date, Date startTime, Date exitTime) {
+    public ScheduleWorkers(long id, long userId, long date, long startTime, long exitTime) {
         this.id = id;
         this.userId = userId;
         this.date = date;
@@ -28,14 +25,14 @@ public class ScheduleWorkers {
         this.exitTime = exitTime;
     }
 
-    public ScheduleWorkers(long id, long userId, Date date, Date startTime) {
+    public ScheduleWorkers(long id, long userId, long date, long startTime) {
         this.id = id;
         this.userId = userId;
         this.date = date;
         this.startTime = startTime;
     }
 
-    public ScheduleWorkers(long userId,Date date,Date startTime){
+    public ScheduleWorkers(long userId,long date,long startTime){
         this.userId=userId;
         this.date=date;
         this.startTime=startTime;
@@ -57,21 +54,21 @@ public class ScheduleWorkers {
         return userId;
     }
 
-    public Date getDate() {
+    public long getDate() {
         return date;
     }
 
-    public Date getStartTime() {
+    public long getStartTime() {
         return startTime;
     }
 
-    public Date getExitTime() {
+    public long getExitTime() {
         return exitTime;
     }
 
 
     // Setters
-    public void setExitTime(Date exitTime) {
+    public void setExitTime(long exitTime) {
         this.exitTime = exitTime;
     }
 

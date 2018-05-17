@@ -10,7 +10,6 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.R;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -49,7 +48,7 @@ public class ProductDBAdapter {
     // TODO: Create public field for each column in your table.
     // SQL Statement to create a new database.
     public static final String DATABASE_CREATE="CREATE TABLE products ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, "+
-            "`name` TEXT NOT NULL, `barcode` INTEGER NOT NULL, `description` TEXT,"+
+            "`name` TEXT NOT NULL, `barcode` TEXT , `description` TEXT,"+
             "`price` REAL NOT NULL, `costPrice` REAL, `withTax` INTEGER NOT NULL DEFAULT 1, "+
             "`weighable` INTEGER NOT NULL DEFAULT 0, `creatingDate` TEXT NOT NULL DEFAULT current_timestamp, "+
             "`hide` INTEGER DEFAULT 0, `depId` INTEGER NOT NULL, `byUser` INTEGER NOT NULL, `status` INTEGER NOT NULL DEFAULT 0 ,  `with_pos` INTEGER NOT NULL DEFAULT 1, `with_point_system` INTEGER NOT NULL DEFAULT 1,"+
@@ -82,11 +81,15 @@ public class ProductDBAdapter {
 
     public long insertEntry(String name,String barCode,String description,double price,double costPrice,
                            boolean withTax,boolean weighable,long depId,long byUser ,int pos,int point_system) {
-        Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price, costPrice, withTax, weighable, new Date(), depId, byUser, pos, point_system);
+        Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price, costPrice, withTax, weighable, new Date().getTime(), depId, byUser, pos, point_system);
 
         long id = insertEntry(p);
         if (id > 0) {
-            sendToBroker(MessageType.ADD_PRODUCT, p, this.context);
+            Product boProduct=p;
+            boProduct.setName(Util.getString(boProduct.getName()));
+            boProduct.setDescription(Util.getString(boProduct.getDescription()));
+            boProduct.setBarCode(Util.getString(boProduct.getBarCode()));
+            sendToBroker(MessageType.ADD_PRODUCT, boProduct, this.context);
         }
         return id;
     }
@@ -176,6 +179,8 @@ public class ProductDBAdapter {
     }
 
     public void updateEntry(Product product) {
+        ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
+        productDBAdapter.open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(PRODUCTS_COLUMN_NAME, product.getName());
@@ -190,6 +195,10 @@ public class ProductDBAdapter {
 
         String where = PRODUCTS_COLUMN_ID + " = ?";
         db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getId() + ""});
+        Product p=productDBAdapter.getProductByID(product.getId());
+        Log.d("Update Object",p.toString());
+        sendToBroker(MessageType.UPDATE_PRODUCT, p, this.context);
+        productDBAdapter.close();
     }
 
     public List<Product> getAllProducts(){
@@ -272,7 +281,7 @@ public class ProductDBAdapter {
                 cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DESCRIPTION)),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_COSTPRICE))),
-                withTaxStatus, weighableStatus, DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
+                withTaxStatus, weighableStatus, cursor.getLong(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE)),
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))),

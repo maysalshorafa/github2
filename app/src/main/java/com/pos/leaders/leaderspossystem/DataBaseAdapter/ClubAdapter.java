@@ -71,7 +71,10 @@ public class ClubAdapter {
 
     public long insertEntry( String name,String description, int type, float parcent, int amount, int point) {
         Club group = new Club(Util.idHealth(this.db, Group_TABLE_NAME, Group_COLUMN__ID), name, description, type, parcent, amount, point, false );
-        sendToBroker(MessageType.ADD_CLUB, group, this.context);
+        Club boClub=group;
+        boClub.setName(Util.getString(boClub.getName()));
+        boClub.setDescription(Util.getString(boClub.getDescription()));
+        sendToBroker(MessageType.ADD_CLUB, boClub, this.context);
 
         try {
             long insertResult = insertEntry(group);
@@ -86,10 +89,10 @@ public class ClubAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Group_COLUMN__ID, group.getId());
-        val.put(Group_COLUMN_Name, group.getname());
+        val.put(Group_COLUMN_Name, group.getName());
         val.put(Group_COLUMN__Descrption, group.getDescription());
         val.put(Group_COLUMN_Type, group.getType());
-        val.put(Group_COLUMN_Parcent, group.getParcent());
+        val.put(Group_COLUMN_Parcent, group.getPercent());
         val.put(Group_COLUMN_Amount, group.getAmount());
         val.put(Group_COLUMN_Point, group.getPoint());
         val.put(Group_COLUMN_DISENABLED, group.isHide()?1:0);
@@ -102,17 +105,23 @@ public class ClubAdapter {
     }
 
     public int updateEntry(Club club){
+        ClubAdapter clubAdapter =new ClubAdapter(context);
+        clubAdapter.open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Group_COLUMN_Name,club.getname());
+        val.put(Group_COLUMN_Name,club.getName());
         val.put(Group_COLUMN__Descrption,club.getDescription());
         val.put(Group_COLUMN_Type,club.getType());
-        val.put(Group_COLUMN_Parcent,club.getParcent());
+        val.put(Group_COLUMN_Parcent,club.getPercent());
         val.put(Group_COLUMN_Amount,club.getAmount());
         val.put(Group_COLUMN_Point,club.getPoint());
         try {
             String where = Group_COLUMN__ID + " = ?";
             db.update(Group_TABLE_NAME, val, where, new String[]{club.getId() + ""});
+            Club c=clubAdapter.getGroupByID(club.getId());
+            Log.d("UpDate Object",c.toString());
+            sendToBroker(MessageType.UPDATE_CLUB, c, this.context);
+            clubAdapter.close();
             return 1;
         } catch (SQLException ex) {
             Log.e("Club insertEntry", "inserting Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());

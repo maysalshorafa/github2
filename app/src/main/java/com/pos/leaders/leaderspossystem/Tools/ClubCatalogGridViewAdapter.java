@@ -97,7 +97,7 @@ public class ClubCatalogGridViewAdapter  extends BaseAdapter {
         //TextView tvFullName=(TextView)gridView.findViewById(R.id.custmerGridView_TVFullName);
         TextView tcClubType=(TextView)gridView.findViewById(R.id.clubGridView_TVClubType);
 
-        tvClubName.setText(groups.get(position).getname());
+        tvClubName.setText(groups.get(position).getName());
         //   tvFullName.setText(customers.get(position).getFullName());
         tcClubType.setText(""+groups.get(position).getDescription());
 

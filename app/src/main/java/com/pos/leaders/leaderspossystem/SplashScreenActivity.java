@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -10,10 +11,16 @@ import android.widget.ImageView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.SettingsTab.BOPOSVersionSettings;
+import com.pos.leaders.leaderspossystem.SettingsTab.StartBoVersionSettingConnection;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 
+import org.json.JSONException;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,6 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import static com.pos.leaders.leaderspossystem.SetUpManagement.POS_Management;
+import static com.pos.leaders.leaderspossystem.SettingsTab.BOPOSVersionSettings.BO_SETTING;
 
 /**
  * Created by KARAM on 19/11/2016.
@@ -33,6 +41,10 @@ public class SplashScreenActivity extends Activity {
     public static boolean  currencyEnable , creditCardEnable , customerMeasurementEnable ;
     public static int floatPoint;
     public static String printerType ;
+    public static final String LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_VERSION = "LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_VERSION";
+    public static final String LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_DB_VERSION = "LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_DB_VERSION";
+    public static final String LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_FE_VERSION = "LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_FE_VERSION";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -265,6 +277,14 @@ public class SplashScreenActivity extends Activity {
 
         }
         else{
+            File f = new File("/data/data/com.pos.leaders.leaderspossystem/shared_prefs/BO_SETTING.xml");
+            if (f.exists()) {
+                Log.d("TAG", "SharedPreferences BO_SETTING : exist");
+            }
+            else{
+                BoSetting();
+                Log.d("TAG", "Setup default preferences");
+            }
             if(newPosManagement()) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -516,6 +536,50 @@ public class SplashScreenActivity extends Activity {
             startActivity(i);
         }
    return true;
+    }
+    // get BoSetting and store in shared preference file
+    private void BoSetting() {
+        final SharedPreferences preferences =getSharedPreferences(BO_SETTING, MODE_PRIVATE);
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected void onPreExecute() {
+
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                try {
+                    if(BOPOSVersionSettings.jsonObject!=null){
+                    final SharedPreferences.Editor editor = preferences.edit();
+                    if(!BOPOSVersionSettings.jsonObject.getString(MessageKey.version).equals(null)){
+                        final String  BoVersionNo =  BOPOSVersionSettings.jsonObject.getString(MessageKey.version);
+                        editor.putString(LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_VERSION, BoVersionNo);
+
+                    }
+                    if(!BOPOSVersionSettings.jsonObject.getString(MessageKey.dbVersion).equals(null)) {
+                        final String BoDbVersionNo =BOPOSVersionSettings.jsonObject.getString(MessageKey.dbVersion);
+                        editor.putString(LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_DB_VERSION, BoDbVersionNo);
+                    }
+                    if(!BOPOSVersionSettings.jsonObject.getString(MessageKey.FEVersion).equals(null)) {
+                        final String FrontVersionNo =BOPOSVersionSettings.jsonObject.getString(MessageKey.FEVersion);
+                        editor.putString(LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_FE_VERSION, FrontVersionNo);
+                    }
+                    editor.apply();
+                        }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                final StartBoVersionSettingConnection s1 = new StartBoVersionSettingConnection();
+                s1.onPostExecute("a");
+                return null;
+            }
+        }.execute();
+
     }
 
 }

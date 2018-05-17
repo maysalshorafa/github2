@@ -36,18 +36,24 @@ public class AccessToken extends AsyncTask<Context,Void,String> {
         SharedPreferences prefs = context.getSharedPreferences(SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH, Context.MODE_PRIVATE);
         String posID = prefs.getString(MessageKey.PosID, null);
         String posPass = prefs.getString(MessageKey.PosPass, null);
+        String companyName = prefs.getString(MessageKey.companyName, null);
 
         if (posID != null && posPass != null) {
             //call api auth
             try {
-                String authRes = messageTransmit.post(ApiURL.Authentication, MessagesCreator.authentication(posID, posPass));
+                String authRes = messageTransmit.post(ApiURL.Authentication, MessagesCreator.authentication(posID, posPass,companyName));
                 Log.i("result token", authRes);
                 JSONObject jsonObject = new JSONObject(authRes);
-                String token = jsonObject.getString(MessageKey.Token);
-                SharedPreferences sharedpreferences = context.getSharedPreferences(SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString(MessageKey.Token, token);
-                editor.apply();
+                String token = "";
+                if (jsonObject.getString(MessageKey.status).equals("200")) {
+                    JSONObject res = jsonObject.getJSONObject(MessageKey.responseBody);
+                    token = res.getString(MessageKey.Token);
+                    SharedPreferences sharedpreferences = context.getSharedPreferences(SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString(MessageKey.Token, token);
+                    editor.apply();
+                }
+
                 onPostExecute(token);
                 cancel(true);
 

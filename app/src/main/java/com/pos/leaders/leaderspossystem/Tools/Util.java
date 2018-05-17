@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -317,6 +318,29 @@ public class Util {
         boolean result = matcher.matches();
         return result;
     }
+    public static String getString(String value)  {
+        ArrayList<String> test = new ArrayList<String>();
+        for(int i= 0 ; i<value.length();i++){
+           if (String.valueOf(value.charAt(i)).equals("'")) {
+                test.add("\\\\'");
+           }
+           /*
+           if (String.valueOf(value.charAt(i)).equals("י")) {
+                test.add("י\\");
+           }*/
+           else  if(String.valueOf(value.charAt(i)).equals("\"")){
+               test.add("\\\"");
 
+           }
+           else {
+                test.add(String.valueOf(value.charAt(i)));
+            }
+        }
+        String a= "";
+        for(int i=0;i<test.size();i++){
+            a+=test.get(i);
+        }
+        return a;
+    }
 
 }

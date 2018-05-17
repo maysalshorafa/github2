@@ -175,15 +175,17 @@ public class SettingActivity extends AppCompatActivity {
         MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
             String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
-
+            jsonObject = new JSONObject(res);
             try {
-                jsonObject = new JSONObject(res);
-                SettingActivity.jsonObject = jsonObject;
+
+                if(!jsonObject.getString(MessageKey.status).equals("200"))
+                    return;
+                SettingActivity.jsonObject = jsonObject.getJSONObject(MessageKey.responseBody);
                 Log.i(SettingActivity.LOG_TAG, jsonObject.toString());
 
             }
             catch (JSONException e){
-                JSONArray jsonArray = new JSONArray(res);
+                JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.responseBody);
                 jsonObject = jsonArray.getJSONObject(0);
                 SettingActivity.jsonObject = jsonObject;
                  Log.i(SettingActivity.LOG_TAG, jsonObject.toString());

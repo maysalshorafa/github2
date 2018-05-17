@@ -48,7 +48,7 @@ public class ValueOfPointDB {
         return db;
     }
 
-      public long insertEntry( int value,String create_date) {
+      public long insertEntry( int value,long create_date) {
         ValueOfPoint valueOfPoint = new ValueOfPoint(Util.idHealth(this.db, ValueOfPoint_TABLE_NAME, Value_COLUMN_Id),value, create_date);
         sendToBroker(MessageType.ADD_VALUE_OF_POINT, valueOfPoint, this.context);
 
@@ -84,7 +84,7 @@ public class ValueOfPointDB {
         }        cursor.moveToLast();
         valueOfPoint =new ValueOfPoint(Long.parseLong(cursor.getString(cursor.getColumnIndex(Value_COLUMN_Id))),Double.parseDouble(
                 cursor.getString(cursor.getColumnIndex(Value_COLUMN))),
-                cursor.getString(cursor.getColumnIndex(CreateDate_Value_COLUMN_CreateDate)));
+                cursor.getLong(cursor.getColumnIndex(CreateDate_Value_COLUMN_CreateDate)));
         return valueOfPoint;
     }
 }

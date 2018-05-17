@@ -100,8 +100,19 @@ public class CustomerDBAdapter {
 
     public long insertEntry(String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, int cityId, long clubId, String houseNumber, String postalCode, String country, String countryCode) {
         Customer customer_m = new Customer(Util.idHealth(this.db, CUSTOMER_TABLE_NAME, CUSTOMER_COLUMN_ID), firstName, lastName, gender, email, job, phoneNumber, street, false, cityId, clubId, houseNumber, postalCode, country, countryCode);
-        sendToBroker(MessageType.ADD_CUSTOMER, customer_m, this.context);
-
+        Customer boCustomer = customer_m;
+        boCustomer.setFirstName(Util.getString(boCustomer.getFirstName()));
+        boCustomer.setLastName(Util.getString(boCustomer.getLastName()));
+        boCustomer.setGender(Util.getString(boCustomer.getGender()));
+        boCustomer.setEmail(Util.getString(boCustomer.getEmail()));
+        boCustomer.setJob(Util.getString(boCustomer.getJob()));
+        boCustomer.setPhoneNumber(Util.getString(boCustomer.getPhoneNumber()));
+        boCustomer.setStreet(Util.getString(boCustomer.getStreet()));
+        boCustomer.setHouseNumber(Util.getString(boCustomer.getHouseNumber()));
+        boCustomer.setPostalCode(Util.getString(boCustomer.getPostalCode()));
+        boCustomer.setCountry(Util.getString(boCustomer.getCountry()));
+        boCustomer.setCountryCode(Util.getString(boCustomer.getCountryCode()));
+        sendToBroker(MessageType.ADD_CUSTOMER, boCustomer, this.context);
         try {
             long insertResult = insertEntry(customer_m);
             return insertResult;
@@ -168,6 +179,8 @@ public class CustomerDBAdapter {
 
 
     public void updateEntry(Customer customer) {
+        CustomerDBAdapter customerDBAdapter=new CustomerDBAdapter(context);
+        customerDBAdapter.open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(CUSTOMER_COLUMN_FIRST_NAME, customer.getFirstName());
@@ -186,6 +199,10 @@ public class CustomerDBAdapter {
         val.put(CUSTOMER_COLUMN_COUNTRY_CODE, customer.getCountryCode());
         String where = CUSTOMER_COLUMN_ID + " = ?";
         db.update(CUSTOMER_TABLE_NAME, val, where, new String[]{customer.getId() + ""});
+        Customer c=customerDBAdapter.getCustomerByID(customer.getId());
+        Log.d("Update Object",c.toString());
+        sendToBroker(MessageType.UPDATE_CUSTOMER, c, this.context);
+        customerDBAdapter.close();
 
     }
 

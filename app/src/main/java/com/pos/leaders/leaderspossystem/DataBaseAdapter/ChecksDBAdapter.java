@@ -71,7 +71,7 @@ public class ChecksDBAdapter {
 
 
 
-	public long insertEntry(int checkNum,int bankNum,int branchNum,int accountNum,double amount,Date date, long saleId) {
+	public long insertEntry(int checkNum,int bankNum,int branchNum,int accountNum,double amount,long date, long saleId) {
         Check check = new Check(Util.idHealth(this.db, CHECKS_TABLE_NAME, CHECKS_COLUMN_ID), checkNum, bankNum, branchNum, accountNum, amount, date, false, saleId);
         sendToBroker(MessageType.ADD_CHECK, check, this.context);
 
@@ -93,7 +93,7 @@ public class ChecksDBAdapter {
 		val.put(CHECKS_COLUMN_BRANCHNUMBER, check.getBranchNum());
 		val.put(CHECKS_COLUMN_ACCOUNTNUMBER, check.getAccountNum());
 		val.put(CHECKS_COLUMN_AMOUNT,check.getAmount() );
-		val.put(CHECKS_COLUMN_DATE,DateConverter.DateToString(check.getDate()));
+		val.put(CHECKS_COLUMN_DATE,check.getDate());
         val.put(CHECKS_COLUMN_ISDELETED, check.isDeleted() ? 1 : 0);
         val.put(CHECKS_COLUMN_SALEID, check.getSaleId());
 		try {
@@ -138,7 +138,7 @@ public class ChecksDBAdapter {
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_BRANCHNUMBER))),
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_ACCOUNTNUMBER))),
 				Double.parseDouble(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_AMOUNT))),
-				DateConverter.stringToDate(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_DATE))),
+				cursor.getLong(cursor.getColumnIndex(CHECKS_COLUMN_DATE)),
 				Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_ISDELETED))),
 				Long.parseLong(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_SALEID))));
 	}

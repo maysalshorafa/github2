@@ -66,7 +66,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
             "Report",
             "Product",
             "Department",
-            "Users",
+            "User",
             "Offers",
             "BackUp",
             "Tax",
@@ -263,7 +263,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
 
                 try {
                     scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getId(), new Date());
-                    SESSION._SCHEDULEWORKERS.setExitTime(new Date());
+                    SESSION._SCHEDULEWORKERS.setExitTime(new Date().getTime());
                     Log.i("Worker get out", SESSION._SCHEDULEWORKERS.toString());
                 } catch (Exception ex) {
                 }

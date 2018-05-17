@@ -11,14 +11,11 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
-
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
-
-import com.pos.leaders.leaderspossystem.Models.AReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Payment;
@@ -29,7 +26,6 @@ import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
-import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -48,7 +44,7 @@ import POSSDK.POSSDK;
 
 public class PrintTools {
     POSSDK pos;
-    private Context context;
+    private static Context context;
 
     public PrintTools(Context context) {
         this.context = context;
@@ -430,7 +426,7 @@ public class PrintTools {
     }
 
     // get Payment List
-    public List<Payment> paymentList(List<Sale> sales) {
+    public static List<Payment> paymentList(List<Sale> sales) {
         List<Payment> pl = new ArrayList<Payment>();
         PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(context);
         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
@@ -453,7 +449,7 @@ public class PrintTools {
     }
 
     // get Cash Payment List
-    private List<CashPayment> cashPaymentList(List<Sale> sales) {
+    public static List<CashPayment> cashPaymentList(List<Sale> sales) {
         List<CashPayment> pl = new ArrayList<CashPayment>();
         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
         cashPaymentDBAdapter.open();
@@ -466,7 +462,7 @@ public class PrintTools {
     }
 
     // get Currency Return  List
-    private List<CurrencyReturns> returnPaymentList(List<Sale> sales) {
+    public static List<CurrencyReturns> returnPaymentList(List<Sale> sales) {
         List<CurrencyReturns> pl = new ArrayList<CurrencyReturns>();
         CurrencyReturnsDBAdapter currencyDBAdapter = new CurrencyReturnsDBAdapter(context);
         currencyDBAdapter.open();

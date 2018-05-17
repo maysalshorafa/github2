@@ -18,8 +18,7 @@ public class Check {
 	private int branchNum;
 	private int accountNum;
 	private double amount;
-	@JsonDeserialize(using=CustomerDateAndTimeDeserialize.class)
-	private Date date;
+	private long date;
 	private boolean deleted;
 	private long saleId;
 
@@ -27,7 +26,7 @@ public class Check {
 
 
 
-	public Check(long id, int checkNum, int bankNum, int branchNum, int accountNum, double amount, Date date, boolean deleted, long saleId) {
+	public Check(long id, int checkNum, int bankNum, int branchNum, int accountNum, double amount, long date, boolean deleted, long saleId) {
 		this.accountNum = accountNum;
 		this.amount = amount;
 		this.bankNum = bankNum;
@@ -39,7 +38,7 @@ public class Check {
 		this.saleId = saleId;
 	}
 
-	public Check(int checkNum, int bankNum, int branchNum, int accountNum, double amount, Date date, boolean deleted) {
+	public Check(int checkNum, int bankNum, int branchNum, int accountNum, double amount, long date, boolean deleted) {
 		this.accountNum = accountNum;
 		this.amount = amount;
 		this.bankNum = bankNum;
@@ -81,7 +80,7 @@ public class Check {
 		return checkNum;
 	}
 
-	public Date getDate() {
+	public long getDate() {
 		return date;
 	}
 
@@ -125,7 +124,7 @@ public class Check {
 		this.checkNum = checkNum;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(long date) {
 		this.date = date;
 	}
 
@@ -162,7 +161,7 @@ public class Check {
 
         return ("D120" + String.format(Util.locale, "%09d", rowNumber) + companyID + s + String.format(Util.locale, "%020d", saleId) + String.format(Util.locale, "%04d", saleId) +
                 paymentType + String.format(Util.locale, "%010d", bankNum) + String.format(Util.locale, "%010d", branchNum) + String.format(Util.locale, "%015d", accountNum) +
-                String.format(Util.locale, "%010d", checkNum) + DateConverter.getYYYYMMDD(this.date) + OP + Util.x12V99(amount) + cardType + Util.spaces(20) +
+                String.format(Util.locale, "%010d", checkNum) + DateConverter.getYYYYMMDD(new Date(this.date)) + OP + Util.x12V99(amount) + cardType + Util.spaces(20) +
                 "0" + Util.spaces(7) + DateConverter.getYYYYMMDD(date) + String.format(Util.locale, "%07d", parentNumber) + Util.spaces(60));
     }
 

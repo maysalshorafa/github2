@@ -1,7 +1,6 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,6 @@ import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.R;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -68,7 +65,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		holder.tvID.setText(salesList.get(position).getId() + "");
 		holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
 		holder.tvPaid.setText(Util.makePrice(salesList.get(position).getTotalPaid()) + " " + context.getString(R.string.ins));
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat format = new SimpleDateFormat();
 		holder.tvDate.setText(format.format(salesList.get(position).getSaleDate()));
 		holder.tvUseName.setText(salesList.get(position).getUser().getFullName());
 		holder.FL.setVisibility(View.GONE);
