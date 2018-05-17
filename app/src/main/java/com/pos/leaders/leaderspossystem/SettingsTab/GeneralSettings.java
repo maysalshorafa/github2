@@ -24,12 +24,15 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
+import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+
+import static com.pos.leaders.leaderspossystem.SettingsTab.GeneralSettings.context;
 
 /**
  * Created by Win8.1 on 3/25/2018.
@@ -43,6 +46,7 @@ public class GeneralSettings extends Fragment {
     protected static Context context = null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        context=getContext();
         View v= inflater.inflate(R.layout.general_setting_fragment, container, false);
         etCompanyName = (TextView) v.findViewById(R.id.settings_etCompanyName);
         etCompanyName.setEnabled(false);
@@ -224,10 +228,15 @@ class StartCompanyCredentialsConnection extends AsyncTask<String,Void,String> {
 
             @Override
             protected Void doInBackground(Void... params) {
-                try {
-                    GeneralSettings.updateSettings(token);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (SyncMessage.isConnected(context)) {
+                    try {
+                        GeneralSettings.updateSettings(token);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.d("fail", "fail internet connection");
+
                 }
 
                 return null;
