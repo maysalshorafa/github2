@@ -190,10 +190,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scheduleWorkersDBAdapter=new ScheduleWorkersDBAdapter(getApplicationContext());
+                /*scheduleWorkersDBAdapter=new ScheduleWorkersDBAdapter(getApplicationContext());
                 scheduleWorkersDBAdapter.open();
                 ScheduleWorkers scheduleWorkers = scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(SESSION._USER.getId());
-                scheduleWorkersDBAdapter.updateEntry(SESSION._USER.getId(),new Date());
+                scheduleWorkersDBAdapter.updateEntry(SESSION._USER.getId(),new Date());*/
                 Intent intent = new Intent(DashBord.this, LogInActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 /**

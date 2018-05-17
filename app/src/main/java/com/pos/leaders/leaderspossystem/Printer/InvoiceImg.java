@@ -218,7 +218,7 @@ public class InvoiceImg {
                 o.getProduct().setName(context.getString(R.string.general));
             int cut = 11;
             if (o.getProduct().getName().length() < cut)
-                cut = o.getProduct().getName().length() - 1;
+                cut = o.getProduct().getName().length();
             name.text += (o.getProduct().getName().substring(0, cut) + newLineL);
             String bc = "0000000000";
             if (o.getProduct().getBarCode() != null)
@@ -357,7 +357,7 @@ public class InvoiceImg {
                 o.getProduct().setName(context.getString(R.string.general));
             int cut = 11;
             if (o.getProduct().getName().length() < cut)
-                cut = o.getProduct().getName().length() - 1;
+                cut = o.getProduct().getName().length();
             name.text += (o.getProduct().getName().substring(0, cut) + newLineL);
             String bc = "0000000000";
             if (o.getProduct().getBarCode() != null)
@@ -459,7 +459,7 @@ public class InvoiceImg {
         for (Order o : sale.getOrders()) {
             int cut = 11;
             if (o.getProduct().getName().length() < cut)
-                cut = o.getProduct().getName().length() - 1;
+                cut = o.getProduct().getName().length();
             name.text += (o.getProduct().getName().substring(0, cut) + newLineL);
             String bc = "0000000000";
             if (o.getProduct().getBarCode() != null)
@@ -560,7 +560,7 @@ public class InvoiceImg {
         for (Order o : sale.getOrders()) {
             int cut = 11;
             if (o.getProduct().getName().length() < cut)
-                cut = o.getProduct().getName().length() - 1;
+                cut = o.getProduct().getName().length();
             name.text += (o.getProduct().getName().substring(0, cut) + newLineL);
             String bc = "0000000000";
             if (o.getProduct().getBarCode() != null)

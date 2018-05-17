@@ -129,6 +129,42 @@ public class DepartmentDBAdapter {
             return 0;
         }
     }
+    public long deleteEntryBo(Department department) {
+        // Define the updated row content.
+        ContentValues updatedValues = new ContentValues();
+        // Assign values for each row.
+        updatedValues.put(DEPARTMENTS_COLUMN_DISENABLED, 1);
+
+        String where = DEPARTMENTS_COLUMN_ID + " = ?";
+        try {
+            db.update(DEPARTMENTS_TABLE_NAME, updatedValues, where, new String[]{department.getId() + ""});
+            return 1;
+        } catch (SQLException ex) {
+            Log.e("Department DB delete", "enable hide Entry at " + DEPARTMENTS_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+    }
+
+    public long updateEntryBo(Department department) {
+        DepartmentDBAdapter departmentDBAdapter = new DepartmentDBAdapter(context);
+        departmentDBAdapter.open();
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(DEPARTMENTS_COLUMN_NAME, department.getName());
+        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, department.getCreatingDate());
+        val.put(DEPARTMENTS_COLUMN_BYUSER, department.getByUser());
+        val.put(DEPARTMENTS_COLUMN_DISENABLED, department.isHide());
+        try {
+            String where = DEPARTMENTS_COLUMN_ID + " = ?";
+            db.update(DEPARTMENTS_TABLE_NAME, val, where, new String[]{department.getId() + ""});
+            Department d=departmentDBAdapter.getDepartmentByID(department.getId());
+            Log.d("Update object",d.toString());
+            departmentDBAdapter.close();
+            return 1;
+        } catch (SQLException ex) {
+            return 0;
+        }
+    }
 
     public void updateEntry(Department department) {
         DepartmentDBAdapter departmentDBAdapter = new DepartmentDBAdapter(context);

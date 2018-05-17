@@ -67,7 +67,7 @@ public class GmailClient {
                     Multipart multipart = new MimeMultipart();
 
                     messageBodyPart = new MimeBodyPart();
-                    String fileName = "PosExceptionFile";
+                    String fileName = "PosLogcat.txt";
                     DataSource source = new FileDataSource(file);
                     messageBodyPart.setDataHandler(new DataHandler(source));
                     messageBodyPart.setFileName(fileName);

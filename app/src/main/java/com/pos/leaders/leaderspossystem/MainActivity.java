@@ -1001,6 +1001,7 @@ public class MainActivity extends AppCompatActivity {
                                         int indexOfItem = SESSION._ORDERS.indexOf(selectedOrderOnCart);
                                         double X = SESSION._USER.getPresent();
                                         if (sw.isChecked()) {
+                                            if (!(str.equals(""))) {
                                             double d = Double.parseDouble(str);
                                             int count = SESSION._ORDERS.get(indexOfItem).getCount();
                                             double discount = (1 - (d / (SESSION._ORDERS.get(indexOfItem).getOriginal_price() * count)));
@@ -1012,7 +1013,7 @@ public class MainActivity extends AppCompatActivity {
                                             } else {
                                                 Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                             }
-                                        } else {
+                                        }} else {
                                             if (!(str.equals(""))) {
                                                 float val = Float.parseFloat(str);
                                                 if (val <= X) {
@@ -1294,6 +1295,7 @@ public class MainActivity extends AppCompatActivity {
                             String str = et.getText().toString();
                             double X = SESSION._USER.getPresent();
                             if (sw.isChecked()) {
+                                if (!(str.equals(""))) {
                                 double d = Double.parseDouble(str);
                                 double originalTotalPrice = 0;
                                 for (Order o : SESSION._ORDERS) {
@@ -1308,6 +1310,7 @@ public class MainActivity extends AppCompatActivity {
                                     discountDialog.cancel();
                                 } else {
                                     Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                }
                                 }
                             } else {
                                 if (!(str.equals(""))) {
@@ -1956,13 +1959,26 @@ startActivity(i);
     }
 
     private void addToCart(Product p) {
+        List<Order>orderList = new ArrayList<Order>();
         /*if(p.getOffersIDs()==null){
             ProductOfferDBAdapter productOfferDBAdapter = new ProductOfferDBAdapter(this);
             productOfferDBAdapter.open();
             p.setOffersIDs(productOfferDBAdapter.getProductOffers(p.getId(),offersIDsList));
             productOfferDBAdapter.close();
         }*/
-        SESSION._ORDERS.add(new Order(1, 0, p, p.getPrice(), p.getPrice(), 0));
+        //test if cart have this order before insert to cart and order have'nt discount
+        for(int i=0;i<SESSION._ORDERS.size();i++){
+            Order o = SESSION._ORDERS.get(i);
+            if(o.getProduct().equals(p)&&o.getDiscount()==0){
+                orderList.add(o);
+            }
+        }
+        if(orderList.size()>0){
+            orderList.get(0).setCount(orderList.get(0).getCount()+1);
+        }else {
+            SESSION._ORDERS.add(new Order(1, 0, p, p.getPrice(), p.getPrice(), 0));
+        }
+
         removeOrderItemSelection();
         refreshCart();
     }

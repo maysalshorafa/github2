@@ -171,6 +171,21 @@ public class UserDBAdapter {
             return 0;
         }
     }
+    public long deleteEntryBo(User user) {
+        // Define the updated row content.
+        ContentValues updatedValues = new ContentValues();
+        // Assign values for each row.
+        updatedValues.put(USERS_COLUMN_DISENABLED, 1);
+
+        String where = USERS_COLUMN_ID + " = ?";
+        try {
+            db.update(USERS_TABLE_NAME, updatedValues, where, new String[]{user.getId() + ""});
+            return 1;
+        } catch (SQLException ex) {
+            Log.e("UserDB deleteEntry", "enable hide Entry at " + USERS_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+    }
 
     public void updateEntry(User user) {
         UserDBAdapter userDBAdapter = new UserDBAdapter(context);
@@ -191,6 +206,31 @@ public class UserDBAdapter {
         Log.d("Update Object",u.toString());
         sendToBroker(MessageType.UPDATE_USER, u, this.context);
         userDBAdapter.close();
+    }
+    public long updateEntryBo(User user) {
+        UserDBAdapter userDBAdapter = new UserDBAdapter(context);
+        userDBAdapter.open();
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(USERS_COLUMN_USERNAME, user.getUserName());
+        val.put(USERS_COLUMN_PASSWORD, user.getPassword());
+        val.put(USERS_COLUMN_FIRSTNAME, user.getFirstName());
+        val.put(USERS_COLUMN_LASTNAME, user.getLastName());
+        val.put(USERS_COLUMN_PHONENUMBER, user.getPhoneNumber());
+        val.put(USERS_COLUMN_DISCOUNTINPERCENTAGE, user.getPresent());
+        val.put(USERS_COLUMN_HOURLYWAGE, user.getHourlyWage());
+
+        try {
+            String where = USERS_COLUMN_ID + " = ?";
+            db.update(USERS_TABLE_NAME, val, where, new String[]{user.getId() + ""});
+            User u=userDBAdapter.getUserByID(user.getId());
+            Log.d("Update Object",u.toString());
+            userDBAdapter.close();
+            return 1;
+        } catch (SQLException ex) {
+            return 0;
+        }
+
     }
 
     public boolean availableUserName(String userName) {

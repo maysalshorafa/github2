@@ -205,6 +205,36 @@ public class CustomerDBAdapter {
         customerDBAdapter.close();
 
     }
+    public long updateEntryBo(Customer customer) {
+        CustomerDBAdapter customerDBAdapter=new CustomerDBAdapter(context);
+        customerDBAdapter.open();
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(CUSTOMER_COLUMN_FIRST_NAME, customer.getFirstName());
+        val.put(CUSTOMER_COLUMN_LAST_NAME, customer.getLastName());
+        val.put(CUSTOMER_COLUMN_GENDER, customer.getGender());
+        val.put(CUSTOMER_COLUMN_EMAIL, customer.getEmail());
+        val.put(CUSTOMER_COLUMN_JOB, customer.getJob());
+        val.put(CUSTOMER_COLUMN_DISENABLED, customer.isHide() ? 1 : 0);
+        val.put(CUSTOMER_COLUMN_PHONE_NUMBER, customer.getPhoneNumber());
+        val.put(CUSTOMER_COLUMN_STREET, customer.getStreet());
+        val.put(CUSTOMER_COLUMN_CITY, customer.getCity());
+        val.put(CUSTOMER_COLUMN_CLUB, customer.getClub());
+        val.put(CUSTOMER_COLUMN_HOUSE_NUMBER, customer.getHouseNumber());
+        val.put(CUSTOMER_COLUMN_POSTAL_CODE, customer.getPostalCode());
+        val.put(CUSTOMER_COLUMN_COUNTRY, customer.getCountry());
+        val.put(CUSTOMER_COLUMN_COUNTRY_CODE, customer.getCountryCode());
+        try {
+            String where = CUSTOMER_COLUMN_ID + " = ?";
+            db.update(CUSTOMER_TABLE_NAME, val, where, new String[]{customer.getId() + ""});
+            Customer c=customerDBAdapter.getCustomerByID(customer.getId());
+            Log.d("Update Object",c.toString());
+            customerDBAdapter.close();
+            return 1;
+        } catch (SQLException ex) {
+            return 0;
+        }
+    }
 
     public List<Customer> getTopCustomer(int from, int count) {
         List<Customer> customerList = new ArrayList<Customer>();
@@ -299,6 +329,18 @@ public class CustomerDBAdapter {
         String where = CUSTOMER_COLUMN_ID + " = ?";
         try {
             db.update(CUSTOMER_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+            return 1;
+        } catch (SQLException ex) {
+            Log.e("CustomerDB deleteEntry", "enable hide Entry at " + CUSTOMER_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+    }
+    public long deleteEntryBo(Customer customer) {
+        ContentValues updatedValues = new ContentValues();
+        updatedValues.put(CUSTOMER_COLUMN_DISENABLED, 1);
+        String where = CUSTOMER_COLUMN_ID + " = ?";
+        try {
+            db.update(CUSTOMER_TABLE_NAME, updatedValues, where, new String[]{customer.getId() + ""});
             return 1;
         } catch (SQLException ex) {
             Log.e("CustomerDB deleteEntry", "enable hide Entry at " + CUSTOMER_TABLE_NAME + ": " + ex.getMessage());
