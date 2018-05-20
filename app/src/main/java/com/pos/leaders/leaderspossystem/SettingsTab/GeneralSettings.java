@@ -39,6 +39,7 @@ import static com.pos.leaders.leaderspossystem.SettingsTab.GeneralSettings.conte
  */
 
 public class GeneralSettings extends Fragment {
+    public static boolean checkInternetConnectionVariable;
     TextView etCompanyName, etPrivateCompany, etTax, etTerminalNumber, etTerminalPassword,etInvoiceNote , returnNote;
     Button btSave ;
     public static JSONObject jsonObject;
@@ -94,6 +95,7 @@ public class GeneralSettings extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 try {
+                                if(checkInternetConnectionVariable){
                                 if(GeneralSettings.jsonObject!=null) {
                                     final String CompanyName = GeneralSettings.jsonObject.getString(MessageKey.companyName);
                                     final String PrivateCompany = GeneralSettings.jsonObject.getString(MessageKey.companyID);
@@ -144,6 +146,9 @@ public class GeneralSettings extends Fragment {
                                             })
                                             .setIcon(android.R.drawable.ic_dialog_alert)
                                             .show();
+                                }
+                                }else{
+                                    Toast.makeText(getContext(), getString(R.string.fail_to_make_internet_connection), Toast.LENGTH_SHORT).show();
                                 }
                                 dialog.cancel();
 
@@ -230,11 +235,13 @@ class StartCompanyCredentialsConnection extends AsyncTask<String,Void,String> {
             protected Void doInBackground(Void... params) {
                 if (SyncMessage.isConnected(context)) {
                     try {
+                        GeneralSettings.checkInternetConnectionVariable=true;
                         GeneralSettings.updateSettings(token);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 } else {
+                    GeneralSettings.checkInternetConnectionVariable=false;
                     Log.d("fail", "fail internet connection");
 
                 }
