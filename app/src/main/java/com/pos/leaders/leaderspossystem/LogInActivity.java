@@ -42,6 +42,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     public static final String LEADPOS_MAKE_A_REPORT = "LEADPOS_make_a_report";
     public static double LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT = 0.0;
 
+    private static User DEFAULT_USER = null;
 
     private SQLiteDatabase db;
 
@@ -173,20 +174,25 @@ public class LogInActivity extends Activity implements View.OnClickListener {
         return true;
     }
 
+    private void MakeDefaultUser(){
+        DEFAULT_USER = new User();
+        DEFAULT_USER.setFirstName("LeadPOS");
+        DEFAULT_USER.setLastName("Developer");
+        DEFAULT_USER.setId(0L);
+        DEFAULT_USER.setPassword("117181916131");
+    }
+
     private void login() {
+        MakeDefaultUser();
         String str = et.getText().toString();
         if (str.equals("")) {
             Toast.makeText(this, getResources().getString(R.string.empty_password), Toast.LENGTH_SHORT).show();
-        } else if (str.equals("117181916131")) {
-            User user=new User();
-            user.setFirstName("LeadPOS");
-            user.setLastName("Developer");
+        } else if (str.equals(DEFAULT_USER.getPassword())) {
 
-            user.setId(0L);
             ArrayList<Integer> permissions = new ArrayList<>();
 
 
-            SESSION._USER = new User(user);
+            SESSION._USER = new User(DEFAULT_USER);
 
             permissions.add(0,2);//report
             permissions.add(1,3);//products

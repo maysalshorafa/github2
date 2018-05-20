@@ -121,19 +121,22 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         Intent intent = new Intent();
         intent.setPackage("com.sunmi.mscardservice");
         intent.setAction("com.sunmi.mainservice.MainService");
-        bindService(intent, new ServiceConnection() {
+        try {
+            bindService(intent, new ServiceConnection() {
 
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                sendservice = MSCardService.Stub.asInterface(service);
-            }
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    sendservice = MSCardService.Stub.asInterface(service);
+                }
 
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
 
-            }
-        }, BIND_AUTO_CREATE);
-
+                }
+            }, BIND_AUTO_CREATE);
+        } catch (Exception e) {
+            Log.e("Sunmi MSC ", e.getMessage());
+        }
 
         //sendable.run();
 
@@ -848,7 +851,6 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
 
     }
-
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
