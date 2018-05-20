@@ -1971,7 +1971,7 @@ startActivity(i);
             Order o = SESSION._ORDERS.get(i);
             Log.d("Order",o.toString());
             Log.d("Product",p.toString());
-            if(o.getProduct().equals(p)&&o.getDiscount()==0&&o.getProduct().getName()!=getString(R.string.general)){
+            if(o.getProduct().equals(p)&&o.getDiscount()==0&&o.getProduct().getId()!=-1){
                 orderList.add(o);
             }
         }
