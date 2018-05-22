@@ -1,15 +1,9 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -128,6 +122,14 @@ public class Product {
         this.withTax=true;
         this.byUser = byUser;
     }
+    public Product(long id, String name,double price, long byUser,String barCode) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.byUser = byUser;
+        this.barCode=barCode;
+    }
+
 
     public Product(Product product){
         this(product.getId(),product.getName(),product.getBarCode(),product.getDescription(),

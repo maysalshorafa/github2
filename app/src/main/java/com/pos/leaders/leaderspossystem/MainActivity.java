@@ -1470,7 +1470,7 @@ startActivity(i);
             return;
         }
         if (Double.parseDouble(str) != 0)
-            addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._USER.getId()));
+            addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._USER.getId(),""));
     }
 
     private void showQuickPricePad() {
@@ -1531,7 +1531,7 @@ startActivity(i);
                 break;
             case R.id.touchPadFragment_btEnter:
                 if (!touchPadPressed.equals(""))
-                    addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._USER.getId()));
+                    addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._USER.getId(),""));
                 touchPadPressed = "";
                 break;
             case R.id.touchPadFragment_btDot:
@@ -1969,7 +1969,9 @@ startActivity(i);
         //test if cart have this order before insert to cart and order have'nt discount
         for(int i=0;i<SESSION._ORDERS.size();i++){
             Order o = SESSION._ORDERS.get(i);
-            if(o.getProduct().equals(p)&&o.getDiscount()==0){
+            Log.d("Order",o.toString());
+            Log.d("Product",p.toString());
+            if(o.getProduct().equals(p)&&o.getDiscount()==0&&o.getProduct().getId()!=-1){
                 orderList.add(o);
             }
         }
