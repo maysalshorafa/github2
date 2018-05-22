@@ -99,6 +99,7 @@ import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CashActivity;
 import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.DiscountProductInMainActivityGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -1257,7 +1258,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (SESSION._SALE != null && SESSION._ORDERS != null) {
                     final Dialog discountDialog = new Dialog(MainActivity.this);
-                    discountDialog.setTitle(R.string.please_select_discount_offer);
+                    //discountDialog.setTitle(R.string.discount);
                     discountDialog.setContentView(R.layout.cash_payment_dialog);
                     discountDialog.show();
 
@@ -1265,6 +1266,7 @@ public class MainActivity extends AppCompatActivity {
                     final Button btCancel = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTCancel);
                     final EditText et = (EditText) discountDialog.findViewById(R.id.cashPaymentDialog_TECash);
                     final Switch sw = (Switch) discountDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
+                    final ListView productManagement_LV = (ListView)discountDialog.findViewById(R.id.productManagement_LV);
 
                     sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
@@ -1288,6 +1290,9 @@ public class MainActivity extends AppCompatActivity {
                             return false;
                         }
                     });
+
+                    DiscountProductInMainActivityGridViewAdapter adapter = new DiscountProductInMainActivityGridViewAdapter(getApplicationContext(), SESSION._ORDERS);
+                    productManagement_LV.setAdapter(adapter);
 
                     btOK.setOnClickListener(new View.OnClickListener() {
                         @Override

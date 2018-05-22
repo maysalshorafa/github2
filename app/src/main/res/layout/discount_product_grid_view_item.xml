@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:focusable="false"
+    android:orientation="horizontal"
+    android:weightSum="4"
+    >
+
+    <TextView
+        android:id="@+id/itemProductCatalog_TVName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:focusable="false"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="@color/text"
+        android:textDirection="anyRtl"
+        android:textSize="22sp"
+        android:minLines="1"
+        android:maxLength="14"
+        android:textStyle="bold"
+        android:layout_weight="1"
+        />
+
+    <TextView
+        android:id="@+id/itemProductCatalog_TVCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:focusable="false"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="@color/text"
+        android:textDirection="anyRtl"
+        android:textSize="18sp"
+        android:minLines="1"
+        android:maxLength="14"
+        android:textStyle="bold"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/itemProductCatalog_TVPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:focusable="false"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="@color/text"
+        android:textDirection="anyRtl"
+        android:textSize="18sp"
+        android:minLines="1"
+        android:maxLength="14"
+        android:textStyle="bold"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/itemProductCatalog_TVTotalPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:focusable="false"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="@color/text"
+        android:textDirection="anyRtl"
+        android:textSize="18sp"
+        android:minLines="1"
+        android:maxLength="14"
+        android:textStyle="bold"
+        android:layout_weight="1"/>
+
+
+</LinearLayout>
