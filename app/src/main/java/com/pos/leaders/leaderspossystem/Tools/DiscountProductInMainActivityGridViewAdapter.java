@@ -88,10 +88,7 @@ public class DiscountProductInMainActivityGridViewAdapter extends BaseAdapter {
             inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             gridView=inflater.inflate(R.layout.discount_product_grid_view_item,null);
         }
-        double totalPrice = 0.0;
-        for (int i= 0; i<orders.size();i++){
-          totalPrice+=orders.get(position).getItemTotalPrice();
-        }
+
         TextView tvName=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVName);
         TextView tvTotalPrice=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVTotalPrice);
         TextView tvPrice=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVPrice);
@@ -101,13 +98,21 @@ public class DiscountProductInMainActivityGridViewAdapter extends BaseAdapter {
         tvTotalPrice.setText(orders.get(position).getProduct().getPrice()+"");
         tvPrice.setText(orders.get(position).getProduct().getPrice()+ " " +  context.getString(R.string.ins));
         tvCount.setText(orders.get(position).getCount()+"");
-        tvTotalPrice.setText(totalPrice+"");
+        tvTotalPrice.setText(Util.makePrice(_totalPrice())+context.getString(R.string.ins));
         return gridView;
     }
     private String _Substring(String str){
         if(str.length()>MINCHARNUMBER)
             return str.substring(0,MINCHARNUMBER);
         return str;
+    }
+    private double _totalPrice(){
+
+        double totalPrice = 0.0;
+        for (int i= 0; i<orders.size();i++){
+            totalPrice+=orders.get(i).getPrice();
+        }
+        return totalPrice;
     }
 
 }
