@@ -28,6 +28,9 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             case 2:
                 BOPOSVersionSettings tab3 = new BOPOSVersionSettings();
                 return tab3;
+            case 3:
+                NewTab tab4 = new NewTab();
+                return tab4;
             default:
                 return null;
         }

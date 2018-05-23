@@ -27,6 +27,7 @@ public class SettingsTab extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.general_settings)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.pos_setting)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.version_info)));
+        tabLayout.addTab(tabLayout.newTab().setText("New Tab"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
