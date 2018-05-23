@@ -109,7 +109,7 @@ public class DiscountProductInMainActivityGridViewAdapter extends BaseAdapter {
 
         double totalPrice = 0.0;
         for (int i= 0; i<orders.size();i++){
-            totalPrice+=orders.get(i).getPrice();
+            totalPrice+=orders.get(i).getItemTotalPrice();;
         }
         return totalPrice;
     }
