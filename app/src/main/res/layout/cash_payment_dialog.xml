@@ -27,7 +27,8 @@
             android:layout_weight="1"
             android:background="@drawable/catalogproduct_item_bg"
             android:inputType="numberDecimal"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+             />
 
         <Switch
             android:id="@+id/cashPaymentDialog_SwitchProportion"
@@ -58,106 +59,117 @@
         <ListView
             android:id="@+id/productManagement_LV"
             android:layout_width="match_parent"
-            android:layout_height="150dp"/>
+            android:layout_height="150dp"
+            android:dividerHeight="1sp"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:orientation="vertical"
-        android:background="@drawable/catalogproduct_item_bg"
-        android:weightSum="3"
         android:layout_margin="8dp"
-        >
+        android:background="@drawable/catalogproduct_item_bg"
+        android:orientation="vertical"
+        android:weightSum="3">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_weight="1"
-            android:weightSum="2" >
+            android:orientation="horizontal"
+            android:weightSum="2">
+
             <TextView
+                android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="16dp"
                 android:text="@string/price"
                 android:textColor="@color/black"
                 android:textDirection="anyRtl"
                 android:textSize="24sp"
-                android:layout_weight="1"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/TvTotalPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_weight="1"
                 android:textColor="@color/black"
                 android:textDirection="anyRtl"
                 android:textSize="24sp"
-                android:layout_weight="1"
                 android:textStyle="bold"
-                android:layout_gravity="left"
-                />
+                android:layout_marginRight="8dp"/>
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/white"
             android:layout_margin="12dp"
-            />
+            android:background="@android:color/white" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_weight="1"
-            android:weightSum="2" >
+            android:orientation="horizontal"
+            android:weightSum="2">
+
             <TextView
+                android:id="@+id/textView8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="16dp"
                 android:text="@string/price_after_discount"
                 android:textColor="@color/black"
                 android:textDirection="anyRtl"
                 android:textSize="24sp"
-                android:layout_weight="1"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/TvPriceAfterDiscount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="right"
                 android:layout_weight="1"
                 android:textColor="@color/black"
                 android:textDirection="anyRtl"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:layout_gravity="left"
-                />
+                android:layout_marginRight="8dp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_weight="1"
-            android:weightSum="2" >
+            android:orientation="horizontal"
+            android:weightSum="2">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="16dp"
                 android:text="@string/total_discount"
                 android:textColor="@color/black"
                 android:textDirection="anyRtl"
                 android:textSize="24sp"
-                android:layout_weight="1"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/totalDiscount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_weight="1"
                 android:textColor="@color/black"
                 android:textDirection="anyRtl"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:layout_gravity="left"
-                />
+                android:layout_marginRight="8dp"/>
         </LinearLayout>
     </LinearLayout>
 
