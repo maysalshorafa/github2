@@ -95,8 +95,7 @@ public class DiscountProductInMainActivityGridViewAdapter extends BaseAdapter {
         TextView tvCount=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVCount);
 
         tvName.setText(_Substring(orders.get(position).getProduct().getName()));
-        tvTotalPrice.setText(orders.get(position).getProduct().getPrice()+"");
-        tvPrice.setText(orders.get(position).getProduct().getPrice()+ " " +  context.getString(R.string.ins));
+        tvPrice.setText(orders.get(position).getItemTotalPrice()+ " " +  context.getString(R.string.ins));
         tvCount.setText(orders.get(position).getCount()+"");
         tvTotalPrice.setText(Util.makePrice(_totalPrice())+context.getString(R.string.ins));
         return gridView;

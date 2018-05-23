@@ -1405,13 +1405,13 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 if (!(str.equals(""))) {
                                     float val = Float.parseFloat(str);
-                                        for (Order o : SESSION._ORDERS) {
+                                        for (Order o : orderList) {
                                             o.setDiscount(val);
                                         }
 
                                          double saleTotalPrice = 0;
                                         double SaleOriginalityPrice = 0;
-                                        for (Order o : SESSION._ORDERS) {
+                                        for (Order o : orderList) {
                                             saleTotalPrice += o.getItemTotalPrice();
 
                                             SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
