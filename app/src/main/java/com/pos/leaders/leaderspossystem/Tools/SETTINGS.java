@@ -30,6 +30,7 @@ public class SETTINGS {
 	public static boolean enableCustomerMeasurement;
 
 	public static boolean creditCardEnable;
+	public static boolean pinpadEnable;
 	public static boolean timerState = false;
 	//public static String BO_SERVER_URL = "http://172.16.0.44:8080/leadBO/webapi/";
 

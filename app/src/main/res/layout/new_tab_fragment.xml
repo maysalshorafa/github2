@@ -32,19 +32,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|center"
                 android:gravity="center"
-                android:text="First Value"
-                android:textAlignment="textStart"
+                android:text="@string/ip"
+                android:textAlignment="textEnd"
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/add_first_value"
+                android:id="@+id/pinpad_ip"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:layout_marginBottom="4dp"
                 android:background="@drawable/bubble"
-                android:padding="8dp"
-                android:paddingLeft="5dp" />
+                android:padding="8dp" />
         </LinearLayout>
 
 
@@ -61,20 +61,20 @@
                 android:layout_gravity="top|center"
                 android:gravity="center"
 
-                android:text="Second Value"
+                android:text="@string/user_name"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/second_value"
+                android:id="@+id/pinpad_username"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:layout_marginBottom="4dp"
                 android:background="@drawable/bubble"
-                android:inputType="numberPassword"
-                android:padding="8dp"
-                android:paddingLeft="5dp" />
+                android:inputType="text"
+                android:padding="8dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -90,33 +90,32 @@
                 android:layout_gravity="top|center"
                 android:gravity="center"
 
-                android:text="Third value"
+                android:text="@string/password"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/third_value"
+                android:id="@+id/pinpad_password"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:layout_marginBottom="4dp"
                 android:background="@drawable/bubble"
-                android:inputType="numberPassword"
-                android:padding="8dp"
-                android:paddingLeft="5dp" />
+                android:inputType="text"
+                android:padding="8dp" />
         </LinearLayout>
-
 
 
         <Button
-            android:id="@+id/ok"
+            android:id="@+id/pinpad_save"
             style="@style/AppTheme.bt_normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="4dp"
             android:text="@string/done"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            android:layout_gravity="center"/>
+            android:textSize="18sp" />
     </LinearLayout>
 </RelativeLayout>

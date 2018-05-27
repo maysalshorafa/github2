@@ -91,6 +91,7 @@ import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
+import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
@@ -132,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CASH_ACTIVITY_CODE = 600;
     private static final int REQUEST_CHECKS_ACTIVITY_CODE = 753;
     private static final int REQUEST_CREDIT_CARD_ACTIVITY_CODE = 801;
+    private static final int REQUEST_PIN_PAD_ACTIVITY_CODE = 907;
     public static final String COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE = "com_pos_leaders_cart_total_price";
     String transID = "";
 
@@ -1140,44 +1142,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (SESSION._ORDERS.size() > 0 && SETTINGS.creditCardEnable) {
-                    //final String __customerName = customerName_EditText.getText().toString();
-                    Intent intent = new Intent(MainActivity.this, MainCreditCardActivity.class);
-                    intent.putExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
-                    startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
+                    if (SETTINGS.pinpadEnable) {//pinpad is active
+                        Log.i("CreditCard", "PinPad is active");
+                        Intent intent = new Intent(MainActivity.this, PinpadActivity.class);
+                        intent.putExtra(PinpadActivity.LEADERS_POS_PIN_PAD_TOTAL_PRICE, saleTotalPrice);
+                        startActivityForResult(intent, REQUEST_PIN_PAD_ACTIVITY_CODE);
+                    } else {//old school
+                        //final String __customerName = customerName_EditText.getText().toString();
+                        Intent intent = new Intent(MainActivity.this, MainCreditCardActivity.class);
+                        intent.putExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
+                        startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
+                    }
 
-                    /*
-                    final Context c = MainActivity.this;
-                    new AlertDialog.Builder(c)
-                            .setTitle(c.getResources().getString(R.string.clearCartAlertTitle))
-                            //.setMessage(c.getResources().getString(R.string.clearCartAlertMessage))
-                            .setPositiveButton(c.getResources().getString(R.string.by_card), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(c, CreditCardActivity.class);
-                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
-                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_CUSTOMER, __customerName);
-
-                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TYPE, CreditCardActivity.LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PASS_CARD);
-                                    startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
-                                    dialog.cancel();
-                                }
-                            })
-                            .setNegativeButton(c.getResources().getString(R.string.by_phone), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    customerName = customerName_EditText.getText().toString();
-
-                                    Intent intent = new Intent(c, CreditCardActivity.class);
-                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
-                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_CUSTOMER, __customerName);
-
-                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TYPE, CreditCardActivity.LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PHONE);
-                                    startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
-                                    dialog.cancel();
-                                }
-                            })
-                            .setIcon(android.R.drawable.sym_contact_card)
-                            .show();*/
                 }
             }
         });
@@ -2540,6 +2516,31 @@ startActivity(i);
         }
 
         //endregion
+
+
+        //region PinPad
+        if (requestCode == REQUEST_PIN_PAD_ACTIVITY_CODE) {
+            if (resultCode == RESULT_OK) {
+                //// TODO: 27/05/2018 : print the invoice
+
+            } else if (resultCode == RESULT_CANCELED) {
+                new AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.fail))
+                        .setMessage(getString(R.string.cant_finish_this_action))
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+
+
+            }
+        //endregion PinPad
+
+
 
         //region Checks
 

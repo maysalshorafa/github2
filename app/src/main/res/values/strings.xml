@@ -80,8 +80,6 @@
     <string name="please_insert_department_name_with_out_spaces">Please Insert Department Name WithOut Spaces.</string>
 
 
-
-
     <!--Splash Screen-->
 
     <!--Log In Screen-->
@@ -488,6 +486,7 @@
     <string name="invalid_payments_number">Please insert valid payments number between 2 and 36.</string>
     <string name="active_currency_service_in_pos">If you want to active Currency Service in your Pos Check the Currency CheckBox</string>
     <string name="active_credit_card_service_in_pos">If you want to active CreditCard Service in your Pos Check the CreditCard CheckBox</string>
+    <string name="active_pin_pad_service_in_pos">If you want to active PinPad Service in your Pos Check the PinPad CheckBox</string>
     <string name="active_customer_measurement_service_in_pos">If you want to active CustomerMeasurement Service in your Pos Check the CustomerMeasurement CheckBox</string>
     <string name="choose_no_of_float_point"> Choose No Of Float Point</string>
     <string name="choose_printer_type">Choose Printer Type</string>
@@ -526,6 +525,7 @@
     <string name="total_sales">Total Sales</string>
     <string name="details">Details</string>
     <string name="cashiers">Cashiers :</string>
+    <string name="ip">IP Address</string>
 
 </resources>
 
