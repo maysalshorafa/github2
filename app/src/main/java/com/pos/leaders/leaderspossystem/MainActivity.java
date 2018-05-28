@@ -100,6 +100,7 @@ import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CashActivity;
 import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.DiscountProductInMainActivityGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -269,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
     TextView orderSalesMan;
     ImageView deleteOrderSalesMan;
     String fromEditText="";
+ 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -962,7 +964,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 Button btnDiscount = (Button) view.findViewById(R.id.rowSaleDetails_Dicount);
-                btnDiscount.setOnClickListener(new View.OnClickListener() {
+              btnDiscount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (selectedIteminCartList != null) {
@@ -970,12 +972,21 @@ public class MainActivity extends AppCompatActivity {
                                 final TextView discountPercentage = (TextView) view.findViewById(R.id.discountPercentage);
                                 final TextView tvDiscountPercentage = (TextView) view.findViewById(R.id.tvDiscountPercentageAmount);
                                 final Dialog cashDialog = new Dialog(MainActivity.this);
-                                cashDialog.setTitle(R.string.please_select_discount_offer);
+                                cashDialog.setTitle(R.string.discount);
                                 cashDialog.setContentView(R.layout.cash_payment_dialog);
                                 cashDialog.show();
                                 final Button cashBTOk = (Button) cashDialog.findViewById(R.id.cashPaymentDialog_BTOk);
                                 final EditText cashETCash = (EditText) cashDialog.findViewById(R.id.cashPaymentDialog_TECash);
                                 final Switch sw = (Switch) cashDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
+                                final ListView productManagement_LV = (ListView)cashDialog.findViewById(R.id.productManagement_LV);
+                                final TextView totalPrice =(TextView)cashDialog.findViewById(R.id.TvTotalPrice);
+                                final TextView priceAfterDiscount =(TextView)cashDialog.findViewById(R.id.TvPriceAfterDiscount);
+                                List<Order>list=new ArrayList<Order>();
+                                list.add(selectedOrderOnCart);
+                                DiscountProductInMainActivityGridViewAdapter adapter = new DiscountProductInMainActivityGridViewAdapter(getApplicationContext(), list);
+                                productManagement_LV.setAdapter(adapter);
+                                final TextView totalDiscount =(TextView)cashDialog.findViewById(R.id.totalDiscount);
+                                totalPrice.setText(Util.makePrice(selectedOrderOnCart.getPrice())+getString(R.string.ins));
                                 sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                     @Override
                                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -996,6 +1007,67 @@ public class MainActivity extends AppCompatActivity {
                                         return false;
                                     }
                                 });
+                                final List<Order>orderList=list;
+                                cashETCash.addTextChangedListener(new TextWatcher() {
+                                    @Override
+                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                    }
+
+                                    @Override
+                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    }
+
+                                    @Override
+                                    public void afterTextChanged(Editable s) {
+                                        String str = cashETCash.getText().toString();
+                                        if (sw.isChecked()) {
+                                            if (!(str.equals(""))) {
+                                                double d = Double.parseDouble(str);
+                                                double originalTotalPrice = 0;
+                                                for (Order o : orderList) {
+                                                    originalTotalPrice += (o.getOriginal_price() * o.getCount());
+                                                }
+                                                double val = (1 - (d / originalTotalPrice)) * 100;
+                                                for (Order o : orderList) {
+                                                    o.setDiscount(val);
+                                                }
+                                                double saleTotalPrice = 0;
+                                                double SaleOriginalityPrice = 0;
+                                                for (Order o : orderList) {
+                                                    saleTotalPrice += o.getItemTotalPrice();
+
+                                                    SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                                }
+                                                totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                                priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+                                            }else {
+                                                totalDiscount.setText("");
+                                                priceAfterDiscount.setText("");
+                                            }
+                                        } else {
+                                            if (!(str.equals(""))) {
+                                                float val = Float.parseFloat(str);
+                                                for (Order o : orderList) {
+                                                    o.setDiscount(val);
+                                                }
+
+                                                double saleTotalPrice = 0;
+                                                double SaleOriginalityPrice = 0;
+                                                for (Order o : orderList) {
+                                                    saleTotalPrice += o.getItemTotalPrice();
+
+                                                    SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                                }
+                                                totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                                priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+
+                                            }else {
+                                                totalDiscount.setText("");
+                                                priceAfterDiscount.setText("");
+                                            }
+                                        }
+                                    }
+                                });
                                 cashBTOk.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -1004,18 +1076,18 @@ public class MainActivity extends AppCompatActivity {
                                         double X = SESSION._USER.getPresent();
                                         if (sw.isChecked()) {
                                             if (!(str.equals(""))) {
-                                            double d = Double.parseDouble(str);
-                                            int count = SESSION._ORDERS.get(indexOfItem).getCount();
-                                            double discount = (1 - (d / (SESSION._ORDERS.get(indexOfItem).getOriginal_price() * count)));
+                                                double d = Double.parseDouble(str);
+                                                int count = SESSION._ORDERS.get(indexOfItem).getCount();
+                                                double discount = (1 - (d / (SESSION._ORDERS.get(indexOfItem).getOriginal_price() * count)));
 
-                                            if (discount <= (X / 100)) {
-                                                SESSION._ORDERS.get(indexOfItem).setDiscount(discount * 100);
-                                                refreshCart();
-                                                cashDialog.cancel();
-                                            } else {
-                                                Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
-                                            }
-                                        }} else {
+                                                if (discount <= (X / 100)) {
+                                                    SESSION._ORDERS.get(indexOfItem).setDiscount(discount * 100);
+                                                    refreshCart();
+                                                    cashDialog.cancel();
+                                                } else {
+                                                    Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }} else {
                                             if (!(str.equals(""))) {
                                                 float val = Float.parseFloat(str);
                                                 if (val <= X) {
@@ -1233,7 +1305,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (SESSION._SALE != null && SESSION._ORDERS != null) {
                     final Dialog discountDialog = new Dialog(MainActivity.this);
-                    discountDialog.setTitle(R.string.please_select_discount_offer);
+                    discountDialog.setTitle(R.string.discount);
                     discountDialog.setContentView(R.layout.cash_payment_dialog);
                     discountDialog.show();
 
@@ -1241,7 +1313,13 @@ public class MainActivity extends AppCompatActivity {
                     final Button btCancel = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTCancel);
                     final EditText et = (EditText) discountDialog.findViewById(R.id.cashPaymentDialog_TECash);
                     final Switch sw = (Switch) discountDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
-
+                    final ListView productManagement_LV = (ListView)discountDialog.findViewById(R.id.productManagement_LV);
+                    final TextView totalPrice =(TextView)discountDialog.findViewById(R.id.TvTotalPrice);
+                    final TextView priceAfterDiscount =(TextView)discountDialog.findViewById(R.id.TvPriceAfterDiscount);
+                    DiscountProductInMainActivityGridViewAdapter adapter = new DiscountProductInMainActivityGridViewAdapter(getApplicationContext(), SESSION._ORDERS);
+                    productManagement_LV.setAdapter(adapter);
+                    final TextView totalDiscount =(TextView)discountDialog.findViewById(R.id.totalDiscount);
+                    totalPrice.setText(tvTotalPrice.getText().toString());
                     sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -1264,7 +1342,67 @@ public class MainActivity extends AppCompatActivity {
                             return false;
                         }
                     });
+                    final List<Order>orderList=SESSION._ORDERS;
+                    et.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
 
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            String str = et.getText().toString();
+                            if (sw.isChecked()) {
+                                if (!(str.equals(""))) {
+                                    double d = Double.parseDouble(str);
+                                    double originalTotalPrice = 0;
+                                    for (Order o : orderList) {
+                                        originalTotalPrice += (o.getOriginal_price() * o.getCount());
+                                    }
+                                        double val = (1 - (d / originalTotalPrice)) * 100;
+                                        for (Order o : orderList) {
+                                            o.setDiscount(val);
+                                        }
+                                        double saleTotalPrice = 0;
+                                        double SaleOriginalityPrice = 0;
+                                        for (Order o : orderList) {
+                                            saleTotalPrice += o.getItemTotalPrice();
+
+                                            SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                        }
+                                        totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                        priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+                                }else {
+                                    totalDiscount.setText("");
+                                    priceAfterDiscount.setText("");
+                                }
+                            } else {
+                                if (!(str.equals(""))) {
+                                    float val = Float.parseFloat(str);
+                                        for (Order o : orderList) {
+                                            o.setDiscount(val);
+                                        }
+
+                                         double saleTotalPrice = 0;
+                                        double SaleOriginalityPrice = 0;
+                                        for (Order o : orderList) {
+                                            saleTotalPrice += o.getItemTotalPrice();
+
+                                            SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                        }
+                                        totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                        priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+
+                                }else {
+                                    totalDiscount.setText("");
+                                    priceAfterDiscount.setText("");
+                                }
+                            }
+                        }
+                    });
                     btOK.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -1272,28 +1410,28 @@ public class MainActivity extends AppCompatActivity {
                             double X = SESSION._USER.getPresent();
                             if (sw.isChecked()) {
                                 if (!(str.equals(""))) {
-                                double d = Double.parseDouble(str);
-                                double originalTotalPrice = 0;
-                                for (Order o : SESSION._ORDERS) {
-                                    originalTotalPrice += (o.getOriginal_price() * o.getCount());
-                                }
-                                if ((1 - (d / originalTotalPrice) <= (X / 100))) {
-                                    double val = (1 - (d / originalTotalPrice)) * 100;
+                                    double d = Double.parseDouble(str);
+                                    double originalTotalPrice = 0;
                                     for (Order o : SESSION._ORDERS) {
-                                        o.setDiscount(val);
+                                        originalTotalPrice += (o.getOriginal_price() * o.getCount());
                                     }
-                                    refreshCart();
-                                    discountDialog.cancel();
-                                } else {
-                                    Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
-                                }
+                                    if ((1 - (d / originalTotalPrice) <= (X / 100))) {
+                                        double val = (1 - (d / originalTotalPrice)) * 100;
+                                        for (Order o : SESSION._ORDERS) {
+                                            o.setDiscount(val);
+                                        }
+                                        refreshCart();
+                                        discountDialog.cancel();
+                                    } else {
+                                        Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             } else {
                                 if (!(str.equals(""))) {
                                     float val = Float.parseFloat(str);
                                     if (val <= X) {
                                         for (Order o : SESSION._ORDERS) {
-                                            o.setDiscount(val);
+                                                o.setDiscount(val);
                                         }
 
                                         refreshCart();
@@ -1954,7 +2092,7 @@ startActivity(i);
         if(orderList.size()>0){
             orderList.get(0).setCount(orderList.get(0).getCount()+1);
         }else {
-            SESSION._ORDERS.add(new Order(1, 0, p, p.getPrice(), p.getPrice(), 0));
+            SESSION._ORDERS.add(new Order(1, 0, p, p.getPrice(), p.getPrice(),0));
         }
 
         removeOrderItemSelection();

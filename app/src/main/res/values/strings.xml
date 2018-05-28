@@ -123,7 +123,8 @@
     <string name="general">General</string>
     <string name="general_product">General Product</string>
     <string name="price">Price</string>
-
+    <string name="price_after_discount">Price after discount</string>
+    <string name="total_discount">Total Discount</string>
     <string name="clearCartAlertTitle">Clear Cart</string>
     <string name="clearCartAlertMessage">Do you want to delete all the items on the cart?</string>
     <string name="yes">Yes</string>
