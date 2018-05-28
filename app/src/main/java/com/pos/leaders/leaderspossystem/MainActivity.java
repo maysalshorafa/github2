@@ -946,7 +946,6 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 });
 
-
                                 Switch s = (Switch) cashDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
                                 s.setVisibility(View.GONE);
                             } else {
@@ -968,12 +967,22 @@ public class MainActivity extends AppCompatActivity {
                                 final TextView discountPercentage = (TextView) view.findViewById(R.id.discountPercentage);
                                 final TextView tvDiscountPercentage = (TextView) view.findViewById(R.id.tvDiscountPercentageAmount);
                                 final Dialog cashDialog = new Dialog(MainActivity.this);
-                                cashDialog.setTitle(R.string.please_select_discount_offer);
-                                cashDialog.setContentView(R.layout.cash_payment_dialog);
+                               // cashDialog.setTitle(R.string.please_select_discount_offer);
+                                cashDialog.setContentView(R.layout.discount_dialog);
                                 cashDialog.show();
                                 final Button cashBTOk = (Button) cashDialog.findViewById(R.id.cashPaymentDialog_BTOk);
                                 final EditText cashETCash = (EditText) cashDialog.findViewById(R.id.cashPaymentDialog_TECash);
                                 final Switch sw = (Switch) cashDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
+                                final TextView totalPrice =(TextView)cashDialog.findViewById(R.id.TvTotalPrice);
+                                final TextView priceAfterDiscount =(TextView)cashDialog.findViewById(R.id.TvPriceAfterDiscount);
+                                final TextView totalDiscount =(TextView)cashDialog.findViewById(R.id.totalDiscount);
+                                totalPrice.setText(Util.makePrice(selectedOrderOnCart.getPrice())+getString(R.string.ins));
+                                List<Order>list=new ArrayList<Order>();
+                                list.add(selectedOrderOnCart);
+                                final TextView discountType =(TextView)cashDialog.findViewById(R.id. cashPaymentDialog_TVStatus);
+                                discountType.setText("Product Name:"+selectedOrderOnCart.getProduct().getName());
+                                totalDiscount.setText("0.0");
+                                priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice())+getString(R.string.ins));
                                 sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                     @Override
                                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -992,6 +1001,67 @@ public class MainActivity extends AppCompatActivity {
                                             cashBTOk.callOnClick();
                                         }
                                         return false;
+                                    }
+                                });
+                                final List<Order>orderList=list;
+                                cashETCash.addTextChangedListener(new TextWatcher() {
+                                    @Override
+                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                    }
+
+                                    @Override
+                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    }
+
+                                    @Override
+                                    public void afterTextChanged(Editable s) {
+                                        String str = cashETCash.getText().toString();
+                                        if (sw.isChecked()) {
+                                            if (!(str.equals(""))) {
+                                                double d = Double.parseDouble(str);
+                                                double originalTotalPrice = 0;
+                                                for (Order o : orderList) {
+                                                    originalTotalPrice += (o.getOriginal_price() * o.getCount());
+                                                }
+                                                double val = (1 - (d / originalTotalPrice)) * 100;
+                                                for (Order o : orderList) {
+                                                    o.setDiscount(val);
+                                                }
+                                                double saleTotalPrice = 0;
+                                                double SaleOriginalityPrice = 0;
+                                                for (Order o : orderList) {
+                                                    saleTotalPrice += o.getItemTotalPrice();
+
+                                                    SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                                }
+                                                totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                                priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+                                            }else {
+                                                totalDiscount.setText("0.0");
+                                                priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice())+getString(R.string.ins));
+                                            }
+                                        } else {
+                                            if (!(str.equals(""))) {
+                                                float val = Float.parseFloat(str);
+                                                for (Order o : orderList) {
+                                                    o.setDiscount(val);
+                                                }
+
+                                                double saleTotalPrice = 0;
+                                                double SaleOriginalityPrice = 0;
+                                                for (Order o : orderList) {
+                                                    saleTotalPrice += o.getItemTotalPrice();
+
+                                                    SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                                }
+                                                totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                                priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+
+                                            }else {
+                                                totalDiscount.setText("0.0");
+                                                priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice())+getString(R.string.ins));
+                                            }
+                                        }
                                     }
                                 });
                                 cashBTOk.setOnClickListener(new View.OnClickListener() {
@@ -1028,13 +1098,6 @@ public class MainActivity extends AppCompatActivity {
                                                 }
                                             }
                                         }
-                                    }
-                                });
-                                Button cashBTCancel = (Button) cashDialog.findViewById(R.id.cashPaymentDialog_BTCancel);
-                                cashBTCancel.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        cashDialog.cancel();
                                     }
                                 });
                             } else {
@@ -1257,15 +1320,21 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (SESSION._SALE != null && SESSION._ORDERS != null) {
                     final Dialog discountDialog = new Dialog(MainActivity.this);
-                    discountDialog.setTitle(R.string.please_select_discount_offer);
-                    discountDialog.setContentView(R.layout.cash_payment_dialog);
+                    //discountDialog.setTitle(R.string.please_select_discount_offer);
+                    discountDialog.setContentView(R.layout.discount_dialog);
                     discountDialog.show();
 
                     final Button btOK = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTOk);
-                    final Button btCancel = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTCancel);
                     final EditText et = (EditText) discountDialog.findViewById(R.id.cashPaymentDialog_TECash);
                     final Switch sw = (Switch) discountDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
-
+                    final TextView totalPrice =(TextView)discountDialog.findViewById(R.id.TvTotalPrice);
+                    final TextView priceAfterDiscount =(TextView)discountDialog.findViewById(R.id.TvPriceAfterDiscount);
+                    final TextView totalDiscount =(TextView)discountDialog.findViewById(R.id.totalDiscount);
+                    final TextView discountType =(TextView)discountDialog.findViewById(R.id. cashPaymentDialog_TVStatus);
+                    discountType.setText(getString(R.string.discount));
+                    totalPrice.setText(tvTotalPrice.getText().toString());
+                    totalDiscount.setText("0.0");
+                    priceAfterDiscount.setText(tvTotalPrice.getText().toString());
                     sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -1286,6 +1355,67 @@ public class MainActivity extends AppCompatActivity {
                                 btOK.callOnClick();
                             }
                             return false;
+                        }
+                    });
+                    final List<Order>orderList=SESSION._ORDERS;
+                    et.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            String str = et.getText().toString();
+                            if (sw.isChecked()) {
+                                if (!(str.equals(""))) {
+                                    double d = Double.parseDouble(str);
+                                    double originalTotalPrice = 0;
+                                    for (Order o : orderList) {
+                                        originalTotalPrice += (o.getOriginal_price() * o.getCount());
+                                    }
+                                    double val = (1 - (d / originalTotalPrice)) * 100;
+                                    for (Order o : orderList) {
+                                        o.setDiscount(val);
+                                    }
+                                    double saleTotalPrice = 0;
+                                    double SaleOriginalityPrice = 0;
+                                    for (Order o : orderList) {
+                                        saleTotalPrice += o.getItemTotalPrice();
+
+                                        SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                    }
+                                    totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                    priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+                                }else {
+                                    totalDiscount.setText("0.0");
+                                    priceAfterDiscount.setText(tvTotalPrice.getText().toString());
+                                }
+                            } else {
+                                if (!(str.equals(""))) {
+                                    float val = Float.parseFloat(str);
+                                    for (Order o : orderList) {
+                                        o.setDiscount(val);
+                                    }
+
+                                    double saleTotalPrice = 0;
+                                    double SaleOriginalityPrice = 0;
+                                    for (Order o : orderList) {
+                                        saleTotalPrice += o.getItemTotalPrice();
+
+                                        SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                    }
+                                    totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                    priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+
+                                }else {
+                                    totalDiscount.setText("0.0");
+                                    priceAfterDiscount.setText(tvTotalPrice.getText().toString());
+                                }
+                            }
                         }
                     });
 
@@ -1330,12 +1460,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-                    btCancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            discountDialog.cancel();
-                        }
-                    });
+
 
 
                 } else {
