@@ -97,10 +97,9 @@ public class Transaction {
         if (payments == 1) {
             this.creditTerms = CreditTerms.REGULAR_CREDIT;
             this.numberOfPayments = 1;
-
-            this.firstPaymentAmount = Float.parseFloat(null);
-            this.paymentAmount = Float.parseFloat(null);
+            return;
         }
+
         float totalPrice = Float.parseFloat(String.format(Locale.ENGLISH, "%.2f", amount));
         float fixedPayment = Float.parseFloat(String.format(Locale.ENGLISH, "%.2f", totalPrice / payments));
         float firstPayment = Float.parseFloat(String.format(Locale.ENGLISH, "%.2f", totalPrice - (fixedPayment * (payments - 1))));
