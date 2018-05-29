@@ -23,6 +23,7 @@ import android.util.Pair;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -801,7 +802,7 @@ public class MainActivity extends AppCompatActivity {
  drawerLayout.addDrawerListener(actionBarDrawerToggle);
  actionBarDrawerToggle.syncState();
  **/
-       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //region Order List View
 
@@ -3279,5 +3280,14 @@ startActivity(i);
         //- (Dash), $ (Dollar), % (Percentage), (Space), . (Point), / (Slash), + (Plus)
         String code39="AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789-$% ./+";
         return code39.contains(c+"");
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) // Press Back Icon
+        {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
