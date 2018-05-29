@@ -801,7 +801,7 @@ public class MainActivity extends AppCompatActivity {
  drawerLayout.addDrawerListener(actionBarDrawerToggle);
  actionBarDrawerToggle.syncState();
  **/
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //region Order List View
 
