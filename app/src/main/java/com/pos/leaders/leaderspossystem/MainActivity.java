@@ -967,9 +967,10 @@ public class MainActivity extends AppCompatActivity {
                                 final TextView discountPercentage = (TextView) view.findViewById(R.id.discountPercentage);
                                 final TextView tvDiscountPercentage = (TextView) view.findViewById(R.id.tvDiscountPercentageAmount);
                                 final Dialog cashDialog = new Dialog(MainActivity.this);
-                               // cashDialog.setTitle(R.string.please_select_discount_offer);
-                                cashDialog.setContentView(R.layout.discount_dialog);
+                                cashDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                // cashDialog.setTitle(R.string.please_select_discount_offer);
                                 cashDialog.show();
+                                cashDialog.setContentView(R.layout.discount_dialog);
                                 final Button cashBTOk = (Button) cashDialog.findViewById(R.id.cashPaymentDialog_BTOk);
                                 final EditText cashETCash = (EditText) cashDialog.findViewById(R.id.cashPaymentDialog_TECash);
                                 final Switch sw = (Switch) cashDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
@@ -980,7 +981,7 @@ public class MainActivity extends AppCompatActivity {
                                 List<Order>list=new ArrayList<Order>();
                                 list.add(selectedOrderOnCart);
                                 final TextView discountType =(TextView)cashDialog.findViewById(R.id. cashPaymentDialog_TVStatus);
-                                discountType.setText("Product Name:"+selectedOrderOnCart.getProduct().getName());
+                                discountType.append(":"+selectedOrderOnCart.getProduct().getName());
                                 totalDiscount.setText("0.0");
                                 priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice())+getString(R.string.ins));
                                 sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -1320,6 +1321,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (SESSION._SALE != null && SESSION._ORDERS != null) {
                     final Dialog discountDialog = new Dialog(MainActivity.this);
+                    discountDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     //discountDialog.setTitle(R.string.please_select_discount_offer);
                     discountDialog.setContentView(R.layout.discount_dialog);
                     discountDialog.show();
