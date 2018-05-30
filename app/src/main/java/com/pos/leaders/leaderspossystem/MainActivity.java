@@ -842,7 +842,6 @@ public class MainActivity extends AppCompatActivity {
                 view.findViewById(R.id.rowSaleDetails_LLMethods).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.saleManLayout).setVisibility(View.VISIBLE);
                 double discount = SESSION._ORDERS.get(position).getDiscount();
-                Log.d("discount",""+discount);
                 if (discount > 0) {
                     view.findViewById(R.id.discountLayout).setVisibility(View.VISIBLE);
 
@@ -1345,7 +1344,6 @@ public class MainActivity extends AppCompatActivity {
                     //discountDialog.setTitle(R.string.please_select_discount_offer);
                     discountDialog.setContentView(R.layout.discount_dialog);
                     discountDialog.show();
-
                     final Button btOK = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTOk);
                     final EditText et = (EditText) discountDialog.findViewById(R.id.cashPaymentDialog_TECash);
                     final Switch sw = (Switch) discountDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
@@ -1378,7 +1376,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     et.setHint(R.string.proportion);
-                    final List<Order>orderList=SESSION._ORDERS;
+                    final List<Order>orderList=new ArrayList<Order>();
+                    for (int i=0;i<SESSION._ORDERS.size();i++){
+                        orderList.add(new Order(SESSION._ORDERS.get(i)));
+                    }
                     et.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1494,9 +1495,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-
-
-
 
                 } else {
                     Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.please_add_item), Toast.LENGTH_SHORT);
@@ -3441,4 +3439,5 @@ startActivity(i);
         String code39="AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789-$% ./+";
         return code39.contains(c+"");
     }
+
 }
