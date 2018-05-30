@@ -2,10 +2,15 @@ package com.pos.leaders.leaderspossystem.Tools;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
+import android.text.format.Time;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -63,30 +68,58 @@ public class TitleBar {
             //System.exit(0);
         }
 
+        TypedValue tv = new TypedValue();
+        if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            int actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
+        }
+
+
         long date;
-        Calendar ca = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        final Calendar ca = Calendar.getInstance();
+        final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         // You customization
         final int actionBarColor = context.getResources().getColor(R.color.primaryColor);
         actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
 
-        final TextView actionBarTitle = (TextView) context.findViewById(R.id.date);
-        actionBarTitle.setText(format.format(ca.getTime()));
-        final TextView actionBarSent = (TextView) context.findViewById(R.id.posID);
-        actionBarSent.setText("POSID  "+ SETTINGS.posID);
+        final TextView tvDate = (TextView) context.findViewById(R.id.titleBar_tvClock);
+        tvDate.setText(DateFormat.format("dd-MM-yyyy HH:mm", ca.getTime()));
+        Clock clock = new Clock(context);
+        clock.AddClockTickListner(new OnClockTickListner() {
+            @Override
+            public void OnSecondTick(Time currentTime) {
+
+            }
+
+            @Override
+            public void OnMinuteTick(Time currentTime) {
+                tvDate.setText(DateFormat.format("dd-MM-yyyy HH:mm",currentTime.toMillis(true)).toString());
+            }
+        });
+
+
+        final TextView tvTerminalID = (TextView) context.findViewById(R.id.titleBar_tvTerminalID);
+        tvTerminalID.setText("Terminal "+ SETTINGS.posID);
 
 
 
-        final TextView actionBarStaff = (TextView) context.findViewById(R.id.userName);
-        if(SESSION._USER==null){
-            actionBarStaff.setText("");
+        final TextView tvUsername = (TextView) context.findViewById(R.id.titleBar_tvUsername);
+        if (SESSION._USER == null){
+            tvUsername.setText("");
+        } else {
+            tvUsername.setText(SESSION._USER.getFullName());
+        }
 
-        }else {
-            actionBarStaff.setText(SESSION._USER.getFullName());
+        final TextView tvActivityTitle = (TextView) context.findViewById(R.id.titleBar_tvActivityLabel);
+        PackageManager packageManager = context.getPackageManager();
+
+        try {
+            ActivityInfo info = packageManager.getActivityInfo(context.getComponentName(), 0);
+            tvActivityTitle.setText(context.getString(info.labelRes));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception ex) {
 
         }
-        final TextView actionBarLocations = (TextView) context.findViewById(R.id.userPermtions);
-      //  actionBarLocations.setText(" "+SESSION._USER.getPermtionName());
 
 
         ivInternet = (ImageView) context.findViewById(R.id.titleBar_ivInternetStatus);

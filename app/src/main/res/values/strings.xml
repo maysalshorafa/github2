@@ -375,6 +375,7 @@
     <string name="address">Address</string>
     <string name="add_to_city"> Add to City</string>
     <string name="title_activity_temp_cash_activty">TempCashActivty</string>
+    <string name="title_activity_dashboard_activty">Dashboard</string>
     <string name="title_activity_club_management">ClubManagementActivity</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
