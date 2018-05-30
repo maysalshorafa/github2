@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
@@ -114,7 +115,7 @@ public class Util {
                 format += "0";
             }
         }
-        DecimalFormat form = new DecimalFormat(format);
+        DecimalFormat form = new DecimalFormat(format,new DecimalFormatSymbols(Locale.ENGLISH));
         return form.format(d);
     }
 
