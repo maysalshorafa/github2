@@ -978,6 +978,13 @@ public class MainActivity extends AppCompatActivity {
                                 final TextView totalPrice =(TextView)cashDialog.findViewById(R.id.TvTotalPrice);
                                 final TextView priceAfterDiscount =(TextView)cashDialog.findViewById(R.id.TvPriceAfterDiscount);
                                 final TextView totalDiscount =(TextView)cashDialog.findViewById(R.id.totalDiscount);
+                                final ImageView closeDialogImage =(ImageView)cashDialog.findViewById(R.id.closeDialog);
+                                closeDialogImage.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                    cashDialog.dismiss();
+                                    }
+                                });
                                 totalPrice.setText(Util.makePrice(selectedOrderOnCart.getOriginal_price()*selectedOrderOnCart.getCount())+getString(R.string.ins));
                                 List<Order>list=new ArrayList<Order>();
                                 list.add(selectedOrderOnCart);
@@ -1014,6 +1021,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     @Override
                                     public void afterTextChanged(Editable s) {
+                                        cashETCash.setBackgroundResource(R.drawable.catalogproduct_item_bg);
                                         String str = cashETCash.getText().toString();
                                         int indexOfItem = SESSION._ORDERS.indexOf(selectedOrderOnCart);
                                         double X = SESSION._USER.getPresent();
@@ -1045,6 +1053,7 @@ public class MainActivity extends AppCompatActivity {
                                                     totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
                                                     priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
                                                     Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                    cashETCash.setBackgroundResource(R.drawable.backtext);
 
                                                 }
 
@@ -1074,7 +1083,9 @@ public class MainActivity extends AppCompatActivity {
                                                     totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
                                                     priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
                                                     Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
-                                                   }
+                                                    cashETCash.setBackgroundResource(R.drawable.backtext);
+
+                                                }
 
 
                                             }else {
@@ -1352,6 +1363,13 @@ public class MainActivity extends AppCompatActivity {
                     final TextView totalDiscount =(TextView)discountDialog.findViewById(R.id.totalDiscount);
                     final TextView discountType =(TextView)discountDialog.findViewById(R.id. cashPaymentDialog_TVStatus);
                     discountType.setText(getString(R.string.discount));
+                    final ImageView closeDialogImage =(ImageView)discountDialog.findViewById(R.id.closeDialog);
+                    closeDialogImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            discountDialog.dismiss();
+                        }
+                    });
                     double originalTotalPrice = 0;
                     for (Order o : SESSION._ORDERS) {
                         originalTotalPrice += (o.getOriginal_price() * o.getCount());
@@ -1391,6 +1409,7 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void afterTextChanged(Editable s) {
+                            et.setBackgroundResource(R.drawable.catalogproduct_item_bg);
                             String str = et.getText().toString();
                             double X = SESSION._USER.getPresent();
                             if (sw.isChecked()) {
@@ -1418,6 +1437,7 @@ public class MainActivity extends AppCompatActivity {
                                         totalDiscount.setText(Util.makePrice(valueOfDiscount)+getString(R.string.ins));
                                         priceAfterDiscount.setText(tvTotalPrice.getText().toString());
                                         Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                        et.setBackgroundResource(R.drawable.backtext);
                                     }
 
                                 }else {
@@ -1445,6 +1465,7 @@ public class MainActivity extends AppCompatActivity {
                                         totalDiscount.setText(Util.makePrice(valueOfDiscount)+getString(R.string.ins));
                                         priceAfterDiscount.setText(tvTotalPrice.getText().toString());
                                         Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                        et.setBackgroundResource(R.drawable.backtext);
                                     }
                                 }else {
                                     totalDiscount.setText(Util.makePrice(valueOfDiscount)+getString(R.string.ins));
