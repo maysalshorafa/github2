@@ -34,12 +34,12 @@
         android:layout_margin="8dp" />
 
     <Button
-        android:id="@+id/pinpadActivity_btAdvance"
+        android:id="@+id/pinpadActivity_btByPhone"
         style="@style/AppTheme.bt_yellow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:text="@string/advance" />
+        android:text="@string/by_phone" />
 
     <LinearLayout
         android:layout_width="match_parent"
