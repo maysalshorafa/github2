@@ -255,7 +255,7 @@ public class PinpadActivity extends AppCompatActivity {
                 transaction.printVoucher = false;
                 transaction.transactionCode = TransactionCode.PHONE_TRANSACTION;
                 transaction.cardNumber = "";
-                transaction.cardExpirationDate = "";
+                //transaction.cardExpirationDate = "";
                 transaction.ccv = "";
                 transaction.cardHolderId = "";
 
