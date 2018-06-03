@@ -268,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
     TextView orderSalesMan;
     ImageView deleteOrderSalesMan;
     String fromEditText="";
+    double valueOfDiscount=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -947,7 +948,6 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 });
 
-
                                 Switch s = (Switch) cashDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
                                 s.setVisibility(View.GONE);
                             } else {
@@ -969,30 +969,131 @@ public class MainActivity extends AppCompatActivity {
                                 final TextView discountPercentage = (TextView) view.findViewById(R.id.discountPercentage);
                                 final TextView tvDiscountPercentage = (TextView) view.findViewById(R.id.tvDiscountPercentageAmount);
                                 final Dialog cashDialog = new Dialog(MainActivity.this);
-                                cashDialog.setTitle(R.string.please_select_discount_offer);
-                                cashDialog.setContentView(R.layout.cash_payment_dialog);
+                                cashDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                // cashDialog.setTitle(R.string.please_select_discount_offer);
                                 cashDialog.show();
+                                cashDialog.setContentView(R.layout.discount_dialog);
                                 final Button cashBTOk = (Button) cashDialog.findViewById(R.id.cashPaymentDialog_BTOk);
                                 final EditText cashETCash = (EditText) cashDialog.findViewById(R.id.cashPaymentDialog_TECash);
                                 final Switch sw = (Switch) cashDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
+                                final TextView totalPrice =(TextView)cashDialog.findViewById(R.id.TvTotalPrice);
+                                final TextView priceAfterDiscount =(TextView)cashDialog.findViewById(R.id.TvPriceAfterDiscount);
+                                final TextView totalDiscount =(TextView)cashDialog.findViewById(R.id.totalDiscount);
+                                final ImageView closeDialogImage =(ImageView)cashDialog.findViewById(R.id.closeDialog);
+                                closeDialogImage.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                    cashDialog.dismiss();
+                                    }
+                                });
+                                totalPrice.setText(Util.makePrice(selectedOrderOnCart.getOriginal_price()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+                                List<Order>list=new ArrayList<Order>();
+                                list.add(selectedOrderOnCart);
+                                final TextView discountType =(TextView)cashDialog.findViewById(R.id. cashPaymentDialog_TVStatus);
+                                discountType.append(":"+selectedOrderOnCart.getProduct().getName());
+                                totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
+                                priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
                                 sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                     @Override
                                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                         if (isChecked) {
                                             sw.setText(getBaseContext().getString(R.string.amount));
+                                            totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
+                                            priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+                                            cashETCash.setText("0");
                                         } else {
                                             sw.setText(getBaseContext().getString(R.string.proportion));
+                                            totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
+                                            priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+                                            cashETCash.setText("0");
                                         }
                                     }
                                 });
                                 cashETCash.setHint(R.string.proportion);
-                                cashETCash.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                                final List<Order>orderList=list;
+                                cashETCash.addTextChangedListener(new TextWatcher() {
                                     @Override
-                                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                                        if (actionId == EditorInfo.IME_ACTION_DONE) {
-                                            cashBTOk.callOnClick();
+                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                    }
+
+                                    @Override
+                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    }
+
+                                    @Override
+                                    public void afterTextChanged(Editable s) {
+                                        cashETCash.setBackgroundResource(R.drawable.catalogproduct_item_bg);
+                                        String str = cashETCash.getText().toString();
+                                        int indexOfItem = SESSION._ORDERS.indexOf(selectedOrderOnCart);
+                                        double X = SESSION._USER.getPresent();
+                                        if (sw.isChecked()) {
+                                            if (!(str.equals(""))) {
+                                                double d = Double.parseDouble(str);
+                                                int count = SESSION._ORDERS.get(indexOfItem).getCount();
+                                                double discount = (1 - (d / (SESSION._ORDERS.get(indexOfItem).getOriginal_price() * count)));
+
+                                                if (discount <= (X / 100)) {
+                                                    double originalTotalPrice = 0;
+                                                    for (Order o : orderList) {
+                                                        originalTotalPrice += (o.getOriginal_price() * o.getCount());
+                                                    }
+                                                    double val = (1 - (d / originalTotalPrice)) * 100;
+                                                    for (Order o : orderList) {
+                                                        o.setDiscount(val);
+                                                    }
+                                                    double saleTotalPrice = 0;
+                                                    double SaleOriginalityPrice = 0;
+                                                    for (Order o : orderList) {
+                                                        saleTotalPrice += o.getItemTotalPrice();
+
+                                                        SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                                    }
+                                                    totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                                    priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+                                                } else {
+                                                    totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
+                                                    priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+                                                    Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                    cashETCash.setBackgroundResource(R.drawable.backtext);
+
+                                                }
+
+                                            }else {
+                                                totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
+                                                priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+                                            }
+                                        } else {
+                                            if (!(str.equals(""))) {
+                                                float val = Float.parseFloat(str);
+                                                if (val <= X) {
+                                                    int count = SESSION._ORDERS.get(indexOfItem).getCount();
+                                                    for (Order o : orderList) {
+                                                        o.setDiscount(val);
+                                                    }
+
+                                                    double saleTotalPrice = 0;
+                                                    double SaleOriginalityPrice = 0;
+                                                    for (Order o : orderList) {
+                                                        saleTotalPrice += o.getItemTotalPrice();
+
+                                                        SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                                    }
+                                                    totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                                    priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+                                                } else {
+                                                    totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
+                                                    priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+                                                    Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                    cashETCash.setBackgroundResource(R.drawable.backtext);
+
+                                                }
+
+
+                                            }else {
+                                                totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
+                                                priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+                                            }
                                         }
-                                        return false;
                                     }
                                 });
                                 cashBTOk.setOnClickListener(new View.OnClickListener() {
@@ -1029,13 +1130,6 @@ public class MainActivity extends AppCompatActivity {
                                                 }
                                             }
                                         }
-                                    }
-                                });
-                                Button cashBTCancel = (Button) cashDialog.findViewById(R.id.cashPaymentDialog_BTCancel);
-                                cashBTCancel.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        cashDialog.cancel();
                                     }
                                 });
                             } else {
@@ -1258,35 +1352,127 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (SESSION._SALE != null && SESSION._ORDERS != null) {
                     final Dialog discountDialog = new Dialog(MainActivity.this);
-                    discountDialog.setTitle(R.string.please_select_discount_offer);
-                    discountDialog.setContentView(R.layout.cash_payment_dialog);
+                    discountDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    //discountDialog.setTitle(R.string.please_select_discount_offer);
+                    discountDialog.setContentView(R.layout.discount_dialog);
                     discountDialog.show();
-
                     final Button btOK = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTOk);
-                    final Button btCancel = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTCancel);
                     final EditText et = (EditText) discountDialog.findViewById(R.id.cashPaymentDialog_TECash);
                     final Switch sw = (Switch) discountDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
-
+                    final TextView totalPrice =(TextView)discountDialog.findViewById(R.id.TvTotalPrice);
+                    final TextView priceAfterDiscount =(TextView)discountDialog.findViewById(R.id.TvPriceAfterDiscount);
+                    final TextView totalDiscount =(TextView)discountDialog.findViewById(R.id.totalDiscount);
+                    final TextView discountType =(TextView)discountDialog.findViewById(R.id. cashPaymentDialog_TVStatus);
+                    discountType.setText(getString(R.string.discount));
+                    final ImageView closeDialogImage =(ImageView)discountDialog.findViewById(R.id.closeDialog);
+                    closeDialogImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            discountDialog.dismiss();
+                        }
+                    });
+                    double originalTotalPrice = 0;
+                    for (Order o : SESSION._ORDERS) {
+                        originalTotalPrice += (o.getOriginal_price() * o.getCount());
+                    }
+                    totalPrice.setText(Util.makePrice(originalTotalPrice)+getString(R.string.ins));
+                    totalDiscount.setText(Util.makePrice(valueOfDiscount)+getString(R.string.ins));
+                    priceAfterDiscount.setText(tvTotalPrice.getText().toString());
                     sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                             if (sw.isChecked()) {
+                                totalDiscount.setText(Util.makePrice(valueOfDiscount)+getString(R.string.ins));
+                                priceAfterDiscount.setText(tvTotalPrice.getText().toString());
                                 sw.setText(R.string.amount);
-                                et.setHint(R.string.amount);
+                                et.setText("0");
                             } else {
+                                totalDiscount.setText(Util.makePrice(valueOfDiscount)+getString(R.string.ins));
+                                priceAfterDiscount.setText(tvTotalPrice.getText().toString());
                                 sw.setText(R.string.proportion);
-                                et.setHint(R.string.proportion);
+                                et.setText("0");
                             }
                         }
                     });
                     et.setHint(R.string.proportion);
-                    et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    final List<Order>orderList=new ArrayList<Order>();
+                    for (int i=0;i<SESSION._ORDERS.size();i++){
+                        orderList.add(new Order(SESSION._ORDERS.get(i)));
+                    }
+                    et.addTextChangedListener(new TextWatcher() {
                         @Override
-                        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                                btOK.callOnClick();
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            et.setBackgroundResource(R.drawable.catalogproduct_item_bg);
+                            String str = et.getText().toString();
+                            double X = SESSION._USER.getPresent();
+                            if (sw.isChecked()) {
+                                if (!(str.equals(""))) {
+                                    double d = Double.parseDouble(str);
+                                    double originalTotalPrice = 0;
+                                    for (Order o : orderList) {
+                                        originalTotalPrice += (o.getOriginal_price() * o.getCount());
+                                    }
+                                    if ((1 - (d / originalTotalPrice) <= (X / 100))) {
+                                        double val = (1 - (d / originalTotalPrice)) * 100;
+                                        for (Order o : orderList) {
+                                            o.setDiscount(val);
+                                        }
+                                        double saleTotalPrice = 0;
+                                        double SaleOriginalityPrice = 0;
+                                        for (Order o : orderList) {
+                                            saleTotalPrice += o.getItemTotalPrice();
+
+                                            SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                        }
+                                        totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                        priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+                                    } else {
+                                        totalDiscount.setText(Util.makePrice(valueOfDiscount)+getString(R.string.ins));
+                                        priceAfterDiscount.setText(tvTotalPrice.getText().toString());
+                                        Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                        et.setBackgroundResource(R.drawable.backtext);
+                                    }
+
+                                }else {
+                                    totalDiscount.setText(Util.makePrice(valueOfDiscount)+getString(R.string.ins));
+                                    priceAfterDiscount.setText(tvTotalPrice.getText().toString());
+                                }
+                            } else {
+                                if (!(str.equals(""))) {
+                                    float val = Float.parseFloat(str);
+                                    if (val <= X) {
+                                        for (Order o : orderList) {
+                                            o.setDiscount(val);
+                                        }
+                                        double saleTotalPrice = 0;
+                                        double SaleOriginalityPrice = 0;
+                                        for (Order o : orderList) {
+                                            saleTotalPrice += o.getItemTotalPrice();
+
+                                            SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                        }
+                                        totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                        priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+
+                                    } else {
+                                        totalDiscount.setText(Util.makePrice(valueOfDiscount)+getString(R.string.ins));
+                                        priceAfterDiscount.setText(tvTotalPrice.getText().toString());
+                                        Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                        et.setBackgroundResource(R.drawable.backtext);
+                                    }
+                                }else {
+                                    totalDiscount.setText(Util.makePrice(valueOfDiscount)+getString(R.string.ins));
+                                    priceAfterDiscount.setText(tvTotalPrice.getText().toString());
+                                }
                             }
-                            return false;
                         }
                     });
 
@@ -1304,6 +1490,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 if ((1 - (d / originalTotalPrice) <= (X / 100))) {
                                     double val = (1 - (d / originalTotalPrice)) * 100;
+                                    valueOfDiscount=val;
                                     for (Order o : SESSION._ORDERS) {
                                         o.setDiscount(val);
                                     }
@@ -1317,10 +1504,10 @@ public class MainActivity extends AppCompatActivity {
                                 if (!(str.equals(""))) {
                                     float val = Float.parseFloat(str);
                                     if (val <= X) {
+                                        valueOfDiscount=val;
                                         for (Order o : SESSION._ORDERS) {
                                             o.setDiscount(val);
                                         }
-
                                         refreshCart();
                                         discountDialog.cancel();
                                     } else {
@@ -1330,14 +1517,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-
-                    btCancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            discountDialog.cancel();
-                        }
-                    });
-
 
                 } else {
                     Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.please_add_item), Toast.LENGTH_SHORT);
@@ -1572,6 +1751,7 @@ startActivity(i);
     }
 
     public void clearCart() {
+        valueOfDiscount=0.0;
         clubDiscount = 0;
         clubPoint = 0;
         clubAmount = 0;
@@ -3290,4 +3470,5 @@ startActivity(i);
 
         return super.onOptionsItemSelected(item);
     }
+
 }
