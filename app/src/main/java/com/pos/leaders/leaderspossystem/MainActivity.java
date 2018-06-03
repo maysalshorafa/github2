@@ -268,7 +268,9 @@ public class MainActivity extends AppCompatActivity {
     TextView orderSalesMan;
     ImageView deleteOrderSalesMan;
     String fromEditText="";
+
     double valueOfDiscount=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1503,6 +1505,7 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 if (!(str.equals(""))) {
                                     float val = Float.parseFloat(str);
+                                    valueOfDiscount=val;
                                     if (val <= X) {
                                         valueOfDiscount=val;
                                         for (Order o : SESSION._ORDERS) {
@@ -2159,7 +2162,7 @@ startActivity(i);
         if(orderList.size()>0){
             orderList.get(0).setCount(orderList.get(0).getCount()+1);
         }else {
-            SESSION._ORDERS.add(new Order(1, 0, p, p.getPrice(), p.getPrice(), 0));
+            SESSION._ORDERS.add(new Order(1, 0, p, p.getPrice(), p.getPrice(),valueOfDiscount));
         }
 
         removeOrderItemSelection();
