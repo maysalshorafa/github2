@@ -238,10 +238,6 @@ public class PinpadActivity extends AppCompatActivity {
         btByPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(PinpadActivity.this, "By Phone is under construction.", Toast.LENGTH_SHORT).show();
-
-
                 payments = np.getValue();
 
                 PinPadAPI pinpad = new PinPadAPI();
