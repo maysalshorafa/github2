@@ -75,7 +75,7 @@
     <string name="please_insert_department_name">Please insert department name.</string>
     <string name="please_insert_another_department_name">Please insert another department name.</string>
     <string name="success_to_add_new_department">Success To Add New Department</string>
-    <string name="failed_to_add_new_department">Fail To Add New Department Please Try Again!</string>
+    <string name="failed_to_add_new_department">Fail On Add New Department Please Try Again!</string>
     <string name="update_department">Update Department</string>
     <string name="please_insert_department_name_with_out_spaces">Please Insert Department Name WithOut Spaces.</string>
 
@@ -217,7 +217,7 @@
     <string name="copy_invoice">- Copy -</string>
     <string name="private_company">P.C</string>
     <string name="invoice_with_tax">Invoice</string>
-    <string name="credit_invoice">Credit Invoice</string>
+    <string name="credit_invoice">Credit Card Number</string>
     <string name="replacement_invoice">Replacement Invoice</string>
     <string name="copyinvoice">Duplicate Invoice</string>
     <string name="cancel_invoice">Cancel Invoice</string>
@@ -336,7 +336,7 @@
     <string name="company_name">Company Name</string>
     <string name="POS_ID">POS Id</string>
     <string name="tax">Tax</string>
-    <string name="invoice_note">Invoice Note</string>
+    <string name="invoice_note">Invoice note</string>
     <string name="qty">Qty</string>
     <string name="productID">Product ID</string>
     <string name="replacement_expiration_date">Replacement Expiration Date</string>
@@ -479,7 +479,7 @@
     <string name="different"> Different</string>
     <string name="out_put"> Out Put</string>
     <string name="in_put"> InPut</string>
-    <string name="currency"> Currency</string>
+    <string name="currency">Currency</string>
     <string name="usd">USD</string>
     <string name="eur">EUR</string>
     <string name="gbp">GBP</string>

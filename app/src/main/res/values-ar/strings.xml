@@ -58,7 +58,7 @@
     <string name="house_number"> رقم المنزل</string>
     <string name="job"> المهنة </string>
     <string name="add_customer_club"> اختر نادي الاعضاء </string>
-    <string name="add_to_city"> اختر مدينة </string>
+    <string name="add_to_city">اختر مدينة</string>
     <string name="gender"> الجنس</string>
     <string name="male"> ذكر</string>
     <string name="female"> انثى </string>
@@ -206,5 +206,21 @@
     <string name="customer_measurement">قياسات الزبون</string>
     <string name="choose_no_of_float_point"> اختر عدد المنازل العشرية</string>
     <string name="choose_printer_type">اختر نوع الطابعة</string>
+    <string name="TouchPad_0">0</string>
+    <string name="TouchPad_1">1</string>
+    <string name="TouchPad_2">2</string>
+    <string name="FE_version_no">اصدار الواجهة</string>
+    <string name="TouchPad_3">3</string>
+    <string name="TouchPad_4">4</string>
+    <string name="TouchPad_5">5</string>
+    <string name="TouchPad_6">6</string>
+    <string name="TouchPad_7">7</string>
+    <string name="TouchPad_8">8</string>
+    <string name="TouchPad_9">9</string>
+    <string name="_return">باقي</string>
+    <string name="a_report_amount">اساس</string>
+    <string name="active_credit_card_service_in_pos">الرجاء تفعيل خدمة الدفع عن طريق بطاقة الائتمان</string>
+    <string name="ccv">CCV</string>
+    <string name="ins">₪</string>
 
 </resources>
