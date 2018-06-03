@@ -116,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:text="@string/no_of_float_point"
+                    android:text="@string/choose_no_of_float_point"
                     android:textColor="@color/black"
                     android:textSize="25dp" />
 
@@ -141,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:text="@string/printer_type"
+                    android:text="@string/choose_printer_type"
                     android:textColor="@color/black"
                     android:textSize="25dp" />
 
