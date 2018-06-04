@@ -1,39 +1,18 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.support.v7.app.ActionBar;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.AddUserActivity;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
-import com.pos.leaders.leaderspossystem.MainActivity;
-import com.pos.leaders.leaderspossystem.Models.Order;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.R;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,7 +24,7 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickListener {
 	private static final int MINCHARNUMBER = 50;
-	private List<Order> orderList;
+	private List<OrderDetails> orderList;
 	private int resource;
 	private LayoutInflater inflater;
 	private Context context;
@@ -59,7 +38,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 	 *                 instantiating views.
 	 * @param objects  The objects to represent in the ListView.
 	 */
-	public SaleDetailsListViewAdapter(Context context, int resource, List<Order> objects) {
+	public SaleDetailsListViewAdapter(Context context, int resource, List<OrderDetails> objects) {
 		super(context, resource, objects);
 		this.context=context;
 		orderList=objects;
@@ -93,8 +72,8 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 		int count;
 		double price;
 		double discount = orderList.get(position).getDiscount();
-		price=orderList.get(position).getPrice();
-		count=orderList.get(position).getCount();
+		price=orderList.get(position).getPaid_amount();
+		count=orderList.get(position).getQuantity();
 		holder.tvName.setText(_Substring(orderList.get(position).getProduct().getName()));
 		holder.tvPrice.setText(String.format(new Locale("en"),"%.2f",price)+" "+ context.getString(R.string.ins));
 		holder.tvCount.setText(count+"");

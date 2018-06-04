@@ -14,13 +14,12 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
-import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -117,7 +116,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
          e.printStackTrace();
          }**/
 
-        SESSION._ORDERS = new ArrayList<Order>();
+        SESSION._ORDERS = new ArrayList<OrderDetails>();
 
         userDBAdapter = new UserDBAdapter(this);
 
@@ -240,9 +239,9 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                     scheduleWorkersDBAdapter.close();**/
 
                 //// TODO: 12/04/2017 check if AReport is valid
-                SaleDBAdapter saleDBAdapter = new SaleDBAdapter(LogInActivity.this);
+                OrderDBAdapter saleDBAdapter = new OrderDBAdapter(LogInActivity.this);
                 saleDBAdapter.open();
-                Sale lastSale = saleDBAdapter.getLast();
+                Order lastSale = saleDBAdapter.getLast();
                 saleDBAdapter.close();
 
                 ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(LogInActivity.this);

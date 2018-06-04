@@ -27,13 +27,13 @@ import android.widget.Toast;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
-import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
@@ -64,7 +64,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     ArrayList<Permissions> permissions = new ArrayList<Permissions>();
     ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
     Intent i;
-    Sale lastSale;
+    Order lastSale;
     double totalZReportAmount=0;
 
     private MSCardService sendservice;
@@ -404,7 +404,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     protected void onResume() {
         super.onResume();
 
-        SaleDBAdapter saleDBAdapter = new SaleDBAdapter(TempDashBord.this);
+        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(TempDashBord.this);
         saleDBAdapter.open();
         lastSale = saleDBAdapter.getLast();
         saleDBAdapter.close();

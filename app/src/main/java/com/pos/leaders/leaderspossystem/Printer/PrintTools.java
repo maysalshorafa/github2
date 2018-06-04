@@ -12,14 +12,14 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Payment;
-import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
@@ -297,9 +297,9 @@ public class PrintTools {
         double eur_plus = 0, eur_minus = 0;
         double gbp_plus = 0, gbp_minus = 0;
         Log.i("CZREPO", "id:" + id + " ,from:" + from + " ,to" + to + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        SaleDBAdapter saleDBAdapter = new SaleDBAdapter(context);
+        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(context);
         saleDBAdapter.open();
-        List<Sale> sales = saleDBAdapter.getBetween(from, to);
+        List<Order> sales = saleDBAdapter.getBetween(from, to);
 
         saleDBAdapter.close();
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
@@ -426,19 +426,19 @@ public class PrintTools {
     }
 
     // get Payment List
-    public static List<Payment> paymentList(List<Sale> sales) {
+    public static List<Payment> paymentList(List<Order> sales) {
         List<Payment> pl = new ArrayList<Payment>();
         PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(context);
         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
         CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(context);
         paymentDBAdapter.open();
-        for (Sale s : sales) {
+        for (Order s : sales) {
             List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(s.getId());
             /**
              if (SETTINGS.enableCurrencies) {
              for (Payment _p : payments) {
-             _p.setCashPayments(cashPaymentDBAdapter.getPaymentBySaleID(_p.getSaleId()));
-             _p.setCurrencyReturns(currencyReturnsDBAdapter.getCurencyReturnBySaleID(_p.getSaleId()));
+             _p.setCashPayments(cashPaymentDBAdapter.getPaymentBySaleID(_p.getOrder_id()));
+             _p.setCurrencyReturns(currencyReturnsDBAdapter.getCurencyReturnBySaleID(_p.getOrder_id()));
              }
              }**/
 
@@ -449,11 +449,11 @@ public class PrintTools {
     }
 
     // get Cash Payment List
-    public static List<CashPayment> cashPaymentList(List<Sale> sales) {
+    public static List<CashPayment> cashPaymentList(List<Order> sales) {
         List<CashPayment> pl = new ArrayList<CashPayment>();
         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
         cashPaymentDBAdapter.open();
-        for (Sale s : sales) {
+        for (Order s : sales) {
             List<CashPayment> payments = cashPaymentDBAdapter.getPaymentBySaleID(s.getId());
             pl.addAll(payments);
         }
@@ -462,11 +462,11 @@ public class PrintTools {
     }
 
     // get Currency Return  List
-    public static List<CurrencyReturns> returnPaymentList(List<Sale> sales) {
+    public static List<CurrencyReturns> returnPaymentList(List<Order> sales) {
         List<CurrencyReturns> pl = new ArrayList<CurrencyReturns>();
         CurrencyReturnsDBAdapter currencyDBAdapter = new CurrencyReturnsDBAdapter(context);
         currencyDBAdapter.open();
-        for (Sale s : sales) {
+        for (Order s : sales) {
             List<CurrencyReturns> payments = currencyDBAdapter.getCurencyReturnBySaleID(s.getId());
             pl.addAll(payments);
         }
@@ -481,11 +481,11 @@ public class PrintTools {
         double gbp_plus = 0, gbp_minus = 0;
         double sheqle_plus = 0, sheqle_minus = 0;
         double aReportAmount = 0;
-        SaleDBAdapter saleDBAdapter = new SaleDBAdapter(context);
+        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(context);
         saleDBAdapter.open();
 
 
-        List<Sale> sales = saleDBAdapter.getBetween(endSaleId, id);
+        List<Order> sales = saleDBAdapter.getBetween(endSaleId, id);
 
         saleDBAdapter.close();
 

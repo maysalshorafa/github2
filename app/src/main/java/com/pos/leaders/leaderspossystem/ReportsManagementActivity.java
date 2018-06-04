@@ -12,12 +12,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
@@ -27,10 +26,10 @@ public class ReportsManagementActivity  extends AppCompatActivity {
     Button btnZ, btnZView,btnX, btnSales,btnExFiles ,btnSalesMan;
 
     ZReportDBAdapter zReportDBAdapter;
-    SaleDBAdapter saleDBAdapter;
+    OrderDBAdapter saleDBAdapter;
 
     ZReport lastZReport=null;
-    Sale lastSale;
+    Order lastSale;
     String str;
     double totalZReportAmount =0;
     @Override
@@ -57,7 +56,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         btnExFiles = (Button) findViewById(R.id.reportManagementActivity_btnExtractingFiles);
 
         zReportDBAdapter = new ZReportDBAdapter(this);
-        saleDBAdapter = new SaleDBAdapter(this);
+        saleDBAdapter = new OrderDBAdapter(this);
 
         //endregion init
 

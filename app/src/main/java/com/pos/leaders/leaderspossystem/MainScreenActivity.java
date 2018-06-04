@@ -18,20 +18,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.BarcodeFormat;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
 
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -45,11 +43,11 @@ public class MainScreenActivity extends Activity {
 			btSalesManagement,btClearCart;
 	TextView tvTotalPrice;
 	ListView lvSalesDetails;
-	static Sale sale;
+	static Order sale;
 	ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
 	PaymentDBAdapter paymentDBAdapter;
-	SaleDBAdapter saleDBAdapter;
-	OrderDBAdapter orderDBAdapter;
+	OrderDBAdapter saleDBAdapter;
+	OrderDetailsDBAdapter orderDBAdapter;
 	SaleDetailsListViewAdapter adapter;
 
 	String barcodeScanned ="";
@@ -62,7 +60,7 @@ public class MainScreenActivity extends Activity {
     int printLanguage = 0;
 
     private void addToCart(Product p){
-        SESSION._ORDERS.add(new Order(1,0,p));
+        SESSION._ORDERS.add(new OrderDetails(1,0,p));
         lvSalesDetails.setAdapter(adapter);
         calculateTotalPrice();
     }
@@ -244,11 +242,11 @@ public class MainScreenActivity extends Activity {
 
 
 		if (SESSION._SALE != null) {
-			sale = new Sale(SESSION._USER.getId(), new Date().getTime(), 0, false, 0,0);
+			sale = new Order(SESSION._USER.getId(), new Date().getTime(), 0, false, 0,0);
 		}
 		else
 		{
-			SESSION._SALE=new Sale(SESSION._USER.getId(), new Date().getTime(), 0, false, 0,0);
+			SESSION._SALE=new Order(SESSION._USER.getId(), new Date().getTime(), 0, false, 0,0);
 		}
 
 		if (SESSION._ORDERS != null) {
@@ -259,7 +257,7 @@ public class MainScreenActivity extends Activity {
 			calculateTotalPrice();
 		}
 		else{
-			SESSION._ORDERS=new ArrayList<Order>();
+			SESSION._ORDERS=new ArrayList<OrderDetails>();
 			adapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
 		}
 		lvSalesDetails.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -276,9 +274,9 @@ public class MainScreenActivity extends Activity {
 		scheduleWorkersDBAdapter.open();
 		paymentDBAdapter=new PaymentDBAdapter(this);
 		paymentDBAdapter.open();
-		orderDBAdapter=new OrderDBAdapter(this);
+		orderDBAdapter=new OrderDetailsDBAdapter(this);
 		orderDBAdapter.open();
-		saleDBAdapter=new SaleDBAdapter(this);
+		saleDBAdapter=new OrderDBAdapter(this);
 		saleDBAdapter.open();
 
 
@@ -330,14 +328,14 @@ public class MainScreenActivity extends Activity {
 										@Override
 										public void onClick(View v) {
 											double pid=Double.parseDouble(cashETCash.getText().toString());
-											double tot=SESSION._SALE.getTotalPrice();
+											double tot=SESSION._SALE.getTotal_price();
 											if(pid>=tot){
-												SESSION._SALE.setTotalPaid(pid);
+												SESSION._SALE.setTotal_paid_amount(pid);
 												Toast.makeText(MainScreenActivity.this, "return :"+(pid-tot), Toast.LENGTH_LONG).show();
 												long saleId=saleDBAdapter.insertEntry(SESSION._SALE,1,"dd");
                                                 SESSION._SALE.setId(saleId);
-												for(Order o:SESSION._ORDERS){
-												//	orderDBAdapter.insertEntry(o.getProductId(),o.getCount(),o.getUserOffer(),saleId);
+												for(OrderDetails o:SESSION._ORDERS){
+												//	orderDBAdapter.insertEntry(o.getProduct_id(),o.getQuantity(),o.getUserOffer(),saleId);
 												}
 												paymentDBAdapter.insertEntry("cash",saleTotalPrice,saleId);
                                                 ///Controller();
@@ -492,10 +490,10 @@ public class MainScreenActivity extends Activity {
 	}
 	protected void calculateTotalPrice() {
 		saleTotalPrice = 0;
-		for (Order o : SESSION._ORDERS) {
+		for (OrderDetails o : SESSION._ORDERS) {
 			saleTotalPrice += o.getItemTotalPrice();
 		}
-		SESSION._SALE.setTotalPrice(saleTotalPrice);
+		SESSION._SALE.setTotal_price(saleTotalPrice);
 		tvTotalPrice.setText(saleTotalPrice + " " + getString(R.string.ins));
 	}
 
@@ -549,7 +547,7 @@ public class MainScreenActivity extends Activity {
         printerController.PrinterController_Set_Right();
         for (Order o :
                 SESSION._ORDERS) {
-            String s=o.getProduct().getName()+"       "+o.getCount()+"     "+o.getItemTotalPrice();
+            String s=o.getProduct().getName()+"       "+o.getQuantity()+"     "+o.getItemTotalPrice();
            // printerController.PrinterController_Take_The_Paper(1);
         }*/
 /*
@@ -584,7 +582,7 @@ public class MainScreenActivity extends Activity {
         printerController.PrinterController_Linefeed();
         for (Order o :
                 SESSION._ORDERS) {
-            String s=o.getProduct().getName()+"       "+o.getCount()+"     "+o.getProduct().getPrice();
+            String s=o.getProduct().getName()+"       "+o.getQuantity()+"     "+o.getProduct().getPaid_amount();
             printerController
                     .PrinterController_Print(s
                             .getBytes());

@@ -1,7 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models.Offers;
 
 import com.pos.leaders.leaderspossystem.Models.Offer;
-import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 
 import java.util.List;
 
@@ -47,12 +47,12 @@ public class Rule4 extends Rule {
     }
 
     @Override
-    public void execute(List<Order> orders, Offer offer) throws Exception {
+    public void execute(List<OrderDetails> orders, Offer offer) throws Exception {
 
     }
 
     @Override
-    public boolean precondition(List<Order> orders) {
+    public boolean precondition(List<OrderDetails> orders) {
         return false;
     }
 }

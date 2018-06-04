@@ -10,9 +10,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
-import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 
 import java.util.ArrayList;
@@ -104,11 +104,11 @@ public class ReportZDetailsActivity extends Activity {
         goHome();
     }
 
-    private List<Order> orderList(List<Sale> sales){
-        List<Order> ol=new ArrayList<Order>();
-        OrderDBAdapter orderDBAdapter=new OrderDBAdapter(this);
+    private List<OrderDetails> orderList(List<Order> sales){
+        List<OrderDetails> ol=new ArrayList<OrderDetails>();
+        OrderDetailsDBAdapter orderDBAdapter=new OrderDetailsDBAdapter(this);
         orderDBAdapter.open();
-        for (Sale s : sales) {
+        for (Order s : sales) {
             ol.addAll(orderDBAdapter.getOrderBySaleID(s.getId()));
         }
         orderDBAdapter.close();

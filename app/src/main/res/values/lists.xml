@@ -2,16 +2,16 @@
 
     <string-array name="offers_list">
 
-        <item>x on price y</item>
-        <item>buy x and get the least price with p</item>
+        <item>x on paid_amount y</item>
+        <item>buy x and get the least paid_amount with p</item>
         <item>p on every invoice</item>
-        <item>buy x and get the least price with y</item>
-        <item>gift on x on price y</item>
-        <item>gift on total price y</item>
-        <item>product special price y</item>
+        <item>buy x and get the least paid_amount with y</item>
+        <item>gift on x on paid_amount y</item>
+        <item>gift on total paid_amount y</item>
+        <item>product special paid_amount y</item>
         <item>p to product</item>
         <item>multilevel discount</item>
-        <item>multilevel price</item>
+        <item>multilevel paid_amount</item>
         <item>Buy Y Pay y</item>
     </string-array>
 

@@ -26,7 +26,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferRuleDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
@@ -37,7 +37,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule5DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
@@ -120,12 +120,12 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(Sum_PointDbAdapter.DATABASE_CREATE);
         db.execSQL(ValueOfPointDB.DATABASE_CREATE);
 
-        db.execSQL(SaleDBAdapter.DATABASE_CREATE);
+        db.execSQL(OrderDBAdapter.DATABASE_CREATE);
         db.execSQL(ChecksDBAdapter.DATABASE_CREATE);
         db.execSQL(DepartmentDBAdapter.DATABASE_CREATE);
         db.execSQL(CustomerAssetDB.DATABASE_CREATE);
 
-        db.execSQL(OrderDBAdapter.DATABASE_CREATE);
+        db.execSQL(OrderDetailsDBAdapter.DATABASE_CREATE);
         db.execSQL(PaymentDBAdapter.DATABASE_CREATE);
         db.execSQL(CreditCardPaymentDBAdapter.DATABASE_CREATE);
 

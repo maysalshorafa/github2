@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -61,7 +61,7 @@ public class HomeActivity extends Activity {
 		setContentView(R.layout.activity_home);
 		prefs = getSharedPreferences("com.pos.leaders.leaderspossystem", MODE_PRIVATE);
 
-		SESSION._ORDERS = new ArrayList<Order>();
+		SESSION._ORDERS = new ArrayList<OrderDetails>();
 		userDBAdapter = new UserDBAdapter(this);
 		userDBAdapter.open();
 

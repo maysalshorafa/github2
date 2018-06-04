@@ -119,7 +119,7 @@ public class OfferRuleDBAdapter {
     /**public OfferRule getOfferRuleByID(int id) {
         OfferRule offerRule = null;
         Cursor cursor = db.rawQuery("select * from " + OFFERROLL_TABLE_NAME + " where id='" + id + "'", null);
-        if (cursor.getCount() < 1) // UserName Not Exist
+        if (cursor.getQuantity() < 1) // UserName Not Exist
         {
             cursor.close();
             return offerRule;

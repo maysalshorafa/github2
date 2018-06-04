@@ -5,20 +5,20 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Accounting;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.OldCustomer;
-import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
@@ -47,8 +47,8 @@ public class BKMVDATA {
     private OutputStreamWriter writer;
     private Context context;
 
-    private SaleDBAdapter saleDBAdapter;
-    private OrderDBAdapter orderDBAdapter;
+    private OrderDBAdapter saleDBAdapter;
+    private OrderDetailsDBAdapter orderDBAdapter;
     private PaymentDBAdapter paymentDBAdapter;
     private UserDBAdapter userDBAdapter;
     private ProductDBAdapter productDBAdapter;
@@ -56,7 +56,7 @@ public class BKMVDATA {
     private AReportDBAdapter aReportDBAdapter;
     private ZReportDBAdapter zReportDBAdapter;
 
-    private List<Sale> sales = new ArrayList<Sale>();
+    private List<Order> sales = new ArrayList<Order>();
     private List<AReport> aReports = new ArrayList<AReport>();
     private List<ZReport> zReports = new ArrayList<ZReport>();
     private List<Product> products = new ArrayList<Product>();
@@ -74,8 +74,8 @@ public class BKMVDATA {
         //"UTF-8");
         this.context = context;
 
-        saleDBAdapter = new SaleDBAdapter(context);
-        orderDBAdapter = new OrderDBAdapter(context);
+        saleDBAdapter = new OrderDBAdapter(context);
+        orderDBAdapter = new OrderDetailsDBAdapter(context);
         paymentDBAdapter = new PaymentDBAdapter(context);
         userDBAdapter = new UserDBAdapter(context);
         productDBAdapter = new ProductDBAdapter(context);
@@ -99,11 +99,11 @@ public class BKMVDATA {
         Accounting accountingCreditCardFund = new Accounting(5, 61004, "CreditCard Fund", 310, "", new OldCustomer());
 
 
-        for (Sale s : sales) {
+        for (Order s : sales) {
             addSale(s);
             addPayment(s);
-            for (Order o : s.getOrders()) {
-                addOrders(o, new Date(s.getSaleDate()));
+            for (OrderDetails o : s.getOrders()) {
+                addOrders(o, new Date(s.getOrder_date()));
             }
         }
         for (ZReport z : zReports) {
@@ -132,28 +132,28 @@ public class BKMVDATA {
                 firstDate = records.get(i).getDate().getTime();
             }
             zTotal++;
-            if (records.get(i).getObj() instanceof Sale) {
-                Sale sale = (Sale) records.get(i).getObj();
+            if (records.get(i).getObj() instanceof Order) {
+                Order sale = (Order) records.get(i).getObj();
                 strRecords += sale.BKMVDATA(counter, SETTINGS.companyID) + "\r\n";
                 cC100++;
-                if(sale.getTotalPrice()<0){
+                if(sale.getTotal_price()<0){
                     c330++;
-                    a330 += sale.getTotalPrice();
+                    a330 += sale.getTotal_price();
                 } else {
                     c320++;
-                    a320 += sale.getTotalPrice();
+                    a320 += sale.getTotal_price();
                 }
-            } else if (records.get(i).getObj() instanceof Order) {
-                Order order = (Order) records.get(i).getObj();
+            } else if (records.get(i).getObj() instanceof OrderDetails) {
+                OrderDetails order = (OrderDetails) records.get(i).getObj();
                 strRecords += order.DKMVDATA(counter, SETTINGS.companyID, records.get(i).getDate()) + "\r\n";
-                if (checkProductNonEX(order.getProductId())) {
+                if (checkProductNonEX(order.getProduct_id())) {
                     productNonRep.add(order.getProduct());
                     addProduct(order.getProduct());
                 }
                 cD110++;
             } else if (records.get(i).getObj() instanceof Payment) {
                 Payment payment = (Payment) records.get(i).getObj();
-                Sale _sale = (Sale) records.get(i - 1).getObj();
+                Order _sale = (Order) records.get(i - 1).getObj();
                 //strRecords += String.format(Locale.ENGLISH, "%s", payment.BKMVDATA(counter, SETTINGS.companyID, records.get(i).getDate(), _sale)) + "\r\n";
                 if (!visited) {
                     //create the B100 for the 3 way of payment
@@ -173,7 +173,7 @@ public class BKMVDATA {
                 accountingSalesTax.totalCredit += (payment.getAmount() - withoutTax);
 
                 cB100++;
-                Date sdo = new Date(_sale.getSaleDate());
+                Date sdo = new Date(_sale.getOrder_date());
 
                 switch (payment.getPaymentWay()) {
                     case CONSTANT.CASH:
@@ -263,15 +263,15 @@ public class BKMVDATA {
         productDBAdapter.open();
         paymentDBAdapter.open();
         userDBAdapter.open();
-        for (Sale s : sales) {
+        for (Order s : sales) {
             if (paymentDBAdapter.getPaymentBySaleID(s.getId()).size() > 0)
                 s.setPayment(paymentDBAdapter.getPaymentBySaleID(s.getId()).get(0));
             s.setOrders(orderDBAdapter.getOrderBySaleID(s.getId()));
-            for (Order o : s.getOrders()) {
-                if (o.getProductId() != -1)
-                    o.setProduct(productDBAdapter.getProductByID(o.getProductId()));
+            for (OrderDetails o : s.getOrders()) {
+                if (o.getProduct_id() != -1)
+                    o.setProduct(productDBAdapter.getProductByID(o.getProduct_id()));
                 else {
-                    o.setProduct(new Product(-1, context.getResources().getString(R.string.general), o.getOriginal_price(), s.getByUser()));
+                    o.setProduct(new Product(-1, context.getResources().getString(R.string.general), o.getUnit_price(), s.getByUser()));
                 }
             }
             s.setUser(userDBAdapter.getUserByID(s.getByUser()));
@@ -300,7 +300,7 @@ public class BKMVDATA {
         Date getDate();
     }
 
-    public void addSale(final Sale sale) {
+    public void addSale(final Order sale) {
         records.add(new Record() {
             @Override
             public Object getObj() {
@@ -309,12 +309,12 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return new Date(sale.getSaleDate());
+                return new Date(sale.getOrder_date());
             }
         });
     }
 
-    public void addPayment(final Sale payment) {
+    public void addPayment(final Order payment) {
         records.add(new Record() {
             @Override
             public Object getObj() {
@@ -323,12 +323,12 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return new Date(payment.getSaleDate() + 1);
+                return new Date(payment.getOrder_date() + 1);
             }
         });
     }
 
-    public void addOrders(final Order o, final Date d) {
+    public void addOrders(final OrderDetails o, final Date d) {
         records.add(new Record() {
             @Override
             public Object getObj() {

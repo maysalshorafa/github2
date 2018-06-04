@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.R;
 
 import java.text.SimpleDateFormat;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 public class SaleManagementListViewAdapter extends ArrayAdapter {
-	private List<Sale> salesList;
+	private List<Order> salesList;
 	private int resource;
 	private LayoutInflater inflater;
 	private Context context;
@@ -32,7 +32,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 	 * @param resource The resource ID for a layout file containing a layout to use when
 	 * @param objects  The objects to represent in the ListView.
 	 */
-	public SaleManagementListViewAdapter(Context context, int resource, List<Sale> objects) {
+	public SaleManagementListViewAdapter(Context context, int resource, List<Order> objects) {
 		super(context, resource, objects);
 		this.context = context;
 		this.resource = resource;
@@ -61,12 +61,12 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		double price;
-		price = salesList.get(position).getTotalPrice();
+		price = salesList.get(position).getTotal_price();
 		holder.tvID.setText(salesList.get(position).getId() + "");
 		holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
-		holder.tvPaid.setText(Util.makePrice(salesList.get(position).getTotalPaid()) + " " + context.getString(R.string.ins));
+		holder.tvPaid.setText(Util.makePrice(salesList.get(position).getTotal_paid_amount()) + " " + context.getString(R.string.ins));
 		SimpleDateFormat format = new SimpleDateFormat();
-		holder.tvDate.setText(format.format(salesList.get(position).getSaleDate()));
+		holder.tvDate.setText(format.format(salesList.get(position).getOrder_date()));
 		holder.tvUseName.setText(salesList.get(position).getUser().getFullName());
 		holder.FL.setVisibility(View.GONE);
 

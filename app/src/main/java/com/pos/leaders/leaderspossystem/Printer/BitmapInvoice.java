@@ -10,8 +10,8 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
-import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
@@ -30,7 +30,7 @@ import java.util.Locale;
 
 public class BitmapInvoice {
 
-    public static Bitmap print(int id, List<Order> orders, Sale sale, boolean isCopy, User user, Context context) {
+    public static Bitmap print(int id, List<OrderDetails> orders, Order sale, boolean isCopy, User user, Context context) {
         //miriam_libre_bold.ttf
         //miriam_libre_regular.ttf
         //carmelitregular.ttf
@@ -82,14 +82,14 @@ public class BitmapInvoice {
 
 
         String names = "", prices = "", count = "", barcode = "";
-        for (Order o : orders) {
+        for (OrderDetails o : orders) {
             int cut = 10;
             if (o.getProduct().getName().length() < 10)
                 cut = o.getProduct().getName().length() - 1;
             String productName = o.getProduct().getName().substring(0, cut);
             names += "\u200F" + productName + "\n";
             barcode += o.getProduct().getBarCode() + "\n";
-            count += o.getCount() + "\n";
+            count += o.getQuantity() + "\n";
             prices += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
         }
         StaticLayout slNames = new StaticLayout(names, orderTP,
@@ -114,7 +114,7 @@ public class BitmapInvoice {
         StaticLayout slTotalText = new StaticLayout("סה''כ", ntp,
                 (int) (PAGE_WIDTH * 0.35), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
 
-        StaticLayout slTotalPrice = new StaticLayout(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), ntp,
+        StaticLayout slTotalPrice = new StaticLayout(String.format(new Locale("en"), "%.2f", sale.getTotal_price()), ntp,
                 (int) (PAGE_WIDTH * 0.35), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
 
 
@@ -124,7 +124,7 @@ public class BitmapInvoice {
         StaticLayout slTaxText = new StaticLayout("חייב במע''מ" + "\n" + "מע''מ " + SETTINGS.tax + " % \n" + "לא חייב במע''מ", tax,
                 (int) (PAGE_WIDTH * 0.35), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
 
-        double notax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
+        double notax = sale.getTotal_price() / (1 + (SETTINGS.tax / 100));
         StaticLayout slTaxNumber = new StaticLayout(String.format(new Locale("en"), "%.2f\n%.2f\n%.2f", notax, notax * (SETTINGS.tax / 100), 0.0f), tax,
                 (int) (PAGE_WIDTH * 0.35), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
 
@@ -146,7 +146,7 @@ public class BitmapInvoice {
             }
             //u2003
             //\u3000
-            str+="\u200F"+productName+"\t\t\t"+Barcode+"\t\t"+o.getCount()+"\t\t"+String.format(new Locale("en"),"%.2f",o.getItemTotalPrice());
+            str+="\u200F"+productName+"\t\t\t"+Barcode+"\t\t"+o.getQuantity()+"\t\t"+String.format(new Locale("en"),"%.2f",o.getItemTotalPrice());
             if(true)
                 str+="\n";
         }

@@ -15,14 +15,14 @@ import java.util.List;
 
 public class SESSION {
 	public static User _USER = null;
-	public static Order _ORDER;
-	public static List<Order> _ORDERS;
-	public static Sale _SALE;
+	public static OrderDetails _ORDER;
+	public static List<OrderDetails> _ORDERS;
+	public static Order _SALE;
 	public static ScheduleWorkers _SCHEDULEWORKERS;
 	public static UserPermissions _USERPERMISSIONS;
 	public static CreditCardPayment _TEMP_CREDITCARD_PAYMNET;
 	public static List<Product> _TEMPOFFERPRODUCTS;
-	public static List<Pair<Integer, Sale>> _SALES;
+	public static List<Pair<Integer, Order>> _SALES;
 	public static List<Check> _CHECKS_HOLDER;
 	public static int TEMP_NUMBER = 0;
 	public static int POS_ID_NUMBER = 0;
@@ -40,8 +40,8 @@ public class SESSION {
 	}
 
 	public static void _Rest() {
-		SESSION._ORDERS = new ArrayList<Order>();
-		SESSION._SALE = new Sale(SESSION._USER.getId(), new Date().getTime(), 0, false, 0, 0);
+		SESSION._ORDERS = new ArrayList<OrderDetails>();
+		SESSION._SALE = new Order(SESSION._USER.getId(), new Date().getTime(), 0, false, 0, 0);
 		SESSION._CHECKS_HOLDER = new ArrayList<Check>();
 		SESSION._ORDER = null;
 

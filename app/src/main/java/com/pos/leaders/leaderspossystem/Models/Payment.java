@@ -1,14 +1,8 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import android.content.Context;
-import android.widget.Space;
-import android.widget.Switch;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
-import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -124,7 +118,7 @@ public class Payment {
 				'}';
 	}
 
-    public String BKMVDATA(int rowNumber, String companyID, Date date,Sale sale){
+    public String BKMVDATA(int rowNumber, String companyID, Date date,Order sale){
         String s = "320",OP="+";
         if(amount<0) {
             s = "330";
@@ -133,15 +127,15 @@ public class Payment {
 		}
         int totalItems = 0;
         double totalDiscount = 0;
-        for(Order o: sale.getOrders())
+        for(OrderDetails o: sale.getOrders())
         {
-            totalItems += o.getCount();
+            totalItems += o.getQuantity();
             totalDiscount += (o.getItemTotalPrice() * o.getDiscount() / 100);
         }
         if(amount<0)
             totalDiscount = 0;
         totalItems = 1;
-        double noTax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
+        double noTax = sale.getTotal_price() / (1 + (SETTINGS.tax / 100));
         if(noTax<0)
             noTax *= -1;
         return "D110" + String.format(locale, "%09d", rowNumber) + companyID + s + String.format(locale, "%020d", saleId) + String.format(locale, "%04d", id) + s + String.format(locale, "%020d", saleId) + "3" + String.format(locale, "%020d", saleId) + String.format(locale, "%30s", "sale") + Util.spaces(50) + Util.spaces(30) +

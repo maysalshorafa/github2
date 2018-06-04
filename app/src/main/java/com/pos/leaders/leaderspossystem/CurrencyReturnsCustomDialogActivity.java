@@ -23,7 +23,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapt
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 
-import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -41,7 +41,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
     private Spinner returnSpener;
     private double excess = 0;
     Currency rCurrency;
-    private Sale sale;
+    private Order sale;
 
     public CurrencyReturnsCustomDialogActivity() {
         super(null);
@@ -57,7 +57,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
         this.c = c;
     }
 
-    public CurrencyReturnsCustomDialogActivity(Activity a, double excess, Sale sale) {
+    public CurrencyReturnsCustomDialogActivity(Activity a, double excess, Order sale) {
         super(a);
         this.c = a;
         this.excess = excess;

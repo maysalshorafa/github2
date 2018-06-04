@@ -136,7 +136,7 @@
                 android:layout_weight="1"
                 android:gravity="right"
                 android:paddingLeft="16dp"
-                android:text="@string/price"
+                android:text="@string/paid_amount"
                 android:textColor="@color/black"
                 android:textDirection="anyRtl"
                 android:textSize="24sp"

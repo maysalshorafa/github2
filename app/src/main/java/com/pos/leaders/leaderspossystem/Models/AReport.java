@@ -1,7 +1,6 @@
 package com.pos.leaders.leaderspossystem.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 /**
@@ -17,7 +16,7 @@ public class AReport {
     private double amount;
     private long lastSaleID;
     @JsonIgnore
-    private Sale lastSale;
+    private Order lastSale;
     private long lastZReportID;
     @JsonIgnore
     private ZReport lastZReport;
@@ -35,7 +34,7 @@ public class AReport {
         this.lastZReportID = lastZReportID;
     }
 
-    public AReport(long creationDate, User byUser, Sale lastSale, ZReport lastZReport, double amount) {
+    public AReport(long creationDate, User byUser, Order lastSale, ZReport lastZReport, double amount) {
         this.creationDate = creationDate;
         this.byUser = byUser;
         this.lastSale = lastSale;
@@ -79,7 +78,7 @@ public class AReport {
         return lastSaleID;
     }
 
-    public Sale getLastSale() {
+    public Order getLastSale() {
         return lastSale;
     }
 
@@ -120,7 +119,7 @@ public class AReport {
         this.lastSaleID = lastSaleID;
     }
 
-    public void setLastSale(Sale lastSale) {
+    public void setLastSale(Order lastSale) {
         this.lastSale = lastSale;
     }
 

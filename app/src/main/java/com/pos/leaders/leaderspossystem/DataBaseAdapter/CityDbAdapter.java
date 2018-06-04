@@ -9,9 +9,6 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.City;
-import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
-import com.pos.leaders.leaderspossystem.Models.Sale;
-import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;

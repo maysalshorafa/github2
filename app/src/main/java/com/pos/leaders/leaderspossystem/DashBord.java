@@ -39,7 +39,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
@@ -48,8 +48,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.Sale;
-import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
@@ -89,7 +88,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     ArrayList<Permissions> permissions = new ArrayList<Permissions>();
     ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
     Intent i;
-    Sale lastSale;
+    Order lastSale;
     Currency fCurrency;
     Currency sCurrency;
     Currency tCurrency;
@@ -441,7 +440,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     protected void onResume() {
         super.onResume();
 
-        SaleDBAdapter saleDBAdapter = new SaleDBAdapter(DashBord.this);
+        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(DashBord.this);
         saleDBAdapter.open();
         lastSale = saleDBAdapter.getLast();
         saleDBAdapter.close();

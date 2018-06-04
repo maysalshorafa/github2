@@ -5,25 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DbHelper;
 
-import com.pos.leaders.leaderspossystem.Models.AReport;
-import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
-import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Payment;
-import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
-import com.pos.leaders.leaderspossystem.Printer.BitmapInvoice;
-import com.pos.leaders.leaderspossystem.Printer.PrintTools;
-import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-
-import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
@@ -182,9 +170,9 @@ public class ZReportDBAdapter {
     }
     public double getZReportAmount( long from, long to) {
         double amount =0 , amountPlus =0 , amountMinus =0;
-        SaleDBAdapter saleDBAdapter = new SaleDBAdapter(context);
+        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(context);
         saleDBAdapter.open();
-        List<Sale> sales = saleDBAdapter.getBetween(from, to);
+        List<Order> sales = saleDBAdapter.getBetween(from, to);
         saleDBAdapter.close();
         List<Payment> payments = paymentList(sales);
 
@@ -200,11 +188,11 @@ public class ZReportDBAdapter {
 
         return amount;
     }
-    public List<Payment> paymentList(List<Sale> sales) {
+    public List<Payment> paymentList(List<Order> sales) {
         List<Payment> pl = new ArrayList<Payment>();
         PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(context);
         paymentDBAdapter.open();
-        for (Sale s : sales) {
+        for (Order s : sales) {
             List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(s.getId());
             pl.addAll(payments);
         }

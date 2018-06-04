@@ -1,15 +1,5 @@
 package com.pos.leaders.leaderspossystem.Models.Currency;
 
-import com.pos.leaders.leaderspossystem.Models.Order;
-import com.pos.leaders.leaderspossystem.Models.Payment;
-import com.pos.leaders.leaderspossystem.Models.Sale;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
-import com.pos.leaders.leaderspossystem.Tools.Util;
-
-import java.util.Date;
-import java.util.Locale;
-
 /**
  * Created by Win8.1 on 9/27/2017.
  */

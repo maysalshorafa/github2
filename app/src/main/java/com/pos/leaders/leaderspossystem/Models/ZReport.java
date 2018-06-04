@@ -1,11 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
 import com.pos.leaders.leaderspossystem.Tools.Util;
-
-import java.util.Date;
 
 /**
  * Created by KARAM on 05/01/2017.
@@ -22,10 +18,10 @@ public class ZReport {
     @JsonIgnore
     private double total_amount;
     @JsonIgnore
-    private Sale startSale;
+    private Order startSale;
     private long endSaleId;
     @JsonIgnore
-    private Sale endSale;
+    private Order endSale;
 
     public ZReport() {
 
@@ -51,7 +47,7 @@ public class ZReport {
         this.total_amount=total_amount;
     }
 
-    public ZReport(long id, long creationDate, User user, Sale startSale, Sale endSale) {
+    public ZReport(long id, long creationDate, User user, Order startSale, Order endSale) {
         this.id = id;
         this.creationDate = creationDate;
         this.user = user;
@@ -63,7 +59,7 @@ public class ZReport {
         this.endSaleId=endSale.getId();
     }
 
-    public ZReport(long id, long creationDate, User user, long startSaleId,Sale endSale) {
+    public ZReport(long id, long creationDate, User user, long startSaleId,Order endSale) {
         this.id = id;
         this.creationDate = creationDate;
         this.user = user;
@@ -127,11 +123,11 @@ public class ZReport {
         this.startSaleId = startSaleId;
     }
 
-    public Sale getStartSale() {
+    public Order getStartSale() {
         return startSale;
     }
 
-    public void setStartSale(Sale startSale) {
+    public void setStartSale(Order startSale) {
         this.startSale = startSale;
     }
 
@@ -143,11 +139,11 @@ public class ZReport {
         this.endSaleId = endSaleId;
     }
 
-    public Sale getEndSale() {
+    public Order getEndSale() {
         return endSale;
     }
 
-    public void setEndSale(Sale endSale) {
+    public void setEndSale(Order endSale) {
         this.endSale = endSale;
     }
 

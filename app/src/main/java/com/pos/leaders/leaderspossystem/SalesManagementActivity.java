@@ -23,16 +23,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Check;
-import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
@@ -55,7 +55,7 @@ public class SalesManagementActivity extends AppCompatActivity {
     TextView customer;
     ListView lvSales;
     EditText etFrom, etTo;
-    SaleDBAdapter saleDBAdapter;
+    OrderDBAdapter saleDBAdapter;
     UserDBAdapter userDBAdapter;
     PaymentDBAdapter paymentDBAdapter;
     private static final int DIALOG_FROM_DATE = 825;
@@ -65,10 +65,10 @@ public class SalesManagementActivity extends AppCompatActivity {
     SaleManagementListViewAdapter adapter;
     View previousView = null;
 
-    List<Sale> _saleList;
-    List<Order> orders;
+    List<Order> _saleList;
+    List<OrderDetails> orders;
     List<Check> checks;
-    List<Sale> All_sales;
+    List<Order> All_sales;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +110,7 @@ public class SalesManagementActivity extends AppCompatActivity {
             }
         });
 
-        saleDBAdapter = new SaleDBAdapter(this);
+        saleDBAdapter = new OrderDBAdapter(this);
 
         userDBAdapter = new UserDBAdapter(this);
         paymentDBAdapter = new PaymentDBAdapter(this);
@@ -127,7 +127,7 @@ public class SalesManagementActivity extends AppCompatActivity {
 
         All_sales = _saleList;
         saleDBAdapter.close();
-        for (Sale s : _saleList) {
+        for (Order s : _saleList) {
             userDBAdapter.open();
             s.setUser(userDBAdapter.getUserByID(s.getByUser()));
             userDBAdapter.close();
@@ -144,7 +144,7 @@ public class SalesManagementActivity extends AppCompatActivity {
         }
         Log.i("log", _saleList.toString());
         /*for (Sale s : saleList) {
-			if(DateConverter.dateBetweenTwoDates(from, to, s.getSaleDate())) {
+			if(DateConverter.dateBetweenTwoDates(from, to, s.getOrder_date())) {
 				_saleList.add(s);
 			}
 		}*/
@@ -156,18 +156,18 @@ public class SalesManagementActivity extends AppCompatActivity {
         lvSales.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                final Sale sale = _saleList.get(position);
-                OrderDBAdapter orderDBAdapter = new OrderDBAdapter(SalesManagementActivity.this);
+                final Order sale = _saleList.get(position);
+                OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(SalesManagementActivity.this);
                 orderDBAdapter.open();
                 orders = orderDBAdapter.getOrderBySaleID(sale.getId());
                 orderDBAdapter.close();
                 ProductDBAdapter productDBAdapter = new ProductDBAdapter(SalesManagementActivity.this);
                 productDBAdapter.open();
-                for (Order o : orders) {
-                    if (o.getProductId() != -1) {
-                        o.setProduct(productDBAdapter.getProductByID(o.getProductId()));
+                for (OrderDetails o : orders) {
+                    if (o.getProduct_id() != -1) {
+                        o.setProduct(productDBAdapter.getProductByID(o.getProduct_id()));
                     } else {
-                        o.setProduct(new Product(-1, getApplicationContext().getResources().getString(R.string.general), o.getOriginal_price(), SESSION._USER.getId()));
+                        o.setProduct(new Product(-1, getApplicationContext().getResources().getString(R.string.general), o.getUnit_price(), SESSION._USER.getId()));
                     }
                 }
                 productDBAdapter.close();
@@ -254,7 +254,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                 btnRN.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        SaleDBAdapter saleDBAdapter = new SaleDBAdapter(SalesManagementActivity.this);
+                        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(SalesManagementActivity.this);
                         saleDBAdapter.open();
                         sale.setReplacementNote(sale.getReplacementNote() + 1);
                         saleDBAdapter.updateEntry(sale);
@@ -271,7 +271,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                 btnCan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        SaleDBAdapter saleDBAdapter = new SaleDBAdapter(SalesManagementActivity.this);
+                        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(SalesManagementActivity.this);
                         saleDBAdapter.open();
                         saleDBAdapter.deleteEntry(sale.getId());
                         if (checks.size() > 0)
@@ -279,12 +279,12 @@ public class SalesManagementActivity extends AppCompatActivity {
                         else
                             print(invoiceImg.cancelingInvoice(sale, false, null));
                         sale.setPayment(new Payment(payments.get(0)));
-                        long sID = saleDBAdapter.insertEntry(SESSION._USER.getId(), new Date().getTime(), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaid() * -1, sale.getCustomer_id(), sale.getCustomer_name());
+                        long sID = saleDBAdapter.insertEntry(SESSION._USER.getId(), new Date().getTime(), sale.getReplacementNote(), true, sale.getTotal_price() * -1, sale.getTotal_paid_amount() * -1, sale.getCustomer_id(), sale.getCustomer_name());
 
                         saleDBAdapter.close();
                         PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(SalesManagementActivity.this);
                         paymentDBAdapter1.open();
-                        paymentDBAdapter1.insertEntry(sale.getPayment().getPaymentWay(), sale.getTotalPrice() * -1, sID);
+                        paymentDBAdapter1.insertEntry(sale.getPayment().getPaymentWay(), sale.getTotal_price() * -1, sID);
                         paymentDBAdapter1.close();
                         //// TODO: 19/01/2017 cancel this sale and print return note and mony back by the payment way
                     }
@@ -315,14 +315,14 @@ public class SalesManagementActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                _saleList = new ArrayList<Sale>();
+                _saleList = new ArrayList<Order>();
                 String word = etSearch.getText().toString();
 
                 if (!word.equals("")) {
-                    for (Sale c : All_sales) {
+                    for (Order c : All_sales) {
 
                         if (c.getUser().getUserName().toLowerCase().contains(word.toLowerCase()) ||(c.getId() + "").contains(word.toLowerCase())
-                                || (c.getSaleDate() + "").contains(word.toLowerCase())) {
+                                || (c.getOrder_date() + "").contains(word.toLowerCase())) {
                             _saleList.add(c);
 
                         }
@@ -399,6 +399,6 @@ public class SalesManagementActivity extends AppCompatActivity {
 /**class OutcomeDescComparator implements Comparator<Sale>
 {
     public int compare(Sale fSale, Sale lSale) {
-        return lSale.getSaleDate().compareTo(fSale.getSaleDate());
+        return lSale.getOrder_date().compareTo(fSale.getOrder_date());
     }
 }*/
