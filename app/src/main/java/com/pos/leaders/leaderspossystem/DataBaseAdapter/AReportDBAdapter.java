@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.AReport;
-import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -82,7 +81,7 @@ public class AReportDBAdapter {
     public long insertEntry(AReport aReport) {
         ContentValues val = new ContentValues();
 
-        val.put(A_REPORT_COLUMN_ID, aReport.getId());
+        val.put(A_REPORT_COLUMN_ID, aReport.getaReportId());
         val.put(A_REPORT_COLUMN_CREATEDATE, aReport.getCreationDate());
         val.put(A_REPORT_COLUMN_BYUSER, aReport.getByUserID());
         val.put(A_REPORT_COLUMN_AMOUNT, aReport.getAmount());

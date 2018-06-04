@@ -5,7 +5,7 @@ package com.pos.leaders.leaderspossystem.Models;
  */
 
 public class CustomerAssistant {
-    private long id ;
+    private long custAssistantId;
     private long order_id;
     private long customerAssistantID;
     private double amount;
@@ -23,8 +23,8 @@ public class CustomerAssistant {
     }
 
 
-    public CustomerAssistant(long id, long order_id, long customerAssistantID, double amount, int type, String salesCase, long saleDate) {
-        this.id = id;
+    public CustomerAssistant(long custAssistantId, long order_id, long customerAssistantID, double amount, int type, String salesCase, long saleDate) {
+        this.custAssistantId = custAssistantId;
         this.order_id = order_id;
         this.customerAssistantID = customerAssistantID;
         this.amount = amount;
@@ -33,12 +33,12 @@ public class CustomerAssistant {
         this.saleDate=saleDate;
     }
 
-    public long getId() {
-        return id;
+    public long getCustAssistantId() {
+        return custAssistantId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setCustAssistantId(long custAssistantId) {
+        this.custAssistantId = custAssistantId;
     }
 
     public long getOrder_id() {

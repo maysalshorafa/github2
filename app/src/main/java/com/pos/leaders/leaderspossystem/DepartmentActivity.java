@@ -76,7 +76,7 @@ public class DepartmentActivity extends AppCompatActivity {
                         switch (item) {
                             case 0:
                                 intent = new Intent(DepartmentActivity.this, AddNewDepartment.class);
-                                intent.putExtra("departmentID", listDepartment.get(position).getId());
+                                intent.putExtra("departmentID", listDepartment.get(position).getDepartmentId());
                                 startActivity(intent);
                                 break;
                             case 1:
@@ -85,7 +85,7 @@ public class DepartmentActivity extends AppCompatActivity {
                                         .setMessage(getString(R.string.delete))
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
-                                                departmentDBAdapter.deleteEntry(listDepartment.get(position).getId());
+                                                departmentDBAdapter.deleteEntry(listDepartment.get(position).getDepartmentId());
                                                 listDepartment.remove(listDepartment.get(position));
                                                 gvDepartment.setAdapter(adapter);
                                                 adapter.notifyDataSetChanged();

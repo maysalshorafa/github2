@@ -34,7 +34,7 @@
         <item>add customer</item>
     </string-array>
     <string-array name="permissions_list">
-    <item>main screen</item>
+        <item>main screen</item>
         <item>report</item>
         <item>product</item>
         <item>department</item>

@@ -141,7 +141,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
         AccessToken accessToken = new AccessToken(this);
         accessToken.execute(this);
-        //load pos id from shared file
+        //load pos usedPointId from shared file
         SharedPreferences sharedpreferences = getSharedPreferences(BO_CORE_ACCESS_AUTH, Context.MODE_PRIVATE);
         if (sharedpreferences.contains(MessageKey.PosId)) {
             int posID = sharedpreferences.getInt(MessageKey.syncNumber, 1);
@@ -180,7 +180,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         report = (Button) findViewById(R.id.report);
         product = (Button) findViewById(R.id.product);
         department = (Button) findViewById(R.id.department);
-        //offers = (Button) findViewById(R.id.offers);
+        //offers = (Button) findViewById(R.usedPointId.offers);
         users = (Button) findViewById(R.id.users);
         schedule_workers = (Button) findViewById(R.id.schedule_workers);
         backUp = (Button) findViewById(R.id.backUp);
@@ -194,13 +194,13 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             public void onClick(View v) {
                 /*scheduleWorkersDBAdapter=new ScheduleWorkersDBAdapter(getApplicationContext());
                 scheduleWorkersDBAdapter.open();
-                ScheduleWorkers scheduleWorkers = scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(SESSION._USER.getId());
-                scheduleWorkersDBAdapter.updateEntry(SESSION._USER.getId(),new Date());*/
+                ScheduleWorkers scheduleWorkers = scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(SESSION._USER.getCashPaymentId());
+                scheduleWorkersDBAdapter.updateEntry(SESSION._USER.getCashPaymentId(),new Date());*/
                 Intent intent = new Intent(DashBord.this, LogInActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 /**
                 try {
-                    scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getId(), new Date());
+                    scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getCashPaymentId(), new Date());
                     SESSION._SCHEDULEWORKERS.setExitTime(new Date().getTime());
                     Log.i("Worker get out", SESSION._SCHEDULEWORKERS.toString());
                 } catch (Exception ex) {
@@ -216,7 +216,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             @Override
             public void onClick(View v) {
                 final AReport _aReport = new AReport();
-                _aReport.setByUserID(SESSION._USER.getId());
+                _aReport.setByUserID(SESSION._USER.getUserId());
                 _aReport.setCreationDate(new Date().getTime());
 
                 AReport aReport = getLastAReport();
@@ -228,7 +228,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
                     ShowAReportDialog(_aReport);
                 } else {
-                    _aReport.setLastZReportID(zReport.getId());
+                    _aReport.setLastZReportID(zReport.getzReportId());
                     _aReport.setLastSaleID(zReport.getEndSaleId());
 
                     ShowAReportDialog(_aReport);
@@ -256,22 +256,22 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                     lastZReport.setEndSaleId(0);
                                 }
                                 ZReport z = new ZReport(0, new Date().getTime(), SESSION._USER, lastZReport.getEndSaleId() + 1, lastSale);
-                                z.setByUser(SESSION._USER.getId());
+                                z.setByUser(SESSION._USER.getUserId());
                                 double amount = zReportDBAdapter.getZReportAmount(z.getStartSaleId(), z.getEndSaleId());
                                 totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
                                 long zID = zReportDBAdapter.insertEntry(z.getCreationDate(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId(),amount,totalZReportAmount);
-                                z.setId(zID);
+                                z.setzReportId(zID);
                                 lastZReport = new ZReport(z);
                                 zReportDBAdapter.close();
                                 PrintTools pt = new PrintTools(DashBord.this);
 
                                 //create and print z report
-                                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false,totalZReportAmount);
+                                Bitmap bmap = pt.createZReport(lastZReport.getzReportId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false,totalZReportAmount);
                                 if (bmap != null)
                                     pt.PrintReport(bmap);
 
                                 Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, lastZReport.getId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, lastZReport.getzReportId());
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, lastZReport.getStartSaleId());
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, lastZReport.getEndSaleId());
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
@@ -485,7 +485,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
 
         if (aReport != null && zReport != null) {
-            if (aReport.getLastZReportID() == zReport.getId()) {
+            if (aReport.getLastZReportID() == zReport.getzReportId()) {
 
             } else {
                 return true;
@@ -818,21 +818,21 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         aReportDBAdapter.open();
                         aReportDBAdapter.insertEntry(aReport.getCreationDate(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastSaleID(), aReport.getLastZReportID());
                         try {
-                            aReportId = aReportDBAdapter.getLastRow().getId();
+                            aReportId = aReportDBAdapter.getLastRow().getaReportId();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         if (firstCurrencyInDefaultValue > 0) {
-                            aReportDetailsDBAdapter.insertEntry(aReportId, firstCurrencyInDefaultValue, fCurrency.getId(), firstCurrencyInDefaultValue * fCurrency.getRate());
+                            aReportDetailsDBAdapter.insertEntry(aReportId, firstCurrencyInDefaultValue, fCurrency.getCurrencyId(), firstCurrencyInDefaultValue * fCurrency.getRate());
                         }
                         if (secondCurrencyInDefaultValue > 0) {
-                            aReportDetailsDBAdapter.insertEntry(aReportId, secondCurrencyInDefaultValue, sCurrency.getId(), secondCurrencyInDefaultValue * sCurrency.getRate());
+                            aReportDetailsDBAdapter.insertEntry(aReportId, secondCurrencyInDefaultValue, sCurrency.getCurrencyId(), secondCurrencyInDefaultValue * sCurrency.getRate());
                         }
                         if (thirdCurrencyInDefaultValue > 0) {
-                            aReportDetailsDBAdapter.insertEntry(aReportId, thirdCurrencyInDefaultValue, tCurrency.getId(), thirdCurrencyInDefaultValue * tCurrency.getRate());
+                            aReportDetailsDBAdapter.insertEntry(aReportId, thirdCurrencyInDefaultValue, tCurrency.getCurrencyId(), thirdCurrencyInDefaultValue * tCurrency.getRate());
                         }
                         if (forthCurrencyInDefaultValue > 0) {
-                            aReportDetailsDBAdapter.insertEntry(aReportId, firstCurrencyInDefaultValue, forthCurrency.getId(), forthCurrencyInDefaultValue * forthCurrency.getRate());
+                            aReportDetailsDBAdapter.insertEntry(aReportId, firstCurrencyInDefaultValue, forthCurrency.getCurrencyId(), forthCurrencyInDefaultValue * forthCurrency.getRate());
                         }
 
                         aReportDialog.cancel();
@@ -877,7 +877,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 w = Workbook.getWorkbook(in);
                 Sheet sheet = w.getSheet(0);
                 // Loop over column and lines
-                Log.i("Row ","id \t name \t barcode \t price");
+                Log.i("Row ","usedPointId \t name \t barcode \t price");
                 for (int row = 1; row < sheet.getRows(); row++) {
                     try {
                         String name,barcode,id,price;
@@ -885,7 +885,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         name=sheet.getCell(4, row).getContents();
                         barcode=sheet.getCell(6, row).getContents();
                         price=new BigDecimal(sheet.getCell(1, row).getContents().replaceAll(" ","")).toString();
-                        resultSet.add(new Product(i++,name,Double.parseDouble(price),barcode,1, SESSION._USER.getId()));
+                        resultSet.add(new Product(i++,name,Double.parseDouble(price),barcode,1, SESSION._USER.getUserId()));
                     }
                     catch (Exception ex){
                         Log.e("",ex.getMessage());

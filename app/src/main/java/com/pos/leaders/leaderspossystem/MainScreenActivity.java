@@ -242,11 +242,11 @@ public class MainScreenActivity extends Activity {
 
 
 		if (SESSION._SALE != null) {
-			sale = new Order(SESSION._USER.getId(), new Date().getTime(), 0, false, 0,0);
+			sale = new Order(SESSION._USER.getUserId(), new Date().getTime(), 0, false, 0,0);
 		}
 		else
 		{
-			SESSION._SALE=new Order(SESSION._USER.getId(), new Date().getTime(), 0, false, 0,0);
+			SESSION._SALE=new Order(SESSION._USER.getUserId(), new Date().getTime(), 0, false, 0,0);
 		}
 
 		if (SESSION._ORDERS != null) {
@@ -333,7 +333,7 @@ public class MainScreenActivity extends Activity {
 												SESSION._SALE.setTotal_paid_amount(pid);
 												Toast.makeText(MainScreenActivity.this, "return :"+(pid-tot), Toast.LENGTH_LONG).show();
 												long saleId=saleDBAdapter.insertEntry(SESSION._SALE,1,"dd");
-                                                SESSION._SALE.setId(saleId);
+                                                SESSION._SALE.setOrderId(saleId);
 												for(OrderDetails o:SESSION._ORDERS){
 												//	orderDBAdapter.insertEntry(o.getProduct_id(),o.getQuantity(),o.getUserOffer(),saleId);
 												}
@@ -399,7 +399,7 @@ public class MainScreenActivity extends Activity {
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
 				try {
-					scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getId(), new Date());
+					scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getScheduleWorkersId(), new Date());
 					SESSION._SCHEDULEWORKERS.setExitTime(new Date().getTime());
 					Log.i("Worker get out", SESSION._SCHEDULEWORKERS.toString());
 				}
@@ -469,7 +469,7 @@ public class MainScreenActivity extends Activity {
 				.setMessage("Are you sure you want to exit?")
 				.setCancelable(false)
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
+					public void onClick(DialogInterface dialog, int usedPointId) {
 						//MainScreenActivity.this.finish();
 					}
 				})
@@ -533,7 +533,7 @@ public class MainScreenActivity extends Activity {
         // e.printStackTrace();
         // }
         String head="חש' מס-קבלה ";
-        head+=SESSION._SALE.getId();
+        head+=SESSION._SALE.getCashPaymentId();
         printerController.PrinterController_Font_Bold();
         printerController.PrinterController_Set_Center();
         printerController.PrinterController_Print(head.getBytes(Charset.forName("UTF-8")));

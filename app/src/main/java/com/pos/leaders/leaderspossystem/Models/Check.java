@@ -1,7 +1,5 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -12,7 +10,7 @@ import java.util.Date;
  */
 
 public class Check {
-	private long id;
+	private long checkId;
 	private int checkNum;
 	private int bankNum;
 	private int branchNum;
@@ -26,14 +24,14 @@ public class Check {
 
 
 
-	public Check(long id, int checkNum, int bankNum, int branchNum, int accountNum, double amount, long date, boolean deleted, long saleId) {
+	public Check(long checkId, int checkNum, int bankNum, int branchNum, int accountNum, double amount, long date, boolean deleted, long saleId) {
 		this.accountNum = accountNum;
 		this.amount = amount;
 		this.bankNum = bankNum;
 		this.branchNum = branchNum;
 		this.checkNum = checkNum;
 		this.date = date;
-		this.id = id;
+		this.checkId = checkId;
 		this.deleted = deleted;
 		this.saleId = saleId;
 	}
@@ -84,8 +82,8 @@ public class Check {
 		return date;
 	}
 
-	public long getId() {
-		return id;
+	public long getCheckId() {
+		return checkId;
 	}
 
 	public long getSaleId() {
@@ -140,7 +138,7 @@ public class Check {
 	public String toString() {
 		return "Check{" +
 				"accountNum=" + accountNum +
-				", id=" + id +
+				", accountingId=" + checkId +
 				", checkNum=" + checkNum +
 				", bankNum=" + bankNum +
 				", branchNum=" + branchNum +

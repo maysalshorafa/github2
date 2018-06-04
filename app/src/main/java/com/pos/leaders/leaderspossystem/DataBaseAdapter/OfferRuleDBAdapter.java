@@ -11,9 +11,6 @@ import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OfferRule;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by KARAM on 23/10/2016.
  */
@@ -116,16 +113,16 @@ public class OfferRuleDBAdapter {
     }
 
 
-    /**public OfferRule getOfferRuleByID(int id) {
+    /**public OfferRule getOfferRuleByID(int usedPointId) {
         OfferRule offerRule = null;
-        Cursor cursor = db.rawQuery("select * from " + OFFERROLL_TABLE_NAME + " where id='" + id + "'", null);
+        Cursor cursor = db.rawQuery("select * from " + OFFERROLL_TABLE_NAME + " where usedPointId='" + usedPointId + "'", null);
         if (cursor.getQuantity() < 1) // UserName Not Exist
         {
             cursor.close();
             return offerRule;
         }
         cursor.moveToFirst();
-        offerRule =new OfferRule(id,cursor.getString(cursor.getColumnIndex(OFFERROLL_COLUMN_NAME)));
+        offerRule =new OfferRule(usedPointId,cursor.getString(cursor.getColumnIndex(OFFERROLL_COLUMN_NAME)));
 
         cursor.close();
 
@@ -138,7 +135,7 @@ public class OfferRuleDBAdapter {
         val.put(OFFERROLL_COLUMN_NAME, offerRule.getName());
 
         String where = OFFERROLL_COLUMN_ID + " = ?";
-        db.update(OFFERROLL_TABLE_NAME, val, where, new String[]{offerRule.getId() + ""});
+        db.update(OFFERROLL_TABLE_NAME, val, where, new String[]{offerRule.getCashPaymentId() + ""});
     }
 
     public List<OfferRule> getAllOfferRoll(){

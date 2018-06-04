@@ -70,7 +70,7 @@ public class CustomerMeasurementDBAdapter {
 
     public long insertEntry(CustomerMeasurement customerMeasurement) {
         ContentValues val = new ContentValues();
-        val.put(CUSTOMER_MEASUREMENT_COLUMN_ID, customerMeasurement.getId());
+        val.put(CUSTOMER_MEASUREMENT_COLUMN_ID, customerMeasurement.getCustomerMeasurementId());
         val.put(CUSTOMER_MEASUREMENT_COLUMN_CUSTOMER_ID, customerMeasurement.getCustomerId());
         val.put(CUSTOMER_MEASUREMENT_COLUMN_USER_ID,customerMeasurement.getUserId());
         val.put(CUSTOMER_MEASUREMENT_COLUMN_VISIT_DATE, customerMeasurement.getVisitDate());
@@ -91,7 +91,7 @@ public class CustomerMeasurementDBAdapter {
     }
     // end
 
-    // get CustomerMeasurement by id
+    // get CustomerMeasurement by usedPointId
     public CustomerMeasurement getCustomerMeasurementByID(long id) {
         CustomerMeasurement customerMeasurement = null;
         Cursor cursor = db.rawQuery("select * from " + CUSTOMER_MEASUREMENT_TABLE_NAME + " where " + CUSTOMER_MEASUREMENT_COLUMN_ID + " = "+ id, null);
@@ -122,7 +122,7 @@ public class CustomerMeasurementDBAdapter {
         }
     }
     //end
-    // get CustomerMeasurement between to id
+    // get CustomerMeasurement between to usedPointId
     public List<CustomerMeasurement> getTopCustomerMeasurement(long count, long offset) {
                      List<CustomerMeasurement> customerMeasurementList = new ArrayList<CustomerMeasurement>();
                     Cursor cursor = db.rawQuery("select * from " + CUSTOMER_MEASUREMENT_TABLE_NAME + " where " + CUSTOMER_MEASUREMENT_COLUMN_ID + "<='" + offset + "' and " + CUSTOMER_MEASUREMENT_COLUMN_ID +

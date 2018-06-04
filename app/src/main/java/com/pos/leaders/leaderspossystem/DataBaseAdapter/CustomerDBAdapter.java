@@ -125,7 +125,7 @@ public class CustomerDBAdapter {
     public long insertEntry(Customer customer) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(CUSTOMER_COLUMN_ID, customer.getId());
+        val.put(CUSTOMER_COLUMN_ID, customer.getCustomerId());
         val.put(CUSTOMER_COLUMN_FIRST_NAME, customer.getFirstName());
         val.put(CUSTOMER_COLUMN_LAST_NAME, customer.getLastName());
         val.put(CUSTOMER_COLUMN_GENDER, customer.getGender());
@@ -198,8 +198,8 @@ public class CustomerDBAdapter {
         val.put(CUSTOMER_COLUMN_COUNTRY, customer.getCountry());
         val.put(CUSTOMER_COLUMN_COUNTRY_CODE, customer.getCountryCode());
         String where = CUSTOMER_COLUMN_ID + " = ?";
-        db.update(CUSTOMER_TABLE_NAME, val, where, new String[]{customer.getId() + ""});
-        Customer c=customerDBAdapter.getCustomerByID(customer.getId());
+        db.update(CUSTOMER_TABLE_NAME, val, where, new String[]{customer.getCustomerId() + ""});
+        Customer c=customerDBAdapter.getCustomerByID(customer.getCustomerId());
         Log.d("Update Object",c.toString());
         sendToBroker(MessageType.UPDATE_CUSTOMER, c, this.context);
         customerDBAdapter.close();
@@ -226,8 +226,8 @@ public class CustomerDBAdapter {
         val.put(CUSTOMER_COLUMN_COUNTRY_CODE, customer.getCountryCode());
         try {
             String where = CUSTOMER_COLUMN_ID + " = ?";
-            db.update(CUSTOMER_TABLE_NAME, val, where, new String[]{customer.getId() + ""});
-            Customer c=customerDBAdapter.getCustomerByID(customer.getId());
+            db.update(CUSTOMER_TABLE_NAME, val, where, new String[]{customer.getCustomerId() + ""});
+            Customer c=customerDBAdapter.getCustomerByID(customer.getCustomerId());
             Log.d("Update Object",c.toString());
             customerDBAdapter.close();
             return 1;
@@ -340,7 +340,7 @@ public class CustomerDBAdapter {
         updatedValues.put(CUSTOMER_COLUMN_DISENABLED, 1);
         String where = CUSTOMER_COLUMN_ID + " = ?";
         try {
-            db.update(CUSTOMER_TABLE_NAME, updatedValues, where, new String[]{customer.getId() + ""});
+            db.update(CUSTOMER_TABLE_NAME, updatedValues, where, new String[]{customer.getCustomerId() + ""});
             return 1;
         } catch (SQLException ex) {
             Log.e("CustomerDB deleteEntry", "enable hide Entry at " + CUSTOMER_TABLE_NAME + ": " + ex.getMessage());

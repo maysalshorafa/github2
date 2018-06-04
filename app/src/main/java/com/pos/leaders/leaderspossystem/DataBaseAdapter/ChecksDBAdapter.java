@@ -9,14 +9,10 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Check;
-import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
@@ -86,7 +82,7 @@ public class ChecksDBAdapter {
 	public long insertEntry(Check check){
 
 		ContentValues val = new ContentValues();
-		val.put(CHECKS_COLUMN_ID,check.getId());
+		val.put(CHECKS_COLUMN_ID,check.getCheckId());
 		//Assign values for each row.
 		val.put(CHECKS_COLUMN_CHECKNUMBER, check.getCheckNum());
 		val.put(CHECKS_COLUMN_BANKNUMBER, check.getBankNum());
@@ -131,7 +127,7 @@ public class ChecksDBAdapter {
 	}
 
 	private Check newCheck(Cursor cursor){
-		////int id, int checkNum, int bankNum, int branchNum, int accountNum, double amount, Date date, boolean isDeleted, int saleId
+		////int usedPointId, int checkNum, int bankNum, int branchNum, int accountNum, double amount, Date date, boolean isDeleted, int saleId
 		return new Check(Long.parseLong(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_ID))),
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_CHECKNUMBER))),
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_BANKNUMBER))),

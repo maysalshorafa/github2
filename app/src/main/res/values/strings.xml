@@ -124,17 +124,17 @@
     <string name="all">All</string>
     <string name="general">General</string>
     <string name="general_product">General Product</string>
-    <string name="paid_amount">Price</string>
+    <string name="price">Price</string>
     <string name="price_after_discount">Price after discount</string>
-     <string name="total_discount">Total Discount</string>
+    <string name="total_discount">Total Discount</string>
 
     <string name="clearCartAlertTitle">Clear Cart</string>
     <string name="clearCartAlertMessage">Do you want to delete all the items on the cart?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
-    <string name="quantity">Count</string>
-    <string name="multi_count">Please set product quantity.</string>
+    <string name="count">Count</string>
+    <string name="multi_count">Please set product count.</string>
 
     <string name="by_card">By Card</string>
     <string name="by_phone">By Phone</string>
@@ -179,7 +179,7 @@
 
     <!--Checks Activity pop-up-->
     <string name="add_check">Add Check</string>
-    <string name="check_pid_error">The total checks amount does not get the total paid_amount</string>
+    <string name="check_pid_error">The total checks amount does not get the total price</string>
     <string name="not_inserted_checks">There is no checks inserted</string>
     <!--Products -->
     <string name="name">Name</string>

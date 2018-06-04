@@ -249,7 +249,7 @@ public class OfferProductCartActivity extends Activity {
         departmentDBAdapter.open();
         for (Department d : departmentDBAdapter.getAllDepartments()) {
             Button bt = new Button(this);
-            //bt.setId(d.getId());
+            //bt.setCurrencyId(d.getCashPaymentId());
             bt.setText(d.getName());
             bt.setTextAppearance(this, R.style.TextAppearance);
             bt.setBackground(getResources().getDrawable(R.drawable.btn_secondary));
@@ -350,7 +350,7 @@ public class OfferProductCartActivity extends Activity {
     }
     private boolean ProductAtList(List<Product> list,Product product){
         for (Product p : list) {
-            if (p.getId() == product.getId())
+            if (p.getProductId() == product.getProductId())
                 return true;
         }
         return false;

@@ -85,7 +85,7 @@ public class CustomerAssetDB {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(CUSTMER_ASSEST_ID, assest.getId());
+        val.put(CUSTMER_ASSEST_ID, assest.getCustAssistantId());
         val.put(ORDER_ID, assest.getOrder_id());
         val.put(CustmerAssest_COLUMN_ID,assest.getCustomerAssistantID() );
         val.put(CUSTMER_ASSEST_COLUMN_AMOUNT, assest.getAmount());

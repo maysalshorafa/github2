@@ -86,7 +86,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
                     CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(getContext());
                     currencyReturnsDBAdapter.open();
                     double returnCurrencyValue = Double.parseDouble(tvExcess.getText().toString());
-                    currencyReturnsDBAdapter.insertEntry(sale.getId(), returnCurrencyValue, new Date().getTime(), rCurrency.getId());
+                    currencyReturnsDBAdapter.insertEntry(sale.getOrderId(), returnCurrencyValue, new Date().getTime(), rCurrency.getCurrencyId());
                     currencyReturnsDBAdapter.close();
                 }
                 cancel();

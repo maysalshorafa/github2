@@ -21,13 +21,13 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 public class UsedPointDBAdapter {
     public static final String USED_POINT_TABLE_NAME = "UsedPoint";
     // Column Names
-    protected static final String USED_POINT_COLUMN_ID = "id";
+    protected static final String USED_POINT_COLUMN_ID = "usedPointId";
     protected static final String USED_POINT_COLUMN_SALE_ID = "saleId";
     protected static final String USED_POINT_COLUMN_POINT = "unUsedPointAmount";
     protected static final String USED_POINT_COLUMN_CUSTOMER = "customerId";
 
 
-    public static final String DATABASE_CREATE = "CREATE TABLE UsedPoint ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  , `saleId` INTEGER ,`unUsedPointAmount` INTEGER ,`customerId` INTEGER ," +"FOREIGN KEY(`saleId`) REFERENCES `sales.id`)";
+    public static final String DATABASE_CREATE = "CREATE TABLE UsedPoint ( `usedPointId` INTEGER PRIMARY KEY AUTOINCREMENT  , `saleId` INTEGER ,`unUsedPointAmount` INTEGER ,`customerId` INTEGER ," +"FOREIGN KEY(`saleId`) REFERENCES `sales.usedPointId`)";
     private SQLiteDatabase db;
     private final Context context;
     // Database open/upgrade helper
@@ -78,7 +78,7 @@ public class UsedPointDBAdapter {
     }
     public long insertEntry(UsedPoint usedPoint){
         ContentValues val = new ContentValues();
-        val.put(USED_POINT_COLUMN_ID,usedPoint.getId());
+        val.put(USED_POINT_COLUMN_ID,usedPoint.getUsedPointId());
         //Assign values for each row.
         val.put(USED_POINT_COLUMN_SALE_ID, usedPoint.getSaleId());
         val.put(USED_POINT_COLUMN_POINT, usedPoint.getUnUsed_point_amount());

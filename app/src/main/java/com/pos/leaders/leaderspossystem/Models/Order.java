@@ -14,7 +14,7 @@ import java.util.Locale;
  */
 
 public class Order {
-	private long id;
+	private long orderId;
 	private long byUser;
 	private long order_date;
 	private int replacementNote;
@@ -43,8 +43,8 @@ public class Order {
     public Order() {
     }
 
-    public Order(long id, long byUser, long order_date, int replacementNote, boolean status, double total_price, double total_paid_amount, long customer_id, String customer_name) {
-		this.id = id;
+    public Order(long orderId, long byUser, long order_date, int replacementNote, boolean status, double total_price, double total_paid_amount, long customer_id, String customer_name) {
+		this.orderId = orderId;
 		this.byUser = byUser;
 		this.order_date = order_date;
 		this.replacementNote = replacementNote;
@@ -64,9 +64,9 @@ public class Order {
 		this.total_paid_amount = total_paid_amount;
 	}
 
-	public Order(long id, long order_date, int replacementNote, boolean status, double total_price, double total_paid_amount, User user) {
-		this.id = id;
-		this.byUser = user.getId();
+	public Order(long orderId, long order_date, int replacementNote, boolean status, double total_price, double total_paid_amount, User user) {
+		this.orderId = orderId;
+		this.byUser = user.getUserId();
 		this.order_date = order_date;
 		this.replacementNote = replacementNote;
 		this.status = status;
@@ -77,19 +77,19 @@ public class Order {
 	}
 
 	public Order(Order s) {
-		this(s.getId(),s.getByUser(),s.getOrder_date(),s.getReplacementNote(),s.isStatus(),s.getTotal_price(),s.getTotal_paid_amount(),s.getCustomer_id(),s.getCustomer_name());
+		this(s.getOrderId(),s.getByUser(),s.getOrder_date(),s.getReplacementNote(),s.isStatus(),s.getTotal_price(),s.getTotal_paid_amount(),s.getCustomer_id(),s.getCustomer_name());
 	}
 
 	public static Order newInstance(Order s){
-		return new Order(s.getId(),s.getByUser(),s.getOrder_date(),s.getReplacementNote(),s.isStatus(),s.getTotal_price(),s.getTotal_paid_amount(),s.getCustomer_id(),s.getCustomer_name());
+		return new Order(s.getOrderId(),s.getByUser(),s.getOrder_date(),s.getReplacementNote(),s.isStatus(),s.getTotal_price(),s.getTotal_paid_amount(),s.getCustomer_id(),s.getCustomer_name());
 	}
 
 	//endregion
 
 	//region Getter
 
-    public long getId() {
-        return id;
+    public long getOrderId() {
+        return orderId;
     }
 
     public long getByUser() {
@@ -154,8 +154,8 @@ public class Order {
         this.status = status;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 
     public void setByUser(long byUser) {
@@ -204,7 +204,7 @@ public class Order {
 	@Override
 	public String toString() {
 		return "Order{" +
-				"id=" + id +
+				"accountingId=" + orderId +
 				", byUser=" + byUser +
 				", order_date=" + order_date +
 				", replacementNote=" + replacementNote +
@@ -253,7 +253,7 @@ public class Order {
 		}
 
 
-		return "C100" + String.format(locale, "%09d", rowNumber) + pc + recordType + String.format(locale, "%020d", id) + DateConverter.getYYYYMMDD(new Date(order_date)) + DateConverter.getHHMM(new Date(order_date))
+		return "C100" + String.format(locale, "%09d", rowNumber) + pc + recordType + String.format(locale, "%020d", orderId) + DateConverter.getYYYYMMDD(new Date(order_date)) + DateConverter.getHHMM(new Date(order_date))
 				+ String.format(locale, "%50s", "OldCustomer") + Util.spaces(50) + Util.spaces(10) + Util.spaces(30) + Util.spaces(8) + Util.spaces(30) + Util.spaces(2) + Util.spaces(15) + Util.spaces(9)
 				+ DateConverter.getYYYYMMDD(new Date(order_date)) + Util.spaces(15) + Util.spaces(3)
 				+ OP + Util.x12V99(totalPriceBeforeDiscount/(1+(SETTINGS.tax/100)))
@@ -262,7 +262,7 @@ public class Order {
 				+ OP + Util.x12V99(tax+0.004)
 				+ OP + Util.x12V99(total_price)
 				+ OP + String.format(locale, "%09.0f", 0.0f) + String.format(locale, "%02d", (int) ((0.0f - Math.floor(0.0f) + 0.001) * 100))
-				+ Util.spaces(13) + "a0" + Util.spaces(8) + "b0" + "0" + DateConverter.getYYYYMMDD(new Date(order_date)) + Util.spaces(7) + name + String.format(locale, "%07d", id)
+				+ Util.spaces(13) + "a0" + Util.spaces(8) + "b0" + "0" + DateConverter.getYYYYMMDD(new Date(order_date)) + Util.spaces(7) + name + String.format(locale, "%07d", orderId)
 				+ Util.spaces(13);
 
 

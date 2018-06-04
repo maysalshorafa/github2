@@ -5,7 +5,7 @@ package com.pos.leaders.leaderspossystem.Models;
  */
 
 public class AReportDetails {
-    private long id;
+    private long aReportDetailsId;
     private long a_report_id;
     private double amount;
     private long type;
@@ -15,21 +15,21 @@ public class AReportDetails {
     public AReportDetails() {
     }
 
-    public AReportDetails(long id, long a_report_id, double amount, long type, double amount_in_basic_currency) {
-        this.id = id;
+    public AReportDetails(long aReportDetailsId, long a_report_id, double amount, long type, double amount_in_basic_currency) {
+        this.aReportDetailsId = aReportDetailsId;
         this.a_report_id = a_report_id;
         this.amount = amount;
         this.type = type;
         this.amount_in_basic_currency = amount_in_basic_currency;
     }
 
-    public long getId() {
-        return id;
+    public long getaReportDetailsId() {
+        return aReportDetailsId;
 
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setaReportDetailsId(long aReportDetailsId) {
+        this.aReportDetailsId = aReportDetailsId;
     }
 
     public long getA_report_id() {
@@ -64,6 +64,6 @@ public class AReportDetails {
         this.amount_in_basic_currency = amount_in_basic_currency;
     }
     public AReportDetails(AReportDetails a) {
-        this(a.getId(),a.getA_report_id(),a.getAmount(),a.getType(),a.getAmount_in_basic_currency());
+        this(a.getaReportDetailsId(),a.getA_report_id(),a.getAmount(),a.getType(),a.getAmount_in_basic_currency());
     }
 }

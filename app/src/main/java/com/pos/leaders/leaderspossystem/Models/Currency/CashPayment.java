@@ -5,7 +5,7 @@ package com.pos.leaders.leaderspossystem.Models.Currency;
  */
 
 public class CashPayment {
-    private long id;
+    private long cashPaymentId;
     private long saleId;
     private double amount;
     private long currency_type;
@@ -36,8 +36,8 @@ public class CashPayment {
 
 
     // Constructors
-    public CashPayment(long id,  long saleId, double amount,long currency_type,long createDate) {
-        this.id = id;
+    public CashPayment(long cashPaymentId, long saleId, double amount, long currency_type, long createDate) {
+        this.cashPaymentId = cashPaymentId;
         this.amount = amount;
         this.saleId = saleId;
         this.currency_type=currency_type;
@@ -45,12 +45,12 @@ public class CashPayment {
     }
 
     public CashPayment(CashPayment p) {
-        this(p.getId(),  p.getSaleId(),p.getAmount(),p.getCurrency_type(),p.getCreateDate());
+        this(p.getCashPaymentId(),  p.getSaleId(),p.getAmount(),p.getCurrency_type(),p.getCreateDate());
     }
 
     // Getters
-    public long getId() {
-        return id;
+    public long getCashPaymentId() {
+        return cashPaymentId;
     }
 
 
@@ -65,7 +65,7 @@ public class CashPayment {
     @Override
     public String toString() {
         return "Payment{" +
-                "id=" + id +
+                "cashPaymentId=" + cashPaymentId +
                 ",currency_type ='" + currency_type + '\'' +
                 ", amount='" + amount + '\'' +
                 ", saleId=" + saleId +

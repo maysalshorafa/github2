@@ -76,7 +76,7 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
      */
     @Override
     public long getItemId(int position) {
-        return (long)customerAssests.get(position).getId();
+        return (long)customerAssests.get(position).getCustAssistantId();
     }
 
 

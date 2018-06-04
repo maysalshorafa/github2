@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.Models.Product;
@@ -61,7 +60,7 @@ public class ProductCatalogGridViewAdapter extends BaseAdapter {
 	 */
 	@Override
 	public long getItemId(int position) {
-		return products.get(position).getId();
+		return products.get(position).getProductId();
 	}
 
 	/**

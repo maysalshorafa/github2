@@ -177,7 +177,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
         DEFAULT_USER = new User();
         DEFAULT_USER.setFirstName("LeadPOS");
         DEFAULT_USER.setLastName("Developer");
-        DEFAULT_USER.setId(0L);
+        DEFAULT_USER.setUserId(0L);
         DEFAULT_USER.setPassword("117181916131");
     }
 
@@ -215,7 +215,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
             } else {
                 UserPermissionsDBAdapter userPermissionsDBAdapter = new UserPermissionsDBAdapter(this);
                 userPermissionsDBAdapter.open();
-                ArrayList<Integer> permissions = userPermissionsDBAdapter.getPermissions(user.getId());
+                ArrayList<Integer> permissions = userPermissionsDBAdapter.getPermissions(user.getUserId());
 
                 // success to log in
 
@@ -234,8 +234,8 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 userDBAdapter.close();
 
                 /**
-                    long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getId());
-                    SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, user.getId(), new Date().getTime(), new Date().getTime());
+                    long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getCashPaymentId());
+                    SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, user.getCashPaymentId(), new Date().getTime(), new Date().getTime());
                     scheduleWorkersDBAdapter.close();**/
 
                 //// TODO: 12/04/2017 check if AReport is valid
@@ -255,7 +255,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 //end
                 try {
                     lastZReport = zReportDBAdapter.getLastRow();
-                    if (lastZReport.getEndSaleId() == lastSale.getId()) {
+                    if (lastZReport.getEndSaleId() == lastSale.getOrderId()) {
                         intent.putExtra(LEADPOS_MAKE_A_REPORT, LEADPOS_MAKE_A_REPORT);
                     }
                 } catch (Exception e) {

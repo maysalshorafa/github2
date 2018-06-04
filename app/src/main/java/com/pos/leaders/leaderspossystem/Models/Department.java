@@ -1,11 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,7 +9,7 @@ import java.util.List;
  */
 
 public class Department {
-    private long id;
+    private long departmentId;
     private String name;
 
     private long creatingDate;
@@ -28,8 +24,8 @@ public class Department {
 
 
 
-    public Department(long id, String name, long creatingDate, long byUser, boolean hide) {
-        this.id = id;
+    public Department(long departmentId, String name, long creatingDate, long byUser, boolean hide) {
+        this.departmentId = departmentId;
         this.name = name;
         this.creatingDate = creatingDate;
         this.byUser = byUser;
@@ -44,7 +40,7 @@ public class Department {
     }
 
     public Department(Department d) {
-        new Department(d.getId(), d.getName(), d.getCreatingDate(), d.getByUser(), d.isHide());
+        new Department(d.getDepartmentId(), d.getName(), d.getCreatingDate(), d.getByUser(), d.isHide());
     }
 
     public Department() {
@@ -62,8 +58,8 @@ public class Department {
 		this.name = name;
 	}
 
-    public void setId(long id) {
-        this.id = id;
+    public void setDepartmentId(long departmentId) {
+        this.departmentId = departmentId;
     }
 
     public void setCreatingDate(long creatingDate) {
@@ -82,8 +78,8 @@ public class Department {
 
 	// region Getters
 
-    public long getId() {
-        return id;
+    public long getDepartmentId() {
+        return departmentId;
     }
 
     public String getName() {
@@ -122,7 +118,7 @@ public class Department {
 	public String toString() {
 		return "Department{" +
 				"byUser=" + byUser +
-				", id=" + id +
+				", accountingId=" + departmentId +
 				", name='" + name + '\'' +
 				", creatingDate=" + creatingDate +
 				", hide=" + hide +

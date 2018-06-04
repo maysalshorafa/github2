@@ -338,7 +338,7 @@ public class InvoiceImg {
         String status = context.getString(R.string.source_invoice);
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
-        Block inum = new Block("\u200E" + status + "\n" + "\u200E" + context.getString(R.string.invoice_with_tax) + String.format(" %06d ", sale.getId()) + "\n"
+        Block inum = new Block("\u200E" + status + "\n" + "\u200E" + context.getString(R.string.invoice_with_tax) + String.format(" %06d ", sale.getOrderId()) + "\n"
                 + line, 35.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(inum);
 
@@ -444,7 +444,7 @@ public class InvoiceImg {
         String status = context.getString(R.string.source_invoice);
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
-        Block inum = new Block("\u200E" + status + "\n" + "\u200E" + context.getString(R.string.credit_invoice) + String.format(" %06d ", sale.getId()) + "\n"
+        Block inum = new Block("\u200E" + status + "\n" + "\u200E" + context.getString(R.string.credit_invoice) + String.format(" %06d ", sale.getOrderId()) + "\n"
                 + line, 35.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(inum);
 
@@ -546,7 +546,7 @@ public class InvoiceImg {
         String status = context.getString(R.string.source_invoice);
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
-        Block inum = new Block("\u200E" + status + "\n" + "\u200E" + context.getString(R.string.replacement_invoice) + String.format(" %06d ", sale.getId()) + "\n"
+        Block inum = new Block("\u200E" + status + "\n" + "\u200E" + context.getString(R.string.replacement_invoice) + String.format(" %06d ", sale.getOrderId()) + "\n"
                 + line, 35.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(inum);
 

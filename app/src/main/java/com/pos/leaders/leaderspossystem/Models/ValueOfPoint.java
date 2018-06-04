@@ -5,19 +5,19 @@ package com.pos.leaders.leaderspossystem.Models;
  */
 
 public class ValueOfPoint {
-    public long id ;
+    public long valueOfPointId;
     public double value;
     public long create_Date ;
 
     public ValueOfPoint() {
     }
 
-    public long getId() {
-        return id;
+    public long getValueOfPointId() {
+        return valueOfPointId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setValueOfPointId(long valueOfPointId) {
+        this.valueOfPointId = valueOfPointId;
     }
 
     public double getValue() {
@@ -36,8 +36,8 @@ public class ValueOfPoint {
         this.create_Date = create_Date;
     }
 
-    public ValueOfPoint(long id, double value, long create_Date) {
-        this.id=id;
+    public ValueOfPoint(long valueOfPointId, double value, long create_Date) {
+        this.valueOfPointId = valueOfPointId;
         this.value=value;
         this.create_Date=create_Date;
     }

@@ -9,12 +9,10 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
@@ -74,7 +72,7 @@ public class CashPaymentDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(CashPAYMENT_COLUMN_ID, payment.getId());
+        val.put(CashPAYMENT_COLUMN_ID, payment.getCashPaymentId());
         val.put(CashPAYMENT_COLUMN_SALEID, payment.getSaleId());
         val.put(CashPAYMENT_COLUMN_AMOUNT,payment.getAmount() );
         val.put(CashPAYMENT_COLUMN_CurrencyType, payment.getCurrency_type());

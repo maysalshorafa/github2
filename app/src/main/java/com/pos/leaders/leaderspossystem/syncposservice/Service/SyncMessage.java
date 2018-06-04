@@ -911,6 +911,7 @@ public class SyncMessage extends Service {
             //region A REPORT
             case MessageType.ADD_A_REPORT:
                 res = messageTransmit.authPost(ApiURL.AReport, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authPost(ApiURL.AReport, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_A_REPORT:
                 res = messageTransmit.authPut(ApiURL.AReport, jsonObject.getString(MessageKey.Data), token);
@@ -1263,8 +1264,11 @@ public class SyncMessage extends Service {
                 JSONObject object = new JSONObject(res);
                 int status = Integer.parseInt(object.get("status").toString());
                 if (status == 200 || status == 201) {
+                    Log.d("statusstrue",status+"");
                     return true;
                 } else {
+                    Log.d("statussfalse",status+"");
+
                     return false;
                 }
             }

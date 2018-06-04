@@ -1,16 +1,11 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
-
-import java.util.Date;
-
 /**
  * Created by KARAM on 31/10/2017.
  */
 
 public class CreditCardPayment {
-    private long id;
+    private long creditCardPaymentId;
     private long saleId;
     private double amount;
     private String CreditCardCompanyName;
@@ -43,8 +38,8 @@ public class CreditCardPayment {
         this.createDate = createDate;
     }
 
-    public CreditCardPayment(long id, long saleId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, long createDate) {
-        this.id = id;
+    public CreditCardPayment(long creditCardPaymentId, long saleId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, long createDate) {
+        this.creditCardPaymentId = creditCardPaymentId;
         this.saleId = saleId;
         this.amount = amount;
         CreditCardCompanyName = creditCardCompanyName;
@@ -61,8 +56,8 @@ public class CreditCardPayment {
 
     //region Getters
 
-    public long getId() {
-        return id;
+    public long getCreditCardPaymentId() {
+        return creditCardPaymentId;
     }
 
     public long getSaleId() {
@@ -118,8 +113,8 @@ public class CreditCardPayment {
 
     //region Setters
 
-    public void setId(long id) {
-        this.id = id;
+    public void setCreditCardPaymentId(long creditCardPaymentId) {
+        this.creditCardPaymentId = creditCardPaymentId;
     }
 
     public void setSaleId(long saleId) {
@@ -176,7 +171,7 @@ public class CreditCardPayment {
     @Override
     public String toString() {
         return "CreditCardPayment{" +
-                "id=" + id +
+                "accountingId=" + creditCardPaymentId +
                 ", saleId=" + saleId +
                 ", amount=" + amount +
                 ", CreditCardCompanyName='" + CreditCardCompanyName + '\'' +

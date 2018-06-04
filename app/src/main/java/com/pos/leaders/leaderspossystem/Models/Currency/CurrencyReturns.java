@@ -1,13 +1,11 @@
 package com.pos.leaders.leaderspossystem.Models.Currency;
 
-import java.util.Date;
-
 /**
  * Created by Win8.1 on 9/28/2017.
  */
 
 public class CurrencyReturns {
-    private long id;
+    private long currencyReturnsId;
     private long saleId;
     private double amount;
     private long currency_type;
@@ -36,8 +34,8 @@ public class CurrencyReturns {
 
 
     // Constructors
-    public CurrencyReturns(long id,  long saleId, double amount,long createDate,long currency_type) {
-        this.id = id;
+    public CurrencyReturns(long currencyReturnsId, long saleId, double amount, long createDate, long currency_type) {
+        this.currencyReturnsId = currencyReturnsId;
         this.amount = amount;
         this.saleId = saleId;
         this.currency_type=currency_type;
@@ -45,12 +43,12 @@ public class CurrencyReturns {
     }
 
     public CurrencyReturns(CurrencyReturns p) {
-        this(p.getId(),  p.getSaleId(),p.getAmount(),p.getCreateDate(),p.getCurrency_type());
+        this(p.getCurrencyReturnsId(),  p.getSaleId(),p.getAmount(),p.getCreateDate(),p.getCurrency_type());
     }
 
     // Getters
-    public long getId() {
-        return id;
+    public long getCurrencyReturnsId() {
+        return currencyReturnsId;
     }
 
 
@@ -65,7 +63,7 @@ public class CurrencyReturns {
     @Override
     public String toString() {
         return "Payment{" +
-                "id=" + id +
+                "currencyReturnsId=" + currencyReturnsId +
                 ",currency_type ='" + currency_type + '\'' +
                 ", amount='" + amount + '\'' +
                 ", createDate='" + createDate + '\'' +

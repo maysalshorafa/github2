@@ -27,10 +27,10 @@ public class UserPermissionsDBAdapter {
 	protected static final String USERPERMISSIONS_COLUMN_USERID = "userId";
 	protected static final String USERPERMISSIONS_COLUMN_PERMISSIONSID = "permissionId";
 
-	protected static final String USERPERMISSIONS_COLUMN_ID = "id";
+	protected static final String USERPERMISSIONS_COLUMN_ID = "usedPointId";
 
-	public static final String DATABASE_CREATE = "CREATE TABLE `userPermissions` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userId` INTEGER , `permissionId` INTEGER,"+
-			"FOREIGN KEY(`userId`) REFERENCES `users.id`,FOREIGN KEY(`permissionId`) REFERENCES `permissions.id`)";
+	public static final String DATABASE_CREATE = "CREATE TABLE `userPermissions` (`usedPointId` INTEGER PRIMARY KEY AUTOINCREMENT, `userId` INTEGER , `permissionId` INTEGER,"+
+			"FOREIGN KEY(`userId`) REFERENCES `users.usedPointId`,FOREIGN KEY(`permissionId`) REFERENCES `permissions.usedPointId`)";
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
 	// Context of the application using the database.
@@ -64,7 +64,7 @@ public class UserPermissionsDBAdapter {
 		}
 	public long insertEntry(UserPermissions userPermissions){
 		ContentValues val = new ContentValues();
-		val.put(USERPERMISSIONS_COLUMN_ID,userPermissions.getId());
+		val.put(USERPERMISSIONS_COLUMN_ID,userPermissions.getUserPermissionsId());
 		//Assign values for each row.
 		val.put(USERPERMISSIONS_COLUMN_USERID, userPermissions.getUserId());
 		val.put(USERPERMISSIONS_COLUMN_PERMISSIONSID, userPermissions.getPermissionId());

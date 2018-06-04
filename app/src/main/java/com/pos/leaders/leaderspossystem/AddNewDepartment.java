@@ -68,7 +68,7 @@ public class AddNewDepartment extends AppCompatActivity {
                         }
                         //unique
                         else {
-                            long check = departmentDBAdapter.insertEntry(departmentName.getText().toString(), SESSION._USER.getId());
+                            long check = departmentDBAdapter.insertEntry(departmentName.getText().toString(), SESSION._USER.getUserId());
                             if (check > 0) {
                                 Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_new_department), Toast.LENGTH_LONG).show();
                                 Log.i("success", "added department");

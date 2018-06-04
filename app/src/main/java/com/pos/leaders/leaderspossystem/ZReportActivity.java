@@ -1,29 +1,23 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.ZReportListViewAdapter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class ZReportActivity extends AppCompatActivity {
@@ -84,7 +78,7 @@ public class ZReportActivity extends AppCompatActivity {
                 Intent i=new Intent(ZReportActivity.this,ReportZDetailsActivity.class);
                 i.putExtra("permissions_name",str);
 
-                i.putExtra(COM_LEADPOS_ZREPORT_ID,zReportList.get(position).getId());
+                i.putExtra(COM_LEADPOS_ZREPORT_ID,zReportList.get(position).getzReportId());
                 i.putExtra(COM_LEADPOS_ZREPORT_FORM,zReportList.get(position).getStartSaleId());
                 i.putExtra(COM_LEADPOS_ZREPORT_TO,zReportList.get(position).getEndSaleId());
                 i.putExtra(COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReportList.get(position).getTotal_amount());

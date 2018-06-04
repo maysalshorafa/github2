@@ -65,7 +65,7 @@ public class CityDbAdapter {
     }
     public long insertEntry(City city){
         ContentValues val = new ContentValues();
-        val.put(City_COLUMN_Id,city.getId());
+        val.put(City_COLUMN_Id,city.getCityId());
         //Assign values for each row.
         val.put(City_COLUMN_Name, city.getName());
         try {

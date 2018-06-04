@@ -296,7 +296,7 @@ public class AutoUpdateApk extends Observable {
                         .appendQueryParameter("pkgname", packageName)
                         .appendQueryParameter("version", "" + versionCode)
                         .appendQueryParameter("md5", preferences.getString( MD5_KEY, "0"))
-                        .appendQueryParameter("id", String.format( "%08x", device_id));
+                        .appendQueryParameter("usedPointId", String.format( "%08x", device_id));
                 final String postParameters = builder.build().getEncodedQuery();
 
                 // set the timeout in milliseconds until a connection is established

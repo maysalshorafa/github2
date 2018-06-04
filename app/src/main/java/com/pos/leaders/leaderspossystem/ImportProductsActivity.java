@@ -140,7 +140,7 @@ public class ImportProductsActivity extends Activity {
 
         for (Department d : listDepartment) {
             departmentsName.add(d.getName());
-            departmentMap.put(d.getName(),d.getId());
+            departmentMap.put(d.getName(),d.getDepartmentId());
         }
         LAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,departmentsName);
         lvDepartment.setAdapter(LAdapter);
@@ -269,7 +269,7 @@ public class ImportProductsActivity extends Activity {
                 // Get the first sheet
                 Sheet sheet = w.getSheet(0);
                 // Loop over column and lines
-                Log.i("Row ","id \t name \t barcode \t price");
+                Log.i("Row ","usedPointId \t name \t barcode \t price");
                 for (int row = 1; row < sheet.getRows(); row++) {
                     try {
                         String name,barcode,id,price;
@@ -277,7 +277,7 @@ public class ImportProductsActivity extends Activity {
                         name=sheet.getCell(1, row).getContents();
                         barcode=sheet.getCell(2, row).getContents();
                         price=new BigDecimal(sheet.getCell(4, row).getContents().replaceAll(" ","")).toString();
-                        resultSet.add(new Product(Integer.parseInt(id),name,Double.parseDouble(price),barcode,1, SESSION._USER.getId()));
+                        resultSet.add(new Product(Integer.parseInt(id),name,Double.parseDouble(price),barcode,1, SESSION._USER.getUserId()));
                     }
                     catch (Exception ex){
                         Log.e("",ex.getMessage());
@@ -328,7 +328,7 @@ public class ImportProductsActivity extends Activity {
                 int totalRows = 0;
                 for (Sheet sh:w.getSheets()) {
                     totalRows += sh.getRows();
-                    Department d = new Department(sh.getName(), new Date().getTime(), SESSION._USER.getId());
+                    Department d = new Department(sh.getName(), new Date().getTime(), SESSION._USER.getUserId());
                     List<Product> products = new ArrayList<>();
                     for (int row = 1; row < sh.getRows(); row++) {
                         try {
@@ -341,7 +341,7 @@ public class ImportProductsActivity extends Activity {
                             costPrice = sh.getCell(4, row).getContents();
                             if(costPrice.equals(""))
                                 costPrice = "0";
-                            products.add(new Product(name, Double.parseDouble(price), Double.parseDouble(costPrice), barcode, SESSION._USER.getId()));
+                            products.add(new Product(name, Double.parseDouble(price), Double.parseDouble(costPrice), barcode, SESSION._USER.getUserId()));
                         }
                         catch (Exception ex){
                             Log.e("",ex.getMessage());

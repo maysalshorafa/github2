@@ -19,7 +19,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -62,7 +61,7 @@ public class Backup{
 
         for (Department d : deps) {
             File f=new File(downloadDir,"product_"+d.getName()+"_export.xls");
-            List<Product> products=productDBAdapter.getAllProductsByDepartment(d.getId());
+            List<Product> products=productDBAdapter.getAllProductsByDepartment(d.getDepartmentId());
             try {
                 WritableWorkbook excelFile = Workbook.createWorkbook(f);
                 WritableSheet excelTable=excelFile.createSheet(d.getName(),0);
@@ -72,7 +71,7 @@ public class Backup{
                 excelTable.addCell(new Label(3,0,"Price"));
 
                 for (int i=0;i<products.size();i++){
-                    excelTable.addCell(new Label(0,i+1,products.get(i).getId()+""));
+                    excelTable.addCell(new Label(0,i+1,products.get(i).getProductId()+""));
                     excelTable.addCell(new Label(1,i+1,products.get(i).getName()));
                     excelTable.addCell(new Label(2,i+1,products.get(i).getBarCode()));
                     excelTable.addCell(new Label(3,i+1,String.format(new Locale("en"),"%.2f",products.get(i).getPrice())));
@@ -110,7 +109,7 @@ public class Backup{
             excelTable.addCell(new Label(1,0,"Name"));
 
             for (int i=0;i<departments.size();i++){
-                excelTable.addCell(new Label(0,i+1,departments.get(i).getId()+""));
+                excelTable.addCell(new Label(0,i+1,departments.get(i).getDepartmentId()+""));
                 excelTable.addCell(new Label(1,i+1,departments.get(i).getName()));
             }
             excelFile.write();
@@ -145,7 +144,7 @@ public class Backup{
             excelTable.addCell(new Label(3,0,"Price"));
 
             for (int i=0;i<products.size();i++){
-                excelTable.addCell(new Label(0,i+1,products.get(i).getId()+""));
+                excelTable.addCell(new Label(0,i+1,products.get(i).getProductId()+""));
                 excelTable.addCell(new Label(1,i+1,products.get(i).getName()));
                 excelTable.addCell(new Label(2,i+1,products.get(i).getBarCode()));
                 excelTable.addCell(new Label(3,i+1,String.format(new Locale("en"),"%.2f",products.get(i).getPrice())));

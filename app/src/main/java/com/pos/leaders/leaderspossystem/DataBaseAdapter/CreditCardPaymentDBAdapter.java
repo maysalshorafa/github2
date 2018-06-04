@@ -9,8 +9,6 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
-import com.pos.leaders.leaderspossystem.Models.ZReport;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -94,7 +92,7 @@ public class CreditCardPaymentDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(ID, p.getId());
+        val.put(ID, p.getCreditCardPaymentId());
 
 
         val.put(SALEID, p.getSaleId());

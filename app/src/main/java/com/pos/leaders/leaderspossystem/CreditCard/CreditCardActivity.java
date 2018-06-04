@@ -94,7 +94,7 @@ public class CreditCardActivity extends AppCompatActivity {
 
         getWindow().setLayout((int) (width * 0.6), (int) (height * 0.5));
 
-        //etFirstPayment=(EditText)findViewById(R.id.creditCardActivity_etFirstPayment);
+        //etFirstPayment=(EditText)findViewById(R.usedPointId.creditCardActivity_etFirstPayment);
         etNumberOfPayments = (EditText) findViewById(R.id.creditCardActivity_etNumberOfPayments);
 
         sCreditType = (Spinner) findViewById(R.id.creditCardActivity_sCreditType);

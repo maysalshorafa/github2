@@ -6,23 +6,23 @@ package com.pos.leaders.leaderspossystem.Models.Currency;
 
 public class CurrencyType {
 
-    private long id;
+    private long currencyTypeId;
     private String type;
 
     public CurrencyType() {
     }
 
-    public CurrencyType(long id, String type) {
-        this.id = id;
+    public CurrencyType(long currencyTypeId, String type) {
+        this.currencyTypeId = currencyTypeId;
         this.type = type;
     }
 
-    public long getId() {
-        return id;
+    public long getCurrencyTypeId() {
+        return currencyTypeId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setCurrencyTypeId(long currencyTypeId) {
+        this.currencyTypeId = currencyTypeId;
     }
 
     public String getType() {

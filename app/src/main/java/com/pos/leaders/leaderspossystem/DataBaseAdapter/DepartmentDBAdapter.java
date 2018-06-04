@@ -81,7 +81,7 @@ public class DepartmentDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(DEPARTMENTS_COLUMN_ID, department.getId());
+        val.put(DEPARTMENTS_COLUMN_ID, department.getDepartmentId());
         val.put(DEPARTMENTS_COLUMN_NAME, department.getName());
         val.put(DEPARTMENTS_COLUMN_BYUSER, department.getByUser());
         val.put(DEPARTMENTS_COLUMN_CREATINGDATE, department.getCreatingDate());
@@ -137,7 +137,7 @@ public class DepartmentDBAdapter {
 
         String where = DEPARTMENTS_COLUMN_ID + " = ?";
         try {
-            db.update(DEPARTMENTS_TABLE_NAME, updatedValues, where, new String[]{department.getId() + ""});
+            db.update(DEPARTMENTS_TABLE_NAME, updatedValues, where, new String[]{department.getDepartmentId() + ""});
             return 1;
         } catch (SQLException ex) {
             Log.e("Department DB delete", "enable hide Entry at " + DEPARTMENTS_TABLE_NAME + ": " + ex.getMessage());
@@ -156,8 +156,8 @@ public class DepartmentDBAdapter {
         val.put(DEPARTMENTS_COLUMN_DISENABLED, department.isHide());
         try {
             String where = DEPARTMENTS_COLUMN_ID + " = ?";
-            db.update(DEPARTMENTS_TABLE_NAME, val, where, new String[]{department.getId() + ""});
-            Department d=departmentDBAdapter.getDepartmentByID(department.getId());
+            db.update(DEPARTMENTS_TABLE_NAME, val, where, new String[]{department.getDepartmentId() + ""});
+            Department d=departmentDBAdapter.getDepartmentByID(department.getDepartmentId());
             Log.d("Update object",d.toString());
             departmentDBAdapter.close();
             return 1;
@@ -177,8 +177,8 @@ public class DepartmentDBAdapter {
         val.put(DEPARTMENTS_COLUMN_DISENABLED, department.isHide());
 
         String where = DEPARTMENTS_COLUMN_ID + " = ?";
-        db.update(DEPARTMENTS_TABLE_NAME, val, where, new String[]{department.getId() + ""});
-        Department d=departmentDBAdapter.getDepartmentByID(department.getId());
+        db.update(DEPARTMENTS_TABLE_NAME, val, where, new String[]{department.getDepartmentId() + ""});
+        Department d=departmentDBAdapter.getDepartmentByID(department.getDepartmentId());
         Log.d("Update object",d.toString());
         sendToBroker(MessageType.UPDATE_DEPARTMENT, d, this.context);
         departmentDBAdapter.close();

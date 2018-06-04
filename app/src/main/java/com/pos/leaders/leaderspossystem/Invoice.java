@@ -52,7 +52,7 @@ public class Invoice extends Activity {
         List<OrderDetails> orders = new ArrayList<OrderDetails>();
         for (OrderDetails o:orders){
             tvProductsNames.append(o.getProduct().getName()+"\n\r");
-            tvProductsIDs.append(o.getProduct().getId() + "\n\r");
+            tvProductsIDs.append(o.getProduct().getProductId() + "\n\r");
             tvQty.append(o.getQuantity() + "\n\r");
             tvProductsPrices.append(o.getItemTotalPrice() + "\n\r");
         }

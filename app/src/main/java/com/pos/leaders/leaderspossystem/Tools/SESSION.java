@@ -41,7 +41,7 @@ public class SESSION {
 
 	public static void _Rest() {
 		SESSION._ORDERS = new ArrayList<OrderDetails>();
-		SESSION._SALE = new Order(SESSION._USER.getId(), new Date().getTime(), 0, false, 0, 0);
+		SESSION._SALE = new Order(SESSION._USER.getUserId(), new Date().getTime(), 0, false, 0, 0);
 		SESSION._CHECKS_HOLDER = new ArrayList<Check>();
 		SESSION._ORDER = null;
 

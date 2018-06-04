@@ -315,7 +315,7 @@ public class PrintTools {
         AReport aReport = aReportDBAdapter.getByLastZReport(id);
         /*try {
             aReportAmount = aReportDBAdapter.getLastRow().getAmount();
-            aReportId = aReportDBAdapter.getLastRow().getId();
+            aReportId = aReportDBAdapter.getLastRow().getCashPaymentId();
         } catch (Exception e) {
             e.printStackTrace();
         }*/
@@ -332,10 +332,10 @@ public class PrintTools {
         AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
         aReportDetailsDBAdapter.open();
 
-            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReport.getId());
-            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReport.getId());
-            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReport.getId());
-            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReport.getId());
+            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReport.getaReportId());
+            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReport.getaReportId());
+            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReport.getaReportId());
+            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReport.getaReportId());
         }
         double cash_plus = 0, cash_minus = 0;
         double check_plus = 0, check_minus = 0;
@@ -433,7 +433,7 @@ public class PrintTools {
         CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(context);
         paymentDBAdapter.open();
         for (Order s : sales) {
-            List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(s.getId());
+            List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(s.getOrderId());
             /**
              if (SETTINGS.enableCurrencies) {
              for (Payment _p : payments) {
@@ -454,7 +454,7 @@ public class PrintTools {
         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
         cashPaymentDBAdapter.open();
         for (Order s : sales) {
-            List<CashPayment> payments = cashPaymentDBAdapter.getPaymentBySaleID(s.getId());
+            List<CashPayment> payments = cashPaymentDBAdapter.getPaymentBySaleID(s.getOrderId());
             pl.addAll(payments);
         }
         cashPaymentDBAdapter.close();
@@ -467,7 +467,7 @@ public class PrintTools {
         CurrencyReturnsDBAdapter currencyDBAdapter = new CurrencyReturnsDBAdapter(context);
         currencyDBAdapter.open();
         for (Order s : sales) {
-            List<CurrencyReturns> payments = currencyDBAdapter.getCurencyReturnBySaleID(s.getId());
+            List<CurrencyReturns> payments = currencyDBAdapter.getCurencyReturnBySaleID(s.getOrderId());
             pl.addAll(payments);
         }
         currencyDBAdapter.close();
@@ -494,7 +494,7 @@ public class PrintTools {
         AReport aReport = aReportDBAdapter.getByLastZReport((int) id);
         try {
             aReportAmount = aReportDBAdapter.getLastRow().getAmount();
-            aReportId = aReportDBAdapter.getLastRow().getId();
+            aReportId = aReportDBAdapter.getLastRow().getaReportId();
         } catch (Exception e) {
             e.printStackTrace();
         }

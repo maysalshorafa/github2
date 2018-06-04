@@ -97,7 +97,7 @@ public class ProductDBAdapter {
     public long insertEntry(Product p) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(PRODUCTS_COLUMN_ID, p.getId());
+        val.put(PRODUCTS_COLUMN_ID, p.getProductId());
         val.put(PRODUCTS_COLUMN_NAME, p.getName());
         val.put(PRODUCTS_COLUMN_BARCODE, p.getBarCode());
         val.put(PRODUCTS_COLUMN_DESCRIPTION, p.getDescription());
@@ -185,7 +185,7 @@ public class ProductDBAdapter {
 
         String where = PRODUCTS_COLUMN_ID + " = ?";
         try {
-            db.update(PRODUCTS_TABLE_NAME, updatedValues, where, new String[]{product.getId() + ""});
+            db.update(PRODUCTS_TABLE_NAME, updatedValues, where, new String[]{product.getProductId() + ""});
             return 1;
         } catch (SQLException ex) {
             Log.e("Product deleteEntry", "enable hide Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
@@ -209,8 +209,8 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_BYUSER, product.getByUser());
 
         String where = PRODUCTS_COLUMN_ID + " = ?";
-        db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getId() + ""});
-        Product p=productDBAdapter.getProductByID(product.getId());
+        db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getProductId() + ""});
+        Product p=productDBAdapter.getProductByID(product.getProductId());
         Log.d("Update Object",p.toString());
         sendToBroker(MessageType.UPDATE_PRODUCT, p, this.context);
         productDBAdapter.close();
@@ -232,8 +232,8 @@ public class ProductDBAdapter {
 
         try {
             String where = PRODUCTS_COLUMN_ID + " = ?";
-            db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getId() + ""});
-            Product p=productDBAdapter.getProductByID(product.getId());
+            db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getProductId() + ""});
+            Product p=productDBAdapter.getProductByID(product.getProductId());
             Log.d("Update Object",p.toString());
             productDBAdapter.close();
             return 1;

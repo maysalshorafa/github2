@@ -109,7 +109,7 @@ public class ReportZDetailsActivity extends Activity {
         OrderDetailsDBAdapter orderDBAdapter=new OrderDetailsDBAdapter(this);
         orderDBAdapter.open();
         for (Order s : sales) {
-            ol.addAll(orderDBAdapter.getOrderBySaleID(s.getId()));
+            ol.addAll(orderDBAdapter.getOrderBySaleID(s.getOrderId()));
         }
         orderDBAdapter.close();
         return ol;

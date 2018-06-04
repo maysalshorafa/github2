@@ -262,7 +262,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 try {
-                    scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getId(), new Date());
+                    scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getScheduleWorkersId(), new Date());
                     SESSION._SCHEDULEWORKERS.setExitTime(new Date().getTime());
                     Log.i("Worker get out", SESSION._SCHEDULEWORKERS.toString());
                 } catch (Exception ex) {
@@ -316,22 +316,22 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
 
 
         if (aReport != null && zReport != null) {
-            _aReport.setByUserID(SESSION._USER.getId());
+            _aReport.setByUserID(SESSION._USER.getUserId());
             _aReport.setCreationDate(new Date().getTime());
 
 
-            if (aReport.getLastZReportID() == zReport.getId()) {
+            if (aReport.getLastZReportID() == zReport.getzReportId()) {
                 //its have customerName report
 
             } else {
-                _aReport.setLastZReportID(zReport.getId());
+                _aReport.setLastZReportID(zReport.getzReportId());
                 _aReport.setLastSaleID(zReport.getEndSaleId());
 
                 ShowAReportDialog(_aReport);
             }
 
         } else if(aReport==null) {
-            _aReport.setByUserID(SESSION._USER.getId());
+            _aReport.setByUserID(SESSION._USER.getUserId());
             _aReport.setCreationDate(new Date().getTime());
             _aReport.setLastZReportID(-1);
             _aReport.setLastSaleID(-1);

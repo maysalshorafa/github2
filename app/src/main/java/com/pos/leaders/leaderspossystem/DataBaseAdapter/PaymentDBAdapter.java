@@ -31,7 +31,7 @@ public class PaymentDBAdapter {
 
 	private static final String PAYMENT_CHECKS_ID = "checkId";
 
-	public static final String DATABASE_CREATE = "CREATE TABLE `payment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `paymentWay` TEXT NOT NULL, `amount` REAL NOT NULL, `checkId` INTEGER , `saleId` INTEGER, FOREIGN KEY(`saleId`) REFERENCES `sales.id` ,FOREIGN KEY(`checkId`) REFERENCES `checks.id`)";
+	public static final String DATABASE_CREATE = "CREATE TABLE `payment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `paymentWay` TEXT NOT NULL, `amount` REAL NOT NULL, `checkId` INTEGER , `saleId` INTEGER, FOREIGN KEY(`saleId`) REFERENCES `sales.usedPointId` ,FOREIGN KEY(`checkId`) REFERENCES `checks.usedPointId`)";
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
 	// Context of the application using the database.
@@ -73,7 +73,7 @@ public class PaymentDBAdapter {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 
-		val.put(PAYMENT_COLUMN_ID, payment.getId());
+		val.put(PAYMENT_COLUMN_ID, payment.getPaymentId());
 
 
 		val.put(PAYMENT_COLUMN_PAYMENTWAY, payment.getPaymentWay());

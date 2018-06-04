@@ -17,7 +17,7 @@ import java.util.Locale;
  */
 
 public class Payment {
-	private long id;
+	private long paymentId;
 	private String paymentWay;
 	private long saleId;
 	private double amount;
@@ -30,23 +30,23 @@ public class Payment {
 	private List<CurrencyReturns> currencyReturns = new ArrayList<>();
 
 	// Constructors
-	public Payment(long id, String paymentWay, double amount, long saleId) {
-		this.id = id;
+	public Payment(long paymentId, String paymentWay, double amount, long saleId) {
+		this.paymentId = paymentId;
 		this.paymentWay = paymentWay;
 		this.amount = amount;
 		this.saleId = saleId;
 	}
 
 	public Payment(Payment p) {
-		this(p.getId(), p.getPaymentWay(), p.getAmount(), p.getSaleId());
+		this(p.getPaymentId(), p.getPaymentWay(), p.getAmount(), p.getSaleId());
 	}
 
 	public Payment() {
 	}
 
 	//region Getters
-	public long getId() {
-		return id;
+	public long getPaymentId() {
+		return paymentId;
 	}
 
 	public String getPaymentWay() {
@@ -89,8 +89,8 @@ public class Payment {
 
 
 
-	public void setId(long id) {
-		this.id = id;
+	public void setPaymentId(long paymentId) {
+		this.paymentId = paymentId;
 	}
 
 	public void setPaymentWay(String paymentWay) {
@@ -111,7 +111,7 @@ public class Payment {
 	@Override
 	public String toString() {
 		return "Payment{" +
-				"id=" + id +
+				"accountingId=" + paymentId +
 				", paymentWay='" + paymentWay + '\'' +
 				", amount='" + amount + '\'' +
 				", saleId=" + saleId +
@@ -138,7 +138,7 @@ public class Payment {
         double noTax = sale.getTotal_price() / (1 + (SETTINGS.tax / 100));
         if(noTax<0)
             noTax *= -1;
-        return "D110" + String.format(locale, "%09d", rowNumber) + companyID + s + String.format(locale, "%020d", saleId) + String.format(locale, "%04d", id) + s + String.format(locale, "%020d", saleId) + "3" + String.format(locale, "%020d", saleId) + String.format(locale, "%30s", "sale") + Util.spaces(50) + Util.spaces(30) +
+        return "D110" + String.format(locale, "%09d", rowNumber) + companyID + s + String.format(locale, "%020d", saleId) + String.format(locale, "%04d", paymentId) + s + String.format(locale, "%020d", saleId) + "3" + String.format(locale, "%020d", saleId) + String.format(locale, "%30s", "sale") + Util.spaces(50) + Util.spaces(30) +
                 String.format(locale, "%20s", "unit")
                 + "+" + String.format(locale, "%012d", totalItems) + String.format(locale, "%04d", (int) ((totalItems - Math.floor(totalItems) + 0.00001) * 10000))
                 + OP + Util.x12V99(noTax)

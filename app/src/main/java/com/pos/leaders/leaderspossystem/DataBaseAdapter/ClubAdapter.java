@@ -88,7 +88,7 @@ public class ClubAdapter {
     public long insertEntry(Club group) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Group_COLUMN__ID, group.getId());
+        val.put(Group_COLUMN__ID, group.getClubId());
         val.put(Group_COLUMN_Name, group.getName());
         val.put(Group_COLUMN__Descrption, group.getDescription());
         val.put(Group_COLUMN_Type, group.getType());
@@ -117,8 +117,8 @@ public class ClubAdapter {
         val.put(Group_COLUMN_Point,club.getPoint());
         try {
             String where = Group_COLUMN__ID + " = ?";
-            db.update(Group_TABLE_NAME, val, where, new String[]{club.getId() + ""});
-            Club c=clubAdapter.getGroupByID(club.getId());
+            db.update(Group_TABLE_NAME, val, where, new String[]{club.getClubId() + ""});
+            Club c=clubAdapter.getGroupByID(club.getClubId());
             Log.d("UpDate Object",c.toString());
             sendToBroker(MessageType.UPDATE_CLUB, c, this.context);
             clubAdapter.close();
@@ -142,8 +142,8 @@ public class ClubAdapter {
         val.put(Group_COLUMN_Point,club.getPoint());
         try {
             String where = Group_COLUMN__ID + " = ?";
-            db.update(Group_TABLE_NAME, val, where, new String[]{club.getId() + ""});
-            Club c=clubAdapter.getGroupByID(club.getId());
+            db.update(Group_TABLE_NAME, val, where, new String[]{club.getClubId() + ""});
+            Club c=clubAdapter.getGroupByID(club.getClubId());
             Log.d("UpDate Object",c.toString());
             clubAdapter.close();
             return 1;
@@ -254,7 +254,7 @@ public class ClubAdapter {
 
         String where = Group_COLUMN__ID + " = ?";
         try {
-            db.update(Group_TABLE_NAME, updatedValues, where, new String[]{club.getId() + ""});
+            db.update(Group_TABLE_NAME, updatedValues, where, new String[]{club.getClubId() + ""});
             return 1;
         } catch (SQLException ex) {
             Log.e("Club deleteEntry", "enable hide Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());

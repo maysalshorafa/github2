@@ -1,16 +1,11 @@
 package com.pos.leaders.leaderspossystem.Models.Currency;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
-
-import java.util.Date;
-
 /**
  * Created by Win8.1 on 9/24/2017.
  */
 
 public class CurrencyOperation {
-    private long id;
+    private long currencyOperationId;
     private long createDate;
     private long operation_id;
     private String operation_type;
@@ -20,8 +15,8 @@ public class CurrencyOperation {
     public CurrencyOperation() {
     }
 
-    public CurrencyOperation(long id, long createDate, long operation_id, String operation_type, double amount, long currency_type) {
-        this.id = id;
+    public CurrencyOperation(long currencyOperationId, long createDate, long operation_id, String operation_type, double amount, long currency_type) {
+        this.currencyOperationId = currencyOperationId;
         this.createDate = createDate;
         this.operation_id = operation_id;
         this.operation_type = operation_type;
@@ -30,12 +25,12 @@ public class CurrencyOperation {
     }
 
 
-    public long getId() {
-        return id;
+    public long getCurrencyOperationId() {
+        return currencyOperationId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setCurrencyOperationId(long currencyOperationId) {
+        this.currencyOperationId = currencyOperationId;
     }
 
     public long getCreateDate() {

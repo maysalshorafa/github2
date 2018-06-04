@@ -264,9 +264,9 @@ public class BKMVDATA {
         paymentDBAdapter.open();
         userDBAdapter.open();
         for (Order s : sales) {
-            if (paymentDBAdapter.getPaymentBySaleID(s.getId()).size() > 0)
-                s.setPayment(paymentDBAdapter.getPaymentBySaleID(s.getId()).get(0));
-            s.setOrders(orderDBAdapter.getOrderBySaleID(s.getId()));
+            if (paymentDBAdapter.getPaymentBySaleID(s.getOrderId()).size() > 0)
+                s.setPayment(paymentDBAdapter.getPaymentBySaleID(s.getOrderId()).get(0));
+            s.setOrders(orderDBAdapter.getOrderBySaleID(s.getOrderId()));
             for (OrderDetails o : s.getOrders()) {
                 if (o.getProduct_id() != -1)
                     o.setProduct(productDBAdapter.getProductByID(o.getProduct_id()));
@@ -390,7 +390,7 @@ public class BKMVDATA {
 
     private boolean checkProductNonEX(long id) {
         for (Product p : productNonRep) {
-            if (p.getId() == id)
+            if (p.getProductId() == id)
                 return false;
         }
         return true;

@@ -99,14 +99,14 @@ public class ClubManagementActivity extends AppCompatActivity {
                             case 0:
                                 Club_Management_View=9;
                                 intent = new Intent(ClubManagementActivity.this, Coustmer_Group.class);
-                                intent.putExtra("id", groups.get(position).getId());
+                                intent.putExtra("usedPointId", groups.get(position).getClubId());
 
 
                                 startActivity(intent);
                             case 1:
                                 Club_Management_Edit=10;
                                 intent = new Intent(ClubManagementActivity.this, Coustmer_Group.class);
-                                intent.putExtra("id", groups.get(position).getId());
+                                intent.putExtra("usedPointId", groups.get(position).getClubId());
                                 startActivity(intent);
                                 break;
 
@@ -116,7 +116,7 @@ public class ClubManagementActivity extends AppCompatActivity {
                                         .setMessage(getString(R.string.delete_club_message))
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
-                                                groupAdapter.deleteEntry(groups.get(position).getId());
+                                                groupAdapter.deleteEntry(groups.get(position).getClubId());
                                                 groups.remove(groups.get(position));
                                                 gvGroup.setAdapter(adapter);
                                             }

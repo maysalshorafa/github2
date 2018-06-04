@@ -66,7 +66,7 @@ import java.util.List;
          */
         @Override
         public long getItemId(int position) {
-            return (long)customers.get(position).getId();
+            return (long)customers.get(position).getCustomerId();
         }
 
 

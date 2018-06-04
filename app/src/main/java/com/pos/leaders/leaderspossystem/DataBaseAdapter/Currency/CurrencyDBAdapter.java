@@ -10,12 +10,10 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
@@ -86,7 +84,7 @@ public class CurrencyDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(CURRENCY_COLUMN_ID, currency.getId());
+        val.put(CURRENCY_COLUMN_ID, currency.getCurrencyId());
 
 
         val.put(CURRENCY_COLUMN_NAME, currency.getName());
@@ -128,7 +126,7 @@ public class CurrencyDBAdapter {
         val.put(CURRENCYCOLUMN_RATE, currency.getRate());
 
         String where = CURRENCY_COLUMN_ID + " = ?";
-        db.update(CURRENCY_TABLE_NAME, val, where, new String[]{currency.getId() + ""});
+        db.update(CURRENCY_TABLE_NAME, val, where, new String[]{currency.getCurrencyId() + ""});
     }
 
     public List<Currency> getAllCurrencyLastUpdate(List<CurrencyType> currency) {

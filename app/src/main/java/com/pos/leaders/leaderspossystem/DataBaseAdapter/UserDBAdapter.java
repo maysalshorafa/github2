@@ -26,7 +26,7 @@ public class UserDBAdapter {
     //Table name
     public static final String USERS_TABLE_NAME = "users";
     //column names
-    protected static final String USERS_COLUMN_ID = "id";
+    protected static final String USERS_COLUMN_ID = "usedPointId";
     protected static final String USERS_COLUMN_USERNAME = "userName";
     protected static final String USERS_COLUMN_PASSWORD = "pwd";
     protected static final String USERS_COLUMN_FIRSTNAME = "firstName";
@@ -40,7 +40,7 @@ public class UserDBAdapter {
 
     // TODO: Create public field for each column in your table.
     // SQL Statement to create a new database.
-    public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS users ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,`userName` TEXT UNIQUE, `firstName` TEXT NOT NULL, `lastName` TEXT, `visitDate` TEXT NOT NULL DEFAULT current_timestamp,`pwd` TEXT , `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, `hourlyWage` REAL DEFAULT 0.0 )";
+    public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS users ( `usedPointId` INTEGER PRIMARY KEY AUTOINCREMENT,`userName` TEXT UNIQUE, `firstName` TEXT NOT NULL, `lastName` TEXT, `visitDate` TEXT NOT NULL DEFAULT current_timestamp,`pwd` TEXT , `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, `hourlyWage` REAL DEFAULT 0.0 )";
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
@@ -89,7 +89,7 @@ public class UserDBAdapter {
     public long insertEntry(User user) throws  SQLException {
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(USERS_COLUMN_ID, user.getId());
+        val.put(USERS_COLUMN_ID, user.getUserId());
         val.put(USERS_COLUMN_USERNAME, user.getUserName());
         val.put(USERS_COLUMN_PASSWORD, user.getPassword());
         val.put(USERS_COLUMN_FIRSTNAME, user.getFirstName());
@@ -108,7 +108,7 @@ public class UserDBAdapter {
     public User getUserByID(long id) {
         User user = null;
         Cursor cursor = db.query(USERS_TABLE_NAME, null, USERS_COLUMN_ID + "=? ", new String[]{id + ""}, null, null, null);
-        //Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where id='" + id + "'", null);
+        //Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where usedPointId='" + usedPointId + "'", null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) // UserName Exist
         {
@@ -179,7 +179,7 @@ public class UserDBAdapter {
 
         String where = USERS_COLUMN_ID + " = ?";
         try {
-            db.update(USERS_TABLE_NAME, updatedValues, where, new String[]{user.getId() + ""});
+            db.update(USERS_TABLE_NAME, updatedValues, where, new String[]{user.getUserId() + ""});
             return 1;
         } catch (SQLException ex) {
             Log.e("UserDB deleteEntry", "enable hide Entry at " + USERS_TABLE_NAME + ": " + ex.getMessage());
@@ -201,8 +201,8 @@ public class UserDBAdapter {
         val.put(USERS_COLUMN_HOURLYWAGE, user.getHourlyWage());
 
         String where = USERS_COLUMN_ID + " = ?";
-        db.update(USERS_TABLE_NAME, val, where, new String[]{user.getId() + ""});
-        User u=userDBAdapter.getUserByID(user.getId());
+        db.update(USERS_TABLE_NAME, val, where, new String[]{user.getUserId() + ""});
+        User u=userDBAdapter.getUserByID(user.getUserId());
         Log.d("Update Object",u.toString());
         sendToBroker(MessageType.UPDATE_USER, u, this.context);
         userDBAdapter.close();
@@ -222,8 +222,8 @@ public class UserDBAdapter {
 
         try {
             String where = USERS_COLUMN_ID + " = ?";
-            db.update(USERS_TABLE_NAME, val, where, new String[]{user.getId() + ""});
-            User u=userDBAdapter.getUserByID(user.getId());
+            db.update(USERS_TABLE_NAME, val, where, new String[]{user.getUserId() + ""});
+            User u=userDBAdapter.getUserByID(user.getUserId());
             Log.d("Update Object",u.toString());
             userDBAdapter.close();
             return 1;
@@ -255,7 +255,7 @@ public class UserDBAdapter {
     }
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<User>();
-        Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where " + USERS_COLUMN_DISENABLED + "=0 order by id desc", null);
+        Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where " + USERS_COLUMN_DISENABLED + "=0 order by usedPointId desc", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             users.add(createNewUser(cursor));
@@ -273,7 +273,7 @@ public class UserDBAdapter {
 
         Cursor cursor = null;
         for (int i = 0; i < salesManId.size(); i++) {
-            cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where  id='" + salesManId.get(i) + "'"+ " and " + USERS_COLUMN_DISENABLED + "=0", null);
+            cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where  usedPointId='" + salesManId.get(i) + "'"+ " and " + USERS_COLUMN_DISENABLED + "=0", null);
             if (cursor != null) {
 
                 while (cursor.moveToNext()) {

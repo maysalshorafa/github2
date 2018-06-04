@@ -7,7 +7,7 @@ import java.util.List;
  */
 
 public class CustomerMeasurement {
-    private long id;
+    private long customerMeasurementId;
     private long customerId;
     private long userId;
     private long visitDate;
@@ -17,19 +17,19 @@ public class CustomerMeasurement {
     public CustomerMeasurement() {
     }
 
-    public CustomerMeasurement(long id, long customerId, long userId, long visitDate) {
-        this.id = id;
+    public CustomerMeasurement(long customerMeasurementId, long customerId, long userId, long visitDate) {
+        this.customerMeasurementId = customerMeasurementId;
         this.customerId = customerId;
         this.userId = userId;
         this.visitDate = visitDate;
     }
     public CustomerMeasurement(CustomerMeasurement customerMeasurement) {
-        this(customerMeasurement.getId(),customerMeasurement.getCustomerId(),customerMeasurement.getUserId(),customerMeasurement.getVisitDate());
+        this(customerMeasurement.getCustomerMeasurementId(),customerMeasurement.getCustomerId(),customerMeasurement.getUserId(),customerMeasurement.getVisitDate());
     }
     //end
     //Getters
-    public long getId() {
-        return id;
+    public long getCustomerMeasurementId() {
+        return customerMeasurementId;
     }
 
     public long getCustomerId() {
@@ -49,8 +49,8 @@ public class CustomerMeasurement {
     }
     //end
     //Setters
-    public void setId(long id) {
-        this.id = id;
+    public void setCustomerMeasurementId(long customerMeasurementId) {
+        this.customerMeasurementId = customerMeasurementId;
     }
 
     public void setCustomerId(long customerId) {
@@ -73,7 +73,7 @@ public class CustomerMeasurement {
     @Override
     public String toString() {
         return "CustomerMeasurement{" +
-                "id=" + id +
+                "customerMeasurementId=" + customerMeasurementId +
                 ", customerId=" + customerId +
                 ", userId=" + userId +
                 ", visitDate=" + visitDate +

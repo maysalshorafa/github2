@@ -8,7 +8,7 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
  */
 
 public class AReport {
-    private long id;
+    private long aReportId;
     private long creationDate;
     private long byUserID;
     @JsonIgnore
@@ -42,8 +42,8 @@ public class AReport {
         this.amount = amount;
     }
 
-    public AReport(long id, long creationDate, long byUserID, double amount, long lastSaleID, long lastZReportID) {
-        this.id = id;
+    public AReport(long aReportId, long creationDate, long byUserID, double amount, long lastSaleID, long lastZReportID) {
+        this.aReportId = aReportId;
         this.creationDate = creationDate;
         this.byUserID = byUserID;
         this.amount = amount;
@@ -54,8 +54,8 @@ public class AReport {
 
     //region Getter
 
-    public long getId() {
-        return id;
+    public long getaReportId() {
+        return aReportId;
     }
 
     public long getCreationDate() {
@@ -95,8 +95,8 @@ public class AReport {
 
     //region Setter
 
-    public void setId(long id) {
-        this.id = id;
+    public void setaReportId(long aReportId) {
+        this.aReportId = aReportId;
     }
 
     public void setCreationDate(long creationDate) {

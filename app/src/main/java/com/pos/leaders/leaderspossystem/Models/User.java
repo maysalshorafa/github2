@@ -1,11 +1,8 @@
 package com.pos.leaders.leaderspossystem.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
-import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,7 +10,7 @@ import java.util.List;
  */
 
 public class User {
-    private long id;
+    private long userId;
     private String userName;
     private String password;
     private String firstName;
@@ -28,14 +25,14 @@ public class User {
     @JsonIgnore
     private List<Permissions> permissionsList;
 
-    public void setId(long id) {
-        this.id = id;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
 
 
-    public User(long id, String userName, String password, String firstName, String lastName, long creatingDate, boolean hide, String phoneNumber, double present, double hourlyWage ) {
-        this.id = id;
+    public User(long userId, String userName, String password, String firstName, String lastName, long creatingDate, boolean hide, String phoneNumber, double present, double hourlyWage ) {
+        this.userId = userId;
         this.userName = userName;
         this.password = password;
         this.firstName = firstName;
@@ -47,7 +44,7 @@ public class User {
         this.hourlyWage = hourlyWage;
     }
     public User(User user){
-        this(user.getId(),user.getUserName(),user.getPassword(),user.getFirstName(),
+        this(user.getUserId(),user.getUserName(),user.getPassword(),user.getFirstName(),
                 user.getLastName(),user.getCreatingDate(),user.isHide(),user.getPhoneNumber(),user.getPresent(),user.getHourlyWage());
     }
     public User(){}
@@ -70,8 +67,8 @@ public class User {
         return firstName;
     }
 
-    public long getId() {
-        return id;
+    public long getUserId() {
+        return userId;
     }
 
 
@@ -152,7 +149,7 @@ public class User {
     public String toString() {
         return "User{" +
                 "creatingDate=" + creatingDate +
-                ", id=" + id +
+                ", accountingId=" + userId +
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +

@@ -9,11 +9,6 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Tools.Util;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
-
-import java.util.Date;
-
-import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by Win8.1 on 9/24/2017.
@@ -83,7 +78,7 @@ public class CurrencyOperationDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(CurrencyOperation_COLUMN_ID, currency.getId());
+        val.put(CurrencyOperation_COLUMN_ID, currency.getCurrencyOperationId());
         val.put(CurrencyOperation_TABLE_NAME, currency.getCreateDate());
         val.put(CurrencyOperation_COLUMN_Operation_ID, currency.getOperation_id());
         val.put(CurrencyOperation_COLUMN_Operation_Type,currency.getOperation_type());

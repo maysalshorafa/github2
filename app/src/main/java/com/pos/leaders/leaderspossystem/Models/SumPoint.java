@@ -5,7 +5,7 @@ package com.pos.leaders.leaderspossystem.Models;
  */
 
 public class SumPoint {
-    private long id;
+    private long sumPointId;
     private long saleId;
     private int pointAmount;
     private long customer_id;
@@ -14,19 +14,19 @@ public class SumPoint {
     public SumPoint() {
     }
 
-    public SumPoint(long id, long saleId, int pointAmount, long customer_id) {
-        this.id = id;
+    public SumPoint(long sumPointId, long saleId, int pointAmount, long customer_id) {
+        this.sumPointId = sumPointId;
         this.saleId = saleId;
         this.pointAmount = pointAmount;
         this.customer_id = customer_id;
     }
 
-    public long getId() {
-        return id;
+    public long getSumPointId() {
+        return sumPointId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setSumPointId(long sumPointId) {
+        this.sumPointId = sumPointId;
     }
 
     public long getSaleId() {

@@ -23,7 +23,7 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
  */
 
 public class OrderDBAdapter {
-	protected static final String SALES_TABLE_NAME = "Order";
+	protected static final String SALES_TABLE_NAME = "_Order";
 	// Column Names
 	protected static final String SALES_COLUMN_ID = "id";
 	protected static final String SALES_COLUMN_BYUSER = "byUser";
@@ -36,7 +36,7 @@ public class OrderDBAdapter {
 	protected static final String SALES_COLUMN_CUSTOMER_NAME = "customer_name";
 
 
-	public static final String DATABASE_CREATE = "CREATE TABLE Order ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byUser` INTEGER, `order_date` TEXT DEFAULT current_timestamp, " +
+	public static final String DATABASE_CREATE = "CREATE TABLE _Order( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byUser` INTEGER, `order_date` TEXT DEFAULT current_timestamp, " +
 			"`replacementNote` INTEGER DEFAULT 0, `status` INTEGER DEFAULT 0, total_price REAL, total_paid_amount REAL, customer_id  INTEGER DEFAULT 0 ,customer_name  TEXT, " +
 			"FOREIGN KEY(`byUser`) REFERENCES `users.id`)";
 	// Variable to hold the database instance
@@ -84,7 +84,7 @@ public class OrderDBAdapter {
 	}
 	public long insertEntry(Order sale){
         ContentValues val = new ContentValues();
-        val.put(SALES_COLUMN_ID,sale.getId());
+        val.put(SALES_COLUMN_ID,sale.getOrderId());
         //Assign values for each row.
         val.put(SALES_COLUMN_BYUSER, sale.getByUser());
         val.put(SALES_COLUMN_SALEDATE, sale.getOrder_date());
@@ -143,7 +143,7 @@ public class OrderDBAdapter {
 		val.put(SALES_COLUMN_TOTALPRICE, sale.getTotal_price());
 
 		String where = SALES_COLUMN_ID + " = ?";
-		db.update(SALES_TABLE_NAME, val, where, new String[]{sale.getId() + ""});
+		db.update(SALES_TABLE_NAME, val, where, new String[]{sale.getOrderId() + ""});
 	}
 
 	public List<Order> getAllSales() {

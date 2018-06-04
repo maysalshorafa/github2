@@ -72,7 +72,7 @@ public class AReportDetailsDBAdapter {
     public long insertEntry(AReportDetails aReportDetails) {
         ContentValues val = new ContentValues();
 
-        val.put(A_REPORT_DETAILS_COLUMN_ID, aReportDetails.getId());
+        val.put(A_REPORT_DETAILS_COLUMN_ID, aReportDetails.getaReportDetailsId());
         val.put(A_REPORT_DETAILS_A_REPORT_COLUMN_ID, aReportDetails.getA_report_id());
         val.put(A_REPORT_DETAILS_COLUMN_AMOUNT, aReportDetails.getAmount());
         val.put(A_REPORT_DETAILS_COLUMN_TYPE, aReportDetails.getType());

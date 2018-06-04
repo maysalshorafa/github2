@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
-import com.pos.leaders.leaderspossystem.Models.User;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 
 import java.util.ArrayList;
 import java.util.List;

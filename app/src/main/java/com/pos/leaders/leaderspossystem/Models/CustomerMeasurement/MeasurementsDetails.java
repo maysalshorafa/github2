@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 
 public class MeasurementsDetails {
-    private long id;
+    private long measurementsDetailsId;
     private long measurementId;
     private long dynamicVarId;
     private String value;
@@ -17,21 +17,21 @@ public class MeasurementsDetails {
     public MeasurementsDetails() {
     }
 
-    public MeasurementsDetails(long id, long measurementId, long dynamicVarId, String value) {
-        this.id = id;
+    public MeasurementsDetails(long measurementsDetailsId, long measurementId, long dynamicVarId, String value) {
+        this.measurementsDetailsId = measurementsDetailsId;
         this.measurementId = measurementId;
         this.dynamicVarId = dynamicVarId;
         this.value = value;
     }
     public MeasurementsDetails(MeasurementsDetails measurementsDetails) {
-        this(measurementsDetails.getId(),measurementsDetails.getMeasurementId(),measurementsDetails.getDynamicVarId(),measurementsDetails.getValue());
+        this(measurementsDetails.getMeasurementsDetailsId(),measurementsDetails.getMeasurementId(),measurementsDetails.getDynamicVarId(),measurementsDetails.getValue());
     }
     // end
 
     //Getters
 
-    public long getId() {
-        return id;
+    public long getMeasurementsDetailsId() {
+        return measurementsDetailsId;
     }
 
     public long getMeasurementId() {
@@ -52,8 +52,8 @@ public class MeasurementsDetails {
     // end
     //Setters
 
-    public void setId(long id) {
-        this.id = id;
+    public void setMeasurementsDetailsId(long measurementsDetailsId) {
+        this.measurementsDetailsId = measurementsDetailsId;
     }
 
     public void setMeasurementId(long measurementId) {
@@ -76,7 +76,7 @@ public class MeasurementsDetails {
     @Override
     public String toString() {
         return "MeasurementsDetails{" +
-                "id=" + id +
+                "measurementsDetailsId=" + measurementsDetailsId +
                 ", measurementId=" + measurementId +
                 ", dynamicVarId=" + dynamicVarId +
                 ", value='" + value + '\'' +

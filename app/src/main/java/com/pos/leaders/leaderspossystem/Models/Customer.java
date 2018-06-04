@@ -5,7 +5,7 @@ package com.pos.leaders.leaderspossystem.Models;
  */
 
 public class Customer {
-    private long id;
+    private long customerId;
     private String firstName;
     private String lastName;
     private String gender;
@@ -25,8 +25,8 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(long id, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode) {
-        this.id = id;
+    public Customer(long customerId, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode) {
+        this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -44,7 +44,7 @@ public class Customer {
     }
 
     public Customer(Customer customer){
-        this(customer.getId(),customer.getFirstName(),customer.getLastName(),customer.getGender(),
+        this(customer.getCustomerId(),customer.getFirstName(),customer.getLastName(),customer.getGender(),
                 customer.getEmail(),customer.getJob(),customer.getPhoneNumber(),customer.getStreet(),
                 customer.getHide(),customer.getCity(),customer.getClub(),customer.getHouseNumber()
                 ,customer.getPostalCode(),customer.getCountry(),customer.getCountryCode());
@@ -77,8 +77,8 @@ public class Customer {
         this.club = club;
     }
 
-    public long getId() {
-     return id;
+    public long getCustomerId() {
+     return customerId;
  }
 
     public String getFirstName() {
@@ -110,8 +110,8 @@ public class Customer {
         return hide;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
     }
 
     public void setFirstName(String name) {

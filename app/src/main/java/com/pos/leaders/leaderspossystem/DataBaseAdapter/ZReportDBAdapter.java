@@ -32,7 +32,7 @@ public class ZReportDBAdapter {
     // Table Name
     protected static final String Z_REPORT_TABLE_NAME = "z_report";
     // Column Names
-    protected static final String Z_REPORT_COLUMN_ID = "id";
+    protected static final String Z_REPORT_COLUMN_ID = "usedPointId";
     protected static final String Z_REPORT_COLUMN_CREATEDATE = "createDate";
     protected static final String Z_REPORT_COLUMN_BYUSER = "byUser";
     protected static final String Z_REPORT_COLUMN_STARTSALEID = "startSaleID";
@@ -43,7 +43,7 @@ public class ZReportDBAdapter {
 
     public static final String DATABASE_CREATE = "CREATE TABLE "+Z_REPORT_TABLE_NAME+" ( `"+Z_REPORT_COLUMN_ID+"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+Z_REPORT_COLUMN_CREATEDATE+"` TEXT DEFAULT current_timestamp,  `"+Z_REPORT_COLUMN_BYUSER+"` INTEGER, " +
             " `"+Z_REPORT_COLUMN_STARTSALEID+"` INTEGER,  `"+Z_REPORT_COLUMN_ENDSALEID+"` INTEGER ,  `"+Z_REPORT_COLUMN_AMOUNT+"` REAL,  `"+Z_REPORT_COLUMN_TOTAL_AMOUNT+"` REAL, " +
-            "FOREIGN KEY(`"+Z_REPORT_COLUMN_BYUSER+"`) REFERENCES `users.id` )";
+            "FOREIGN KEY(`"+Z_REPORT_COLUMN_BYUSER+"`) REFERENCES `users.usedPointId` )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -84,7 +84,7 @@ public class ZReportDBAdapter {
     public long insertEntry(ZReport zReport) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Z_REPORT_COLUMN_ID, zReport.getId());
+        val.put(Z_REPORT_COLUMN_ID, zReport.getzReportId());
 
         val.put(Z_REPORT_COLUMN_CREATEDATE, zReport.getCreationDate());
         val.put(Z_REPORT_COLUMN_BYUSER, zReport.getByUser());
@@ -146,7 +146,7 @@ public class ZReportDBAdapter {
 
     public ZReport getLastRow() throws Exception {
         ZReport zReport = null;
-        Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
+        Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " where usedPointId like '"+ SESSION.POS_ID_NUMBER+"%' order by usedPointId desc", null);
         if (cursor.getCount() < 1) // zReport Not Exist
         {
             cursor.close();
@@ -193,7 +193,7 @@ public class ZReportDBAdapter {
         PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(context);
         paymentDBAdapter.open();
         for (Order s : sales) {
-            List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(s.getId());
+            List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(s.getOrderId());
             pl.addAll(payments);
         }
         paymentDBAdapter.close();
@@ -229,7 +229,7 @@ public class ZReportDBAdapter {
             ZReport zReport1 = zl.get(i);
             double amount = zReportDBAdapter.getZReportAmount(zReport1.getStartSaleId(),zReport1.getEndSaleId());
             totalAmount+=amount;
-            ZReport zReport =new ZReport(zl.get(i).getId(),zl.get(i).getCreationDate(),zl.get(i).getByUser(),zl.get(i).getStartSaleId(),zl.get(i).getEndSaleId(),amount,totalAmount);
+            ZReport zReport =new ZReport(zl.get(i).getzReportId(),zl.get(i).getCreationDate(),zl.get(i).getByUser(),zl.get(i).getStartSaleId(),zl.get(i).getEndSaleId(),amount,totalAmount);
             updateEntry(zReport);
         }
     }
@@ -240,7 +240,7 @@ public class ZReportDBAdapter {
         val.put(Z_REPORT_COLUMN_TOTAL_AMOUNT, zReport.getTotal_amount());
 
         String where = Z_REPORT_COLUMN_ID + " = ?";
-        db.update(Z_REPORT_TABLE_NAME, val, where, new String[]{zReport.getId() + ""});
+        db.update(Z_REPORT_TABLE_NAME, val, where, new String[]{zReport.getzReportId() + ""});
     }
 
 }

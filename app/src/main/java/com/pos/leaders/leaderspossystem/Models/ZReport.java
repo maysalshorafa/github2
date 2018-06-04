@@ -8,7 +8,7 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
  */
 
 public class ZReport {
-    private long id;
+    private long zReportId;
     private long creationDate;
     private long byUser;
     @JsonIgnore
@@ -27,8 +27,8 @@ public class ZReport {
 
     }
 
-    public ZReport(long id, long creationDate, long byUser, long startSaleId, long endSaleId,double amount,double total_amount) {
-        this.id = id;
+    public ZReport(long zReportId, long creationDate, long byUser, long startSaleId, long endSaleId, double amount, double total_amount) {
+        this.zReportId = zReportId;
         this.creationDate = creationDate;
         this.byUser = byUser;
         this.startSaleId = startSaleId;
@@ -37,8 +37,8 @@ public class ZReport {
         this.total_amount=total_amount;
     }
 
-    public ZReport(long id, long creationDate, long byUser, long startSaleId, long endSaleId,double amount) {
-        this.id = id;
+    public ZReport(long zReportId, long creationDate, long byUser, long startSaleId, long endSaleId, double amount) {
+        this.zReportId = zReportId;
         this.creationDate = creationDate;
         this.byUser = byUser;
         this.startSaleId = startSaleId;
@@ -47,31 +47,31 @@ public class ZReport {
         this.total_amount=total_amount;
     }
 
-    public ZReport(long id, long creationDate, User user, Order startSale, Order endSale) {
-        this.id = id;
+    public ZReport(long zReportId, long creationDate, User user, Order startSale, Order endSale) {
+        this.zReportId = zReportId;
         this.creationDate = creationDate;
         this.user = user;
         this.startSale = startSale;
         this.endSale = endSale;
 
-        this.byUser=user.getId();
-        this.startSaleId=startSale.getId();
-        this.endSaleId=endSale.getId();
+        this.byUser=user.getUserId();
+        this.startSaleId=startSale.getOrderId();
+        this.endSaleId=endSale.getOrderId();
     }
 
-    public ZReport(long id, long creationDate, User user, long startSaleId,Order endSale) {
-        this.id = id;
+    public ZReport(long zReportId, long creationDate, User user, long startSaleId, Order endSale) {
+        this.zReportId = zReportId;
         this.creationDate = creationDate;
         this.user = user;
         this.endSale = endSale;
 
-        this.byUser=user.getId();
+        this.byUser=user.getUserId();
         this.startSaleId=startSaleId;
-        this.endSaleId=endSale.getId();
+        this.endSaleId=endSale.getOrderId();
     }
 
     public ZReport(ZReport zReport) {
-        this.id = zReport.id;
+        this.zReportId = zReport.zReportId;
         this.creationDate = zReport.creationDate;
         this.user = zReport.user;
         this.startSale = zReport.startSale;
@@ -83,12 +83,12 @@ public class ZReport {
         this.total_amount=zReport.total_amount;
     }
 
-    public long getId() {
-        return id;
+    public long getzReportId() {
+        return zReportId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setzReportId(long zReportId) {
+        this.zReportId = zReportId;
     }
 
     public long getCreationDate() {
