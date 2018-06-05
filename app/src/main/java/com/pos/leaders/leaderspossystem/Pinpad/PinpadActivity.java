@@ -1,8 +1,11 @@
 package com.pos.leaders.leaderspossystem.Pinpad;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +22,8 @@ import com.credix.pinpad.jni.PinPadResponse;
 import com.credix.pinpad.jni.PinPadSession;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pos.leaders.leaderspossystem.Pinpad.Credix.NumberOfPaymentException;
+import com.pos.leaders.leaderspossystem.Pinpad.Credix.ResponseCode;
+import com.pos.leaders.leaderspossystem.Pinpad.Credix.SendRequestType;
 import com.pos.leaders.leaderspossystem.Pinpad.Credix.TransactionCode;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -26,6 +31,8 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Iterator;
 
 import static com.pos.leaders.leaderspossystem.SettingsTab.PinpadTap.PINPAD_IP;
 import static com.pos.leaders.leaderspossystem.SettingsTab.PinpadTap.PINPAD_PASSWORD;
@@ -46,13 +53,12 @@ public class PinpadActivity extends AppCompatActivity {
     double totalPrice;
 
     SharedPreferences pinpadSP;
-    String username = "", password = "", ip = "";
+    public static String username = "", password = "", ip = "";
 
     public static final int PAYMENTS_MAX_NUMBER = 36;
     public static final int PAYMENTS_MIN_NUMBER = 1;
 
 
-    JSONObject responseJSON;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +78,10 @@ public class PinpadActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             totalPrice = (double) extras.get(LEADERS_POS_PIN_PAD_TOTAL_PRICE);
-            tvTotalPrice.append(" "+Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
+            tvTotalPrice.append(" " + Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
         } else {
             finish();
         }
-
 
         pinpadSP = this.getSharedPreferences(PINPAD_PREFERENCES, 0);
         if (pinpadSP.contains(PINPAD_IP) || pinpadSP.contains(PINPAD_USERNAME)) {
@@ -85,11 +90,10 @@ public class PinpadActivity extends AppCompatActivity {
             password = (pinpadSP.getString(PINPAD_PASSWORD, ""));
         }
 
-        if(ip.equals("")||username.equals("")||password.equals("")) {
+        if (ip.equals("") || username.equals("") || password.equals("")) {
             Toast.makeText(this, "Please config your PinPad.", Toast.LENGTH_SHORT).show();
             onBackPressed();
         }
-
 
         //init Views
         np = (NumberPicker) findViewById(R.id.pinpadActivity_np);
@@ -101,21 +105,14 @@ public class PinpadActivity extends AppCompatActivity {
         np.setMinValue(1);
         np.setValue(payments);
 
-
         //Done button
         btDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 payments = np.getValue();
 
-                PinPadAPI pinpad = new PinPadAPI();
-                Integer res;
-
-                pinpad.open(ip, username, password);
-
-                PinPadSession requestSession = new PinPadSession();
                 Transaction transaction = new Transaction();
-                transaction.amount = (float)totalPrice;
+                transaction.amount = (float) totalPrice;
 
                 try {
                     transaction.setNumberOfPayments(payments);
@@ -124,253 +121,32 @@ public class PinpadActivity extends AppCompatActivity {
                     Toast.makeText(PinpadActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                try {
-                    Log.i("Request", transaction.make());
-                    res = pinpad.sendRequest(requestSession, "transaction", transaction.make());
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                    Toast.makeText(PinpadActivity.this, "You have an error", Toast.LENGTH_SHORT).show();
-                    return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(PinpadActivity.this, "You have an error", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-
-                final ProgressDialog dialog_connection = new ProgressDialog(PinpadActivity.this);
-                dialog_connection.setTitle(getBaseContext().getString(R.string.wait_for_accept));
-                dialog_connection.show();
-
-
-
-                for (int i = 0; i < 10; i++) {
-                    // Get transaction response
-                    res = pinpad.isResponseReady(requestSession, 1000);
-                    if (res > 0) {
-                        PinPadResponse response = new PinPadResponse();
-                        pinpad.getResponse(requestSession, response, res);
-                        Log.e("response", response.get());
-
-                        try {
-                            responseJSON = new JSONObject(response.get());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            pinpad.close();
-                            dialog_connection.dismiss();
-                            return;
-                        }
-
-                        if (responseJSON.has("code")) {
-                            int code = 0;
-                            try {
-                                code = responseJSON.getInt("code");
-                            } catch (JSONException e){/*ignore this exception*/}
-
-                            switch (code) {
-                                case 60000:
-                                    //success response
-                                    pinpad.close();
-                                    successResponse(responseJSON);
-                                    dialog_connection.dismiss();
-                                    return;
-                                case 60001:
-                                    pinpad.close();
-                                    dialog_connection.dismiss();
-                                    return;
-
-                                case 60002:
-                                    pinpad.close();
-                                    dialog_connection.dismiss();
-                                    return;
-                            }
-                        }
-
-                        /************** response example **************//*
-                        {"code":60002,"msg":"עסקה לא הושלמה"}
-                        {"code":60000,"data":{"receipt":{"aid":{"category":"BOTH","index":21,"name":"זיהוי יישום בשבב","value":""},"appVersion":{"category":"BOTH","index":3,"name":"גרסת תוכנה","value":"ABS001617i"},"arc":{"category":"SELLER","index":15,"name":"ARC","value":""},"atc":{"category":"BOTH","index":12,"name":"סידורי ש","value":""},"authCodeManpik":{"category":"BOTH","index":19,"name":"גורם מאשר","value":""},"authNo":{"category":"BOTH","index":18,"name":"מספר אישור","value":""},"cardName":{"category":"BOTH","index":6,"name":"שם כרטיס","value":"ישראכרט"},"cardNumber":{"category":"SELLER","index":8,"name":"מספר כרטיס","value":"0136058817"},"cardSeqNumber":{"category":"BOTH","index":13,"name":"סידורי כ","value":""},"cashbackAmount":{"category":"BOTH","index":38,"name":"סכום במזומן","value":""},"clientCardNumber":{"category":"CLIENT","index":7,"name":"מספר כרטיס","value":"8817"},"clientPhone":{"category":"SELLER","index":42,"name":"מספר טלפון של לקוח","value":"\\r\\n____________________"},"clientSignature":{"category":"SELLER","index":41,"name":"חתימת לקוח","value":"\\r\\n____________________"},"compRetailerNum":{"category":"BOTH","index":4,"name":"מספר עסק בחברת האשראי","value":"0071506"},"constMsg":{"category":"BOTH","index":40,"name":"","value":""},"conversionAmount":{"category":"BOTH","index":25,"name":"סכום העסקה לאחר המרה","value":""},"conversionCurrency":{"category":"BOTH","index":26,"name":"מטבע ההמרה","value":""},"conversionProvider":{"category":"BOTH","index":28,"name":"גורם המרה","value":""},"conversionRate":{"category":"BOTH","index":27,"name":"שער המרה","value":""},"creditTerms":{"category":"BOTH","index":22,"name":"סוג אשראי","value":"רגיל"},"currency":{"category":"BOTH","index":24,"name":"מטבע","value":"ש''ח"},"deferMonths":{"category":"BOTH","index":32,"name":"דחוי","value":""},"dspBalance":{"category":"CLIENT","index":43,"name":"","value":""},"dspF111":{"category":"BOTH","index":44,"name":"","value":""},"dueDate":{"category":"BOTH","index":33,"name":"חיוב במועד","value":""},"firstPayment":{"category":"BOTH","index":29,"name":"תשלום ראשון","value":""},"ipayAmount":{"category":"BOTH","index":36,"name":"סכום הנחה בקניה","value":""},"ipayNumber":{"category":"BOTH","index":37,"name":"מספר יחידות הטבה","value":""},"lumpSum":{"category":"BOTH","index":39,"name":"סה''כ כולל תשר ומזומן","value":""},"netAmount":{"category":"BOTH","index":35,"name":"סכום נטו","value":""},"noPayments":{"category":"BOTH","index":30,"name":"מספר תשלומים","value":""},"notFirstPayment":{"category":"BOTH","index":31,"name":"תשלום נוסף","value":""},"panEntryMode":{"category":"BOTH","index":20,"name":"אופן ביצוע העסקה","value":"מגנטי"},"rrn":{"category":"BOTH","index":11,"name":"RRN","value":""},"terminalName":{"category":"BOTH","index":1,"name":"שם מסוף","value":"מסוף טסט דנגוט"},"terminalNumber":{"category":"BOTH","index":2,"name":"מספר מסוף","value":"0882214"},"tip":{"category":"BOTH","index":34,"name":"תשר","value":""},"tranType":{"category":"BOTH","index":17,"name":"סוג עסקה","value":"חובה"},"transAmount":{"category":"BOTH","index":23,"name":"סכום העסקה","value":"1.50"},"transDateTime":{"category":"BOTH","index":5,"name":"תאריך ושעת העסקה","value":"23\/05\/18 16:43"},"tsi":{"category":"SELLER","index":14,"name":"TSI","value":""},"tvr":{"category":"SELLER","index":16,"name":"TVR","value":""},"uid":{"category":"BOTH","index":10,"name":"UID","value":"18052316432608822141749"},"voucherNumber":{"category":"BOTH","index":9,"name":"מספר שובר","value":"06001001"}},"transaction":{"aid":"","amount":1.5,"approvalNumber":"","approvalSource":"INVALID","arc":"Y1","atc":"","authCodeManpik":"INVALID","authCodeSolek":"INVALID","businessId":2538,"cardBrand":"ISRACAR
-                        {"code":60012,"msg":"Invalid Parameter: 'cardExpirationDate'"}
-                        {"code":60011,"data":{"code":406,"message":"סה''כ סכום העסקה שונה מסכום תשלום ראשון + סכום תשלום קבוע * מספר תשלומים","solek":"לא תקין"},"msg":"Declined"}
-                         */
-                        break;
-                    }
-                }
-
-
-                if (res == 0) {
-                    // Cancel transaction
-                    PinPadSession cancelSession = new PinPadSession();
-                    res = pinpad.sendRequest(cancelSession, "cancel", null);
-
-                    // Get cancel response
-                    res = pinpad.isResponseReady(cancelSession, 1000);
-                    if (res > 0) {
-                        PinPadResponse response = new PinPadResponse();
-                        pinpad.getResponse(cancelSession, response, res);
-                        Log.e("res can", response.toString());
-                        try {
-                            responseJSON = new JSONObject(response.get());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    res = pinpad.isResponseReady(requestSession, 1000);
-                    pinpad.close();
-                    dialog_connection.dismiss();
-                    setResult(RESULT_CANCELED);
-                    finish();
-                }
-
-                // Get transaction response
-                if (res > 0) {
-                    PinPadResponse response = new PinPadResponse();
-                    pinpad.getResponse(requestSession, response, res);
-                    Log.e("Response ", response.toString());
-                }
-
-                pinpad.close();
-                dialog_connection.dismiss();
+                new PinPadTransaction().execute(transaction);
             }
         });
 
-        //Advance button
+        //byPhone button
         btByPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                payments = np.getValue();
+            payments = np.getValue();
 
-                PinPadAPI pinpad = new PinPadAPI();
-                Integer res;
+            Transaction transaction = new Transaction();
+            transaction.amount = (float) totalPrice;
+            transaction.printVoucher = false;
+            transaction.transactionCode = TransactionCode.PHONE_TRANSACTION;
+            transaction.cardNumber = "";
+            transaction.ccv = "";
+            transaction.cardHolderId = "";
 
-                pinpad.open(ip, username, password);
-
-                PinPadSession requestSession = new PinPadSession();
-                Transaction transaction = new Transaction();
-                transaction.amount = (float)totalPrice;
-                transaction.printVoucher = false;
-                transaction.transactionCode = TransactionCode.PHONE_TRANSACTION;
-                transaction.cardNumber = "";
-                //transaction.cardExpirationDate = "";
-                transaction.ccv = "";
-                transaction.cardHolderId = "";
-
-
-                try {
-                    transaction.setNumberOfPayments(payments);
-                } catch (NumberOfPaymentException e) {
-                    Log.e("PinPad", e.getMessage());
-                    Toast.makeText(PinpadActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                try {
-                    Log.i("Request", transaction.make());
-                    res = pinpad.sendRequest(requestSession, "transaction", transaction.make());
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                    Toast.makeText(PinpadActivity.this, "You have an error", Toast.LENGTH_SHORT).show();
-                    return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(PinpadActivity.this, "You have an error", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-
-                final ProgressDialog dialog_connection = new ProgressDialog(PinpadActivity.this);
-                dialog_connection.setTitle(getBaseContext().getString(R.string.wait_for_accept));
-                dialog_connection.show();
-
-
-
-                for (int i = 0; i < 10; i++) {
-                    // Get transaction response
-                    res = pinpad.isResponseReady(requestSession, 1000);
-                    if (res > 0) {
-                        PinPadResponse response = new PinPadResponse();
-                        pinpad.getResponse(requestSession, response, res);
-                        Log.e("response", response.get());
-
-                        try {
-                            responseJSON = new JSONObject(response.get());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            pinpad.close();
-                            dialog_connection.dismiss();
-                            return;
-                        }
-
-                        if (responseJSON.has("code")) {
-                            int code = 0;
-                            try {
-                                code = responseJSON.getInt("code");
-                            } catch (JSONException e){/*ignore this exception*/}
-
-                            switch (code) {
-                                case 60000:
-                                    //success response
-                                    pinpad.close();
-                                    successResponse(responseJSON);
-                                    dialog_connection.dismiss();
-                                    return;
-                                case 60001:
-                                    pinpad.close();
-                                    dialog_connection.dismiss();
-                                    return;
-
-                                case 60002:
-                                    pinpad.close();
-                                    dialog_connection.dismiss();
-                                    return;
-                            }
-                        }
-
-                        /************** response example **************//*
-                        {"code":60002,"msg":"עסקה לא הושלמה"}
-                        {"code":60000,"data":{"receipt":{"aid":{"category":"BOTH","index":21,"name":"זיהוי יישום בשבב","value":""},"appVersion":{"category":"BOTH","index":3,"name":"גרסת תוכנה","value":"ABS001617i"},"arc":{"category":"SELLER","index":15,"name":"ARC","value":""},"atc":{"category":"BOTH","index":12,"name":"סידורי ש","value":""},"authCodeManpik":{"category":"BOTH","index":19,"name":"גורם מאשר","value":""},"authNo":{"category":"BOTH","index":18,"name":"מספר אישור","value":""},"cardName":{"category":"BOTH","index":6,"name":"שם כרטיס","value":"ישראכרט"},"cardNumber":{"category":"SELLER","index":8,"name":"מספר כרטיס","value":"0136058817"},"cardSeqNumber":{"category":"BOTH","index":13,"name":"סידורי כ","value":""},"cashbackAmount":{"category":"BOTH","index":38,"name":"סכום במזומן","value":""},"clientCardNumber":{"category":"CLIENT","index":7,"name":"מספר כרטיס","value":"8817"},"clientPhone":{"category":"SELLER","index":42,"name":"מספר טלפון של לקוח","value":"\\r\\n____________________"},"clientSignature":{"category":"SELLER","index":41,"name":"חתימת לקוח","value":"\\r\\n____________________"},"compRetailerNum":{"category":"BOTH","index":4,"name":"מספר עסק בחברת האשראי","value":"0071506"},"constMsg":{"category":"BOTH","index":40,"name":"","value":""},"conversionAmount":{"category":"BOTH","index":25,"name":"סכום העסקה לאחר המרה","value":""},"conversionCurrency":{"category":"BOTH","index":26,"name":"מטבע ההמרה","value":""},"conversionProvider":{"category":"BOTH","index":28,"name":"גורם המרה","value":""},"conversionRate":{"category":"BOTH","index":27,"name":"שער המרה","value":""},"creditTerms":{"category":"BOTH","index":22,"name":"סוג אשראי","value":"רגיל"},"currency":{"category":"BOTH","index":24,"name":"מטבע","value":"ש''ח"},"deferMonths":{"category":"BOTH","index":32,"name":"דחוי","value":""},"dspBalance":{"category":"CLIENT","index":43,"name":"","value":""},"dspF111":{"category":"BOTH","index":44,"name":"","value":""},"dueDate":{"category":"BOTH","index":33,"name":"חיוב במועד","value":""},"firstPayment":{"category":"BOTH","index":29,"name":"תשלום ראשון","value":""},"ipayAmount":{"category":"BOTH","index":36,"name":"סכום הנחה בקניה","value":""},"ipayNumber":{"category":"BOTH","index":37,"name":"מספר יחידות הטבה","value":""},"lumpSum":{"category":"BOTH","index":39,"name":"סה''כ כולל תשר ומזומן","value":""},"netAmount":{"category":"BOTH","index":35,"name":"סכום נטו","value":""},"noPayments":{"category":"BOTH","index":30,"name":"מספר תשלומים","value":""},"notFirstPayment":{"category":"BOTH","index":31,"name":"תשלום נוסף","value":""},"panEntryMode":{"category":"BOTH","index":20,"name":"אופן ביצוע העסקה","value":"מגנטי"},"rrn":{"category":"BOTH","index":11,"name":"RRN","value":""},"terminalName":{"category":"BOTH","index":1,"name":"שם מסוף","value":"מסוף טסט דנגוט"},"terminalNumber":{"category":"BOTH","index":2,"name":"מספר מסוף","value":"0882214"},"tip":{"category":"BOTH","index":34,"name":"תשר","value":""},"tranType":{"category":"BOTH","index":17,"name":"סוג עסקה","value":"חובה"},"transAmount":{"category":"BOTH","index":23,"name":"סכום העסקה","value":"1.50"},"transDateTime":{"category":"BOTH","index":5,"name":"תאריך ושעת העסקה","value":"23\/05\/18 16:43"},"tsi":{"category":"SELLER","index":14,"name":"TSI","value":""},"tvr":{"category":"SELLER","index":16,"name":"TVR","value":""},"uid":{"category":"BOTH","index":10,"name":"UID","value":"18052316432608822141749"},"voucherNumber":{"category":"BOTH","index":9,"name":"מספר שובר","value":"06001001"}},"transaction":{"aid":"","amount":1.5,"approvalNumber":"","approvalSource":"INVALID","arc":"Y1","atc":"","authCodeManpik":"INVALID","authCodeSolek":"INVALID","businessId":2538,"cardBrand":"ISRACAR
-                        {"code":60012,"msg":"Invalid Parameter: 'cardExpirationDate'"}
-                        {"code":60011,"data":{"code":406,"message":"סה''כ סכום העסקה שונה מסכום תשלום ראשון + סכום תשלום קבוע * מספר תשלומים","solek":"לא תקין"},"msg":"Declined"}
-                         */
-                        break;
-                    }
-                }
-
-
-                if (res == 0) {
-                    // Cancel transaction
-                    PinPadSession cancelSession = new PinPadSession();
-                    res = pinpad.sendRequest(cancelSession, "cancel", null);
-
-                    // Get cancel response
-                    res = pinpad.isResponseReady(cancelSession, 1000);
-                    if (res > 0) {
-                        PinPadResponse response = new PinPadResponse();
-                        pinpad.getResponse(cancelSession, response, res);
-                        Log.e("res can", response.toString());
-                        try {
-                            responseJSON = new JSONObject(response.get());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    res = pinpad.isResponseReady(requestSession, 1000);
-                    pinpad.close();
-                    dialog_connection.dismiss();
-                    setResult(RESULT_CANCELED);
-                    finish();
-                }
-
-                // Get transaction response
-                if (res > 0) {
-                    PinPadResponse response = new PinPadResponse();
-                    pinpad.getResponse(requestSession, response, res);
-                    Log.e("Response ", response.toString());
-                }
-
-                pinpad.close();
-                dialog_connection.dismiss();
-
+            try {
+                transaction.setNumberOfPayments(payments);
+            } catch (NumberOfPaymentException e) {
+                Log.e("PinPad", e.getMessage());
+                Toast.makeText(PinpadActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            new PinPadTransaction().execute(transaction);
             }
         });
 
@@ -382,6 +158,7 @@ public class PinpadActivity extends AppCompatActivity {
             }
         });
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     private void successResponse(JSONObject jsonObject) {
@@ -390,7 +167,6 @@ public class PinpadActivity extends AppCompatActivity {
             jo = jsonObject.getJSONObject("data");
         } catch (JSONException e) {/*ignore*/}
 
-
         Intent i = new Intent();
         i.putExtra(RESULT_INTENT_CODE_PIN_PAD_ACTIVITY_FULL_RESPONSE, jo.toString());
 
@@ -398,5 +174,166 @@ public class PinpadActivity extends AppCompatActivity {
         finish();
     }
 
+    private void failResponse(String message) {
+        //make alert showing the error message
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.transaction_error)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //on click go bvack to main screen with negative result
+                        setResult(RESULT_CANCELED);
+                        finish();
+                    }
+                })
+                .show();
+    }
 
+    private class PinPadTransaction extends AsyncTask<Transaction, Void, JSONObject> {
+
+        private PinPadAPI pinPad;
+        private Integer res;
+        private ProgressDialog waitDialog;
+        private static final int TIMEOUT = 1000;
+
+        @Override
+        protected void onPreExecute() {
+            pinPad = new PinPadAPI();
+            pinPad.open(ip, username, password);
+
+            waitDialog = new ProgressDialog(PinpadActivity.this);
+            waitDialog.setTitle(getString(R.string.pinpad_wait_for_finish));
+            waitDialog.show();
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected JSONObject doInBackground(Transaction... params) {
+            Transaction transaction = params[0];
+
+            PinPadSession requestSession = new PinPadSession();
+
+            try {
+                res = pinPad.sendRequest(requestSession, SendRequestType.TRANSACTION, transaction.make());
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                return null;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            for (int i = 0; i < 10; i++) {
+                // Get transaction response
+                res = pinPad.isResponseReady(requestSession, TIMEOUT);
+                if (res > 0) {
+                    PinPadResponse response = new PinPadResponse();
+                    pinPad.getResponse(requestSession, response, res);
+                    Log.d("getting response", response.get());
+                    try {
+                        return new JSONObject(response.get());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+            }
+
+            if (res == 0) {
+                // Cancel transaction
+                PinPadSession cancelSession = new PinPadSession();
+                res = pinPad.sendRequest(cancelSession, SendRequestType.CANCEL, null);
+
+                // Get cancel response
+                res = pinPad.isResponseReady(cancelSession, TIMEOUT);
+                if (res > 0) {
+                    PinPadResponse response = new PinPadResponse();
+                    pinPad.getResponse(cancelSession, response, res);
+                    JSONObject cancelResponse;
+                    Log.d("cancel response", response.toString());
+                    try {
+                        cancelResponse = new JSONObject(response.get());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            // Get transaction response
+            if (res > 0) {
+                PinPadResponse response = new PinPadResponse();
+                pinPad.getResponse(requestSession, response, res);
+                Log.d("transaction response", response.toString());
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jsonObject) {
+            //close pinpad connection
+            pinPad.close();
+            //closing wait dialog
+            waitDialog.dismiss();
+
+            //reading response object
+            if (jsonObject != null) {
+                if (jsonObject.has("code")) {
+                    int code = 0;
+                    try {
+                        code = jsonObject.getInt("code");
+                        Log.d("response", jsonObject.toString());
+                        switch (code) {
+                            case ResponseCode.PP_SUCCESS:
+                                //success response
+                                successResponse(jsonObject);
+                                return;
+                            case ResponseCode.PP_INVALID_JSON_FORMAT:
+                                failResponse(jsonObject.getString("msg"));
+                                return;
+                            case ResponseCode.PP_USER_ABORT_DETECTED:
+                                failResponse(jsonObject.getString("msg"));
+                                return;
+                            case ResponseCode.PP_MISSING_MANDATORY_PARAMS:
+                                failResponse(jsonObject.getString("msg"));
+                                return;
+                            case ResponseCode.PP_COMMAND_NOT_FOUND:
+                                failResponse(jsonObject.getString("msg"));
+                                return;
+                            case ResponseCode.PP_COMMAND_NOT_ALLOWED:
+                                failResponse(jsonObject.getString("msg"));
+                                return;
+                            case ResponseCode.PP_CONNECTION_FAILURE:
+                                failResponse(jsonObject.getString("msg"));
+                                return;
+                            case ResponseCode.PP_CARD_AID_BLOCK:
+                                failResponse(jsonObject.getString("msg"));
+                                return;
+                            case ResponseCode.PP_EMV_TRANSACTION_FAILED:
+                                failResponse(jsonObject.getString("msg"));
+                                return;
+                            case ResponseCode.PP_SHVA_GENERAL_ERROR:
+                                failResponse(jsonObject.getJSONObject("data").getString("message"));
+                                return;
+                            case ResponseCode.PP_INVALID_PARAMS:
+                                failResponse(jsonObject.getString("msg"));
+                                return;
+                            case ResponseCode.PP_CREDIX_GENERAL_ERROR:
+                                failResponse(jsonObject.getString("msg"));
+                                return;
+                            case ResponseCode.PP_PROTOCOL_ERROR:
+                                failResponse(jsonObject.getJSONObject("data").getString("message"));
+                                return;
+                        }
+                    } catch (JSONException e) {/*ignore this exception*/}
+                }
+            } else {
+                //connection error with pin-pad
+                failResponse(getString(R.string.pinpad_connection_error));
+            }
+            super.onPostExecute(jsonObject);
+        }
+    }
 }

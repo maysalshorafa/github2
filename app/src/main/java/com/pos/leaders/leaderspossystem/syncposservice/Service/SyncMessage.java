@@ -407,9 +407,7 @@ public class SyncMessage extends Service {
                     break;
                 //endregion OFFER
 
-                //region Rules
-
-                //region Rule3
+                //region Rules3
                 case MessageType.ADD_RULE_3:
                     Rule3 rule3 = null;
                     rule3 = objectMapper.readValue(msgData, Rule3.class);

@@ -527,6 +527,9 @@
     <string name="details">Details</string>
     <string name="cashiers">Cashiers :</string>
     <string name="ip">IP Address</string>
+    <string name="pinpad_connection_error">Please call the support team.</string>
+    <string name="transaction_error">Transaction error</string>
+    <string name="pinpad_wait_for_finish">Continue the transaction using your pin-pad.</string>
 
 </resources>
 

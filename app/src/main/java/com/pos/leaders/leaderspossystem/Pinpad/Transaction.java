@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem.Pinpad;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +24,7 @@ import static com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity.PAYMENTS_MI
  * Created by KARAM on 24/05/2018.
  */
 
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Transaction {
     float amount;
     String creditTerms = CreditTerms.REGULAR_CREDIT;
