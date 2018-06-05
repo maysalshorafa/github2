@@ -26,7 +26,7 @@ public class UserDBAdapter {
     //Table name
     public static final String USERS_TABLE_NAME = "users";
     //column names
-    protected static final String USERS_COLUMN_ID = "usedPointId";
+    protected static final String USERS_COLUMN_ID = "id";
     protected static final String USERS_COLUMN_USERNAME = "userName";
     protected static final String USERS_COLUMN_PASSWORD = "pwd";
     protected static final String USERS_COLUMN_FIRSTNAME = "firstName";
@@ -40,7 +40,7 @@ public class UserDBAdapter {
 
     // TODO: Create public field for each column in your table.
     // SQL Statement to create a new database.
-    public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS users ( `usedPointId` INTEGER PRIMARY KEY AUTOINCREMENT,`userName` TEXT UNIQUE, `firstName` TEXT NOT NULL, `lastName` TEXT, `visitDate` TEXT NOT NULL DEFAULT current_timestamp,`pwd` TEXT , `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, `hourlyWage` REAL DEFAULT 0.0 )";
+    public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS users ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,`userName` TEXT UNIQUE, `firstName` TEXT NOT NULL, `lastName` TEXT, `visitDate` TEXT NOT NULL DEFAULT current_timestamp,`pwd` TEXT , `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, `hourlyWage` REAL DEFAULT 0.0 )";
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
@@ -108,7 +108,7 @@ public class UserDBAdapter {
     public User getUserByID(long id) {
         User user = null;
         Cursor cursor = db.query(USERS_TABLE_NAME, null, USERS_COLUMN_ID + "=? ", new String[]{id + ""}, null, null, null);
-        //Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where usedPointId='" + usedPointId + "'", null);
+        //Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where id='" + id + "'", null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) // UserName Exist
         {
@@ -255,7 +255,7 @@ public class UserDBAdapter {
     }
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<User>();
-        Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where " + USERS_COLUMN_DISENABLED + "=0 order by usedPointId desc", null);
+        Cursor cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where " + USERS_COLUMN_DISENABLED + "=0 order by id desc", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             users.add(createNewUser(cursor));
@@ -273,7 +273,7 @@ public class UserDBAdapter {
 
         Cursor cursor = null;
         for (int i = 0; i < salesManId.size(); i++) {
-            cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where  usedPointId='" + salesManId.get(i) + "'"+ " and " + USERS_COLUMN_DISENABLED + "=0", null);
+            cursor = db.rawQuery("select * from " + USERS_TABLE_NAME + " where  id='" + salesManId.get(i) + "'"+ " and " + USERS_COLUMN_DISENABLED + "=0", null);
             if (cursor != null) {
 
                 while (cursor.moveToNext()) {

@@ -301,14 +301,14 @@ public class MainActivity extends AppCompatActivity {
 
         search_person = (ImageButton) findViewById(R.id.searchPerson);
         drawerLayout = (DrawerLayout) findViewById(R.id.mainActivity_drawerLayout);
-        //   navigationView = (NavigationView) findViewById(R.usedPointId.mainActivity_navigationView);
-        //((MenuItem)(navigationView.findViewById(R.usedPointId.menuItem_ZReport))).setTitle("Z"+getString(R.string.reports));
+        //   navigationView = (NavigationView) findViewById(R.id.mainActivity_navigationView);
+        //((MenuItem)(navigationView.findViewById(R.id.menuItem_ZReport))).setTitle("Z"+getString(R.string.reports));
 
         //region Init
         btnPauseSale = (Button) findViewById(R.id.mainActivity_BTNGeneralProduct);
         btnResumeSale = (Button) findViewById(R.id.mainActivity_BTNMultProduct);
         btnPercentProduct = (Button) findViewById(R.id.mainActivity_BTNPercentProduct);
-        //  btnLastSales = (ImageButton) findViewById(R.usedPointId.mainActivity_BTNLastSales);
+        //  btnLastSales = (ImageButton) findViewById(R.id.mainActivity_BTNLastSales);
         btnCancel = (ImageView) findViewById(R.id.mainActivity_btnCancel);
         lvOrder = (ListView) findViewById(R.id.mainScreen_LVOrder);
 
@@ -328,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
         custmerAssetstIdList = new ArrayList<Long>();
         orderIdList=new ArrayList<OrderDetails>();
         orderId=new ArrayList<Long>();
-        //fragmentTouchPad = (FrameLayout) findViewById(R.usedPointId.mainActivity_fragmentTochPad);
+        //fragmentTouchPad = (FrameLayout) findViewById(R.id.mainActivity_fragmentTochPad);
 
         //region  Init cash drawer
         /*
@@ -1552,31 +1552,31 @@ startActivity(i);
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent intent = new Intent();
                 switch (item.getItemId()) {
-                    case R.usedPointId.menuItem_Product:
+                    case R.id.menuItem_Product:
                         intent = new Intent(MainActivity.this, ProductCatalogActivity.class);
                         break;
-                    case R.usedPointId.menuItem_Department:
+                    case R.id.menuItem_Department:
                         intent = new Intent(MainActivity.this, DepartmentActivity.class);
                         break;
-                    case R.usedPointId.menuItem_Users:
+                    case R.id.menuItem_Users:
                         intent = new Intent(MainActivity.this, WorkerManagementActivity.class);
                         break;
 
-                    case R.usedPointId.menuItem_Reports:
+                    case R.id.menuItem_Reports:
                         intent = new Intent(MainActivity.this, ReportsManagementActivity.class);
                         intent.putExtra("permissions_name",str);
 
                         break;
-                    case R.usedPointId.menuItem_Setting:
+                    case R.id.menuItem_Setting:
                         // TODO: 30/03/2017 Settings Activity
                         intent = new Intent(MainActivity.this, SettingActivity.class);
                         break;
-                    case R.usedPointId.menuItem_Backup:
+                    case R.id.menuItem_Backup:
                         intent = new Intent(MainActivity.this, BackupActivity.class);
                         startActivity(intent);
                         finish();
                         break;
-                    case R.usedPointId.menuItem_Custmer_Club:
+                    case R.id.menuItem_Custmer_Club:
                         intent = new Intent(MainActivity.this, OldCustomer.class);
                         startActivity(intent);
                         finish();

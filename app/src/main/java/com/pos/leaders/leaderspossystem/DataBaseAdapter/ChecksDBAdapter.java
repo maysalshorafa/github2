@@ -127,7 +127,7 @@ public class ChecksDBAdapter {
 	}
 
 	private Check newCheck(Cursor cursor){
-		////int usedPointId, int checkNum, int bankNum, int branchNum, int accountNum, double amount, Date date, boolean isDeleted, int saleId
+		////int id, int checkNum, int bankNum, int branchNum, int accountNum, double amount, Date date, boolean isDeleted, int saleId
 		return new Check(Long.parseLong(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_ID))),
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_CHECKNUMBER))),
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_BANKNUMBER))),

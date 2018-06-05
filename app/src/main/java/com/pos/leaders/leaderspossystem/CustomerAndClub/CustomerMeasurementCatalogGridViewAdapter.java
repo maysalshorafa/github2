@@ -58,10 +58,10 @@ public class CustomerMeasurementCatalogGridViewAdapter extends BaseAdapter {
 
 
     /**
-     * Get the row usedPointId associated with the specified position in the list.
+     * Get the row id associated with the specified position in the list.
      *
-     * @param position The position of the item within the adapter's data set whose row usedPointId we want.
-     * @return The usedPointId of the item at the specified position.
+     * @param position The position of the item within the adapter's data set whose row id we want.
+     * @return The id of the item at the specified position.
      */
     @Override
     public long getItemId(int position) {

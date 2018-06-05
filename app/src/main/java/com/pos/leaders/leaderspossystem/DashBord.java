@@ -141,7 +141,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
         AccessToken accessToken = new AccessToken(this);
         accessToken.execute(this);
-        //load pos usedPointId from shared file
+        //load pos id from shared file
         SharedPreferences sharedpreferences = getSharedPreferences(BO_CORE_ACCESS_AUTH, Context.MODE_PRIVATE);
         if (sharedpreferences.contains(MessageKey.PosId)) {
             int posID = sharedpreferences.getInt(MessageKey.syncNumber, 1);
@@ -180,7 +180,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         report = (Button) findViewById(R.id.report);
         product = (Button) findViewById(R.id.product);
         department = (Button) findViewById(R.id.department);
-        //offers = (Button) findViewById(R.usedPointId.offers);
+        //offers = (Button) findViewById(R.id.offers);
         users = (Button) findViewById(R.id.users);
         schedule_workers = (Button) findViewById(R.id.schedule_workers);
         backUp = (Button) findViewById(R.id.backUp);
@@ -877,7 +877,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 w = Workbook.getWorkbook(in);
                 Sheet sheet = w.getSheet(0);
                 // Loop over column and lines
-                Log.i("Row ","usedPointId \t name \t barcode \t price");
+                Log.i("Row ","id \t name \t barcode \t price");
                 for (int row = 1; row < sheet.getRows(); row++) {
                     try {
                         String name,barcode,id,price;

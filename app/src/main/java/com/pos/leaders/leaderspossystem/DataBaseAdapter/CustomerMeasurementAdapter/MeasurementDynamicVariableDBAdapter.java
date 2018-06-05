@@ -95,7 +95,7 @@ public class MeasurementDynamicVariableDBAdapter {
         return db.delete(MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME, MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_ID + "=" + id, null) > 0;
     }
     // end
-    // get MeasurementDynamicVariable by usedPointId
+    // get MeasurementDynamicVariable by id
     public MeasurementDynamicVariable getMeasurementDynamicVariableByID(long id) {
         MeasurementDynamicVariable measurementDynamicVariable = null;
         Cursor cursor = db.rawQuery("select * from " + MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME + " where " + MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_ID + " = "+ id, null);

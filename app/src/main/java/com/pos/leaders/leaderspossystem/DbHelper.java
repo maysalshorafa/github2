@@ -69,7 +69,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     protected static final String DATABASE_NAME = "POSDB.db";
     protected static final String CONTACTS_TABLE_NAME = "contacts";
-    protected static final String CONTACTS_COLUMN_ID = "usedPointId";
+    protected static final String CONTACTS_COLUMN_ID = "id";
     protected static final String CONTACTS_COLUMN_NAME = "name";
     protected static final String CONTACTS_COLUMN_EMAIL = "email";
     protected static final String CONTACTS_COLUMN_STREET = "street";

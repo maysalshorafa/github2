@@ -26,15 +26,15 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 public class ScheduleWorkersDBAdapter {
     protected static final String SCHEDULEWORKERS_TABLE_NAME = "scheduleWorkers";
     // Column Names
-    protected static final String SCHEDULEWORKERS_COLUMN_ID = "usedPointId";
+    protected static final String SCHEDULEWORKERS_COLUMN_ID = "id";
     protected static final String SCHEDULEWORKERS_COLUMN_USERID = "userId";
     protected static final String SCHEDULEWORKERS_COLUMN_DATE = "date";
     protected static final String SCHEDULEWORKERS_COLUMN_STARTTIME = "startTime";
     protected static final String SCHEDULEWORKERS_COLUMN_EXITTIME = "exitTime";
 
-    public static final String DATABASE_CREATE="CREATE TABLE scheduleWorkers ( `usedPointId` INTEGER PRIMARY KEY AUTOINCREMENT, "+
+    public static final String DATABASE_CREATE="CREATE TABLE scheduleWorkers ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, "+
             "`userId` INTEGER, `date` TEXT DEFAULT current_timestamp, `startTime` TEXT, `exitTime` TEXT, "+
-            "FOREIGN KEY(`userId`) REFERENCES `users.usedPointId` )";
+            "FOREIGN KEY(`userId`) REFERENCES `users.id` )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -136,7 +136,7 @@ public class ScheduleWorkersDBAdapter {
 
     public ScheduleWorkers getScheduleWorkersByID(long id) {
         ScheduleWorkers scheduleWorkers = null;
-        Cursor cursor = db.rawQuery("select * from " + SCHEDULEWORKERS_TABLE_NAME + " where usedPointId='" + id + "'", null);
+        Cursor cursor = db.rawQuery("select * from " + SCHEDULEWORKERS_TABLE_NAME + " where id='" + id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();
@@ -219,7 +219,7 @@ public class ScheduleWorkersDBAdapter {
 //get last row in table
     public ScheduleWorkers getLastScheduleWorkersByUserID(long userId) {
         ScheduleWorkers scheduleWorkers=null;
-        Cursor cursor =  db.rawQuery( "select * from "+SCHEDULEWORKERS_TABLE_NAME +" where "+SCHEDULEWORKERS_COLUMN_USERID+" = "+ userId+ " order by usedPointId desc", null );
+        Cursor cursor =  db.rawQuery( "select * from "+SCHEDULEWORKERS_TABLE_NAME +" where "+SCHEDULEWORKERS_COLUMN_USERID+" = "+ userId+ " order by id desc", null );
         cursor.moveToFirst();
         if (cursor.getCount() < 1) // UserName Not Exist
         {

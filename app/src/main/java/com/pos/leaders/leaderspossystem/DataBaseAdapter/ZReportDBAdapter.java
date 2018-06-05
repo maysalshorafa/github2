@@ -32,7 +32,7 @@ public class ZReportDBAdapter {
     // Table Name
     protected static final String Z_REPORT_TABLE_NAME = "z_report";
     // Column Names
-    protected static final String Z_REPORT_COLUMN_ID = "usedPointId";
+    protected static final String Z_REPORT_COLUMN_ID = "id";
     protected static final String Z_REPORT_COLUMN_CREATEDATE = "createDate";
     protected static final String Z_REPORT_COLUMN_BYUSER = "byUser";
     protected static final String Z_REPORT_COLUMN_STARTSALEID = "startSaleID";
@@ -43,7 +43,7 @@ public class ZReportDBAdapter {
 
     public static final String DATABASE_CREATE = "CREATE TABLE "+Z_REPORT_TABLE_NAME+" ( `"+Z_REPORT_COLUMN_ID+"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+Z_REPORT_COLUMN_CREATEDATE+"` TEXT DEFAULT current_timestamp,  `"+Z_REPORT_COLUMN_BYUSER+"` INTEGER, " +
             " `"+Z_REPORT_COLUMN_STARTSALEID+"` INTEGER,  `"+Z_REPORT_COLUMN_ENDSALEID+"` INTEGER ,  `"+Z_REPORT_COLUMN_AMOUNT+"` REAL,  `"+Z_REPORT_COLUMN_TOTAL_AMOUNT+"` REAL, " +
-            "FOREIGN KEY(`"+Z_REPORT_COLUMN_BYUSER+"`) REFERENCES `users.usedPointId` )";
+            "FOREIGN KEY(`"+Z_REPORT_COLUMN_BYUSER+"`) REFERENCES `users.id` )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -146,7 +146,7 @@ public class ZReportDBAdapter {
 
     public ZReport getLastRow() throws Exception {
         ZReport zReport = null;
-        Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " where usedPointId like '"+ SESSION.POS_ID_NUMBER+"%' order by usedPointId desc", null);
+        Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
         if (cursor.getCount() < 1) // zReport Not Exist
         {
             cursor.close();

@@ -63,7 +63,7 @@ public class CustomerMeasurementManagementActivity  extends AppCompatActivity {
         setContentView(R.layout.customer_measurement_management );
         TitleBar.setTitleBar(this);
         Bundle bundle = getIntent().getExtras();
-        long customerId = (long) bundle.get("usedPointId");
+        long customerId = (long) bundle.get("id");
         CustomerDBAdapter customerDBAdapter=new CustomerDBAdapter(this);
         customerDBAdapter.open();
         final com.pos.leaders.leaderspossystem.Models.Customer customer = customerDBAdapter.getCustomerByID(customerId);

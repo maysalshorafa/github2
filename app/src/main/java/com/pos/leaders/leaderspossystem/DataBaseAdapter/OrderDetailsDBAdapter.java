@@ -40,7 +40,7 @@ public class OrderDetailsDBAdapter {
     public static final String DATABASE_CREATE = "CREATE TABLE `OrderDetails` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL , `product_id` INTEGER," +
             " `quantity` INTEGER, `order_id` INTEGER, " +
             " '" + ORDER_COLUMN_PRICE + "' REAL , '" + ORDER_COLUMN_ORIGINAL_PRICE + "' REAL, '" + ORDER_COLUMN_DISCOUNT + "' REAL , '" + ORDER_COLUMN_CUSTMER_ASSEST_ID + "' INTEGER , " +
-            "FOREIGN KEY(`product_id`) REFERENCES `products.usedPointId`, FOREIGN KEY(`order_id`) REFERENCES `sales.usedPointId` )";
+            "FOREIGN KEY(`product_id`) REFERENCES `products.id`, FOREIGN KEY(`order_id`) REFERENCES `_Order.id` )";
     // Variable to hold the database instance
 	private SQLiteDatabase db;
 	// Context of the application using the database.

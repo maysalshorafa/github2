@@ -85,7 +85,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            long i = (long) bundle.get("usedPointId");
+            long i = (long) bundle.get("id");
             club = clubAdapter.getGroupByID(i);
             customerDBAdapter = new CustomerDBAdapter(this);
             customerDBAdapter.open();

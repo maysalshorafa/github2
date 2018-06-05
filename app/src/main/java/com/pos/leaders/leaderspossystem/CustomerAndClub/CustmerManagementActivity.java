@@ -94,12 +94,12 @@ public class CustmerManagementActivity extends AppCompatActivity {
                             case 0:
                                 Customer_Management_View=9;
                                 intent = new Intent(CustmerManagementActivity.this, AddNewCustomer.class);
-                                intent.putExtra("usedPointId", customers.get(position).getCustomerId());
+                                intent.putExtra("id", customers.get(position).getCustomerId());
                                 startActivity(intent);
                             case 1:
                                 Customer_Management_Edit=10;
                                 intent = new Intent(CustmerManagementActivity.this, AddNewCustomer.class);
-                                intent.putExtra("usedPointId", customers.get(position).getCustomerId());
+                                intent.putExtra("id", customers.get(position).getCustomerId());
                                 startActivity(intent);
                                 break;
 
@@ -140,12 +140,12 @@ public class CustmerManagementActivity extends AppCompatActivity {
                                 case 0:
                                     Customer_Management_View=9;
                                     intent = new Intent(CustmerManagementActivity.this, AddNewCustomer.class);
-                                    intent.putExtra("usedPointId", customers.get(position).getCustomerId());
+                                    intent.putExtra("id", customers.get(position).getCustomerId());
                                     startActivity(intent);
                                 case 1:
                                     Customer_Management_Edit=10;
                                     intent = new Intent(CustmerManagementActivity.this, AddNewCustomer.class);
-                                    intent.putExtra("usedPointId", customers.get(position).getCustomerId());
+                                    intent.putExtra("id", customers.get(position).getCustomerId());
                                     startActivity(intent);
                                     break;
 
@@ -170,12 +170,12 @@ public class CustmerManagementActivity extends AppCompatActivity {
                                     break;
                                 case 3:
                                     intent = new Intent(CustmerManagementActivity.this, AddCustomerMeasurement.class);
-                                    intent.putExtra("usedPointId", customers.get(position).getCustomerId());
+                                    intent.putExtra("id", customers.get(position).getCustomerId());
                                     startActivity(intent);
                                     break;
                                 case 4 :
                                     intent = new Intent(CustmerManagementActivity.this, CustomerMeasurementManagementActivity.class);
-                                    intent.putExtra("usedPointId", customers.get(position).getCustomerId());
+                                    intent.putExtra("id", customers.get(position).getCustomerId());
                                     startActivity(intent);
 
                                     break;

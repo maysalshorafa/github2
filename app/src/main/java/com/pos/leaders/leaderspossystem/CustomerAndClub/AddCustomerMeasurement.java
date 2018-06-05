@@ -42,7 +42,7 @@ public class AddCustomerMeasurement extends AppCompatActivity {
     HashMap< Long,EditText> editText = new HashMap<Long,EditText>();
     HashMap< Long,CheckBox> checkBoxes =  new HashMap<Long, CheckBox>();
     public List<String> measurementValueList= new ArrayList<String>(); //list of measured value
-    List<Long> measurementDynamicVariableId =new ArrayList<Long>(); //list of measured value usedPointId
+    List<Long> measurementDynamicVariableId =new ArrayList<Long>(); //list of measured value id
     List<String>measurementValueListValueType= new ArrayList<String>(); //list of measured value type
     //end
     long customerId;
@@ -59,7 +59,7 @@ public class AddCustomerMeasurement extends AppCompatActivity {
         TitleBar.setTitleBar(this);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            customerId = (long) bundle.get("usedPointId");
+            customerId = (long) bundle.get("id");
         }
         CustomerDBAdapter customerDBAdapter=new CustomerDBAdapter(this);
         customerDBAdapter.open();
@@ -118,7 +118,7 @@ public class AddCustomerMeasurement extends AppCompatActivity {
             for (int noOfCustomOpt = 0; noOfCustomOpt < storeList.size(); noOfCustomOpt++) {
                 jsonObject = new JSONObject(storeList.get(noOfCustomOpt));
                 // get information from json
-                Long dynamicVariableId=jsonObject.getLong("usedPointId");  //json usedPointId
+                Long dynamicVariableId=jsonObject.getLong("id");  //json id
                 String elementType =jsonObject.getString("type");  // json type (elementType)
                 //end
                 //CheckBox
@@ -210,7 +210,7 @@ public class AddCustomerMeasurement extends AppCompatActivity {
                             else {
                                 Toast.makeText(AddCustomerMeasurement.this, "Fail Insert ...try again", Toast.LENGTH_LONG).show();
                             measurementValueList= new ArrayList<String>(); //list of measured value
-                            measurementDynamicVariableId =new ArrayList<Long>(); //list of measured value usedPointId
+                            measurementDynamicVariableId =new ArrayList<Long>(); //list of measured value id
                             measurementValueListValueType= new ArrayList<String>(); //list of measured value type
 
                         }
@@ -348,7 +348,7 @@ public class AddCustomerMeasurement extends AppCompatActivity {
             for (int noOfCustomOpt = 0; noOfCustomOpt < storeList.size(); noOfCustomOpt++) {
                 jsonObject = new JSONObject(storeList.get(noOfCustomOpt));
                 // get information from json
-                long   dynamicVariableId=jsonObject.getLong("usedPointId");  //json usedPointId
+                long   dynamicVariableId=jsonObject.getLong("id");  //json id
                 String type = jsonObject.getString("type");
                 if(type.equalsIgnoreCase("boolean")){
                     CheckBox checkBox = checkBoxes.get(dynamicVariableId);
@@ -372,7 +372,7 @@ public class AddCustomerMeasurement extends AppCompatActivity {
                 }
                 else {
                     EditText e = editText.get(dynamicVariableId);
-                    // add editText Value and usedPointId if it enable
+                    // add editText Value and id if it enable
                     if(!e.getText().equals("")){
                     measurementValueList.add(e.getText().toString());
                     measurementDynamicVariableId.add(dynamicVariableId);
@@ -389,7 +389,7 @@ public class AddCustomerMeasurement extends AppCompatActivity {
     }
     public  void clear() { // if user end first measurement and want to add another measurement so must clear {list , element....}
         measurementValueList= new ArrayList<String>(); //list of measured value
-        measurementDynamicVariableId =new ArrayList<Long>(); //list of measured value usedPointId
+        measurementDynamicVariableId =new ArrayList<Long>(); //list of measured value id
         measurementValueListValueType= new ArrayList<String>(); //list of measured value type
 
         JSONObject  jsonObject ;
@@ -397,7 +397,7 @@ public class AddCustomerMeasurement extends AppCompatActivity {
             for (int noOfCustomOpt = 0; noOfCustomOpt < storeList.size(); noOfCustomOpt++) {
                 jsonObject = new JSONObject(storeList.get(noOfCustomOpt));
                 // get information from json
-                long   dynamicVariableId=jsonObject.getLong("usedPointId");  //json usedPointId
+                long   dynamicVariableId=jsonObject.getLong("id");  //json id
                 String elementType =jsonObject.getString("type");  // json type (elementType)}
                 if(elementType.equalsIgnoreCase("boolean")){
                     CheckBox checkBox = checkBoxes.get(dynamicVariableId);

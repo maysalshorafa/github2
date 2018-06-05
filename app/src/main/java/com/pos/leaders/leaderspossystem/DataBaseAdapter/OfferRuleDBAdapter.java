@@ -113,16 +113,16 @@ public class OfferRuleDBAdapter {
     }
 
 
-    /**public OfferRule getOfferRuleByID(int usedPointId) {
+    /**public OfferRule getOfferRuleByID(int id) {
         OfferRule offerRule = null;
-        Cursor cursor = db.rawQuery("select * from " + OFFERROLL_TABLE_NAME + " where usedPointId='" + usedPointId + "'", null);
+        Cursor cursor = db.rawQuery("select * from " + OFFERROLL_TABLE_NAME + " where id='" + id + "'", null);
         if (cursor.getQuantity() < 1) // UserName Not Exist
         {
             cursor.close();
             return offerRule;
         }
         cursor.moveToFirst();
-        offerRule =new OfferRule(usedPointId,cursor.getString(cursor.getColumnIndex(OFFERROLL_COLUMN_NAME)));
+        offerRule =new OfferRule(id,cursor.getString(cursor.getColumnIndex(OFFERROLL_COLUMN_NAME)));
 
         cursor.close();
 

@@ -172,7 +172,7 @@ public class ChecksActivity extends AppCompatActivity {
                     checkList.get(lvChecks.getChildCount() - 2);
                     _check = new Check(lastItem.getEtCheckNum(), lastItem.getEtBankNum(), lastItem.getEtBenchNum(), lastItem.getEtAccountNum(),
                             lastItem.getEtAmount(), DateConverter.stringToDate(lastItem.getEtDate()).getTime(), false);
-                    //lastItem.findViewById(R.usedPointId.listChecks_ETAmount);
+                    //lastItem.findViewById(R.id.listChecks_ETAmount);
                     checkList.set(lvChecks.getChildCount()-2,_check);
                 }
                 if (getTotalPid() >= totalPrice) {
@@ -219,7 +219,7 @@ public class ChecksActivity extends AppCompatActivity {
 
 						check = new Check(lastItem.getEtCheckNum(), lastItem.getEtBankNum(), lastItem.getEtBenchNum(), lastItem.getEtAccountNum(),
 								lastItem.getEtAmount(), DateConverter.stringToDate(lastItem.getEtDate()).getTime(), false);
-						//lastItem.findViewById(R.usedPointId.listChecks_ETAmount);
+						//lastItem.findViewById(R.id.listChecks_ETAmount);
 						checkList.set(lsttchildID-1,check);
 					}
 					Check newCheck=new Check(check);

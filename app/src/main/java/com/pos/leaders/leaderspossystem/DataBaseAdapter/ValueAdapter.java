@@ -51,7 +51,7 @@ public class ValueAdapter extends BaseAdapter implements Filterable {
         return mStringList.get(position);
     }
 
-    //Get the row usedPointId associated with the specified position in the list.
+    //Get the row id associated with the specified position in the list.
     @Override
     public long getItemId(int position) {
 

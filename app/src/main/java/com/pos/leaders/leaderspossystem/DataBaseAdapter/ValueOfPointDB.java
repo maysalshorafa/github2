@@ -21,10 +21,10 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 public class ValueOfPointDB {
     public static final String ValueOfPoint_TABLE_NAME = "value_ofPoint";
     // Column Names
-    protected static final String Value_COLUMN_Id = "usedPointId";
+    protected static final String Value_COLUMN_Id = "id";
     protected static final String Value_COLUMN = "value";
     protected static final String CreateDate_Value_COLUMN_CreateDate = "createDate";
-    public static final String DATABASE_CREATE = "CREATE TABLE value_ofPoint ( `usedPointId` INTEGER PRIMARY KEY AUTOINCREMENT  ," + " `value` INTEGER ,`createDate` TEXT DEFAULT current_timestamp )";
+    public static final String DATABASE_CREATE = "CREATE TABLE value_ofPoint ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  ," + " `value` INTEGER ,`createDate` TEXT DEFAULT current_timestamp )";
     private DbHelper dbHelper;
     Context context;
     private SQLiteDatabase db;

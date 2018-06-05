@@ -437,7 +437,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         if (aReport != null && zReport != null) {
             if (aReport.getLastZReportID() == zReport.getzReportId()) {
                 Toast.makeText(this, zReport.toString(), Toast.LENGTH_LONG).show();
-                Log.e("zreport usedPointId", zReport.getzReportId()+"");
+                Log.e("zreport id", zReport.getzReportId()+"");
             } else {
                 return true;
             }

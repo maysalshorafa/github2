@@ -269,7 +269,7 @@ public class ImportProductsActivity extends Activity {
                 // Get the first sheet
                 Sheet sheet = w.getSheet(0);
                 // Loop over column and lines
-                Log.i("Row ","usedPointId \t name \t barcode \t price");
+                Log.i("Row ","id \t name \t barcode \t price");
                 for (int row = 1; row < sheet.getRows(); row++) {
                     try {
                         String name,barcode,id,price;

@@ -77,7 +77,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             CustmerManagementActivity.Customer_Management_View=0;
         }
         if (bundle != null) {
-             customerId = (long) bundle.get("usedPointId");
+             customerId = (long) bundle.get("id");
             customer = customerDBAdapter.getCustomerByID(customerId);
             etCustomerFirstName.setText(customer.getFirstName());
             etCustomerLastName.setText(customer.getLastName());

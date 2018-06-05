@@ -8,30 +8,23 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.MainActivity;
-import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.PrinterType;
-import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 
 import org.ksoap2.serialization.SoapObject;
 
@@ -94,7 +87,7 @@ public class CreditCardActivity extends AppCompatActivity {
 
         getWindow().setLayout((int) (width * 0.6), (int) (height * 0.5));
 
-        //etFirstPayment=(EditText)findViewById(R.usedPointId.creditCardActivity_etFirstPayment);
+        //etFirstPayment=(EditText)findViewById(R.id.creditCardActivity_etFirstPayment);
         etNumberOfPayments = (EditText) findViewById(R.id.creditCardActivity_etNumberOfPayments);
 
         sCreditType = (Spinner) findViewById(R.id.creditCardActivity_sCreditType);

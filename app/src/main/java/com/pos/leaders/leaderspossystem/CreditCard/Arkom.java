@@ -1,6 +1,5 @@
 package com.pos.leaders.leaderspossystem.CreditCard;
 
-import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.util.Log;
 
@@ -84,7 +83,7 @@ public class Arkom {
             androidHttpTransport.call(SOAP_ACTION_MTS_PING, envelope);
 
             SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-            // TextView v=(TextView) findViewById(R.usedPointId.currency);
+            // TextView v=(TextView) findViewById(R.id.currency);
             // v.setText("1" +fromUnit +"=" +response.toString()+toUnit);
 
             // Output to the log
@@ -142,7 +141,7 @@ public class Arkom {
             androidHttpTransport.call(SOAP_ACTION_MTS_GetTransactionID, envelope);
 
             SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-            // TextView v=(TextView) findViewById(R.usedPointId.currency);
+            // TextView v=(TextView) findViewById(R.id.currency);
             // v.setText("1" +fromUnit +"=" +response.toString()+toUnit);
 
             // Output to the log
@@ -206,7 +205,7 @@ public class Arkom {
             androidHttpTransport.call(SOAP_ACTION_MTS_PutTransactionAcknowledge, envelope);
 
             SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-            // TextView v=(TextView) findViewById(R.usedPointId.currency);
+            // TextView v=(TextView) findViewById(R.id.currency);
             // v.setText("1" +fromUnit +"=" +response.toString()+toUnit);
 
             // Output to the log
@@ -250,7 +249,7 @@ public class Arkom {
             androidHttpTransport.call(SOAP_ACTION_MTS_GetErrorDescription, envelope);
 
             SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-            // TextView v=(TextView) findViewById(R.usedPointId.currency);
+            // TextView v=(TextView) findViewById(R.id.currency);
             // v.setText("1" +fromUnit +"=" +response.toString()+toUnit);
 
             // Output to the log
@@ -359,7 +358,7 @@ public class Arkom {
             androidHttpTransport.call(SOAP_ACTION_MTS_CC_Transaction, envelope);
 
             SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-            // TextView v=(TextView) findViewById(R.usedPointId.currency);
+            // TextView v=(TextView) findViewById(R.id.currency);
             // v.setText("1" +fromUnit +"=" +response.toString()+toUnit);
 
             // Output to the log
@@ -428,7 +427,7 @@ public class Arkom {
             androidHttpTransport.call(SOAP_ACTION_MTS_PING, envelope);
 
             SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-            // TextView v=(TextView) findViewById(R.usedPointId.currency);
+            // TextView v=(TextView) findViewById(R.id.currency);
             // v.setText("1" +fromUnit +"=" +response.toString()+toUnit);
 
             // Output to the log

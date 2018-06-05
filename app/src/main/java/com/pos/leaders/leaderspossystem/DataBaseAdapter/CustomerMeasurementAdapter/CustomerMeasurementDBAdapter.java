@@ -91,7 +91,7 @@ public class CustomerMeasurementDBAdapter {
     }
     // end
 
-    // get CustomerMeasurement by usedPointId
+    // get CustomerMeasurement by id
     public CustomerMeasurement getCustomerMeasurementByID(long id) {
         CustomerMeasurement customerMeasurement = null;
         Cursor cursor = db.rawQuery("select * from " + CUSTOMER_MEASUREMENT_TABLE_NAME + " where " + CUSTOMER_MEASUREMENT_COLUMN_ID + " = "+ id, null);
@@ -122,7 +122,7 @@ public class CustomerMeasurementDBAdapter {
         }
     }
     //end
-    // get CustomerMeasurement between to usedPointId
+    // get CustomerMeasurement between to id
     public List<CustomerMeasurement> getTopCustomerMeasurement(long count, long offset) {
                      List<CustomerMeasurement> customerMeasurementList = new ArrayList<CustomerMeasurement>();
                     Cursor cursor = db.rawQuery("select * from " + CUSTOMER_MEASUREMENT_TABLE_NAME + " where " + CUSTOMER_MEASUREMENT_COLUMN_ID + "<='" + offset + "' and " + CUSTOMER_MEASUREMENT_COLUMN_ID +

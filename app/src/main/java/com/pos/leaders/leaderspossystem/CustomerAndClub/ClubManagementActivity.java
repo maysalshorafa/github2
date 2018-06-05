@@ -99,14 +99,14 @@ public class ClubManagementActivity extends AppCompatActivity {
                             case 0:
                                 Club_Management_View=9;
                                 intent = new Intent(ClubManagementActivity.this, Coustmer_Group.class);
-                                intent.putExtra("usedPointId", groups.get(position).getClubId());
+                                intent.putExtra("id", groups.get(position).getClubId());
 
 
                                 startActivity(intent);
                             case 1:
                                 Club_Management_Edit=10;
                                 intent = new Intent(ClubManagementActivity.this, Coustmer_Group.class);
-                                intent.putExtra("usedPointId", groups.get(position).getClubId());
+                                intent.putExtra("id", groups.get(position).getClubId());
                                 startActivity(intent);
                                 break;
 

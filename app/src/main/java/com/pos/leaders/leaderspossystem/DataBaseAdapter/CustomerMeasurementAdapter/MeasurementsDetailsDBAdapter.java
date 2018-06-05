@@ -90,7 +90,7 @@ public class MeasurementsDetailsDBAdapter {
         return db.delete(MEASUREMENTS_DETAILS_TABLE_NAME, MEASUREMENTS_DETAILS_COLUMN_ID + "=" + id, null) > 0;
     }
     // end
-    // get MeasurementsDetails by usedPointId
+    // get MeasurementsDetails by id
     public MeasurementsDetails getMeasurementDetailsByID(long id) {
         MeasurementsDetails measurementsDetails = null;
         Cursor cursor = db.rawQuery("select * from " + MEASUREMENTS_DETAILS_TABLE_NAME + " where id='" + id + "'", null);

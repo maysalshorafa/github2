@@ -128,7 +128,7 @@ public class OfferDBAdapter {
 		}
 		return offerList;
 	}
-//+ OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by usedPointId desc"
+//+ OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by id desc"
 	public List<Offer> getAllOffersByStatus(int Status) {
 		List<Offer> offerList = new ArrayList<Offer>();
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_STATUS + "=" + Status + " order by id desc", null);
@@ -166,7 +166,7 @@ public class OfferDBAdapter {
 				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RULENAME)),
 				cursor.getLong(cursor.getColumnIndex(OFFER_COLUMN_RULEID)));
 	}
-	// "=1 and "+OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by usedPointId desc"
+	// "=1 and "+OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by id desc"
 
 	public Offer getAllValidOffers() {
 		Offer offer =null;
