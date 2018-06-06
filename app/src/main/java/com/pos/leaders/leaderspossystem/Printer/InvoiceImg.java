@@ -226,7 +226,7 @@ public class InvoiceImg {
             barcode.text += bc + "\n";
             counter.text += o.getQuantity() + "\n";
             price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
-            SaleOriginalityPrice += (o.getUnit_price() * o.getQuantity());
+            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
             saleTotalPrice += o.getItemTotalPrice();
         }
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);
@@ -365,7 +365,7 @@ public class InvoiceImg {
             barcode.text += bc + "\n";
             counter.text += o.getQuantity() + "\n";
             price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
-            SaleOriginalityPrice += (o.getUnit_price() * o.getQuantity());
+            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
             saleTotalPrice += o.getItemTotalPrice();
         }
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);

@@ -50,15 +50,15 @@ public class Rule2 extends Rule {
     public void execute(List<OrderDetails> orders, Offer offer) throws Exception{
         if(!precondition(orders))
             throw new Exception("cant execute this rule because the quantity is too small");
-        double min = orders.get(0).getPaid_amount();
+        double min = orders.get(0).getPaidAmount();
         int indexOfMin = 0;
         for (int i=0;i<orders.size();i++) {
-            if(orders.get(i).getPaid_amount()<min){
-                min = orders.get(i).getPaid_amount();
+            if(orders.get(i).getPaidAmount()<min){
+                min = orders.get(i).getPaidAmount();
                 indexOfMin = i;
             }
         }
-        orders.get(indexOfMin).setPaid_amount(orders.get(indexOfMin).getPaid_amount()*this.percent);
+        orders.get(indexOfMin).setPaidAmount(orders.get(indexOfMin).getPaidAmount()*this.percent);
     }
 
     @Override

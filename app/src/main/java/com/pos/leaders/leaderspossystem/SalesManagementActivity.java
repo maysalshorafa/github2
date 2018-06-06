@@ -168,7 +168,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                     if (o.getProductId() != -1) {
                         o.setProduct(productDBAdapter.getProductByID(o.getProductId()));
                     } else {
-                        o.setProduct(new Product(-1, getApplicationContext().getResources().getString(R.string.general), o.getUnit_price(), SESSION._USER.getUserId()));
+                        o.setProduct(new Product(-1, getApplicationContext().getResources().getString(R.string.general), o.getUnitPrice(), SESSION._USER.getUserId()));
                     }
                 }
                 productDBAdapter.close();

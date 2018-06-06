@@ -582,7 +582,7 @@ public class MainScreenActivity extends Activity {
         printerController.PrinterController_Linefeed();
         for (Order o :
                 SESSION._ORDERS) {
-            String s=o.getProduct().getName()+"       "+o.getQuantity()+"     "+o.getProduct().getPaid_amount();
+            String s=o.getProduct().getName()+"       "+o.getQuantity()+"     "+o.getProduct().getPaidAmount();
             printerController
                     .PrinterController_Print(s
                             .getBytes());

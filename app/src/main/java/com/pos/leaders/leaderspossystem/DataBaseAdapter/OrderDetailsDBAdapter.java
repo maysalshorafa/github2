@@ -74,9 +74,9 @@ public class OrderDetailsDBAdapter {
         val.put(ORDER_COLUMN_PRODUCTID, o.getProductId());
         val.put(ORDER_COLUMN_COUNTER, o.getQuantity());
         val.put(ORDER_COLUMN_USEROFFER, o.getUserOffer());
-        val.put(ORDER_COLUMN_SALEID, o.getOrder_id());
-        val.put(ORDER_COLUMN_PRICE, o.getPaid_amount());
-        val.put(ORDER_COLUMN_ORIGINAL_PRICE, o.getUnit_price());
+        val.put(ORDER_COLUMN_SALEID, o.getOrderId());
+        val.put(ORDER_COLUMN_PRICE, o.getPaidAmount());
+        val.put(ORDER_COLUMN_ORIGINAL_PRICE, o.getUnitPrice());
         val.put(ORDER_COLUMN_DISCOUNT, o.getDiscount());
 		val.put(ORDER_COLUMN_CUSTMER_ASSEST_ID,o.getCustomer_assistance_id());
         try {

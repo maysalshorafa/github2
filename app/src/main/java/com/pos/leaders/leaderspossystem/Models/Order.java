@@ -226,7 +226,7 @@ public class Order {
 		}
 		double totalPriceBeforeDiscount = 0;
 		for (OrderDetails o : orders) {
-			totalPriceBeforeDiscount += (o.getUnit_price()*o.getQuantity());
+			totalPriceBeforeDiscount += (o.getUnitPrice()*o.getQuantity());
 		}
 		if(total_price <0){
 			total_price *= -1;

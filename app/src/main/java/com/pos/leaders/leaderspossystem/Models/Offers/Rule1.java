@@ -51,13 +51,13 @@ public class Rule1 extends Rule {
         for (OrderDetails o : orders) {
             if (offer.getProducts().contains(o.getProduct())) {
                 if (o.getQuantity() == this.quantity) {
-                    o.setPaid_amount(price / quantity);
+                    o.setPaidAmount(price / quantity);
                 } else if (o.getQuantity() > this.quantity) {
                     OrderDetails _o = o;
                     _o.setCount(o.getQuantity() - quantity);
                     orders.add(_o);
                     o.setCount(quantity);
-                    o.setPaid_amount(price / quantity);
+                    o.setPaidAmount(price / quantity);
                 }
                 break;
             }

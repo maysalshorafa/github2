@@ -16,10 +16,10 @@ public class OrderDetails {
 	private long productId;
 	private int quantity;
 	private double userOffer;
-	private long order_id;
+	private long orderId;
 
-	private double unit_price;
-	private double paid_amount;
+	private double unitPrice;
+	private double paidAmount;
 	private double discount;
 
 	@JsonIgnore
@@ -36,41 +36,41 @@ public class OrderDetails {
 	private  long customer_assistance_id;
 
 	//region Constructors
-	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long order_id, long customer_assistance_id) {
+	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, long customer_assistance_id) {
 		this.orderDetailsId = orderDetailsId;
 		this.productId = productId;
 		this.quantity = quantity;
 		this.userOffer = userOffer;
-		this.order_id = order_id;
+		this.orderId = orderId;
 		this.customer_assistance_id = customer_assistance_id;
 	}
 
-    public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long order_id, double paid_amount, double original_price, double discount, long customer_assistance_id) {
+    public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id) {
         this.orderDetailsId = orderDetailsId;
         this.productId = productId;
         this.quantity = quantity;
         this.userOffer = userOffer;
-        this.order_id = order_id;
-        this.paid_amount = paid_amount;
-        this.unit_price = original_price;
+        this.orderId = orderId;
+        this.paidAmount = paidAmount;
+        this.unitPrice = original_price;
         this.discount = discount;
     	this.customer_assistance_id = customer_assistance_id;
     }
 
-	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long order_id, Product product, long customer_assistance_id) {
+	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, Product product, long customer_assistance_id) {
 		this.orderDetailsId = orderDetailsId;
 		this.productId = productId;
 		this.quantity = quantity;
 		this.userOffer = userOffer;
-		this.order_id = order_id;
+		this.orderId = orderId;
 		this.product = product;
 		this.customer_assistance_id = customer_assistance_id;
 	}
-	public OrderDetails(long productId, int quantity, double userOffer, long order_id, Product product) {
+	public OrderDetails(long productId, int quantity, double userOffer, long orderId, Product product) {
 		this.productId = productId;
 		this.quantity = quantity;
 		this.userOffer = userOffer;
-		this.order_id = order_id;
+		this.orderId = orderId;
 		this.product = product;
 
 	}
@@ -79,27 +79,27 @@ public class OrderDetails {
         this.userOffer = userOffer;
         this.product = product;
         this.productId = product.getProductId();
-        this.paid_amount = product.getPrice();
-        this.unit_price = product.getPrice();
+        this.paidAmount = product.getPrice();
+        this.unitPrice = product.getPrice();
         this.discount = 0;
     }
 
-    public OrderDetails(int quantity, double userOffer, Product product, double paid_amount, double original_price, double discount) {
+    public OrderDetails(int quantity, double userOffer, Product product, double paidAmount, double original_price, double discount) {
         this.quantity = quantity;
         this.userOffer = userOffer;
         this.product = product;
         this.productId =product.getProductId();
-        this.paid_amount = paid_amount;
-        this.unit_price = original_price;
+        this.paidAmount = paidAmount;
+        this.unitPrice = original_price;
         this.discount = discount;
     }
 
 	public OrderDetails(OrderDetails o) {
-        this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrder_id(), o.getPaid_amount(), o.getUnit_price(), o.getDiscount(),o.getCustomer_assistance_id());
+        this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
     }
 
 	public OrderDetails newInstance(OrderDetails o) {
-		return new OrderDetails(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrder_id(),o.getCustomer_assistance_id());
+		return new OrderDetails(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(),o.getCustomer_assistance_id());
 	}
 
 	public OrderDetails() {
@@ -124,8 +124,8 @@ public class OrderDetails {
 		return userOffer;
 	}
 
-	public long getOrder_id() {
-		return order_id;
+	public long getOrderId() {
+		return orderId;
 	}
 
 	public Product getProduct() {
@@ -135,15 +135,15 @@ public class OrderDetails {
 	@JsonIgnore
 	public double getItemTotalPrice() {
 
-		return (quantity * (unit_price * (1-(discount / 100))));
+		return (quantity * (unitPrice * (1-(discount / 100))));
 	}
 	@JsonIgnore
-	public double getUnit_price() {
-		return unit_price;
+	public double getUnitPrice() {
+		return unitPrice;
 	}
 
-	public double getPaid_amount() {
-		return (unit_price * (1-(discount / 100)));
+	public double getPaidAmount() {
+		return (unitPrice * (1-(discount / 100)));
 	}
 
 	public double getDiscount() {
@@ -169,8 +169,8 @@ public class OrderDetails {
 		this.discount = discount;
 	}
 
-	public void setPaid_amount(double paid_amount){
-		this.paid_amount = (unit_price * (discount / 100));
+	public void setPaidAmount(double paidAmount){
+		this.paidAmount = (unitPrice * (discount / 100));
 	}
 
 
@@ -193,18 +193,18 @@ public class OrderDetails {
 	public String DKMVDATA(int rowNumber,String companyID,Date date) {
         String s = "320", OP = "+", mOP = "-";
         double totalDiscount = (getItemTotalPrice() * discount / 100);
-        double noTax = paid_amount / (1 + (SETTINGS.tax / 100));
+        double noTax = paidAmount / (1 + (SETTINGS.tax / 100));
         if(product.getName().length()>29){
             product.setName(product.getName().substring(0,29));
         }
 
-        return "D110" + String.format(Util.locale, "%09d", rowNumber) + companyID + s + String.format(Util.locale, "%020d", order_id) + String.format(Util.locale, "%04d", orderDetailsId)
-                + s + String.format(Util.locale, "%020d", order_id) + "3" + String.format(Util.locale, "%20s", productId) + String.format(Util.locale, "%30s", "sale")
+        return "D110" + String.format(Util.locale, "%09d", rowNumber) + companyID + s + String.format(Util.locale, "%020d", orderId) + String.format(Util.locale, "%04d", orderDetailsId)
+                + s + String.format(Util.locale, "%020d", orderId) + "3" + String.format(Util.locale, "%20s", productId) + String.format(Util.locale, "%30s", "sale")
                 + Util.spaces(50) + String.format(Util.locale, "%30s", product.getBarCode()) + Util.spaces(20)
                 + "+" + String.format(Util.locale, "%012d", quantity) + String.format(Util.locale, "%04d", (int) ((quantity - Math.floor(quantity) + 0.00001) * 10000))
                 + OP + Util.x12V99(noTax) + mOP + Util.x12V99(totalDiscount) + OP + Util.x12V99((noTax-totalDiscount)* quantity)
                 + String.format(Util.locale, "%02.0f", SETTINGS.tax) + String.format(Util.locale, "%02d", (int) ((SETTINGS.tax - Math.floor(SETTINGS.tax) + 0.001) * 100))
-                + Util.spaces(7) + DateConverter.getYYYYMMDD(date) + String.format(Util.locale, "%07d", order_id) + Util.spaces(7) + Util.spaces(21);
+                + Util.spaces(7) + DateConverter.getYYYYMMDD(date) + String.format(Util.locale, "%07d", orderId) + Util.spaces(7) + Util.spaces(21);
     }
 
 	//endregion Methods
@@ -217,9 +217,9 @@ public class OrderDetails {
                 ", productId=" + productId +
                 ", quantity=" + quantity +
                 ", userOffer=" + userOffer +
-                ", order_id=" + order_id +
-                ", unit_price=" + unit_price +
-                ", paid_amount=" + paid_amount +
+                ", orderId=" + orderId +
+                ", unitPrice=" + unitPrice +
+                ", paidAmount=" + paidAmount +
                 ", discount=" + discount +
                 ", product=" + product +
                 '}';
