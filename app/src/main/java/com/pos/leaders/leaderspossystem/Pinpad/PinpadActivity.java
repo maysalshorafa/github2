@@ -200,8 +200,6 @@ public class PinpadActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             pinPad = new PinPadAPI();
-            pinPad.open(ip, username, password);
-
             waitDialog = new ProgressDialog(PinpadActivity.this);
             waitDialog.setTitle(getString(R.string.pinpad_wait_for_finish));
             waitDialog.show();
@@ -212,6 +210,8 @@ public class PinpadActivity extends AppCompatActivity {
         @Override
         protected JSONObject doInBackground(Transaction... params) {
             Transaction transaction = params[0];
+
+            pinPad.open(ip, username, password);
 
             PinPadSession requestSession = new PinPadSession();
 

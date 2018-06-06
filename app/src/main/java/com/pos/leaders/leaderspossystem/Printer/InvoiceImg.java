@@ -712,7 +712,7 @@ public class InvoiceImg {
         blocks.add(thanks.Center());
 
 
-        //// TODO: 05/06/2018 printing this part not working fine 
+        //// TODO: 05/06/2018 printing this part not working fine
         for (ArrayMap.Entry<String, String> entry : mainMer.entrySet()) {
             blocks.add(new Block("\u200f" +entry.getValue(),25.0f,Color.BLACK,(int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5)).Left());
             blocks.add(new Block("\u200e" +entry.getKey(),25.0f,Color.BLACK,(int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5)));

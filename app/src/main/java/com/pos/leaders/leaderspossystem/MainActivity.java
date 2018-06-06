@@ -2229,8 +2229,8 @@ public class MainActivity extends AppCompatActivity {
                     byte b = 0;
                     try {
                         if (mainAns.equals("PINPAD")) {
-                            Map<String, String> clientNote = new ArrayMap<String, String>();
-                            Map<String, String> sellerNote = new ArrayMap<String, String>();
+                            Map<String, String> clientNote = new ArrayMap<>();
+                            Map<String, String> sellerNote = new ArrayMap<>();
 
                             JSONObject jsonObject = new JSONObject(mainMer);
                             Iterator<String> itr = null;
