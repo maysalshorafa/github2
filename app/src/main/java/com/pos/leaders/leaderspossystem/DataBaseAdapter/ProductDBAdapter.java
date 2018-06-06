@@ -107,8 +107,8 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_WEIGHABLE, p.isWeighable());
         val.put(PRODUCTS_COLUMN_DEPARTMENTID, p.getDepartmentId());
         val.put(PRODUCTS_COLUMN_BYUSER, p.getByUser());
-        val.put(PRODUCTS_COLUMN_with_pos,p.getWith_pos());
-        val.put(PRODUCTS_COLUMN_with_point_system,p.getWith_point_system());
+        val.put(PRODUCTS_COLUMN_with_pos,p.getWithPos());
+        val.put(PRODUCTS_COLUMN_with_point_system,p.getWithPointSystem());
         try {
             return db.insert(PRODUCTS_TABLE_NAME, null, val);
         } catch (SQLException ex) {

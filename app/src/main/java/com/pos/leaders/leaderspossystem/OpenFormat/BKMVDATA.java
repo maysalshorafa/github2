@@ -104,7 +104,7 @@ public class BKMVDATA {
             addSale(s);
             addPayment(s);
             for (OrderDetails o : s.getOrders()) {
-                addOrders(o, s.getOrder_date());
+                addOrders(o, s.getCreatedAt());
             }
         }
         for (ZReport z : zReports) {
@@ -174,7 +174,7 @@ public class BKMVDATA {
                 accountingSalesTax.totalCredit += (payment.getAmount() - withoutTax);
 
                 cB100++;
-                Date sdo = new Date(_sale.getOrder_date().getTime());
+                Date sdo = new Date(_sale.getCreatedAt().getTime());
 
                 switch (payment.getPaymentWay()) {
                     case CONSTANT.CASH:
@@ -310,7 +310,7 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return new Date(sale.getOrder_date().getTime());
+                return new Date(sale.getCreatedAt().getTime());
             }
         });
     }
@@ -324,7 +324,7 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return new Date(payment.getOrder_date().getTime() + 1);
+                return new Date(payment.getCreatedAt().getTime() + 1);
             }
         });
     }

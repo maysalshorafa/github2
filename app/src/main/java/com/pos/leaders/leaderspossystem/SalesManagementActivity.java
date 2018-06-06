@@ -323,7 +323,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                     for (Order c : All_sales) {
 
                         if (c.getUser().getUserName().toLowerCase().contains(word.toLowerCase()) ||(c.getOrderId() + "").contains(word.toLowerCase())
-                                || (c.getOrder_date() + "").contains(word.toLowerCase())) {
+                                || (c.getCreatedAt() + "").contains(word.toLowerCase())) {
                             _saleList.add(c);
 
                         }

@@ -25,8 +25,8 @@ public class Product {
     private boolean hide;
     private long departmentId;
     private long byUser;
-    private int with_pos;
-    private int with_point_system;
+    private int withPos;
+    private int withPointSystem;
     @JsonIgnore
     private List<Integer> offersIDs=new ArrayList<Integer>();
 
@@ -44,27 +44,27 @@ public class Product {
         this.productId = productId;
     }
 
-    public void setWith_pos(int with_pos) {
-        this.with_pos = with_pos;
+    public void setWithPos(int withPos) {
+        this.withPos = withPos;
     }
 
-    public void setWith_point_system(int with_point_system) {
-        this.with_point_system = with_point_system;
+    public void setWithPointSystem(int withPointSystem) {
+        this.withPointSystem = withPointSystem;
     }
 
-    public int getWith_pos() {
-        return with_pos;
+    public int getWithPos() {
+        return withPos;
 
     }
 
-    public int getWith_point_system() {
-        return with_point_system;
+    public int getWithPointSystem() {
+        return withPointSystem;
     }
 
     // region Constructor
     public Product(long productId, String name, String barCode, String description,
                    double price, double costPrice, boolean withTax, boolean weighable,
-                   Timestamp createdAt, boolean hide, long departmentId, long byUser , int with_pos, int with_point_system) {
+                   Timestamp createdAt, boolean hide, long departmentId, long byUser , int withPos, int withPointSystem) {
         this.productId = productId;
         this.name = name;
         this.barCode = barCode;
@@ -77,13 +77,13 @@ public class Product {
         this.hide = hide;
         this.departmentId = departmentId;
         this.byUser = byUser;
-        this.with_pos=with_pos;
-        this.with_point_system=with_point_system;
+        this.withPos = withPos;
+        this.withPointSystem = withPointSystem;
     }
 
     public Product(long productId, String name, String barCode, String description,
                    double price, double costPrice, boolean withTax, boolean weighable,
-                   Timestamp createdAt, long departmentId, long byUser , int with_pos, int with_point_system) {
+                   Timestamp createdAt, long departmentId, long byUser , int withPos, int withPointSystem) {
         this.productId = productId;
         this.name = name;
         this.barCode = barCode;
@@ -95,8 +95,8 @@ public class Product {
         this.createdAt = createdAt;
         this.departmentId = departmentId;
         this.byUser = byUser;
-        this.with_pos=with_pos;
-        this.with_point_system=with_point_system;
+        this.withPos = withPos;
+        this.withPointSystem = withPointSystem;
     }
 
     public Product(long productId, String name, double price, long byUser) {
@@ -135,7 +135,7 @@ public class Product {
     public Product(Product product){
         this(product.getProductId(),product.getName(),product.getBarCode(),product.getDescription(),
                 product.getPrice(),product.getCostPrice(),product.isWithTax(),product.isWeighable(),
-                product.getCreatedAt(),product.isHide(),product.getDepartmentId(),product.getByUser(),product.getWith_pos(),product.getWith_point_system());
+                product.getCreatedAt(),product.isHide(),product.getDepartmentId(),product.getByUser(),product.getWithPos(),product.getWithPointSystem());
     }
 
     public Product(){}
@@ -255,8 +255,8 @@ public class Product {
                 ", hide=" + hide +
                 ", departmentId=" + departmentId +
                 ", byUser=" + byUser +
-                ", with_pos=" + with_pos +
-                ", with_point_system=" + with_point_system +
+                ", withPos=" + withPos +
+                ", withPointSystem=" + withPointSystem +
 
                 '}';
     }

@@ -66,7 +66,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
 		holder.tvPaid.setText(Util.makePrice(salesList.get(position).getTotalPaidAmount()) + " " + context.getString(R.string.ins));
 		SimpleDateFormat format = new SimpleDateFormat();
-		holder.tvDate.setText(format.format(salesList.get(position).getOrder_date()));
+		holder.tvDate.setText(format.format(salesList.get(position).getCreatedAt()));
 		holder.tvUseName.setText(salesList.get(position).getUser().getFullName());
 		holder.FL.setVisibility(View.GONE);
 

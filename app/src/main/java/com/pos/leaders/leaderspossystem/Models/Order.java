@@ -77,11 +77,11 @@ public class Order {
 	}
 
 	public Order(Order s) {
-		this(s.getOrderId(),s.getByUser(),s.getOrder_date(),s.getReplacementNote(),s.isStatus(),s.getTotalPrice(),s.getTotalPaidAmount(),s.getCustomerId(),s.getCustomer_name());
+		this(s.getOrderId(),s.getByUser(),s.getCreatedAt(),s.getReplacementNote(),s.isStatus(),s.getTotalPrice(),s.getTotalPaidAmount(),s.getCustomerId(),s.getCustomer_name());
 	}
 
 	public static Order newInstance(Order s){
-		return new Order(s.getOrderId(),s.getByUser(),s.getOrder_date(),s.getReplacementNote(),s.isStatus(),s.getTotalPrice(),s.getTotalPaidAmount(),s.getCustomerId(),s.getCustomer_name());
+		return new Order(s.getOrderId(),s.getByUser(),s.getCreatedAt(),s.getReplacementNote(),s.isStatus(),s.getTotalPrice(),s.getTotalPaidAmount(),s.getCustomerId(),s.getCustomer_name());
 	}
 
 	//endregion
@@ -96,11 +96,15 @@ public class Order {
         return byUser;
     }
 
-    public Timestamp getOrder_date() {
-        return createdAt;
-    }
+	public Timestamp getCreatedAt() {
+		return createdAt;
+	}
 
-    public int getReplacementNote() {
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public int getReplacementNote() {
         return replacementNote;
     }
 
@@ -146,9 +150,6 @@ public class Order {
 	//region Setter
 
 
-    public void setOrder_date(Timestamp order_date) {
-        this.createdAt = order_date;
-    }
 
     public void setStatus(boolean status) {
         this.status = status;

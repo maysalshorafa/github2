@@ -81,14 +81,14 @@ public class OrderDBAdapter {
 	}
 
 	public long insertEntry(Order sale , long _custmer_id, String custmer_name) {
-		return insertEntry(sale.getByUser(), sale.getOrder_date(), sale.getReplacementNote(), sale.isStatus(), sale.getTotalPrice(),sale.getTotalPaidAmount(),_custmer_id,custmer_name);
+		return insertEntry(sale.getByUser(), sale.getCreatedAt(), sale.getReplacementNote(), sale.isStatus(), sale.getTotalPrice(),sale.getTotalPaidAmount(),_custmer_id,custmer_name);
 	}
 	public long insertEntry(Order sale){
         ContentValues val = new ContentValues();
         val.put(SALES_COLUMN_ID,sale.getOrderId());
         //Assign values for each row.
         val.put(SALES_COLUMN_BYUSER, sale.getByUser());
-        val.put(SALES_COLUMN_SALEDATE, String.valueOf(sale.getOrder_date()));
+        val.put(SALES_COLUMN_SALEDATE, String.valueOf(sale.getCreatedAt()));
         val.put(SALES_COLUMN_REPLACEMENTNOTE, sale.getReplacementNote());
         val.put(SALES_COLUMN_CANCELED, sale.isStatus()?1:0);
         val.put(SALES_COLUMN_TOTALPRICE, sale.getTotalPrice());
@@ -138,7 +138,7 @@ public class OrderDBAdapter {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 		val.put(SALES_COLUMN_BYUSER, sale.getByUser());
-		val.put(SALES_COLUMN_SALEDATE, String.valueOf(sale.getOrder_date()));
+		val.put(SALES_COLUMN_SALEDATE, String.valueOf(sale.getCreatedAt()));
 		val.put(SALES_COLUMN_REPLACEMENTNOTE, sale.getReplacementNote());
 		val.put(SALES_COLUMN_CANCELED, sale.isStatus());
 		val.put(SALES_COLUMN_TOTALPRICE, sale.getTotalPrice());
