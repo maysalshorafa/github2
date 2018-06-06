@@ -911,7 +911,6 @@ public class SyncMessage extends Service {
             //region A REPORT
             case MessageType.ADD_A_REPORT:
                 res = messageTransmit.authPost(ApiURL.AReport, jsonObject.getString(MessageKey.Data), token);
-                res = messageTransmit.authPost(ApiURL.AReport, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_A_REPORT:
                 res = messageTransmit.authPut(ApiURL.AReport, jsonObject.getString(MessageKey.Data), token);
