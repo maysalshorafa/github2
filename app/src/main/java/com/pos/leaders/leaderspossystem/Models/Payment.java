@@ -19,7 +19,7 @@ import java.util.Locale;
 public class Payment {
 	private long paymentId;
 	private String paymentWay;
-	private long saleId;
+	private long orderId;
 	private double amount;
 
 	@JsonIgnore
@@ -30,15 +30,15 @@ public class Payment {
 	private List<CurrencyReturns> currencyReturns = new ArrayList<>();
 
 	// Constructors
-	public Payment(long paymentId, String paymentWay, double amount, long saleId) {
+	public Payment(long paymentId, String paymentWay, double amount, long orderId) {
 		this.paymentId = paymentId;
 		this.paymentWay = paymentWay;
 		this.amount = amount;
-		this.saleId = saleId;
+		this.orderId = orderId;
 	}
 
 	public Payment(Payment p) {
-		this(p.getPaymentId(), p.getPaymentWay(), p.getAmount(), p.getSaleId());
+		this(p.getPaymentId(), p.getPaymentWay(), p.getAmount(), p.getOrderId());
 	}
 
 	public Payment() {
@@ -53,8 +53,8 @@ public class Payment {
 		return paymentWay;
 	}
 
-	public long getSaleId() {
-		return saleId;
+	public long getOrderId() {
+		return orderId;
 	}
 
 	public double getAmount() {
@@ -97,8 +97,8 @@ public class Payment {
 		this.paymentWay = paymentWay;
 	}
 
-	public void setSaleId(long saleId) {
-		this.saleId = saleId;
+	public void setOrderId(long orderId) {
+		this.orderId = orderId;
 	}
 
 	public void setAmount(double amount) {
@@ -114,7 +114,7 @@ public class Payment {
 				"accountingId=" + paymentId +
 				", paymentWay='" + paymentWay + '\'' +
 				", amount='" + amount + '\'' +
-				", saleId=" + saleId +
+				", orderId=" + orderId +
 				'}';
 	}
 
@@ -138,14 +138,14 @@ public class Payment {
         double noTax = sale.getTotal_price() / (1 + (SETTINGS.tax / 100));
         if(noTax<0)
             noTax *= -1;
-        return "D110" + String.format(locale, "%09d", rowNumber) + companyID + s + String.format(locale, "%020d", saleId) + String.format(locale, "%04d", paymentId) + s + String.format(locale, "%020d", saleId) + "3" + String.format(locale, "%020d", saleId) + String.format(locale, "%30s", "sale") + Util.spaces(50) + Util.spaces(30) +
+        return "D110" + String.format(locale, "%09d", rowNumber) + companyID + s + String.format(locale, "%020d", orderId) + String.format(locale, "%04d", paymentId) + s + String.format(locale, "%020d", orderId) + "3" + String.format(locale, "%020d", orderId) + String.format(locale, "%30s", "sale") + Util.spaces(50) + Util.spaces(30) +
                 String.format(locale, "%20s", "unit")
                 + "+" + String.format(locale, "%012d", totalItems) + String.format(locale, "%04d", (int) ((totalItems - Math.floor(totalItems) + 0.00001) * 10000))
                 + OP + Util.x12V99(noTax)
                 + OP + Util.x12V99(totalDiscount)
                 + OP + Util.x12V99(noTax)
                 + String.format(locale, "%02.0f", SETTINGS.tax) + String.format(locale, "%02d", (int) ((SETTINGS.tax - Math.floor(SETTINGS.tax) + 0.001) * 100))
-                + Util.spaces(7) + DateConverter.getYYYYMMDD(date) + String.format(locale, "%07d", saleId) + Util.spaces(7) + Util.spaces(21);
+                + Util.spaces(7) + DateConverter.getYYYYMMDD(date) + String.format(locale, "%07d", orderId) + Util.spaces(7) + Util.spaces(21);
 
     }
 }

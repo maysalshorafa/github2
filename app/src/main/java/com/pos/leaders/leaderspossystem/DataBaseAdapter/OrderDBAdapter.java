@@ -33,12 +33,12 @@ public class OrderDBAdapter {
 	protected static final String SALES_COLUMN_CANCELED = "status";
 	protected static final String SALES_COLUMN_TOTALPRICE = "total_price";
 	protected static final String SALES_COLUMN_TOTALPAID = "total_paid_amount";
-	protected static final String SALES_COLUMN_CUSTOMER_ID = "customer_id";
+	protected static final String SALES_COLUMN_CUSTOMER_ID = "customerId";
 	protected static final String SALES_COLUMN_CUSTOMER_NAME = "customer_name";
 
 
 	public static final String DATABASE_CREATE = "CREATE TABLE _Order( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byUser` INTEGER, `order_date` TEXT DEFAULT current_timestamp, " +
-			"`replacementNote` INTEGER DEFAULT 0, `status` INTEGER DEFAULT 0, total_price REAL, total_paid_amount REAL, customer_id  INTEGER DEFAULT 0 ,customer_name  TEXT, " +
+			"`replacementNote` INTEGER DEFAULT 0, `status` INTEGER DEFAULT 0, total_price REAL, total_paid_amount REAL, customerId  INTEGER DEFAULT 0 ,customer_name  TEXT, " +
 			"FOREIGN KEY(`byUser`) REFERENCES `users.id`)";
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
@@ -93,7 +93,7 @@ public class OrderDBAdapter {
         val.put(SALES_COLUMN_CANCELED, sale.isStatus()?1:0);
         val.put(SALES_COLUMN_TOTALPRICE, sale.getTotal_price());
         val.put(SALES_COLUMN_TOTALPAID, sale.getTotal_paid_amount());
-        val.put(SALES_COLUMN_CUSTOMER_ID, sale.getCustomer_id());
+        val.put(SALES_COLUMN_CUSTOMER_ID, sale.getCustomerId());
         val.put(SALES_COLUMN_CUSTOMER_NAME, sale.getCustomer_name());
 
         try {

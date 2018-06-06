@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 public class CurrencyReturns {
     private long currencyReturnsId;
-    private long saleId;
+    private long orderId;
     private double amount;
     private long currency_type;
     private Timestamp createdAt;
@@ -36,16 +36,16 @@ public class CurrencyReturns {
 
 
     // Constructors
-    public CurrencyReturns(long currencyReturnsId, long saleId, double amount, Timestamp createdAt, long currency_type) {
+    public CurrencyReturns(long currencyReturnsId, long orderId, double amount, Timestamp createdAt, long currency_type) {
         this.currencyReturnsId = currencyReturnsId;
         this.amount = amount;
-        this.saleId = saleId;
+        this.orderId = orderId;
         this.currency_type=currency_type;
         this.createdAt = createdAt;
     }
 
     public CurrencyReturns(CurrencyReturns p) {
-        this(p.getCurrencyReturnsId(),  p.getSaleId(),p.getAmount(),p.getCreatedAt(),p.getCurrency_type());
+        this(p.getCurrencyReturnsId(),  p.getOrderId(),p.getAmount(),p.getCreatedAt(),p.getCurrency_type());
     }
 
     // Getters
@@ -54,8 +54,8 @@ public class CurrencyReturns {
     }
 
 
-    public long getSaleId() {
-        return saleId;
+    public long getOrderId() {
+        return orderId;
     }
 
     public double getAmount() {
@@ -69,7 +69,7 @@ public class CurrencyReturns {
                 ",currency_type ='" + currency_type + '\'' +
                 ", amount='" + amount + '\'' +
                 ", createdAt='" + createdAt + '\'' +
-                ", saleId=" + saleId +
+                ", orderId=" + orderId +
                 '}';
     }
 }

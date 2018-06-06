@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 public class CustomerAssistant {
     private long custAssistantId;
-    private long order_id;
+    private long orderId;
     private long customerAssistantID;
     private double amount;
     private int type;
@@ -25,9 +25,9 @@ public class CustomerAssistant {
     }
 
 
-    public CustomerAssistant(long custAssistantId, long order_id, long customerAssistantID, double amount, int type, String salesCase, Timestamp saleDate) {
+    public CustomerAssistant(long custAssistantId, long orderId, long customerAssistantID, double amount, int type, String salesCase, Timestamp saleDate) {
         this.custAssistantId = custAssistantId;
-        this.order_id = order_id;
+        this.orderId = orderId;
         this.customerAssistantID = customerAssistantID;
         this.amount = amount;
         this.type = type;
@@ -43,8 +43,8 @@ public class CustomerAssistant {
         this.custAssistantId = custAssistantId;
     }
 
-    public long getOrder_id() {
-        return order_id;
+    public long getOrderId() {
+        return orderId;
     }
 
     public Timestamp getSaleDate() {
@@ -55,8 +55,8 @@ public class CustomerAssistant {
         return customerAssistantID;
     }
 
-    public void setOrder_id(long order_id) {
-        this.order_id = order_id;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 
     public void setCustomerAssistantID(long customerAssistantID) {

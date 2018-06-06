@@ -437,8 +437,8 @@ public class PrintTools {
             /**
              if (SETTINGS.enableCurrencies) {
              for (Payment _p : payments) {
-             _p.setCashPayments(cashPaymentDBAdapter.getPaymentBySaleID(_p.getOrder_id()));
-             _p.setCurrencyReturns(currencyReturnsDBAdapter.getCurencyReturnBySaleID(_p.getOrder_id()));
+             _p.setCashPayments(cashPaymentDBAdapter.getPaymentBySaleID(_p.getOrderId()));
+             _p.setCurrencyReturns(currencyReturnsDBAdapter.getCurencyReturnBySaleID(_p.getOrderId()));
              }
              }**/
 

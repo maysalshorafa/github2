@@ -77,7 +77,7 @@ public class CurrencyReturnsDBAdapter {
         val.put(CurrencyReturns_COLUMN_ID, returns.getCurrencyReturnsId());
 
 
-        val.put(CurrencyReturns_COLUMN_SALEID, returns.getSaleId());
+        val.put(CurrencyReturns_COLUMN_SALEID, returns.getOrderId());
         val.put(CurrencyReturns_COLUMN_AMOUNT,returns.getAmount() );
         val.put(CurrencyReturns_COLUMN_CREATEDATE, String.valueOf(returns.getCreatedAt()));
 

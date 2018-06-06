@@ -165,8 +165,8 @@ public class SalesManagementActivity extends AppCompatActivity {
                 ProductDBAdapter productDBAdapter = new ProductDBAdapter(SalesManagementActivity.this);
                 productDBAdapter.open();
                 for (OrderDetails o : orders) {
-                    if (o.getProduct_id() != -1) {
-                        o.setProduct(productDBAdapter.getProductByID(o.getProduct_id()));
+                    if (o.getProductId() != -1) {
+                        o.setProduct(productDBAdapter.getProductByID(o.getProductId()));
                     } else {
                         o.setProduct(new Product(-1, getApplicationContext().getResources().getString(R.string.general), o.getUnit_price(), SESSION._USER.getUserId()));
                     }
@@ -280,7 +280,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                         else
                             print(invoiceImg.cancelingInvoice(sale, false, null));
                         sale.setPayment(new Payment(payments.get(0)));
-                        long sID = saleDBAdapter.insertEntry(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotal_price() * -1, sale.getTotal_paid_amount() * -1, sale.getCustomer_id(), sale.getCustomer_name());
+                        long sID = saleDBAdapter.insertEntry(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotal_price() * -1, sale.getTotal_paid_amount() * -1, sale.getCustomerId(), sale.getCustomer_name());
 
                         saleDBAdapter.close();
                         PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(SalesManagementActivity.this);

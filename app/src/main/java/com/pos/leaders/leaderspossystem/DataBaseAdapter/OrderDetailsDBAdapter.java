@@ -71,7 +71,7 @@ public class OrderDetailsDBAdapter {
 	public long insertEntry(OrderDetails o){
         ContentValues val = new ContentValues();
         val.put(ORDER_COLUMN_ID, o.getOrderDetailsId());
-        val.put(ORDER_COLUMN_PRODUCTID, o.getProduct_id());
+        val.put(ORDER_COLUMN_PRODUCTID, o.getProductId());
         val.put(ORDER_COLUMN_COUNTER, o.getQuantity());
         val.put(ORDER_COLUMN_USEROFFER, o.getUserOffer());
         val.put(ORDER_COLUMN_SALEID, o.getOrder_id());

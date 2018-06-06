@@ -13,7 +13,7 @@ import java.util.Date;
 
 public class OrderDetails {
 	private long orderDetailsId;
-	private long product_id;
+	private long productId;
 	private int quantity;
 	private double userOffer;
 	private long order_id;
@@ -36,18 +36,18 @@ public class OrderDetails {
 	private  long customer_assistance_id;
 
 	//region Constructors
-	public OrderDetails(long orderDetailsId, long product_id, int quantity, double userOffer, long order_id, long customer_assistance_id) {
+	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long order_id, long customer_assistance_id) {
 		this.orderDetailsId = orderDetailsId;
-		this.product_id = product_id;
+		this.productId = productId;
 		this.quantity = quantity;
 		this.userOffer = userOffer;
 		this.order_id = order_id;
 		this.customer_assistance_id = customer_assistance_id;
 	}
 
-    public OrderDetails(long orderDetailsId, long product_id, int quantity, double userOffer, long order_id, double paid_amount, double original_price, double discount, long customer_assistance_id) {
+    public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long order_id, double paid_amount, double original_price, double discount, long customer_assistance_id) {
         this.orderDetailsId = orderDetailsId;
-        this.product_id = product_id;
+        this.productId = productId;
         this.quantity = quantity;
         this.userOffer = userOffer;
         this.order_id = order_id;
@@ -57,17 +57,17 @@ public class OrderDetails {
     	this.customer_assistance_id = customer_assistance_id;
     }
 
-	public OrderDetails(long orderDetailsId, long product_id, int quantity, double userOffer, long order_id, Product product, long customer_assistance_id) {
+	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long order_id, Product product, long customer_assistance_id) {
 		this.orderDetailsId = orderDetailsId;
-		this.product_id = product_id;
+		this.productId = productId;
 		this.quantity = quantity;
 		this.userOffer = userOffer;
 		this.order_id = order_id;
 		this.product = product;
 		this.customer_assistance_id = customer_assistance_id;
 	}
-	public OrderDetails(long product_id, int quantity, double userOffer, long order_id, Product product) {
-		this.product_id = product_id;
+	public OrderDetails(long productId, int quantity, double userOffer, long order_id, Product product) {
+		this.productId = productId;
 		this.quantity = quantity;
 		this.userOffer = userOffer;
 		this.order_id = order_id;
@@ -78,7 +78,7 @@ public class OrderDetails {
         this.quantity = quantity;
         this.userOffer = userOffer;
         this.product = product;
-        this.product_id = product.getProductId();
+        this.productId = product.getProductId();
         this.paid_amount = product.getPrice();
         this.unit_price = product.getPrice();
         this.discount = 0;
@@ -88,18 +88,18 @@ public class OrderDetails {
         this.quantity = quantity;
         this.userOffer = userOffer;
         this.product = product;
-        this.product_id =product.getProductId();
+        this.productId =product.getProductId();
         this.paid_amount = paid_amount;
         this.unit_price = original_price;
         this.discount = discount;
     }
 
 	public OrderDetails(OrderDetails o) {
-        this(o.getOrderDetailsId(), o.getProduct_id(), o.getQuantity(), o.getUserOffer(), o.getOrder_id(), o.getPaid_amount(), o.getUnit_price(), o.getDiscount(),o.getCustomer_assistance_id());
+        this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrder_id(), o.getPaid_amount(), o.getUnit_price(), o.getDiscount(),o.getCustomer_assistance_id());
     }
 
 	public OrderDetails newInstance(OrderDetails o) {
-		return new OrderDetails(o.getOrderDetailsId(), o.getProduct_id(), o.getQuantity(), o.getUserOffer(), o.getOrder_id(),o.getCustomer_assistance_id());
+		return new OrderDetails(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrder_id(),o.getCustomer_assistance_id());
 	}
 
 	public OrderDetails() {
@@ -108,8 +108,8 @@ public class OrderDetails {
 
     //region Getters
 
-	public long getProduct_id() {
-		return product_id;
+	public long getProductId() {
+		return productId;
 	}
 
 	public long getOrderDetailsId() {
@@ -199,7 +199,7 @@ public class OrderDetails {
         }
 
         return "D110" + String.format(Util.locale, "%09d", rowNumber) + companyID + s + String.format(Util.locale, "%020d", order_id) + String.format(Util.locale, "%04d", orderDetailsId)
-                + s + String.format(Util.locale, "%020d", order_id) + "3" + String.format(Util.locale, "%20s", product_id) + String.format(Util.locale, "%30s", "sale")
+                + s + String.format(Util.locale, "%020d", order_id) + "3" + String.format(Util.locale, "%20s", productId) + String.format(Util.locale, "%30s", "sale")
                 + Util.spaces(50) + String.format(Util.locale, "%30s", product.getBarCode()) + Util.spaces(20)
                 + "+" + String.format(Util.locale, "%012d", quantity) + String.format(Util.locale, "%04d", (int) ((quantity - Math.floor(quantity) + 0.00001) * 10000))
                 + OP + Util.x12V99(noTax) + mOP + Util.x12V99(totalDiscount) + OP + Util.x12V99((noTax-totalDiscount)* quantity)
@@ -214,7 +214,7 @@ public class OrderDetails {
     public String toString() {
         return "OrderDetails{" +
                 "accountingId=" + orderDetailsId +
-                ", product_id=" + product_id +
+                ", productId=" + productId +
                 ", quantity=" + quantity +
                 ", userOffer=" + userOffer +
                 ", order_id=" + order_id +

@@ -147,7 +147,7 @@ public class BKMVDATA {
             } else if (records.get(i).getObj() instanceof OrderDetails) {
                 OrderDetails order = (OrderDetails) records.get(i).getObj();
                 strRecords += order.DKMVDATA(counter, SETTINGS.companyID, records.get(i).getDate()) + "\r\n";
-                if (checkProductNonEX(order.getProduct_id())) {
+                if (checkProductNonEX(order.getProductId())) {
                     productNonRep.add(order.getProduct());
                     addProduct(order.getProduct());
                 }
@@ -179,9 +179,9 @@ public class BKMVDATA {
                 switch (payment.getPaymentWay()) {
                     case CONSTANT.CASH:
                         paymentType = "1";
-                        str += ("D120" + String.format(Util.locale, "%09d", counter) + SETTINGS.companyID + s + String.format(Util.locale, "%020d", payment.getSaleId()) + String.format(Util.locale, "%04d", payment.getSaleId()) +
+                        str += ("D120" + String.format(Util.locale, "%09d", counter) + SETTINGS.companyID + s + String.format(Util.locale, "%020d", payment.getOrderId()) + String.format(Util.locale, "%04d", payment.getOrderId()) +
                                 paymentType + Util.spaces(10) + Util.spaces(10) + Util.spaces(15) + Util.spaces(10) + DateConverter.getYYYYMMDD(sdo) + OP + Util.x12V99(payment.getAmount()) + Util.spaces(1) + Util.spaces(20) +
-                                "0" + Util.spaces(7) + DateConverter.getYYYYMMDD(sdo) + String.format(Util.locale, "%07d", payment.getSaleId()) + Util.spaces(60)) + "\r\n";
+                                "0" + Util.spaces(7) + DateConverter.getYYYYMMDD(sdo) + String.format(Util.locale, "%07d", payment.getOrderId()) + Util.spaces(60)) + "\r\n";
                         accountingCashFund.totalRequired += payment.getAmount();
                         str += CreateB100(++counter, SETTINGS.companyID, cB100, 5, sdo, accountingCashFund.getKey(), (short) 1, payment.getAmount()) + "\r\n";
                         ++b100;
@@ -192,8 +192,8 @@ public class BKMVDATA {
                         ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(context);
                         checksDBAdapter.open();
                         int tempcount = 0;
-                        for (Check c : checksDBAdapter.getPaymentBySaleID(payment.getSaleId())) {
-                            str += c.BKMVDATA(counter, SETTINGS.companyID, sdo, payment.getSaleId()) + "\r\n";
+                        for (Check c : checksDBAdapter.getPaymentBySaleID(payment.getOrderId())) {
+                            str += c.BKMVDATA(counter, SETTINGS.companyID, sdo, payment.getOrderId()) + "\r\n";
                             accountingChecksFund.totalRequired += payment.getAmount();
                             str += CreateB100(++counter, SETTINGS.companyID, cB100, 5+tempcount, sdo, accountingChecksFund.getKey(), (short) 1, payment.getAmount()) + "\r\n";
                             ++b100;
@@ -205,9 +205,9 @@ public class BKMVDATA {
                     case CONSTANT.CREDIT_CARD:
                         paymentType = "3";
                         cardType = "1";
-                        str += ("D120" + String.format(Util.locale, "%09d", counter) + SETTINGS.companyID + s + String.format(Util.locale, "%020d", payment.getSaleId()) + String.format(Util.locale, "%04d", payment.getSaleId()) +
+                        str += ("D120" + String.format(Util.locale, "%09d", counter) + SETTINGS.companyID + s + String.format(Util.locale, "%020d", payment.getOrderId()) + String.format(Util.locale, "%04d", payment.getOrderId()) +
                                 paymentType + Util.spaces(10) + Util.spaces(10) + Util.spaces(15) + Util.spaces(10) + DateConverter.getYYYYMMDD(sdo) + OP + Util.x12V99(payment.getAmount()) + cardType + Util.spaces(20) +
-                                "1" + Util.spaces(7) + DateConverter.getYYYYMMDD(sdo) + String.format(Util.locale, "%07d", payment.getSaleId()) + Util.spaces(60)) + "\r\n";
+                                "1" + Util.spaces(7) + DateConverter.getYYYYMMDD(sdo) + String.format(Util.locale, "%07d", payment.getOrderId()) + Util.spaces(60)) + "\r\n";
                         accountingCreditCardFund.totalRequired += payment.getAmount();
                         str += CreateB100(++counter, SETTINGS.companyID, cB100, 5, sdo, accountingCreditCardFund.getKey(), (short) 1, payment.getAmount()) + "\r\n";
                         zTotal++;
@@ -269,8 +269,8 @@ public class BKMVDATA {
                 s.setPayment(paymentDBAdapter.getPaymentBySaleID(s.getOrderId()).get(0));
             s.setOrders(orderDBAdapter.getOrderBySaleID(s.getOrderId()));
             for (OrderDetails o : s.getOrders()) {
-                if (o.getProduct_id() != -1)
-                    o.setProduct(productDBAdapter.getProductByID(o.getProduct_id()));
+                if (o.getProductId() != -1)
+                    o.setProduct(productDBAdapter.getProductByID(o.getProductId()));
                 else {
                     o.setProduct(new Product(-1, context.getResources().getString(R.string.general), o.getUnit_price(), s.getByUser()));
                 }

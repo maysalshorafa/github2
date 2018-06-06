@@ -362,7 +362,7 @@
     <string name="search">Search</string>
     <!--customer String -->
     <string name="customer_name">Customer Name</string>
-    <string name="customer_id">Customer ID</string>
+    <string name="customerId">Customer ID</string>
     <string name="gender">Gender</string>
     <string name="street">Street</string>
     <string name="country">Country</string>

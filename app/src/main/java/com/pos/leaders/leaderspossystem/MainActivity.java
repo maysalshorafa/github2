@@ -1929,7 +1929,7 @@ startActivity(i);
         double SaleOriginalityPrice = 0;
 
         for (OrderDetails o : SESSION._ORDERS) {
-            if (o.getProduct_id() == productIDForRule7) {
+            if (o.getProductId() == productIDForRule7) {
                 if (SumForRule3Status || SumForRule11Status) {
                     saleTotalPrice += priceFoeRule7 * o.getQuantity();
                     SaleOriginalityPrice += (o.getUnit_price() * o.getQuantity());
@@ -1946,7 +1946,7 @@ startActivity(i);
                 }
 
 
-            } else if (o.getProduct_id() == productIDForRule8) {
+            } else if (o.getProductId() == productIDForRule8) {
                 if (SumForRule3Status || SumForRule11Status) {
                     saleTotalPrice += o.getItemTotalPrice() - o.getItemTotalPrice() * ParcentForRule8;
                     SaleOriginalityPrice += (o.getUnit_price() * o.getQuantity());
@@ -1960,7 +1960,7 @@ startActivity(i);
                     SumForClub += o.getItemTotalPrice() - o.getItemTotalPrice() * ParcentForRule8;
                 }
 
-            } else if (o.getProduct_id() == productIdForRule5) {
+            } else if (o.getProductId() == productIdForRule5) {
                 stausForRule5 = true;
                 i = o.getItemTotalPrice();
 
@@ -2593,7 +2593,7 @@ startActivity(i);
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (Long.valueOf(SESSION._SALE.getCustomer_id()) == 0) {
+        if (Long.valueOf(SESSION._SALE.getCustomerId()) == 0) {
             if (SESSION._SALE.getCustomer_name() == null) {
                 if (customerName_EditText.getText().toString().equals("")) {
                     SESSION._SALE.setCustomer_name("");
@@ -2659,9 +2659,9 @@ startActivity(i);
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDERS) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProduct_id(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
-                    //   orderDBAdapter.insertEntry(o.getProduct_id(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(),o.getCustomer_assistance_id());
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // Order Sales man Region
                 for (int i=0;i<orderIdList.size();i++) {
@@ -2774,9 +2774,9 @@ startActivity(i);
 
                 // insert order region
                 for (OrderDetails o : SESSION._ORDERS) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProduct_id(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
-                    //   orderDBAdapter.insertEntry(o.getProduct_id(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(),o.getCustomer_assistance_id());
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // Order Sales man Region
                 for (int i=0;i<orderIdList.size();i++) {
@@ -2875,9 +2875,9 @@ startActivity(i);
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDERS) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProduct_id(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
-                    //   orderDBAdapter.insertEntry(o.getProduct_id(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(),o.getCustomer_assistance_id());
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // Order Sales man Region
                 for (int i=0;i<orderIdList.size();i++) {
@@ -2979,9 +2979,9 @@ startActivity(i);
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDERS) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProduct_id(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
-                    //   orderDBAdapter.insertEntry(o.getProduct_id(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(),o.getCustomer_assistance_id());
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaid_amount(), o.getUnit_price(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // Order Sales man Region
                 for (int i=0;i<orderIdList.size();i++) {

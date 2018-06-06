@@ -87,7 +87,7 @@ public class CustomerAssetDB {
         //Assign values for each row.
 
         val.put(CUSTMER_ASSEST_ID, assest.getCustAssistantId());
-        val.put(ORDER_ID, assest.getOrder_id());
+        val.put(ORDER_ID, assest.getOrderId());
         val.put(CustmerAssest_COLUMN_ID,assest.getCustomerAssistantID() );
         val.put(CUSTMER_ASSEST_COLUMN_AMOUNT, assest.getAmount());
         val.put(CUSTMER_ASSEST_COLUMN_TYPE, assest.getType());

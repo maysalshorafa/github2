@@ -73,7 +73,7 @@ public class AReportDetailsDBAdapter {
         ContentValues val = new ContentValues();
 
         val.put(A_REPORT_DETAILS_COLUMN_ID, aReportDetails.getaReportDetailsId());
-        val.put(A_REPORT_DETAILS_A_REPORT_COLUMN_ID, aReportDetails.getA_report_id());
+        val.put(A_REPORT_DETAILS_A_REPORT_COLUMN_ID, aReportDetails.getaReportId());
         val.put(A_REPORT_DETAILS_COLUMN_AMOUNT, aReportDetails.getAmount());
         val.put(A_REPORT_DETAILS_COLUMN_TYPE, aReportDetails.getType());
         val.put(A_REPORT_DETAILS_COLUMN_AMOUNT_IN_BASIC_CURRENCY, aReportDetails.getAmount_in_basic_currency());

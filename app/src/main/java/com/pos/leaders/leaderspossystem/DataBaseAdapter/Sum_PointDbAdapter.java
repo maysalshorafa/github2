@@ -24,7 +24,7 @@ public class Sum_PointDbAdapter {
     protected static final String SUM_POINT_COLUMN_ID = "id";
     protected static final String SUM_POINT_COLUMN_SALE_ID = "saleId";
     protected static final String SUM_POINT_COLUMN_POINT = "pointAmount";
-    protected static final String SUM_POINT_COLUMN_CUSTOMER = "customer_id";
+    protected static final String SUM_POINT_COLUMN_CUSTOMER = "customerId";
 
 
     public static final String DATABASE_CREATE= "CREATE TABLE sumPoint ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  , `saleId` INTEGER ,"+" `pointAmount` INTEGER , `"+ SUM_POINT_COLUMN_CUSTOMER +"` INTEGER, FOREIGN KEY(`saleId`) REFERENCES `_Order.id` )";
@@ -77,9 +77,9 @@ public class Sum_PointDbAdapter {
         ContentValues val = new ContentValues();
         val.put(SUM_POINT_COLUMN_ID,sumPoint.getSumPointId());
         //Assign values for each row.
-        val.put(SUM_POINT_COLUMN_SALE_ID, sumPoint.getSaleId());
+        val.put(SUM_POINT_COLUMN_SALE_ID, sumPoint.getOrderId());
         val.put(SUM_POINT_COLUMN_POINT, sumPoint.getPointAmount());
-        val.put(SUM_POINT_COLUMN_CUSTOMER,sumPoint.getCustomer_id());
+        val.put(SUM_POINT_COLUMN_CUSTOMER,sumPoint.getCustomerId());
 
         try {
             return db.insert(SUM_POINT_TABLE_NAME, null, val);

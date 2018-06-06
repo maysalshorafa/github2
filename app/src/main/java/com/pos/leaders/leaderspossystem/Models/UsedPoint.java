@@ -8,16 +8,16 @@ public class UsedPoint {
     public long usedPointId;
     public long orderId ;
     public int unUsed_point_amount;
-    public long customer_id;
+    public long customerId;
 
     public UsedPoint() {
     }
 
-    public UsedPoint(long usedPointId, long orderId, int unUsed_point_amount, long customer_id) {
+    public UsedPoint(long usedPointId, long orderId, int unUsed_point_amount, long customerId) {
         this.usedPointId = usedPointId;
         this.orderId = orderId;
         this.unUsed_point_amount = unUsed_point_amount;
-        this.customer_id = customer_id;
+        this.customerId = customerId;
     }
 
     public long getUsedPointId() {
@@ -45,11 +45,11 @@ public class UsedPoint {
         this.unUsed_point_amount = unUsed_point_amount;
     }
 
-    public long getCustomer_id() {
-        return customer_id;
+    public long getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer_id(long customer_id) {
-        this.customer_id = customer_id;
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
     }
 }

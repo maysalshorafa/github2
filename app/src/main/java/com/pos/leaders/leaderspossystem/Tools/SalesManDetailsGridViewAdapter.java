@@ -120,7 +120,7 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
         tvSalesAmount.setText(Util.makePrice(customerAssests.get(position).getAmount()));
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         salesDate.setText(format.format(customerAssests.get(position).getSaleDate()));
-        saleId.setText(customerAssests.get(position).getOrder_id()+"");
+        saleId.setText(customerAssests.get(position).getOrderId()+"");
         if(bgColor%2==0){
             gridView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
         }

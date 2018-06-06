@@ -21,7 +21,7 @@ public class Order {
 	private boolean status;
 	private double total_price;
 	private double total_paid_amount;
-	private long customer_id;
+	private long customerId;
 
 	@JsonIgnore
 	private String customer_name = null;
@@ -43,7 +43,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double total_price, double total_paid_amount, long customer_id, String customer_name) {
+    public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double total_price, double total_paid_amount, long customerId, String customer_name) {
 		this.orderId = orderId;
 		this.byUser = byUser;
 		this.createdAt = createdAt;
@@ -51,7 +51,7 @@ public class Order {
 		this.status = status;
 		this.total_price = total_price;
 		this.total_paid_amount = total_paid_amount;
-		this.customer_id=customer_id;
+		this.customerId = customerId;
 		this.customer_name=customer_name;
 	}
 
@@ -77,11 +77,11 @@ public class Order {
 	}
 
 	public Order(Order s) {
-		this(s.getOrderId(),s.getByUser(),s.getOrder_date(),s.getReplacementNote(),s.isStatus(),s.getTotal_price(),s.getTotal_paid_amount(),s.getCustomer_id(),s.getCustomer_name());
+		this(s.getOrderId(),s.getByUser(),s.getOrder_date(),s.getReplacementNote(),s.isStatus(),s.getTotal_price(),s.getTotal_paid_amount(),s.getCustomerId(),s.getCustomer_name());
 	}
 
 	public static Order newInstance(Order s){
-		return new Order(s.getOrderId(),s.getByUser(),s.getOrder_date(),s.getReplacementNote(),s.isStatus(),s.getTotal_price(),s.getTotal_paid_amount(),s.getCustomer_id(),s.getCustomer_name());
+		return new Order(s.getOrderId(),s.getByUser(),s.getOrder_date(),s.getReplacementNote(),s.isStatus(),s.getTotal_price(),s.getTotal_paid_amount(),s.getCustomerId(),s.getCustomer_name());
 	}
 
 	//endregion
@@ -131,8 +131,8 @@ public class Order {
         return locale;
     }
 
-    public long getCustomer_id() {
-        return customer_id;
+    public long getCustomerId() {
+        return customerId;
     }
 
     public String getCustomer_name() {
@@ -191,8 +191,8 @@ public class Order {
         this.locale = locale;
     }
 
-    public void setCustomer_id(long customer_id) {
-        this.customer_id = customer_id;
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
     }
 
     public void setCustomer_name(String customer_name) {

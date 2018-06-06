@@ -76,7 +76,7 @@ public class PaymentDBAdapter {
 
 		val.put(PAYMENT_COLUMN_PAYMENTWAY, payment.getPaymentWay());
 		val.put(PAYMENT_COLUMN_AMOUNT,payment.getAmount() );
-		val.put(PAYMENT_COLUMN_ORDERID, payment.getSaleId());
+		val.put(PAYMENT_COLUMN_ORDERID, payment.getOrderId());
 		try {
 			return db.insert(PAYMENT_TABLE_NAME, null, val);
 		} catch (SQLException ex) {

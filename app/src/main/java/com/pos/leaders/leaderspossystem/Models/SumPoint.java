@@ -6,19 +6,19 @@ package com.pos.leaders.leaderspossystem.Models;
 
 public class SumPoint {
     private long sumPointId;
-    private long saleId;
+    private long orderId;
     private int pointAmount;
-    private long customer_id;
+    private long customerId;
 
 
     public SumPoint() {
     }
 
-    public SumPoint(long sumPointId, long saleId, int pointAmount, long customer_id) {
+    public SumPoint(long sumPointId, long orderId, int pointAmount, long customerId) {
         this.sumPointId = sumPointId;
-        this.saleId = saleId;
+        this.orderId = orderId;
         this.pointAmount = pointAmount;
-        this.customer_id = customer_id;
+        this.customerId = customerId;
     }
 
     public long getSumPointId() {
@@ -29,12 +29,12 @@ public class SumPoint {
         this.sumPointId = sumPointId;
     }
 
-    public long getSaleId() {
-        return saleId;
+    public long getOrderId() {
+        return orderId;
     }
 
-    public void setSaleId(long saleId) {
-        this.saleId = saleId;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 
     public int getPointAmount() {
@@ -45,11 +45,11 @@ public class SumPoint {
         this.pointAmount = pointAmount;
     }
 
-    public long getCustomer_id() {
-        return customer_id;
+    public long getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer_id(long customer_id) {
-        this.customer_id = customer_id;
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
     }
 }
