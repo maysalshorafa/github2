@@ -18,6 +18,7 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -70,7 +71,7 @@ public class ZReportDBAdapter {
         return db;
     }
 
-    public long insertEntry(long creatingDate,long byUserID,long startSaleID,long endSaleID,double amount,double total_amount){
+    public long insertEntry(Timestamp creatingDate, long byUserID, long startSaleID, long endSaleID, double amount, double total_amount){
         ZReport zReport = new ZReport(Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID),creatingDate, byUserID, startSaleID, endSaleID,amount,total_amount);
         sendToBroker(MessageType.ADD_Z_REPORT, zReport, this.context);
         try {
@@ -86,7 +87,7 @@ public class ZReportDBAdapter {
         //Assign values for each row.
         val.put(Z_REPORT_COLUMN_ID, zReport.getzReportId());
 
-        val.put(Z_REPORT_COLUMN_CREATEDATE, zReport.getCreatedAt());
+        val.put(Z_REPORT_COLUMN_CREATEDATE, String.valueOf(zReport.getCreatedAt()));
         val.put(Z_REPORT_COLUMN_BYUSER, zReport.getByUser());
         val.put(Z_REPORT_COLUMN_STARTORDERID, zReport.getStartOrderId());
         val.put(Z_REPORT_COLUMN_ENDORDERID, zReport.getEndOrderId());
@@ -161,7 +162,7 @@ public class ZReportDBAdapter {
 
     private ZReport makeZReport(Cursor c){
         return new ZReport(c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_ID)),
-                c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_CREATEDATE)),
+                Timestamp.valueOf(c.getString(c.getColumnIndex(Z_REPORT_COLUMN_CREATEDATE))),
                 c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_BYUSER)),
                 c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_STARTORDERID)),
                 c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_ENDORDERID)),

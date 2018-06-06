@@ -352,7 +352,7 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return new Date(z.getCreatedAt());
+                return new Date(z.getCreatedAt().getTime());
             }
         });
     }

@@ -20,6 +20,7 @@ import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class ReportsManagementActivity  extends AppCompatActivity {
@@ -100,7 +101,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                     lastZReport.setEndOrderId(0);
                                 }
 
-                                ZReport z=new ZReport(0,new Date().getTime() , SESSION._USER,lastZReport.getEndOrderId()+1,lastSale);
+                                ZReport z=new ZReport(0, new Timestamp(System.currentTimeMillis()) , SESSION._USER,lastZReport.getEndOrderId()+1,lastSale);
                                 z.setByUser(SESSION._USER.getUserId());
                                 double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
                                 totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;

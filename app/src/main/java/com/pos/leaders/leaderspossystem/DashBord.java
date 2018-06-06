@@ -67,7 +67,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import jxl.Sheet;
@@ -255,7 +254,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                     lastZReport = new ZReport();
                                     lastZReport.setEndOrderId(0);
                                 }
-                                ZReport z = new ZReport(0, new Date().getTime(), SESSION._USER, lastZReport.getEndOrderId() + 1, lastSale);
+                                ZReport z = new ZReport(0,  new Timestamp(System.currentTimeMillis()), SESSION._USER, lastZReport.getEndOrderId() + 1, lastSale);
                                 z.setByUser(SESSION._USER.getUserId());
                                 double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
                                 totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;

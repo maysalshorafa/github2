@@ -3,13 +3,15 @@ package com.pos.leaders.leaderspossystem.Models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.sql.Timestamp;
+
 /**
  * Created by KARAM on 05/01/2017.
  */
 
 public class ZReport {
     private long zReportId;
-    private long createdAt;
+    private Timestamp createdAt;
     private long byUser;
     @JsonIgnore
     private User user;
@@ -27,7 +29,7 @@ public class ZReport {
 
     }
 
-    public ZReport(long zReportId, long createdAt, long byUser, long startOrderId, long endOrderId, double amount, double total_amount) {
+    public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount, double total_amount) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -37,7 +39,7 @@ public class ZReport {
         this.total_amount=total_amount;
     }
 
-    public ZReport(long zReportId, long createdAt, long byUser, long startOrderId, long endOrderId, double amount) {
+    public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -47,7 +49,7 @@ public class ZReport {
         this.total_amount=total_amount;
     }
 
-    public ZReport(long zReportId, long createdAt, User user, Order startSale, Order endSale) {
+    public ZReport(long zReportId, Timestamp createdAt, User user, Order startSale, Order endSale) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.user = user;
@@ -59,7 +61,7 @@ public class ZReport {
         this.endOrderId =endSale.getOrderId();
     }
 
-    public ZReport(long zReportId, long createdAt, User user, long startOrderId, Order endSale) {
+    public ZReport(long zReportId, Timestamp createdAt, User user, long startOrderId, Order endSale) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.user = user;
@@ -91,11 +93,11 @@ public class ZReport {
         this.zReportId = zReportId;
     }
 
-    public long getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(long createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 

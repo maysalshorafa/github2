@@ -19,13 +19,13 @@ public class Check {
 	private double amount;
 	private Timestamp createdAt;
 	private boolean deleted;
-	private long saleId;
+	private long orderId;
 
 	// region Constructors
 
 
 
-	public Check(long checkId, int checkNum, int bankNum, int branchNum, int accountNum, double amount, Timestamp date, boolean deleted, long saleId) {
+	public Check(long checkId, int checkNum, int bankNum, int branchNum, int accountNum, double amount, Timestamp date, boolean deleted, long orderId) {
 		this.accountNum = accountNum;
 		this.amount = amount;
 		this.bankNum = bankNum;
@@ -34,7 +34,7 @@ public class Check {
 		this.createdAt = date;
 		this.checkId = checkId;
 		this.deleted = deleted;
-		this.saleId = saleId;
+		this.orderId = orderId;
 	}
 
 	public Check(int checkNum, int bankNum, int branchNum, int accountNum, double amount, Timestamp date, boolean deleted) {
@@ -87,8 +87,8 @@ public class Check {
 		return checkId;
 	}
 
-	public long getSaleId() {
-		return saleId;
+	public long getOrderId() {
+		return orderId;
 	}
 
 	public boolean isDeleted() {
@@ -99,8 +99,8 @@ public class Check {
 
 	//region Setters
 
-	public void setSaleId(long saleId) {
-		this.saleId = saleId;
+	public void setOrderId(long orderId) {
+		this.orderId = orderId;
 	}
 
 	public void setAccountNum(int accountNum) {
@@ -145,7 +145,7 @@ public class Check {
 				", branchNum=" + branchNum +
 				", amount=" + amount +
 				", date=" + createdAt +
-				", saleId=" + saleId +
+				", orderId=" + orderId +
 				'}';
 	}
 
@@ -158,7 +158,7 @@ public class Check {
             OP = "-";
         }
 
-        return ("D120" + String.format(Util.locale, "%09d", rowNumber) + companyID + s + String.format(Util.locale, "%020d", saleId) + String.format(Util.locale, "%04d", saleId) +
+        return ("D120" + String.format(Util.locale, "%09d", rowNumber) + companyID + s + String.format(Util.locale, "%020d", orderId) + String.format(Util.locale, "%04d", orderId) +
                 paymentType + String.format(Util.locale, "%010d", bankNum) + String.format(Util.locale, "%010d", branchNum) + String.format(Util.locale, "%015d", accountNum) +
                 String.format(Util.locale, "%010d", checkNum) + DateConverter.getYYYYMMDD(new Date(String.valueOf(this.createdAt))) + OP + Util.x12V99(amount) + cardType + Util.spaces(20) +
                 "0" + Util.spaces(7) + DateConverter.getYYYYMMDD(date) + String.format(Util.locale, "%07d", parentNumber) + Util.spaces(60));
