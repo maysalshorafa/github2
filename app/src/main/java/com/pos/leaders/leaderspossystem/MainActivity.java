@@ -2006,7 +2006,7 @@ startActivity(i);
                 totalSaved = (SaleOriginalityPrice - saleTotalPrice);
                 tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
                 tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
-                SESSION._SALE.setTotal_price(saleTotalPrice);
+                SESSION._SALE.setTotalPrice(saleTotalPrice);
 
             }
 
@@ -2037,7 +2037,7 @@ startActivity(i);
             totalSaved = (SaleOriginalityPrice - saleTotalPrice);
             tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
             tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
-            SESSION._SALE.setTotal_price(saleTotalPrice);
+            SESSION._SALE.setTotalPrice(saleTotalPrice);
         }
 
 
@@ -2072,7 +2072,7 @@ startActivity(i);
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);
         tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
         tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
-        SESSION._SALE.setTotal_price(saleTotalPrice);
+        SESSION._SALE.setTotalPrice(saleTotalPrice);
 
 
         rule3DbAdapter.close();
@@ -2107,7 +2107,7 @@ startActivity(i);
             totalSaved = (SaleOriginalityPrice - saleTotalPrice);
             tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
             tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
-            SESSION._SALE.setTotal_price(saleTotalPrice);
+            SESSION._SALE.setTotalPrice(saleTotalPrice);
 
         } else {
 
@@ -2130,7 +2130,7 @@ startActivity(i);
                 tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
                 //  clubPoint=  ( (int)(sale/clubAmount)*clubPoint);
             }
-            SESSION._SALE.setTotal_price(saleTotalPrice);
+            SESSION._SALE.setTotalPrice(saleTotalPrice);
         }
 
 
@@ -2609,32 +2609,32 @@ startActivity(i);
 
                 if (data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote).equals("anyType{}"))
                     return;
-                SESSION._SALE.setTotal_paid_amount(SESSION._SALE.getTotal_price());
+                SESSION._SALE.setTotalPaidAmount(SESSION._SALE.getTotalPrice());
                 saleDBAdapter = new OrderDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
-                clubPoint = ((int) (SESSION._SALE.getTotal_price() / clubAmount) * clubPoint);
+                clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 long tempSaleId=0;
                 // Club with point and amount
                 if (clubType == 2) {
-                    pointFromSale = ((int) (SESSION._SALE.getTotal_price() * clubPoint) / clubAmount);
+                    pointFromSale = ((int) (SESSION._SALE.getTotalPrice() * clubPoint) / clubAmount);
                     sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
                 }
 
                 if (equalUsedPoint) {
                     saleTotalPrice = 0.0;
-                    SESSION._SALE.setTotal_price(saleTotalPrice);
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
-                    SESSION._SALE.setTotal_price(saleTotalPrice);
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
-                    SESSION._SALE.setTotal_price(saleTotalPrice);
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
@@ -2655,7 +2655,7 @@ startActivity(i);
                 SESSION._SALE.setOrderId(saleID);
                 if (forSaleMan) {
                     tempSaleId =saleID;
-                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotal_price(), 0, "Sale", SESSION._SALE.getOrder_date());
+                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getOrder_date());
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDERS) {
@@ -2731,32 +2731,32 @@ startActivity(i);
             if (resultCode == RESULT_OK) {
 
                 final double result = data.getDoubleExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, 0.0f);
-                SESSION._SALE.setTotal_paid_amount(result);
+                SESSION._SALE.setTotalPaidAmount(result);
                 saleDBAdapter = new OrderDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
-                clubPoint = ((int) (SESSION._SALE.getTotal_price() / clubAmount) * clubPoint);
+                clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 long tempSaleId=0;
                 // Club with point and amount
                 if (clubType == 2) {
-                    pointFromSale = ((int) (SESSION._SALE.getTotal_price() * clubPoint) / clubAmount);
+                    pointFromSale = ((int) (SESSION._SALE.getTotalPrice() * clubPoint) / clubAmount);
                     sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
                 }
 
                 if (equalUsedPoint) {
                     saleTotalPrice = 0.0;
-                    SESSION._SALE.setTotal_price(saleTotalPrice);
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
-                    SESSION._SALE.setTotal_price(saleTotalPrice);
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
-                    SESSION._SALE.setTotal_price(saleTotalPrice);
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
@@ -2769,7 +2769,7 @@ startActivity(i);
                 SESSION._SALE.setOrderId(saleID);
                 if (forSaleMan) {
                     tempSaleId =saleID;
-                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotal_price(), 0, "Sale", SESSION._SALE.getOrder_date());
+                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getOrder_date());
                 }
 
                 // insert order region
@@ -2837,9 +2837,9 @@ startActivity(i);
                 double totalPaidWithOutCurrency = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_TOTAL_PAID, 0.0f);
                 double excess = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE, 0.0f);
 
-                SESSION._SALE.setTotal_paid_amount(totalPaidWithOutCurrency);
+                SESSION._SALE.setTotalPaidAmount(totalPaidWithOutCurrency);
 
-                clubPoint = ((int) (SESSION._SALE.getTotal_price() / clubAmount) * clubPoint);
+                clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
                 SESSION._SALE.setOrderId(saleIDforCash);
 
@@ -2847,31 +2847,31 @@ startActivity(i);
 
                 /// Club with point and amount
                 if (clubType == 2) {
-                    pointFromSale = ((int) (SESSION._SALE.getTotal_price() * clubPoint) / clubAmount);
+                    pointFromSale = ((int) (SESSION._SALE.getTotalPrice() * clubPoint) / clubAmount);
                     sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
                 }
 
                 if (equalUsedPoint) {
                     saleTotalPrice = 0.0;
-                    SESSION._SALE.setTotal_price(saleTotalPrice);
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
-                    SESSION._SALE.setTotal_price(saleTotalPrice);
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
-                    SESSION._SALE.setTotal_price(saleTotalPrice);
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 // insert in Order , CustomerAssistant
                 if (forSaleMan) {
                     tempSaleId =saleIDforCash;
-                    custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotal_price(), 0, "Sale", SESSION._SALE.getOrder_date());
+                    custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getOrder_date());
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDERS) {
@@ -2930,7 +2930,7 @@ startActivity(i);
 
                 // Get data from CashActivityWithCurrency and insert in Cash Payment
                 double totalPaidWithCurrency = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_TOTAL_PAID, 0.0f);
-                SESSION._SALE.setTotal_paid_amount(totalPaidWithCurrency);
+                SESSION._SALE.setTotalPaidAmount(totalPaidWithCurrency);
                 double firstCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_AMOUNT, 0.0f);
                 double secondCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_AMOUNT, 0.0f);
                 double excess = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_EXCESS_VALUE, 0.0f);
@@ -2952,30 +2952,30 @@ startActivity(i);
 
                 // Club with point and amount
                 if (clubType == 2) {
-                    pointFromSale = ((int) (SESSION._SALE.getTotal_price() * clubPoint) / clubAmount);
+                    pointFromSale = ((int) (SESSION._SALE.getTotalPrice() * clubPoint) / clubAmount);
                     sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
                 }
 
                 if (equalUsedPoint) {
                     saleTotalPrice = 0.0;
-                    SESSION._SALE.setTotal_price(saleTotalPrice);
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
-                    SESSION._SALE.setTotal_price(saleTotalPrice);
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
-                    SESSION._SALE.setTotal_price(saleTotalPrice);
+                    SESSION._SALE.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._SALE);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (forSaleMan) {
                     tempSaleId =saleIDforCash;
-                    custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotal_price(), 0, "Sale", SESSION._SALE.getOrder_date());
+                    custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getOrder_date());
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDERS) {

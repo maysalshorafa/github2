@@ -92,7 +92,7 @@ public class CustomerAssetDB {
         val.put(CUSTMER_ASSEST_COLUMN_AMOUNT, assest.getAmount());
         val.put(CUSTMER_ASSEST_COLUMN_TYPE, assest.getType());
         val.put(CUSTMER_ASSEST_COLUMN_CASE, assest.getSalesCase());
-        val.put(CustmerAssest_COLUMN_CEATEDATE, String.valueOf(assest.getSaleDate()));
+        val.put(CustmerAssest_COLUMN_CEATEDATE, String.valueOf(assest.getCreatedAt()));
 
         try {
             return db.insert(CustmerAsset_TabelName, null, val);

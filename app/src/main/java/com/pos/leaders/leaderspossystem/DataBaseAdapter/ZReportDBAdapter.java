@@ -92,7 +92,7 @@ public class ZReportDBAdapter {
         val.put(Z_REPORT_COLUMN_STARTORDERID, zReport.getStartOrderId());
         val.put(Z_REPORT_COLUMN_ENDORDERID, zReport.getEndOrderId());
         val.put(Z_REPORT_COLUMN_AMOUNT, zReport.getAmount());
-        val.put(Z_REPORT_COLUMN_TOTAL_AMOUNT, zReport.getTotal_amount());
+        val.put(Z_REPORT_COLUMN_TOTAL_AMOUNT, zReport.getTotalAmount());
         try {
             return db.insert(Z_REPORT_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -238,7 +238,7 @@ public class ZReportDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Z_REPORT_COLUMN_AMOUNT, zReport.getAmount());
-        val.put(Z_REPORT_COLUMN_TOTAL_AMOUNT, zReport.getTotal_amount());
+        val.put(Z_REPORT_COLUMN_TOTAL_AMOUNT, zReport.getTotalAmount());
 
         String where = Z_REPORT_COLUMN_ID + " = ?";
         db.update(Z_REPORT_TABLE_NAME, val, where, new String[]{zReport.getzReportId() + ""});

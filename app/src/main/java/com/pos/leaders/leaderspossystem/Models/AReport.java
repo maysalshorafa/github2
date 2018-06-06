@@ -16,7 +16,7 @@ public class AReport {
     @JsonIgnore
     private User byUser;
     private double amount;
-    private long lastSaleID;
+    private long lastOrderId;
     @JsonIgnore
     private Order lastSale;
     private long lastZReportID;
@@ -28,11 +28,11 @@ public class AReport {
 
     public AReport() {}
 
-    public AReport(Timestamp createdAt, int byUserID, double amount, long lastSaleID, long lastZReportID) {
+    public AReport(Timestamp createdAt, int byUserID, double amount, long lastOrderId, long lastZReportID) {
         this.createdAt = createdAt;
         this.byUserID = byUserID;
         this.amount = amount;
-        this.lastSaleID = lastSaleID;
+        this.lastOrderId = lastOrderId;
         this.lastZReportID = lastZReportID;
     }
 
@@ -44,12 +44,12 @@ public class AReport {
         this.amount = amount;
     }
 
-    public AReport(long aReportId, Timestamp createdAt, long byUserID, double amount, long lastSaleID, long lastZReportID) {
+    public AReport(long aReportId, Timestamp createdAt, long byUserID, double amount, long lastOrderId, long lastZReportID) {
         this.aReportId = aReportId;
         this.createdAt = createdAt;
         this.byUserID = byUserID;
         this.amount = amount;
-        this.lastSaleID = lastSaleID;
+        this.lastOrderId = lastOrderId;
         this.lastZReportID = lastZReportID;
     }
     //endregion Constructors
@@ -76,8 +76,8 @@ public class AReport {
         return amount;
     }
 
-    public long getLastSaleID() {
-        return lastSaleID;
+    public long getLastOrderId() {
+        return lastOrderId;
     }
 
     public Order getLastSale() {
@@ -117,8 +117,8 @@ public class AReport {
         this.amount = amount;
     }
 
-    public void setLastSaleID(long lastSaleID) {
-        this.lastSaleID = lastSaleID;
+    public void setLastOrderId(long lastOrderId) {
+        this.lastOrderId = lastOrderId;
     }
 
     public void setLastSale(Order lastSale) {

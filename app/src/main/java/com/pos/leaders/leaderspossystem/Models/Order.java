@@ -19,8 +19,8 @@ public class Order {
 	private Timestamp createdAt;
 	private int replacementNote;
 	private boolean status;
-	private double total_price;
-	private double total_paid_amount;
+	private double totalPrice;
+	private double totalPaidAmount;
 	private long customerId;
 
 	@JsonIgnore
@@ -43,45 +43,45 @@ public class Order {
     public Order() {
     }
 
-    public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double total_price, double total_paid_amount, long customerId, String customer_name) {
+    public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name) {
 		this.orderId = orderId;
 		this.byUser = byUser;
 		this.createdAt = createdAt;
 		this.replacementNote = replacementNote;
 		this.status = status;
-		this.total_price = total_price;
-		this.total_paid_amount = total_paid_amount;
+		this.totalPrice = totalPrice;
+		this.totalPaidAmount = totalPaidAmount;
 		this.customerId = customerId;
 		this.customer_name=customer_name;
 	}
 
-	public Order(long byUser, Timestamp createdAt, int replacementNote, boolean status, double total_price, double total_paid_amount) {
+	public Order(long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount) {
 		this.byUser = byUser;
 		this.createdAt = createdAt;
 		this.replacementNote = replacementNote;
 		this.status = status;
-		this.total_price = total_price;
-		this.total_paid_amount = total_paid_amount;
+		this.totalPrice = totalPrice;
+		this.totalPaidAmount = totalPaidAmount;
 	}
 
-	public Order(long orderId, Timestamp createdAt, int replacementNote, boolean status, double total_price, double total_paid_amount, User user) {
+	public Order(long orderId, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, User user) {
 		this.orderId = orderId;
 		this.byUser = user.getUserId();
 		this.createdAt = createdAt;
 		this.replacementNote = replacementNote;
 		this.status = status;
-		this.total_price = total_price;
-		this.total_paid_amount = total_paid_amount;
+		this.totalPrice = totalPrice;
+		this.totalPaidAmount = totalPaidAmount;
 
 		this.user=user;
 	}
 
 	public Order(Order s) {
-		this(s.getOrderId(),s.getByUser(),s.getOrder_date(),s.getReplacementNote(),s.isStatus(),s.getTotal_price(),s.getTotal_paid_amount(),s.getCustomerId(),s.getCustomer_name());
+		this(s.getOrderId(),s.getByUser(),s.getOrder_date(),s.getReplacementNote(),s.isStatus(),s.getTotalPrice(),s.getTotalPaidAmount(),s.getCustomerId(),s.getCustomer_name());
 	}
 
 	public static Order newInstance(Order s){
-		return new Order(s.getOrderId(),s.getByUser(),s.getOrder_date(),s.getReplacementNote(),s.isStatus(),s.getTotal_price(),s.getTotal_paid_amount(),s.getCustomerId(),s.getCustomer_name());
+		return new Order(s.getOrderId(),s.getByUser(),s.getOrder_date(),s.getReplacementNote(),s.isStatus(),s.getTotalPrice(),s.getTotalPaidAmount(),s.getCustomerId(),s.getCustomer_name());
 	}
 
 	//endregion
@@ -108,12 +108,12 @@ public class Order {
         return status;
     }
 
-    public double getTotal_price() {
-        return total_price;
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
-    public double getTotal_paid_amount() {
-        return total_paid_amount;
+    public double getTotalPaidAmount() {
+        return totalPaidAmount;
     }
     public List<OrderDetails> getOrders() {
         return orders;
@@ -162,17 +162,17 @@ public class Order {
         this.byUser = byUser;
     }
 
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 
     public void setReplacementNote(int replacementNote) {
         this.replacementNote = replacementNote;
     }
 
-    public void setTotal_price(double total_price) {
-        this.total_price = total_price;
-    }
 
-    public void setTotal_paid_amount(double total_paid_amount) {
-        this.total_paid_amount = total_paid_amount;
+    public void setTotalPaidAmount(double total_paid_amount) {
+        this.totalPaidAmount = total_paid_amount;
     }
 
     public void setOrders(List<OrderDetails> orders) {
@@ -209,8 +209,8 @@ public class Order {
 				", order_date=" + createdAt +
 				", replacementNote=" + replacementNote +
 				", status=" + status +
-				", total_price=" + total_price +
-				", total_paid_amount=" + total_paid_amount +
+				", total_price=" + totalPrice +
+				", total_paid_amount=" + totalPaidAmount +
 				", user=" + user +
 				'}';
 	}
@@ -219,7 +219,7 @@ public class Order {
 
 		String recordType = "320", OP = "+", mOP = "-";
 
-		if (total_price < 0){
+		if (totalPrice < 0){
 			recordType = "330";
 			OP = "-";
 			//total_paid_amount *= -1;
@@ -228,23 +228,23 @@ public class Order {
 		for (OrderDetails o : orders) {
 			totalPriceBeforeDiscount += (o.getUnitPrice()*o.getQuantity());
 		}
-		if(total_price <0){
-			total_price *= -1;
+		if(totalPrice <0){
+            totalPrice *= -1;
 
 		}
-		double totalSaved = totalPriceBeforeDiscount - total_price;
+		double totalSaved = totalPriceBeforeDiscount - totalPrice;
 		if(totalSaved<0)
 			totalSaved *= -1;
 		//totalSaved = (totalSaved / (1 + SETTINGS.tax / 100));
-		if(total_paid_amount < 0) {
+		if(totalPaidAmount < 0) {
 			totalSaved = 0;
-			totalPriceBeforeDiscount = total_price;
+			totalPriceBeforeDiscount = totalPrice;
 		}
 
-		double noTax = total_price / (1 + (SETTINGS.tax / 100));
+		double noTax = totalPrice / (1 + (SETTINGS.tax / 100));
 		if(noTax<0)
 			noTax *= -1;
-		double tax = total_price -noTax;
+		double tax = totalPrice -noTax;
 		String name = "";
 		if(user.getFullName().length()>9)
 			name = user.getFullName().substring(0, 9);
@@ -260,7 +260,7 @@ public class Order {
 				+ mOP + Util.x12V99(((totalSaved)/(1+(SETTINGS.tax/100))))
 				+ OP + Util.x12V99(noTax)
 				+ OP + Util.x12V99(tax+0.004)
-				+ OP + Util.x12V99(total_price)
+				+ OP + Util.x12V99(totalPrice)
 				+ OP + String.format(locale, "%09.0f", 0.0f) + String.format(locale, "%02d", (int) ((0.0f - Math.floor(0.0f) + 0.001) * 100))
 				+ Util.spaces(13) + "a0" + Util.spaces(8) + "b0" + "0" + DateConverter.getYYYYMMDD(new Timestamp(System.currentTimeMillis())) + Util.spaces(7) + name + String.format(locale, "%07d", orderId)
 				+ Util.spaces(13);

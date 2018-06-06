@@ -325,7 +325,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
 
             } else {
                 _aReport.setLastZReportID(zReport.getzReportId());
-                _aReport.setLastSaleID(zReport.getEndOrderId());
+                _aReport.setLastOrderId(zReport.getEndOrderId());
 
                 ShowAReportDialog(_aReport);
             }
@@ -334,7 +334,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
             _aReport.setByUserID(SESSION._USER.getUserId());
             _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             _aReport.setLastZReportID(-1);
-            _aReport.setLastSaleID(-1);
+            _aReport.setLastOrderId(-1);
 
             ShowAReportDialog(_aReport);
         }
@@ -380,7 +380,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
                     aReport.setAmount(Double.parseDouble(str));
                     AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(OldDashBoard.this);
                     aReportDBAdapter.open();
-                    aReportDBAdapter.insertEntry(aReport.getCreatedAt(),aReport.getByUserID(),aReport.getAmount(),aReport.getLastSaleID(),aReport.getLastZReportID());
+                    aReportDBAdapter.insertEntry(aReport.getCreatedAt(),aReport.getByUserID(),aReport.getAmount(),aReport.getLastOrderId(),aReport.getLastZReportID());
                     aReportDBAdapter.close();
                     discountDialog.cancel();
                 }

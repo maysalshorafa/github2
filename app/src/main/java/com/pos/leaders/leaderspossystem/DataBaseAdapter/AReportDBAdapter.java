@@ -86,7 +86,7 @@ public class AReportDBAdapter {
         val.put(A_REPORT_COLUMN_CREATEDATE, String.valueOf(aReport.getCreatedAt()));
         val.put(A_REPORT_COLUMN_BYUSER, aReport.getByUserID());
         val.put(A_REPORT_COLUMN_AMOUNT, aReport.getAmount());
-        val.put(A_REPORT_COLUMN_LASTSALEID, aReport.getLastSaleID());
+        val.put(A_REPORT_COLUMN_LASTSALEID, aReport.getLastOrderId());
         val.put(A_REPORT_COLUMN_LASTZREPORTID, aReport.getLastZReportID());
         try {
             return db.insert(A_REPORT_TABLE_NAME, null, val);

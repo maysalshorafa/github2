@@ -81,7 +81,7 @@ public class OrderDBAdapter {
 	}
 
 	public long insertEntry(Order sale , long _custmer_id, String custmer_name) {
-		return insertEntry(sale.getByUser(), sale.getOrder_date(), sale.getReplacementNote(), sale.isStatus(), sale.getTotal_price(),sale.getTotal_paid_amount(),_custmer_id,custmer_name);
+		return insertEntry(sale.getByUser(), sale.getOrder_date(), sale.getReplacementNote(), sale.isStatus(), sale.getTotalPrice(),sale.getTotalPaidAmount(),_custmer_id,custmer_name);
 	}
 	public long insertEntry(Order sale){
         ContentValues val = new ContentValues();
@@ -91,8 +91,8 @@ public class OrderDBAdapter {
         val.put(SALES_COLUMN_SALEDATE, String.valueOf(sale.getOrder_date()));
         val.put(SALES_COLUMN_REPLACEMENTNOTE, sale.getReplacementNote());
         val.put(SALES_COLUMN_CANCELED, sale.isStatus()?1:0);
-        val.put(SALES_COLUMN_TOTALPRICE, sale.getTotal_price());
-        val.put(SALES_COLUMN_TOTALPAID, sale.getTotal_paid_amount());
+        val.put(SALES_COLUMN_TOTALPRICE, sale.getTotalPrice());
+        val.put(SALES_COLUMN_TOTALPAID, sale.getTotalPaidAmount());
         val.put(SALES_COLUMN_CUSTOMER_ID, sale.getCustomerId());
         val.put(SALES_COLUMN_CUSTOMER_NAME, sale.getCustomer_name());
 
@@ -141,7 +141,7 @@ public class OrderDBAdapter {
 		val.put(SALES_COLUMN_SALEDATE, String.valueOf(sale.getOrder_date()));
 		val.put(SALES_COLUMN_REPLACEMENTNOTE, sale.getReplacementNote());
 		val.put(SALES_COLUMN_CANCELED, sale.isStatus());
-		val.put(SALES_COLUMN_TOTALPRICE, sale.getTotal_price());
+		val.put(SALES_COLUMN_TOTALPRICE, sale.getTotalPrice());
 
 		String where = SALES_COLUMN_ID + " = ?";
 		db.update(SALES_TABLE_NAME, val, where, new String[]{sale.getOrderId() + ""});

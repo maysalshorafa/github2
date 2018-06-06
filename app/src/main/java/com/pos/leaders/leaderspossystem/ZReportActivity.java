@@ -81,7 +81,7 @@ public class ZReportActivity extends AppCompatActivity {
                 i.putExtra(COM_LEADPOS_ZREPORT_ID,zReportList.get(position).getzReportId());
                 i.putExtra(COM_LEADPOS_ZREPORT_FORM,zReportList.get(position).getStartOrderId());
                 i.putExtra(COM_LEADPOS_ZREPORT_TO,zReportList.get(position).getEndOrderId());
-                i.putExtra(COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReportList.get(position).getTotal_amount());
+                i.putExtra(COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReportList.get(position).getTotalAmount());
 
                 i.putExtra(COM_LEADPOS_ZREPORT_HISTORY, true);
                 startActivity(i);

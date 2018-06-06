@@ -137,12 +137,12 @@ public class BKMVDATA {
                 Order sale = (Order) records.get(i).getObj();
                 strRecords += sale.BKMVDATA(counter, SETTINGS.companyID) + "\r\n";
                 cC100++;
-                if(sale.getTotal_price()<0){
+                if(sale.getTotalPrice()<0){
                     c330++;
-                    a330 += sale.getTotal_price();
+                    a330 += sale.getTotalPrice();
                 } else {
                     c320++;
-                    a320 += sale.getTotal_price();
+                    a320 += sale.getTotalPrice();
                 }
             } else if (records.get(i).getObj() instanceof OrderDetails) {
                 OrderDetails order = (OrderDetails) records.get(i).getObj();

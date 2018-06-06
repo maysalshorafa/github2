@@ -135,7 +135,7 @@ public class Payment {
         if(amount<0)
             totalDiscount = 0;
         totalItems = 1;
-        double noTax = sale.getTotal_price() / (1 + (SETTINGS.tax / 100));
+        double noTax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
         if(noTax<0)
             noTax *= -1;
         return "D110" + String.format(locale, "%09d", rowNumber) + companyID + s + String.format(locale, "%020d", orderId) + String.format(locale, "%04d", paymentId) + s + String.format(locale, "%020d", orderId) + "3" + String.format(locale, "%020d", orderId) + String.format(locale, "%30s", "sale") + Util.spaces(50) + Util.spaces(30) +

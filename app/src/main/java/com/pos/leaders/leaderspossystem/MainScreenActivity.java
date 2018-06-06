@@ -328,9 +328,9 @@ public class MainScreenActivity extends Activity {
 										@Override
 										public void onClick(View v) {
 											double pid=Double.parseDouble(cashETCash.getText().toString());
-											double tot=SESSION._SALE.getTotal_price();
+											double tot=SESSION._SALE.getTotalPrice();
 											if(pid>=tot){
-												SESSION._SALE.setTotal_paid_amount(pid);
+												SESSION._SALE.setTotalPaidAmount(pid);
 												Toast.makeText(MainScreenActivity.this, "return :"+(pid-tot), Toast.LENGTH_LONG).show();
 												long saleId=saleDBAdapter.insertEntry(SESSION._SALE,1,"dd");
                                                 SESSION._SALE.setOrderId(saleId);
@@ -493,7 +493,7 @@ public class MainScreenActivity extends Activity {
 		for (OrderDetails o : SESSION._ORDERS) {
 			saleTotalPrice += o.getItemTotalPrice();
 		}
-		SESSION._SALE.setTotal_price(saleTotalPrice);
+		SESSION._SALE.setTotalPrice(saleTotalPrice);
 		tvTotalPrice.setText(saleTotalPrice + " " + getString(R.string.ins));
 	}
 

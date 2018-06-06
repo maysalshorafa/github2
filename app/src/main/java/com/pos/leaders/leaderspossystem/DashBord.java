@@ -223,12 +223,12 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
                 if (aReport == null) {
                     _aReport.setLastZReportID(-1);
-                    _aReport.setLastSaleID(-1);
+                    _aReport.setLastOrderId(-1);
 
                     ShowAReportDialog(_aReport);
                 } else {
                     _aReport.setLastZReportID(zReport.getzReportId());
-                    _aReport.setLastSaleID(zReport.getEndOrderId());
+                    _aReport.setLastOrderId(zReport.getEndOrderId());
 
                     ShowAReportDialog(_aReport);
                 }
@@ -556,7 +556,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         aReport.setAmount(Double.parseDouble(str));
                         AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
-                        aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastSaleID(), aReport.getLastZReportID());
+                        aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
                         aReportDBAdapter.close();
                         discountDialog.cancel();
                     }
@@ -798,7 +798,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         aReport.setAmount(aReportTotalAmount);
                         AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
-                        aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastSaleID(), aReport.getLastZReportID());
+                        aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
                         try {
                             aReportId = aReportDBAdapter.getLastRow().getaReportId();
                         } catch (Exception e) {

@@ -18,7 +18,7 @@ public class ZReport {
     private long startOrderId;
     private double amount;
     @JsonIgnore
-    private double total_amount;
+    private double totalAmount;
     @JsonIgnore
     private Order startSale;
     private long endOrderId;
@@ -29,14 +29,14 @@ public class ZReport {
 
     }
 
-    public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount, double total_amount) {
+    public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount, double totalAmount) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
         this.startOrderId = startOrderId;
         this.endOrderId = endOrderId;
         this.amount=amount;
-        this.total_amount=total_amount;
+        this.totalAmount = totalAmount;
     }
 
     public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount) {
@@ -46,7 +46,7 @@ public class ZReport {
         this.startOrderId = startOrderId;
         this.endOrderId = endOrderId;
         this.amount=amount;
-        this.total_amount=total_amount;
+        this.totalAmount = totalAmount;
     }
 
     public ZReport(long zReportId, Timestamp createdAt, User user, Order startSale, Order endSale) {
@@ -82,7 +82,7 @@ public class ZReport {
         this.startOrderId = zReport.startOrderId;
         this.endOrderId = zReport.endOrderId;
         this.amount=zReport.amount;
-        this.total_amount=zReport.total_amount;
+        this.totalAmount =zReport.totalAmount;
     }
 
     public long getzReportId() {
@@ -153,16 +153,16 @@ public class ZReport {
         return amount;
     }
 
-    public double getTotal_amount() {
-        return total_amount;
+    public double getTotalAmount() {
+        return totalAmount;
     }
 
     public void setAmount(double amount) {
         this.amount = amount;
     }
 
-    public void setTotal_amount(double total_amount) {
-        this.total_amount = total_amount;
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
     //region OpenFormat
     public String BKMVDATA(int rowNumber,String pc,int totalRows){

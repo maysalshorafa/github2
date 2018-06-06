@@ -13,26 +13,26 @@ public class CustomerAssistant {
     private double amount;
     private int type;
     private String salesCase;
-    private Timestamp saleDate;
+    private Timestamp createdAt;
 
 
 
     public CustomerAssistant() {
     }
 
-    public void setSaleDate(Timestamp saleDate) {
-        this.saleDate = saleDate;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
 
-    public CustomerAssistant(long custAssistantId, long orderId, long customerAssistantID, double amount, int type, String salesCase, Timestamp saleDate) {
+    public CustomerAssistant(long custAssistantId, long orderId, long customerAssistantID, double amount, int type, String salesCase, Timestamp createdAt) {
         this.custAssistantId = custAssistantId;
         this.orderId = orderId;
         this.customerAssistantID = customerAssistantID;
         this.amount = amount;
         this.type = type;
         this.salesCase = salesCase;
-        this.saleDate=saleDate;
+        this.createdAt = createdAt;
     }
 
     public long getCustAssistantId() {
@@ -47,8 +47,8 @@ public class CustomerAssistant {
         return orderId;
     }
 
-    public Timestamp getSaleDate() {
-        return saleDate;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
     public long getCustomerAssistantID() {

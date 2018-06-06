@@ -280,12 +280,12 @@ public class SalesManagementActivity extends AppCompatActivity {
                         else
                             print(invoiceImg.cancelingInvoice(sale, false, null));
                         sale.setPayment(new Payment(payments.get(0)));
-                        long sID = saleDBAdapter.insertEntry(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotal_price() * -1, sale.getTotal_paid_amount() * -1, sale.getCustomerId(), sale.getCustomer_name());
+                        long sID = saleDBAdapter.insertEntry(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name());
 
                         saleDBAdapter.close();
                         PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(SalesManagementActivity.this);
                         paymentDBAdapter1.open();
-                        paymentDBAdapter1.insertEntry(sale.getPayment().getPaymentWay(), sale.getTotal_price() * -1, sID);
+                        paymentDBAdapter1.insertEntry(sale.getPayment().getPaymentWay(), sale.getTotalPrice() * -1, sID);
                         paymentDBAdapter1.close();
                         //// TODO: 19/01/2017 cancel this sale and print return note and mony back by the payment way
                     }

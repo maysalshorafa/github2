@@ -114,7 +114,7 @@ public class BitmapInvoice {
         StaticLayout slTotalText = new StaticLayout("סה''כ", ntp,
                 (int) (PAGE_WIDTH * 0.35), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
 
-        StaticLayout slTotalPrice = new StaticLayout(String.format(new Locale("en"), "%.2f", sale.getTotal_price()), ntp,
+        StaticLayout slTotalPrice = new StaticLayout(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), ntp,
                 (int) (PAGE_WIDTH * 0.35), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
 
 
@@ -124,7 +124,7 @@ public class BitmapInvoice {
         StaticLayout slTaxText = new StaticLayout("חייב במע''מ" + "\n" + "מע''מ " + SETTINGS.tax + " % \n" + "לא חייב במע''מ", tax,
                 (int) (PAGE_WIDTH * 0.35), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
 
-        double notax = sale.getTotal_price() / (1 + (SETTINGS.tax / 100));
+        double notax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
         StaticLayout slTaxNumber = new StaticLayout(String.format(new Locale("en"), "%.2f\n%.2f\n%.2f", notax, notax * (SETTINGS.tax / 100), 0.0f), tax,
                 (int) (PAGE_WIDTH * 0.35), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
 
