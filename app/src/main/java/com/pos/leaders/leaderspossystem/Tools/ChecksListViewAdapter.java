@@ -81,7 +81,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 				holder.etBankNum.setText(checks.get(position).getBankNum() + "");
 				holder.etBenchNum.setText(checks.get(position).getBranchNum() + "");
 				holder.etCheckNum.setText(checks.get(position).getCheckNum() + "");
-				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getDate().getTime())));
+				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getCreatedAt().getTime())));
 
 			}
 		}
@@ -129,7 +129,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date1);
 		cal.set(Calendar.MILLISECOND, 0);
-		checks.get(position).setDate(new java.sql.Timestamp(date1.getTime()));
+		checks.get(position).setCreatedAt(new java.sql.Timestamp(date1.getTime()));
 		this.notifyDataSetChanged();
 	}
 

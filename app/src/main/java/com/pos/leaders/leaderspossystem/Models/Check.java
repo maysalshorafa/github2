@@ -52,7 +52,7 @@ public class Check {
 	}
 
 	public Check(Check check){
-		this(check.getCheckNum(),check.getBankNum(),check.getBranchNum(),check.getAccountNum(),check.getAmount(),check.getDate(),false);
+		this(check.getCheckNum(),check.getBankNum(),check.getBranchNum(),check.getAccountNum(),check.getAmount(),check.getCreatedAt(),false);
 	}
 
 	//endregion
@@ -79,7 +79,7 @@ public class Check {
 		return checkNum;
 	}
 
-	public Timestamp getDate() {
+	public Timestamp getCreatedAt() {
 		return createdAt;
 	}
 
@@ -123,11 +123,11 @@ public class Check {
 		this.checkNum = checkNum;
 	}
 
-	public void setDate(Timestamp date) {
-		this.createdAt = date;
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
 	}
 
-    public void setDeleted(boolean deleted) {
+	public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
 

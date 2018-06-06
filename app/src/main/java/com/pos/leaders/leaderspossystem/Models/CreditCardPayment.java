@@ -10,7 +10,7 @@ public class CreditCardPayment {
     private long creditCardPaymentId;
     private long orderId;
     private double amount;
-    private String CreditCardCompanyName;
+    private String creditCardCompanyName;
     private int transactionType;
     private String last4Digits;
     private String transactionId;
@@ -28,7 +28,7 @@ public class CreditCardPayment {
     public CreditCardPayment(long orderId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, Timestamp createdAt) {
         this.orderId = orderId;
         this.amount = amount;
-        CreditCardCompanyName = creditCardCompanyName;
+        this.creditCardCompanyName = creditCardCompanyName;
         this.transactionType = transactionType;
         this.last4Digits = last4Digits;
         this.transactionId = transactionId;
@@ -44,7 +44,7 @@ public class CreditCardPayment {
         this.creditCardPaymentId = creditCardPaymentId;
         this.orderId = orderId;
         this.amount = amount;
-        CreditCardCompanyName = creditCardCompanyName;
+        this.creditCardCompanyName = creditCardCompanyName;
         this.transactionType = transactionType;
         this.last4Digits = last4Digits;
         this.transactionId = transactionId;
@@ -71,7 +71,7 @@ public class CreditCardPayment {
     }
 
     public String getCreditCardCompanyName() {
-        return CreditCardCompanyName;
+        return creditCardCompanyName;
     }
 
     public int getTransactionType() {
@@ -128,7 +128,7 @@ public class CreditCardPayment {
     }
 
     public void setCreditCardCompanyName(String creditCardCompanyName) {
-        CreditCardCompanyName = creditCardCompanyName;
+        this.creditCardCompanyName = creditCardCompanyName;
     }
 
     public void setTransactionType(int transactionType) {
@@ -176,7 +176,7 @@ public class CreditCardPayment {
                 "accountingId=" + creditCardPaymentId +
                 ", orderId=" + orderId +
                 ", amount=" + amount +
-                ", CreditCardCompanyName='" + CreditCardCompanyName + '\'' +
+                ", creditCardCompanyName='" + creditCardCompanyName + '\'' +
                 ", transactionType=" + transactionType +
                 ", last4Digits='" + last4Digits + '\'' +
                 ", transactionId='" + transactionId + '\'' +

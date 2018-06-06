@@ -228,11 +228,11 @@ public class ChecksActivity extends AppCompatActivity {
 						checkList.set(lsttchildID-1,check);
 					}
 					Check newCheck=new Check(check);
-					if(check.getDate()!=null){
-						Date date = DateConverter.getAfterMonth(new Date(check.getDate().getTime()));
+					if(check.getCreatedAt()!=null){
+						Date date = DateConverter.getAfterMonth(new Date(check.getCreatedAt().getTime()));
 						Calendar cal = Calendar.getInstance();
 						cal.setTime(date);
-						newCheck.setDate(new java.sql.Timestamp(date.getTime()));
+						newCheck.setCreatedAt(new java.sql.Timestamp(date.getTime()));
 						newCheck.setCheckNum(check.getCheckNum()+1);
 
 					}

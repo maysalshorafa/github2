@@ -303,7 +303,7 @@ public class InvoiceImg {
             Block b_checks_amount = new Block(context.getString(R.string.amount), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
             for (Check check : checks) {
                 b_checks_number.text += newLineL + check.getCheckNum();
-                b_checks_date.text += "\n" + DateConverter.toDate(new Date(check.getDate().getTime()));
+                b_checks_date.text += "\n" + DateConverter.toDate(new Date(check.getCreatedAt().getTime()));
                 b_checks_amount.text += "\n" + Util.makePrice(check.getAmount());
             }
             blocks.add(b_checks_amount.Left());
@@ -519,7 +519,7 @@ public class InvoiceImg {
             Block b_checks_amount = new Block(context.getString(R.string.amount), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
             for (Check check : checks) {
                 b_checks_number.text += newLineL + check.getCheckNum();
-                b_checks_date.text += "\n" + DateConverter.toDate(new Date(check.getDate().getTime()));
+                b_checks_date.text += "\n" + DateConverter.toDate(new Date(check.getCreatedAt().getTime()));
                 b_checks_amount.text += "\n" + Util.makePrice(check.getAmount());
             }
             blocks.add(b_checks_amount.Left());
