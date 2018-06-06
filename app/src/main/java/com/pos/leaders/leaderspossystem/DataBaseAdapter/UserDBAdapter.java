@@ -12,8 +12,8 @@ import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
@@ -68,7 +68,7 @@ public class UserDBAdapter {
 
     public long insertEntry(String userName, String password, String firstName, String lastName, String phoneNumber, Double persent, Double hourlyWag) {
 
-        User u = new User(Util.idHealth(this.db, USERS_TABLE_NAME, USERS_COLUMN_ID), userName, password, firstName, lastName, new Date().getTime(), false, phoneNumber, persent, hourlyWag);
+        User u = new User(Util.idHealth(this.db, USERS_TABLE_NAME, USERS_COLUMN_ID), userName, password, firstName, lastName, new Timestamp(System.currentTimeMillis()), false, phoneNumber, persent, hourlyWag);
         User boUser = u;
         boUser.setUserName(Util.getString(boUser.getUserName()));
         boUser.setPassword(Util.getString(boUser.getPassword()));
@@ -94,7 +94,7 @@ public class UserDBAdapter {
         val.put(USERS_COLUMN_PASSWORD, user.getPassword());
         val.put(USERS_COLUMN_FIRSTNAME, user.getFirstName());
         val.put(USERS_COLUMN_LASTNAME, user.getLastName());
-        val.put(USERS_COLUMN_CREATINGDATE, user.getCreatingDate());
+        val.put(USERS_COLUMN_CREATINGDATE, String.valueOf(user.getCreatedAt()));
         val.put(USERS_COLUMN_DISENABLED, user.isHide() ? 1 : 0);
         val.put(USERS_COLUMN_PHONENUMBER, user.getPhoneNumber());
         val.put(USERS_COLUMN_DISCOUNTINPERCENTAGE, user.getPresent());
@@ -290,7 +290,7 @@ public class UserDBAdapter {
         return new User(Long.parseLong(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_ID)))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_USERNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PASSWORD))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_FIRSTNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_LASTNAME))
-                , cursor.getLong(cursor.getColumnIndex(USERS_COLUMN_CREATINGDATE))
+                , Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_CREATINGDATE)))
                 , Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISENABLED)))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PHONENUMBER))
                 , Double.parseDouble(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISCOUNTINPERCENTAGE)))
@@ -312,7 +312,7 @@ public class UserDBAdapter {
         user = new User(Long.parseLong(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_ID)))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_USERNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PASSWORD))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_FIRSTNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_LASTNAME))
-                , cursor.getLong(cursor.getColumnIndex(USERS_COLUMN_CREATINGDATE))
+                , Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_CREATINGDATE)))
                 , Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISENABLED)))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PHONENUMBER))
                 , Double.parseDouble(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISCOUNTINPERCENTAGE)))
@@ -343,7 +343,7 @@ public class UserDBAdapter {
         user = new User(Long.parseLong(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_ID)))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_USERNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PASSWORD))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_FIRSTNAME)), cursor.getString(cursor.getColumnIndex(USERS_COLUMN_LASTNAME))
-                , cursor.getLong(cursor.getColumnIndex(USERS_COLUMN_CREATINGDATE))
+                , Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_CREATINGDATE)))
                 , Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISENABLED)))
                 , cursor.getString(cursor.getColumnIndex(USERS_COLUMN_PHONENUMBER))
                 , Double.parseDouble(cursor.getString(cursor.getColumnIndex(USERS_COLUMN_DISCOUNTINPERCENTAGE)))

@@ -12,6 +12,7 @@ import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class CustomerAssetDB {
 
 
    
-    public long insertEntry(long order_id,long user_id,double amount,int type,String salescase,long saleDate ) {
+    public long insertEntry(long order_id,long user_id,double amount,int type,String salescase,Timestamp saleDate ) {
         CustomerAssistant assest = new CustomerAssistant(Util.idHealth(this.db, CustmerAsset_TabelName, CUSTMER_ASSEST_ID), order_id, user_id, amount,type,salescase,saleDate);
         sendToBroker(MessageType.ADD_CUSTOMER_ASSISTANT, assest, this.context);
 
@@ -91,7 +92,7 @@ public class CustomerAssetDB {
         val.put(CUSTMER_ASSEST_COLUMN_AMOUNT, assest.getAmount());
         val.put(CUSTMER_ASSEST_COLUMN_TYPE, assest.getType());
         val.put(CUSTMER_ASSEST_COLUMN_CASE, assest.getSalesCase());
-        val.put(CustmerAssest_COLUMN_CEATEDATE, assest.getSaleDate());
+        val.put(CustmerAssest_COLUMN_CEATEDATE, String.valueOf(assest.getSaleDate()));
 
         try {
             return db.insert(CustmerAsset_TabelName, null, val);
@@ -122,7 +123,7 @@ public class CustomerAssetDB {
                     Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTMER_ASSEST_COLUMN_AMOUNT))),
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(CUSTMER_ASSEST_COLUMN_TYPE))),
                     cursor.getString(cursor.getColumnIndex(CUSTMER_ASSEST_COLUMN_CASE)),
-                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CustmerAssest_COLUMN_CEATEDATE))));
+                    Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CustmerAssest_COLUMN_CEATEDATE))));
         }
         catch (Exception ex){
             return new CustomerAssistant(Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTMER_ASSEST_ID))),
@@ -131,7 +132,7 @@ public class CustomerAssetDB {
                     Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTMER_ASSEST_COLUMN_AMOUNT))),
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(CUSTMER_ASSEST_COLUMN_TYPE))),
                     cursor.getString(cursor.getColumnIndex(CUSTMER_ASSEST_COLUMN_CASE)),
-                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CustmerAssest_COLUMN_CEATEDATE))));
+                   Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CustmerAssest_COLUMN_CEATEDATE))));
         }
 
     }

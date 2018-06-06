@@ -170,8 +170,11 @@ public class ChecksActivity extends AppCompatActivity {
                     ChecksListViewAdapter.ViewHolder lastItem = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(lvChecks.getChildCount() - 1).getTag();
 
                     checkList.get(lvChecks.getChildCount() - 2);
+					Date utilDate=DateConverter.stringToDate(lastItem.getEtDate());
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(utilDate);
                     _check = new Check(lastItem.getEtCheckNum(), lastItem.getEtBankNum(), lastItem.getEtBenchNum(), lastItem.getEtAccountNum(),
-                            lastItem.getEtAmount(), DateConverter.stringToDate(lastItem.getEtDate()).getTime(), false);
+                            lastItem.getEtAmount(), new java.sql.Timestamp(utilDate.getTime()), false);
                     //lastItem.findViewById(R.id.listChecks_ETAmount);
                     checkList.set(lvChecks.getChildCount()-2,_check);
                 }
@@ -216,15 +219,20 @@ public class ChecksActivity extends AppCompatActivity {
 
 						Log.i("LOOOGT", checkList.toString());
 						checkList.get(lsttchildID-1);
-
+						Date utilDate=DateConverter.stringToDate(lastItem.getEtDate());
+						Calendar cal = Calendar.getInstance();
+						cal.setTime(utilDate);
 						check = new Check(lastItem.getEtCheckNum(), lastItem.getEtBankNum(), lastItem.getEtBenchNum(), lastItem.getEtAccountNum(),
-								lastItem.getEtAmount(), DateConverter.stringToDate(lastItem.getEtDate()).getTime(), false);
+								lastItem.getEtAmount(), new java.sql.Timestamp(utilDate.getTime()), false);
 						//lastItem.findViewById(R.id.listChecks_ETAmount);
 						checkList.set(lsttchildID-1,check);
 					}
 					Check newCheck=new Check(check);
-					if(check.getDate()!=0){
-						newCheck.setDate(DateConverter.getAfterMonth(new Date(check.getDate())).getTime());
+					if(check.getDate()!=null){
+						Date date = DateConverter.getAfterMonth(new Date(check.getDate().getTime()));
+						Calendar cal = Calendar.getInstance();
+						cal.setTime(date);
+						newCheck.setDate(new java.sql.Timestamp(date.getTime()));
 						newCheck.setCheckNum(check.getCheckNum()+1);
 
 					}

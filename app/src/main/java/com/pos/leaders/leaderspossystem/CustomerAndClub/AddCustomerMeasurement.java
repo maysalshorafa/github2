@@ -31,8 +31,8 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -197,7 +197,7 @@ public class AddCustomerMeasurement extends AppCompatActivity {
                 customerMeasurementDBAdapter.open();
                 measurementsDetailsDBAdapter.open();
                         if(isValidValue(measurementValueList,measurementValueListValueType)) {
-                            long measurementId = customerMeasurementDBAdapter.insertEntry(customerId, SESSION._USER.getUserId(),new Date().getTime()); // insert in customerMeasurement Table
+                            long measurementId = customerMeasurementDBAdapter.insertEntry(customerId, SESSION._USER.getUserId(),new Timestamp(System.currentTimeMillis())); // insert in customerMeasurement Table
                             if(measurementId>0){
                                 for (int a=0 ; a<measurementValueList.size();a++){
                                     measurementsDetailsDBAdapter.insertEntry(measurementId, measurementDynamicVariableId.get(a),measurementValueList.get(a)); //insert list of measurement in measurement details

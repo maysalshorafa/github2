@@ -255,7 +255,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 //end
                 try {
                     lastZReport = zReportDBAdapter.getLastRow();
-                    if (lastZReport.getEndSaleId() == lastSale.getOrderId()) {
+                    if (lastZReport.getEndOrderId() == lastSale.getOrderId()) {
                         intent.putExtra(LEADPOS_MAKE_A_REPORT, LEADPOS_MAKE_A_REPORT);
                     }
                 } catch (Exception e) {

@@ -5,7 +5,7 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Locale;
 
@@ -16,7 +16,7 @@ import java.util.Locale;
 public class Order {
 	private long orderId;
 	private long byUser;
-	private long order_date;
+	private Timestamp createdAt;
 	private int replacementNote;
 	private boolean status;
 	private double total_price;
@@ -43,10 +43,10 @@ public class Order {
     public Order() {
     }
 
-    public Order(long orderId, long byUser, long order_date, int replacementNote, boolean status, double total_price, double total_paid_amount, long customer_id, String customer_name) {
+    public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double total_price, double total_paid_amount, long customer_id, String customer_name) {
 		this.orderId = orderId;
 		this.byUser = byUser;
-		this.order_date = order_date;
+		this.createdAt = createdAt;
 		this.replacementNote = replacementNote;
 		this.status = status;
 		this.total_price = total_price;
@@ -55,19 +55,19 @@ public class Order {
 		this.customer_name=customer_name;
 	}
 
-	public Order(long byUser, long order_date, int replacementNote, boolean status, double total_price, double total_paid_amount) {
+	public Order(long byUser, Timestamp createdAt, int replacementNote, boolean status, double total_price, double total_paid_amount) {
 		this.byUser = byUser;
-		this.order_date = order_date;
+		this.createdAt = createdAt;
 		this.replacementNote = replacementNote;
 		this.status = status;
 		this.total_price = total_price;
 		this.total_paid_amount = total_paid_amount;
 	}
 
-	public Order(long orderId, long order_date, int replacementNote, boolean status, double total_price, double total_paid_amount, User user) {
+	public Order(long orderId, Timestamp createdAt, int replacementNote, boolean status, double total_price, double total_paid_amount, User user) {
 		this.orderId = orderId;
 		this.byUser = user.getUserId();
-		this.order_date = order_date;
+		this.createdAt = createdAt;
 		this.replacementNote = replacementNote;
 		this.status = status;
 		this.total_price = total_price;
@@ -96,8 +96,8 @@ public class Order {
         return byUser;
     }
 
-    public long getOrder_date() {
-        return order_date;
+    public Timestamp getOrder_date() {
+        return createdAt;
     }
 
     public int getReplacementNote() {
@@ -146,8 +146,8 @@ public class Order {
 	//region Setter
 
 
-    public void setOrder_date(long order_date) {
-        this.order_date = order_date;
+    public void setOrder_date(Timestamp order_date) {
+        this.createdAt = order_date;
     }
 
     public void setStatus(boolean status) {
@@ -206,7 +206,7 @@ public class Order {
 		return "Order{" +
 				"accountingId=" + orderId +
 				", byUser=" + byUser +
-				", order_date=" + order_date +
+				", order_date=" + createdAt +
 				", replacementNote=" + replacementNote +
 				", status=" + status +
 				", total_price=" + total_price +
@@ -253,16 +253,16 @@ public class Order {
 		}
 
 
-		return "C100" + String.format(locale, "%09d", rowNumber) + pc + recordType + String.format(locale, "%020d", orderId) + DateConverter.getYYYYMMDD(new Date(order_date)) + DateConverter.getHHMM(new Date(order_date))
+		return "C100" + String.format(locale, "%09d", rowNumber) + pc + recordType + String.format(locale, "%020d", orderId) + DateConverter.getYYYYMMDD(new Timestamp(System.currentTimeMillis())) + DateConverter.getHHMM(new Timestamp(System.currentTimeMillis()))
 				+ String.format(locale, "%50s", "OldCustomer") + Util.spaces(50) + Util.spaces(10) + Util.spaces(30) + Util.spaces(8) + Util.spaces(30) + Util.spaces(2) + Util.spaces(15) + Util.spaces(9)
-				+ DateConverter.getYYYYMMDD(new Date(order_date)) + Util.spaces(15) + Util.spaces(3)
+				+ DateConverter.getYYYYMMDD(new Timestamp(System.currentTimeMillis())) + Util.spaces(15) + Util.spaces(3)
 				+ OP + Util.x12V99(totalPriceBeforeDiscount/(1+(SETTINGS.tax/100)))
 				+ mOP + Util.x12V99(((totalSaved)/(1+(SETTINGS.tax/100))))
 				+ OP + Util.x12V99(noTax)
 				+ OP + Util.x12V99(tax+0.004)
 				+ OP + Util.x12V99(total_price)
 				+ OP + String.format(locale, "%09.0f", 0.0f) + String.format(locale, "%02d", (int) ((0.0f - Math.floor(0.0f) + 0.001) * 100))
-				+ Util.spaces(13) + "a0" + Util.spaces(8) + "b0" + "0" + DateConverter.getYYYYMMDD(new Date(order_date)) + Util.spaces(7) + name + String.format(locale, "%07d", orderId)
+				+ Util.spaces(13) + "a0" + Util.spaces(8) + "b0" + "0" + DateConverter.getYYYYMMDD(new Timestamp(System.currentTimeMillis())) + Util.spaces(7) + name + String.format(locale, "%07d", orderId)
 				+ Util.spaces(13);
 
 

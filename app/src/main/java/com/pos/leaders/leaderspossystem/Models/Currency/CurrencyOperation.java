@@ -1,12 +1,14 @@
 package com.pos.leaders.leaderspossystem.Models.Currency;
 
+import java.sql.Timestamp;
+
 /**
  * Created by Win8.1 on 9/24/2017.
  */
 
 public class CurrencyOperation {
     private long currencyOperationId;
-    private long createDate;
+    private Timestamp createdAt;
     private long operation_id;
     private String operation_type;
     private double amount;
@@ -15,9 +17,9 @@ public class CurrencyOperation {
     public CurrencyOperation() {
     }
 
-    public CurrencyOperation(long currencyOperationId, long createDate, long operation_id, String operation_type, double amount, long currency_type) {
+    public CurrencyOperation(long currencyOperationId, Timestamp createdAt, long operation_id, String operation_type, double amount, long currency_type) {
         this.currencyOperationId = currencyOperationId;
-        this.createDate = createDate;
+        this.createdAt = createdAt;
         this.operation_id = operation_id;
         this.operation_type = operation_type;
         this.amount = amount;
@@ -33,12 +35,12 @@ public class CurrencyOperation {
         this.currencyOperationId = currencyOperationId;
     }
 
-    public long getCreateDate() {
-        return createDate;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateDate(long createDate) {
-        this.createDate = createDate;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
     public long getOperation_id() {

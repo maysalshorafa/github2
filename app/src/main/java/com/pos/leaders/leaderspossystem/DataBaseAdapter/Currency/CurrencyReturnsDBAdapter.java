@@ -12,6 +12,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class CurrencyReturnsDBAdapter {
         return db;
     }
 
-    public long insertEntry(long saleId, double amount, long createDate , long currency_type) {
+    public long insertEntry(long saleId, double amount, Timestamp createDate , long currency_type) {
         CurrencyReturns returns = new CurrencyReturns(Util.idHealth(this.db, CurrencyReturnsDBAdapterTabelName, CurrencyReturns_COLUMN_ID), saleId, amount,createDate, currency_type);
         sendToBroker(MessageType.ADD_CURRENCY_RETURN, returns, this.context);
 
@@ -78,7 +79,7 @@ public class CurrencyReturnsDBAdapter {
 
         val.put(CurrencyReturns_COLUMN_SALEID, returns.getSaleId());
         val.put(CurrencyReturns_COLUMN_AMOUNT,returns.getAmount() );
-        val.put(CurrencyReturns_COLUMN_CREATEDATE, String.valueOf(returns.getCreateDate()));
+        val.put(CurrencyReturns_COLUMN_CREATEDATE, String.valueOf(returns.getCreatedAt()));
 
         val.put(CurrencyReturns_COLUMN_CurencyType, returns.getCurrency_type());
         try {
@@ -121,7 +122,7 @@ public class CurrencyReturnsDBAdapter {
         return new CurrencyReturns(Long.parseLong(cursor.getString(cursor.getColumnIndex(CurrencyReturns_COLUMN_ID))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CurrencyReturns_COLUMN_SALEID))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CurrencyReturns_COLUMN_AMOUNT))),
-                cursor.getLong(cursor.getColumnIndex(CurrencyReturns_COLUMN_CREATEDATE)),
+                Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CurrencyReturns_COLUMN_CREATEDATE))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CurrencyReturns_COLUMN_CurencyType))));
     }
 

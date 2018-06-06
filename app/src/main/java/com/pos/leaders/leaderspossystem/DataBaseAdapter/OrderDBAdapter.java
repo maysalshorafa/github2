@@ -13,6 +13,7 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class OrderDBAdapter {
 
 
 
-	public long insertEntry(long byUser, long saleDate, int replacementNote, boolean canceled, double totalPrice,double totalPaid,long custmer_id,String custmer_name) {
+	public long insertEntry(long byUser, Timestamp saleDate, int replacementNote, boolean canceled, double totalPrice, double totalPaid, long custmer_id, String custmer_name) {
         Order sale = new Order(Util.idHealth(this.db, SALES_TABLE_NAME, SALES_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name);
 
         sendToBroker(MessageType.ADD_SALE, sale, this.context);
@@ -87,7 +88,7 @@ public class OrderDBAdapter {
         val.put(SALES_COLUMN_ID,sale.getOrderId());
         //Assign values for each row.
         val.put(SALES_COLUMN_BYUSER, sale.getByUser());
-        val.put(SALES_COLUMN_SALEDATE, sale.getOrder_date());
+        val.put(SALES_COLUMN_SALEDATE, String.valueOf(sale.getOrder_date()));
         val.put(SALES_COLUMN_REPLACEMENTNOTE, sale.getReplacementNote());
         val.put(SALES_COLUMN_CANCELED, sale.isStatus()?1:0);
         val.put(SALES_COLUMN_TOTALPRICE, sale.getTotal_price());
@@ -137,7 +138,7 @@ public class OrderDBAdapter {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 		val.put(SALES_COLUMN_BYUSER, sale.getByUser());
-		val.put(SALES_COLUMN_SALEDATE, sale.getOrder_date());
+		val.put(SALES_COLUMN_SALEDATE, String.valueOf(sale.getOrder_date()));
 		val.put(SALES_COLUMN_REPLACEMENTNOTE, sale.getReplacementNote());
 		val.put(SALES_COLUMN_CANCELED, sale.isStatus());
 		val.put(SALES_COLUMN_TOTALPRICE, sale.getTotal_price());
@@ -218,7 +219,7 @@ public class OrderDBAdapter {
 		try {
 			return new Order(Long.parseLong(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_ID))),
 					Long.parseLong(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_BYUSER))),
-					cursor.getLong(cursor.getColumnIndex(SALES_COLUMN_SALEDATE)),
+					Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_SALEDATE))),
 					cursor.getInt(cursor.getColumnIndex(SALES_COLUMN_REPLACEMENTNOTE)),
 					Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CANCELED))),
 					cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPRICE)),
@@ -228,7 +229,7 @@ public class OrderDBAdapter {
 		catch (Exception ex){
 			return new Order(Long.parseLong(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_ID))),
 					Long.parseLong(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_BYUSER))),
-					cursor.getLong(cursor.getColumnIndex(SALES_COLUMN_SALEDATE)),
+					Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_SALEDATE))),
 					cursor.getInt(cursor.getColumnIndex(SALES_COLUMN_REPLACEMENTNOTE)),
 					Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(SALES_COLUMN_CANCELED))),
 					cursor.getDouble(cursor.getColumnIndex(SALES_COLUMN_TOTALPRICE)),

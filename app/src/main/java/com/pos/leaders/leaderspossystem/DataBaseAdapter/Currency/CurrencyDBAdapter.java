@@ -13,6 +13,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class CurrencyDBAdapter {
     }
 
 
-    public long insertEntry(String name, String currency_code, String country, long rate,long createDate) {
+    public long insertEntry(String name, String currency_code, String country, long rate,Timestamp createDate) {
         Currency currency = new Currency(Util.idHealth(this.db, CURRENCY_TABLE_NAME, CURRENCY_COLUMN_ID), name, currency_code, country,rate,createDate);
         sendToBroker(MessageType.ADD_CURRENCY, currency, this.context);
 
@@ -120,7 +121,7 @@ public class CurrencyDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(CURRENCY_COLUMN_NAME, currency.getName());
-        val.put(CURRENCYCOLUMN_CREATEDATE, currency.getLastUpdate());
+        val.put(CURRENCYCOLUMN_CREATEDATE,String.valueOf( currency.getLastUpdate()));
         val.put(CURRENCY_COLUMN_COUNTRY, currency.getCountry());
         val.put(CURRENCY_COLUMN_CURRENCYCODE, currency.getCurrencyCode());
         val.put(CURRENCYCOLUMN_RATE, currency.getRate());
@@ -151,7 +152,7 @@ public class CurrencyDBAdapter {
                 cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_CURRENCYCODE)),
                 cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_COUNTRY)),
                 Double.parseDouble( cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_RATE))),
-                cursor.getLong(cursor.getColumnIndex(CURRENCYCOLUMN_CREATEDATE)));
+                Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_CREATEDATE))));
     }
 
 }

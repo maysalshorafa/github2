@@ -10,6 +10,8 @@ import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.sql.Timestamp;
+
 /**
  * Created by Win8.1 on 9/24/2017.
  */
@@ -58,7 +60,7 @@ public class CurrencyOperationDBAdapter {
         return db;
     }
 
-    public long insertEntry(long createDate, long operation_id, String operation_type, double amount, long currency_type) {
+    public long insertEntry(Timestamp createDate, long operation_id, String operation_type, double amount, long currency_type) {
 
         CurrencyOperation currency = new CurrencyOperation(Util.idHealth(this.db, CurrencyOperation_TABLE_NAME, CurrencyOperation_COLUMN_ID), createDate, operation_id,operation_type, amount, currency_type);
         //sendToBroker(MessageType.ADD_CURRENCY_OPERATION, currency, this.context);
@@ -79,7 +81,7 @@ public class CurrencyOperationDBAdapter {
         //Assign values for each row.
 
         val.put(CurrencyOperation_COLUMN_ID, currency.getCurrencyOperationId());
-        val.put(CurrencyOperation_TABLE_NAME, currency.getCreateDate());
+        val.put(CurrencyOperation_TABLE_NAME, String.valueOf(currency.getCreatedAt()));
         val.put(CurrencyOperation_COLUMN_Operation_ID, currency.getOperation_id());
         val.put(CurrencyOperation_COLUMN_Operation_Type,currency.getOperation_type());
         val.put(CurrencyOperationCOLUMN_AMOUNT, currency.getAmount());

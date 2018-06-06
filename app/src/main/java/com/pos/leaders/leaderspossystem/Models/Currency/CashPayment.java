@@ -1,25 +1,27 @@
 package com.pos.leaders.leaderspossystem.Models.Currency;
 
+import java.sql.Timestamp;
+
 /**
  * Created by Win8.1 on 9/27/2017.
  */
 
 public class CashPayment {
     private long cashPaymentId;
-    private long saleId;
+    private long orderId;
     private double amount;
     private long currency_type;
-    private long createDate;
+    private Timestamp createdAt;
 
     public CashPayment() {
     }
 
-    public long getCreateDate() {
-        return createDate;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateDate(long createDate) {
-        this.createDate = createDate;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
 
@@ -36,16 +38,16 @@ public class CashPayment {
 
 
     // Constructors
-    public CashPayment(long cashPaymentId, long saleId, double amount, long currency_type, long createDate) {
+    public CashPayment(long cashPaymentId, long orderId, double amount, long currency_type, Timestamp createdAt) {
         this.cashPaymentId = cashPaymentId;
         this.amount = amount;
-        this.saleId = saleId;
+        this.orderId = orderId;
         this.currency_type=currency_type;
-        this.createDate=createDate;
+        this.createdAt = createdAt;
     }
 
     public CashPayment(CashPayment p) {
-        this(p.getCashPaymentId(),  p.getSaleId(),p.getAmount(),p.getCurrency_type(),p.getCreateDate());
+        this(p.getCashPaymentId(),  p.getOrderId(),p.getAmount(),p.getCurrency_type(),p.getCreatedAt());
     }
 
     // Getters
@@ -54,8 +56,8 @@ public class CashPayment {
     }
 
 
-    public long getSaleId() {
-        return saleId;
+    public long getOrderId() {
+        return orderId;
     }
 
     public double getAmount() {
@@ -68,7 +70,7 @@ public class CashPayment {
                 "cashPaymentId=" + cashPaymentId +
                 ",currency_type ='" + currency_type + '\'' +
                 ", amount='" + amount + '\'' +
-                ", saleId=" + saleId +
+                ", orderId=" + orderId +
                 '}';
     }
 

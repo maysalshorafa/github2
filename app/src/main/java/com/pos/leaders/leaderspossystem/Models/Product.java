@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.Models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -20,7 +21,7 @@ public class Product {
     private double costPrice;
     private boolean withTax;
     private boolean weighable;
-    private long creatingDate;
+    private Timestamp createdAt;
     private boolean hide;
     private long departmentId;
     private long byUser;
@@ -63,7 +64,7 @@ public class Product {
     // region Constructor
     public Product(long productId, String name, String barCode, String description,
                    double price, double costPrice, boolean withTax, boolean weighable,
-                   long creatingDate, boolean hide, long departmentId, long byUser , int with_pos, int with_point_system) {
+                   Timestamp createdAt, boolean hide, long departmentId, long byUser , int with_pos, int with_point_system) {
         this.productId = productId;
         this.name = name;
         this.barCode = barCode;
@@ -72,7 +73,7 @@ public class Product {
         this.description = description;
         this.withTax = withTax;
         this.weighable = weighable;
-        this.creatingDate = creatingDate;
+        this.createdAt = createdAt;
         this.hide = hide;
         this.departmentId = departmentId;
         this.byUser = byUser;
@@ -82,7 +83,7 @@ public class Product {
 
     public Product(long productId, String name, String barCode, String description,
                    double price, double costPrice, boolean withTax, boolean weighable,
-                   long creatingDate, long departmentId, long byUser , int with_pos, int with_point_system) {
+                   Timestamp createdAt, long departmentId, long byUser , int with_pos, int with_point_system) {
         this.productId = productId;
         this.name = name;
         this.barCode = barCode;
@@ -91,7 +92,7 @@ public class Product {
         this.description = description;
         this.withTax = withTax;
         this.weighable = weighable;
-        this.creatingDate = creatingDate;
+        this.createdAt = createdAt;
         this.departmentId = departmentId;
         this.byUser = byUser;
         this.with_pos=with_pos;
@@ -134,7 +135,7 @@ public class Product {
     public Product(Product product){
         this(product.getProductId(),product.getName(),product.getBarCode(),product.getDescription(),
                 product.getPrice(),product.getCostPrice(),product.isWithTax(),product.isWeighable(),
-                product.getCreatingDate(),product.isHide(),product.getDepartmentId(),product.getByUser(),product.getWith_pos(),product.getWith_point_system());
+                product.getCreatedAt(),product.isHide(),product.getDepartmentId(),product.getByUser(),product.getWith_pos(),product.getWith_point_system());
     }
 
     public Product(){}
@@ -175,8 +176,8 @@ public class Product {
         return weighable;
     }
 
-    public long getCreatingDate() {
-        return creatingDate;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
     public boolean isHide() {
@@ -250,7 +251,7 @@ public class Product {
                 ", costPrice=" + costPrice +
                 ", withTax=" + withTax +
                 ", weighable=" + weighable +
-                ", creatingDate=" + creatingDate +
+                ", createdAt=" + createdAt +
                 ", hide=" + hide +
                 ", departmentId=" + departmentId +
                 ", byUser=" + byUser +

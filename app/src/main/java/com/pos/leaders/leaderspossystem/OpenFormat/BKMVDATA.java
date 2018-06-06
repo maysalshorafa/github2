@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -103,7 +104,7 @@ public class BKMVDATA {
             addSale(s);
             addPayment(s);
             for (OrderDetails o : s.getOrders()) {
-                addOrders(o, new Date(s.getOrder_date()));
+                addOrders(o, s.getOrder_date());
             }
         }
         for (ZReport z : zReports) {
@@ -173,7 +174,7 @@ public class BKMVDATA {
                 accountingSalesTax.totalCredit += (payment.getAmount() - withoutTax);
 
                 cB100++;
-                Date sdo = new Date(_sale.getOrder_date());
+                Date sdo = new Date(_sale.getOrder_date().getTime());
 
                 switch (payment.getPaymentWay()) {
                     case CONSTANT.CASH:
@@ -309,7 +310,7 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return new Date(sale.getOrder_date());
+                return new Date(sale.getOrder_date().getTime());
             }
         });
     }
@@ -323,12 +324,12 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return new Date(payment.getOrder_date() + 1);
+                return new Date(payment.getOrder_date().getTime() + 1);
             }
         });
     }
 
-    public void addOrders(final OrderDetails o, final Date d) {
+    public void addOrders(final OrderDetails o, final Timestamp d) {
         records.add(new Record() {
             @Override
             public Object getObj() {
@@ -351,7 +352,7 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return new Date(z.getCreationDate());
+                return new Date(z.getCreatedAt());
             }
         });
     }
@@ -365,7 +366,7 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return new Date(a.getCreationDate());
+                return new Date(a.getCreatedAt().getTime());
             }
         });
     }

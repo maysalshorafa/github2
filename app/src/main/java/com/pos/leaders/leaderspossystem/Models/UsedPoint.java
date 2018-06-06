@@ -6,16 +6,16 @@ package com.pos.leaders.leaderspossystem.Models;
 
 public class UsedPoint {
     public long usedPointId;
-    public long saleId ;
+    public long orderId ;
     public int unUsed_point_amount;
     public long customer_id;
 
     public UsedPoint() {
     }
 
-    public UsedPoint(long usedPointId, long saleId, int unUsed_point_amount, long customer_id) {
+    public UsedPoint(long usedPointId, long orderId, int unUsed_point_amount, long customer_id) {
         this.usedPointId = usedPointId;
-        this.saleId = saleId;
+        this.orderId = orderId;
         this.unUsed_point_amount = unUsed_point_amount;
         this.customer_id = customer_id;
     }
@@ -30,11 +30,11 @@ public class UsedPoint {
     }
 
     public long getSaleId() {
-        return saleId;
+        return orderId;
     }
 
     public void setSaleId(long saleId) {
-        this.saleId = saleId;
+        this.orderId = saleId;
     }
 
     public int getUnUsed_point_amount() {

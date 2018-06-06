@@ -26,12 +26,10 @@ public class PaymentDBAdapter {
 	// Column Names
 	protected static final String PAYMENT_COLUMN_ID = "id";
 	protected static final String PAYMENT_COLUMN_PAYMENTWAY = "paymentWay";
-	protected static final String PAYMENT_COLUMN_SALEID = "saleId";
+	protected static final String PAYMENT_COLUMN_ORDERID = "orderId";
 	protected static final String PAYMENT_COLUMN_AMOUNT = "amount";
 
-	private static final String PAYMENT_CHECKS_ID = "checkId";
-
-	public static final String DATABASE_CREATE = "CREATE TABLE `payment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `paymentWay` TEXT NOT NULL, `amount` REAL NOT NULL, `checkId` INTEGER , `saleId` INTEGER, FOREIGN KEY(`saleId`) REFERENCES `sales.usedPointId` ,FOREIGN KEY(`checkId`) REFERENCES `checks.usedPointId`)";
+	public static final String DATABASE_CREATE = "CREATE TABLE `payment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `paymentWay` TEXT NOT NULL, `amount` REAL NOT NULL,`orderId` INTEGER, FOREIGN KEY(`orderId`) REFERENCES `_Order.id`)";
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
 	// Context of the application using the database.
@@ -78,7 +76,7 @@ public class PaymentDBAdapter {
 
 		val.put(PAYMENT_COLUMN_PAYMENTWAY, payment.getPaymentWay());
 		val.put(PAYMENT_COLUMN_AMOUNT,payment.getAmount() );
-		val.put(PAYMENT_COLUMN_SALEID, payment.getSaleId());
+		val.put(PAYMENT_COLUMN_ORDERID, payment.getSaleId());
 		try {
 			return db.insert(PAYMENT_TABLE_NAME, null, val);
 		} catch (SQLException ex) {
@@ -104,7 +102,7 @@ public class PaymentDBAdapter {
 	public List<Payment> getPaymentBySaleID(long saleID) {
 		List<Payment> salePaymentList = new ArrayList<Payment>();
 
-		Cursor cursor = db.rawQuery("select * from " + PAYMENT_TABLE_NAME +" where "+PAYMENT_COLUMN_SALEID+"="+saleID, null);
+		Cursor cursor = db.rawQuery("select * from " + PAYMENT_TABLE_NAME +" where "+PAYMENT_COLUMN_ORDERID+"="+saleID, null);
 		cursor.moveToFirst();
 
 		while (!cursor.isAfterLast()) {
@@ -119,7 +117,7 @@ public class PaymentDBAdapter {
         return new Payment(Long.parseLong(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_PAYMENTWAY)),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_AMOUNT))),
-                Long.parseLong(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_SALEID))));
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_ORDERID))));
     }
 
 }

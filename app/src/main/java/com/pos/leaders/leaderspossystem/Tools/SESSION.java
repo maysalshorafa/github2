@@ -2,11 +2,17 @@ package com.pos.leaders.leaderspossystem.Tools;
 
 import android.util.Pair;
 
-import com.pos.leaders.leaderspossystem.Models.*;
+import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
+import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Permission.UserPermissions;
+import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
+import com.pos.leaders.leaderspossystem.Models.User;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,7 +47,7 @@ public class SESSION {
 
 	public static void _Rest() {
 		SESSION._ORDERS = new ArrayList<OrderDetails>();
-		SESSION._SALE = new Order(SESSION._USER.getUserId(), new Date().getTime(), 0, false, 0, 0);
+		SESSION._SALE = new Order(SESSION._USER.getUserId(),new Timestamp(System.currentTimeMillis()), 0, false, 0, 0);
 		SESSION._CHECKS_HOLDER = new ArrayList<Check>();
 		SESSION._ORDER = null;
 

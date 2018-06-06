@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.Models.CustomerMeasurement;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -10,14 +11,14 @@ public class CustomerMeasurement {
     private long customerMeasurementId;
     private long customerId;
     private long userId;
-    private long visitDate;
+    private Timestamp visitDate;
     private List<MeasurementsDetails>measurementsDetailsList;
     //Constructors
 
     public CustomerMeasurement() {
     }
 
-    public CustomerMeasurement(long customerMeasurementId, long customerId, long userId, long visitDate) {
+    public CustomerMeasurement(long customerMeasurementId, long customerId, long userId, Timestamp visitDate) {
         this.customerMeasurementId = customerMeasurementId;
         this.customerId = customerId;
         this.userId = userId;
@@ -40,7 +41,7 @@ public class CustomerMeasurement {
         return userId;
     }
 
-    public long getVisitDate() {
+    public Timestamp getVisitDate() {
         return visitDate;
     }
 
@@ -61,7 +62,7 @@ public class CustomerMeasurement {
         this.userId = userId;
     }
 
-    public void setVisitDate(long visitDate) {
+    public void setVisitDate(Timestamp visitDate) {
         this.visitDate = visitDate;
     }
 

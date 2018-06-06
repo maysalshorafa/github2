@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -43,6 +42,7 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -317,7 +317,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
 
         if (aReport != null && zReport != null) {
             _aReport.setByUserID(SESSION._USER.getUserId());
-            _aReport.setCreationDate(new Date().getTime());
+            _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
 
             if (aReport.getLastZReportID() == zReport.getzReportId()) {
@@ -325,14 +325,14 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
 
             } else {
                 _aReport.setLastZReportID(zReport.getzReportId());
-                _aReport.setLastSaleID(zReport.getEndSaleId());
+                _aReport.setLastSaleID(zReport.getEndOrderId());
 
                 ShowAReportDialog(_aReport);
             }
 
         } else if(aReport==null) {
             _aReport.setByUserID(SESSION._USER.getUserId());
-            _aReport.setCreationDate(new Date().getTime());
+            _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             _aReport.setLastZReportID(-1);
             _aReport.setLastSaleID(-1);
 
@@ -380,7 +380,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
                     aReport.setAmount(Double.parseDouble(str));
                     AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(OldDashBoard.this);
                     aReportDBAdapter.open();
-                    aReportDBAdapter.insertEntry(aReport.getCreationDate(),aReport.getByUserID(),aReport.getAmount(),aReport.getLastSaleID(),aReport.getLastZReportID());
+                    aReportDBAdapter.insertEntry(aReport.getCreatedAt(),aReport.getByUserID(),aReport.getAmount(),aReport.getLastSaleID(),aReport.getLastZReportID());
                     aReportDBAdapter.close();
                     discountDialog.cancel();
                 }

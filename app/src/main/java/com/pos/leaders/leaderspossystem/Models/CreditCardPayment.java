@@ -1,12 +1,14 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import java.sql.Timestamp;
+
 /**
  * Created by KARAM on 31/10/2017.
  */
 
 public class CreditCardPayment {
     private long creditCardPaymentId;
-    private long saleId;
+    private long orderId;
     private double amount;
     private String CreditCardCompanyName;
     private int transactionType;
@@ -17,14 +19,14 @@ public class CreditCardPayment {
     private double firstPaymentAmount;
     private double otherPaymentAmount;
     private String cardholder;
-    private long createDate;
+    private Timestamp createdAt;
 
 
     public CreditCardPayment() {
     }
 
-    public CreditCardPayment(long saleId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, long createDate) {
-        this.saleId = saleId;
+    public CreditCardPayment(long orderId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, Timestamp createdAt) {
+        this.orderId = orderId;
         this.amount = amount;
         CreditCardCompanyName = creditCardCompanyName;
         this.transactionType = transactionType;
@@ -35,12 +37,12 @@ public class CreditCardPayment {
         this.firstPaymentAmount = firstPaymentAmount;
         this.otherPaymentAmount = otherPaymentAmount;
         this.cardholder = cardholder;
-        this.createDate = createDate;
+        this.createdAt = createdAt;
     }
 
-    public CreditCardPayment(long creditCardPaymentId, long saleId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, long createDate) {
+    public CreditCardPayment(long creditCardPaymentId, long orderId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, Timestamp createdAt) {
         this.creditCardPaymentId = creditCardPaymentId;
-        this.saleId = saleId;
+        this.orderId = orderId;
         this.amount = amount;
         CreditCardCompanyName = creditCardCompanyName;
         this.transactionType = transactionType;
@@ -51,7 +53,7 @@ public class CreditCardPayment {
         this.firstPaymentAmount = firstPaymentAmount;
         this.otherPaymentAmount = otherPaymentAmount;
         this.cardholder = cardholder;
-        this.createDate = createDate;
+        this.createdAt = createdAt;
     }
 
     //region Getters
@@ -60,8 +62,8 @@ public class CreditCardPayment {
         return creditCardPaymentId;
     }
 
-    public long getSaleId() {
-        return saleId;
+    public long getOrderId() {
+        return orderId;
     }
 
     public double getAmount() {
@@ -104,8 +106,8 @@ public class CreditCardPayment {
         return cardholder;
     }
 
-    public long getCreateDate() {
-        return createDate;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
 
@@ -117,8 +119,8 @@ public class CreditCardPayment {
         this.creditCardPaymentId = creditCardPaymentId;
     }
 
-    public void setSaleId(long saleId) {
-        this.saleId = saleId;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 
     public void setAmount(double amount) {
@@ -161,8 +163,8 @@ public class CreditCardPayment {
         this.cardholder = cardholder;
     }
 
-    public void setCreateDate(long createDate) {
-        this.createDate = createDate;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
 
@@ -172,7 +174,7 @@ public class CreditCardPayment {
     public String toString() {
         return "CreditCardPayment{" +
                 "accountingId=" + creditCardPaymentId +
-                ", saleId=" + saleId +
+                ", orderId=" + orderId +
                 ", amount=" + amount +
                 ", CreditCardCompanyName='" + CreditCardCompanyName + '\'' +
                 ", transactionType=" + transactionType +
@@ -183,7 +185,7 @@ public class CreditCardPayment {
                 ", firstPaymentAmount=" + firstPaymentAmount +
                 ", otherPaymentAmount=" + otherPaymentAmount +
                 ", cardholder='" + cardholder + '\'' +
-                ", createDate=" + createDate +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

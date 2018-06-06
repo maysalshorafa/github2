@@ -90,7 +90,7 @@ public class PdfUA {
         headingTable.setRunDirection(0);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, urFontName);
         insertCell(headingTable, status , Element.ALIGN_CENTER, 1, urFontName);
-        insertCell(headingTable, DateConverter.dateToString(zReport.getCreationDate()) , Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(headingTable, DateConverter.dateToString(zReport.getCreatedAt()) , Element.ALIGN_CENTER, 1, urFontName);
         insertCell(headingTable, context.getString(R.string.cashiers) + user.getFullName() , Element.ALIGN_CENTER, 1, urFontName);
         insertCell(headingTable,  String.format("%06d", zReport.getCashPaymentId()) , Element.ALIGN_CENTER, 1, urFontName);
         insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, urFontName);

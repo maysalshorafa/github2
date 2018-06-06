@@ -1,5 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models.Currency;
 
+import java.sql.Timestamp;
+
 /**
  * Created by Win8.1 on 9/28/2017.
  */
@@ -9,16 +11,16 @@ public class CurrencyReturns {
     private long saleId;
     private double amount;
     private long currency_type;
-    private long createDate;
+    private Timestamp createdAt;
     public CurrencyReturns() {
     }
 
-    public long getCreateDate() {
-        return createDate;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateDate(long createDate) {
-        this.createDate = createDate;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
 
@@ -34,16 +36,16 @@ public class CurrencyReturns {
 
 
     // Constructors
-    public CurrencyReturns(long currencyReturnsId, long saleId, double amount, long createDate, long currency_type) {
+    public CurrencyReturns(long currencyReturnsId, long saleId, double amount, Timestamp createdAt, long currency_type) {
         this.currencyReturnsId = currencyReturnsId;
         this.amount = amount;
         this.saleId = saleId;
         this.currency_type=currency_type;
-        this.createDate=createDate;
+        this.createdAt = createdAt;
     }
 
     public CurrencyReturns(CurrencyReturns p) {
-        this(p.getCurrencyReturnsId(),  p.getSaleId(),p.getAmount(),p.getCreateDate(),p.getCurrency_type());
+        this(p.getCurrencyReturnsId(),  p.getSaleId(),p.getAmount(),p.getCreatedAt(),p.getCurrency_type());
     }
 
     // Getters
@@ -66,7 +68,7 @@ public class CurrencyReturns {
                 "currencyReturnsId=" + currencyReturnsId +
                 ",currency_type ='" + currency_type + '\'' +
                 ", amount='" + amount + '\'' +
-                ", createDate='" + createDate + '\'' +
+                ", createdAt='" + createdAt + '\'' +
                 ", saleId=" + saleId +
                 '}';
     }

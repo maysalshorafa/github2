@@ -48,7 +48,7 @@ public class ZReportListViewAdapter extends ArrayAdapter {
         }
 
         holder.tvZID.setText(context.getString(R.string.z_number)+" "+ZReportList.get(position).getzReportId());
-        holder.tvZCreateDate.setText(DateConverter.DateToString(new Date(ZReportList.get(position).getCreationDate())));
+        holder.tvZCreateDate.setText(DateConverter.DateToString(new Date(ZReportList.get(position).getCreatedAt())));
         holder.tvZUserName.setText("");
         if(ZReportList.get(position).getUser()!=null)
             holder.tvZUserName.setText(ZReportList.get(position).getUser().getFullName());

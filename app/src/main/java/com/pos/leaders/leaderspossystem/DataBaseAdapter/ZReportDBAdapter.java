@@ -35,14 +35,14 @@ public class ZReportDBAdapter {
     protected static final String Z_REPORT_COLUMN_ID = "id";
     protected static final String Z_REPORT_COLUMN_CREATEDATE = "createDate";
     protected static final String Z_REPORT_COLUMN_BYUSER = "byUser";
-    protected static final String Z_REPORT_COLUMN_STARTSALEID = "startSaleID";
-    protected static final String Z_REPORT_COLUMN_ENDSALEID = "endSaleID";
+    protected static final String Z_REPORT_COLUMN_STARTORDERID = "startOrderId";
+    protected static final String Z_REPORT_COLUMN_ENDORDERID = "endOrderId";
     protected static final String Z_REPORT_COLUMN_AMOUNT = "amount";
     protected static final String Z_REPORT_COLUMN_TOTAL_AMOUNT= "total_amount";
 
 
     public static final String DATABASE_CREATE = "CREATE TABLE "+Z_REPORT_TABLE_NAME+" ( `"+Z_REPORT_COLUMN_ID+"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+Z_REPORT_COLUMN_CREATEDATE+"` TEXT DEFAULT current_timestamp,  `"+Z_REPORT_COLUMN_BYUSER+"` INTEGER, " +
-            " `"+Z_REPORT_COLUMN_STARTSALEID+"` INTEGER,  `"+Z_REPORT_COLUMN_ENDSALEID+"` INTEGER ,  `"+Z_REPORT_COLUMN_AMOUNT+"` REAL,  `"+Z_REPORT_COLUMN_TOTAL_AMOUNT+"` REAL, " +
+            " `"+Z_REPORT_COLUMN_STARTORDERID+"` INTEGER,  `"+Z_REPORT_COLUMN_ENDORDERID+"` INTEGER ,  `"+Z_REPORT_COLUMN_AMOUNT+"` REAL,  `"+Z_REPORT_COLUMN_TOTAL_AMOUNT+"` REAL, " +
             "FOREIGN KEY(`"+Z_REPORT_COLUMN_BYUSER+"`) REFERENCES `users.id` )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -86,10 +86,10 @@ public class ZReportDBAdapter {
         //Assign values for each row.
         val.put(Z_REPORT_COLUMN_ID, zReport.getzReportId());
 
-        val.put(Z_REPORT_COLUMN_CREATEDATE, zReport.getCreationDate());
+        val.put(Z_REPORT_COLUMN_CREATEDATE, zReport.getCreatedAt());
         val.put(Z_REPORT_COLUMN_BYUSER, zReport.getByUser());
-        val.put(Z_REPORT_COLUMN_STARTSALEID, zReport.getStartSaleId());
-        val.put(Z_REPORT_COLUMN_ENDSALEID, zReport.getEndSaleId());
+        val.put(Z_REPORT_COLUMN_STARTORDERID, zReport.getStartOrderId());
+        val.put(Z_REPORT_COLUMN_ENDORDERID, zReport.getEndOrderId());
         val.put(Z_REPORT_COLUMN_AMOUNT, zReport.getAmount());
         val.put(Z_REPORT_COLUMN_TOTAL_AMOUNT, zReport.getTotal_amount());
         try {
@@ -163,8 +163,8 @@ public class ZReportDBAdapter {
         return new ZReport(c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_ID)),
                 c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_CREATEDATE)),
                 c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_BYUSER)),
-                c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_STARTSALEID)),
-                c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_ENDSALEID)),
+                c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_STARTORDERID)),
+                c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_ENDORDERID)),
                 c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_AMOUNT)),
                 c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_TOTAL_AMOUNT)));
     }
@@ -227,9 +227,9 @@ public class ZReportDBAdapter {
         double totalAmount =0;
         for (int  i= 0 ; i<zl.size();i++){
             ZReport zReport1 = zl.get(i);
-            double amount = zReportDBAdapter.getZReportAmount(zReport1.getStartSaleId(),zReport1.getEndSaleId());
+            double amount = zReportDBAdapter.getZReportAmount(zReport1.getStartOrderId(),zReport1.getEndOrderId());
             totalAmount+=amount;
-            ZReport zReport =new ZReport(zl.get(i).getzReportId(),zl.get(i).getCreationDate(),zl.get(i).getByUser(),zl.get(i).getStartSaleId(),zl.get(i).getEndSaleId(),amount,totalAmount);
+            ZReport zReport =new ZReport(zl.get(i).getzReportId(),zl.get(i).getCreatedAt(),zl.get(i).getByUser(),zl.get(i).getStartOrderId(),zl.get(i).getEndOrderId(),amount,totalAmount);
             updateEntry(zReport);
         }
     }

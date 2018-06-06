@@ -12,6 +12,7 @@ import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class ChecksDBAdapter {
 
 
 
-	public long insertEntry(int checkNum,int bankNum,int branchNum,int accountNum,double amount,long date, long saleId) {
+	public long insertEntry(int checkNum, int bankNum, int branchNum, int accountNum, double amount, Timestamp date, long saleId) {
         Check check = new Check(Util.idHealth(this.db, CHECKS_TABLE_NAME, CHECKS_COLUMN_ID), checkNum, bankNum, branchNum, accountNum, amount, date, false, saleId);
         sendToBroker(MessageType.ADD_CHECK, check, this.context);
 
@@ -89,7 +90,7 @@ public class ChecksDBAdapter {
 		val.put(CHECKS_COLUMN_BRANCHNUMBER, check.getBranchNum());
 		val.put(CHECKS_COLUMN_ACCOUNTNUMBER, check.getAccountNum());
 		val.put(CHECKS_COLUMN_AMOUNT,check.getAmount() );
-		val.put(CHECKS_COLUMN_DATE,check.getDate());
+		val.put(CHECKS_COLUMN_DATE,String.valueOf(check.getDate()));
         val.put(CHECKS_COLUMN_ISDELETED, check.isDeleted() ? 1 : 0);
         val.put(CHECKS_COLUMN_SALEID, check.getSaleId());
 		try {
@@ -134,7 +135,7 @@ public class ChecksDBAdapter {
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_BRANCHNUMBER))),
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_ACCOUNTNUMBER))),
 				Double.parseDouble(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_AMOUNT))),
-				cursor.getLong(cursor.getColumnIndex(CHECKS_COLUMN_DATE)),
+				Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_DATE))),
 				Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_ISDELETED))),
 				Long.parseLong(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_SALEID))));
 	}

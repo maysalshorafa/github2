@@ -1,5 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import java.sql.Timestamp;
+
 /**
  * Created by Win8.1 on 9/28/2017.
  */
@@ -11,19 +13,19 @@ public class CustomerAssistant {
     private double amount;
     private int type;
     private String salesCase;
-    private long saleDate;
+    private Timestamp saleDate;
 
 
 
     public CustomerAssistant() {
     }
 
-    public void setSaleDate(long saleDate) {
+    public void setSaleDate(Timestamp saleDate) {
         this.saleDate = saleDate;
     }
 
 
-    public CustomerAssistant(long custAssistantId, long order_id, long customerAssistantID, double amount, int type, String salesCase, long saleDate) {
+    public CustomerAssistant(long custAssistantId, long order_id, long customerAssistantID, double amount, int type, String salesCase, Timestamp saleDate) {
         this.custAssistantId = custAssistantId;
         this.order_id = order_id;
         this.customerAssistantID = customerAssistantID;
@@ -45,7 +47,7 @@ public class CustomerAssistant {
         return order_id;
     }
 
-    public long getSaleDate() {
+    public Timestamp getSaleDate() {
         return saleDate;
     }
 

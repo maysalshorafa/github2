@@ -3,13 +3,15 @@ package com.pos.leaders.leaderspossystem.Models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.sql.Timestamp;
+
 /**
  * Created by KARAM on 12/04/2017.
  */
 
 public class AReport {
     private long aReportId;
-    private long creationDate;
+    private Timestamp createdAt;
     private long byUserID;
     @JsonIgnore
     private User byUser;
@@ -26,25 +28,25 @@ public class AReport {
 
     public AReport() {}
 
-    public AReport(long creationDate, int byUserID, double amount, long lastSaleID, long lastZReportID) {
-        this.creationDate = creationDate;
+    public AReport(Timestamp createdAt, int byUserID, double amount, long lastSaleID, long lastZReportID) {
+        this.createdAt = createdAt;
         this.byUserID = byUserID;
         this.amount = amount;
         this.lastSaleID = lastSaleID;
         this.lastZReportID = lastZReportID;
     }
 
-    public AReport(long creationDate, User byUser, Order lastSale, ZReport lastZReport, double amount) {
-        this.creationDate = creationDate;
+    public AReport(Timestamp createdAt, User byUser, Order lastSale, ZReport lastZReport, double amount) {
+        this.createdAt = createdAt;
         this.byUser = byUser;
         this.lastSale = lastSale;
         this.lastZReport = lastZReport;
         this.amount = amount;
     }
 
-    public AReport(long aReportId, long creationDate, long byUserID, double amount, long lastSaleID, long lastZReportID) {
+    public AReport(long aReportId, Timestamp createdAt, long byUserID, double amount, long lastSaleID, long lastZReportID) {
         this.aReportId = aReportId;
-        this.creationDate = creationDate;
+        this.createdAt = createdAt;
         this.byUserID = byUserID;
         this.amount = amount;
         this.lastSaleID = lastSaleID;
@@ -58,8 +60,8 @@ public class AReport {
         return aReportId;
     }
 
-    public long getCreationDate() {
-        return creationDate;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
     public long getByUserID() {
@@ -99,8 +101,8 @@ public class AReport {
         this.aReportId = aReportId;
     }
 
-    public void setCreationDate(long creationDate) {
-        this.creationDate = creationDate;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void setByUserID(long byUserID) {

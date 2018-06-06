@@ -64,7 +64,7 @@ public class ValueOfPointDB {
         ContentValues val = new ContentValues();
         val.put(Value_COLUMN_Id,valueOfPoint.getValueOfPointId());
         val.put(Value_COLUMN, valueOfPoint.getValue());
-        val.put(CreateDate_Value_COLUMN_CreateDate, valueOfPoint.getCreate_Date());
+        val.put(CreateDate_Value_COLUMN_CreateDate, valueOfPoint.getCreatedAt());
 
         try {
             return db.insert(ValueOfPoint_TABLE_NAME, null, val);

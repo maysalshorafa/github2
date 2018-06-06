@@ -18,18 +18,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
 
-
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -242,11 +242,11 @@ public class MainScreenActivity extends Activity {
 
 
 		if (SESSION._SALE != null) {
-			sale = new Order(SESSION._USER.getUserId(), new Date().getTime(), 0, false, 0,0);
+			sale = new Order(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), 0, false, 0,0);
 		}
 		else
 		{
-			SESSION._SALE=new Order(SESSION._USER.getUserId(), new Date().getTime(), 0, false, 0,0);
+			SESSION._SALE=new Order(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), 0, false, 0,0);
 		}
 
 		if (SESSION._ORDERS != null) {

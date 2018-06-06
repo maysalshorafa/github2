@@ -37,18 +37,17 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
@@ -66,6 +65,7 @@ import com.sunmi.aidl.MSCardService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -217,7 +217,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             public void onClick(View v) {
                 final AReport _aReport = new AReport();
                 _aReport.setByUserID(SESSION._USER.getUserId());
-                _aReport.setCreationDate(new Date().getTime());
+                _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
                 AReport aReport = getLastAReport();
                 ZReport zReport = getLastZReport();
@@ -229,7 +229,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     ShowAReportDialog(_aReport);
                 } else {
                     _aReport.setLastZReportID(zReport.getzReportId());
-                    _aReport.setLastSaleID(zReport.getEndSaleId());
+                    _aReport.setLastSaleID(zReport.getEndOrderId());
 
                     ShowAReportDialog(_aReport);
                 }
@@ -253,27 +253,27 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
                                 if (lastZReport == null) {
                                     lastZReport = new ZReport();
-                                    lastZReport.setEndSaleId(0);
+                                    lastZReport.setEndOrderId(0);
                                 }
-                                ZReport z = new ZReport(0, new Date().getTime(), SESSION._USER, lastZReport.getEndSaleId() + 1, lastSale);
+                                ZReport z = new ZReport(0, new Date().getTime(), SESSION._USER, lastZReport.getEndOrderId() + 1, lastSale);
                                 z.setByUser(SESSION._USER.getUserId());
-                                double amount = zReportDBAdapter.getZReportAmount(z.getStartSaleId(), z.getEndSaleId());
+                                double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
                                 totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
-                                long zID = zReportDBAdapter.insertEntry(z.getCreationDate(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId(),amount,totalZReportAmount);
+                                long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
                                 z.setzReportId(zID);
                                 lastZReport = new ZReport(z);
                                 zReportDBAdapter.close();
                                 PrintTools pt = new PrintTools(DashBord.this);
 
                                 //create and print z report
-                                Bitmap bmap = pt.createZReport(lastZReport.getzReportId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false,totalZReportAmount);
+                                Bitmap bmap = pt.createZReport(lastZReport.getzReportId(), lastZReport.getStartOrderId(), lastZReport.getEndOrderId(), false,totalZReportAmount);
                                 if (bmap != null)
                                     pt.PrintReport(bmap);
 
                                 Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, lastZReport.getzReportId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, lastZReport.getStartSaleId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, lastZReport.getEndSaleId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, lastZReport.getStartOrderId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, lastZReport.getEndOrderId());
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
 
                                 startActivity(i);
@@ -338,25 +338,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         schedule_workers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Product>lstPro= null;
-                try {
-                    long startTime = System.nanoTime();
-                    lstPro = readProducts();
-                    ProductDBAdapter productDBAdapter = new ProductDBAdapter(getBaseContext());
-                    productDBAdapter.open();
-                    Log.d("productsizelist ",lstPro.size()+"");
-                    for(int i = 0; i<lstPro.size(); i++){
-                        Product p=lstPro.get(i);
-                    productDBAdapter.insertEntry(p.getName(), p.getBarCode(), "", p.getPrice(), p.getCostPrice(), true, false, 1, p.getByUser(), 1, 1);
-                    }
-                    long endTime = System.nanoTime();
-                    long duration = (endTime - startTime); //divide by 1000000 to get milliseconds.
-                   Log.d("executiontime:",duration+"");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                //i = new Intent(getApplicationContext(), ScheduleWorkersActivity.class);
-             //   startActivity(i);
+            i = new Intent(getApplicationContext(), ScheduleWorkersActivity.class);
+                startActivity(i);
             }
         });
         settings.setOnClickListener(new View.OnClickListener() {
@@ -574,7 +557,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         aReport.setAmount(Double.parseDouble(str));
                         AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
-                        aReportDBAdapter.insertEntry(aReport.getCreationDate(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastSaleID(), aReport.getLastZReportID());
+                        aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastSaleID(), aReport.getLastZReportID());
                         aReportDBAdapter.close();
                         discountDialog.cancel();
                     }
@@ -816,7 +799,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         aReport.setAmount(aReportTotalAmount);
                         AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
-                        aReportDBAdapter.insertEntry(aReport.getCreationDate(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastSaleID(), aReport.getLastZReportID());
+                        aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastSaleID(), aReport.getLastZReportID());
                         try {
                             aReportId = aReportDBAdapter.getLastRow().getaReportId();
                         } catch (Exception e) {

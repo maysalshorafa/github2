@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.Models;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -16,7 +17,7 @@ public class Check {
 	private int branchNum;
 	private int accountNum;
 	private double amount;
-	private long date;
+	private Timestamp createdAt;
 	private boolean deleted;
 	private long saleId;
 
@@ -24,25 +25,25 @@ public class Check {
 
 
 
-	public Check(long checkId, int checkNum, int bankNum, int branchNum, int accountNum, double amount, long date, boolean deleted, long saleId) {
+	public Check(long checkId, int checkNum, int bankNum, int branchNum, int accountNum, double amount, Timestamp date, boolean deleted, long saleId) {
 		this.accountNum = accountNum;
 		this.amount = amount;
 		this.bankNum = bankNum;
 		this.branchNum = branchNum;
 		this.checkNum = checkNum;
-		this.date = date;
+		this.createdAt = date;
 		this.checkId = checkId;
 		this.deleted = deleted;
 		this.saleId = saleId;
 	}
 
-	public Check(int checkNum, int bankNum, int branchNum, int accountNum, double amount, long date, boolean deleted) {
+	public Check(int checkNum, int bankNum, int branchNum, int accountNum, double amount, Timestamp date, boolean deleted) {
 		this.accountNum = accountNum;
 		this.amount = amount;
 		this.bankNum = bankNum;
 		this.branchNum = branchNum;
 		this.checkNum = checkNum;
-		this.date = date;
+		this.createdAt = date;
 		this.deleted = deleted;
 	}
 
@@ -78,8 +79,8 @@ public class Check {
 		return checkNum;
 	}
 
-	public long getDate() {
-		return date;
+	public Timestamp getDate() {
+		return createdAt;
 	}
 
 	public long getCheckId() {
@@ -122,8 +123,8 @@ public class Check {
 		this.checkNum = checkNum;
 	}
 
-	public void setDate(long date) {
-		this.date = date;
+	public void setDate(Timestamp date) {
+		this.createdAt = date;
 	}
 
     public void setDeleted(boolean deleted) {
@@ -143,7 +144,7 @@ public class Check {
 				", bankNum=" + bankNum +
 				", branchNum=" + branchNum +
 				", amount=" + amount +
-				", date=" + date +
+				", date=" + createdAt +
 				", saleId=" + saleId +
 				'}';
 	}
@@ -159,7 +160,7 @@ public class Check {
 
         return ("D120" + String.format(Util.locale, "%09d", rowNumber) + companyID + s + String.format(Util.locale, "%020d", saleId) + String.format(Util.locale, "%04d", saleId) +
                 paymentType + String.format(Util.locale, "%010d", bankNum) + String.format(Util.locale, "%010d", branchNum) + String.format(Util.locale, "%015d", accountNum) +
-                String.format(Util.locale, "%010d", checkNum) + DateConverter.getYYYYMMDD(new Date(this.date)) + OP + Util.x12V99(amount) + cardType + Util.spaces(20) +
+                String.format(Util.locale, "%010d", checkNum) + DateConverter.getYYYYMMDD(new Date(String.valueOf(this.createdAt))) + OP + Util.x12V99(amount) + cardType + Util.spaces(20) +
                 "0" + Util.spaces(7) + DateConverter.getYYYYMMDD(date) + String.format(Util.locale, "%07d", parentNumber) + Util.spaces(60));
     }
 

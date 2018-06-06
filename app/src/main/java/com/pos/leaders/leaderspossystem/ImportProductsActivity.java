@@ -26,8 +26,8 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -328,7 +328,7 @@ public class ImportProductsActivity extends Activity {
                 int totalRows = 0;
                 for (Sheet sh:w.getSheets()) {
                     totalRows += sh.getRows();
-                    Department d = new Department(sh.getName(), new Date().getTime(), SESSION._USER.getUserId());
+                    Department d = new Department(sh.getName(), new Timestamp(System.currentTimeMillis()), SESSION._USER.getUserId());
                     List<Product> products = new ArrayList<>();
                     for (int row = 1; row < sh.getRows(); row++) {
                         try {

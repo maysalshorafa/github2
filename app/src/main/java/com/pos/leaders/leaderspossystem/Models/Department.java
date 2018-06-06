@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ public class Department {
     private long departmentId;
     private String name;
 
-    private long creatingDate;
+    private Timestamp createdAt;
 
     private long byUser;
     private boolean hide;
@@ -24,23 +25,23 @@ public class Department {
 
 
 
-    public Department(long departmentId, String name, long creatingDate, long byUser, boolean hide) {
+    public Department(long departmentId, String name, Timestamp createdAt, long byUser, boolean hide) {
         this.departmentId = departmentId;
         this.name = name;
-        this.creatingDate = creatingDate;
+        this.createdAt = createdAt;
         this.byUser = byUser;
         this.hide = hide;
     }
 
-    public Department(String name, long creatingDate, long byUser) {
+    public Department(String name, Timestamp createdAt, long byUser) {
         this.name = name;
-        this.creatingDate = creatingDate;
+        this.createdAt = createdAt;
         this.byUser = byUser;
         this.hide = false;
     }
 
     public Department(Department d) {
-        new Department(d.getDepartmentId(), d.getName(), d.getCreatingDate(), d.getByUser(), d.isHide());
+        new Department(d.getDepartmentId(), d.getName(), d.getCreatedAt(), d.getByUser(), d.isHide());
     }
 
     public Department() {
@@ -62,8 +63,8 @@ public class Department {
         this.departmentId = departmentId;
     }
 
-    public void setCreatingDate(long creatingDate) {
-        this.creatingDate = creatingDate;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void setByUser(long byUser) {
@@ -86,8 +87,8 @@ public class Department {
         return name;
     }
 
-    public long getCreatingDate() {
-        return creatingDate;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
     public long getByUser() {
@@ -120,7 +121,7 @@ public class Department {
 				"byUser=" + byUser +
 				", accountingId=" + departmentId +
 				", name='" + name + '\'' +
-				", creatingDate=" + creatingDate +
+				", createdAt=" + createdAt +
 				", hide=" + hide +
 				", products={" + products +
 				"}}";

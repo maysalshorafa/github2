@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.Models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
-    private long creatingDate;
+    private Timestamp createdAt;
     private boolean hide;
     private String phoneNumber;
     private double present;
@@ -31,13 +32,13 @@ public class User {
 
 
 
-    public User(long userId, String userName, String password, String firstName, String lastName, long creatingDate, boolean hide, String phoneNumber, double present, double hourlyWage ) {
+    public User(long userId, String userName, String password, String firstName, String lastName, Timestamp createdAt, boolean hide, String phoneNumber, double present, double hourlyWage ) {
         this.userId = userId;
         this.userName = userName;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.creatingDate = creatingDate;
+        this.createdAt = createdAt;
         this.hide = hide;
         this.phoneNumber = phoneNumber;
         this.present = present;
@@ -45,7 +46,7 @@ public class User {
     }
     public User(User user){
         this(user.getUserId(),user.getUserName(),user.getPassword(),user.getFirstName(),
-                user.getLastName(),user.getCreatingDate(),user.isHide(),user.getPhoneNumber(),user.getPresent(),user.getHourlyWage());
+                user.getLastName(),user.getCreatedAt(),user.isHide(),user.getPhoneNumber(),user.getPresent(),user.getHourlyWage());
     }
     public User(){}
 
@@ -80,8 +81,8 @@ public class User {
         return hide;
     }
 
-    public long getCreatingDate() {
-        return creatingDate;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
     public double getHourlyWage() {
@@ -133,8 +134,8 @@ public class User {
         return permissionsName;
     }
 
-    public void setCreatingDate(long creatingDate) {
-        this.creatingDate = creatingDate;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void setHide(boolean hide) {
@@ -148,7 +149,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "creatingDate=" + creatingDate +
+                "createdAt=" + createdAt +
                 ", accountingId=" + userId +
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +

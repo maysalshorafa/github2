@@ -12,6 +12,7 @@
         import com.pos.leaders.leaderspossystem.Tools.Util;
         import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+        import java.sql.Timestamp;
         import java.util.ArrayList;
         import java.util.List;
 
@@ -56,7 +57,7 @@ public class CustomerMeasurementDBAdapter {
         return db;
     }
     // Insert Method
-    public long insertEntry(long customerId, long userId, long visitDate) {
+    public long insertEntry(long customerId, long userId, Timestamp visitDate) {
         CustomerMeasurement customerMeasurement = new CustomerMeasurement(Util.idHealth(this.db, CUSTOMER_MEASUREMENT_TABLE_NAME, CUSTOMER_MEASUREMENT_COLUMN_ID), customerId, userId, visitDate);
         sendToBroker(MessageType.ADD_CUSTOMER_MEASUREMENT, customerMeasurement, this.context);
         try {
@@ -73,7 +74,7 @@ public class CustomerMeasurementDBAdapter {
         val.put(CUSTOMER_MEASUREMENT_COLUMN_ID, customerMeasurement.getCustomerMeasurementId());
         val.put(CUSTOMER_MEASUREMENT_COLUMN_CUSTOMER_ID, customerMeasurement.getCustomerId());
         val.put(CUSTOMER_MEASUREMENT_COLUMN_USER_ID,customerMeasurement.getUserId());
-        val.put(CUSTOMER_MEASUREMENT_COLUMN_VISIT_DATE, customerMeasurement.getVisitDate());
+        val.put(CUSTOMER_MEASUREMENT_COLUMN_VISIT_DATE, String.valueOf(customerMeasurement.getVisitDate()));
 
         try {
             return db.insert(CUSTOMER_MEASUREMENT_TABLE_NAME, null, val);
@@ -113,12 +114,12 @@ public class CustomerMeasurementDBAdapter {
             return new CustomerMeasurement(Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_MEASUREMENT_COLUMN_ID))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_MEASUREMENT_COLUMN_CUSTOMER_ID))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_MEASUREMENT_COLUMN_USER_ID))),
-                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_MEASUREMENT_COLUMN_VISIT_DATE))));
+                    Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_MEASUREMENT_COLUMN_VISIT_DATE))));
         }catch (Exception ex){
             return new CustomerMeasurement(Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_MEASUREMENT_COLUMN_ID))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_MEASUREMENT_COLUMN_CUSTOMER_ID))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_MEASUREMENT_COLUMN_USER_ID))),
-                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_MEASUREMENT_COLUMN_VISIT_DATE))));
+                   Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_MEASUREMENT_COLUMN_VISIT_DATE))));
         }
     }
     //end
