@@ -11,10 +11,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
@@ -45,12 +47,14 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     final List<String> club = new ArrayList<String>();
     long clubID;
     long customerId;
+    ImageView advanceFeature;
+    TextView advance;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_add_new_coustmer);
+        setContentView(R.layout.test);
         TitleBar.setTitleBar(this);
         init();
         customer = null;
@@ -118,6 +122,14 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 Intent intent = new Intent(AddNewCustomer.this, com.pos.leaders.leaderspossystem.CustomerAndClub.Customer.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);             }
+        });
+        advanceFeature.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                advanceFeature.setVisibility(View.INVISIBLE);
+                advance.setVisibility(View.INVISIBLE);
+              secondCustomerInformation.setVisibility(View.VISIBLE);
+                  }
         });
 
         btAddCustomer.setOnClickListener(new View.OnClickListener() {
@@ -280,6 +292,8 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         etPostalCode = (EditText) findViewById(R.id.etCustomerPostalCode);
         btAddCustomer = (Button) findViewById(R.id.add_Custmer);
         btCancel = (Button) findViewById(R.id.addCustmer_BTCancel);
+        advanceFeature=(ImageView)findViewById(R.id.advanceFeature);
+        advance=(TextView)findViewById(R.id.advance);
         customerDBAdapter = new CustomerDBAdapter(this);
         customerDBAdapter.open();
         selectCitySpinner = (Spinner) findViewById(R.id.customerCitySpinner);
