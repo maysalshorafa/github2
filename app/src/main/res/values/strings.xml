@@ -362,7 +362,7 @@
     <string name="search">Search</string>
     <!--customer String -->
     <string name="customer_name">Customer Name</string>
-    <string name="customerId">Customer ID</string>
+    <string name="customer_id">Customer ID</string>
     <string name="gender">Gender</string>
     <string name="street">Street</string>
     <string name="country">Country</string>
@@ -393,7 +393,7 @@
     <string name="retry">Retry</string>
     <string name="internet_access">No internet access.</string>
     <!--DashBord String-->
-    <string name="main_screen">Start Sale</string>
+    <string name="main_screen">Main Screen</string>
     <string name="department">Department</string>
     <string name="back_up">BackUp</string>
     <string name="hours_of_work">Hours Of Work</string>
@@ -529,6 +529,33 @@
     <string name="total_sales">Total Sales</string>
     <string name="details">Details</string>
     <string name="cashiers">Cashiers :</string>
+    <!-- Activity Label -->
+    <string name="title_add_user_activity">Add User Activity</string>
+    <string name="title_sales_management_activity">Sales Management Activity</string>
+    <string name="title_sales_man_management_activity">SalesMan Management Activity</string>
+    <string name="title_user_attendance_report_activity">User Attendance Report</string>
+    <string name="title_main_sales_activity">Sales Screen</string>
+    <string name="title_import_product_activity">Import Product Activity</string>
+    <string name="title_reports_activity">Reports Activity</string>
+    <string name="title_zreports_activity">Z Reports Activity</string>
+    <string name="title_reports_management_activity">Report Management Activity</string>
+    <string name="title_report_zdetails_activity">Report Z Details Activity</string>
+    <string name="title_backup_activity">BackUP Activity</string>
+    <string name="title_credit_card_by_phone_activity">Credit Card By Phone Activity</string>
+    <string name="title_customer_and_club_management_activity">Customer And Club Management Activity</string>
+    <string name="title_add_new_customer_activity">Add New Customer Activity</string>
+    <string name="title_add_new_club_activity">Add New Club Activity</string>
+    <string name="title_customer_management_activity">Customer ManagementActivity</string>
+    <string name="title_club_management_activity">Club Management Activity</string>
+    <string name="title_activity_worker_management_activity">Worker Management Activity</string>
+    <string name="title_activity_customer_measurement_management_activity">Customer Measurement Activity</string>
+    <string name="title_activity_add_customer_measurement_activity">Add Customer Measurement Activity</string>
+    <string name="title_activity_add_new_department_activity">Add New Department Activity</string>
+    <string name="title_activity_setting_tab_activity">Setting Tab Activity</string>
+    <string name="title_activity_departments_activity">Departments Activity</string>
+    <string name="title_activity_products_activity">Products Activity</string>
+
 
 </resources>
+
 
