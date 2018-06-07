@@ -92,10 +92,7 @@ import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.User;
-
-import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
-
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
@@ -105,7 +102,6 @@ import com.pos.leaders.leaderspossystem.Tools.CashActivity;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.DiscountProductInMainActivityGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -115,18 +111,12 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-import java.util.Date;
-import java.util.HashMap;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Iterator;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1120,8 +1110,8 @@ public class MainActivity extends AppCompatActivity {
                                         if (sw.isChecked()) {
                                             if (!(str.equals(""))) {
                                                 double d = Double.parseDouble(str);
-                                                int count = SESSION._ORDERS.get(indexOfItem).getCount();
-                                                double discount = (1 - (d / (SESSION._ORDERS.get(indexOfItem).getOriginal_price() * count)));
+                                                int count = SESSION._ORDERS.get(indexOfItem).getQuantity();
+                                                double discount = (1 - (d / (SESSION._ORDERS.get(indexOfItem).getUnitPrice() * count)));
 
                                                 if (discount <= (X / 100)) {
                                                     SESSION._ORDERS.get(indexOfItem).setDiscount(discount * 100);
@@ -2666,8 +2656,8 @@ public class MainActivity extends AppCompatActivity {
                 //endregion
 
                 //region save the transaction
-                SESSION._SALE.setTotalPaid(SESSION._SALE.getTotalPrice());
-                saleDBAdapter = new SaleDBAdapter(MainActivity.this);
+                SESSION._SALE.setTotalPaidAmount(SESSION._SALE.getTotalPrice());
+                saleDBAdapter = new OrderDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
@@ -2682,32 +2672,32 @@ public class MainActivity extends AppCompatActivity {
 
                 creditCardPaymentDBAdapter.close();
 
-                orderDBAdapter = new OrderDBAdapter(MainActivity.this);
+                orderDBAdapter = new OrderDetailsDBAdapter(MainActivity.this);
                 custmerAssetDB = new CustomerAssetDB(MainActivity.this);
                 orderDBAdapter.open();
                 custmerAssetDB.open();
-                SESSION._SALE.setId(saleID);
+                SESSION._SALE.setOrderId(saleID);
                 if (forSaleMan) {
                     tempSaleId =saleID;
-                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate());
+                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getCreatedAt());
                 }
                 // insert order region
-                for (Order o : SESSION._ORDERS) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
+                for (OrderDetails o : SESSION._ORDERS) {
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
                 }
                 // Order Sales man Region
                 for (int i=0;i<orderIdList.size();i++) {
-                    Order order = orderIdList.get(i);
+                    OrderDetails order = orderIdList.get(i);
                     long customerAssestId= custmerAssetstIdList.get(i);
                     for (int j = 0 ; j< SESSION._ORDERS.size();j++) {
-                        Order o = SESSION._ORDERS.get(j);
+                        OrderDetails o = SESSION._ORDERS.get(j);
                         long tempOrderId =orderId.get(i);
                         if (o==order) {
                             if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
-                                o.setCustmerAssestId(custmerAssetstIdList.get(i));
-                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate());
+                                o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
+                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPaidAmount(), 0, "Order", SESSION._SALE.getCreatedAt());
                             }
                         }
                     }

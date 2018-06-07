@@ -169,9 +169,6 @@
         <activity android:name=".ScheduleWorkersActivity" />
         <activity android:name=".SettingsTab.SettingsTab"
             android:label="@string/title_activity_setting_tab_activity"></activity>
-
-        <activity android:name=".AddNewDepartment" />
-        <activity android:name=".ScheduleWorkersActivity" />
         <activity android:name=".Pinpad.PinpadActivity"
                    android:label="@string/title_activity_pinpad"></activity>
 
