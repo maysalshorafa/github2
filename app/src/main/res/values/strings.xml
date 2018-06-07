@@ -75,11 +75,9 @@
     <string name="please_insert_department_name">Please insert department name.</string>
     <string name="please_insert_another_department_name">Please insert another department name.</string>
     <string name="success_to_add_new_department">Success To Add New Department</string>
-    <string name="failed_to_add_new_department">Fail To Add New Department Please Try Again!</string>
+    <string name="failed_to_add_new_department">Fail On Add New Department Please Try Again!</string>
     <string name="update_department">Update Department</string>
     <string name="please_insert_department_name_with_out_spaces">Please Insert Department Name WithOut Spaces.</string>
-
-
 
 
     <!--Splash Screen-->
@@ -99,7 +97,7 @@
     <string name="TouchPad_9">9</string>
     <string name="empty_password">Please insert your password</string>
     <string name="wrong_password">Please insert valid password</string>
-    <string name="schedule_workers">Schedule Workers</string>
+    <string name="schedule_workers">Time Attendance</string>
     <!--menu-->
     <string name="products">Products</string>
     <string name="departments">Departments</string>
@@ -126,7 +124,8 @@
     <string name="general_product">General Product</string>
     <string name="price">Price</string>
     <string name="price_after_discount">Price after discount</string>
-     <string name="total_discount">Total Discount</string>
+
+    <string name="total_discount">Total Discount</string>
 
     <string name="clearCartAlertTitle">Clear Cart</string>
     <string name="clearCartAlertMessage">Do you want to delete all the items on the cart?</string>
@@ -217,7 +216,7 @@
     <string name="copy_invoice">- Copy -</string>
     <string name="private_company">P.C</string>
     <string name="invoice_with_tax">Invoice</string>
-    <string name="credit_invoice">Credit Invoice</string>
+    <string name="credit_invoice">Credit Card Number</string>
     <string name="replacement_invoice">Replacement Invoice</string>
     <string name="copyinvoice">Duplicate Invoice</string>
     <string name="cancel_invoice">Cancel Invoice</string>
@@ -336,7 +335,7 @@
     <string name="company_name">Company Name</string>
     <string name="POS_ID">POS Id</string>
     <string name="tax">Tax</string>
-    <string name="invoice_note">Invoice Note</string>
+    <string name="invoice_note">Invoice note</string>
     <string name="qty">Qty</string>
     <string name="productID">Product ID</string>
     <string name="replacement_expiration_date">Replacement Expiration Date</string>
@@ -479,7 +478,7 @@
     <string name="different"> Different</string>
     <string name="out_put"> Out Put</string>
     <string name="in_put"> InPut</string>
-    <string name="currency"> Currency</string>
+    <string name="currency">Currency</string>
     <string name="usd">USD</string>
     <string name="eur">EUR</string>
     <string name="gbp">GBP</string>
@@ -491,8 +490,9 @@
     <string name="invalid_payments_number">Please insert valid payments number between 2 and 36.</string>
     <string name="active_currency_service_in_pos">If you want to active Currency Service in your Pos Check the Currency CheckBox</string>
     <string name="active_credit_card_service_in_pos">If you want to active CreditCard Service in your Pos Check the CreditCard CheckBox</string>
+    <string name="active_pin_pad_service_in_pos">If you want to active PinPad Service in your Pos Check the PinPad CheckBox</string>
     <string name="active_customer_measurement_service_in_pos">If you want to active CustomerMeasurement Service in your Pos Check the CustomerMeasurement CheckBox</string>
-    <string name="choose_no_of_float_point"> Choose No Of Float Point</string>
+    <string name="choose_no_of_float_point">Choose No Of Float Point</string>
     <string name="choose_printer_type">Choose Printer Type</string>
     <string name="success_edit_POS_setting">Success Edit POS Setting</string>
     <string name="delete_check">Delete Check</string>
@@ -530,5 +530,18 @@
     <string name="details">Details</string>
     <string name="cashiers">Cashiers :</string>
 
+    <string name="currency_is_activated_in_pos">Currency is activated in POS</string>
+    <string name="currency_is_not_activated_in_pos">Currency is not activated in POS</string>
+    <string name="credit_card_is_activated_in_pos">Credit Card is activated in POS</string>
+    <string name="credit_card_is_not_activated_in_pos">Currency is not activated in POS</string>
+    <string name="customer_measurement_is_activated_in_pos">Customer Measurement is activated in POS</string>
+    <string name="customer_measurement_is_not_activated_in_pos">Customer Measurement is not activated in POS</string>
+
+    <string name="ip">IP Address</string>
+    <string name="pinpad_connection_error">Please call the support team.</string>
+    <string name="transaction_error">Transaction error</string>
+    <string name="pinpad_wait_for_finish">Continue the transaction using your pin-pad.</string>
+
 </resources>
+
 

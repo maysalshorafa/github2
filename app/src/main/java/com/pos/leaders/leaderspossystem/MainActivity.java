@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -92,14 +93,17 @@ import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
+import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CashActivity;
+import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.DiscountProductInMainActivityGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -109,10 +113,16 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import HPRTAndroidSDK.HPRTPrinterHelper;
 import POSAPI.POSInterfaceAPI;
@@ -133,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CASH_ACTIVITY_CODE = 600;
     private static final int REQUEST_CHECKS_ACTIVITY_CODE = 753;
     private static final int REQUEST_CREDIT_CARD_ACTIVITY_CODE = 801;
+    private static final int REQUEST_PIN_PAD_ACTIVITY_CODE = 907;
     public static final String COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE = "com_pos_leaders_cart_total_price";
     String transID = "";
 
@@ -960,7 +971,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 Button btnDiscount = (Button) view.findViewById(R.id.rowSaleDetails_Dicount);
-                btnDiscount.setOnClickListener(new View.OnClickListener() {
+              btnDiscount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (selectedIteminCartList != null) {
@@ -968,13 +979,19 @@ public class MainActivity extends AppCompatActivity {
                                 final TextView discountPercentage = (TextView) view.findViewById(R.id.discountPercentage);
                                 final TextView tvDiscountPercentage = (TextView) view.findViewById(R.id.tvDiscountPercentageAmount);
                                 final Dialog cashDialog = new Dialog(MainActivity.this);
+
+                                cashDialog.setTitle(R.string.discount);
+                                cashDialog.setContentView(R.layout.cash_payment_dialog);
+
                                 cashDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 // cashDialog.setTitle(R.string.please_select_discount_offer);
+
                                 cashDialog.show();
                                 cashDialog.setContentView(R.layout.discount_dialog);
                                 final Button cashBTOk = (Button) cashDialog.findViewById(R.id.cashPaymentDialog_BTOk);
                                 final EditText cashETCash = (EditText) cashDialog.findViewById(R.id.cashPaymentDialog_TECash);
                                 final Switch sw = (Switch) cashDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
+
                                 final TextView totalPrice =(TextView)cashDialog.findViewById(R.id.TvTotalPrice);
                                 final TextView priceAfterDiscount =(TextView)cashDialog.findViewById(R.id.TvPriceAfterDiscount);
                                 final TextView totalDiscount =(TextView)cashDialog.findViewById(R.id.totalDiscount);
@@ -992,6 +1009,7 @@ public class MainActivity extends AppCompatActivity {
                                 discountType.append(":"+selectedOrderOnCart.getProduct().getName());
                                 totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
                                 priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+
                                 sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                     @Override
                                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -1095,6 +1113,67 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
+                                final List<Order>orderList=list;
+                                cashETCash.addTextChangedListener(new TextWatcher() {
+                                    @Override
+                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                    }
+
+                                    @Override
+                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    }
+
+                                    @Override
+                                    public void afterTextChanged(Editable s) {
+                                        String str = cashETCash.getText().toString();
+                                        if (sw.isChecked()) {
+                                            if (!(str.equals(""))) {
+                                                double d = Double.parseDouble(str);
+                                                double originalTotalPrice = 0;
+                                                for (Order o : orderList) {
+                                                    originalTotalPrice += (o.getOriginal_price() * o.getCount());
+                                                }
+                                                double val = (1 - (d / originalTotalPrice)) * 100;
+                                                for (Order o : orderList) {
+                                                    o.setDiscount(val);
+                                                }
+                                                double saleTotalPrice = 0;
+                                                double SaleOriginalityPrice = 0;
+                                                for (Order o : orderList) {
+                                                    saleTotalPrice += o.getItemTotalPrice();
+
+                                                    SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                                }
+                                                totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                                priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+                                            }else {
+                                                totalDiscount.setText("");
+                                                priceAfterDiscount.setText("");
+                                            }
+                                        } else {
+                                            if (!(str.equals(""))) {
+                                                float val = Float.parseFloat(str);
+                                                for (Order o : orderList) {
+                                                    o.setDiscount(val);
+                                                }
+
+                                                double saleTotalPrice = 0;
+                                                double SaleOriginalityPrice = 0;
+                                                for (Order o : orderList) {
+                                                    saleTotalPrice += o.getItemTotalPrice();
+
+                                                    SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                                }
+                                                totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                                priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+
+                                            }else {
+                                                totalDiscount.setText("");
+                                                priceAfterDiscount.setText("");
+                                            }
+                                        }
+                                    }
+                                });
                                 cashBTOk.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -1103,18 +1182,18 @@ public class MainActivity extends AppCompatActivity {
                                         double X = SESSION._USER.getPresent();
                                         if (sw.isChecked()) {
                                             if (!(str.equals(""))) {
-                                            double d = Double.parseDouble(str);
-                                            int count = SESSION._ORDERS.get(indexOfItem).getCount();
-                                            double discount = (1 - (d / (SESSION._ORDERS.get(indexOfItem).getOriginal_price() * count)));
+                                                double d = Double.parseDouble(str);
+                                                int count = SESSION._ORDERS.get(indexOfItem).getCount();
+                                                double discount = (1 - (d / (SESSION._ORDERS.get(indexOfItem).getOriginal_price() * count)));
 
-                                            if (discount <= (X / 100)) {
-                                                SESSION._ORDERS.get(indexOfItem).setDiscount(discount * 100);
-                                                refreshCart();
-                                                cashDialog.cancel();
-                                            } else {
-                                                Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
-                                            }
-                                        }} else {
+                                                if (discount <= (X / 100)) {
+                                                    SESSION._ORDERS.get(indexOfItem).setDiscount(discount * 100);
+                                                    refreshCart();
+                                                    cashDialog.cancel();
+                                                } else {
+                                                    Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }} else {
                                             if (!(str.equals(""))) {
                                                 float val = Float.parseFloat(str);
                                                 if (val <= X) {
@@ -1191,44 +1270,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (SESSION._ORDERS.size() > 0 && SETTINGS.creditCardEnable) {
-                    //final String __customerName = customerName_EditText.getText().toString();
-                    Intent intent = new Intent(MainActivity.this, MainCreditCardActivity.class);
-                    intent.putExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
-                    startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
+                    if (SETTINGS.pinpadEnable) {//pinpad is active
+                        Log.i("CreditCard", "PinPad is active");
+                        Intent intent = new Intent(MainActivity.this, PinpadActivity.class);
+                        intent.putExtra(PinpadActivity.LEADERS_POS_PIN_PAD_TOTAL_PRICE, saleTotalPrice);
+                        startActivityForResult(intent, REQUEST_PIN_PAD_ACTIVITY_CODE);
+                    } else {//old school
+                        //final String __customerName = customerName_EditText.getText().toString();
+                        Intent intent = new Intent(MainActivity.this, MainCreditCardActivity.class);
+                        intent.putExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
+                        startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
+                    }
 
-                    /*
-                    final Context c = MainActivity.this;
-                    new AlertDialog.Builder(c)
-                            .setTitle(c.getResources().getString(R.string.clearCartAlertTitle))
-                            //.setMessage(c.getResources().getString(R.string.clearCartAlertMessage))
-                            .setPositiveButton(c.getResources().getString(R.string.by_card), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(c, CreditCardActivity.class);
-                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
-                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_CUSTOMER, __customerName);
-
-                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TYPE, CreditCardActivity.LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PASS_CARD);
-                                    startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
-                                    dialog.cancel();
-                                }
-                            })
-                            .setNegativeButton(c.getResources().getString(R.string.by_phone), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    customerName = customerName_EditText.getText().toString();
-
-                                    Intent intent = new Intent(c, CreditCardActivity.class);
-                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
-                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_CUSTOMER, __customerName);
-
-                                    intent.putExtra(CreditCardActivity.LEADERS_POS_CREDIT_CARD_TYPE, CreditCardActivity.LEADERS_POS_CREDIT_CARD_ACTIVITY_BY_PHONE);
-                                    startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
-                                    dialog.cancel();
-                                }
-                            })
-                            .setIcon(android.R.drawable.sym_contact_card)
-                            .show();*/
                 }
             }
         });
@@ -1308,16 +1361,29 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (SESSION._SALE != null && SESSION._ORDERS != null) {
                     final Dialog discountDialog = new Dialog(MainActivity.this);
+
+                    discountDialog.setTitle(R.string.discount);
+                    discountDialog.setContentView(R.layout.cash_payment_dialog);
+                  
                     discountDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     //discountDialog.setTitle(R.string.please_select_discount_offer);
                     discountDialog.setContentView(R.layout.discount_dialog);
+                  
                     discountDialog.show();
                     final Button btOK = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTOk);
                     final EditText et = (EditText) discountDialog.findViewById(R.id.cashPaymentDialog_TECash);
                     final Switch sw = (Switch) discountDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
-                    final TextView totalPrice =(TextView)discountDialog.findViewById(R.id.TvTotalPrice);
-                    final TextView priceAfterDiscount =(TextView)discountDialog.findViewById(R.id.TvPriceAfterDiscount);
+
+                    final ListView productManagement_LV = (ListView)discountDialog.findViewById(R.id.productManagement_LV);
+                    
+                     final TextView totalPrice =(TextView)discountDialog.findViewById(R.id.TvTotalPrice);
+                    DiscountProductInMainActivityGridViewAdapter adapter = new DiscountProductInMainActivityGridViewAdapter(getApplicationContext(), SESSION._ORDERS);
+                    productManagement_LV.setAdapter(adapter);
                     final TextView totalDiscount =(TextView)discountDialog.findViewById(R.id.totalDiscount);
+                    totalPrice.setText(tvTotalPrice.getText().toString());
+
+                   
+                    final TextView priceAfterDiscount =(TextView)discountDialog.findViewById(R.id.TvPriceAfterDiscount);
                     final TextView discountType =(TextView)discountDialog.findViewById(R.id. cashPaymentDialog_TVStatus);
                     discountType.setText(getString(R.string.discount));
                     final ImageView closeDialogImage =(ImageView)discountDialog.findViewById(R.id.closeDialog);
@@ -1334,6 +1400,7 @@ public class MainActivity extends AppCompatActivity {
                     totalPrice.setText(Util.makePrice(originalTotalPrice)+getString(R.string.ins));
                     totalDiscount.setText(Util.makePrice(valueOfDiscount)+getString(R.string.ins));
                     priceAfterDiscount.setText(tvTotalPrice.getText().toString());
+
                     sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -1431,7 +1498,67 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
+                    final List<Order>orderList=SESSION._ORDERS;
+                    et.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
 
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            String str = et.getText().toString();
+                            if (sw.isChecked()) {
+                                if (!(str.equals(""))) {
+                                    double d = Double.parseDouble(str);
+                                    double originalTotalPrice = 0;
+                                    for (Order o : orderList) {
+                                        originalTotalPrice += (o.getOriginal_price() * o.getCount());
+                                    }
+                                        double val = (1 - (d / originalTotalPrice)) * 100;
+                                        for (Order o : orderList) {
+                                            o.setDiscount(val);
+                                        }
+                                        double saleTotalPrice = 0;
+                                        double SaleOriginalityPrice = 0;
+                                        for (Order o : orderList) {
+                                            saleTotalPrice += o.getItemTotalPrice();
+
+                                            SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                        }
+                                        totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                        priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+                                }else {
+                                    totalDiscount.setText("");
+                                    priceAfterDiscount.setText("");
+                                }
+                            } else {
+                                if (!(str.equals(""))) {
+                                    float val = Float.parseFloat(str);
+                                        for (Order o : orderList) {
+                                            o.setDiscount(val);
+                                        }
+
+                                         double saleTotalPrice = 0;
+                                        double SaleOriginalityPrice = 0;
+                                        for (Order o : orderList) {
+                                            saleTotalPrice += o.getItemTotalPrice();
+
+                                            SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                        }
+                                        totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
+                                        priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+
+                                }else {
+                                    totalDiscount.setText("");
+                                    priceAfterDiscount.setText("");
+                                }
+                            }
+                        }
+                    });
                     btOK.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -1439,6 +1566,7 @@ public class MainActivity extends AppCompatActivity {
                             double X = SESSION._USER.getPresent();
                             if (sw.isChecked()) {
                                 if (!(str.equals(""))) {
+
                                 double d = Double.parseDouble(str);
                                 double originalTotalPrice = 0;
                                 for (Order o : SESSION._ORDERS) {
@@ -1448,13 +1576,18 @@ public class MainActivity extends AppCompatActivity {
                                     double val = (1 - (d / originalTotalPrice)) * 100;
                                     valueOfDiscount=val;
                                     for (Order o : SESSION._ORDERS) {
-                                        o.setDiscount(val);
+                                        originalTotalPrice += (o.getOriginal_price() * o.getCount());
                                     }
-                                    refreshCart();
-                                    discountDialog.cancel();
-                                } else {
-                                    Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
-                                }
+                                    if ((1 - (d / originalTotalPrice) <= (X / 100))) {
+                                        double val = (1 - (d / originalTotalPrice)) * 100;
+                                        for (Order o : SESSION._ORDERS) {
+                                            o.setDiscount(val);
+                                        }
+                                        refreshCart();
+                                        discountDialog.cancel();
+                                    } else {
+                                        Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             } else {
                                 if (!(str.equals(""))) {
@@ -1463,7 +1596,7 @@ public class MainActivity extends AppCompatActivity {
                                     if (val <= X) {
                                         valueOfDiscount=val;
                                         for (Order o : SESSION._ORDERS) {
-                                            o.setDiscount(val);
+                                                o.setDiscount(val);
                                         }
                                         refreshCart();
                                         discountDialog.cancel();
@@ -1483,65 +1616,6 @@ public class MainActivity extends AppCompatActivity {
 
         //endregion Percent Product
 
-
-        //region last sale button
-
-/**        btnLastSales.setOnClickListener(new View.OnClickListener() {
-@Override public void onClick(View v) {
-Intent i = new Intent(MainActivity.this, SalesManagementActivity.class);
-i.putExtra("_custmer", customerName);
-
-startActivity(i);
-}
-});**/
-
-        //endregion last sale button
-
-        //endregion
-
-       /*region navigation menu items
-
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Intent intent = new Intent();
-                switch (item.getItemId()) {
-                    case R.id.menuItem_Product:
-                        intent = new Intent(MainActivity.this, ProductCatalogActivity.class);
-                        break;
-                    case R.id.menuItem_Department:
-                        intent = new Intent(MainActivity.this, DepartmentActivity.class);
-                        break;
-                    case R.id.menuItem_Users:
-                        intent = new Intent(MainActivity.this, WorkerManagementActivity.class);
-                        break;
-
-                    case R.id.menuItem_Reports:
-                        intent = new Intent(MainActivity.this, ReportsManagementActivity.class);
-                        intent.putExtra("permissions_name",str);
-
-                        break;
-                    case R.id.menuItem_Setting:
-                        // TODO: 30/03/2017 Settings Activity
-                        intent = new Intent(MainActivity.this, SettingActivity.class);
-                        break;
-                    case R.id.menuItem_Backup:
-                        intent = new Intent(MainActivity.this, BackupActivity.class);
-                        startActivity(intent);
-                        finish();
-                        break;
-                    case R.id.menuItem_Custmer_Club:
-                        intent = new Intent(MainActivity.this, OldCustomer.class);
-                        startActivity(intent);
-                        finish();
-                        break;
-                }
-                startActivity(intent);
-                return false;
-            }
-        });
-        //endregion
-*/
         etSearch.setFocusable(true);
         etSearch.requestFocus();
         etSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -1567,6 +1641,7 @@ startActivity(i);
          }*/
 
     }
+
     //region fragment Touch Pad
 
     private void showAlertDialogResumePauseSale() {
@@ -1683,14 +1758,6 @@ startActivity(i);
 
     //endregion
 
-    /**
-     * @Override public boolean onOptionsItemSelected(MenuItem item) {//
-     * if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-     * return true;
-     * }
-     * return super.onOptionsItemSelected(item);
-     * }
-     **/
     private void removeOrderItemSelection() {
         saleDetailsListViewAdapter.setSelected(-1);
         if (selectedIteminCartList != null) {
@@ -2107,6 +2174,7 @@ startActivity(i);
         if(orderList.size()>0){
             orderList.get(0).setCount(orderList.get(0).getCount()+1);
         }else {
+
             SESSION._ORDERS.add(new Order(1, 0, p, p.getPrice(), p.getPrice(),valueOfDiscount));
         }
 
@@ -2143,24 +2211,6 @@ startActivity(i);
         }
 
     }
-
-    /**
-     * private boolean getOffers(){
-     * for (Offer o : offersList) {//offer list
-     * if (o.getRuleId() == 0) {//offer clubType x on price y
-     * for (Order or : SESSION._ORDERS) {//loop into all product at cart
-     * //if (o.getProducts().contains(or.getProduct())) {//product is in the offer
-     * if (or.getCount() >= o.getX()) {//count > x
-     * or.getProduct().setPrice(o.getY() / o.getX());//set the new price
-     * }
-     * //}
-     * }
-     * }
-     * }
-     * return false;
-     * }
-     **/
-
 
     private void enterKeyPressed(String barcodeScanned) {
         Product product = productDBAdapter.getProductByBarCode(barcodeScanned);
@@ -2226,54 +2276,6 @@ startActivity(i);
         }.execute();
     }
 
-    /*
-        private void printAndOpenCashBoxWINTEC(String mainAns, final String mainMer, final String mainCli) {
-            final UsbPrinter printer = new UsbPrinter(1155, 30016);
-
-            final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
-            dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
-
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected void onPreExecute() {
-                    dialog.show();
-                    ////Hebrew 15 Windows-1255
-
-                    SESSION._SALE.setTotalPrice(saleTotalPrice);
-                    printer.PRN_Init();
-                    printer.PRN_PrintAndFeedLine(11);
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    printer.PRN_PrintAndFeedLine(11);
-                    printer.PRN_HalfCutPaper();
-
-                    //pos.cashdrawerOpen(0,20,20);
-                    dialog.cancel();
-                    clearCart();
-                }
-
-                @Override
-                protected Void doInBackground(Void... params) {
-                    InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
-                    if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
-
-                        printer.PRN_PrintDotBitmap(invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer), 0);
-                        printer.PRN_PrintAndFeedLine(11);
-                        printer.PRN_HalfCutPaper();
-
-                        printer.PRN_PrintDotBitmap(invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli), 0);
-                    } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                        printer.PRN_PrintDotBitmap(invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER), 0);
-                    } else {
-                        printer.PRN_PrintDotBitmap(invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null), 0);
-                    }
-                    return null;
-                }
-            }.execute();
-        }
-    */
     private void printAndOpenCashBoxBTP880(String mainAns, final String mainMer, final String mainCli) {
         final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(MainActivity.this);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
@@ -2320,10 +2322,9 @@ startActivity(i);
         }.execute();
     }
 
-
     private static HPRTPrinterHelper HPRTPrinter = new HPRTPrinterHelper();
 
-    private void printAndOpenCashBoxHPRT_TP805(String mainAns, final String mainMer, final String mainCli) {
+    private void printAndOpenCashBoxHPRT_TP805(final String mainAns, final String mainMer, final String mainCli) {
         if (HPRT_TP805.connect(this)) {
             final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
             dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
@@ -2368,7 +2369,47 @@ startActivity(i);
                     InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
                     byte b = 0;
                     try {
-                        if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
+                        if (mainAns.equals("PINPAD")) {
+                            Map<String, String> clientNote = new ArrayMap<>();
+                            Map<String, String> sellerNote = new ArrayMap<>();
+
+                            JSONObject jsonObject = new JSONObject(mainMer);
+                            Iterator<String> itr = null;
+                            try {
+                                itr = jsonObject.getJSONObject("receipt").keys();
+
+                                while (itr.hasNext()) {
+                                    String key = itr.next();
+                                    if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("BOTH")) {
+                                        clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                        sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                    } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("CLIENT")) {
+                                        clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                    } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("SELLER")) {
+                                        sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                    }
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            Bitmap seller = invoiceImg.pinPadInvoice(SESSION._SALE, false, sellerNote);
+
+
+                            HPRTPrinterHelper.PrintBitmap(seller, b, b, 300);
+
+                            try {
+                                HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            Bitmap client = invoiceImg.pinPadInvoice(SESSION._SALE, false, clientNote);
+                            HPRTPrinterHelper.PrintBitmap(client, b, b, 300);
+
+
+
+                        } else if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
                             Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer);
 
                             HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
@@ -2669,6 +2710,131 @@ startActivity(i);
         }
 
         //endregion
+
+
+        //region PinPad
+        if (requestCode == REQUEST_PIN_PAD_ACTIVITY_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                CreditCardPayment ccp = new CreditCardPayment();
+
+                //region prepare CC information
+                JSONObject jsonObject = null;
+                try {
+                    String pinpadResult = data.getStringExtra(PinpadActivity.RESULT_INTENT_CODE_PIN_PAD_ACTIVITY_FULL_RESPONSE);
+                    Log.i("PinPad Result", pinpadResult);
+                    jsonObject = new JSONObject(pinpadResult);
+                    JSONObject tr = jsonObject.getJSONObject("transaction");
+
+                    ccp.setAmount(tr.getDouble("amount"));
+                    ccp.setAnswer(pinpadResult);
+                    ccp.setTransactionId(tr.getString("uid"));
+                    ccp.setCreditCardCompanyName(tr.getString("cardBrand"));
+                    ccp.setLast4Digits(tr.getString("cardNumber"));
+                    ccp.setCardholder(tr.getString("cardHolderName"));
+                    ccp.setPaymentsNumber(0);
+                    ccp.setTransactionType(CreditCardTransactionType.NORMAL);
+
+                    if (tr.getInt("numberOfPayments") > 0) {
+                        ccp.setPaymentsNumber(tr.getInt("numberOfPayments") + 1);
+                        ccp.setFirstPaymentAmount(tr.getDouble("firstPaymentAmount"));
+                        ccp.setOtherPaymentAmount(tr.getDouble("paymentAmount"));
+                        ccp.setTransactionType(CreditCardTransactionType.PAYMENTS);
+                    }
+
+                    if (!tr.getString("transactionType2").equals("CHARGE")) {
+                        ccp.setTransactionType(CreditCardTransactionType.CREDIT);
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                //endregion
+
+                //region save the transaction
+                SESSION._SALE.setTotalPaid(SESSION._SALE.getTotalPrice());
+                saleDBAdapter = new SaleDBAdapter(MainActivity.this);
+                saleDBAdapter.open();
+                clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
+                long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
+                long tempSaleId;
+                saleDBAdapter.close();
+
+                CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
+                creditCardPaymentDBAdapter.open();
+
+                creditCardPaymentDBAdapter.insertEntry(saleID, ccp.getAmount(), ccp.getCreditCardCompanyName(), ccp.getTransactionType(), ccp.getLast4Digits(), ccp.getTransactionId(), ccp.getAnswer(), ccp.getPaymentsNumber()
+                        , ccp.getFirstPaymentAmount(), ccp.getOtherPaymentAmount(), ccp.getCreditCardCompanyName());
+
+                creditCardPaymentDBAdapter.close();
+
+                orderDBAdapter = new OrderDBAdapter(MainActivity.this);
+                custmerAssetDB = new CustomerAssetDB(MainActivity.this);
+                orderDBAdapter.open();
+                custmerAssetDB.open();
+                SESSION._SALE.setId(saleID);
+                if (forSaleMan) {
+                    tempSaleId =saleID;
+                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate());
+                }
+                // insert order region
+                for (Order o : SESSION._ORDERS) {
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
+                    orderId.add(orderid);
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                }
+                // Order Sales man Region
+                for (int i=0;i<orderIdList.size();i++) {
+                    Order order = orderIdList.get(i);
+                    long customerAssestId= custmerAssetstIdList.get(i);
+                    for (int j = 0 ; j< SESSION._ORDERS.size();j++) {
+                        Order o = SESSION._ORDERS.get(j);
+                        long tempOrderId =orderId.get(i);
+                        if (o==order) {
+                            if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
+                                o.setCustmerAssestId(custmerAssetstIdList.get(i));
+                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate());
+                            }
+                        }
+                    }
+                }
+                orderDBAdapter.close();
+                custmerAssetDB.close();
+                SESSION._SALE.setOrders(SESSION._ORDERS);
+                SESSION._SALE.setUser(SESSION._USER);
+
+                PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(MainActivity.this);
+                paymentDBAdapter.open();
+
+                long paymentID = paymentDBAdapter.insertEntry(CREDIT_CARD, saleTotalPrice, saleID);
+
+                paymentDBAdapter.close();
+
+                Payment payment = new Payment(paymentID, CREDIT_CARD, saleTotalPrice, saleID);
+                SESSION._SALE.setPayment(payment);
+                //endregion
+
+                printAndOpenCashBox("PINPAD", jsonObject.toString(), "", REQUEST_PIN_PAD_ACTIVITY_CODE);
+
+            } else if (resultCode == RESULT_CANCELED) {
+                new AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.fail))
+                        .setMessage(getString(R.string.cant_finish_this_action))
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+
+
+            }
+        //endregion PinPad
+
+
 
         //region Checks
 
@@ -3347,6 +3513,7 @@ startActivity(i);
 
 
     }
+
    @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if(event.getSource()==257){
@@ -3395,8 +3562,7 @@ startActivity(i);
         return (char)ascii;
     }
 
-    public boolean validChar(char c)
-    {
+    public boolean validChar(char c) {
         //- (Dash), $ (Dollar), % (Percentage), (Space), . (Point), / (Slash), + (Plus)
         String code39="AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789-$% ./+";
         return code39.contains(c+"");

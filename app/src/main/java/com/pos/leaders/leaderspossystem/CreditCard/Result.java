@@ -59,7 +59,7 @@ public class Result {
             String firstPayment = stringAt(res, 78, 8);
             String fixedPayment = stringAt(res, 86, 8);
             String paymentsNumber = stringAt(res, 94, 2);
-            System.out.println(cardNumber);
+           /* System.out.println(cardNumber);
             System.out.println(brand);
             System.out.println(clearingCompany);
             System.out.println(date);
@@ -68,7 +68,7 @@ public class Result {
             System.out.println("--------------");
             System.out.println(firstPayment);
             System.out.println(fixedPayment);
-            System.out.println(paymentsNumber);
+            System.out.println(paymentsNumber);*/
 
             creditCardPayment.setLast4Digits(cardNumber);
             creditCardPayment.setCreditCardCompanyName(cardName);
