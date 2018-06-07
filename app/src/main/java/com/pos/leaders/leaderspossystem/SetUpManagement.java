@@ -22,16 +22,17 @@ import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 public class SetUpManagement extends AppCompatActivity {
-    CheckBox currencyCheckBox, creditCardCheckBox, customerMeasurementCheckBox;
+    CheckBox currencyCheckBox, creditCardCheckBox,cbPinpad, customerMeasurementCheckBox;
     Spinner printerTypeSpinner, floatPointSpinner;
     Button saveButton, editButton;
-    ImageView currencyImage, customerMeasurementImage, creditCardImage;
+    ImageView currencyImage, customerMeasurementImage, creditCardImage,ivPinpad;
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE";
-    boolean currencyEnable, creditCardEnable, customerMeasurementEnable = false;
+    boolean currencyEnable, creditCardEnable,pinpadEnable, customerMeasurementEnable = false;
     int noOfPoint;
     String printerType;
     ArrayAdapter<String> spinnerArrayAdapter;
@@ -55,13 +56,19 @@ public class SetUpManagement extends AppCompatActivity {
         context = this;
         currencyCheckBox = (CheckBox) findViewById(R.id.setUpManagementCurrencyCheckBox);
         creditCardCheckBox = (CheckBox) findViewById(R.id.setUpManagementCreditCardCheckBox);
+
+        cbPinpad = (CheckBox) findViewById(R.id.setUpManagementCreditCardPinPadCheckBox);
+
         customerMeasurementCheckBox = (CheckBox) findViewById(R.id.setUpManagementCustomerMeasurementCheckBox);
         floatPointSpinner = (Spinner) findViewById(R.id.setUpManagementFloatPointSpinner);
         printerTypeSpinner = (Spinner) findViewById(R.id.setUpManagementPrinterTypeSpinner);
         saveButton = (Button) findViewById(R.id.setUpManagementSaveButton);
         editButton = (Button) findViewById(R.id.setUpManagementEditButton);
         currencyImage = (ImageView) findViewById(R.id.currencyImage);
+
         creditCardImage = (ImageView) findViewById(R.id.creditCardImage);
+        ivPinpad = (ImageView) findViewById(R.id.creditCardPinPadImage);
+
         customerMeasurementImage = (ImageView) findViewById(R.id.customerMeasurementImage);
         printer = new String[]{PrinterType.BTP880.name(), PrinterType.HPRT_TP805.name(), PrinterType.SUNMI_T1.name(), PrinterType.SM_S230I.name(), PrinterType.WINTEC_BUILDIN.name()};
         floatPoint = new Integer[]{2, 0, 1, 3};
@@ -100,6 +107,16 @@ public class SetUpManagement extends AppCompatActivity {
                     creditCardEnable = false;
                 }
 
+            }
+        });
+        cbPinpad.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    pinpadEnable = true;
+                } else {
+                    pinpadEnable = false;
+                }
             }
         });
         customerMeasurementCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -145,6 +162,8 @@ public class SetUpManagement extends AppCompatActivity {
                 final SharedPreferences.Editor editor = preferences.edit();
                 editor.putBoolean(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, currencyEnable);
                 editor.putBoolean(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, creditCardEnable);
+                editor.putBoolean(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD, pinpadEnable);
+
                 editor.putBoolean(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, customerMeasurementEnable);
                 editor.putInt(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, noOfPoint);
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, printerType);
@@ -173,6 +192,12 @@ public class SetUpManagement extends AppCompatActivity {
                 Toast.makeText(SetUpManagement.this, R.string.active_credit_card_service_in_pos, Toast.LENGTH_LONG).show();
             }
         });
+        ivPinpad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(SetUpManagement.this, R.string.active_pin_pad_service_in_pos, Toast.LENGTH_LONG).show();
+            }
+        });
         customerMeasurementImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,6 +219,17 @@ public class SetUpManagement extends AppCompatActivity {
                         }
                         editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, creditCardEnable);
                         SETTINGS.creditCardEnable = creditCardEnable;
+                    }
+
+                    //PinPad
+                    if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD)) {
+                        if(creditCardCheckBox.isChecked()){
+                            pinpadEnable=true;
+                        }else {
+                            pinpadEnable=false;
+                        }
+                        editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD, pinpadEnable);
+                        SETTINGS.pinpadEnable = pinpadEnable;
                     }
                     //Currency
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY)) {
@@ -252,6 +288,15 @@ public class SetUpManagement extends AppCompatActivity {
             }
 
             // end CreditCard
+
+            //pin pad
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD)) {
+                boolean pinpadEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD, false);
+                if (pinpadEnable) {
+                    cbPinpad.setChecked(true);
+
+                }
+            }
             //Currency
             if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY)) {
                 boolean currencyEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, false);

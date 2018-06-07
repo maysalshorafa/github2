@@ -2,7 +2,7 @@
 <resources>
 
     <string name="_new">חדש</string>
-    <string name="edit">ערוך</string>
+    <string name="edit">מדידה משוכפלת</string>
     <string name="change_password">שנה סיסמא</string>
     <string name="delete">הסרה</string>
     <string name="report">דווח</string>
@@ -44,7 +44,7 @@
     <string name="invoice_with_tax">חש\' מס-קבלה</string>
     <string name="credit_invoice">חש\' זיכוי</string>
     <string name="replacement_invoice">פתק החלפה</string>
-    <string name="copyinvoice">עותק</string>
+    <string name="copyinvoice">לחבר</string>
     <string name="cancel_invoice">ביטול עסקה</string>
 
     <!--Z Report-->
@@ -88,7 +88,7 @@
     <string name="sales_man">איש מכירות</string>
     <string name="customer_name">לכבוד</string>
     <string name="group_name">מועדון לקוחות</string>
-    <string name="Information">מועדון לקוחות</string>
+    <string name="Information">מידע</string>
     <string name="count">כמות</string>
     <string name="search">חפוש</string>
     <string name="pause">השהיה</string>
@@ -219,6 +219,118 @@
     <string name="out_put">זיכוי</string>
     <string name="details">פריט</string>
     <string name="cashiers">קןפאי:</string>
+
+    <string name="TouchPad_0">0</string>
+    <string name="TouchPad_1">1</string>
+    <string name="TouchPad_2">2</string>
+    <string name="FE_version_no">מס\' גרסת פרונט</string>
+    <string name="POS_ID">קופה מס\'</string>
+    <string name="TouchPad_3">3</string>
+    <string name="TouchPad_4">4</string>
+    <string name="TouchPad_5">5</string>
+    <string name="TouchPad_6">6</string>
+    <string name="TouchPad_7">7</string>
+    <string name="TouchPad_8">8</string>
+    <string name="TouchPad_9">9</string>
+    <string name="_amount">ערך</string>
+    <string name="_continue">המשך</string>
+    <string name="_description">תיאור</string>
+    <string name="active_credit_card_service_in_pos">נא להפעיל שירות כרטיס אשראי</string>
+    <string name="add_club">הוספת מעדון לקוחות</string>
+    <string name="add_customer">הוספת לקוח</string>
+    <string name="add_customer_club">הוספת מעדון לקוח</string>
+    <string name="add_customer_measurement">הוספת מדידה ללקוח</string>
+    <string name="add_group">הןספת קבוצה</string>
+    <string name="add_measurement">מדידה</string>
+    <string name="add_to_cart">הוספה לסל קניות</string>
+    <string name="add_to_city">בחר עיר</string>
+    <string name="address">כתובת</string>
+    <string name="back_up">גיבוי</string>
+    <string name="backup_all_system">גיבוי מלא</string>
+    <string name="backup_department">גיבוי מחלקות</string>
+    <string name="backup_products_by_department">גיבוי מוצרים</string>
+    <string name="bo_db_version_no">מס\' גרסת מסד נתוני המשרד אחורי</string>
+    <string name="bo_version_no">מס\' גרסת המשרד אחורי</string>
+    <string name="can_not_add_club_please_try_again">כישלון, הוספת מועדון לקוחות</string>
+    <string name="can_not_add_customer_please_try_again">כישלון, הוספת לקוח</string>
+    <string name="can_not_edit_club_please_try_again">כישלון, עריכת מועדון לקוחות</string>
+    <string name="can_not_edit_customer_please_try_again">כישלון, עריכת לקוח</string>
+    <string name="cant_finish_this_action">לא יכול לבצע הפעולה</string>
+    <string name="cancel_measurement">ביטול מדידה</string>
+    <string name="ccv">CCV</string>
+    <string name="choose_no_of_float_point">בחר מספר הספרות</string>
+    <string name="choose_printer_type">סוג מדפסת</string>
+    <string name="clear">נקה</string>
+    <string name="clear_cart">נקה סל</string>
+    <string name="club">מועדון</string>
+    <string name="club_general_type">מועדון כללי</string>
+    <string name="club_name_is_not_available_try_to_use_another_club_name">שם מועדון לקוחות תפוס, נסה שם אחר.</string>
+    <string name="club_parcent">הנחה באחוזים</string>
+    <string name="club_point_amount">צבירת נקודות</string>
+    <string name="company_name">שם החברה</string>
+    <string name="connect">לחבר</string>
+    <string name="country">מדינה</string>
+    <string name="country_code">מס\' מדינה</string>
+    <string name="create_report">צור דו\"ח</string>
+    <string name="create_z_report">צור דו\"ח Z</string>
+    <string name="create_z_report_message">האם ברצונך ליצור דוח Z?</string>
+    <string name="credit_card_number">מספר כרטיס אשראי</string>
+    <string name="currency">מטבע</string>
+    <string name="customer">לקוח</string>
+    <string name="customer_club">חברי מועדון</string>
+    <string name="customer_have_money_from_point_equal_total_price">קמות הנקודות שצבר הלקוח שווה מסכום העסקה</string>
+    <string name="customer_have_money_from_point_less_then_total_price">קמות הנקודות שצבר הלקוח בחות מסכום העסקה</string>
+    <string name="customer_have_money_from_point_more_than_total_price">קמות הנקודות שצבר הלקוח יותר מסכום העסקה</string>
+    <string name="customer_id">ת\'\'ז הלקוח</string>
+    <string name="customer_measurement">מדידות הלקוח</string>
+    <string name="customer_name_is_not_available_try_to_use_another_customer_name">שם תפוס, נסה שם אחר</string>
+    <string name="delete_all_selected_products">מחק כל המוצרים שבחרתה</string>
+    <string name="delete_check">מחק צ\'יק</string>
+    <string name="delete_club_message">האם ברצונך למחוק מועדון זה?</string>
+    <string name="delete_customer_message">האם ברצונך למחוק לקוח זה?</string>
+    <string name="delete_product_message">האם ברצונך למחוק מוצר זה?</string>
+    <string name="delete_user_message">האם ברצונך למחוק משתמש זה?</string>
+    <string name="department">מחלקה</string>
+    <string name="different">שונה</string>
+    <string name="discount_percentage">הנחה באחוזים</string>
+    <string name="do_you_want_to_restore_the_system">האם אתה רוצה לשחזר את המערכת.</string>
+    <string name="dont_need_to_add_another_check">אין צורך להוסיף עוד צ\'ק!</string>
+    <string name="duplicate_measurement">מדידה משוכפלת</string>
+    <string name="email">דואר אלקטרוני</string>
+    <string name="enter_user_password">הזן סיסמת משתמש</string>
+    <string name="error">שגיאה</string>
+    <string name="error_on_restore_the_system">שגיאה בשחזור המערכת</string>
+    <string name="eur">EUR</string>
+    <string name="expired_card">תוקף הכרטיס פג</string>
+    <string name="fail">כישלון</string>
+    <string name="fail_to_make_internet_connection">חיבור לאינטרנט נכשל.</string>
+    <string name="fail_to_save_settings">לא מצליח לשמור את ההגדרות.</string>
+    <string name="female">נקבה</string>
+    <string name="failed_to_add_new_department">נכשל בהוספת מחלקה חדשה, נסה שוב!</string>
+    <string name="file_does_not_valid">לא תקין</string>
+    <string name="gbp">GBP</string>
+    <string name="gender">מין</string>
+    <string name="general_settings">הגדרות כלליות</string>
+    <string name="go_back">חזרה</string>
+    <string name="hello_blank_fragment">שלום שלום</string>
+    <string name="hours_of_work">שעות עבודה</string>
+    <string name="house_number">מס\' בית</string>
+    <string name="id">ת\'\'ז</string>
+    <string name="if_you_want_to_update_general_setting_click_ok">אם ברצונך לעדכן את הגדרות כלליות לחץ על אישור</string>
+    <string name="ins">₪</string>
+    <string name="insert_department_name_massage">הזן שם מחלקה.</string>
+    <string name="insert_new_department_name_massage">אנא הכנס שם מחלקה חדש.</string>
+    <string name="integrated_payment">תשלום משולב</string>
+    <string name="internet_access">אין חיבור לאינטרנט</string>
+    <string name="internet_not_connected">בדוק את חיבור האינטרנט שלך ונסה שוב.</string>
+    <string name="invalid_payments_number">הכנס מספר תשלומים חוקי בין 2 ל -36 תשלום.</string>
+    <string name="invoice_note">שטר חשבונית</string>
+    <string name="job">תפקיד בעבודה</string>
+    <string name="key">מפתיח</string>
+
+    <string name="pinpad_connection_error">Please call the support team.</string>
+    <string name="transaction_error">Transaction error</string>
+
 
 
 </resources>

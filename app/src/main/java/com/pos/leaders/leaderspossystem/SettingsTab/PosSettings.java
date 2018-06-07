@@ -21,11 +21,11 @@ import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
  */
 
 public class PosSettings extends Fragment {
-    CheckBox currencyCheckBox , creditCardCheckBox , customerMeasurementCheckBox ;
+    CheckBox currencyCheckBox , creditCardCheckBox ,cbPinPad, customerMeasurementCheckBox ;
     TextView floatPointNo , printerTypeTv ;
     public static final String LEAD_POS_RESULT_INTENT_SETTING_ENABLE_EDIT = "LEAD_POS_RESULT_INTENT_SETTING_ENABLE_EDIT";
     Button btnEditPosSetting;
-    ImageView currencyImage, customerMeasurementImage, creditCardImage;
+    ImageView currencyImage, customerMeasurementImage, creditCardImage,ivPinpad;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -33,11 +33,13 @@ public class PosSettings extends Fragment {
         btnEditPosSetting = (Button)v.findViewById(R.id.settings_editPosSetting);
         currencyCheckBox = (CheckBox) v.findViewById(R.id.setUpManagementCurrencyCheckBox);
         creditCardCheckBox = (CheckBox) v.findViewById(R.id.setUpManagementCreditCardCheckBox);
+        cbPinPad = (CheckBox) v.findViewById(R.id.setUpManagementCreditCardPinPadCheckBox);
         customerMeasurementCheckBox = (CheckBox) v.findViewById(R.id.setUpManagementCustomerMeasurementCheckBox);
         floatPointNo = (TextView)v.findViewById(R.id.noOfFloatPoint);
         printerTypeTv = (TextView)v.findViewById(R.id.printerType);
         currencyImage = (ImageView) v.findViewById(R.id.currencyImage);
         creditCardImage = (ImageView) v.findViewById(R.id.creditCardImage);
+        ivPinpad = (ImageView) v.findViewById(R.id.creditCardPinPadImage);
         customerMeasurementImage = (ImageView) v.findViewById(R.id.customerMeasurementImage);
         floatPointNo.setText(SETTINGS.decimalNumbers+" ");
         printerTypeTv.setText(SETTINGS.printer.toString());
@@ -46,6 +48,9 @@ public class PosSettings extends Fragment {
         }
         if(SETTINGS.creditCardEnable){
             creditCardCheckBox.setChecked(true);
+        }
+        if(SETTINGS.pinpadEnable){
+            cbPinPad.setChecked(true);
         }
         if(SETTINGS.enableCustomerMeasurement){
             customerMeasurementCheckBox.setChecked(true);
@@ -73,9 +78,22 @@ public class PosSettings extends Fragment {
             public void onClick(View v) {
                 if(SETTINGS.creditCardEnable){
                     Toast.makeText(getContext(), getString(R.string.credit_card_is_activated_in_pos), Toast.LENGTH_LONG).show();
+
                 }
             else {
                     Toast.makeText(getContext(),getString(R.string.credit_card_is_not_activated_in_pos), Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+        ivPinpad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SETTINGS.pinpadEnable){
+                    Toast.makeText(getContext(), "PinPad is activated", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(getContext(), "PinPad is not activated", Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -85,6 +103,7 @@ public class PosSettings extends Fragment {
             public void onClick(View v) {
                 if(SETTINGS.enableCustomerMeasurement){
                     Toast.makeText(getContext(), getString(R.string.customer_measurement_is_activated_in_pos), Toast.LENGTH_LONG).show();
+
                 }else {
                     Toast.makeText(getContext(), getString(R.string.customer_measurement_is_not_activated_in_pos), Toast.LENGTH_LONG).show();
 
