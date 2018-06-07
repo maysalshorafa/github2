@@ -206,6 +206,7 @@
     <string name="customer_measurement">قياسات الزبون</string>
     <string name="choose_no_of_float_point"> اختر عدد المنازل العشرية</string>
     <string name="choose_printer_type">اختر نوع الطابعة</string>
+
     <string name="TouchPad_0">0</string>
     <string name="TouchPad_1">1</string>
     <string name="TouchPad_2">2</string>
@@ -222,5 +223,8 @@
     <string name="active_credit_card_service_in_pos">الرجاء تفعيل خدمة الدفع عن طريق بطاقة الائتمان</string>
     <string name="ccv">CCV</string>
     <string name="ins">₪</string>
+
+    <string name="pinpad_connection_error">Please call the support team.</string>
+    <string name="transaction_error">Transaction error</string>
 
 </resources>

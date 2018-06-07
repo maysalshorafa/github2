@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context="com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity">
+
+    <TextView
+        android:id="@+id/pinpadActivity_tvTotalPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/total_price"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/pinpadActivity_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/number_of_payments"
+        android:textAlignment="center"
+        android:textColor="@color/Black"
+        android:textSize="18sp" />
+
+    <NumberPicker
+        android:id="@+id/pinpadActivity_np"
+        style="@android:style/Widget.Material.Light.NumberPicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/pinpadActivity_btDone"
+            style="@style/AppTheme.bt_green"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/payment" />
+
+        <Button
+            android:id="@+id/pinpadActivity_btByPhone"
+            style="@style/AppTheme.bt_yellow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:text="@string/by_phone" />
+
+        <Button
+            android:id="@+id/pinpadActivity_btCancel"
+            style="@style/AppTheme.bt_dangers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -219,6 +219,7 @@
     <string name="out_put">זיכוי</string>
     <string name="details">פריט</string>
     <string name="cashiers">קןפאי:</string>
+
     <string name="TouchPad_0">0</string>
     <string name="TouchPad_1">1</string>
     <string name="TouchPad_2">2</string>
@@ -326,6 +327,10 @@
     <string name="invoice_note">שטר חשבונית</string>
     <string name="job">תפקיד בעבודה</string>
     <string name="key">מפתיח</string>
+
+    <string name="pinpad_connection_error">Please call the support team.</string>
+    <string name="transaction_error">Transaction error</string>
+
 
 
 </resources>
