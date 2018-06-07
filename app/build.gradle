@@ -15,7 +15,9 @@ android {
 
         useLibrary 'org.apache.http.legacy'
         multiDexEnabled true
-
+        jackOptions {
+            enabled true
+        }
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips", "mips64", "x86_64", "arm64-v8a"
         }
@@ -28,8 +30,8 @@ android {
     }
 
     compileOptions {
-        targetCompatibility 1.7
-        sourceCompatibility 1.7
+        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_7
     }
 
     packagingOptions {
@@ -46,6 +48,7 @@ android {
         exclude 'META-INF/LGPL2.1'
     }
 }
+
 
 dependencies {
     compile fileTree(include: ['**/*.jar'], dir: 'libs')

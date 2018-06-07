@@ -206,5 +206,7 @@
     <string name="customer_measurement">قياسات الزبون</string>
     <string name="choose_no_of_float_point"> اختر عدد المنازل العشرية</string>
     <string name="choose_printer_type">اختر نوع الطابعة</string>
+    <string name="pinpad_connection_error">Please call the support team.</string>
+    <string name="transaction_error">Transaction error</string>
 
 </resources>
