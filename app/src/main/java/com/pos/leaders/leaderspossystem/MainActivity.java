@@ -91,7 +91,6 @@ import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.User;
-import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
@@ -137,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
     String transID = "";
 
     TextView salesMan;
-    TextView customer_name, club_name, information , tvCustomerInformation;
     private DrawerLayout drawerLayout;
     //private ActionBarDrawerToggle actionBarDrawerToggle;//
     // private NavigationView navigationView;
@@ -149,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvTotalPrice, tvTotalSaved, salesSaleMan;
     EditText etSearch;
     ImageButton btnDone;
-    ImageButton btnGrid, btnList, used_point;
+    ImageButton btnGrid, btnList;
     ScrollView scDepartment;
     LinearLayout llDepartments;
     FrameLayout fragmentTouchPad;
@@ -289,20 +287,19 @@ public class MainActivity extends AppCompatActivity {
             startService(intent);
         }
 
-
-        used_point = (ImageButton) findViewById(R.id.usedPoint);
-        customer_name = (TextView) findViewById(R.id.cName);
-        club_name = (TextView) findViewById(R.id.cClubName);
-        information = (TextView) findViewById(R.id.cInformation);
-        tvCustomerInformation = (TextView) findViewById(R.id.tvCustomerInformation);
-
         customerName_EditText = (EditText) findViewById(R.id.customer_textView);
-        //customerName=customerName_EditText.getText().toString();
+
+        Button btAddProductShortLink = (Button) findViewById(R.id.mainActivity_btAddProductShortLink);
+        btAddProductShortLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, ProductsActivity.class);
+                startActivity(i);
+            }
+        });
 
         search_person = (ImageButton) findViewById(R.id.searchPerson);
         drawerLayout = (DrawerLayout) findViewById(R.id.mainActivity_drawerLayout);
-        //   navigationView = (NavigationView) findViewById(R.id.mainActivity_navigationView);
-        //((MenuItem)(navigationView.findViewById(R.id.menuItem_ZReport))).setTitle("Z"+getString(R.string.reports));
 
         //region Init
         btnPauseSale = (Button) findViewById(R.id.mainActivity_BTNGeneralProduct);
@@ -346,7 +343,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         showTouchPad(false);
-        showQuickPricePad();
 
         //region Orders Frame
 
@@ -1184,50 +1180,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        used_point.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                double unUsedMoneyFromPoint = 0.0;
-                // get the value of one Point
-                ValueOfPoint valueOfPoint = valueOfPointDB.getValue();
-                double value = valueOfPoint.getValue();
-                // get Customer Used And UnUsedPoint
-                Sum_PointDbAdapter customerPointDbAdapter = new Sum_PointDbAdapter(getApplicationContext());
-                customerPointDbAdapter.open();
-                UsedPointDBAdapter customerUnUsedPointDBAdapter = new UsedPointDBAdapter(getApplicationContext());
-                customerUnUsedPointDBAdapter.open();
-                int totalCustomerPoint = customerPointDbAdapter.getPointInfo(customerId);
-                int unUsedCustomerPoint = customerUnUsedPointDBAdapter.getUnusedPointInfo(customerId);
-                int NOOfPoint = totalCustomerPoint - unUsedCustomerPoint;
-                // Total Money From Customer Point "in Basic Currency"
-                double moneyFromCustomerPoint = NOOfPoint * value;
-                // Customer Point Equal Sale Total Price
-                if (saleTotalPrice == moneyFromCustomerPoint) {
-                    equalUsedPoint = true;
-                    saleTotalPrice = 0.0;
-                    newPoint = (int) (saleTotalPrice / value);
-                    Toast.makeText(MainActivity.this, getString(R.string.customer_have_money_from_point_equal_total_price) + unUsedMoneyFromPoint, Toast.LENGTH_LONG).show();
-                    tvTotalPrice.setText(Util.makePrice(0.0) + getString(R.string.ins));
-                }
-                // Customer Point Bigger Than Sale Total Price
-                if (saleTotalPrice < moneyFromCustomerPoint) {
-                    lessUsedPoint = true;
-                    unUsedMoneyFromPoint = moneyFromCustomerPoint - saleTotalPrice;
-                    newPoint = (int) (saleTotalPrice / value);
-                    saleTotalPrice=0.0;
-                    Toast.makeText(MainActivity.this, getString(R.string.customer_have_money_from_point_more_than_total_price) + unUsedMoneyFromPoint, Toast.LENGTH_LONG).show();
-                    tvTotalPrice.setText(Util.makePrice(0.0) + getString(R.string.ins));
-                }
-                // Customer Point Less Than Sale Total Price
-                if (saleTotalPrice > moneyFromCustomerPoint) {
-                    biggerUsedPoint = true;
-                    saleTotalPrice = saleTotalPrice - moneyFromCustomerPoint;
-                    newPoint = (int) (moneyFromCustomerPoint / value);
-                    Toast.makeText(MainActivity.this, getString(R.string.customer_have_money_from_point_less_then_total_price) + saleTotalPrice, Toast.LENGTH_LONG).show();
-                    tvTotalPrice.setText(Util.makePrice(saleTotalPrice) + getString(R.string.ins));
-                }
-            }
-        });
+
         //endregion
 
 
@@ -1656,12 +1609,7 @@ startActivity(i);
             addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._USER.getUserId(),""));
     }
 
-    private void showQuickPricePad() {
-        QuickPricePadFragment fTP = new QuickPricePadFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.mainActivity_fragmentQuickPricePad, fTP);
-        transaction.commit();
-    }
+
 
     private void showTouchPad(boolean b) {
         if (!b) {
@@ -1761,10 +1709,6 @@ startActivity(i);
         Ppoint = 0;
         salesSaleMan.setText(getString(R.string.sales_man));
         SESSION._Rest();
-        club_name.setText("");
-        customer_name.setText("");
-        information.setText("");
-        tvCustomerInformation.setText(getString(R.string.Information));
         customerName_EditText.setText("");
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
@@ -3151,25 +3095,17 @@ startActivity(i);
                 customerClubId = customer.getClub();
                 customerId = customer.getCustomerId();
                 customerName_EditText.setText(customerName);
-                customer_name.setText(customerName);
                 // get club Information
                 Club club = clubAdapter.getGroupInfo(customerClubId);
                 clubType = club.getType();
                 clubName = club.getName();
-                club_name.setText(clubName);
                 if (clubType == 1) {
                     clubDiscount = club.getPercent();
-                    tvCustomerInformation.setText(getString(R.string.discount));
-                    information.setText(clubDiscount + "");
                 } else if (clubType == 2) {
-                    used_point.setVisibility(View.VISIBLE);
+
                     clubAmount = club.getAmount();
                     clubPoint = club.getPoint();
-                    tvCustomerInformation.setText(getString(R.string.point) + ",\t" + getString(R.string.amount));
-                    information.setText(clubAmount + ",\t " + clubPoint + getResources().getText(R.string.ins));
                 } else if (clubType == 0) {
-
-                    information.setText(getString(R.string.general));
                 }
 
                 popupWindow.dismiss();
