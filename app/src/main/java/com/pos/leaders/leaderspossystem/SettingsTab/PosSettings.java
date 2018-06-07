@@ -67,9 +67,9 @@ public class PosSettings extends Fragment {
             @Override
             public void onClick(View v) {
                 if(SETTINGS.enableCurrencies){
-                    Toast.makeText(getContext(), "Currency is activated in POS", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), getString(R.string.currency_is_activated_in_pos), Toast.LENGTH_LONG).show();
                 }else {
-                    Toast.makeText(getContext(), "Currency Card is not activated in POS", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), getString(R.string.currency_is_not_activated_in_pos), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -77,10 +77,11 @@ public class PosSettings extends Fragment {
             @Override
             public void onClick(View v) {
                 if(SETTINGS.creditCardEnable){
-                    Toast.makeText(getContext(), "Credit Card is activated in POS", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), getString(R.string.credit_card_is_activated_in_pos), Toast.LENGTH_LONG).show();
+
                 }
             else {
-                    Toast.makeText(getContext(), "Credit Card is not activated in POS", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),getString(R.string.credit_card_is_not_activated_in_pos), Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -101,9 +102,10 @@ public class PosSettings extends Fragment {
             @Override
             public void onClick(View v) {
                 if(SETTINGS.enableCustomerMeasurement){
-                    Toast.makeText(getContext(), "Customer Measurement is activated in POS", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), getString(R.string.customer_measurement_is_activated_in_pos), Toast.LENGTH_LONG).show();
+
                 }else {
-                    Toast.makeText(getContext(), "Customer Measurement is not activated in POS", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), getString(R.string.customer_measurement_is_not_activated_in_pos), Toast.LENGTH_LONG).show();
 
                 }
             }
