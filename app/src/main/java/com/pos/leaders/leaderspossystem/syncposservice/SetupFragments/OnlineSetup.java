@@ -2,9 +2,6 @@ package com.pos.leaders.leaderspossystem.syncposservice.SetupFragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,19 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.R;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
-import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
-import com.pos.leaders.leaderspossystem.syncposservice.MessagesCreator;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.UUID;
 
 

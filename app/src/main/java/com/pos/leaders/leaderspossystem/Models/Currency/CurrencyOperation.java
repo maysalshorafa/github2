@@ -1,9 +1,5 @@
 package com.pos.leaders.leaderspossystem.Models.Currency;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
-
-import java.util.Date;
 
 /**
  * Created by Win8.1 on 9/24/2017.

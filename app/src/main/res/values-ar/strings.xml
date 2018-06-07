@@ -218,7 +218,6 @@
     <string name="customer_measurement_is_activated_in_pos">نظام القياسات الخاص بالزباين فعال في النظام</string>
     <string name="customer_measurement_is_not_activated_in_pos">نظام القياسات الخاص بالزباين غير فعال بالنظام</string>
     <string name="active_currency_service_in_pos">اذاأردت تفعيل نظام العملات في النظام الخاص بك اضغط على المربع الخاص بها.</string>
-    <string name="active_credit_card_service_in_pos">اذاأردت تفعيل نظام بطاقة الائتمان في النظام الخاص بك اضغط على المربع الخاص بها.</string>
     <string name="active_customer_measurement_service_in_pos">اذاأردت تفعيل نظام القياسات الخاص بالزباين في النظام اضغط على المربع الخاص بها.</string>
     <string name="success_edit_POS_setting">تم تعديل اعدادات النظام بنجاح.</string>
     <string name="version_info">معلومات النسخة</string>
@@ -226,7 +225,6 @@
     <string name="pos_db_version_no"> قاعدة البيانات الخاص بالPOS</string>
     <string name="bo_version_no">Bo  نسخة</string>
     <string name="bo_db_version_no">Bo  قاعدة البيانات الخاص بال</string>
-    <string name="FE_version_no">Front نسخة </string>
     <string name="pos_setting">اعدادات النظام</string>
     <string name="create_z_report_message">هل تريد انشاء تقرير Z؟</string>
     <string name="create_z_report">انشاء تقرير Z</string>
@@ -256,7 +254,6 @@
     <string name="from">من</string>
     <string name="to">الى</string>
     <string name="create_report">انشاء تقرير</string>
-    <string name="_return">ارجاع</string>
     <string name="add_group">اضافة نادي اعضاء</string>
     <string name="address">عنوان</string>
     <string name="cancel_invoice">الغاء الفاتورة</string>

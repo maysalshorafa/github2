@@ -48,8 +48,6 @@ public class OrderDBAdapter {
 	// Database open/upgrade helper
 	private DbHelper dbHelper;
 
-	private static boolean isEmpty = true;
-
 	public OrderDBAdapter(Context context) {
 		this.context = context;
 		this.dbHelper = new DbHelper(context);

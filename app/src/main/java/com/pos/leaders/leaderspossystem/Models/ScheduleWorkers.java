@@ -1,10 +1,5 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
-
-import java.util.Date;
-
 /**
  * Created by KARAM on 19/10/2016.
  */
