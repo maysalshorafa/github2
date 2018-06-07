@@ -2,8 +2,6 @@ package com.pos.leaders.leaderspossystem.Tools;
 
 import android.content.Context;
 
-import com.pos.leaders.leaderspossystem.Models.Point;
-
 /**
  * Created by Win8.1 on 8/8/2017.
  */

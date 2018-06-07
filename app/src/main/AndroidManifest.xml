@@ -163,11 +163,18 @@
             android:value="fc2345a479e793a78d4e617ce9a0fe1e2c8e93fc" />
 
         <activity android:name=".SalesHistoryCopySales" />
+
         <activity android:name=".AddNewDepartment"
             android:label="@string/title_activity_add_new_department_activity" ></activity>
         <activity android:name=".ScheduleWorkersActivity" />
         <activity android:name=".SettingsTab.SettingsTab"
             android:label="@string/title_activity_setting_tab_activity"></activity>
+
+        <activity android:name=".AddNewDepartment" />
+        <activity android:name=".ScheduleWorkersActivity" />
+        <activity android:name=".Pinpad.PinpadActivity"
+                   android:label="@string/title_activity_pinpad"></activity>
+
     </application>
 
 </manifest>

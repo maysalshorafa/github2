@@ -367,7 +367,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 } else {
                     builder = new AlertDialog.Builder(MainCreditCardActivity.this);
                 }
-                builder.setTitle("שגיאה")
+                builder.setTitle(getString(R.string.error))
                         .setMessage(e.getMessage())
                         .setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {

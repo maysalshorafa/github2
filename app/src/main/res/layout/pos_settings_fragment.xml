@@ -67,14 +67,38 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_weight="1"
+                    android:clickable="false"
                     android:text="@string/credit_card"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
-                    android:clickable="false"
-                    />
+                    android:textSize="25dp" />
 
                 <ImageView
                     android:id="@+id/creditCardImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/exclamation_mark" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/setUpManagementCreditCardPinPadCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:text="Pinpad"
+                    android:textColor="@color/black"
+                    android:textSize="25dp" />
+
+                <ImageView
+                    android:id="@+id/creditCardPinPadImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -116,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:text="@string/no_of_float_point"
+                    android:text="@string/choose_no_of_float_point"
                     android:textColor="@color/black"
                     android:textSize="25dp" />
 
@@ -141,7 +165,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:text="@string/printer_type"
+                    android:text="@string/choose_printer_type"
                     android:textColor="@color/black"
                     android:textSize="25dp" />
 
