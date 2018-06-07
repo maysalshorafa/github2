@@ -26,14 +26,14 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
-import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
@@ -47,6 +47,7 @@ import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 import com.sunmi.aidl.MSCardService;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -64,7 +65,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     ArrayList<Permissions> permissions = new ArrayList<Permissions>();
     ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
     Intent i;
-    Sale lastSale;
+    Order lastSale;
     double totalZReportAmount=0;
 
     private MSCardService sendservice;
@@ -189,7 +190,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 try {
-                    scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getId(), new Date());
+                    scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getScheduleWorkersId(), new Date());
                     SESSION._SCHEDULEWORKERS.setExitTime(new Date().getTime());
                     Log.i("Worker get out", SESSION._SCHEDULEWORKERS.toString());
                 } catch (Exception ex) {
@@ -205,21 +206,21 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onClick(View v) {
                 final AReport _aReport = new AReport();
-                _aReport.setByUserID(SESSION._USER.getId());
-                _aReport.setCreationDate(new Date().getTime());
+                _aReport.setByUserID(SESSION._USER.getUserId());
+                _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
                 AReport aReport = getLastAReport();
                 ZReport zReport = getLastZReport();
 
                 if (aReport == null) {
                     _aReport.setLastZReportID(-1);
-                    _aReport.setLastSaleID(-1);
+                    _aReport.setLastOrderId(-1);
 
                     ShowAReportDialog(_aReport);
                 }
                 else{
-                    _aReport.setLastZReportID(zReport.getId());
-                    _aReport.setLastSaleID(zReport.getEndSaleId());
+                    _aReport.setLastZReportID(zReport.getzReportId());
+                    _aReport.setLastOrderId(zReport.getEndOrderId());
 
                     ShowAReportDialog(_aReport);
                 }
@@ -238,28 +239,28 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
 
                 if(lastZReport == null) {
                     lastZReport = new ZReport();
-                    lastZReport.setEndSaleId(0);
+                    lastZReport.setEndOrderId(0);
                 }
 
-                ZReport z=new ZReport(0, new Date().getTime() , SESSION._USER,lastZReport.getEndSaleId()+1,lastSale);
-                z.setByUser(SESSION._USER.getId());
-                double amount = zReportDBAdapter.getZReportAmount(z.getStartSaleId(), z.getEndSaleId());
+                ZReport z=new ZReport(0,  new Timestamp(System.currentTimeMillis()) , SESSION._USER,lastZReport.getEndOrderId()+1,lastSale);
+                z.setByUser(SESSION._USER.getUserId());
+                double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
                 totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
-                long zID = zReportDBAdapter.insertEntry(z.getCreationDate(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId(),amount,totalZReportAmount);
-                z.setId(zID);
+                long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
+                z.setzReportId(zID);
                 lastZReport = new ZReport(z);
                 zReportDBAdapter.close();
                 PrintTools pt = new PrintTools(TempDashBord.this);
 
                 //create and print z report
-                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false,totalZReportAmount);
+                Bitmap bmap = pt.createZReport(lastZReport.getzReportId(), lastZReport.getStartOrderId(), lastZReport.getEndOrderId(), false,totalZReportAmount);
                 if(bmap!=null)
                     pt.PrintReport(bmap);
 
                 Intent i=new Intent(TempDashBord.this,ReportZDetailsActivity.class);
-                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID,lastZReport.getId());
-                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM,lastZReport.getStartSaleId());
-                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO,lastZReport.getEndSaleId());
+                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID,lastZReport.getzReportId());
+                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM,lastZReport.getStartOrderId());
+                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO,lastZReport.getEndOrderId());
                 startActivity(i);
                 btZReport.setEnabled(false);
             }
@@ -404,7 +405,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     protected void onResume() {
         super.onResume();
 
-        SaleDBAdapter saleDBAdapter = new SaleDBAdapter(TempDashBord.this);
+        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(TempDashBord.this);
         saleDBAdapter.open();
         lastSale = saleDBAdapter.getLast();
         saleDBAdapter.close();
@@ -435,9 +436,9 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
 
 
         if (aReport != null && zReport != null) {
-            if (aReport.getLastZReportID() == zReport.getId()) {
+            if (aReport.getLastZReportID() == zReport.getzReportId()) {
                 Toast.makeText(this, zReport.toString(), Toast.LENGTH_LONG).show();
-                Log.e("zreport id", zReport.getId()+"");
+                Log.e("zreport id", zReport.getzReportId()+"");
             } else {
                 return true;
             }
@@ -524,7 +525,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                     aReport.setAmount(Double.parseDouble(str));
                     AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(TempDashBord.this);
                     aReportDBAdapter.open();
-                    aReportDBAdapter.insertEntry(aReport.getCreationDate(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastSaleID(), aReport.getLastZReportID());
+                    aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
                     aReportDBAdapter.close();
                     discountDialog.cancel();
                 }

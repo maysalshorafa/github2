@@ -1,7 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models.Offers;
 
 import com.pos.leaders.leaderspossystem.Models.Offer;
-import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 
 import java.util.List;
 
@@ -47,17 +47,17 @@ public class Rule1 extends Rule {
     }
 
     @Override
-    public void execute(List<Order> orders, Offer offer) {
-        for (Order o : orders) {
+    public void execute(List<OrderDetails> orders, Offer offer) {
+        for (OrderDetails o : orders) {
             if (offer.getProducts().contains(o.getProduct())) {
-                if (o.getCount() == this.quantity) {
-                    o.setPrice(price / quantity);
-                } else if (o.getCount() > this.quantity) {
-                    Order _o = o;
-                    _o.setCount(o.getCount() - quantity);
+                if (o.getQuantity() == this.quantity) {
+                    o.setPaidAmount(price / quantity);
+                } else if (o.getQuantity() > this.quantity) {
+                    OrderDetails _o = o;
+                    _o.setCount(o.getQuantity() - quantity);
                     orders.add(_o);
                     o.setCount(quantity);
-                    o.setPrice(price / quantity);
+                    o.setPaidAmount(price / quantity);
                 }
                 break;
             }
@@ -65,7 +65,7 @@ public class Rule1 extends Rule {
     }
 
     @Override
-    public boolean precondition(List<Order> orders) {
+    public boolean precondition(List<OrderDetails> orders) {
         if(orders.size()>=quantity)
             return true;
         return false;

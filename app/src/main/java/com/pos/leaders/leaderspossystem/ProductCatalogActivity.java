@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -214,7 +213,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
 							.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
 									int check;
-									check = productDBAdapter.deleteEntry(editableProduct.getId());
+									check = productDBAdapter.deleteEntry(editableProduct.getCashPaymentId());
 									if (check == 1) {
 										Log.i("entry deleted", editableProduct.toString());
 										productsList.remove(editableProduct);
@@ -259,7 +258,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
                             case 0:
                                 Product_Management_Edit=8;
                                 intent = new Intent(ProductCatalogActivity.this, ProductsActivity.class);
-                                intent.putExtra("productID", filter_productsList.get(position).getId());
+                                intent.putExtra("productID", filter_productsList.get(position).getProductId());
                                 startActivity(intent);
                                 break;
                             case 1:
@@ -268,7 +267,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
                                     .setMessage(getString(R.string.delete))
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            productDBAdapter.deleteEntry(filter_productsList.get(position).getId());
+                                            productDBAdapter.deleteEntry(filter_productsList.get(position).getProductId());
                                             productsList.remove(filter_productsList.get(position));
                                             gvProducts.setAdapter(adapter);
                                             adapter.notifyDataSetChanged();
@@ -285,7 +284,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
                             case 2:
                                 Product_Management_View=9;
                                 intent = new Intent(ProductCatalogActivity.this, ProductsActivity.class);
-                                intent.putExtra("productID", filter_productsList.get(position).getId());
+                                intent.putExtra("productID", filter_productsList.get(position).getProductId());
                                 startActivity(intent);
                                 break;
                              
@@ -330,7 +329,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
             bt.setLayoutParams(params);
             bt.setTag(d);
 
-            //bt.setId(d.getId());
+            //bt.setCurrencyId(d.getCashPaymentId());
             bt.setText(d.getName());
             bt.setTextAppearance(this, R.style.TextAppearance);
             bt.setBackground(getResources().getDrawable(R.drawable.bt_normal));
@@ -345,7 +344,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
                     prseedButtonDepartments.setBackground(getResources().getDrawable(R.drawable.bt_normal));
                     v.setPressed(true);
                     v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
-                    final long departmentID = ((Department) v.getTag()).getId();
+                    final long departmentID = ((Department) v.getTag()).getDepartmentId();
                     prseedButtonDepartments = v;
                     productsList = productDBAdapter.getAllProductsByDepartment(departmentID, productLoadItemOffset, productCountLoad);
                     filter_productsList = productsList;

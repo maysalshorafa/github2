@@ -13,8 +13,8 @@ import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
@@ -81,7 +81,7 @@ public class ProductDBAdapter {
 
     public long insertEntry(String name,String barCode,String description,double price,double costPrice,
                            boolean withTax,boolean weighable,long depId,long byUser ,int pos,int point_system) {
-        Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price, costPrice, withTax, weighable, new Date().getTime(), depId, byUser, pos, point_system);
+        Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price, costPrice, withTax, weighable, new Timestamp(System.currentTimeMillis()), depId, byUser, pos, point_system);
 
         long id = insertEntry(p);
         if (id > 0) {
@@ -97,7 +97,7 @@ public class ProductDBAdapter {
     public long insertEntry(Product p) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(PRODUCTS_COLUMN_ID, p.getId());
+        val.put(PRODUCTS_COLUMN_ID, p.getProductId());
         val.put(PRODUCTS_COLUMN_NAME, p.getName());
         val.put(PRODUCTS_COLUMN_BARCODE, p.getBarCode());
         val.put(PRODUCTS_COLUMN_DESCRIPTION, p.getDescription());
@@ -107,8 +107,8 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_WEIGHABLE, p.isWeighable());
         val.put(PRODUCTS_COLUMN_DEPARTMENTID, p.getDepartmentId());
         val.put(PRODUCTS_COLUMN_BYUSER, p.getByUser());
-        val.put(PRODUCTS_COLUMN_with_pos,p.getWith_pos());
-        val.put(PRODUCTS_COLUMN_with_point_system,p.getWith_point_system());
+        val.put(PRODUCTS_COLUMN_with_pos,p.getWithPos());
+        val.put(PRODUCTS_COLUMN_with_point_system,p.getWithPointSystem());
         try {
             return db.insert(PRODUCTS_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -185,7 +185,7 @@ public class ProductDBAdapter {
 
         String where = PRODUCTS_COLUMN_ID + " = ?";
         try {
-            db.update(PRODUCTS_TABLE_NAME, updatedValues, where, new String[]{product.getId() + ""});
+            db.update(PRODUCTS_TABLE_NAME, updatedValues, where, new String[]{product.getProductId() + ""});
             return 1;
         } catch (SQLException ex) {
             Log.e("Product deleteEntry", "enable hide Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
@@ -209,8 +209,8 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_BYUSER, product.getByUser());
 
         String where = PRODUCTS_COLUMN_ID + " = ?";
-        db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getId() + ""});
-        Product p=productDBAdapter.getProductByID(product.getId());
+        db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getProductId() + ""});
+        Product p=productDBAdapter.getProductByID(product.getProductId());
         Log.d("Update Object",p.toString());
         sendToBroker(MessageType.UPDATE_PRODUCT, p, this.context);
         productDBAdapter.close();
@@ -232,8 +232,8 @@ public class ProductDBAdapter {
 
         try {
             String where = PRODUCTS_COLUMN_ID + " = ?";
-            db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getId() + ""});
-            Product p=productDBAdapter.getProductByID(product.getId());
+            db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getProductId() + ""});
+            Product p=productDBAdapter.getProductByID(product.getProductId());
             Log.d("Update Object",p.toString());
             productDBAdapter.close();
             return 1;
@@ -322,7 +322,7 @@ public class ProductDBAdapter {
                 cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DESCRIPTION)),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_COSTPRICE))),
-                withTaxStatus, weighableStatus, cursor.getLong(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE)),
+                withTaxStatus, weighableStatus, Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENTID))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))),

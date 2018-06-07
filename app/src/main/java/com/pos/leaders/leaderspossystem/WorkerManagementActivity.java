@@ -107,13 +107,13 @@ public class WorkerManagementActivity  extends AppCompatActivity {
                             case 0:
                               User_Management_View=7;
                                 intent = new Intent(WorkerManagementActivity.this, AddUserActivity.class);
-                                intent.putExtra("userId", users.get(position).getId());
+                                intent.putExtra("userId", users.get(position).getUserId());
                                 intent.putExtra(LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME, btnName);
                                 startActivity(intent);
                             case 1:
                                 User_Management_Edit=8;
                                 intent = new Intent(WorkerManagementActivity.this, AddUserActivity.class);
-                                intent.putExtra("userId", users.get(position).getId());
+                                intent.putExtra("userId", users.get(position).getUserId());
                                 intent.putExtra(LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME, btnName);
                                 startActivity(intent);
                                 break;
@@ -128,7 +128,7 @@ public class WorkerManagementActivity  extends AppCompatActivity {
                                         .setMessage(getString(R.string.delete_user_message))
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
-                                                userDBAdapter.deleteEntry(users.get(position).getId());
+                                                userDBAdapter.deleteEntry(users.get(position).getUserId());
                                                 users.remove(users.get(position));
                                                 gvUsers.setAdapter(adapter);
                                             }
@@ -143,7 +143,7 @@ public class WorkerManagementActivity  extends AppCompatActivity {
                                 break;
                             case 4:
                                 intent = new Intent(WorkerManagementActivity.this, UserAttendanceReport.class);
-                                intent.putExtra("userID", users.get(position).getId());
+                                intent.putExtra("userID", users.get(position).getUserId());
                                 startActivity(intent);
                                 //Toast.makeText(getApplicationContext(),"this function not available.",Toast.LENGTH_LONG).show();
                                 break;

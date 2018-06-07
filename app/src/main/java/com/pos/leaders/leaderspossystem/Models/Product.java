@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.Models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -12,7 +13,7 @@ import java.util.Locale;
  */
 
 public class Product {
-    private long id;
+    private long productId;
     private String name;
     private String barCode;
     private String description;
@@ -20,12 +21,12 @@ public class Product {
     private double costPrice;
     private boolean withTax;
     private boolean weighable;
-    private long creatingDate;
+    private Timestamp createdAt;
     private boolean hide;
     private long departmentId;
     private long byUser;
-    private int with_pos;
-    private int with_point_system;
+    private int withPos;
+    private int withPointSystem;
     @JsonIgnore
     private List<Integer> offersIDs=new ArrayList<Integer>();
 
@@ -36,35 +37,35 @@ public class Product {
 
 
 
-    //Product with -1 value on id this is a general product
+    //Product with -1 value on accountingId this is a general product
 
 
-    public void setId(long id) {
-        this.id = id;
+    public void setProductId(long productId) {
+        this.productId = productId;
     }
 
-    public void setWith_pos(int with_pos) {
-        this.with_pos = with_pos;
+    public void setWithPos(int withPos) {
+        this.withPos = withPos;
     }
 
-    public void setWith_point_system(int with_point_system) {
-        this.with_point_system = with_point_system;
+    public void setWithPointSystem(int withPointSystem) {
+        this.withPointSystem = withPointSystem;
     }
 
-    public int getWith_pos() {
-        return with_pos;
+    public int getWithPos() {
+        return withPos;
 
     }
 
-    public int getWith_point_system() {
-        return with_point_system;
+    public int getWithPointSystem() {
+        return withPointSystem;
     }
 
     // region Constructor
-    public Product(long id, String name, String barCode, String description,
+    public Product(long productId, String name, String barCode, String description,
                    double price, double costPrice, boolean withTax, boolean weighable,
-                   long creatingDate, boolean hide, long departmentId, long byUser , int with_pos, int with_point_system) {
-        this.id = id;
+                   Timestamp createdAt, boolean hide, long departmentId, long byUser , int withPos, int withPointSystem) {
+        this.productId = productId;
         this.name = name;
         this.barCode = barCode;
         this.price = price;
@@ -72,18 +73,18 @@ public class Product {
         this.description = description;
         this.withTax = withTax;
         this.weighable = weighable;
-        this.creatingDate = creatingDate;
+        this.createdAt = createdAt;
         this.hide = hide;
         this.departmentId = departmentId;
         this.byUser = byUser;
-        this.with_pos=with_pos;
-        this.with_point_system=with_point_system;
+        this.withPos = withPos;
+        this.withPointSystem = withPointSystem;
     }
 
-    public Product(long id, String name, String barCode, String description,
+    public Product(long productId, String name, String barCode, String description,
                    double price, double costPrice, boolean withTax, boolean weighable,
-                   long creatingDate, long departmentId, long byUser , int with_pos, int with_point_system) {
-        this.id = id;
+                   Timestamp createdAt, long departmentId, long byUser , int withPos, int withPointSystem) {
+        this.productId = productId;
         this.name = name;
         this.barCode = barCode;
         this.price = price;
@@ -91,21 +92,21 @@ public class Product {
         this.description = description;
         this.withTax = withTax;
         this.weighable = weighable;
-        this.creatingDate = creatingDate;
+        this.createdAt = createdAt;
         this.departmentId = departmentId;
         this.byUser = byUser;
-        this.with_pos=with_pos;
-        this.with_point_system=with_point_system;
+        this.withPos = withPos;
+        this.withPointSystem = withPointSystem;
     }
 
-    public Product(long id, String name,double price, long byUser) {
-        this.id = id;
+    public Product(long productId, String name, double price, long byUser) {
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.byUser = byUser;
     }
-    public Product(long id, String name,double price,String barCode,long departmentID,long byUser) {
-        this.id = id;
+    public Product(long productId, String name, double price, String barCode, long departmentID, long byUser) {
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.barCode=barCode;
@@ -122,8 +123,8 @@ public class Product {
         this.withTax=true;
         this.byUser = byUser;
     }
-    public Product(long id, String name,double price, long byUser,String barCode) {
-        this.id = id;
+    public Product(long productId, String name, double price, long byUser, String barCode) {
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.byUser = byUser;
@@ -132,9 +133,9 @@ public class Product {
 
 
     public Product(Product product){
-        this(product.getId(),product.getName(),product.getBarCode(),product.getDescription(),
+        this(product.getProductId(),product.getName(),product.getBarCode(),product.getDescription(),
                 product.getPrice(),product.getCostPrice(),product.isWithTax(),product.isWeighable(),
-                product.getCreatingDate(),product.isHide(),product.getDepartmentId(),product.getByUser(),product.getWith_pos(),product.getWith_point_system());
+                product.getCreatedAt(),product.isHide(),product.getDepartmentId(),product.getByUser(),product.getWithPos(),product.getWithPointSystem());
     }
 
     public Product(){}
@@ -143,8 +144,8 @@ public class Product {
 
     // region Getters
 
-    public long getId() {
-        return id;
+    public long getProductId() {
+        return productId;
     }
 
     public String getName() {
@@ -175,8 +176,8 @@ public class Product {
         return weighable;
     }
 
-    public long getCreatingDate() {
-        return creatingDate;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
     public boolean isHide() {
@@ -243,19 +244,19 @@ public class Product {
     public String toString() {
         return "Product{" +
                 "barCode='" + barCode + '\'' +
-                ", id=" + id +
+                ", accountingId=" + productId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", costPrice=" + costPrice +
                 ", withTax=" + withTax +
                 ", weighable=" + weighable +
-                ", creatingDate=" + creatingDate +
+                ", createdAt=" + createdAt +
                 ", hide=" + hide +
                 ", departmentId=" + departmentId +
                 ", byUser=" + byUser +
-                ", with_pos=" + with_pos +
-                ", with_point_system=" + with_point_system +
+                ", withPos=" + withPos +
+                ", withPointSystem=" + withPointSystem +
 
                 '}';
     }
@@ -290,7 +291,7 @@ public class Product {
             name = name.substring(0, 49);
         name = "its cool";
         return "M100" + String.format(Util.locale, "%09d", rowNumber) + companyID + String.format(Util.locale, "%20s", barCode)
-                + String.format(Util.locale, "%20s", barCode) + String.format(Util.locale, "%20s", id) + String.format("%50s", name)
+                + String.format(Util.locale, "%20s", barCode) + String.format(Util.locale, "%20s", productId) + String.format("%50s", name)
                 + Util.spaces(10) + Util.spaces(30) + String.format(new Locale("he"), "%20s", "Unit")
                 + OP + Util.x9V99(0)
                 + OP + Util.x9V99(0)

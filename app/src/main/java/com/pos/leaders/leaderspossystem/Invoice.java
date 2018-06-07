@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -49,11 +49,11 @@ public class Invoice extends Activity {
             tvCopy.setText(getString(R.string.copy_invoice));
         tvInvoiceNumber.setText("");
 
-        List<Order> orders = new ArrayList<Order>();
-        for (Order o:orders){
+        List<OrderDetails> orders = new ArrayList<OrderDetails>();
+        for (OrderDetails o:orders){
             tvProductsNames.append(o.getProduct().getName()+"\n\r");
-            tvProductsIDs.append(o.getProduct().getId() + "\n\r");
-            tvQty.append(o.getCount() + "\n\r");
+            tvProductsIDs.append(o.getProduct().getProductId() + "\n\r");
+            tvQty.append(o.getQuantity() + "\n\r");
             tvProductsPrices.append(o.getItemTotalPrice() + "\n\r");
         }
 

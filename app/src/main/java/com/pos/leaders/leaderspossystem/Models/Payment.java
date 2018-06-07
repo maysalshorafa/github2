@@ -1,14 +1,8 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import android.content.Context;
-import android.widget.Space;
-import android.widget.Switch;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
-import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -23,9 +17,9 @@ import java.util.Locale;
  */
 
 public class Payment {
-	private long id;
+	private long paymentId;
 	private String paymentWay;
-	private long saleId;
+	private long orderId;
 	private double amount;
 
 	@JsonIgnore
@@ -36,31 +30,31 @@ public class Payment {
 	private List<CurrencyReturns> currencyReturns = new ArrayList<>();
 
 	// Constructors
-	public Payment(long id, String paymentWay, double amount, long saleId) {
-		this.id = id;
+	public Payment(long paymentId, String paymentWay, double amount, long orderId) {
+		this.paymentId = paymentId;
 		this.paymentWay = paymentWay;
 		this.amount = amount;
-		this.saleId = saleId;
+		this.orderId = orderId;
 	}
 
 	public Payment(Payment p) {
-		this(p.getId(), p.getPaymentWay(), p.getAmount(), p.getSaleId());
+		this(p.getPaymentId(), p.getPaymentWay(), p.getAmount(), p.getOrderId());
 	}
 
 	public Payment() {
 	}
 
 	//region Getters
-	public long getId() {
-		return id;
+	public long getPaymentId() {
+		return paymentId;
 	}
 
 	public String getPaymentWay() {
 		return paymentWay;
 	}
 
-	public long getSaleId() {
-		return saleId;
+	public long getOrderId() {
+		return orderId;
 	}
 
 	public double getAmount() {
@@ -95,16 +89,16 @@ public class Payment {
 
 
 
-	public void setId(long id) {
-		this.id = id;
+	public void setPaymentId(long paymentId) {
+		this.paymentId = paymentId;
 	}
 
 	public void setPaymentWay(String paymentWay) {
 		this.paymentWay = paymentWay;
 	}
 
-	public void setSaleId(long saleId) {
-		this.saleId = saleId;
+	public void setOrderId(long orderId) {
+		this.orderId = orderId;
 	}
 
 	public void setAmount(double amount) {
@@ -117,14 +111,14 @@ public class Payment {
 	@Override
 	public String toString() {
 		return "Payment{" +
-				"id=" + id +
+				"accountingId=" + paymentId +
 				", paymentWay='" + paymentWay + '\'' +
 				", amount='" + amount + '\'' +
-				", saleId=" + saleId +
+				", orderId=" + orderId +
 				'}';
 	}
 
-    public String BKMVDATA(int rowNumber, String companyID, Date date,Sale sale){
+    public String BKMVDATA(int rowNumber, String companyID, Date date,Order sale){
         String s = "320",OP="+";
         if(amount<0) {
             s = "330";
@@ -133,9 +127,9 @@ public class Payment {
 		}
         int totalItems = 0;
         double totalDiscount = 0;
-        for(Order o: sale.getOrders())
+        for(OrderDetails o: sale.getOrders())
         {
-            totalItems += o.getCount();
+            totalItems += o.getQuantity();
             totalDiscount += (o.getItemTotalPrice() * o.getDiscount() / 100);
         }
         if(amount<0)
@@ -144,14 +138,14 @@ public class Payment {
         double noTax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
         if(noTax<0)
             noTax *= -1;
-        return "D110" + String.format(locale, "%09d", rowNumber) + companyID + s + String.format(locale, "%020d", saleId) + String.format(locale, "%04d", id) + s + String.format(locale, "%020d", saleId) + "3" + String.format(locale, "%020d", saleId) + String.format(locale, "%30s", "sale") + Util.spaces(50) + Util.spaces(30) +
+        return "D110" + String.format(locale, "%09d", rowNumber) + companyID + s + String.format(locale, "%020d", orderId) + String.format(locale, "%04d", paymentId) + s + String.format(locale, "%020d", orderId) + "3" + String.format(locale, "%020d", orderId) + String.format(locale, "%30s", "sale") + Util.spaces(50) + Util.spaces(30) +
                 String.format(locale, "%20s", "unit")
                 + "+" + String.format(locale, "%012d", totalItems) + String.format(locale, "%04d", (int) ((totalItems - Math.floor(totalItems) + 0.00001) * 10000))
                 + OP + Util.x12V99(noTax)
                 + OP + Util.x12V99(totalDiscount)
                 + OP + Util.x12V99(noTax)
                 + String.format(locale, "%02.0f", SETTINGS.tax) + String.format(locale, "%02d", (int) ((SETTINGS.tax - Math.floor(SETTINGS.tax) + 0.001) * 100))
-                + Util.spaces(7) + DateConverter.getYYYYMMDD(date) + String.format(locale, "%07d", saleId) + Util.spaces(7) + Util.spaces(21);
+                + Util.spaces(7) + DateConverter.getYYYYMMDD(date) + String.format(locale, "%07d", orderId) + Util.spaces(7) + Util.spaces(21);
 
     }
 }

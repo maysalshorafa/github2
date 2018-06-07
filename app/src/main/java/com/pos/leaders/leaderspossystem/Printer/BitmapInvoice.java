@@ -10,8 +10,8 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
-import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
@@ -30,7 +30,7 @@ import java.util.Locale;
 
 public class BitmapInvoice {
 
-    public static Bitmap print(int id, List<Order> orders, Sale sale, boolean isCopy, User user, Context context) {
+    public static Bitmap print(int id, List<OrderDetails> orders, Order sale, boolean isCopy, User user, Context context) {
         //miriam_libre_bold.ttf
         //miriam_libre_regular.ttf
         //carmelitregular.ttf
@@ -82,14 +82,14 @@ public class BitmapInvoice {
 
 
         String names = "", prices = "", count = "", barcode = "";
-        for (Order o : orders) {
+        for (OrderDetails o : orders) {
             int cut = 10;
             if (o.getProduct().getName().length() < 10)
                 cut = o.getProduct().getName().length() - 1;
             String productName = o.getProduct().getName().substring(0, cut);
             names += "\u200F" + productName + "\n";
             barcode += o.getProduct().getBarCode() + "\n";
-            count += o.getCount() + "\n";
+            count += o.getQuantity() + "\n";
             prices += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
         }
         StaticLayout slNames = new StaticLayout(names, orderTP,
@@ -146,7 +146,7 @@ public class BitmapInvoice {
             }
             //u2003
             //\u3000
-            str+="\u200F"+productName+"\t\t\t"+Barcode+"\t\t"+o.getCount()+"\t\t"+String.format(new Locale("en"),"%.2f",o.getItemTotalPrice());
+            str+="\u200F"+productName+"\t\t\t"+Barcode+"\t\t"+o.getQuantity()+"\t\t"+String.format(new Locale("en"),"%.2f",o.getItemTotalPrice());
             if(true)
                 str+="\n";
         }
@@ -303,7 +303,7 @@ public class BitmapInvoice {
 
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
-        StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" + DateConverter.dateToString(zReport.getCreationDate()) + "\n\r" + "קןפאי : " + zReport.getUser().getFullName()+ status , head,
+        StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" + DateConverter.dateToString(zReport.getCreatedAt().getTime()) + "\n\r" + "קןפאי : " + zReport.getUser().getFullName()+ status , head,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
         StaticLayout posSales = new StaticLayout( "\n"  +context.getString(R.string.pos_sales)+" "+totalZReportAmount, posSaleStyle,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
@@ -314,7 +314,7 @@ public class BitmapInvoice {
         invoiceHead.setColor(Color.BLACK);
         invoiceHead.setTypeface(bold);
         invoiceHead.setTextSize(38);
-        StaticLayout sInvoiceHead = new StaticLayout(context.getString(R.string.z_number) + " " + String.format("%06d", zReport.getId()) + "\n\r---------------------------", invoiceHead,
+        StaticLayout sInvoiceHead = new StaticLayout(context.getString(R.string.z_number) + " " + String.format("%06d", zReport.getzReportId()) + "\n\r---------------------------", invoiceHead,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
 
 

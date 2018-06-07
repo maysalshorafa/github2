@@ -9,13 +9,11 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDynamicVariable;
-import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
@@ -77,7 +75,7 @@ public class MeasurementDynamicVariableDBAdapter {
 
     public long insertEntry(MeasurementDynamicVariable measurementDynamicVariable) {
         ContentValues val = new ContentValues();
-        val.put(MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_ID, measurementDynamicVariable.getId());
+        val.put(MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_ID, measurementDynamicVariable.getMeasurementDynamicVariableId());
         val.put(MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_NAME, measurementDynamicVariable.getName());
         val.put(MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_DYNAMIC_TYPE,measurementDynamicVariable.getType());
         val.put(MEASUREMENT_DYNAMIC_VARIABLE_COLUMN_COLUMN_UNIT, measurementDynamicVariable.getUnit());

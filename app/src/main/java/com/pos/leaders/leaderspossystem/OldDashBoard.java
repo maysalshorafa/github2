@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -43,6 +42,7 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -262,7 +262,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 try {
-                    scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getId(), new Date());
+                    scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getScheduleWorkersId(), new Date());
                     SESSION._SCHEDULEWORKERS.setExitTime(new Date().getTime());
                     Log.i("Worker get out", SESSION._SCHEDULEWORKERS.toString());
                 } catch (Exception ex) {
@@ -316,25 +316,25 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
 
 
         if (aReport != null && zReport != null) {
-            _aReport.setByUserID(SESSION._USER.getId());
-            _aReport.setCreationDate(new Date().getTime());
+            _aReport.setByUserID(SESSION._USER.getUserId());
+            _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
 
-            if (aReport.getLastZReportID() == zReport.getId()) {
+            if (aReport.getLastZReportID() == zReport.getzReportId()) {
                 //its have customerName report
 
             } else {
-                _aReport.setLastZReportID(zReport.getId());
-                _aReport.setLastSaleID(zReport.getEndSaleId());
+                _aReport.setLastZReportID(zReport.getzReportId());
+                _aReport.setLastOrderId(zReport.getEndOrderId());
 
                 ShowAReportDialog(_aReport);
             }
 
         } else if(aReport==null) {
-            _aReport.setByUserID(SESSION._USER.getId());
-            _aReport.setCreationDate(new Date().getTime());
+            _aReport.setByUserID(SESSION._USER.getUserId());
+            _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             _aReport.setLastZReportID(-1);
-            _aReport.setLastSaleID(-1);
+            _aReport.setLastOrderId(-1);
 
             ShowAReportDialog(_aReport);
         }
@@ -380,7 +380,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
                     aReport.setAmount(Double.parseDouble(str));
                     AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(OldDashBoard.this);
                     aReportDBAdapter.open();
-                    aReportDBAdapter.insertEntry(aReport.getCreationDate(),aReport.getByUserID(),aReport.getAmount(),aReport.getLastSaleID(),aReport.getLastZReportID());
+                    aReportDBAdapter.insertEntry(aReport.getCreatedAt(),aReport.getByUserID(),aReport.getAmount(),aReport.getLastOrderId(),aReport.getLastZReportID());
                     aReportDBAdapter.close();
                     discountDialog.cancel();
                 }

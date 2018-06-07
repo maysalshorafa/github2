@@ -228,7 +228,7 @@ public class AddUserActivity extends AppCompatActivity {
                                     for (Permissions p : permissionsList) {
                                         if (p.getId() == userPermissions.get(i)) {
                                             if (!p.isChecked()) {
-                                                userPermissionAdapter.deletePermissions(user.getId(), (int) p.getId());
+                                                userPermissionAdapter.deletePermissions(user.getUserId(), (int) p.getId());
 
                                             }
                                         }
@@ -248,7 +248,7 @@ public class AddUserActivity extends AppCompatActivity {
 
                                         }
                                         if (addPerm) {
-                                            userPermissionAdapter.insertEntry(p.getId(), user.getId());
+                                            userPermissionAdapter.insertEntry(p.getId(), user.getUserId());
                                         }
                                     }
 

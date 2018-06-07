@@ -7,11 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
-import com.pos.leaders.leaderspossystem.Models.User;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by Win8.1 on 9/25/2017.
@@ -68,4 +70,13 @@ public class CurrencyTypeDBAdapter {
         return new CurrencyType(Long.parseLong(cursor.getString(cursor.getColumnIndex(CurrencyType_COLUMN_ID)))
                 , cursor.getString(cursor.getColumnIndex(CurrencyType_COLUMN_Name)));
     }
+    public long insertEntry(String name) {
+                CurrencyType currencyType = new CurrencyType(Util.idHealth(this.db, CurrencyType_TABLE_NAME, CurrencyType_COLUMN_ID), name);
+              CurrencyType boCurrencyType = currencyType;
+               sendToBroker(MessageType.ADD_CURRENCY_TYPE, boCurrencyType, this.context);
+
+                       return 1;
+            }
+
+
 }

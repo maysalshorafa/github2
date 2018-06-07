@@ -1,38 +1,36 @@
 package com.pos.leaders.leaderspossystem.Models.Currency;
 
-import android.content.Context;
-
-import java.util.Date;
+import java.sql.Timestamp;
 
 /**
  * Created by Win8.1 on 9/25/2017.
  */
 
 public class Currency {
-    private long id;
+    private long currencyId;
     private String name;
     private String country;
     private String currencyCode;
     private double rate;
-    private long lastUpdate;
+    private Timestamp lastUpdate;
 
     public Currency() {
 
     }
 
-    public long getLastUpdate() {
+    public Timestamp getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(long lastUpdate) {
+    public void setLastUpdate(Timestamp lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
 
 
 
-    public Currency(long id, String name, String country, String currencyCode, double rate, long lastUpdate) {
-        this.id = id;
+    public Currency(long currencyId, String name, String country, String currencyCode, double rate, Timestamp lastUpdate) {
+        this.currencyId = currencyId;
         this.name = name;
         this.country = country;
         this.currencyCode = currencyCode;
@@ -40,12 +38,12 @@ public class Currency {
         this.lastUpdate = lastUpdate;
     }
 
-    public long getId() {
-        return id;
+    public long getCurrencyId() {
+        return currencyId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setCurrencyId(long currencyId) {
+        this.currencyId = currencyId;
     }
 
     public String getName() {

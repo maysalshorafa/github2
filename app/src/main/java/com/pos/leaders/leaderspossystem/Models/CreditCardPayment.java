@@ -1,19 +1,16 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
-
-import java.util.Date;
+import java.sql.Timestamp;
 
 /**
  * Created by KARAM on 31/10/2017.
  */
 
 public class CreditCardPayment {
-    private long id;
-    private long saleId;
+    private long creditCardPaymentId;
+    private long orderId;
     private double amount;
-    private String CreditCardCompanyName;
+    private String creditCardCompanyName;
     private int transactionType;
     private String last4Digits;
     private String transactionId;
@@ -22,16 +19,16 @@ public class CreditCardPayment {
     private double firstPaymentAmount;
     private double otherPaymentAmount;
     private String cardholder;
-    private long createDate;
+    private Timestamp createdAt;
 
 
     public CreditCardPayment() {
     }
 
-    public CreditCardPayment(long saleId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, long createDate) {
-        this.saleId = saleId;
+    public CreditCardPayment(long orderId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, Timestamp createdAt) {
+        this.orderId = orderId;
         this.amount = amount;
-        CreditCardCompanyName = creditCardCompanyName;
+        this.creditCardCompanyName = creditCardCompanyName;
         this.transactionType = transactionType;
         this.last4Digits = last4Digits;
         this.transactionId = transactionId;
@@ -40,14 +37,14 @@ public class CreditCardPayment {
         this.firstPaymentAmount = firstPaymentAmount;
         this.otherPaymentAmount = otherPaymentAmount;
         this.cardholder = cardholder;
-        this.createDate = createDate;
+        this.createdAt = createdAt;
     }
 
-    public CreditCardPayment(long id, long saleId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, long createDate) {
-        this.id = id;
-        this.saleId = saleId;
+    public CreditCardPayment(long creditCardPaymentId, long orderId, double amount, String creditCardCompanyName, int transactionType, String last4Digits, String transactionId, String answer, int paymentsNumber, double firstPaymentAmount, double otherPaymentAmount, String cardholder, Timestamp createdAt) {
+        this.creditCardPaymentId = creditCardPaymentId;
+        this.orderId = orderId;
         this.amount = amount;
-        CreditCardCompanyName = creditCardCompanyName;
+        this.creditCardCompanyName = creditCardCompanyName;
         this.transactionType = transactionType;
         this.last4Digits = last4Digits;
         this.transactionId = transactionId;
@@ -56,17 +53,17 @@ public class CreditCardPayment {
         this.firstPaymentAmount = firstPaymentAmount;
         this.otherPaymentAmount = otherPaymentAmount;
         this.cardholder = cardholder;
-        this.createDate = createDate;
+        this.createdAt = createdAt;
     }
 
     //region Getters
 
-    public long getId() {
-        return id;
+    public long getCreditCardPaymentId() {
+        return creditCardPaymentId;
     }
 
-    public long getSaleId() {
-        return saleId;
+    public long getOrderId() {
+        return orderId;
     }
 
     public double getAmount() {
@@ -74,7 +71,7 @@ public class CreditCardPayment {
     }
 
     public String getCreditCardCompanyName() {
-        return CreditCardCompanyName;
+        return creditCardCompanyName;
     }
 
     public int getTransactionType() {
@@ -109,8 +106,8 @@ public class CreditCardPayment {
         return cardholder;
     }
 
-    public long getCreateDate() {
-        return createDate;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
 
@@ -118,12 +115,12 @@ public class CreditCardPayment {
 
     //region Setters
 
-    public void setId(long id) {
-        this.id = id;
+    public void setCreditCardPaymentId(long creditCardPaymentId) {
+        this.creditCardPaymentId = creditCardPaymentId;
     }
 
-    public void setSaleId(long saleId) {
-        this.saleId = saleId;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 
     public void setAmount(double amount) {
@@ -131,7 +128,7 @@ public class CreditCardPayment {
     }
 
     public void setCreditCardCompanyName(String creditCardCompanyName) {
-        CreditCardCompanyName = creditCardCompanyName;
+        this.creditCardCompanyName = creditCardCompanyName;
     }
 
     public void setTransactionType(int transactionType) {
@@ -166,8 +163,8 @@ public class CreditCardPayment {
         this.cardholder = cardholder;
     }
 
-    public void setCreateDate(long createDate) {
-        this.createDate = createDate;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
 
@@ -176,10 +173,10 @@ public class CreditCardPayment {
     @Override
     public String toString() {
         return "CreditCardPayment{" +
-                "id=" + id +
-                ", saleId=" + saleId +
+                "accountingId=" + creditCardPaymentId +
+                ", orderId=" + orderId +
                 ", amount=" + amount +
-                ", CreditCardCompanyName='" + CreditCardCompanyName + '\'' +
+                ", creditCardCompanyName='" + creditCardCompanyName + '\'' +
                 ", transactionType=" + transactionType +
                 ", last4Digits='" + last4Digits + '\'' +
                 ", transactionId='" + transactionId + '\'' +
@@ -188,7 +185,7 @@ public class CreditCardPayment {
                 ", firstPaymentAmount=" + firstPaymentAmount +
                 ", otherPaymentAmount=" + otherPaymentAmount +
                 ", cardholder='" + cardholder + '\'' +
-                ", createDate=" + createDate +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

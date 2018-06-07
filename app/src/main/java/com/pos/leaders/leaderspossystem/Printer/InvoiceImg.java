@@ -13,8 +13,8 @@ import android.util.ArrayMap;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
-import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
@@ -22,7 +22,6 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -165,7 +164,7 @@ public class InvoiceImg {
         return image;
     }
 
-    private List<Block> Head(Sale sale) {
+    private List<Block> Head(Order sale) {
         String customerName = "";
         List<Block> blocks = new ArrayList<Block>();
 
@@ -194,7 +193,7 @@ public class InvoiceImg {
         return blocks;
     }
 
-    public Bitmap normalInvoice(long id, List<Order> orders, Sale sale, boolean isCopy, User user, List<Check> checks) {
+    public Bitmap normalInvoice(long id, List<OrderDetails> orders, Order sale, boolean isCopy, User user, List<Check> checks) {
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(sale));
         Block lineR = new Block("\u200E" + line + "\u200E", 30.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
@@ -216,7 +215,7 @@ public class InvoiceImg {
 
         double SaleOriginalityPrice = 0, saleTotalPrice = 0;
         double totalSaved = 0.0;
-        for (Order o : orders) {
+        for (OrderDetails o : orders) {
             if (o.getProduct().getName().equals("General"))
                 o.getProduct().setName(context.getString(R.string.general));
             int cut = 11;
@@ -228,9 +227,9 @@ public class InvoiceImg {
                 if (!(o.getProduct().getBarCode().equals("")))
                     bc = o.getProduct().getBarCode();
             barcode.text += bc + "\n";
-            counter.text += o.getCount() + "\n";
+            counter.text += o.getQuantity() + "\n";
             price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
-            SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
             saleTotalPrice += o.getItemTotalPrice();
         }
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);
@@ -281,12 +280,12 @@ public class InvoiceImg {
         }
         Block b_payment = new Block("\u200e" + context.getString(R.string.payment) + newLineL + strPaymentWay, 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
         Block b_total = new Block("\u200E" + context.getString(R.string.total) + "\n" + Util.makePrice(sale.getTotalPrice()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
-        Block b_given = new Block("\u200E" + context.getString(R.string.given) + "\n" + Util.makePrice(sale.getTotalPaid()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+        Block b_given = new Block("\u200E" + context.getString(R.string.given) + "\n" + Util.makePrice(sale.getTotalPaidAmount()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
         double calcReturned = 0;
-        if (sale.getTotalPrice() < 0 && sale.getTotalPaid() >= 0) {
-            calcReturned = (sale.getTotalPrice() + sale.getTotalPaid());
+        if (sale.getTotalPrice() < 0 && sale.getTotalPaidAmount() >= 0) {
+            calcReturned = (sale.getTotalPrice() + sale.getTotalPaidAmount());
         } else {
-            calcReturned = (sale.getTotalPaid() - sale.getTotalPrice());
+            calcReturned = (sale.getTotalPaidAmount() - sale.getTotalPrice());
             if (calcReturned < 0) {
                 calcReturned = 0;
             }
@@ -307,7 +306,7 @@ public class InvoiceImg {
             Block b_checks_amount = new Block(context.getString(R.string.amount), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
             for (Check check : checks) {
                 b_checks_number.text += newLineL + check.getCheckNum();
-                b_checks_date.text += "\n" + DateConverter.toDate(new Date(check.getDate()));
+                b_checks_date.text += "\n" + DateConverter.toDate(new Date(check.getCreatedAt().getTime()));
                 b_checks_amount.text += "\n" + Util.makePrice(check.getAmount());
             }
             blocks.add(b_checks_amount.Left());
@@ -318,7 +317,7 @@ public class InvoiceImg {
         }
         blocks.add(new Block("\u200e" + context.getString(R.string.cashier) + ": " + user.getFullName(), 30.0f, Color.BLACK).Left());
 
-        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getSaleDate()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getCreatedAt()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
         if (isCopy) {
             Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
@@ -336,13 +335,13 @@ public class InvoiceImg {
         return make(blocks);
     }
 
-    public Bitmap creditCardInvoice(Sale sale, Boolean isCopy, String mainMer) {
+    public Bitmap creditCardInvoice(Order sale, Boolean isCopy, String mainMer) {
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(sale));
         String status = context.getString(R.string.source_invoice);
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
-        Block inum = new Block("\u200E" + status + "\n" + "\u200E" + context.getString(R.string.invoice_with_tax) + String.format(" %06d ", sale.getId()) + "\n"
+        Block inum = new Block("\u200E" + status + "\n" + "\u200E" + context.getString(R.string.invoice_with_tax) + String.format(" %06d ", sale.getOrderId()) + "\n"
                 + line, 35.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(inum);
 
@@ -355,7 +354,7 @@ public class InvoiceImg {
 
         double SaleOriginalityPrice = 0, saleTotalPrice = 0;
         double totalSaved = 0.0;
-        for (Order o : sale.getOrders()) {
+        for (OrderDetails o : sale.getOrders()) {
             if (o.getProduct().getName().equals("General"))
                 o.getProduct().setName(context.getString(R.string.general));
             int cut = 11;
@@ -367,9 +366,9 @@ public class InvoiceImg {
                 if (!(o.getProduct().getBarCode().equals("")))
                     bc = o.getProduct().getBarCode();
             barcode.text += bc + "\n";
-            counter.text += o.getCount() + "\n";
+            counter.text += o.getQuantity() + "\n";
             price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
-            SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
             saleTotalPrice += o.getItemTotalPrice();
         }
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);
@@ -406,8 +405,8 @@ public class InvoiceImg {
 
         Block b_payment = new Block("\u200e" + context.getString(R.string.payment) + newLineL + sale.getPayment().getPaymentWay().toString(), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
         Block b_total = new Block(context.getString(R.string.total) + "\n" + Util.makePrice(sale.getTotalPrice()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
-        Block b_given = new Block(context.getString(R.string.given) + "\n" + Util.makePrice(sale.getTotalPaid()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
-        double calcReturned = (sale.getTotalPaid() - sale.getTotalPrice());
+        Block b_given = new Block(context.getString(R.string.given) + "\n" + Util.makePrice(sale.getTotalPaidAmount()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+        double calcReturned = (sale.getTotalPaidAmount() - sale.getTotalPrice());
         Block b_returned = new Block(context.getString(R.string.returned) + "\n" + Util.makePrice(calcReturned), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
 
 
@@ -420,7 +419,7 @@ public class InvoiceImg {
 
         blocks.add(new Block("\u200e" + context.getString(R.string.cashier) + ": " + sale.getUser().getFullName(), 30.0f, Color.BLACK).Left());
 
-        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getSaleDate()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getCreatedAt()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
         if(isCopy){
             Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
@@ -441,14 +440,14 @@ public class InvoiceImg {
         return make(blocks);
     }
 
-    public Bitmap cancelingInvoice(Sale sale, Boolean isCopy, List<Check> checks) {
+    public Bitmap cancelingInvoice(Order sale, Boolean isCopy, List<Check> checks) {
 
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(sale));
         String status = context.getString(R.string.source_invoice);
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
-        Block inum = new Block("\u200E" + status + "\n" + "\u200E" + context.getString(R.string.credit_invoice) + String.format(" %06d ", sale.getId()) + "\n"
+        Block inum = new Block("\u200E" + status + "\n" + "\u200E" + context.getString(R.string.credit_invoice) + String.format(" %06d ", sale.getOrderId()) + "\n"
                 + line, 35.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(inum);
 
@@ -459,7 +458,7 @@ public class InvoiceImg {
         Block price = new Block(context.getString(R.string.price) + "\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.15));
 
 
-        for (Order o : sale.getOrders()) {
+        for (OrderDetails o : sale.getOrders()) {
             int cut = 11;
             if (o.getProduct().getName().length() < cut)
                 cut = o.getProduct().getName().length();
@@ -469,7 +468,7 @@ public class InvoiceImg {
                 if (!(o.getProduct().getBarCode().equals("")))
                     bc = o.getProduct().getBarCode();
             barcode.text += bc + "\n";
-            counter.text += o.getCount() + "\n";
+            counter.text += o.getQuantity() + "\n";
             price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
         }
 
@@ -505,8 +504,8 @@ public class InvoiceImg {
 
         Block b_payment = new Block("\u200e" + context.getString(R.string.payment) + newLineL + sale.getPayment().getPaymentWay().toString(), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.332));
         Block b_total = new Block(context.getString(R.string.total) + "\n" + Util.makePrice(sale.getTotalPrice()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
-        Block b_given = new Block(context.getString(R.string.given) + "\n" + Util.makePrice(sale.getTotalPaid()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
-        double calcReturned = (sale.getTotalPaid() - sale.getTotalPrice());
+        Block b_given = new Block(context.getString(R.string.given) + "\n" + Util.makePrice(sale.getTotalPaidAmount()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+        double calcReturned = (sale.getTotalPaidAmount() - sale.getTotalPrice());
         Block b_returned = new Block(context.getString(R.string.returned) + "\n" + Util.makePrice(calcReturned), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
 
 
@@ -523,7 +522,7 @@ public class InvoiceImg {
             Block b_checks_amount = new Block(context.getString(R.string.amount), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
             for (Check check : checks) {
                 b_checks_number.text += newLineL + check.getCheckNum();
-                b_checks_date.text += "\n" + DateConverter.toDate(new Date(check.getDate()));
+                b_checks_date.text += "\n" + DateConverter.toDate(new Date(check.getCreatedAt().getTime()));
                 b_checks_amount.text += "\n" + Util.makePrice(check.getAmount());
             }
             blocks.add(b_checks_amount.Left());
@@ -534,7 +533,7 @@ public class InvoiceImg {
         }
         blocks.add(new Block("\u200e" + context.getString(R.string.cashier) + ": " + sale.getUser().getFullName(), 30.0f, Color.BLACK).Left());
 
-        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getSaleDate()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getCreatedAt()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
 
         Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
@@ -544,13 +543,13 @@ public class InvoiceImg {
         return make(blocks);
     }
 
-    public Bitmap replacmentNote(Sale sale, boolean isCopy) {
+    public Bitmap replacmentNote(Order sale, boolean isCopy) {
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(sale));
         String status = context.getString(R.string.source_invoice);
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
-        Block inum = new Block("\u200E" + status + "\n" + "\u200E" + context.getString(R.string.replacement_invoice) + String.format(" %06d ", sale.getId()) + "\n"
+        Block inum = new Block("\u200E" + status + "\n" + "\u200E" + context.getString(R.string.replacement_invoice) + String.format(" %06d ", sale.getOrderId()) + "\n"
                 + line, 35.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(inum);
 
@@ -560,7 +559,7 @@ public class InvoiceImg {
         Block price = new Block(context.getString(R.string.price) + "\n", 30f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.15));
 
 
-        for (Order o : sale.getOrders()) {
+        for (OrderDetails o : sale.getOrders()) {
             int cut = 11;
             if (o.getProduct().getName().length() < cut)
                 cut = o.getProduct().getName().length();
@@ -570,7 +569,7 @@ public class InvoiceImg {
                 if (!(o.getProduct().getBarCode().equals("")))
                     bc = o.getProduct().getBarCode();
             barcode.text += bc + "\n";
-            counter.text += o.getCount() + "\n";
+            counter.text += o.getQuantity() + "\n";
             price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
         }
 
@@ -603,7 +602,7 @@ public class InvoiceImg {
 
         blocks.add(new Block("\u200e" + context.getString(R.string.cashier) + ": " + sale.getUser().getFullName(), 30.0f, Color.BLACK).Left());
 
-        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getSaleDate()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getCreatedAt()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
 
         Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);

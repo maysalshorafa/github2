@@ -8,17 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Offer;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by KARAM on 23/10/2016.
@@ -80,7 +75,7 @@ public class ProductOfferDBAdapter {
 	public int insertEntry(List<Product> products, int offerId) {
 		int count = 0, i;
 		for (Product product : products) {
-			i = insertEntry(product.getId(), offerId);
+			i = insertEntry(product.getProductId(), offerId);
 			if (i > 0) {
 				count++;
 			} else {

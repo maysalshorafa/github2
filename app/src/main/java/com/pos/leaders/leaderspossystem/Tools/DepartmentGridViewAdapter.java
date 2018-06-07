@@ -62,7 +62,7 @@ public class DepartmentGridViewAdapter extends BaseAdapter {
 	 */
 	@Override
 	public long getItemId(int position) {
-		return (long)departments.get(position).getId();
+		return (long)departments.get(position).getDepartmentId();
 	}
 
 

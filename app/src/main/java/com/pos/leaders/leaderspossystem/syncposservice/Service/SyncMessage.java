@@ -30,7 +30,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
@@ -38,7 +38,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule11DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
@@ -66,11 +66,11 @@ import com.pos.leaders.leaderspossystem.Models.Offers.Rule11;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule8;
-import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.User;
@@ -526,10 +526,10 @@ public class SyncMessage extends Service {
 
                 //region SALE
                 case MessageType.ADD_SALE:
-                    Sale sale = null;
-                    sale = objectMapper.readValue(msgData, Sale.class);
+                    Order sale = null;
+                    sale = objectMapper.readValue(msgData, Order.class);
 
-                    SaleDBAdapter saleDBAdapter = new SaleDBAdapter(this);
+                    OrderDBAdapter saleDBAdapter = new OrderDBAdapter(this);
                     saleDBAdapter.open();
                     rID = saleDBAdapter.insertEntry(sale);
                     saleDBAdapter.close();
@@ -615,10 +615,10 @@ public class SyncMessage extends Service {
 
                 //region ORDER
                 case MessageType.ADD_ORDER:
-                    Order o;
-                    o = objectMapper.readValue(msgData, Order.class);
+                    OrderDetails o;
+                    o = objectMapper.readValue(msgData, OrderDetails.class);
 
-                    OrderDBAdapter orderDBAdapter = new OrderDBAdapter(this);
+                    OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(this);
                     orderDBAdapter.open();
                     rID = orderDBAdapter.insertEntry(o);
                     orderDBAdapter.close();
@@ -1271,8 +1271,11 @@ public class SyncMessage extends Service {
                 JSONObject object = new JSONObject(res);
                 int status = Integer.parseInt(object.get("status").toString());
                 if (status == 200 || status == 201) {
+                    Log.d("statusstrue",status+"");
                     return true;
                 } else {
+                    Log.d("statussfalse",status+"");
+
                     return false;
                 }
             }

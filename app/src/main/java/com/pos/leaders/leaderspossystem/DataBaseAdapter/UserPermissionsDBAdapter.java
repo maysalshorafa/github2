@@ -64,7 +64,7 @@ public class UserPermissionsDBAdapter {
 		}
 	public long insertEntry(UserPermissions userPermissions){
 		ContentValues val = new ContentValues();
-		val.put(USERPERMISSIONS_COLUMN_ID,userPermissions.getId());
+		val.put(USERPERMISSIONS_COLUMN_ID,userPermissions.getUserPermissionsId());
 		//Assign values for each row.
 		val.put(USERPERMISSIONS_COLUMN_USERID, userPermissions.getUserId());
 		val.put(USERPERMISSIONS_COLUMN_PERMISSIONSID, userPermissions.getPermissionId());

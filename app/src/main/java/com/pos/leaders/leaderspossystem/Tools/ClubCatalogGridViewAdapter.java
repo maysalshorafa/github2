@@ -61,7 +61,7 @@ public class ClubCatalogGridViewAdapter  extends BaseAdapter {
      */
     @Override
     public long getItemId(int position) {
-        return (long)groups.get(position).getId();
+        return (long)groups.get(position).getClubId();
     }
 
 

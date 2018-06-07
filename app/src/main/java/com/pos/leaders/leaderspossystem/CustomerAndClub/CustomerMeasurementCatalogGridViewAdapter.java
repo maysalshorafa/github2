@@ -1,20 +1,14 @@
 package com.pos.leaders.leaderspossystem.CustomerAndClub;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
-
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasurement;
-import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDynamicVariable;
-import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
 import com.pos.leaders.leaderspossystem.R;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -71,7 +65,7 @@ public class CustomerMeasurementCatalogGridViewAdapter extends BaseAdapter {
      */
     @Override
     public long getItemId(int position) {
-        return (long) customerMeasurements.get(position).getId();
+        return (long) customerMeasurements.get(position).getCustomerMeasurementId();
     }
 
 
@@ -111,7 +105,7 @@ public class CustomerMeasurementCatalogGridViewAdapter extends BaseAdapter {
         tvMeasurementVisitDate.setText(format.format(customerMeasurements.get(position).getVisitDate()));
         MeasurementsDetailsDBAdapter measurementsDetailsDBAdapter = new MeasurementsDetailsDBAdapter(context);
         measurementsDetailsDBAdapter.open();
-        int noOfMeasurement = measurementsDetailsDBAdapter.getMeasurementDetailsByMeasurementsId(customerMeasurements.get(position).getId());
+        int noOfMeasurement = measurementsDetailsDBAdapter.getMeasurementDetailsByMeasurementsId(customerMeasurements.get(position).getCustomerMeasurementId());
         tvNoOfMeasurement.setText(noOfMeasurement+" ");
         if(bgColor%2==0){
             gridView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));

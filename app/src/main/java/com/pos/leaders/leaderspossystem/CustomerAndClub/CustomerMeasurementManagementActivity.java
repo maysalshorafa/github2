@@ -1,6 +1,5 @@
 package com.pos.leaders.leaderspossystem.CustomerAndClub;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -11,7 +10,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -85,7 +83,7 @@ public class CustomerMeasurementManagementActivity  extends AppCompatActivity {
         cityList = cityDbAdapter.getAllCity();
         for (int i = 0; i < cityList.size(); i++) {
             City city = cityList.get(i);
-            if (city.getId() == customer.getCity()) {
+            if (city.getCityId() == customer.getCity()) {
                 customerAddress.setText(customer.getHouseNumber()+"-"+customer.getStreet()+"-"+city.getName()+"-"+customer.getCountry());
             }        }
         customerPhoneNumber.setText(customer.getPhoneNumber());
@@ -94,12 +92,12 @@ public class CustomerMeasurementManagementActivity  extends AppCompatActivity {
         groupList = groupAdapter.getAllGroup();
         for (int i = 0; i < groupList.size(); i++) {
             Club group = groupList.get(i);
-            if (group.getId() == customer.getClub()) {
+            if (group.getClubId() == customer.getClub()) {
                 customerClubName.setText(": "+group.getName());
             }
         }
         customerEmail.setText(customer.getEmail());
-      int noOfMeasurement= customerMeasurementDBAdapter.noOfCustomerMeasurement(customer.getId());
+      int noOfMeasurement= customerMeasurementDBAdapter.noOfCustomerMeasurement(customer.getCustomerId());
         tvNoOfMeasurement.setText(": "+noOfMeasurement);
         gvCustomerMeasurement = (ListView) findViewById(R.id.Management_GVCustomerMeasurementDetails);
         measurementsDetailsDBAdapter = new MeasurementsDetailsDBAdapter(this);
@@ -123,7 +121,7 @@ public class CustomerMeasurementManagementActivity  extends AppCompatActivity {
                 viewElementLayout.setVisibility(View.VISIBLE);
                 view=viewElementLayout;
                 selectedItem = view;
-                long measurementId = customerMeasurementList.get(position-1).getId();
+                long measurementId = customerMeasurementList.get(position-1).getCustomerMeasurementId();
                 storeList =measurementsDetailsDBAdapter.getAllMeasurementDetail(measurementId);
                 JSONObject jsonObject = new JSONObject();
                 //draw element dynamically using storeList

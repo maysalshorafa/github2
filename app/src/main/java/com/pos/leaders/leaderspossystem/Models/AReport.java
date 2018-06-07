@@ -1,23 +1,24 @@
 package com.pos.leaders.leaderspossystem.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+
+import java.sql.Timestamp;
 
 /**
  * Created by KARAM on 12/04/2017.
  */
 
 public class AReport {
-    private long id;
-    private long creationDate;
+    private long aReportId;
+    private Timestamp createdAt;
     private long byUserID;
     @JsonIgnore
     private User byUser;
     private double amount;
-    private long lastSaleID;
+    private long lastOrderId;
     @JsonIgnore
-    private Sale lastSale;
+    private Order lastSale;
     private long lastZReportID;
     @JsonIgnore
     private ZReport lastZReport;
@@ -27,40 +28,40 @@ public class AReport {
 
     public AReport() {}
 
-    public AReport(long creationDate, int byUserID, double amount, long lastSaleID, long lastZReportID) {
-        this.creationDate = creationDate;
+    public AReport(Timestamp createdAt, int byUserID, double amount, long lastOrderId, long lastZReportID) {
+        this.createdAt = createdAt;
         this.byUserID = byUserID;
         this.amount = amount;
-        this.lastSaleID = lastSaleID;
+        this.lastOrderId = lastOrderId;
         this.lastZReportID = lastZReportID;
     }
 
-    public AReport(long creationDate, User byUser, Sale lastSale, ZReport lastZReport, double amount) {
-        this.creationDate = creationDate;
+    public AReport(Timestamp createdAt, User byUser, Order lastSale, ZReport lastZReport, double amount) {
+        this.createdAt = createdAt;
         this.byUser = byUser;
         this.lastSale = lastSale;
         this.lastZReport = lastZReport;
         this.amount = amount;
     }
 
-    public AReport(long id, long creationDate, long byUserID, double amount, long lastSaleID, long lastZReportID) {
-        this.id = id;
-        this.creationDate = creationDate;
+    public AReport(long aReportId, Timestamp createdAt, long byUserID, double amount, long lastOrderId, long lastZReportID) {
+        this.aReportId = aReportId;
+        this.createdAt = createdAt;
         this.byUserID = byUserID;
         this.amount = amount;
-        this.lastSaleID = lastSaleID;
+        this.lastOrderId = lastOrderId;
         this.lastZReportID = lastZReportID;
     }
     //endregion Constructors
 
     //region Getter
 
-    public long getId() {
-        return id;
+    public long getaReportId() {
+        return aReportId;
     }
 
-    public long getCreationDate() {
-        return creationDate;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
     public long getByUserID() {
@@ -75,11 +76,11 @@ public class AReport {
         return amount;
     }
 
-    public long getLastSaleID() {
-        return lastSaleID;
+    public long getLastOrderId() {
+        return lastOrderId;
     }
 
-    public Sale getLastSale() {
+    public Order getLastSale() {
         return lastSale;
     }
 
@@ -96,12 +97,12 @@ public class AReport {
 
     //region Setter
 
-    public void setId(long id) {
-        this.id = id;
+    public void setaReportId(long aReportId) {
+        this.aReportId = aReportId;
     }
 
-    public void setCreationDate(long creationDate) {
-        this.creationDate = creationDate;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void setByUserID(long byUserID) {
@@ -116,11 +117,11 @@ public class AReport {
         this.amount = amount;
     }
 
-    public void setLastSaleID(long lastSaleID) {
-        this.lastSaleID = lastSaleID;
+    public void setLastOrderId(long lastOrderId) {
+        this.lastOrderId = lastOrderId;
     }
 
-    public void setLastSale(Sale lastSale) {
+    public void setLastSale(Order lastSale) {
         this.lastSale = lastSale;
     }
 

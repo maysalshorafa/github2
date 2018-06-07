@@ -5,23 +5,23 @@ package com.pos.leaders.leaderspossystem.Models;
  */
 
 public class ScheduleWorkers {
-    private long id;
+    private long scheduleWorkersId;
     private long userId;
     private long date;
     private long startTime;
     private long exitTime;
 
     // Constructors
-    public ScheduleWorkers(long id, long userId, long date, long startTime, long exitTime) {
-        this.id = id;
+    public ScheduleWorkers(long scheduleWorkersId, long userId, long date, long startTime, long exitTime) {
+        this.scheduleWorkersId = scheduleWorkersId;
         this.userId = userId;
         this.date = date;
         this.startTime = startTime;
         this.exitTime = exitTime;
     }
 
-    public ScheduleWorkers(long id, long userId, long date, long startTime) {
-        this.id = id;
+    public ScheduleWorkers(long scheduleWorkersId, long userId, long date, long startTime) {
+        this.scheduleWorkersId = scheduleWorkersId;
         this.userId = userId;
         this.date = date;
         this.startTime = startTime;
@@ -34,15 +34,15 @@ public class ScheduleWorkers {
     }
 
     public ScheduleWorkers(ScheduleWorkers scheduleWorkers){
-        this(scheduleWorkers.getId(),scheduleWorkers.getUserId(),scheduleWorkers.getDate(),scheduleWorkers.getStartTime(),scheduleWorkers.getExitTime());
+        this(scheduleWorkers.getScheduleWorkersId(),scheduleWorkers.getUserId(),scheduleWorkers.getDate(),scheduleWorkers.getStartTime(),scheduleWorkers.getExitTime());
     }
 
     public ScheduleWorkers() {
     }
 
     // Getters
-    public long getId() {
-        return id;
+    public long getScheduleWorkersId() {
+        return scheduleWorkersId;
     }
 
     public long getUserId() {
@@ -71,7 +71,7 @@ public class ScheduleWorkers {
 	public String toString() {
 		return "ScheduleWorkers{" +
 				"date=" + date +
-				", id=" + id +
+				", accountingId=" + scheduleWorkersId +
 				", userId=" + userId +
 				", startTime=" + startTime +
 				", exitTime=" + exitTime +

@@ -9,13 +9,13 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.City;
-import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
-import com.pos.leaders.leaderspossystem.Models.Sale;
-import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by Win8.1 on 10/12/2017.
@@ -58,6 +58,10 @@ public class CityDbAdapter {
         //Assign values for each row.
         val.put(City_COLUMN_Id, Util.idHealth(this.db,City_TABLE_NAME,City_COLUMN_Id));
         val.put(City_COLUMN_Name, name);
+        City city = new City(Util.idHealth(this.db, City_TABLE_NAME, City_COLUMN_Id), name);
+                City boCity = city;
+                sendToBroker(MessageType.ADD_CITY, boCity, this.context);
+
         try {
             db.insert(City_TABLE_NAME, null, val);
             return 1;
@@ -68,7 +72,7 @@ public class CityDbAdapter {
     }
     public long insertEntry(City city){
         ContentValues val = new ContentValues();
-        val.put(City_COLUMN_Id,city.getId());
+        val.put(City_COLUMN_Id,city.getCityId());
         //Assign values for each row.
         val.put(City_COLUMN_Name, city.getName());
         try {

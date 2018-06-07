@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
-import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.R;
 
 import java.util.List;
@@ -63,7 +62,7 @@ public class CurrencyCatlogGridViewAdapter extends BaseAdapter {
      */
     @Override
     public long getItemId(int position) {
-        return (long)currencyTypes.get(position).getId();
+        return (long)currencyTypes.get(position).getCurrencyTypeId();
     }
 
 

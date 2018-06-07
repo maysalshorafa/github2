@@ -6,7 +6,7 @@ package com.pos.leaders.leaderspossystem.Models;
 
 public class Club {
 
-    private long id;
+    private long clubId;
     private String name ;
     private String description;
     private int type;
@@ -18,8 +18,8 @@ public class Club {
     public Club() {
     }
 
-    public Club(long id, String name, String description, int type, float percent, int amount, int point, boolean hide) {
-        this.id=id;
+    public Club(long clubId, String name, String description, int type, float percent, int amount, int point, boolean hide) {
+        this.clubId = clubId;
         this.name=name;
         this.description=description;
         this.type=type;
@@ -27,8 +27,8 @@ public class Club {
         this.amount=amount;
         this.point=point;
     }
-    public Club(long id, String name, String description, int type, float percent, int amount, int point) {
-        this.id=id;
+    public Club(long clubId, String name, String description, int type, float percent, int amount, int point) {
+        this.clubId = clubId;
         this.name=name;
         this.description=description;
         this.type=type;
@@ -37,8 +37,8 @@ public class Club {
         this.point=point;
     }
 
-    public long getId() {
-        return id;
+    public long getClubId() {
+        return clubId;
     }
 
     public String getName() {
@@ -69,8 +69,8 @@ public class Club {
         return hide;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setClubId(long clubId) {
+        this.clubId = clubId;
     }
 
     public void setName(String name) {

@@ -5,7 +5,7 @@ package com.pos.leaders.leaderspossystem.Models.CustomerMeasurement;
  */
 
 public class MeasurementDynamicVariable {
-    private long id;
+    private long measurementDynamicVariableId;
     private String name;
     private String type;
     private String unit;
@@ -16,28 +16,28 @@ public class MeasurementDynamicVariable {
     public MeasurementDynamicVariable() {
     }
 
-    public MeasurementDynamicVariable(long id, String name, String type, String unit, boolean hide) {
-        this.id = id;
+    public MeasurementDynamicVariable(long measurementDynamicVariableId, String name, String type, String unit, boolean hide) {
+        this.measurementDynamicVariableId = measurementDynamicVariableId;
         this.name = name;
         this.type = type;
         this.unit = unit;
         this.hide = hide;
     }
 
-    public MeasurementDynamicVariable(long id, String name, String type, String unit) {
-        this.id = id;
+    public MeasurementDynamicVariable(long measurementDynamicVariableId, String name, String type, String unit) {
+        this.measurementDynamicVariableId = measurementDynamicVariableId;
         this.name = name;
         this.type = type;
         this.unit = unit;
     }
     public MeasurementDynamicVariable(MeasurementDynamicVariable measurementDynamicVariable) {
-        this(measurementDynamicVariable.getId(),measurementDynamicVariable.getName(),measurementDynamicVariable.getType(),measurementDynamicVariable.getUnit());
+        this(measurementDynamicVariable.getMeasurementDynamicVariableId(),measurementDynamicVariable.getName(),measurementDynamicVariable.getType(),measurementDynamicVariable.getUnit());
     }
     //end Constructors
     // Getters
 
-    public long getId() {
-        return id;
+    public long getMeasurementDynamicVariableId() {
+        return measurementDynamicVariableId;
     }
 
     public String getName() {
@@ -55,8 +55,8 @@ public class MeasurementDynamicVariable {
     //end Getters
     //Setters
 
-    public void setId(long id) {
-        this.id = id;
+    public void setMeasurementDynamicVariableId(long measurementDynamicVariableId) {
+        this.measurementDynamicVariableId = measurementDynamicVariableId;
     }
 
     public void setName(String name) {
@@ -82,7 +82,7 @@ public class MeasurementDynamicVariable {
     @Override
     public String toString() {
         return "MeasurementDynamicVariable{" +
-                "id=" + id +
+                "measurementDynamicVariableId=" + measurementDynamicVariableId +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", unit='" + unit + '\'' +

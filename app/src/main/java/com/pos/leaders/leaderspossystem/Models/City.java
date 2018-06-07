@@ -5,26 +5,26 @@ package com.pos.leaders.leaderspossystem.Models;
  */
 
 public class City {
-    private long id;
+    private long cityId;
 
-    public City(long id, String name) {
-        this.id = id;
+    public City(long cityId, String name) {
+        this.cityId = cityId;
         this.name = name;
     }
 
     public City() {
     }
 
-    public long getId() {
-        return id;
+    public long getCityId() {
+        return cityId;
     }
 
     public City(String name) {
         this.name = name;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setCityId(long cityId) {
+        this.cityId = cityId;
     }
 
     public String getName() {

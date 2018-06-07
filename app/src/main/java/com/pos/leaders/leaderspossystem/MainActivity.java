@@ -62,6 +62,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
@@ -70,7 +71,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule5DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
@@ -88,12 +88,14 @@ import com.pos.leaders.leaderspossystem.Models.Offers.Rule5;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule8;
 import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.Sale;
 import com.pos.leaders.leaderspossystem.Models.User;
+
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
+
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
@@ -113,13 +115,18 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -169,8 +176,8 @@ public class MainActivity extends AppCompatActivity {
     ProductDBAdapter productDBAdapter;
     OfferDBAdapter offerDBAdapter;
     ProductOfferDBAdapter productOfferDBAdapter;
-    SaleDBAdapter saleDBAdapter;
-    OrderDBAdapter orderDBAdapter;
+    OrderDBAdapter saleDBAdapter;
+    OrderDetailsDBAdapter orderDBAdapter;
     View prseedButtonDepartments;
     List<Product> productList;
     List<Product> All_productsList;
@@ -207,10 +214,10 @@ public class MainActivity extends AppCompatActivity {
     //ProductCatalogListViewAdapter productCatalogListViewAdapter;
     String barcodeScanned = "";
     ListView lvOrder;
-    static Sale sale;
+    static Order sale;
     SaleDetailsListViewAdapter saleDetailsListViewAdapter;
     View selectedIteminCartList;
-    Order selectedOrderOnCart = null;
+    OrderDetails selectedOrderOnCart = null;
     private List<User> custmerAssestList;
     private List<User> AllCustmerAssestList;
     public CustomerAssetDB custmerAssetDB;
@@ -272,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
     String str;
     boolean forSaleMan = false;
     List<Long> custmerAssetstIdList;
-    List<Order> orderIdList;
+    List<OrderDetails> orderIdList;
     List<Long> orderId;
     long custmerSaleAssetstId;
     TextView orderSalesMan;
@@ -335,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
         btnList = (ImageButton) findViewById(R.id.mainActivity_btnList);
         salesSaleMan = (TextView) findViewById(R.id.salesSaleMan);
         custmerAssetstIdList = new ArrayList<Long>();
-        orderIdList=new ArrayList<Order>();
+        orderIdList=new ArrayList<OrderDetails>();
         orderId=new ArrayList<Long>();
         //fragmentTouchPad = (FrameLayout) findViewById(R.id.mainActivity_fragmentTochPad);
 
@@ -600,7 +607,7 @@ public class MainActivity extends AppCompatActivity {
                         v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                         prseedButtonDepartments = v;
-                        productList = productDBAdapter.getAllProductsByDepartment(((Department) v.getTag()).getId(), productLoadItemOffset, productCountLoad);
+                        productList = productDBAdapter.getAllProductsByDepartment(((Department) v.getTag()).getDepartmentId(), productLoadItemOffset, productCountLoad);
                         All_productsList = productList;
                         productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                         gvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -624,7 +631,7 @@ public class MainActivity extends AppCompatActivity {
                         v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                         prseedButtonDepartments = v;
-                        productList = productDBAdapter.getAllProductsByDepartment(((Department) v.getTag()).getId(), productLoadItemOffset, productCountLoad);
+                        productList = productDBAdapter.getAllProductsByDepartment(((Department) v.getTag()).getDepartmentId(), productLoadItemOffset, productCountLoad);
                         All_productsList = productList;
                         productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                         gvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -664,7 +671,7 @@ public class MainActivity extends AppCompatActivity {
                     v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                     prseedButtonDepartments = v;
-                    productList = productDBAdapter.getAllProductsByDepartment(((Department) v.getTag()).getId(), productLoadItemOffset, productCountLoad);
+                    productList = productDBAdapter.getAllProductsByDepartment(((Department) v.getTag()).getDepartmentId(), productLoadItemOffset, productCountLoad);
                     All_productsList = productList;
                     productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                     gvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -819,9 +826,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (SESSION._SALE != null) {
-            sale = new Sale(SESSION._USER.getId(), new Date().getTime(), 0, false, 0, 0);
+            sale = new Order(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), 0, false, 0, 0);
         } else {
-            SESSION._SALE = new Sale(SESSION._USER.getId(), new Date().getTime(), 0, false, 0, 0);
+            SESSION._SALE = new Order(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), 0, false, 0, 0);
         }
 
         if (SESSION._ORDERS != null) {
@@ -839,7 +846,7 @@ public class MainActivity extends AppCompatActivity {
                 calculateTotalPrice();
             }
         } else {
-            SESSION._ORDERS = new ArrayList<Order>();
+            SESSION._ORDERS = new ArrayList<OrderDetails>();
         }
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
@@ -994,31 +1001,31 @@ public class MainActivity extends AppCompatActivity {
                                         cashDialog.dismiss();
                                     }
                                 });
-                                totalPrice.setText(Util.makePrice(selectedOrderOnCart.getOriginal_price()*selectedOrderOnCart.getCount())+getString(R.string.ins));
-                                List<Order>list=new ArrayList<Order>();
+                                totalPrice.setText(Util.makePrice(selectedOrderOnCart.getUnitPrice()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
+                                List<OrderDetails>list=new ArrayList<OrderDetails>();
                                 list.add(selectedOrderOnCart);
                                 final TextView discountType =(TextView)cashDialog.findViewById(R.id. cashPaymentDialog_TVStatus);
                                 discountType.append(":"+selectedOrderOnCart.getProduct().getName());
                                 totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
-                                priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+                                priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
                                 sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                     @Override
                                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                         if (isChecked) {
                                             sw.setText(getBaseContext().getString(R.string.amount));
                                             totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
-                                            priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+                                            priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
                                             cashETCash.setText("0");
                                         } else {
                                             sw.setText(getBaseContext().getString(R.string.proportion));
                                             totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
-                                            priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+                                            priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
                                             cashETCash.setText("0");
                                         }
                                     }
                                 });
                                 cashETCash.setHint(R.string.proportion);
-                                final List<Order>orderList=list;
+                                final List<OrderDetails>orderList=list;
                                 cashETCash.addTextChangedListener(new TextWatcher() {
                                     @Override
                                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1037,30 +1044,30 @@ public class MainActivity extends AppCompatActivity {
                                         if (sw.isChecked()) {
                                             if (!(str.equals(""))) {
                                                 double d = Double.parseDouble(str);
-                                                int count = SESSION._ORDERS.get(indexOfItem).getCount();
-                                                double discount = (1 - (d / (SESSION._ORDERS.get(indexOfItem).getOriginal_price() * count)));
+                                                int count = SESSION._ORDERS.get(indexOfItem).getQuantity();
+                                                double discount = (1 - (d / (SESSION._ORDERS.get(indexOfItem).getUnitPrice() * count)));
 
                                                 if (discount <= (X / 100)) {
                                                     double originalTotalPrice = 0;
-                                                    for (Order o : orderList) {
-                                                        originalTotalPrice += (o.getOriginal_price() * o.getCount());
+                                                    for (OrderDetails o : orderList) {
+                                                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity());
                                                     }
                                                     double val = (1 - (d / originalTotalPrice)) * 100;
-                                                    for (Order o : orderList) {
+                                                    for (OrderDetails o : orderList) {
                                                         o.setDiscount(val);
                                                     }
                                                     double saleTotalPrice = 0;
                                                     double SaleOriginalityPrice = 0;
-                                                    for (Order o : orderList) {
+                                                    for (OrderDetails o : orderList) {
                                                         saleTotalPrice += o.getItemTotalPrice();
 
-                                                        SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                                        SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
                                                     }
                                                     totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
                                                     priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
                                                 } else {
                                                     totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
-                                                    priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+                                                    priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
                                                     Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                                     cashETCash.setBackgroundResource(R.drawable.backtext);
 
@@ -1068,29 +1075,29 @@ public class MainActivity extends AppCompatActivity {
 
                                             }else {
                                                 totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
-                                                priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+                                                priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
                                             }
                                         } else {
                                             if (!(str.equals(""))) {
                                                 float val = Float.parseFloat(str);
                                                 if (val <= X) {
-                                                    int count = SESSION._ORDERS.get(indexOfItem).getCount();
-                                                    for (Order o : orderList) {
+                                                    int count = SESSION._ORDERS.get(indexOfItem).getQuantity();
+                                                    for (OrderDetails o : orderList) {
                                                         o.setDiscount(val);
                                                     }
 
                                                     double saleTotalPrice = 0;
                                                     double SaleOriginalityPrice = 0;
-                                                    for (Order o : orderList) {
+                                                    for (OrderDetails o : orderList) {
                                                         saleTotalPrice += o.getItemTotalPrice();
 
-                                                        SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                                        SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
                                                     }
                                                     totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
                                                     priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
                                                 } else {
                                                     totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
-                                                    priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+                                                    priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
                                                     Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                                     cashETCash.setBackgroundResource(R.drawable.backtext);
 
@@ -1099,7 +1106,7 @@ public class MainActivity extends AppCompatActivity {
 
                                             }else {
                                                 totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
-                                                priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPrice()*selectedOrderOnCart.getCount())+getString(R.string.ins));
+                                                priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
                                             }
                                         }
                                     }
@@ -1127,9 +1134,9 @@ public class MainActivity extends AppCompatActivity {
                                             if (!(str.equals(""))) {
                                                 float val = Float.parseFloat(str);
                                                 if (val <= X) {
-                                                    int count = SESSION._ORDERS.get(indexOfItem).getCount();
+                                                    int count = SESSION._ORDERS.get(indexOfItem).getQuantity();
                                                     SESSION._ORDERS.get(indexOfItem).setDiscount(val);
-                                                    //SESSION._ORDERS.get(indexOfItem).setPrice(((SESSION._ORDERS.get(indexOfItem).getOriginal_price()*count) * ((1 - (val / 100))) / count));
+                                                    //SESSION._ORDERS.get(indexOfItem).setPaidAmount(((SESSION._ORDERS.get(indexOfItem).getUnitPrice()*count) * ((1 - (val / 100))) / count));
 
                                                     refreshCart();
                                                     cashDialog.cancel();
@@ -1249,10 +1256,10 @@ public class MainActivity extends AppCompatActivity {
 
 
                 if (SESSION._ORDERS.size() != 0) {
-                    Sale s = new Sale(SESSION._SALE);
+                    Order s = new Order(SESSION._SALE);
                     s.setOrders(SESSION._ORDERS);
                     if (SESSION._SALES == null)
-                        SESSION._SALES = new ArrayList<Pair<Integer, Sale>>();
+                        SESSION._SALES = new ArrayList<Pair<Integer, Order>>();
                     else if (SESSION._SALES.size() == 0)
                         SESSION.TEMP_NUMBER = 0;
 
@@ -1313,8 +1320,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     double originalTotalPrice = 0;
-                    for (Order o : SESSION._ORDERS) {
-                        originalTotalPrice += (o.getOriginal_price() * o.getCount());
+                    for (OrderDetails o : SESSION._ORDERS) {
+                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity());
                     }
                     totalPrice.setText(Util.makePrice(originalTotalPrice)+getString(R.string.ins));
                     totalDiscount.setText(Util.makePrice(valueOfDiscount)+getString(R.string.ins));
@@ -1336,9 +1343,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     et.setHint(R.string.proportion);
-                    final List<Order>orderList=new ArrayList<Order>();
+                    final List<OrderDetails>orderList=new ArrayList<OrderDetails>();
                     for (int i=0;i<SESSION._ORDERS.size();i++){
-                        orderList.add(new Order(SESSION._ORDERS.get(i)));
+                        orderList.add(new OrderDetails(SESSION._ORDERS.get(i)));
                     }
                     et.addTextChangedListener(new TextWatcher() {
                         @Override
@@ -1358,20 +1365,20 @@ public class MainActivity extends AppCompatActivity {
                                 if (!(str.equals(""))) {
                                     double d = Double.parseDouble(str);
                                     double originalTotalPrice = 0;
-                                    for (Order o : orderList) {
-                                        originalTotalPrice += (o.getOriginal_price() * o.getCount());
+                                    for (OrderDetails o : orderList) {
+                                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity());
                                     }
                                     if ((1 - (d / originalTotalPrice) <= (X / 100))) {
                                         double val = (1 - (d / originalTotalPrice)) * 100;
-                                        for (Order o : orderList) {
+                                        for (OrderDetails o : orderList) {
                                             o.setDiscount(val);
                                         }
                                         double saleTotalPrice = 0;
                                         double SaleOriginalityPrice = 0;
-                                        for (Order o : orderList) {
+                                        for (OrderDetails o : orderList) {
                                             saleTotalPrice += o.getItemTotalPrice();
 
-                                            SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
                                         }
                                         totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
                                         priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
@@ -1390,15 +1397,15 @@ public class MainActivity extends AppCompatActivity {
                                 if (!(str.equals(""))) {
                                     float val = Float.parseFloat(str);
                                     if (val <= X) {
-                                        for (Order o : orderList) {
+                                        for (OrderDetails o : orderList) {
                                             o.setDiscount(val);
                                         }
                                         double saleTotalPrice = 0;
                                         double SaleOriginalityPrice = 0;
-                                        for (Order o : orderList) {
+                                        for (OrderDetails o : orderList) {
                                             saleTotalPrice += o.getItemTotalPrice();
 
-                                            SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                                            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
                                         }
                                         totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice)+getString(R.string.ins));
                                         priceAfterDiscount.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
@@ -1424,21 +1431,23 @@ public class MainActivity extends AppCompatActivity {
                             double X = SESSION._USER.getPresent();
                             if (sw.isChecked()) {
                                 if (!(str.equals(""))) {
-                                    double d = Double.parseDouble(str);
-                                    double originalTotalPrice = 0;
-                                    for (Order o : SESSION._ORDERS) {
-                                        originalTotalPrice += (o.getOriginal_price() * o.getCount());
-                                    }
-                                    if ((1 - (d / originalTotalPrice) <= (X / 100))) {
-                                        double val = (1 - (d / originalTotalPrice)) * 100;
-                                        valueOfDiscount=val;
-                                        for (Order o : SESSION._ORDERS) {
-                                            o.setDiscount(val);
+
+                                double d = Double.parseDouble(str);
+                                double originalTotalPrice = 0;
+                                for (OrderDetails o : SESSION._ORDERS) {
+                                    originalTotalPrice += (o.getUnitPrice() * o.getQuantity());
+                                }
+                                if ((1 - (d / originalTotalPrice) <= (X / 100))) {
+                                    double val = (1 - (d / originalTotalPrice)) * 100;
+                                    valueOfDiscount=val;
+                                    for (OrderDetails o : SESSION._ORDERS) {
+                                        o.setDiscount(val);
                                         }
                                         refreshCart();
                                         discountDialog.cancel();
                                     } else {
                                         Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+
                                     }
                                 }
                             } else {
@@ -1447,7 +1456,7 @@ public class MainActivity extends AppCompatActivity {
                                     valueOfDiscount=val;
                                     if (val <= X) {
                                         valueOfDiscount=val;
-                                        for (Order o : SESSION._ORDERS) {
+                                        for (OrderDetails o : SESSION._ORDERS) {
                                             o.setDiscount(val);
                                         }
                                         refreshCart();
@@ -1537,7 +1546,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         if (Double.parseDouble(str) != 0)
-            addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._USER.getId(),""));
+            addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._USER.getUserId(),""));
     }
 
 
@@ -1593,7 +1602,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.touchPadFragment_btEnter:
                 if (!touchPadPressed.equals(""))
-                    addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._USER.getId(),""));
+                    addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._USER.getUserId(),""));
                 touchPadPressed = "";
                 break;
             case R.id.touchPadFragment_btDot:
@@ -1636,7 +1645,7 @@ public class MainActivity extends AppCompatActivity {
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
         custmerAssetstIdList = new ArrayList<Long>();
-        orderIdList=new ArrayList<Order>();
+        orderIdList=new ArrayList<OrderDetails>();
         orderId=new ArrayList<Long>();
         offerDBAdapter = new OfferDBAdapter(this);
         offerDBAdapter.open();
@@ -1653,18 +1662,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void resumeSale(Sale s) {
+    public void resumeSale(Order s) {
         if (SESSION._ORDERS.size() != 0) {
-            Sale sa = new Sale(SESSION._SALE);
+            Order sa = new Order(SESSION._SALE);
 
             sa.setOrders(SESSION._ORDERS);
             if (SESSION._SALES == null)
-                SESSION._SALES = new ArrayList<Pair<Integer, Sale>>();
+                SESSION._SALES = new ArrayList<Pair<Integer, Order>>();
             SESSION._SALES.add(new Pair<>(++SESSION.TEMP_NUMBER, sa));
             clearCart();
         }
 
-        SESSION._SALE = new Sale(s);
+        SESSION._SALE = new Order(s);
         SESSION._ORDERS = s.getOrders();
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
@@ -1795,11 +1804,11 @@ public class MainActivity extends AppCompatActivity {
         SumForClub = 0;
         double SaleOriginalityPrice = 0;
 
-        for (Order o : SESSION._ORDERS) {
+        for (OrderDetails o : SESSION._ORDERS) {
             if (o.getProductId() == productIDForRule7) {
                 if (SumForRule3Status || SumForRule11Status) {
-                    saleTotalPrice += priceFoeRule7 * o.getCount();
-                    SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                    saleTotalPrice += priceFoeRule7 * o.getQuantity();
+                    SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
                     totalSaved = (SaleOriginalityPrice - saleTotalPrice);
 
                 } else {
@@ -1816,7 +1825,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (o.getProductId() == productIDForRule8) {
                 if (SumForRule3Status || SumForRule11Status) {
                     saleTotalPrice += o.getItemTotalPrice() - o.getItemTotalPrice() * ParcentForRule8;
-                    SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                    SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
                     totalSaved = (SaleOriginalityPrice - saleTotalPrice);
 
                 } else {
@@ -1835,7 +1844,7 @@ public class MainActivity extends AppCompatActivity {
                 saleTotalPrice += o.getItemTotalPrice();
                 SumForClub += o.getItemTotalPrice();
 
-                SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
             }
         }
 
@@ -1919,7 +1928,7 @@ public class MainActivity extends AppCompatActivity {
                             saleTotalPrice += priceForRule5;
                             dialog.dismiss();
 
-                            //   SaleOriginalityPrice += rule5.getPrice() * o.getCount();
+                            //   SaleOriginalityPrice += rule5.getPaidAmount() * o.getQuantity();
                         }
                     });
             alertDialog1.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
@@ -1928,7 +1937,7 @@ public class MainActivity extends AppCompatActivity {
                             saleTotalPrice += i;
                             dialog.dismiss();
 
-                            //   SaleOriginalityPrice += rule5.getPrice() * o.getCount();
+                            //   SaleOriginalityPrice += rule5.getPaidAmount() * o.getQuantity();
                         }
                     });
             alertDialog1.show();
@@ -1951,7 +1960,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void scanOffers() throws Exception {
-        for (Order o : SESSION._ORDERS) {
+        for (OrderDetails o : SESSION._ORDERS) {
             if (o.getProduct().getOffersIDs() != null) {
                 offersList.get(o.getProduct().getOffersIDs().get(0)).getRule().execute(SESSION._ORDERS, offersList.get(0));
             }
@@ -1966,10 +1975,10 @@ public class MainActivity extends AppCompatActivity {
         if (customerClubId == 0) {
             saleTotalPrice = 0;
             double SaleOriginalityPrice = 0;
-            for (Order o : SESSION._ORDERS) {
+            for (OrderDetails o : SESSION._ORDERS) {
                 saleTotalPrice += o.getItemTotalPrice();
 
-                SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
             }
             totalSaved = (SaleOriginalityPrice - saleTotalPrice);
             tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
@@ -1980,9 +1989,9 @@ public class MainActivity extends AppCompatActivity {
 
             saleTotalPrice = 0;
             double SaleOriginalityPrice = 0;
-            for (Order o : SESSION._ORDERS) {
+            for (OrderDetails o : SESSION._ORDERS) {
                 saleTotalPrice += o.getItemTotalPrice();
-                SaleOriginalityPrice += (o.getOriginal_price() * o.getCount());
+                SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
             }
 
             if (clubType == 1) {
@@ -2010,27 +2019,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addToCart(Product p) {
-        List<Order>orderList = new ArrayList<Order>();
+        List<OrderDetails>orderList = new ArrayList<OrderDetails>();
         /*if(p.getOffersIDs()==null){
             ProductOfferDBAdapter productOfferDBAdapter = new ProductOfferDBAdapter(this);
             productOfferDBAdapter.open();
-            p.setOffersIDs(productOfferDBAdapter.getProductOffers(p.getId(),offersIDsList));
+            p.setOffersIDs(productOfferDBAdapter.getProductOffers(p.getCashPaymentId(),offersIDsList));
             productOfferDBAdapter.close();
         }*/
         //test if cart have this order before insert to cart and order have'nt discount
         for(int i=0;i<SESSION._ORDERS.size();i++){
-            Order o = SESSION._ORDERS.get(i);
+            OrderDetails o = SESSION._ORDERS.get(i);
             Log.d("Order",o.toString());
             Log.d("Product",p.toString());
-            if(o.getProduct().equals(p)&&o.getDiscount()==0&&o.getProduct().getId()!=-1){
+            if(o.getProduct().equals(p)&&o.getDiscount()==0&&o.getProduct().getProductId()!=-1){
                 orderList.add(o);
             }
         }
         if(orderList.size()>0){
-            orderList.get(0).setCount(orderList.get(0).getCount()+1);
+            orderList.get(0).setCount(orderList.get(0).getQuantity()+1);
         }else {
+            SESSION._ORDERS.add(new OrderDetails(1, 0, p, p.getPrice(), p.getPrice(),valueOfDiscount));
 
-            SESSION._ORDERS.add(new Order(1, 0, p, p.getPrice(), p.getPrice(),valueOfDiscount));
         }
 
         removeOrderItemSelection();
@@ -2131,6 +2140,55 @@ public class MainActivity extends AppCompatActivity {
         }.execute();
     }
 
+
+    /*
+        private void printAndOpenCashBoxWINTEC(String mainAns, final String mainMer, final String mainCli) {
+            final UsbPrinter printer = new UsbPrinter(1155, 30016);
+
+            final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+            dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
+
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    dialog.show();
+                    ////Hebrew 15 Windows-1255
+
+                    SESSION._SALE.setTotal_price(saleTotalPrice);
+                    printer.PRN_Init();
+                    printer.PRN_PrintAndFeedLine(11);
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    printer.PRN_PrintAndFeedLine(11);
+                    printer.PRN_HalfCutPaper();
+
+                    //pos.cashdrawerOpen(0,20,20);
+                    dialog.cancel();
+                    clearCart();
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
+                    if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
+
+                        printer.PRN_PrintDotBitmap(invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer), 0);
+                        printer.PRN_PrintAndFeedLine(11);
+                        printer.PRN_HalfCutPaper();
+
+                        printer.PRN_PrintDotBitmap(invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli), 0);
+                    } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
+                        printer.PRN_PrintDotBitmap(invoiceImg.normalInvoice(SESSION._SALE.getCashPaymentId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER), 0);
+                    } else {
+                        printer.PRN_PrintDotBitmap(invoiceImg.normalInvoice(SESSION._SALE.getCashPaymentId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null), 0);
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+    */
     private void printAndOpenCashBoxBTP880(String mainAns, final String mainMer, final String mainCli) {
         final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(MainActivity.this);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
@@ -2168,9 +2226,9 @@ public class MainActivity extends AppCompatActivity {
                     pos.systemCutPaper(66, 0);
                     pos.imageStandardModeRasterPrint(invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli), CONSTANT.PRINTER_PAGE_WIDTH);
                 } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                    pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER), CONSTANT.PRINTER_PAGE_WIDTH);
+                    pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._SALE.getOrderId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER), CONSTANT.PRINTER_PAGE_WIDTH);
                 } else {
-                    pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null), CONSTANT.PRINTER_PAGE_WIDTH);
+                    pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._SALE.getOrderId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null), CONSTANT.PRINTER_PAGE_WIDTH);
                 }
                 return null;
             }
@@ -2277,10 +2335,10 @@ public class MainActivity extends AppCompatActivity {
                             Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli);
                             HPRTPrinterHelper.PrintBitmap(bitmap2, b, b, 300);
                         } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER);
+                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getOrderId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER);
                             HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
                         } else {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null);
+                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getOrderId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null);
                             HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
                         }
                     } catch (Exception e) {
@@ -2320,10 +2378,10 @@ public class MainActivity extends AppCompatActivity {
                     AidlUtil.getInstance().printBitmap(bitmap2);
                     //Thread.sleep(100);
                 } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                    Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER);
+                    Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getOrderId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER);
                     AidlUtil.getInstance().printBitmap(bitmap);
                 } else {
-                    Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null);
+                    Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getOrderId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null);
                     AidlUtil.getInstance().printBitmap(bitmap);
                 }
             } catch (Exception e) {
@@ -2393,10 +2451,10 @@ public class MainActivity extends AppCompatActivity {
                             Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainCli);
                             printSMS230(bitmap2);
                         } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER);
+                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getOrderId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, SESSION._CHECKS_HOLDER);
                             printSMS230(bitmap);
                         } else {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null);
+                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._SALE.getOrderId(), SESSION._ORDERS, SESSION._SALE, false, SESSION._USER, null);
                             printSMS230(bitmap);
                         }
                     } catch (Exception e) {
@@ -2434,7 +2492,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (Long.valueOf(SESSION._SALE.getCustomer_id()) == 0) {
+        if (Long.valueOf(SESSION._SALE.getCustomerId()) == 0) {
             if (SESSION._SALE.getCustomer_name() == null) {
                 if (customerName_EditText.getText().toString().equals("")) {
                     SESSION._SALE.setCustomer_name("");
@@ -2450,8 +2508,8 @@ public class MainActivity extends AppCompatActivity {
 
                 if (data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote).equals("anyType{}"))
                     return;
-                SESSION._SALE.setTotalPaid(SESSION._SALE.getTotalPrice());
-                saleDBAdapter = new SaleDBAdapter(MainActivity.this);
+                SESSION._SALE.setTotalPaidAmount(SESSION._SALE.getTotalPrice());
+                saleDBAdapter = new OrderDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
@@ -2489,32 +2547,32 @@ public class MainActivity extends AppCompatActivity {
 
                 creditCardPaymentDBAdapter.close();
 
-                orderDBAdapter = new OrderDBAdapter(MainActivity.this);
+                orderDBAdapter = new OrderDetailsDBAdapter(MainActivity.this);
                 custmerAssetDB = new CustomerAssetDB(MainActivity.this);
                 orderDBAdapter.open();
                 custmerAssetDB.open();
-                SESSION._SALE.setId(saleID);
+                SESSION._SALE.setOrderId(saleID);
                 if (forSaleMan) {
                     tempSaleId =saleID;
-                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate());
+                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getCreatedAt());
                 }
                 // insert order region
-                for (Order o : SESSION._ORDERS) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
+                for (OrderDetails o : SESSION._ORDERS) {
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
-                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // Order Sales man Region
                 for (int i=0;i<orderIdList.size();i++) {
-                    Order order = orderIdList.get(i);
+                    OrderDetails order = orderIdList.get(i);
                     long customerAssestId= custmerAssetstIdList.get(i);
                     for (int j = 0 ; j< SESSION._ORDERS.size();j++) {
-                        Order o = SESSION._ORDERS.get(j);
+                        OrderDetails o = SESSION._ORDERS.get(j);
                         long tempOrderId =orderId.get(i);
                         if (o==order) {
                             if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
-                                o.setCustmerAssestId(custmerAssetstIdList.get(i));
-                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate());
+                                o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
+                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPaidAmount(), 0, "Order", SESSION._SALE.getCreatedAt());
                             }
                         }
                     }
@@ -2697,8 +2755,8 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
 
                 final double result = data.getDoubleExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, 0.0f);
-                SESSION._SALE.setTotalPaid(result);
-                saleDBAdapter = new SaleDBAdapter(MainActivity.this);
+                SESSION._SALE.setTotalPaidAmount(result);
+                saleDBAdapter = new OrderDBAdapter(MainActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
@@ -2728,33 +2786,33 @@ public class MainActivity extends AppCompatActivity {
                 }
                 saleDBAdapter.close();
 
-                orderDBAdapter = new OrderDBAdapter(MainActivity.this);
+                orderDBAdapter = new OrderDetailsDBAdapter(MainActivity.this);
                 custmerAssetDB = new CustomerAssetDB(MainActivity.this);
                 orderDBAdapter.open();
                 custmerAssetDB.open();
-                SESSION._SALE.setId(saleID);
+                SESSION._SALE.setOrderId(saleID);
                 if (forSaleMan) {
                     tempSaleId =saleID;
-                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate());
+                    custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getCreatedAt());
                 }
 
                 // insert order region
-                for (Order o : SESSION._ORDERS) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
+                for (OrderDetails o : SESSION._ORDERS) {
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
-                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // Order Sales man Region
                 for (int i=0;i<orderIdList.size();i++) {
-                    Order order = orderIdList.get(i);
+                    OrderDetails order = orderIdList.get(i);
                     long customerAssestId= custmerAssetstIdList.get(i);
                     for (int j = 0 ; j< SESSION._ORDERS.size();j++) {
-                        Order o = SESSION._ORDERS.get(j);
+                        OrderDetails o = SESSION._ORDERS.get(j);
                         long tempOrderId =orderId.get(i);
                         if (o==order) {
                             if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
-                                o.setCustmerAssestId(custmerAssetstIdList.get(i));
-                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate());
+                                o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
+                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPaidAmount(), 0, "Order", SESSION._SALE.getCreatedAt());
                             }
                         }
                     }
@@ -2775,7 +2833,7 @@ public class MainActivity extends AppCompatActivity {
                 ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(this);
                 checksDBAdapter.open();
                 for (Check check : SESSION._CHECKS_HOLDER) {
-                    checksDBAdapter.insertEntry(check.getCheckNum(), check.getBankNum(), check.getBranchNum(), check.getAccountNum(), check.getAmount(), check.getDate(), saleID);
+                    checksDBAdapter.insertEntry(check.getCheckNum(), check.getBankNum(), check.getBranchNum(), check.getAccountNum(), check.getAmount(), check.getCreatedAt(), saleID);
                 }
                 checksDBAdapter.close();
 
@@ -2790,8 +2848,8 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CASH_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
-                saleDBAdapter = new SaleDBAdapter(MainActivity.this);
-                orderDBAdapter = new OrderDBAdapter(MainActivity.this);
+                saleDBAdapter = new OrderDBAdapter(MainActivity.this);
+                orderDBAdapter = new OrderDetailsDBAdapter(MainActivity.this);
                 custmerAssetDB = new CustomerAssetDB(MainActivity.this);
                 long tempSaleId=0;
                 saleDBAdapter.open();
@@ -2803,13 +2861,13 @@ public class MainActivity extends AppCompatActivity {
                 double totalPaidWithOutCurrency = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_TOTAL_PAID, 0.0f);
                 double excess = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE, 0.0f);
 
-                SESSION._SALE.setTotalPaid(totalPaidWithOutCurrency);
+                SESSION._SALE.setTotalPaidAmount(totalPaidWithOutCurrency);
 
                 clubPoint = ((int) (SESSION._SALE.getTotalPrice() / clubAmount) * clubPoint);
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
-                SESSION._SALE.setId(saleIDforCash);
+                SESSION._SALE.setOrderId(saleIDforCash);
 
-                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Sale(SESSION._SALE));
+                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Order(SESSION._SALE));
 
                 /// Club with point and amount
                 if (clubType == 2) {
@@ -2837,25 +2895,25 @@ public class MainActivity extends AppCompatActivity {
                 // insert in Order , CustomerAssistant
                 if (forSaleMan) {
                     tempSaleId =saleIDforCash;
-                    custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate());
+                    custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getCreatedAt());
                 }
                 // insert order region
-                for (Order o : SESSION._ORDERS) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
+                for (OrderDetails o : SESSION._ORDERS) {
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
-                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // Order Sales man Region
                 for (int i=0;i<orderIdList.size();i++) {
-                    Order order = orderIdList.get(i);
+                    OrderDetails order = orderIdList.get(i);
                     long customerAssestId= custmerAssetstIdList.get(i);
                     for (int j = 0 ; j< SESSION._ORDERS.size();j++) {
-                        Order o = SESSION._ORDERS.get(j);
+                        OrderDetails o = SESSION._ORDERS.get(j);
                         long tempOrderId =orderId.get(i);
                         if (o==order) {
                             if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
-                                o.setCustmerAssestId(custmerAssetstIdList.get(i));
-                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate());
+                                o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
+                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPaidAmount(), 0, "Order", SESSION._SALE.getCreatedAt());
                             }
                         }
                     }
@@ -2868,7 +2926,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
                 SESSION._SALE.setPayment(payment);
-                SESSION._SALE.setSaleDate(new Date().getTime());
+                SESSION._SALE.setCreatedAt(new Timestamp(System.currentTimeMillis()));
                 paymentDBAdapter.close();
                 printAndOpenCashBox("", "", "",REQUEST_CASH_ACTIVITY_CODE);
                 saleDBAdapter.close();
@@ -2883,8 +2941,8 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
-                saleDBAdapter = new SaleDBAdapter(MainActivity.this);
-                orderDBAdapter = new OrderDBAdapter(MainActivity.this);
+                saleDBAdapter = new OrderDBAdapter(MainActivity.this);
+                orderDBAdapter = new OrderDetailsDBAdapter(MainActivity.this);
                 custmerAssetDB = new CustomerAssetDB(MainActivity.this);
                 cashPaymentDBAdapter.open();
                 saleDBAdapter.open();
@@ -2896,7 +2954,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Get data from CashActivityWithCurrency and insert in Cash Payment
                 double totalPaidWithCurrency = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_TOTAL_PAID, 0.0f);
-                SESSION._SALE.setTotalPaid(totalPaidWithCurrency);
+                SESSION._SALE.setTotalPaidAmount(totalPaidWithCurrency);
                 double firstCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_AMOUNT, 0.0f);
                 double secondCurrencyAmount = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_AMOUNT, 0.0f);
                 double excess = data.getDoubleExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_EXCESS_VALUE, 0.0f);
@@ -2904,14 +2962,14 @@ public class MainActivity extends AppCompatActivity {
                 long firstCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID, 0);
 
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._SALE, customerId, customerName);
-                SESSION._SALE.setId(saleIDforCash);
-                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Sale(SESSION._SALE));
+                SESSION._SALE.setOrderId(saleIDforCash);
+                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess,new Order(SESSION._SALE));
 
                 if (firstCurrencyAmount > 0) {
-                    cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Date().getTime());
+                    cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Timestamp(System.currentTimeMillis()));
                 }
                 if (secondCurrencyAmount > 0) {
-                    cashPaymentDBAdapter.insertEntry(saleIDforCash, secondCurrencyAmount, secondCurrencyId, new Date().getTime());
+                    cashPaymentDBAdapter.insertEntry(saleIDforCash, secondCurrencyAmount, secondCurrencyId, new Timestamp(System.currentTimeMillis()));
                 }
                 cashPaymentDBAdapter.close();
 
@@ -2941,25 +2999,25 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (forSaleMan) {
                     tempSaleId =saleIDforCash;
-                    custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getSaleDate());
+                    custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._SALE.getTotalPrice(), 0, "Sale", SESSION._SALE.getCreatedAt());
                 }
                 // insert order region
-                for (Order o : SESSION._ORDERS) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleIDforCash, o.getPrice(), o.getOriginal_price(), o.getDiscount(), o.getCustmerAssestId());
+                for (OrderDetails o : SESSION._ORDERS) {
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
-                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // Order Sales man Region
                 for (int i=0;i<orderIdList.size();i++) {
-                    Order order = orderIdList.get(i);
+                    OrderDetails order = orderIdList.get(i);
                     long customerAssestId= custmerAssetstIdList.get(i);
                     for (int j = 0 ; j< SESSION._ORDERS.size();j++) {
-                        Order o = SESSION._ORDERS.get(j);
+                        OrderDetails o = SESSION._ORDERS.get(j);
                         long tempOrderId =orderId.get(i);
                         if (o==order) {
                             if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
-                                o.setCustmerAssestId(custmerAssetstIdList.get(i));
-                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPrice(), 0, "Order", SESSION._SALE.getSaleDate());
+                                o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
+                                custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPaidAmount(), 0, "Order", SESSION._SALE.getCreatedAt());
                             }
                         }
                     }
@@ -3115,7 +3173,7 @@ public class MainActivity extends AppCompatActivity {
                 customer = customerList.get(position);
                 customerName = customer.getCustmerName();
                 customerClubId = customer.getClub();
-                customerId = customer.getId();
+                customerId = customer.getCustomerId();
                 customerName_EditText.setText(customerName);
                 // get club Information
                 Club club = clubAdapter.getGroupInfo(customerClubId);
@@ -3176,7 +3234,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void callPopupOrderSalesMan(final Order order) {
+    public void callPopupOrderSalesMan(final OrderDetails order) {
         UserDBAdapter userDB = new UserDBAdapter(this);
         userDB.open();
         final CustomerAssetDB customerAssistantDB = new CustomerAssetDB(this);
@@ -3230,7 +3288,7 @@ public class MainActivity extends AppCompatActivity {
                                                        @Override
                                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                                            if(!orderIdList.contains(order)){
-                                                               custmerAssetstIdList.add(custmerAssestList.get(position).getId());
+                                                               custmerAssetstIdList.add(custmerAssestList.get(position).getUserId());
                                                                orderIdList.add(order);
                                                            }
 
@@ -3336,7 +3394,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 forSaleMan = true;
-                custmerSaleAssetstId = custmerAssestList.get(position).getId();
+                custmerSaleAssetstId = custmerAssestList.get(position).getUserId();
                 salesSaleMan.setText(custmerAssestList.get(position).getFullName());
                 popupWindow.dismiss();
             }

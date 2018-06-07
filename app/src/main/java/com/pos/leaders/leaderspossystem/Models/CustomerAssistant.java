@@ -1,60 +1,62 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import java.sql.Timestamp;
+
 /**
  * Created by Win8.1 on 9/28/2017.
  */
 
 public class CustomerAssistant {
-    private long id ;
-    private long order_id;
+    private long custAssistantId;
+    private long orderId;
     private long customerAssistantID;
     private double amount;
     private int type;
     private String salesCase;
-    private long saleDate;
+    private Timestamp createdAt;
 
 
 
     public CustomerAssistant() {
     }
 
-    public void setSaleDate(long saleDate) {
-        this.saleDate = saleDate;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
 
-    public CustomerAssistant(long id, long order_id, long customerAssistantID, double amount, int type, String salesCase, long saleDate) {
-        this.id = id;
-        this.order_id = order_id;
+    public CustomerAssistant(long custAssistantId, long orderId, long customerAssistantID, double amount, int type, String salesCase, Timestamp createdAt) {
+        this.custAssistantId = custAssistantId;
+        this.orderId = orderId;
         this.customerAssistantID = customerAssistantID;
         this.amount = amount;
         this.type = type;
         this.salesCase = salesCase;
-        this.saleDate=saleDate;
+        this.createdAt = createdAt;
     }
 
-    public long getId() {
-        return id;
+    public long getCustAssistantId() {
+        return custAssistantId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setCustAssistantId(long custAssistantId) {
+        this.custAssistantId = custAssistantId;
     }
 
-    public long getOrder_id() {
-        return order_id;
+    public long getOrderId() {
+        return orderId;
     }
 
-    public long getSaleDate() {
-        return saleDate;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
     public long getCustomerAssistantID() {
         return customerAssistantID;
     }
 
-    public void setOrder_id(long order_id) {
-        this.order_id = order_id;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 
     public void setCustomerAssistantID(long customerAssistantID) {

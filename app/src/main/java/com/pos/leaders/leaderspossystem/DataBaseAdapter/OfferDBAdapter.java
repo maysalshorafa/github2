@@ -9,14 +9,10 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Offer;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;

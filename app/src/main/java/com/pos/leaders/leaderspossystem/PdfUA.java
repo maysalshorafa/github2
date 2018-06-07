@@ -20,14 +20,14 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Payment;
-import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
@@ -90,9 +90,9 @@ public class PdfUA {
         headingTable.setRunDirection(0);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, urFontName);
         insertCell(headingTable, status , Element.ALIGN_CENTER, 1, urFontName);
-        insertCell(headingTable, DateConverter.dateToString(zReport.getCreationDate()) , Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(headingTable, DateConverter.dateToString(zReport.getCreatedAt()) , Element.ALIGN_CENTER, 1, urFontName);
         insertCell(headingTable, context.getString(R.string.cashiers) + user.getFullName() , Element.ALIGN_CENTER, 1, urFontName);
-        insertCell(headingTable,  String.format("%06d", zReport.getId()) , Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(headingTable,  String.format("%06d", zReport.getCashPaymentId()) , Element.ALIGN_CENTER, 1, urFontName);
         insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, urFontName);
         document.add(headingTable);
         //end
@@ -193,9 +193,9 @@ public class PdfUA {
         double eur_plus = 0, eur_minus = 0;
         double gbp_plus = 0, gbp_minus = 0;
         Log.i("CZREPO", "id:" + id + " ,from:" + from + " ,to" + to + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        SaleDBAdapter saleDBAdapter = new SaleDBAdapter(context);
+        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(context);
         saleDBAdapter.open();
-        List<Sale> sales = saleDBAdapter.getBetween(from, to);
+        List<Order> sales = saleDBAdapter.getBetween(from, to);
 
         saleDBAdapter.close();
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
@@ -212,7 +212,7 @@ public class PdfUA {
         AReport aReport = aReportDBAdapter.getByLastZReport(id);
         /*try {
             aReportAmount = aReportDBAdapter.getLastRow().getAmount();
-            aReportId = aReportDBAdapter.getLastRow().getId();
+            aReportId = aReportDBAdapter.getLastRow().getCashPaymentId();
         } catch (Exception e) {
             e.printStackTrace();
         }*/
@@ -229,10 +229,10 @@ public class PdfUA {
             AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
             aReportDetailsDBAdapter.open();
 
-            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReport.getId());
-            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReport.getId());
-            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReport.getId());
-            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReport.getId());
+            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReport.getaReportId());
+            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReport.getaReportId());
+            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReport.getaReportId());
+            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReport.getaReportId());
         }
         double cash_plus = 0, cash_minus = 0;
         double check_plus = 0, check_minus = 0;

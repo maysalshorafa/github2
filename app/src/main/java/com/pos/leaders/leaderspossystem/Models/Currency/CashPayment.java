@@ -1,35 +1,27 @@
 package com.pos.leaders.leaderspossystem.Models.Currency;
 
-import com.pos.leaders.leaderspossystem.Models.Order;
-import com.pos.leaders.leaderspossystem.Models.Payment;
-import com.pos.leaders.leaderspossystem.Models.Sale;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
-import com.pos.leaders.leaderspossystem.Tools.Util;
-
-import java.util.Date;
-import java.util.Locale;
+import java.sql.Timestamp;
 
 /**
  * Created by Win8.1 on 9/27/2017.
  */
 
 public class CashPayment {
-    private long id;
-    private long saleId;
+    private long cashPaymentId;
+    private long orderId;
     private double amount;
     private long currency_type;
-    private long createDate;
+    private Timestamp createdAt;
 
     public CashPayment() {
     }
 
-    public long getCreateDate() {
-        return createDate;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateDate(long createDate) {
-        this.createDate = createDate;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
 
@@ -46,26 +38,26 @@ public class CashPayment {
 
 
     // Constructors
-    public CashPayment(long id,  long saleId, double amount,long currency_type,long createDate) {
-        this.id = id;
+    public CashPayment(long cashPaymentId, long orderId, double amount, long currency_type, Timestamp createdAt) {
+        this.cashPaymentId = cashPaymentId;
         this.amount = amount;
-        this.saleId = saleId;
+        this.orderId = orderId;
         this.currency_type=currency_type;
-        this.createDate=createDate;
+        this.createdAt = createdAt;
     }
 
     public CashPayment(CashPayment p) {
-        this(p.getId(),  p.getSaleId(),p.getAmount(),p.getCurrency_type(),p.getCreateDate());
+        this(p.getCashPaymentId(),  p.getOrderId(),p.getAmount(),p.getCurrency_type(),p.getCreatedAt());
     }
 
     // Getters
-    public long getId() {
-        return id;
+    public long getCashPaymentId() {
+        return cashPaymentId;
     }
 
 
-    public long getSaleId() {
-        return saleId;
+    public long getOrderId() {
+        return orderId;
     }
 
     public double getAmount() {
@@ -75,10 +67,10 @@ public class CashPayment {
     @Override
     public String toString() {
         return "Payment{" +
-                "id=" + id +
+                "cashPaymentId=" + cashPaymentId +
                 ",currency_type ='" + currency_type + '\'' +
                 ", amount='" + amount + '\'' +
-                ", saleId=" + saleId +
+                ", orderId=" + orderId +
                 '}';
     }
 

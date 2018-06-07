@@ -5,223 +5,284 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
-import java.util.Date;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by KARAM on 19/10/2016.
  */
 
 public class Order {
-	private long id;
-	private long productId;
-	private int count;
-	private double userOffer;
-	private long saleId;
-
-	private double original_price;
-	private double price;
-	private double discount;
-
-	@JsonIgnore
-	private Product product;
-
-	public long getCustmerAssestId() {
-		return custmerAssestId;
-	}
-
-	public void setCustmerAssestId(long custmerAssestId) {
-		this.custmerAssestId = custmerAssestId;
-	}
-
-	private  long custmerAssestId;
-
-	//region Constructors
-	public Order(long id, long productId, int count, double userOffer, long saleId,long custmerAssestId) {
-		this.id = id;
-		this.productId = productId;
-		this.count = count;
-		this.userOffer = userOffer;
-		this.saleId = saleId;
-		this.custmerAssestId=custmerAssestId;
-	}
-
-    public Order(long id, long productId, int count, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestId) {
-        this.id = id;
-        this.productId = productId;
-        this.count = count;
-        this.userOffer = userOffer;
-        this.saleId = saleId;
-        this.price = price;
-        this.original_price = original_price;
-        this.discount = discount;
-    	this.custmerAssestId=custmerAssestId;
-    }
-
-	public Order(long id, long productId, int count, double userOffer, long saleId, Product product,long custmerAssestId) {
-		this.id = id;
-		this.productId = productId;
-		this.count = count;
-		this.userOffer = userOffer;
-		this.saleId = saleId;
-		this.product = product;
-		this.custmerAssestId=custmerAssestId;
-	}
-	public Order(long productId, int count, double userOffer, long saleId, Product product) {
-		this.productId = productId;
-		this.count = count;
-		this.userOffer = userOffer;
-		this.saleId = saleId;
-		this.product = product;
-
-	}
-	public Order(int count, double userOffer, Product product) {
-        this.count = count;
-        this.userOffer = userOffer;
-        this.product = product;
-        this.productId = product.getId();
-        this.price = product.getPrice();
-        this.original_price = product.getPrice();
-        this.discount = 0;
-    }
-
-    public Order(int count, double userOffer, Product product,double price, double original_price,double discount) {
-        this.count = count;
-        this.userOffer = userOffer;
-        this.product = product;
-        this.productId=product.getId();
-        this.price = price;
-        this.original_price = original_price;
-        this.discount = discount;
-    }
-
-	public Order(Order o) {
-        this(o.getId(), o.getProductId(), o.getCount(), o.getUserOffer(), o.getSaleId(), o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
-    }
-
-	public Order newInstance(Order o) {
-		return new Order(o.getId(), o.getProductId(), o.getCount(), o.getUserOffer(), o.getSaleId(),o.getCustmerAssestId());
-	}
-
-	public Order() {
-	}
-	//endregion Constructors
-
-    //region Getters
-
-	public long getProductId() {
-		return productId;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public int getCount() {
-		return count;
-	}
-
-	public double getUserOffer() {
-		return userOffer;
-	}
-
-	public long getSaleId() {
-		return saleId;
-	}
-
-	public Product getProduct() {
-		return product;
-	}
+	private long orderId;
+	private long byUser;
+	private Timestamp createdAt;
+	private int replacementNote;
+	private boolean status;
+	private double totalPrice;
+	private double totalPaidAmount;
+	private long customerId;
 
 	@JsonIgnore
-	public double getItemTotalPrice() {
-
-		return (count * (original_price * (1-(discount / 100))));
-	}
+	private String customer_name = null;
 	@JsonIgnore
-	public double getOriginal_price() {
-		return original_price;
-	}
+	private List<OrderDetails> orders;
+    @JsonIgnore
+	private User user;
+    @JsonIgnore
+	private Payment payment;
+	@JsonIgnore
+	private Customer customer;
 
-	public double getPrice() {
-		return (original_price * (1-(discount / 100)));
-	}
+    @JsonIgnore
+    private Locale locale = new Locale("en");
 
-	public double getDiscount() {
-		return discount;
-	}
-
-	//endregion Getters
+	// region Constructors
 
 
-	//region Setters
-
-	public int setCount(int count) {
-        if (count > 1)
-            this.count = count;
-        return this.count;
+    public Order() {
     }
 
-	public void setProduct(Product p){
-		this.product=p;
+    public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name) {
+		this.orderId = orderId;
+		this.byUser = byUser;
+		this.createdAt = createdAt;
+		this.replacementNote = replacementNote;
+		this.status = status;
+		this.totalPrice = totalPrice;
+		this.totalPaidAmount = totalPaidAmount;
+		this.customerId = customerId;
+		this.customer_name=customer_name;
 	}
 
-	public void setDiscount(double discount){
-		this.discount = discount;
+	public Order(long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount) {
+		this.byUser = byUser;
+		this.createdAt = createdAt;
+		this.replacementNote = replacementNote;
+		this.status = status;
+		this.totalPrice = totalPrice;
+		this.totalPaidAmount = totalPaidAmount;
 	}
 
-	public void setPrice(double price){
-		this.price = (original_price * (discount / 100));
+	public Order(long orderId, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, User user) {
+		this.orderId = orderId;
+		this.byUser = user.getUserId();
+		this.createdAt = createdAt;
+		this.replacementNote = replacementNote;
+		this.status = status;
+		this.totalPrice = totalPrice;
+		this.totalPaidAmount = totalPaidAmount;
+
+		this.user=user;
 	}
 
-
-	//endregion Setters
-
-	//region Methods
-
-	public int increaseCount(){
-		this.count++;
-		return this.count;
+	public Order(Order s) {
+		this(s.getOrderId(),s.getByUser(),s.getCreatedAt(),s.getReplacementNote(),s.isStatus(),s.getTotalPrice(),s.getTotalPaidAmount(),s.getCustomerId(),s.getCustomer_name());
 	}
 
-	public int decreaseCount(){
-		if(this.count>1) {
-			this.count--;
+	public static Order newInstance(Order s){
+		return new Order(s.getOrderId(),s.getByUser(),s.getCreatedAt(),s.getReplacementNote(),s.isStatus(),s.getTotalPrice(),s.getTotalPaidAmount(),s.getCustomerId(),s.getCustomer_name());
+	}
+
+	//endregion
+
+	//region Getter
+
+    public long getOrderId() {
+        return orderId;
+    }
+
+    public long getByUser() {
+        return byUser;
+    }
+
+	public Timestamp getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public int getReplacementNote() {
+        return replacementNote;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public double getTotalPaidAmount() {
+        return totalPaidAmount;
+    }
+    public List<OrderDetails> getOrders() {
+        return orders;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public long getCustomerId() {
+        return customerId;
+    }
+
+    public String getCustomer_name() {
+        return customer_name;
+    }
+
+
+
+    //endregion
+
+	//region Setter
+
+
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setByUser(long byUser) {
+        this.byUser = byUser;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public void setReplacementNote(int replacementNote) {
+        this.replacementNote = replacementNote;
+    }
+
+
+    public void setTotalPaidAmount(double total_paid_amount) {
+        this.totalPaidAmount = total_paid_amount;
+    }
+
+    public void setOrders(List<OrderDetails> orders) {
+        this.orders = orders;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
+    }
+
+    public void setCustomer_name(String customer_name) {
+        this.customer_name = customer_name;
+    }
+
+    //endregion
+
+	@Override
+	public String toString() {
+		return "Order{" +
+				"accountingId=" + orderId +
+				", byUser=" + byUser +
+				", order_date=" + createdAt +
+				", replacementNote=" + replacementNote +
+				", status=" + status +
+				", total_price=" + totalPrice +
+				", total_paid_amount=" + totalPaidAmount +
+				", user=" + user +
+				'}';
+	}
+
+	public String BKMVDATA(int rowNumber, String pc) {
+
+		String recordType = "320", OP = "+", mOP = "-";
+
+		if (totalPrice < 0){
+			recordType = "330";
+			OP = "-";
+			//total_paid_amount *= -1;
 		}
-		return this.count;
+		double totalPriceBeforeDiscount = 0;
+		for (OrderDetails o : orders) {
+			totalPriceBeforeDiscount += (o.getUnitPrice()*o.getQuantity());
+		}
+		if(totalPrice <0){
+            totalPrice *= -1;
+
+		}
+		double totalSaved = totalPriceBeforeDiscount - totalPrice;
+		if(totalSaved<0)
+			totalSaved *= -1;
+		//totalSaved = (totalSaved / (1 + SETTINGS.tax / 100));
+		if(totalPaidAmount < 0) {
+			totalSaved = 0;
+			totalPriceBeforeDiscount = totalPrice;
+		}
+
+		double noTax = totalPrice / (1 + (SETTINGS.tax / 100));
+		if(noTax<0)
+			noTax *= -1;
+		double tax = totalPrice -noTax;
+		String name = "";
+		if(user.getFullName().length()>9)
+			name = user.getFullName().substring(0, 9);
+		else{
+			name = String.format("%9s", user.getFullName());
+		}
+
+
+		return "C100" + String.format(locale, "%09d", rowNumber) + pc + recordType + String.format(locale, "%020d", orderId) + DateConverter.getYYYYMMDD(new Timestamp(System.currentTimeMillis())) + DateConverter.getHHMM(new Timestamp(System.currentTimeMillis()))
+				+ String.format(locale, "%50s", "OldCustomer") + Util.spaces(50) + Util.spaces(10) + Util.spaces(30) + Util.spaces(8) + Util.spaces(30) + Util.spaces(2) + Util.spaces(15) + Util.spaces(9)
+				+ DateConverter.getYYYYMMDD(new Timestamp(System.currentTimeMillis())) + Util.spaces(15) + Util.spaces(3)
+				+ OP + Util.x12V99(totalPriceBeforeDiscount/(1+(SETTINGS.tax/100)))
+				+ mOP + Util.x12V99(((totalSaved)/(1+(SETTINGS.tax/100))))
+				+ OP + Util.x12V99(noTax)
+				+ OP + Util.x12V99(tax+0.004)
+				+ OP + Util.x12V99(totalPrice)
+				+ OP + String.format(locale, "%09.0f", 0.0f) + String.format(locale, "%02d", (int) ((0.0f - Math.floor(0.0f) + 0.001) * 100))
+				+ Util.spaces(13) + "a0" + Util.spaces(8) + "b0" + "0" + DateConverter.getYYYYMMDD(new Timestamp(System.currentTimeMillis())) + Util.spaces(7) + name + String.format(locale, "%07d", orderId)
+				+ Util.spaces(13);
+
+
 	}
+	static class test{
+		public static void main1(String[] args){
+			double num = 414.70;
+			double tax = 17.0;
 
-	public String DKMVDATA(int rowNumber,String companyID,Date date) {
-        String s = "320", OP = "+", mOP = "-";
-        double totalDiscount = (getItemTotalPrice() * discount / 100);
-        double noTax = price / (1 + (SETTINGS.tax / 100));
-        if(product.getName().length()>29){
-            product.setName(product.getName().substring(0,29));
-        }
+			double withouttax = num / (1 + (tax / 100));
 
-        return "D110" + String.format(Util.locale, "%09d", rowNumber) + companyID + s + String.format(Util.locale, "%020d", saleId) + String.format(Util.locale, "%04d", id)
-                + s + String.format(Util.locale, "%020d", saleId) + "3" + String.format(Util.locale, "%20s", productId) + String.format(Util.locale, "%30s", "sale")
-                + Util.spaces(50) + String.format(Util.locale, "%30s", product.getBarCode()) + Util.spaces(20)
-                + "+" + String.format(Util.locale, "%012d", count) + String.format(Util.locale, "%04d", (int) ((count - Math.floor(count) + 0.00001) * 10000))
-                + OP + Util.x12V99(noTax) + mOP + Util.x12V99(totalDiscount) + OP + Util.x12V99((noTax-totalDiscount)*count)
-                + String.format(Util.locale, "%02.0f", SETTINGS.tax) + String.format(Util.locale, "%02d", (int) ((SETTINGS.tax - Math.floor(SETTINGS.tax) + 0.001) * 100))
-                + Util.spaces(7) + DateConverter.getYYYYMMDD(date) + String.format(Util.locale, "%07d", saleId) + Util.spaces(7) + Util.spaces(21);
-    }
-
-	//endregion Methods
+			String str = String.format("%2.2f", withouttax - 0.005);
+			System.out.println(str);
 
 
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", productId=" + productId +
-                ", count=" + count +
-                ", userOffer=" + userOffer +
-                ", saleId=" + saleId +
-                ", original_price=" + original_price +
-                ", price=" + price +
-                ", discount=" + discount +
-                ", product=" + product +
-                '}';
-    }
+			String st = String.format("%2.2f", num - Double.parseDouble(str));
+			System.out.println((num-withouttax)+"\n"+Util.x12V99(num-withouttax+0.004));
+			//print(Double.parseDouble(st));
+		}
+
+	}
 }

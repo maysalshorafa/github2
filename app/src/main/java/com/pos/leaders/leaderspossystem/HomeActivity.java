@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -61,7 +61,7 @@ public class HomeActivity extends Activity {
 		setContentView(R.layout.activity_home);
 		prefs = getSharedPreferences("com.pos.leaders.leaderspossystem", MODE_PRIVATE);
 
-		SESSION._ORDERS = new ArrayList<Order>();
+		SESSION._ORDERS = new ArrayList<OrderDetails>();
 		userDBAdapter = new UserDBAdapter(this);
 		userDBAdapter.open();
 
@@ -94,8 +94,8 @@ public class HomeActivity extends Activity {
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 					intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, str);
 			//		intent.putExtra("permissions_name",u.getPermtionName());
-					long scheduleID = scheduleWorkersDBAdapter.insertEntry(u.getId());
-					SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, u.getId(), new Date().getTime(), new Date().getTime());
+					long scheduleID = scheduleWorkersDBAdapter.insertEntry(u.getUserId());
+					SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, u.getUserId(), new Date().getTime(), new Date().getTime());
 					/*
 					String message = "hello";
                     intent.putExtra("customerName", message);

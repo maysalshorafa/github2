@@ -31,8 +31,8 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -78,7 +78,7 @@ public class AddCustomerMeasurement extends AppCompatActivity {
         cityList = cityDbAdapter.getAllCity();
         for (int i = 0; i < cityList.size(); i++) {
             City city = cityList.get(i);
-            if (city.getId() == customer.getCity()) {
+            if (city.getCityId() == customer.getCity()) {
                 customerAddress.setText(customer.getHouseNumber()+"-"+customer.getStreet()+"-"+city.getName()+"-"+customer.getCountry());
             }        }
         customerPhoneNumber.setText(customer.getPhoneNumber());
@@ -87,12 +87,12 @@ public class AddCustomerMeasurement extends AppCompatActivity {
         groupList = groupAdapter.getAllGroup();
         for (int i = 0; i < groupList.size(); i++) {
             Club group = groupList.get(i);
-            if (group.getId() == customer.getClub()) {
+            if (group.getClubId() == customer.getClub()) {
                 customerClubName.setText(": "+group.getName());
             }
         }
         customerEmail.setText(customer.getEmail());
-        int noOfMeasurement= customerMeasurementDBAdapter.noOfCustomerMeasurement(customer.getId());
+        int noOfMeasurement= customerMeasurementDBAdapter.noOfCustomerMeasurement(customer.getCustomerId());
         tvNoOfMeasurement.setText(": "+noOfMeasurement);
         addCustomerMeasurement();
     }
@@ -197,7 +197,7 @@ public class AddCustomerMeasurement extends AppCompatActivity {
                 customerMeasurementDBAdapter.open();
                 measurementsDetailsDBAdapter.open();
                         if(isValidValue(measurementValueList,measurementValueListValueType)) {
-                            long measurementId = customerMeasurementDBAdapter.insertEntry(customerId, SESSION._USER.getId(),new Date().getTime()); // insert in customerMeasurement Table
+                            long measurementId = customerMeasurementDBAdapter.insertEntry(customerId, SESSION._USER.getUserId(),new Timestamp(System.currentTimeMillis())); // insert in customerMeasurement Table
                             if(measurementId>0){
                                 for (int a=0 ; a<measurementValueList.size();a++){
                                     measurementsDetailsDBAdapter.insertEntry(measurementId, measurementDynamicVariableId.get(a),measurementValueList.get(a)); //insert list of measurement in measurement details

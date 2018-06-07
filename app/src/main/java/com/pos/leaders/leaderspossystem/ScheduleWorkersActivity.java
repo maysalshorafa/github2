@@ -74,7 +74,7 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
                     // if password valid get userByPassword
                     User user = userDBAdapter.getUserByPassword(passWord);
                         //login case
-                        long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getId());
+                        long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getUserId());
                         if(scheduleID>0){
                             Toast.makeText(ScheduleWorkersActivity.this,getString(R.string.welcome)+user.getFullName()+getString(R.string.we_wish_to_you_a_happy_business_day),Toast.LENGTH_LONG).show();
                             onBackPressed();
@@ -90,8 +90,8 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 User user = userDBAdapter.getUserByPassword(passWord);
-                ScheduleWorkers scheduleWorkers = scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(user.getId());
-                scheduleWorkersDBAdapter.updateEntry(user.getId(),new Date());
+                ScheduleWorkers scheduleWorkers = scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(user.getUserId());
+                scheduleWorkersDBAdapter.updateEntry(user.getUserId(),new Date());
                 long r=0,h=0,m=0,s=0;
                 r= DateConverter.getDateDiff(new Date(scheduleWorkers.getStartTime()),new Date(), TimeUnit.MILLISECONDS);
                 h=r/(1000*60*60);

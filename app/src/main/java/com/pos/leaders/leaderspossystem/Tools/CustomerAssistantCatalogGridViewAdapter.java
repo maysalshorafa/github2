@@ -61,7 +61,7 @@ public class CustomerAssistantCatalogGridViewAdapter extends BaseAdapter {
      */
     @Override
     public long getItemId(int position) {
-        return (long)customersAssest.get(position).getId();
+        return (long)customersAssest.get(position).getUserId();
     }
 
 

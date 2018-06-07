@@ -1,7 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models.Offers;
 
 import com.pos.leaders.leaderspossystem.Models.Offer;
-import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public abstract class Rule {
         this.type = type;
     }
 
-    public abstract void execute(List<Order> orders,Offer offer) throws Exception;
+    public abstract void execute(List<OrderDetails> orders, Offer offer) throws Exception;
 
-    public abstract boolean precondition(List<Order> orders);
+    public abstract boolean precondition(List<OrderDetails> orders);
 }

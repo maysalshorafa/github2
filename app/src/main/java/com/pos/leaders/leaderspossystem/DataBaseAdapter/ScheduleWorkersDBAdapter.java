@@ -90,7 +90,7 @@ public class ScheduleWorkersDBAdapter {
 
     public long insertEntry(ScheduleWorkers scheduleWorkers) {
         ContentValues val = new ContentValues();
-        val.put(SCHEDULEWORKERS_COLUMN_ID,scheduleWorkers.getId());
+        val.put(SCHEDULEWORKERS_COLUMN_ID,scheduleWorkers.getScheduleWorkersId());
         val.put(SCHEDULEWORKERS_COLUMN_USERID, scheduleWorkers.getUserId());
         val.put(SCHEDULEWORKERS_COLUMN_DATE, scheduleWorkers.getDate());
         val.put(SCHEDULEWORKERS_COLUMN_STARTTIME, scheduleWorkers.getStartTime());
@@ -123,7 +123,7 @@ public class ScheduleWorkersDBAdapter {
             //normal update case when exit time didnt have value
             val.put(SCHEDULEWORKERS_COLUMN_EXITTIME, exitTime.getTime());
             String where = SCHEDULEWORKERS_COLUMN_ID + " = ?";
-            db.update(SCHEDULEWORKERS_TABLE_NAME, val, where, new String[]{scheduleWorkers.getId() + ""} );
+            db.update(SCHEDULEWORKERS_TABLE_NAME, val, where, new String[]{scheduleWorkers.getScheduleWorkersId() + ""} );
             ScheduleWorkers s=scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(userId);
             Log.d("last row  empty for exit time",s.toString());
             sendToBroker(MessageType.UPDATE_SCHEDULE_WORKERS, s, this.context);
@@ -162,7 +162,7 @@ public class ScheduleWorkersDBAdapter {
         val.put(SCHEDULEWORKERS_COLUMN_EXITTIME, scheduleWorkers.getExitTime());
 
         String where = SCHEDULEWORKERS_COLUMN_ID + " = ?";
-        db.update(SCHEDULEWORKERS_TABLE_NAME, val, where, new String[]{scheduleWorkers.getId() + ""});
+        db.update(SCHEDULEWORKERS_TABLE_NAME, val, where, new String[]{scheduleWorkers.getScheduleWorkersId() + ""});
     }
 
 

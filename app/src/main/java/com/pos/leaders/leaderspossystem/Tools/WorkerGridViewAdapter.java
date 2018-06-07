@@ -54,14 +54,14 @@ public class WorkerGridViewAdapter extends BaseAdapter {
 
 
 	/**
-	 * Get the row id associated with the specified position in the list.
+	 * Get the row usedPointId associated with the specified position in the list.
 	 *
-	 * @param position The position of the item within the adapter's data set whose row id we want.
-	 * @return The id of the item at the specified position.
+	 * @param position The position of the item within the adapter's data set whose row usedPointId we want.
+	 * @return The usedPointId of the item at the specified position.
 	 */
 	@Override
 	public long getItemId(int position) {
-		return (long)workers.get(position).getId();
+		return (long)workers.get(position).getUserId();
 	}
 
 
@@ -95,9 +95,9 @@ public class WorkerGridViewAdapter extends BaseAdapter {
 		TextView tvFullName=(TextView)gridView.findViewById(R.id.workerGridView_TVFullName);
 		tvFullName.setText(workers.get(position).getFullName());
 /**
-		TextView tvUserName=(TextView)gridView.findViewById(R.id.workerGridView_TVUserName);
-		TextView tvPhoneNumber=(TextView)gridView.findViewById(R.id.workerGridView_TVPhoneNumber);
-		TextView tvPresent=(TextView)gridView.findViewById(R.id.workerGridView_TVPresent);
+		TextView tvUserName=(TextView)gridView.findViewById(R.usedPointId.workerGridView_TVUserName);
+		TextView tvPhoneNumber=(TextView)gridView.findViewById(R.usedPointId.workerGridView_TVPhoneNumber);
+		TextView tvPresent=(TextView)gridView.findViewById(R.usedPointId.workerGridView_TVPresent);
 
 		tvUserName.setText(workers.get(position).getUserName());
 		tvPhoneNumber.setText(workers.get(position).getPhoneNumber());

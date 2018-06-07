@@ -7,7 +7,7 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
  */
 
 public class Accounting {
-    int id;
+    int accountingId;
     int key;
     String name;
     int trialBalance;
@@ -19,8 +19,8 @@ public class Accounting {
     public Accounting() {
     }
 
-    public Accounting(int id, int key, String name, int trialBalance, String trialBalanceDescription, OldCustomer customer) {
-        this.id = id;
+    public Accounting(int accountingId, int key, String name, int trialBalance, String trialBalanceDescription, OldCustomer customer) {
+        this.accountingId = accountingId;
         this.key = key;
         this.name = name;
         this.trialBalance = trialBalance;
@@ -31,8 +31,8 @@ public class Accounting {
     }
 
     //region Getters
-    public int getId() {
-        return id;
+    public int getAccountingId() {
+        return accountingId;
     }
 
     public int getKey() {
@@ -61,8 +61,8 @@ public class Accounting {
     //endregion Getters
 
     //region Setters
-    public void setId(int id) {
-        this.id = id;
+    public void setAccountingId(int accountingId) {
+        this.accountingId = accountingId;
     }
 
     public void setKey(int key) {
@@ -116,16 +116,16 @@ public class Accounting {
         double totalDiscount = 0;
         for(Order o: sale.getOrders())
         {
-            totalItems += o.getCount();
+            totalItems += o.getQuantity();
             totalDiscount += (o.getItemTotalPrice() * o.getDiscount() / 100);
         }
         if(amount<0)
             totalDiscount = 0;
         totalItems = 1;
-        double noTax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
+        double noTax = sale.getTotal_price() / (1 + (SETTINGS.tax / 100));
         if(noTax<0)
             noTax *= -1;
-        return "D110" + String.format(locale, "%09d", rowNumber) + companyID + s + String.format(locale, "%020d", saleId) + String.format(locale, "%04d", id) + s + String.format(locale, "%020d", saleId) + "3" + String.format(locale, "%020d", saleId) + String.format(locale, "%30s", "sale") + Util.spaces(50) + Util.spaces(30) +
+        return "D110" + String.format(locale, "%09d", rowNumber) + companyID + s + String.format(locale, "%020d", saleId) + String.format(locale, "%04d", accountingId) + s + String.format(locale, "%020d", saleId) + "3" + String.format(locale, "%020d", saleId) + String.format(locale, "%30s", "sale") + Util.spaces(50) + Util.spaces(30) +
                 String.format(locale, "%20s", "unit")
                 + "+" + String.format(locale, "%012d", totalItems) + String.format(locale, "%04d", (int) ((totalItems - Math.floor(totalItems) + 0.00001) * 10000))
                 + OP + Util.x12V99(noTax)

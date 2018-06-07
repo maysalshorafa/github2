@@ -9,14 +9,11 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Check;
-import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
@@ -37,12 +34,12 @@ public class ChecksDBAdapter {
 	protected static final String CHECKS_COLUMN_AMOUNT = "amount";
 	protected static final String CHECKS_COLUMN_DATE = "_date";
 	protected static final String CHECKS_COLUMN_ISDELETED = "isDeleted";
-	protected static final String CHECKS_COLUMN_SALEID = "saleId";
+	protected static final String CHECKS_COLUMN_ORDERID = "orderId";
 
 	public static final String DATABASE_CREATE = "CREATE TABLE `checks` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
 			" `checkNum` INTEGER, `bankNum` INTEGER, `branchNum` INTEGER ," +
 			" `accountNum` INTEGER, `amount` REAL, `_date` TEXT DEFAULT current_timestamp, `isDeleted` INTEGER DEFAULT 0 ," +
-			" `saleId` INTEGER, FOREIGN KEY(`saleId`) REFERENCES `sales.id`)";
+			" `orderId` INTEGER, FOREIGN KEY(`orderId`) REFERENCES `_Order.id`)";
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
 	// Context of the application using the database.
@@ -71,7 +68,7 @@ public class ChecksDBAdapter {
 
 
 
-	public long insertEntry(int checkNum,int bankNum,int branchNum,int accountNum,double amount,long date, long saleId) {
+	public long insertEntry(int checkNum, int bankNum, int branchNum, int accountNum, double amount, Timestamp date, long saleId) {
         Check check = new Check(Util.idHealth(this.db, CHECKS_TABLE_NAME, CHECKS_COLUMN_ID), checkNum, bankNum, branchNum, accountNum, amount, date, false, saleId);
         sendToBroker(MessageType.ADD_CHECK, check, this.context);
 
@@ -86,16 +83,16 @@ public class ChecksDBAdapter {
 	public long insertEntry(Check check){
 
 		ContentValues val = new ContentValues();
-		val.put(CHECKS_COLUMN_ID,check.getId());
+		val.put(CHECKS_COLUMN_ID,check.getCheckId());
 		//Assign values for each row.
 		val.put(CHECKS_COLUMN_CHECKNUMBER, check.getCheckNum());
 		val.put(CHECKS_COLUMN_BANKNUMBER, check.getBankNum());
 		val.put(CHECKS_COLUMN_BRANCHNUMBER, check.getBranchNum());
 		val.put(CHECKS_COLUMN_ACCOUNTNUMBER, check.getAccountNum());
 		val.put(CHECKS_COLUMN_AMOUNT,check.getAmount() );
-		val.put(CHECKS_COLUMN_DATE,check.getDate());
+		val.put(CHECKS_COLUMN_DATE,String.valueOf(check.getCreatedAt()));
         val.put(CHECKS_COLUMN_ISDELETED, check.isDeleted() ? 1 : 0);
-        val.put(CHECKS_COLUMN_SALEID, check.getSaleId());
+        val.put(CHECKS_COLUMN_ORDERID, check.getOrderId());
 		try {
 			return db.insert(CHECKS_TABLE_NAME, null, val);
 
@@ -121,7 +118,7 @@ public class ChecksDBAdapter {
 	public List<Check> getPaymentBySaleID(long saleID) {
 		List<Check> checksList = new ArrayList<Check>();
 
-		Cursor cursor = db.rawQuery("select * from " + CHECKS_TABLE_NAME + " where " + CHECKS_COLUMN_SALEID + "=" + saleID, null);
+		Cursor cursor = db.rawQuery("select * from " + CHECKS_TABLE_NAME + " where " + CHECKS_COLUMN_ORDERID + "=" + saleID, null);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			checksList.add(newCheck(cursor));
@@ -138,9 +135,9 @@ public class ChecksDBAdapter {
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_BRANCHNUMBER))),
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_ACCOUNTNUMBER))),
 				Double.parseDouble(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_AMOUNT))),
-				cursor.getLong(cursor.getColumnIndex(CHECKS_COLUMN_DATE)),
+				Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_DATE))),
 				Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_ISDELETED))),
-				Long.parseLong(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_SALEID))));
+				Long.parseLong(cursor.getString(cursor.getColumnIndex(CHECKS_COLUMN_ORDERID))));
 	}
 
 	public int deleteEntry(long id) {

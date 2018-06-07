@@ -5,20 +5,20 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Accounting;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.OldCustomer;
-import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,8 +48,8 @@ public class BKMVDATA {
     private OutputStreamWriter writer;
     private Context context;
 
-    private SaleDBAdapter saleDBAdapter;
-    private OrderDBAdapter orderDBAdapter;
+    private OrderDBAdapter saleDBAdapter;
+    private OrderDetailsDBAdapter orderDBAdapter;
     private PaymentDBAdapter paymentDBAdapter;
     private UserDBAdapter userDBAdapter;
     private ProductDBAdapter productDBAdapter;
@@ -56,7 +57,7 @@ public class BKMVDATA {
     private AReportDBAdapter aReportDBAdapter;
     private ZReportDBAdapter zReportDBAdapter;
 
-    private List<Sale> sales = new ArrayList<Sale>();
+    private List<Order> sales = new ArrayList<Order>();
     private List<AReport> aReports = new ArrayList<AReport>();
     private List<ZReport> zReports = new ArrayList<ZReport>();
     private List<Product> products = new ArrayList<Product>();
@@ -74,8 +75,8 @@ public class BKMVDATA {
         //"UTF-8");
         this.context = context;
 
-        saleDBAdapter = new SaleDBAdapter(context);
-        orderDBAdapter = new OrderDBAdapter(context);
+        saleDBAdapter = new OrderDBAdapter(context);
+        orderDBAdapter = new OrderDetailsDBAdapter(context);
         paymentDBAdapter = new PaymentDBAdapter(context);
         userDBAdapter = new UserDBAdapter(context);
         productDBAdapter = new ProductDBAdapter(context);
@@ -99,11 +100,11 @@ public class BKMVDATA {
         Accounting accountingCreditCardFund = new Accounting(5, 61004, "CreditCard Fund", 310, "", new OldCustomer());
 
 
-        for (Sale s : sales) {
+        for (Order s : sales) {
             addSale(s);
             addPayment(s);
-            for (Order o : s.getOrders()) {
-                addOrders(o, new Date(s.getSaleDate()));
+            for (OrderDetails o : s.getOrders()) {
+                addOrders(o, s.getCreatedAt());
             }
         }
         for (ZReport z : zReports) {
@@ -132,8 +133,8 @@ public class BKMVDATA {
                 firstDate = records.get(i).getDate().getTime();
             }
             zTotal++;
-            if (records.get(i).getObj() instanceof Sale) {
-                Sale sale = (Sale) records.get(i).getObj();
+            if (records.get(i).getObj() instanceof Order) {
+                Order sale = (Order) records.get(i).getObj();
                 strRecords += sale.BKMVDATA(counter, SETTINGS.companyID) + "\r\n";
                 cC100++;
                 if(sale.getTotalPrice()<0){
@@ -143,8 +144,8 @@ public class BKMVDATA {
                     c320++;
                     a320 += sale.getTotalPrice();
                 }
-            } else if (records.get(i).getObj() instanceof Order) {
-                Order order = (Order) records.get(i).getObj();
+            } else if (records.get(i).getObj() instanceof OrderDetails) {
+                OrderDetails order = (OrderDetails) records.get(i).getObj();
                 strRecords += order.DKMVDATA(counter, SETTINGS.companyID, records.get(i).getDate()) + "\r\n";
                 if (checkProductNonEX(order.getProductId())) {
                     productNonRep.add(order.getProduct());
@@ -153,7 +154,7 @@ public class BKMVDATA {
                 cD110++;
             } else if (records.get(i).getObj() instanceof Payment) {
                 Payment payment = (Payment) records.get(i).getObj();
-                Sale _sale = (Sale) records.get(i - 1).getObj();
+                Order _sale = (Order) records.get(i - 1).getObj();
                 //strRecords += String.format(Locale.ENGLISH, "%s", payment.BKMVDATA(counter, SETTINGS.companyID, records.get(i).getDate(), _sale)) + "\r\n";
                 if (!visited) {
                     //create the B100 for the 3 way of payment
@@ -173,14 +174,14 @@ public class BKMVDATA {
                 accountingSalesTax.totalCredit += (payment.getAmount() - withoutTax);
 
                 cB100++;
-                Date sdo = new Date(_sale.getSaleDate());
+                Date sdo = new Date(_sale.getCreatedAt().getTime());
 
                 switch (payment.getPaymentWay()) {
                     case CONSTANT.CASH:
                         paymentType = "1";
-                        str += ("D120" + String.format(Util.locale, "%09d", counter) + SETTINGS.companyID + s + String.format(Util.locale, "%020d", payment.getSaleId()) + String.format(Util.locale, "%04d", payment.getSaleId()) +
+                        str += ("D120" + String.format(Util.locale, "%09d", counter) + SETTINGS.companyID + s + String.format(Util.locale, "%020d", payment.getOrderId()) + String.format(Util.locale, "%04d", payment.getOrderId()) +
                                 paymentType + Util.spaces(10) + Util.spaces(10) + Util.spaces(15) + Util.spaces(10) + DateConverter.getYYYYMMDD(sdo) + OP + Util.x12V99(payment.getAmount()) + Util.spaces(1) + Util.spaces(20) +
-                                "0" + Util.spaces(7) + DateConverter.getYYYYMMDD(sdo) + String.format(Util.locale, "%07d", payment.getSaleId()) + Util.spaces(60)) + "\r\n";
+                                "0" + Util.spaces(7) + DateConverter.getYYYYMMDD(sdo) + String.format(Util.locale, "%07d", payment.getOrderId()) + Util.spaces(60)) + "\r\n";
                         accountingCashFund.totalRequired += payment.getAmount();
                         str += CreateB100(++counter, SETTINGS.companyID, cB100, 5, sdo, accountingCashFund.getKey(), (short) 1, payment.getAmount()) + "\r\n";
                         ++b100;
@@ -191,8 +192,8 @@ public class BKMVDATA {
                         ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(context);
                         checksDBAdapter.open();
                         int tempcount = 0;
-                        for (Check c : checksDBAdapter.getPaymentBySaleID(payment.getSaleId())) {
-                            str += c.BKMVDATA(counter, SETTINGS.companyID, sdo, payment.getSaleId()) + "\r\n";
+                        for (Check c : checksDBAdapter.getPaymentBySaleID(payment.getOrderId())) {
+                            str += c.BKMVDATA(counter, SETTINGS.companyID, sdo, payment.getOrderId()) + "\r\n";
                             accountingChecksFund.totalRequired += payment.getAmount();
                             str += CreateB100(++counter, SETTINGS.companyID, cB100, 5+tempcount, sdo, accountingChecksFund.getKey(), (short) 1, payment.getAmount()) + "\r\n";
                             ++b100;
@@ -204,9 +205,9 @@ public class BKMVDATA {
                     case CONSTANT.CREDIT_CARD:
                         paymentType = "3";
                         cardType = "1";
-                        str += ("D120" + String.format(Util.locale, "%09d", counter) + SETTINGS.companyID + s + String.format(Util.locale, "%020d", payment.getSaleId()) + String.format(Util.locale, "%04d", payment.getSaleId()) +
+                        str += ("D120" + String.format(Util.locale, "%09d", counter) + SETTINGS.companyID + s + String.format(Util.locale, "%020d", payment.getOrderId()) + String.format(Util.locale, "%04d", payment.getOrderId()) +
                                 paymentType + Util.spaces(10) + Util.spaces(10) + Util.spaces(15) + Util.spaces(10) + DateConverter.getYYYYMMDD(sdo) + OP + Util.x12V99(payment.getAmount()) + cardType + Util.spaces(20) +
-                                "1" + Util.spaces(7) + DateConverter.getYYYYMMDD(sdo) + String.format(Util.locale, "%07d", payment.getSaleId()) + Util.spaces(60)) + "\r\n";
+                                "1" + Util.spaces(7) + DateConverter.getYYYYMMDD(sdo) + String.format(Util.locale, "%07d", payment.getOrderId()) + Util.spaces(60)) + "\r\n";
                         accountingCreditCardFund.totalRequired += payment.getAmount();
                         str += CreateB100(++counter, SETTINGS.companyID, cB100, 5, sdo, accountingCreditCardFund.getKey(), (short) 1, payment.getAmount()) + "\r\n";
                         zTotal++;
@@ -263,15 +264,15 @@ public class BKMVDATA {
         productDBAdapter.open();
         paymentDBAdapter.open();
         userDBAdapter.open();
-        for (Sale s : sales) {
-            if (paymentDBAdapter.getPaymentBySaleID(s.getId()).size() > 0)
-                s.setPayment(paymentDBAdapter.getPaymentBySaleID(s.getId()).get(0));
-            s.setOrders(orderDBAdapter.getOrderBySaleID(s.getId()));
-            for (Order o : s.getOrders()) {
+        for (Order s : sales) {
+            if (paymentDBAdapter.getPaymentBySaleID(s.getOrderId()).size() > 0)
+                s.setPayment(paymentDBAdapter.getPaymentBySaleID(s.getOrderId()).get(0));
+            s.setOrders(orderDBAdapter.getOrderBySaleID(s.getOrderId()));
+            for (OrderDetails o : s.getOrders()) {
                 if (o.getProductId() != -1)
                     o.setProduct(productDBAdapter.getProductByID(o.getProductId()));
                 else {
-                    o.setProduct(new Product(-1, context.getResources().getString(R.string.general), o.getOriginal_price(), s.getByUser()));
+                    o.setProduct(new Product(-1, context.getResources().getString(R.string.general), o.getUnitPrice(), s.getByUser()));
                 }
             }
             s.setUser(userDBAdapter.getUserByID(s.getByUser()));
@@ -300,7 +301,7 @@ public class BKMVDATA {
         Date getDate();
     }
 
-    public void addSale(final Sale sale) {
+    public void addSale(final Order sale) {
         records.add(new Record() {
             @Override
             public Object getObj() {
@@ -309,12 +310,12 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return new Date(sale.getSaleDate());
+                return new Date(sale.getCreatedAt().getTime());
             }
         });
     }
 
-    public void addPayment(final Sale payment) {
+    public void addPayment(final Order payment) {
         records.add(new Record() {
             @Override
             public Object getObj() {
@@ -323,12 +324,12 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return new Date(payment.getSaleDate() + 1);
+                return new Date(payment.getCreatedAt().getTime() + 1);
             }
         });
     }
 
-    public void addOrders(final Order o, final Date d) {
+    public void addOrders(final OrderDetails o, final Timestamp d) {
         records.add(new Record() {
             @Override
             public Object getObj() {
@@ -351,7 +352,7 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return new Date(z.getCreationDate());
+                return new Date(z.getCreatedAt().getTime());
             }
         });
     }
@@ -365,7 +366,7 @@ public class BKMVDATA {
 
             @Override
             public Date getDate() {
-                return new Date(a.getCreationDate());
+                return new Date(a.getCreatedAt().getTime());
             }
         });
     }
@@ -390,7 +391,7 @@ public class BKMVDATA {
 
     private boolean checkProductNonEX(long id) {
         for (Product p : productNonRep) {
-            if (p.getId() == id)
+            if (p.getProductId() == id)
                 return false;
         }
         return true;

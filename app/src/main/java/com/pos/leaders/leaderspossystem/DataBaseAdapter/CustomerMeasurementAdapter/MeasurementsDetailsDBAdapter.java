@@ -71,7 +71,7 @@ public class MeasurementsDetailsDBAdapter {
 
     public long insertEntry(MeasurementsDetails measurementsDetails) {
         ContentValues val = new ContentValues();
-        val.put(MEASUREMENTS_DETAILS_COLUMN_ID, measurementsDetails.getId());
+        val.put(MEASUREMENTS_DETAILS_COLUMN_ID, measurementsDetails.getMeasurementsDetailsId());
         val.put(MEASUREMENTS_DETAILS_COLUMN_MEASUREMENTS_ID, measurementsDetails.getMeasurementId());
         val.put(MEASUREMENTS_DETAILS_COLUMN_DYNAMIC_VAR_ID,measurementsDetails.getDynamicVarId());
         val.put(MEASUREMENTS_DETAILS_COLUMN_VALUE, measurementsDetails.getValue());
@@ -163,7 +163,7 @@ public class MeasurementsDetailsDBAdapter {
         val.put(MEASUREMENTS_DETAILS_COLUMN_DYNAMIC_VAR_ID, measurementsDetails.getDynamicVarId());
         val.put(MEASUREMENTS_DETAILS_COLUMN_VALUE, measurementsDetails.getValue());
         String where = MEASUREMENTS_DETAILS_COLUMN_ID + " = ?";
-        db.update(MEASUREMENTS_DETAILS_TABLE_NAME, val, where, new String[]{measurementsDetails.getId() + ""});
+        db.update(MEASUREMENTS_DETAILS_TABLE_NAME, val, where, new String[]{measurementsDetails.getMeasurementsDetailsId() + ""});
     }
     //end
     // get All MeasurementsDetails bu measurementId

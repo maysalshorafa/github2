@@ -1,10 +1,6 @@
 package com.pos.leaders.leaderspossystem.Models.Permission;
 
-import android.content.Context;
-import android.view.View;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pos.leaders.leaderspossystem.AddUserActivity;
 import com.pos.leaders.leaderspossystem.Models.User;
 
 import java.util.List;
@@ -15,7 +11,7 @@ import java.util.List;
 
 public class UserPermissions {
 	//region Attribute
-	private long id;
+	private long userPermissionsId;
 	private long userId;
 	private long permissionId;
 	@JsonIgnore
@@ -30,8 +26,8 @@ public class UserPermissions {
 	public UserPermissions() {
 	}
 
-	public UserPermissions(long id, long userId, long permissionId) {
-		this.id = id;
+	public UserPermissions(long userPermissionsId, long userId, long permissionId) {
+		this.userPermissionsId = userPermissionsId;
 		this.userId = userId;
 		this.permissionId = permissionId;
 	}
@@ -42,15 +38,15 @@ public class UserPermissions {
 
 	public UserPermissions(Permissions permissions, User user) {
 		this.permissionId = permissions.getId();
-		this.userId=user.getId();
+		this.userId=user.getUserId();
 		this.user = user;
 	}
 
 	//endregion
 
 	//region Getters
-	public long getId() {
-		return id;
+	public long getUserPermissionsId() {
+		return userPermissionsId;
 	}
 
 	public long getPermissionId() {
@@ -81,8 +77,8 @@ public class UserPermissions {
 		this.user = user;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setUserPermissionsId(long userPermissionsId) {
+		this.userPermissionsId = userPermissionsId;
 	}
 
 	public void setUserId(long userId) {

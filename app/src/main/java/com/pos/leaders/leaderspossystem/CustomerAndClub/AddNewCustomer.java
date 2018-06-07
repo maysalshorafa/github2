@@ -97,14 +97,14 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             }
              for (int i = 0; i < groupList.size(); i++) {
              Club group = groupList.get(i);
-             if (group.getId() == customer.getClub()) {
+             if (group.getClubId() == customer.getClub()) {
              selectClubSpinner.setSelection(i);
 
              }
              }
             for (int i = 0; i < cityList.size(); i++) {
                 City city = cityList.get(i);
-                if (city.getId() == customer.getCity()) {
+                if (city.getCityId() == customer.getCity()) {
                     selectCitySpinner.setSelection(i);
 
                 }
@@ -157,7 +157,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                 for (int i = 0; i < groupList.size(); i++) {
                                     Club group = groupList.get(i);
                                     if (group.getName().equalsIgnoreCase( selectClubSpinner.getSelectedItem().toString())) {
-                                        clubID = group.getId();
+                                        clubID = group.getClubId();
                                     }
 
 
@@ -226,14 +226,14 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                 for (int i = 0; i < groupList.size(); i++) {
                                     Club group = groupList.get(i);
                                     if (group.getName() .equalsIgnoreCase(selectClubSpinner.getSelectedItem().toString())) {
-                                       long editingClubID = group.getId();
+                                       long editingClubID = group.getClubId();
                                         customer.setClub(editingClubID);
                                     }
                                 }
                                 for (int i = 0; i < cityList.size(); i++) {
                                     City city = cityList.get(i);
                                     if (city.getName().equalsIgnoreCase(selectCitySpinner.getSelectedItem().toString())) {
-                                        long cityId = city.getId();
+                                        long cityId = city.getCityId();
                                         customer.setCity((int) cityId);
                                     }
                                 }

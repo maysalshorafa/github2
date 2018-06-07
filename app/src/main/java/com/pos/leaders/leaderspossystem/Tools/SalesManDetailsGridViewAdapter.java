@@ -76,7 +76,7 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
      */
     @Override
     public long getItemId(int position) {
-        return (long)customerAssests.get(position).getId();
+        return (long)customerAssests.get(position).getCustAssistantId();
     }
 
 
@@ -119,8 +119,8 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
         salesCase.setText(""+customerAssests.get(position).getSalesCase());
         tvSalesAmount.setText(Util.makePrice(customerAssests.get(position).getAmount()));
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        salesDate.setText(format.format(customerAssests.get(position).getSaleDate()));
-        saleId.setText(customerAssests.get(position).getOrder_id()+"");
+        salesDate.setText(format.format(customerAssests.get(position).getCreatedAt()));
+        saleId.setText(customerAssests.get(position).getOrderId()+"");
         if(bgColor%2==0){
             gridView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
         }

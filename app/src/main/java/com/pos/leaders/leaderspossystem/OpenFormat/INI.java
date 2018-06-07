@@ -2,27 +2,15 @@ package com.pos.leaders.leaderspossystem.OpenFormat;
 
 import android.content.Context;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.AReport;
-import com.pos.leaders.leaderspossystem.Models.Sale;
-import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by KARAM on 20/04/2017.

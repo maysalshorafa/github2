@@ -9,12 +9,10 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
-import com.pos.leaders.leaderspossystem.Models.ZReport;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
@@ -26,7 +24,7 @@ public class CreditCardPaymentDBAdapter {
     private static final String TABLE_NAME = "CreditCardPayment";
     // Column Names
     private static final String ID = "id";
-    private static final String SALEID = "saleId";
+    private static final String ORDERID = "orderId";
     private static final String AMOUNT = "amount";
     private static final String CCC_NAME = "cccName";
     private static final String TRANSACTION_TYPE = "transactionType";
@@ -43,7 +41,7 @@ public class CreditCardPaymentDBAdapter {
 
 
     public static final String DATABASE_CREATE = "CREATE TABLE `" + TABLE_NAME + "` ( `" + ID + "` INTEGER PRIMARY KEY AUTOINCREMENT," +
-            " `" + SALEID + "` INTEGER, `" + AMOUNT + "` REAL NOT NULL," +
+            " `" + ORDERID + "` INTEGER, `" + AMOUNT + "` REAL NOT NULL," +
             " `" + CCC_NAME + "` TEXT, `" + TRANSACTION_TYPE + "` INTEGER," +
             " `" + LAST_4DIGITS + "` TEXT,`" + TRANSACTION_ID + "` TEXT, `" + ANSWER + "` TEXT," +
             " `" + PAYMENTS_NUMBER + "` INTEGER,`" + FIRST_PAYMENT_AMOUNT + "` REAL, `" + OTHER_PAYMENT_AMOUNT + "` REAL," +
@@ -79,7 +77,7 @@ public class CreditCardPaymentDBAdapter {
                             String last4Digit,String transactionId,String answer,int paymentsNumber,
                             double firstPaymentAmount,double otherPaymentAmount,String cardHolder) {
         CreditCardPayment payment = new CreditCardPayment(Util.idHealth(this.db, TABLE_NAME, ID), saleId, amount, cccName,transactionType,
-                last4Digit,transactionId,answer,paymentsNumber,firstPaymentAmount,otherPaymentAmount,cardHolder,new Date().getTime());
+                last4Digit,transactionId,answer,paymentsNumber,firstPaymentAmount,otherPaymentAmount,cardHolder,new Timestamp(System.currentTimeMillis()));
         sendToBroker(MessageType.ADD_CREDIT_CARD_PAYMENT, payment, this.context);
 
         try {
@@ -94,10 +92,10 @@ public class CreditCardPaymentDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(ID, p.getId());
+        val.put(ID, p.getCreditCardPaymentId());
 
 
-        val.put(SALEID, p.getSaleId());
+        val.put(ORDERID, p.getOrderId());
         val.put(AMOUNT, p.getAmount());
         val.put(CCC_NAME, p.getCreditCardCompanyName());
         val.put(TRANSACTION_TYPE, p.getTransactionType());
@@ -110,7 +108,7 @@ public class CreditCardPaymentDBAdapter {
         val.put(OTHER_PAYMENT_AMOUNT, p.getOtherPaymentAmount());
         val.put(CARDHOLDER, p.getCardholder());
 
-        val.put(CREATEDATE, p.getCreateDate());
+        val.put(CREATEDATE, String.valueOf(p.getCreatedAt()));
 
 
 
@@ -139,7 +137,7 @@ public class CreditCardPaymentDBAdapter {
 
     public CreditCardPayment getCreditCardPaymentBySaleID(long saleId){
         CreditCardPayment creditCardPayment = null;
-        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME + " where " + SALEID + "='" + saleId + "'", null);
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME + " where " + ORDERID + "='" + saleId + "'", null);
         if (cursor.getCount() < 1)
         {
             cursor.close();
@@ -153,10 +151,10 @@ public class CreditCardPaymentDBAdapter {
     }
 
     private CreditCardPayment make(Cursor cursor){
-        return new CreditCardPayment(cursor.getLong(cursor.getColumnIndex(ID)), cursor.getLong(cursor.getColumnIndex(SALEID)),
+        return new CreditCardPayment(cursor.getLong(cursor.getColumnIndex(ID)), cursor.getLong(cursor.getColumnIndex(ORDERID)),
                 cursor.getDouble(cursor.getColumnIndex(AMOUNT)), cursor.getString(cursor.getColumnIndex(CCC_NAME)), cursor.getInt(cursor.getColumnIndex(TRANSACTION_TYPE)),
                 cursor.getString(cursor.getColumnIndex(LAST_4DIGITS)), cursor.getString(cursor.getColumnIndex(TRANSACTION_ID)), cursor.getString(cursor.getColumnIndex(ANSWER)),
                 cursor.getInt(cursor.getColumnIndex(PAYMENTS_NUMBER)), cursor.getDouble(cursor.getColumnIndex(FIRST_PAYMENT_AMOUNT)), cursor.getDouble(cursor.getColumnIndex(OTHER_PAYMENT_AMOUNT)),
-                cursor.getString(cursor.getColumnIndex(CARDHOLDER)),cursor.getLong(cursor.getColumnIndex(CREATEDATE)));
+                cursor.getString(cursor.getColumnIndex(CARDHOLDER)),Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CREATEDATE))));
     }
 }

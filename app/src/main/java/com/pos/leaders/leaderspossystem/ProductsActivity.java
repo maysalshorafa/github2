@@ -139,7 +139,7 @@ public class ProductsActivity  extends AppCompatActivity  {
 
         for (Department d : listDepartment) {
             departmentsName.add(d.getName());
-            departmentMap.put(d.getName(),d.getId());
+            departmentMap.put(d.getName(),d.getDepartmentId());
         }
 /**
         LAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,departmentsName);
@@ -208,7 +208,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                     btnContinue.setVisibility(View.GONE);
                     selectedDepartment = d.getName();
                     for (Department dep : listDepartment) {
-                        if (dep.getId() == (editableProduct.getDepartmentId())) {
+                        if (dep.getDepartmentId() == (editableProduct.getDepartmentId())) {
                             dep.setChecked(true);
                         }
                     }
@@ -253,13 +253,13 @@ public class ProductsActivity  extends AppCompatActivity  {
             if(availableProductName&&availableBarCode){
                     for (Department d : listDepartment) {
                         if (d.isChecked()) {
-                            depID = d.getId();
+                            depID = d.getDepartmentId();
                         }
                     }
                     check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
                         etDescription.getText().toString(), Double.parseDouble(etPrice.getText().toString()),
                         Double.parseDouble(etCostPrice.getText().toString()), withTax,
-                       withWeighable, depID, SESSION._USER.getId(), with_pos, with_point_system);
+                       withWeighable, depID, SESSION._USER.getUserId(), with_pos, with_point_system);
                 if (check > 0) {
                     Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_product), Toast.LENGTH_LONG).show();
                     return true;
@@ -280,7 +280,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         } else {
             for (Department d : listDepartment) {
                 if (d.isChecked()) {
-                depID = d.getId();               }
+                depID = d.getDepartmentId();               }
             }
             //// TODO: 27/10/2016 edit product
             editableProduct.setName(etName.getText().toString());

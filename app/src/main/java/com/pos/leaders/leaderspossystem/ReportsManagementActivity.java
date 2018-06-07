@@ -12,25 +12,25 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SaleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Sale;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class ReportsManagementActivity  extends AppCompatActivity {
     Button btnZ, btnZView,btnX, btnSales,btnExFiles ,btnSalesMan;
 
     ZReportDBAdapter zReportDBAdapter;
-    SaleDBAdapter saleDBAdapter;
+    OrderDBAdapter saleDBAdapter;
 
     ZReport lastZReport=null;
-    Sale lastSale;
+    Order lastSale;
     String str;
     double totalZReportAmount =0;
     @Override
@@ -57,7 +57,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         btnExFiles = (Button) findViewById(R.id.reportManagementActivity_btnExtractingFiles);
 
         zReportDBAdapter = new ZReportDBAdapter(this);
-        saleDBAdapter = new SaleDBAdapter(this);
+        saleDBAdapter = new OrderDBAdapter(this);
 
         //endregion init
 
@@ -73,7 +73,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
             try {
                 lastZReport = zReportDBAdapter.getLastRow();
 
-                if (lastZReport.getEndSaleId() == lastSale.getId()) {
+                if (lastZReport.getEndOrderId() == lastSale.getOrderId()) {
                     btnZ.setEnabled(false);
                 } else {
                     btnZ.setEnabled(true);
@@ -98,28 +98,28 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                 //(long id, Date creationDate, User user, Sale startSale, Sale endSale)
                                 if(lastZReport == null) {
                                     lastZReport = new ZReport();
-                                    lastZReport.setEndSaleId(0);
+                                    lastZReport.setEndOrderId(0);
                                 }
 
-                                ZReport z=new ZReport(0,new Date().getTime() , SESSION._USER,lastZReport.getEndSaleId()+1,lastSale);
-                                z.setByUser(SESSION._USER.getId());
-                                double amount = zReportDBAdapter.getZReportAmount(z.getStartSaleId(), z.getEndSaleId());
+                                ZReport z=new ZReport(0, new Timestamp(System.currentTimeMillis()) , SESSION._USER,lastZReport.getEndOrderId()+1,lastSale);
+                                z.setByUser(SESSION._USER.getUserId());
+                                double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
                                 totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
-                                long zID = zReportDBAdapter.insertEntry(z.getCreationDate(), z.getByUser(), z.getStartSaleId(), z.getEndSaleId(),amount,totalZReportAmount);
-                                z.setId(zID);
+                                long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
+                                z.setzReportId(zID);
                                 lastZReport = new ZReport(z);
 
                                 PrintTools pt = new PrintTools(ReportsManagementActivity.this);
 
                                 //create and print z report
-                                Bitmap bmap = pt.createZReport(lastZReport.getId(), lastZReport.getStartSaleId(), lastZReport.getEndSaleId(), false,totalZReportAmount);
+                                Bitmap bmap = pt.createZReport(lastZReport.getzReportId(), lastZReport.getStartOrderId(), lastZReport.getEndOrderId(), false,totalZReportAmount);
                                 if(bmap!=null)
                                     pt.PrintReport(bmap);
 
                                 Intent i=new Intent(ReportsManagementActivity.this,ReportZDetailsActivity.class);
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID,lastZReport.getId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM,lastZReport.getStartSaleId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO,lastZReport.getEndSaleId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID,lastZReport.getzReportId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM,lastZReport.getStartOrderId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO,lastZReport.getEndOrderId());
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
                                 startActivity(i);
                                 btnZ.setEnabled(false);
@@ -145,15 +145,15 @@ public class ReportsManagementActivity  extends AppCompatActivity {
             public void onClick(View v) {
                 PrintTools pt=new PrintTools(ReportsManagementActivity.this);
                 if (lastZReport!=null){ // test if have at least i row in ZReportTable Then make XReport
-                Bitmap bmap = pt.createXReport(lastZReport.getEndSaleId()+1,lastSale.getId(),SESSION._USER,new Date());
+                Bitmap bmap = pt.createXReport(lastZReport.getEndOrderId()+1,lastSale.getOrderId(),SESSION._USER,new Date());
 
                     pt.PrintReport(bmap);
                     //create and print x report
 /** test xReport use zActivity
                     Intent i=new Intent(ReportsManagementActivity.this,ReportZDetailsActivity.class);
-                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID,lastZReport.getId());
-                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM,lastZReport.getStartSaleId());
-                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO,lastZReport.getEndSaleId());
+                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID,lastZReport.getCashPaymentId());
+                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM,lastZReport.getStartOrderId());
+                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO,lastZReport.getEndOrderId());
                     startActivity(i);**/}
 
 

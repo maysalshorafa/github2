@@ -132,8 +132,8 @@ public class SalesAssistantDetailesSalesMangmentActivity extends AppCompatActivi
                 if (!word.equals("")) {
                     for (CustomerAssistant c : All_custmerAssestint) {
 
-                        if (c.getSalesCase().toLowerCase().contains(word.toLowerCase())||(c.getAmount()+"").contains(word.toLowerCase())||(c.getOrder_id()+"").contains(word.toLowerCase())
-                                ||(c.getSaleDate()+"").contains(word.toLowerCase())) {
+                        if (c.getSalesCase().toLowerCase().contains(word.toLowerCase())||(c.getAmount()+"").contains(word.toLowerCase())||(c.getOrderId()+"").contains(word.toLowerCase())
+                                ||(c.getCreatedAt()+"").contains(word.toLowerCase())) {
                             customerAssests.add(c);
 
                         }

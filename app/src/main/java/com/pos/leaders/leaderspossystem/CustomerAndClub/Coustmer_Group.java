@@ -89,7 +89,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
             club = clubAdapter.getGroupByID(i);
             customerDBAdapter = new CustomerDBAdapter(this);
             customerDBAdapter.open();
-            customers = customerDBAdapter.getAllCustomerInClub(club.getId());
+            customers = customerDBAdapter.getAllCustomerInClub(club.getClubId());
             final CustomerCatalogGridViewAdapter adapter = new CustomerCatalogGridViewAdapter(this, customers);
             gvCustomer.setAdapter(adapter);
             etClubName.setText(club.getName());

@@ -1,25 +1,21 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.ChecksActivity;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.R;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -74,7 +70,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 				holder.etBankNum.setHint(checks.get(position).getBankNum() + "");
 				holder.etBenchNum.setHint(checks.get(position).getBranchNum() + "");
 				holder.etCheckNum.setHint(checks.get(position).getCheckNum() + "");
-				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getDate())));
+				holder.etDate.setText(DateConverter.toDate(new Date(new Timestamp(System.currentTimeMillis()).getTime())));
 				holder.etAccountNum.setHint(checks.get(position).getAccountNum() + "");
 				amount=checks.get(position).getAmount() ;
 
@@ -85,7 +81,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 				holder.etBankNum.setText(checks.get(position).getBankNum() + "");
 				holder.etBenchNum.setText(checks.get(position).getBranchNum() + "");
 				holder.etCheckNum.setText(checks.get(position).getCheckNum() + "");
-				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getDate())));
+				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getCreatedAt().getTime())));
 
 			}
 		}
@@ -129,7 +125,11 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 	}
 
 	public void updateDate(int position, long date){
-		checks.get(position).setDate(date);
+		Date date1 = new Date(date);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date1);
+		cal.set(Calendar.MILLISECOND, 0);
+		checks.get(position).setCreatedAt(new java.sql.Timestamp(date1.getTime()));
 		this.notifyDataSetChanged();
 	}
 

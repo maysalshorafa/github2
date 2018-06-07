@@ -9,11 +9,11 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.AReport;
-import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -67,7 +67,7 @@ public class AReportDBAdapter {
         return db;
     }
 
-    public long insertEntry(long createDate, long byUser, double amount, long lastSaleID,long lastZReport) {
+    public long insertEntry(Timestamp createDate, long byUser, double amount, long lastSaleID, long lastZReport) {
         AReport aReport = new AReport(Util.idHealth(this.db, A_REPORT_TABLE_NAME, A_REPORT_COLUMN_ID), createDate, byUser, amount, lastSaleID, lastZReport);
         sendToBroker(MessageType.ADD_A_REPORT, aReport, this.context);
         try {
@@ -82,11 +82,11 @@ public class AReportDBAdapter {
     public long insertEntry(AReport aReport) {
         ContentValues val = new ContentValues();
 
-        val.put(A_REPORT_COLUMN_ID, aReport.getId());
-        val.put(A_REPORT_COLUMN_CREATEDATE, aReport.getCreationDate());
+        val.put(A_REPORT_COLUMN_ID, aReport.getaReportId());
+        val.put(A_REPORT_COLUMN_CREATEDATE, String.valueOf(aReport.getCreatedAt()));
         val.put(A_REPORT_COLUMN_BYUSER, aReport.getByUserID());
         val.put(A_REPORT_COLUMN_AMOUNT, aReport.getAmount());
-        val.put(A_REPORT_COLUMN_LASTSALEID, aReport.getLastSaleID());
+        val.put(A_REPORT_COLUMN_LASTSALEID, aReport.getLastOrderId());
         val.put(A_REPORT_COLUMN_LASTZREPORTID, aReport.getLastZReportID());
         try {
             return db.insert(A_REPORT_TABLE_NAME, null, val);
@@ -141,7 +141,7 @@ public class AReportDBAdapter {
 
     private AReport makeAReport(Cursor c){
         return new AReport(c.getLong(c.getColumnIndex(A_REPORT_COLUMN_ID)),
-                c.getLong(c.getColumnIndex(A_REPORT_COLUMN_CREATEDATE)),
+                Timestamp.valueOf(c.getString(c.getColumnIndex(A_REPORT_COLUMN_CREATEDATE))),
                 c.getLong(c.getColumnIndex(A_REPORT_COLUMN_BYUSER)),
                 c.getDouble(c.getColumnIndex(A_REPORT_COLUMN_AMOUNT)),
                 c.getLong(c.getColumnIndex(A_REPORT_COLUMN_LASTSALEID)),

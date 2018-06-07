@@ -8,17 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.AReportDetails;
-import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
-import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
-import com.pos.leaders.leaderspossystem.Models.Sale;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
@@ -80,8 +72,8 @@ public class AReportDetailsDBAdapter {
     public long insertEntry(AReportDetails aReportDetails) {
         ContentValues val = new ContentValues();
 
-        val.put(A_REPORT_DETAILS_COLUMN_ID, aReportDetails.getId());
-        val.put(A_REPORT_DETAILS_A_REPORT_COLUMN_ID, aReportDetails.getA_report_id());
+        val.put(A_REPORT_DETAILS_COLUMN_ID, aReportDetails.getaReportDetailsId());
+        val.put(A_REPORT_DETAILS_A_REPORT_COLUMN_ID, aReportDetails.getaReportId());
         val.put(A_REPORT_DETAILS_COLUMN_AMOUNT, aReportDetails.getAmount());
         val.put(A_REPORT_DETAILS_COLUMN_TYPE, aReportDetails.getType());
         val.put(A_REPORT_DETAILS_COLUMN_AMOUNT_IN_BASIC_CURRENCY, aReportDetails.getAmount_in_basic_currency());
