@@ -124,7 +124,9 @@
     <string name="general_product">General Product</string>
     <string name="price">Price</string>
     <string name="price_after_discount">Price after discount</string>
+
     <string name="total_discount">Total Discount</string>
+
     <string name="clearCartAlertTitle">Clear Cart</string>
     <string name="clearCartAlertMessage">Do you want to delete all the items on the cart?</string>
     <string name="yes">Yes</string>
@@ -372,6 +374,7 @@
     <string name="address">Address</string>
     <string name="add_to_city"> Add to City</string>
     <string name="title_activity_temp_cash_activty">TempCashActivty</string>
+    <string name="title_activity_dashboard_activty">Dashboard</string>
     <string name="title_activity_club_management">ClubManagementActivity</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
