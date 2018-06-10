@@ -1,602 +1,492 @@
-<ScrollView
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/scrollView1"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:background="@color/white">
-<LinearLayout
-
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:padding="5dp">
 
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:id="@+id/mainCustomerInfo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="1.7"
+                    android:orientation="vertical"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="70dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="@string/first_name"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="70dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="@string/last_name"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="70dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="@string/phone_number"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".5"
+                    android:background="#FFFFFF"
+                    android:orientation="vertical"
+                    android:padding="5dp"
+                    android:weightSum="3">
+
+                    <EditText
+                        android:id="@+id/etCustomerFirstName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bubble"
+                        android:hint="@string/first_name"
+                        android:padding="8dp" />
+
+                    <EditText
+                        android:id="@+id/etCustomerLastName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bubble"
+                        android:hint="@string/last_name"
+                        android:padding="8dp" />
+
+                    <EditText
+                        android:id="@+id/etCustomerPhoneNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bubble"
+                        android:hint="@string/phone_number"
+                        android:inputType="phone"
+                        android:padding="8dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/secondCustomerInformation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:weightSum="2"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/secondCustomerInformation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1.7"
+                        android:orientation="vertical"
+                        android:weightSum="7">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="@string/country_code"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="@string/postal_code"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView9"
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="@string/email"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="@string/street"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="@string/country"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="@string/job"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="@string/house_number"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".5"
+                        android:background="#FFFFFF"
+                        android:orientation="vertical"
+                        android:padding="5dp"
+                        android:weightSum="7">
+
+                        <EditText
+                            android:id="@+id/etCustomerCountryCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bubble"
+                            android:hint="@string/country_code"
+                            android:padding="8dp" />
+
+                        <EditText
+                            android:id="@+id/etCustomerPostalCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bubble"
+                            android:hint="@string/postal_code"
+                            android:inputType="number"
+                            android:padding="8dp" />
+
+                        <EditText
+                            android:id="@+id/etCustomerEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bubble"
+                            android:hint="@string/email"
+                            android:inputType="textEmailAddress"
+                            android:padding="8dp" />
+
+                        <EditText
+                            android:id="@+id/etCustomerStreet"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bubble"
+                            android:hint="@string/street"
+                            android:padding="8dp" />
+
+                        <EditText
+                            android:id="@+id/etCustomerCountry"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bubble"
+                            android:hint="@string/country"
+                            android:padding="8dp" />
+                        <EditText
+                            android:id="@+id/etCustomerJob"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bubble"
+                            android:hint="@string/job"
+                            android:padding="8dp" />
+                        <EditText
+                            android:id="@+id/etHouseNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bubble"
+                            android:hint="@string/house_number"
+                            android:padding="8dp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1.7"
+                        android:orientation="vertical"
+                        android:weightSum="3">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="@string/add_customer_club"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="@string/add_to_city"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="@string/gender"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".5"
+                        android:background="#FFFFFF"
+                        android:orientation="vertical"
+                        android:padding="5dp"
+                        android:weightSum="3">
+                        <Spinner
+                            android:id="@+id/customerClubSpinner"
+                            android:layout_width="650dp"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="1"
+                            android:inputType="text"
+                            android:padding="8dp" />
+
+                        <Spinner
+                            android:id="@+id/customerCitySpinner"
+                            android:layout_width="650dp"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="1"
+                            android:inputType="text"
+                            android:padding="8dp" />
+
+                        <RadioGroup
+                            android:id="@+id/customerGender"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:padding="8dp"
+                            android:weightSum="2">
+
+                            <RadioButton
+                                android:id="@+id/male"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="5dp"
+                                android:layout_weight="1"
+                                android:text="@string/male"
+                                android:textSize="20dp" />
+
+                            <RadioButton
+                                android:id="@+id/female"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="5dp"
+                                android:layout_weight="1"
+                                android:text="@string/female"
+                                android:textSize="20dp" />
+
+                        </RadioGroup>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/advanceFeature"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/plus" />
+
+                <TextView
+                    android:id="@+id/advance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/advance"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="30dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="576dp">
 
-        android:weightSum="1">
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-        <LinearLayout
+        <Button
+            android:id="@+id/add_Custmer"
+            style="@style/AppTheme.bt_green"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_weight="0.20">
-
-            <TextView
-                android:text="@string/first_name"
-                android:layout_width="120dp"
-                android:layout_height="62dp"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:textAlignment="textStart"
-                />
-
-            <EditText
-                android:id="@+id/etCustomerFirstName"
-                android:layout_width="300dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bubble"
-                android:paddingLeft="5dp"
-                android:hint="@string/first_name"
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_weight="1">
-
-            <TextView
-                android:text="@string/last_name"
-                android:layout_width="120dp"
-                android:layout_height="62dp"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textAlignment="inherit"
-
-                android:textSize="20dp" />
-            <EditText
-                android:id="@+id/etCustomerLastName"
-                android:layout_width="300dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bubble"
-                android:paddingLeft="5dp"
-                android:hint="@string/last_name"
-                />
-        </LinearLayout>
-            </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_weight="0.20">
-
-                <TextView
-                    android:text="@string/email"
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="20dp" />
-
-                <EditText
-                    android:id="@+id/etCustomerEmail"
-                    android:layout_width="300dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/bubble"
-                    android:paddingLeft="5dp"
-                    android:inputType="textEmailAddress"
-                    android:hint="@string/email"
-
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
-                    android:text="@string/phone_number"
-                    android:textAlignment="inherit"
-                    />
-
-                <EditText
-                    android:id="@+id/etCustomerPhoneNumber"
-                    android:layout_width="300dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/bubble"
-                    android:paddingLeft="5dp"
-                    android:inputType="phone"
-                    android:hint="@string/phone_number"
-                    />
-            </LinearLayout>
-        </LinearLayout>
-        <!-- hide this layout if enable Customer Measurement and case is add Customer Measurement -->
-        <LinearLayout
-            android:id="@+id/secondCustomerInformation"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-          >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_weight="0.31">
-                <TextView
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
-                    android:text="@string/street"
-                    android:textAlignment="textStart"
-                    />
-
-                <EditText
-                    android:id="@+id/etCustomerStreet"
-                    android:layout_width="300dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/bubble"
-                    android:paddingLeft="5dp"
-                    android:hint="@string/street"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_weight="1">
-
-                <TextView
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
-                    android:textAlignment="inherit"
-                    android:text="@string/country"/>
-
-                <EditText
-                    android:id="@+id/etCustomerCountry"
-                    android:layout_width="300dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/bubble"
-                    android:paddingLeft="5dp"
-                    android:hint="@string/country"
-                    />
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_weight="0.44">
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="@string/country_code"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:textAlignment="textStart"
-                    />
-
-                <EditText
-                    android:id="@+id/etCustomerCountryCode"
-                    android:layout_width="300dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/bubble"
-                    android:paddingLeft="5dp"
-                    android:inputType="number"
-                    android:hint="@string/country_code"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_weight="1.08">
-
-                <TextView
-                    android:layout_width="120dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
-                    android:textAlignment="inherit"
-                    android:text="@string/postal_code" />
-
-                <EditText
-                    android:id="@+id/etCustomerPostalCode"
-                    android:layout_width="300dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/bubble"
-                    android:paddingLeft="5dp"
-                    android:inputType="number"
-                    android:hint="@string/postal_code"
-                    />
-            </LinearLayout>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_weight="0.48">
-
-            <TextView
-                android:layout_width="120dp"
-                android:layout_height="62dp"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:text="@string/house_number"
-                android:textAlignment="textStart"
-                />
-
-            <EditText
-                android:id="@+id/etHouseNumber"
-                android:layout_width="300dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bubble"
-                android:paddingLeft="5dp"
-                android:inputType="number"
-                android:hint="@string/house_number"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="120dp"
-                android:layout_height="62dp"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:textAlignment="textStart"
-                android:text="@string/job" />
-
-            <EditText
-                android:id="@+id/etCustomerJob"
-                android:layout_width="300dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bubble"
-                android:paddingLeft="5dp"
-                android:hint="@string/job"
-                />
-        </LinearLayout>
-    </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_weight="0.87">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="62dp"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
-                    android:text="@string/add_customer_club"
-                    android:textAlignment="textStart"
-                    />
-
-                <Spinner
-                    android:id="@+id/customerClubSpinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_weight="1.52"
-                    android:inputType="text"
-                    android:paddingLeft="5dp"
-                    android:textDirection="anyRtl"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_weight="1">
-
-                <TextView
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
-                    android:text="@string/add_to_city"
-                    android:textAlignment="inherit"
-                    />
-
-                <Spinner
-                    android:id="@+id/customerCitySpinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_weight="1.16"
-                    android:inputType="text"
-                    android:paddingLeft="5dp"
-                    android:textDirection="anyRtl"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_marginBottom="5dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_weight="1"
-                android:layout_gravity="center">
-
-                <TextView
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
-                    android:text="@string/gender"
-                    android:textAlignment="textStart"
-
-                    />
-                <RadioGroup
-                    android:id="@+id/customerGender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-
-                    android:layout_weight="1"
-                    android:weightSum="2">
-
-                    <RadioButton
-                        android:id="@+id/male"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="@string/male"
-                        android:textSize="20dp"
-                        android:layout_weight="1"
-                        android:layout_marginBottom="5dp"/>
-
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="@string/female"
-                        android:textSize="20dp"
-                        android:id="@+id/female"
-                        android:layout_weight="1"
-                        android:layout_marginBottom="5dp"/>
-
-                </RadioGroup>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
             android:layout_weight="1"
-            android:weightSum="2">
+            android:gravity="center"
+            android:text="@string/save" />
 
-            <Button
-                android:id="@+id/add_Custmer"
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                style="@style/AppTheme.bt_green"
-                android:gravity="center"
-                android:text="@string/add"
-                android:textColor="#fff"
-                android:textSize="20dp"
-                android:layout_weight="1"
-                android:layout_marginBottom="5dp"/>
-            <Button
-
-                android:id="@+id/addCustmer_BTCancel"
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                style="@style/AppTheme.bt_dangers"
-                android:gravity="center"
-                android:text="@string/cancel"
-                android:textColor="#fff"
-                android:textSize="20dp"
-                android:layout_marginBottom="5dp"
-                android:layout_weight="1"/>
-
-
-        </LinearLayout>
-
+        <Button
+            android:id="@+id/addCustmer_BTCancel"
+            style="@style/AppTheme.bt_dangers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/cancel" />
 
     </LinearLayout>
-        <LinearLayout
-            android:id="@+id/customOptionLL"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FFFFFF"
-            android:orientation="vertical"
-            android:padding="5dp">
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom"
-            android:orientation="horizontal"
-           >
-
-            <Button
-                android:id="@+id/addMeasurement"
-                style="@style/AppTheme.bt_green"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add_measurement"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:visibility="gone"
-                android:layout_weight="1"/>
-            <Button
-                android:id="@+id/cancelMeasurement"
-                style="@style/AppTheme.bt_dangers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cancel"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:visibility="gone"
-                android:layout_weight="1"/>
-
-
-        </LinearLayout>
-        </LinearLayout>
-
-
-
 </LinearLayout>
 
-
-
-</ScrollView>

@@ -2908,6 +2908,25 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+                for (OrderDetails o : SESSION._ORDERS) {
+                    if(o.getPaidAmount()<0&&customer!=null){
+                        Customer upDateCustomer=customer;
+                        upDateCustomer.setBalance(o.getPaidAmount());
+                      customerDBAdapter.updateEntry(upDateCustomer);
+                        Toast.makeText(MainActivity.this, upDateCustomer.toString(), Toast.LENGTH_SHORT).show();
+
+                        Log.d("amount,id",o.getPaidAmount()+customer.getCustmerName()+"");
+
+                    }else {
+                        Toast.makeText(MainActivity.this, "fff", Toast.LENGTH_SHORT).show();
+
+                        Log.d("amount,id","fff");
+
+                    }
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                    orderId.add(orderid);
+                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+                }
                 orderDBAdapter.close();
                 custmerAssetDB.close();
                 // End Order And CustomerAssistant Region

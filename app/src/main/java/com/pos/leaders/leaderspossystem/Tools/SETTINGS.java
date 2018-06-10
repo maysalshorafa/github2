@@ -35,10 +35,10 @@ public class SETTINGS {
 	//public static String BO_SERVER_URL = "http://172.16.0.44:8080/leadBO/webapi/";
 
 
-	public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
+	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
 	//public static String BO_SERVER_URL = "http://192.168.1.18:8080/webapi/";
 	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
-	//public static String BO_SERVER_URL = "http://192.168.1.195:8080/webapi/";
+	public static String BO_SERVER_URL = "http://192.168.1.19:8080/webapi/";
 
 
 
