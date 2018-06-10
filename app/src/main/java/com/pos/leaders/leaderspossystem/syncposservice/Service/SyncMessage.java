@@ -1104,17 +1104,7 @@ public class SyncMessage extends Service {
 
 
             case MessageType.ADD_PRODUCT:
-                JSONObject jsonObject1 = new JSONObject(jsonObject.getString(MessageKey.Data));
-                long id = jsonObject1.getLong("id");
-
-                JSONObject jsonObject2 = new JSONObject();
-                jsonObject2.put("id", (id % 10000000));
-                jsonObject2.put("tenantId", 1);
-                jsonObject2.put("deviceId", 1);
-                jsonObject1.remove("id");
-                jsonObject1.put("compositeId", jsonObject2);
-
-                res = messageTransmit.authPost(ApiURL.Product, jsonObject1.toString(), token);
+                res = messageTransmit.authPost(ApiURL.Product, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_PRODUCT:
                 res = messageTransmit.authPut(ApiURL.Product, jsonObject.getString(MessageKey.Data), token);
