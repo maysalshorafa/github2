@@ -42,7 +42,8 @@ public class AccessToken extends AsyncTask<Context,Void,String> {
             //call api auth
             try {
                 String authRes = messageTransmit.post(ApiURL.Authentication, MessagesCreator.authentication(posID, posPass,companyName));
-                Log.i("result token", authRes);
+                Log.w("request token", ApiURL.Authentication+" "+MessagesCreator.authentication(posID, posPass,companyName));
+                Log.w("result token", authRes);
                 JSONObject jsonObject = new JSONObject(authRes);
                 String token = "";
                 if (jsonObject.getString(MessageKey.status).equals("200")) {

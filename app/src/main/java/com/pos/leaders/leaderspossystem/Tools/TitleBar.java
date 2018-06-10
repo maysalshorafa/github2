@@ -76,13 +76,13 @@ public class TitleBar {
 
         long date;
         final Calendar ca = Calendar.getInstance();
-        final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         // You customization
         final int actionBarColor = context.getResources().getColor(R.color.primaryColor);
         actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
 
         final TextView tvDate = (TextView) context.findViewById(R.id.titleBar_tvClock);
-        tvDate.setText(DateFormat.format("dd-MM-yyyy HH:mm", ca.getTime()));
+        tvDate.setText(format.format(ca.getTime()));
         Clock clock = new Clock(context);
         clock.AddClockTickListner(new OnClockTickListner() {
             @Override
@@ -92,7 +92,7 @@ public class TitleBar {
 
             @Override
             public void OnMinuteTick(Time currentTime) {
-                tvDate.setText(DateFormat.format("dd-MM-yyyy HH:mm",currentTime.toMillis(true)).toString());
+                tvDate.setText(format.format(currentTime.toMillis(true)).toString());
             }
         });
 
@@ -177,14 +177,16 @@ public class TitleBar {
         });
         refreshStatus(context);
 
+        if(!SETTINGS.timerState){
 
-      if(!SETTINGS.timerState){
+            SETTINGS.timerState = true;
+            timer  = new Timer();
+            timer.schedule(new LoggingTask(), 10800000, 10800000);
 
-          SETTINGS.timerState = true;
-          timer  = new Timer();
-          timer.schedule(new LoggingTask(), 10800000, 10800000);
+        }
 
-      }
+        //region Auto Update
+        /*
         if(aua==null){
             aua = new AutoUpdateApk(context);
             aua.addObserver(new Observer() {
@@ -202,9 +204,13 @@ public class TitleBar {
         } else if(new Date().getTime()-lastUpdateCheck>(1000)*(60)*(3)){
             aua.checkUpdatesManually();
             lastUpdateCheck=new Date().getTime();
-        }
+        }*/
 
+        //endregion
     }
+
+
+
 
 
     private static void refreshStatus(Context context){

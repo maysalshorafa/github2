@@ -154,7 +154,8 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
         userDBAdapter.open();
-
+        et.setText("123456");
+        login();
     }
 
     @Override
@@ -259,7 +260,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                         intent.putExtra(LEADPOS_MAKE_A_REPORT, LEADPOS_MAKE_A_REPORT);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
 
 

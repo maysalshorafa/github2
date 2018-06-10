@@ -53,6 +53,7 @@ import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
+import com.pos.leaders.leaderspossystem.Settings.SettingsActivity;
 import com.pos.leaders.leaderspossystem.SettingsTab.SettingsTab;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -323,7 +324,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             @Override
             public void onClick(View v) {
                 i = new Intent(getApplicationContext(), BackupActivity.class);
-             startActivity(i);
+                startActivity(i);
             }
         });
         users.setOnClickListener(new View.OnClickListener() {
@@ -337,7 +338,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         schedule_workers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            i = new Intent(getApplicationContext(), ScheduleWorkersActivity.class);
+                i = new Intent(getApplicationContext(), ScheduleWorkersActivity.class);
                 startActivity(i);
             }
         });
@@ -346,6 +347,14 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             public void onClick(View v) {
                 i = new Intent(getApplicationContext(), SettingsTab.class);
                 startActivity(i);
+            }
+        });
+        settings.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                i = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(i);
+                return false;
             }
         });
         customerClub.setOnClickListener(new View.OnClickListener() {
