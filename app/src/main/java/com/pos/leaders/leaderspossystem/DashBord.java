@@ -345,14 +345,15 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), SettingsTab.class);
+
+                i = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(i);
             }
         });
         settings.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                i = new Intent(getApplicationContext(), SettingsActivity.class);
+                i = new Intent(getApplicationContext(), SettingsTab.class);
                 startActivity(i);
                 return false;
             }
@@ -446,7 +447,11 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         EnableButtons();
 
 
-     switch (SETTINGS.printer) {
+        if (SETTINGS.printer == null) {
+            finish();
+            return;
+        }
+        switch (SETTINGS.printer) {
             case HPRT_TP805:
                 HPRT_TP805.setConnected(false);
                 if (HPRT_TP805.connect(this)) {
@@ -465,7 +470,6 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
                 }
                 break;
-
         }
 
     }
@@ -496,7 +500,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         try {
             zReport = zReportDBAdapter.getLastRow();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.w("Z Report ", e.getMessage());
         }
         zReportDBAdapter.close();
         return zReport;
@@ -511,7 +515,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             aReport = aReportDBAdapter.getLastRow();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.w("A Report ", e.getMessage());
         }
 
         aReportDBAdapter.close();

@@ -4,17 +4,29 @@
 
     <header
         android:fragment="com.pos.leaders.leaderspossystem.Settings.SettingsActivity$GeneralPreferenceFragment"
-        android:icon="@drawable/ic_info_black_24dp"
+
         android:title="@string/pref_header_general" />
 
     <header
         android:fragment="com.pos.leaders.leaderspossystem.Settings.SettingsActivity$NotificationPreferenceFragment"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/pref_header_notifications" />
+
+        android:title="@string/pos_setting" />
 
     <header
         android:fragment="com.pos.leaders.leaderspossystem.Settings.SettingsActivity$DataSyncPreferenceFragment"
-        android:icon="@drawable/ic_sync_black_24dp"
-        android:title="@string/pref_header_data_sync" />
+
+        android:title="@string/version_info" />
+
+    <header
+    android:fragment="com.pos.leaders.leaderspossystem.Settings.SettingsActivity$PinPadPreferenceFragment"
+
+    android:title="@string/pinpad" />
+
+    <!--
+    android:icon="@drawable/ic_info_black_24dp"
+    android:icon="@drawable/ic_notifications_black_24dp"
+    android:icon="@drawable/ic_sync_black_24dp"
+    android:icon="@drawable/add_currency"
+    -->
 
 </preference-headers>

@@ -154,8 +154,8 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
         userDBAdapter.open();
-        et.setText("123456");
-        login();
+       /* et.setText("123456");
+        login();*/
     }
 
     @Override

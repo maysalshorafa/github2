@@ -312,6 +312,21 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="printers_list_preference">
+        <item>BTP880</item>
+        <item>HPRT_TP805</item>
+        <item>SUNMI_T1</item>
+        <item>SM_S230I</item>
+        <item>WINTEC_BUILDIN</item>
+
+    </string-array>
+    <string-array name="float_point_list_preference">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
     <string-array name="multi_select_list_preference_default_value" />
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
@@ -569,6 +584,8 @@
     <string name="transaction_error">Transaction error</string>
     <string name="pinpad_wait_for_finish">Continue the transaction using your pin-pad.</string>
     <string name="pref_title_about_company_name">Company Name</string>
+
+    <string name="pinpad">Pin-Pad</string>
 
 </resources>
 

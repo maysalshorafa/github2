@@ -43,6 +43,7 @@ public class TitleBar {
     private static ImageView ivSync ;
     private static Timer timer = null;
     private static AutoUpdateApk aua = null;
+    private static Clock clock=null;
     private static long lastUpdateCheck;
     public static void setTitleBar(final AppCompatActivity context) {
         final ViewGroup actionBarLayout = (ViewGroup) context.getLayoutInflater().inflate(R.layout.title_bar, null);
@@ -83,18 +84,22 @@ public class TitleBar {
 
         final TextView tvDate = (TextView) context.findViewById(R.id.titleBar_tvClock);
         tvDate.setText(format.format(ca.getTime()));
-        Clock clock = new Clock(context);
-        clock.AddClockTickListner(new OnClockTickListner() {
-            @Override
-            public void OnSecondTick(Time currentTime) {
 
-            }
+        if (clock == null) {
+            clock = new Clock(context);
+            clock.AddClockTickListner(new OnClockTickListner() {
+                @Override
+                public void OnSecondTick(Time currentTime) {
 
-            @Override
-            public void OnMinuteTick(Time currentTime) {
-                tvDate.setText(format.format(currentTime.toMillis(true)).toString());
-            }
-        });
+                }
+
+                @Override
+                public void OnMinuteTick(Time currentTime) {
+                    tvDate.setText(format.format(currentTime.toMillis(true)).toString());
+                }
+            });
+        }
+
 
 
         final TextView tvTerminalID = (TextView) context.findViewById(R.id.titleBar_tvTerminalID);
@@ -208,10 +213,6 @@ public class TitleBar {
 
         //endregion
     }
-
-
-
-
 
     private static void refreshStatus(Context context){
         switch (SESSION.internetStatus) {
