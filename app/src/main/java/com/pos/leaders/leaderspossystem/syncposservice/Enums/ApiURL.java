@@ -13,7 +13,7 @@ public interface ApiURL {
     String City = "City";
     String Customer = "Customer";
     String User = "User";
-    String Order = "OrderDetails";
+    String ORDER_DETAILS = "OrderDetails";
     String AReport = "AReport";
     String AReportDetails = "AReportDetails";
     String Check = "Check";
@@ -21,7 +21,7 @@ public interface ApiURL {
     String Offer = "Offer";
     String Payment = "Payment";
     String Permission = "Permission";
-    String Sale = "Order";
+    String ORDER = "Order";
     String ZReport = "ZReport";
     String Rule3 = "Rule3";
     String Rule7 = "Rule7";

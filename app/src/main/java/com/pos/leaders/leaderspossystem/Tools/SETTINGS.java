@@ -36,9 +36,9 @@ public class SETTINGS {
 
 
 	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
-	public static String BO_SERVER_URL = "http://ec2-18-188-168-191.us-east-2.compute.amazonaws.com:8080/webapi/";
+	//public static String BO_SERVER_URL = "http://ec2-18-188-168-191.us-east-2.compute.amazonaws.com:8080/webapi/";
 	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
-	//public static String BO_SERVER_URL = "http://192.168.1.195:8080/webapi/";
+	public static String BO_SERVER_URL = "http://192.168.1.19:8080/webapi/";
 
 
 

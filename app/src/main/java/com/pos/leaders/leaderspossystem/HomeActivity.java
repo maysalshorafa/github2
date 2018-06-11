@@ -61,7 +61,7 @@ public class HomeActivity extends Activity {
 		setContentView(R.layout.activity_home);
 		prefs = getSharedPreferences("com.pos.leaders.leaderspossystem", MODE_PRIVATE);
 
-		SESSION._ORDERS = new ArrayList<OrderDetails>();
+		SESSION._ORDER_DETAILES = new ArrayList<OrderDetails>();
 		userDBAdapter = new UserDBAdapter(this);
 		userDBAdapter.open();
 

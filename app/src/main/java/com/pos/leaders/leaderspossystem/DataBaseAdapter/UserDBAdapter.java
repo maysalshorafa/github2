@@ -40,7 +40,7 @@ public class UserDBAdapter {
 
     // TODO: Create public field for each column in your table.
     // SQL Statement to create a new database.
-    public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS users ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,`userName` TEXT UNIQUE, `firstName` TEXT NOT NULL, `lastName` TEXT, `visitDate` TEXT NOT NULL DEFAULT current_timestamp,`pwd` TEXT , `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, `hourlyWage` REAL DEFAULT 0.0 )";
+    public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS users ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,`userName` TEXT UNIQUE, `firstName` TEXT NOT NULL, `lastName` TEXT, `visitDate` TIMESTAMP NOT NULL DEFAULT current_timestamp,`pwd` TEXT , `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, `hourlyWage` REAL DEFAULT 0.0 )";
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
@@ -94,7 +94,6 @@ public class UserDBAdapter {
         val.put(USERS_COLUMN_PASSWORD, user.getPassword());
         val.put(USERS_COLUMN_FIRSTNAME, user.getFirstName());
         val.put(USERS_COLUMN_LASTNAME, user.getLastName());
-        val.put(USERS_COLUMN_CREATINGDATE, String.valueOf(user.getCreatedAt()));
         val.put(USERS_COLUMN_DISENABLED, user.isHide() ? 1 : 0);
         val.put(USERS_COLUMN_PHONENUMBER, user.getPhoneNumber());
         val.put(USERS_COLUMN_DISCOUNTINPERCENTAGE, user.getPresent());

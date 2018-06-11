@@ -45,7 +45,7 @@ public class CreditCardPaymentDBAdapter {
             " `" + CCC_NAME + "` TEXT, `" + TRANSACTION_TYPE + "` INTEGER," +
             " `" + LAST_4DIGITS + "` TEXT,`" + TRANSACTION_ID + "` TEXT, `" + ANSWER + "` TEXT," +
             " `" + PAYMENTS_NUMBER + "` INTEGER,`" + FIRST_PAYMENT_AMOUNT + "` REAL, `" + OTHER_PAYMENT_AMOUNT + "` REAL," +
-            " `" + CARDHOLDER + "` TEXT,`" + CREATEDATE + "`  TEXT DEFAULT current_timestamp)";
+            " `" + CARDHOLDER + "` TEXT,`" + CREATEDATE + "`  TIMESTAMP DEFAULT current_timestamp)";
 
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -107,9 +107,6 @@ public class CreditCardPaymentDBAdapter {
         val.put(FIRST_PAYMENT_AMOUNT, p.getFirstPaymentAmount());
         val.put(OTHER_PAYMENT_AMOUNT, p.getOtherPaymentAmount());
         val.put(CARDHOLDER, p.getCardholder());
-
-        val.put(CREATEDATE, String.valueOf(p.getCreatedAt()));
-
 
 
         try {

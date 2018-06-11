@@ -82,20 +82,20 @@ public class OrderDetailsDBAdapter {
         try {
             return db.insert(ORDER_TABLE_NAME, null, val);
         } catch (SQLException ex) {
-            Log.e("Order DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("ORDER_DETAILS DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
 	}
 
     public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID) {
         OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID);
-        sendToBroker(MessageType.ADD_ORDER, o, this.context);
+        sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
 
         try {
             long insertResult = insertEntry(o);
             return insertResult;
         } catch (SQLException ex) {
-            Log.e("Order DB insertEntry", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("ORDER_DETAILS DB insertEntry", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }

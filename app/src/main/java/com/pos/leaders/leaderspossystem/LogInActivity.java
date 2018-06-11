@@ -116,7 +116,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
          e.printStackTrace();
          }**/
 
-        SESSION._ORDERS = new ArrayList<OrderDetails>();
+        SESSION._ORDER_DETAILES = new ArrayList<OrderDetails>();
 
         userDBAdapter = new UserDBAdapter(this);
 

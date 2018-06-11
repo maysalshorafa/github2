@@ -38,7 +38,7 @@ public class ChecksDBAdapter {
 
 	public static final String DATABASE_CREATE = "CREATE TABLE `checks` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT," +
 			" `checkNum` INTEGER, `bankNum` INTEGER, `branchNum` INTEGER ," +
-			" `accountNum` INTEGER, `amount` REAL, `_date` TEXT DEFAULT current_timestamp, `isDeleted` INTEGER DEFAULT 0 ," +
+			" `accountNum` INTEGER, `amount` REAL, `_date` TIMESTAMP DEFAULT current_timestamp, `isDeleted` INTEGER DEFAULT 0 ," +
 			" `orderId` INTEGER, FOREIGN KEY(`orderId`) REFERENCES `_Order.id`)";
 	// Variable to hold the database instance
 	private SQLiteDatabase db;

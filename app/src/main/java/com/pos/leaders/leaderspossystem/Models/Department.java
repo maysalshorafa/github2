@@ -119,7 +119,7 @@ public class Department {
 	public String toString() {
 		return "Department{" +
 				"byUser=" + byUser +
-				", accountingId=" + departmentId +
+				", depId=" + departmentId +
 				", name='" + name + '\'' +
 				", createdAt=" + createdAt +
 				", hide=" + hide +

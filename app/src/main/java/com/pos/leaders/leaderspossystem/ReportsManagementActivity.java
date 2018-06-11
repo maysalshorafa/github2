@@ -95,7 +95,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                         .setMessage(getString(R.string.create_z_report_message))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                //(long id, Date creationDate, User user, Sale startSale, Sale endSale)
+                                //(long id, Date creationDate, User user, ORDER startSale, ORDER endSale)
                                 if(lastZReport == null) {
                                     lastZReport = new ZReport();
                                     lastZReport.setEndOrderId(0);

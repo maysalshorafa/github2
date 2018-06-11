@@ -204,7 +204,7 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order{" +
+		return "ORDER_DETAILS{" +
 				"accountingId=" + orderId +
 				", byUser=" + byUser +
 				", order_date=" + createdAt +

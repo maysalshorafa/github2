@@ -121,7 +121,7 @@ public class SalesManagementActivity extends AppCompatActivity {
     }
 
     private void setDate() {
-        //List<Sale> _saleList=new ArrayList<Sale>();
+        //List<ORDER> _saleList=new ArrayList<ORDER>();
         saleDBAdapter.open();
         _saleList = saleDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime());
        // Collections.sort(_saleList, new OutcomeDescComparator());
@@ -144,7 +144,7 @@ public class SalesManagementActivity extends AppCompatActivity {
             paymentDBAdapter.close();
         }
         Log.i("log", _saleList.toString());
-        /*for (Sale s : saleList) {
+        /*for (ORDER s : saleList) {
 			if(DateConverter.dateBetweenTwoDates(from, to, s.getOrder_date())) {
 				_saleList.add(s);
 			}
@@ -266,7 +266,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                 });
                 //endregion Replacement Note Button
 
-                //region Cancellation Sale Button
+                //region Cancellation ORDER Button
 
                 Button btnCan = (Button) view.findViewById(R.id.listSaleManagement_BTCancel);
                 btnCan.setOnClickListener(new View.OnClickListener() {
@@ -290,7 +290,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                         //// TODO: 19/01/2017 cancel this sale and print return note and mony back by the payment way
                     }
                 });
-                //endregion Cancellation Sale Button
+                //endregion Cancellation ORDER Button
 
 
                 previousView.setBackgroundColor(getResources().getColor(R.color.list_background_color));
@@ -397,9 +397,9 @@ public class SalesManagementActivity extends AppCompatActivity {
     }
 
 }
-/**class OutcomeDescComparator implements Comparator<Sale>
+/**class OutcomeDescComparator implements Comparator<ORDER>
 {
-    public int compare(Sale fSale, Sale lSale) {
+    public int compare(ORDER fSale, ORDER lSale) {
         return lSale.getOrder_date().compareTo(fSale.getOrder_date());
     }
 }*/

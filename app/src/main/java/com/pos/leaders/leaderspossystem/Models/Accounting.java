@@ -114,7 +114,7 @@ public class Accounting {
 		}
         int totalItems = 0;
         double totalDiscount = 0;
-        for(Order o: sale.getOrders())
+        for(ORDER_DETAILS o: sale.getOrders())
         {
             totalItems += o.getQuantity();
             totalDiscount += (o.getItemTotalPrice() * o.getDiscount() / 100);

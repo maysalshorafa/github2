@@ -37,7 +37,7 @@ public class OrderDBAdapter {
 	protected static final String SALES_COLUMN_CUSTOMER_NAME = "customer_name";
 
 
-	public static final String DATABASE_CREATE = "CREATE TABLE _Order( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byUser` INTEGER, `order_date` TEXT DEFAULT current_timestamp, " +
+	public static final String DATABASE_CREATE = "CREATE TABLE _Order( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byUser` INTEGER, `order_date` TIMESTAMP DEFAULT current_timestamp, " +
 			"`replacementNote` INTEGER DEFAULT 0, `status` INTEGER DEFAULT 0, total_price REAL, total_paid_amount REAL, customerId  INTEGER DEFAULT 0 ,customer_name  TEXT, " +
 			"FOREIGN KEY(`byUser`) REFERENCES `users.id`)";
 	// Variable to hold the database instance
@@ -70,7 +70,7 @@ public class OrderDBAdapter {
 	public long insertEntry(long byUser, Timestamp saleDate, int replacementNote, boolean canceled, double totalPrice, double totalPaid, long custmer_id, String custmer_name) {
         Order sale = new Order(Util.idHealth(this.db, SALES_TABLE_NAME, SALES_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name);
 
-        sendToBroker(MessageType.ADD_SALE, sale, this.context);
+        sendToBroker(MessageType.ADD_ORDER, sale, this.context);
 
         try {
             return insertEntry(sale);
@@ -88,7 +88,6 @@ public class OrderDBAdapter {
         val.put(SALES_COLUMN_ID,sale.getOrderId());
         //Assign values for each row.
         val.put(SALES_COLUMN_BYUSER, sale.getByUser());
-        val.put(SALES_COLUMN_SALEDATE, String.valueOf(sale.getCreatedAt()));
         val.put(SALES_COLUMN_REPLACEMENTNOTE, sale.getReplacementNote());
         val.put(SALES_COLUMN_CANCELED, sale.isStatus()?1:0);
         val.put(SALES_COLUMN_TOTALPRICE, sale.getTotalPrice());
@@ -138,7 +137,6 @@ public class OrderDBAdapter {
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 		val.put(SALES_COLUMN_BYUSER, sale.getByUser());
-		val.put(SALES_COLUMN_SALEDATE, String.valueOf(sale.getCreatedAt()));
 		val.put(SALES_COLUMN_REPLACEMENTNOTE, sale.getReplacementNote());
 		val.put(SALES_COLUMN_CANCELED, sale.isStatus());
 		val.put(SALES_COLUMN_TOTALPRICE, sale.getTotalPrice());

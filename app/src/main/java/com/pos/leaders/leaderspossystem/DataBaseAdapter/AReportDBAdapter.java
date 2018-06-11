@@ -37,7 +37,7 @@ public class AReportDBAdapter {
 
 
     public static final String DATABASE_CREATE = "CREATE TABLE "+ A_REPORT_TABLE_NAME
-            +" ( `"+ A_REPORT_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ A_REPORT_COLUMN_CREATEDATE +"` TEXT DEFAULT current_timestamp,  `"
+            +" ( `"+ A_REPORT_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ A_REPORT_COLUMN_CREATEDATE +"` TIMESTAMP DEFAULT current_timestamp,  `"
             + A_REPORT_COLUMN_BYUSER +"` INTEGER, " +
             " `"+ A_REPORT_COLUMN_AMOUNT +"` REAL,  `"+ A_REPORT_COLUMN_LASTSALEID +"` INTEGER , " +
               "`"+ A_REPORT_COLUMN_LASTZREPORTID +"` INTEGER , " +
@@ -83,7 +83,6 @@ public class AReportDBAdapter {
         ContentValues val = new ContentValues();
 
         val.put(A_REPORT_COLUMN_ID, aReport.getaReportId());
-        val.put(A_REPORT_COLUMN_CREATEDATE, String.valueOf(aReport.getCreatedAt()));
         val.put(A_REPORT_COLUMN_BYUSER, aReport.getByUserID());
         val.put(A_REPORT_COLUMN_AMOUNT, aReport.getAmount());
         val.put(A_REPORT_COLUMN_LASTSALEID, aReport.getLastOrderId());

@@ -60,7 +60,7 @@ public class MainScreenActivity extends Activity {
     int printLanguage = 0;
 
     private void addToCart(Product p){
-        SESSION._ORDERS.add(new OrderDetails(1,0,p));
+        SESSION._ORDER_DETAILES.add(new OrderDetails(1,0,p));
         lvSalesDetails.setAdapter(adapter);
         calculateTotalPrice();
     }
@@ -241,29 +241,29 @@ public class MainScreenActivity extends Activity {
         //endregion
 
 
-		if (SESSION._SALE != null) {
+		if (SESSION._ORDERS != null) {
 			sale = new Order(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), 0, false, 0,0);
 		}
 		else
 		{
-			SESSION._SALE=new Order(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), 0, false, 0,0);
+			SESSION._ORDERS =new Order(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), 0, false, 0,0);
 		}
 
-		if (SESSION._ORDERS != null) {
-			adapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
+		if (SESSION._ORDER_DETAILES != null) {
+			adapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
 			lvSalesDetails.setAdapter(adapter);
 			lvSalesDetails.setFocusable(false);
 
 			calculateTotalPrice();
 		}
 		else{
-			SESSION._ORDERS=new ArrayList<OrderDetails>();
-			adapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
+			SESSION._ORDER_DETAILES =new ArrayList<OrderDetails>();
+			adapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
 		}
 		lvSalesDetails.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				SESSION._ORDERS.get(position).increaseCount();
+				SESSION._ORDER_DETAILES.get(position).increaseCount();
 				lvSalesDetails.setAdapter(adapter);
 				calculateTotalPrice();
 				// // TODO: 20/10/2016 show dialog box for increes count and remove andd all the options
@@ -301,9 +301,9 @@ public class MainScreenActivity extends Activity {
 			public void onClick(View v) {
 				//// TODO: 20/10/2016 payment process
 
-				if(SESSION._SALE!=null&&SESSION._ORDERS.size()>0){
-					Log.i("this cart ",SESSION._SALE.toString());
-					Log.i("this cart have",SESSION._ORDERS.toString());
+				if(SESSION._ORDERS !=null&&SESSION._ORDER_DETAILES.size()>0){
+					Log.i("this cart ",SESSION._ORDERS.toString());
+					Log.i("this cart have",SESSION._ORDER_DETAILES.toString());
 
 					final String[] items = {
 							getString(R.string.pay_cash),
@@ -328,13 +328,13 @@ public class MainScreenActivity extends Activity {
 										@Override
 										public void onClick(View v) {
 											double pid=Double.parseDouble(cashETCash.getText().toString());
-											double tot=SESSION._SALE.getTotalPrice();
+											double tot=SESSION._ORDERS.getTotalPrice();
 											if(pid>=tot){
-												SESSION._SALE.setTotalPaidAmount(pid);
+												SESSION._ORDERS.setTotalPaidAmount(pid);
 												Toast.makeText(MainScreenActivity.this, "return :"+(pid-tot), Toast.LENGTH_LONG).show();
-												long saleId=saleDBAdapter.insertEntry(SESSION._SALE,1,"dd");
-                                                SESSION._SALE.setOrderId(saleId);
-												for(OrderDetails o:SESSION._ORDERS){
+												long saleId=saleDBAdapter.insertEntry(SESSION._ORDERS,1,"dd");
+                                                SESSION._ORDERS.setOrderId(saleId);
+												for(OrderDetails o:SESSION._ORDER_DETAILES){
 												//	orderDBAdapter.insertEntry(o.getProductId(),o.getQuantity(),o.getUserOffer(),saleId);
 												}
 												paymentDBAdapter.insertEntry("cash",saleTotalPrice,saleId);
@@ -484,16 +484,16 @@ public class MainScreenActivity extends Activity {
 
 	public void clearCart(){
 		SESSION._Rest();
-		adapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDERS);
+		adapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
 		lvSalesDetails.setAdapter(adapter);
 		calculateTotalPrice();
 	}
 	protected void calculateTotalPrice() {
 		saleTotalPrice = 0;
-		for (OrderDetails o : SESSION._ORDERS) {
+		for (OrderDetails o : SESSION._ORDER_DETAILES) {
 			saleTotalPrice += o.getItemTotalPrice();
 		}
-		SESSION._SALE.setTotalPrice(saleTotalPrice);
+		SESSION._ORDERS.setTotalPrice(saleTotalPrice);
 		tvTotalPrice.setText(saleTotalPrice + " " + getString(R.string.ins));
 	}
 
@@ -533,7 +533,7 @@ public class MainScreenActivity extends Activity {
         // e.printStackTrace();
         // }
         String head="חש' מס-קבלה ";
-        head+=SESSION._SALE.getCashPaymentId();
+        head+=SESSION._ORDERS.getCashPaymentId();
         printerController.PrinterController_Font_Bold();
         printerController.PrinterController_Set_Center();
         printerController.PrinterController_Print(head.getBytes(Charset.forName("UTF-8")));
@@ -546,7 +546,7 @@ public class MainScreenActivity extends Activity {
         printerController.PrinterController_Font_Normal_mode();
         printerController.PrinterController_Set_Right();
         for (Order o :
-                SESSION._ORDERS) {
+                SESSION._ORDER_DETAILES) {
             String s=o.getProduct().getName()+"       "+o.getQuantity()+"     "+o.getItemTotalPrice();
            // printerController.PrinterController_Take_The_Paper(1);
         }*/
@@ -581,7 +581,7 @@ public class MainScreenActivity extends Activity {
                         .getBytes());
         printerController.PrinterController_Linefeed();
         for (Order o :
-                SESSION._ORDERS) {
+                SESSION._ORDER_DETAILES) {
             String s=o.getProduct().getName()+"       "+o.getQuantity()+"     "+o.getProduct().getPaidAmount();
             printerController
                     .PrinterController_Print(s

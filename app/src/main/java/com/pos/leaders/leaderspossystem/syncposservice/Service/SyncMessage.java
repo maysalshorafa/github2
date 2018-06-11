@@ -55,6 +55,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasurement;
@@ -72,9 +73,11 @@ import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
+import com.pos.leaders.leaderspossystem.Models.SumPoint;
 import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.User;
 import com.pos.leaders.leaderspossystem.Models.Permission.UserPermissions;
+import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
@@ -524,21 +527,21 @@ public class SyncMessage extends Service {
 
                 //end user permission region
 
-                //region SALE
-                case MessageType.ADD_SALE:
-                    Order sale = null;
-                    sale = objectMapper.readValue(msgData, Order.class);
+                //region Order
+                case MessageType.ADD_ORDER:
+                    Order order = null;
+                    order = objectMapper.readValue(msgData, Order.class);
 
-                    OrderDBAdapter saleDBAdapter = new OrderDBAdapter(this);
-                    saleDBAdapter.open();
-                    rID = saleDBAdapter.insertEntry(sale);
-                    saleDBAdapter.close();
+                    OrderDBAdapter orderDBAdapter = new OrderDBAdapter(this);
+                    orderDBAdapter.open();
+                    rID = orderDBAdapter.insertEntry(order);
+                    orderDBAdapter.close();
                     break;
-                case MessageType.UPDATE_SALE:
+                case MessageType.UPDATE_ORDER:
                     break;
-                case MessageType.DELETE_SALE:
+                case MessageType.DELETE_ORDER:
                     break;
-                //endregion SALE
+                //endregion order
 
                 //region CLUB
                 case MessageType.ADD_CLUB:
@@ -613,21 +616,21 @@ public class SyncMessage extends Service {
                     break;
                 //endregion CUSTOMER
 
-                //region ORDER
-                case MessageType.ADD_ORDER:
+                //region ORDERDetails
+                case MessageType.ADD_ORDER_DETAILS:
                     OrderDetails o;
                     o = objectMapper.readValue(msgData, OrderDetails.class);
 
-                    OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(this);
-                    orderDBAdapter.open();
-                    rID = orderDBAdapter.insertEntry(o);
-                    orderDBAdapter.close();
+                    OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(this);
+                    orderDetailsDBAdapter.open();
+                    rID = orderDetailsDBAdapter.insertEntry(o);
+                    orderDetailsDBAdapter.close();
                     break;
-                case MessageType.UPDATE_ORDER:
+                case MessageType.UPDATE_ORDER_DETAILS:
                     break;
-                case MessageType.DELETE_ORDER:
+                case MessageType.DELETE_ORDER_DETAILS:
                     break;
-                //endregion ORDER
+                //endregion ORDERDetails
 
                 //region PRODUCT
                 case MessageType.ADD_PRODUCT:
@@ -901,6 +904,28 @@ public class SyncMessage extends Service {
         JSONObject jsonObject = new JSONObject(bm.getCommand());
         String res = "";
         String msgType = jsonObject.getString(MessageKey.MessageType);
+        String msgData = jsonObject.getString(MessageKey.Data);
+
+        if (msgData.startsWith("[")) {
+            try {
+                JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.Data);
+                msgData = jsonArray.getJSONObject(0).toString();
+            } catch (Exception e) {
+                try {
+                    msgData = jsonObject.getJSONObject(MessageKey.Data).toString();
+                    if(msgData.contains("createdAt")){
+                        Log.d("createddate",msgData);
+                    }
+                } catch (Exception ex) {
+                    msgData = msgData.substring(1);
+                    msgData = msgData.substring(0, msgData.length() - 1);
+                }
+            }
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        objectMapper.setDateFormat(dateFormat);
+
 
         Log.w("DO_SYNC", bm.getCommand());
 
@@ -911,7 +936,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.AReport, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_A_REPORT:
-                res = messageTransmit.authPut(ApiURL.AReport, jsonObject.getString(MessageKey.Data), token);
+                AReport aReport =null;
+                aReport=objectMapper.readValue(msgData, AReport.class);
+                res = messageTransmit.authPut(ApiURL.AReport, jsonObject.getString(MessageKey.Data), token,aReport.getaReportId());
                 break;
             case MessageType.DELETE_A_REPORT:
                 res = messageTransmit.authDelete(ApiURL.AReport, jsonObject.getString(MessageKey.Data), token);
@@ -922,7 +949,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.AReportDetails, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_A_REPORT_DETAILS:
-                res = messageTransmit.authPut(ApiURL.AReportDetails, jsonObject.getString(MessageKey.Data), token);
+                AReportDetails aReportDetails =null;
+                aReportDetails=objectMapper.readValue(msgData, AReportDetails.class);
+                res = messageTransmit.authPut(ApiURL.AReportDetails, jsonObject.getString(MessageKey.Data), token,aReportDetails.getaReportDetailsId());
                 break;
             case MessageType.DELETE_A_REPORT_DETAILS:
                 res = messageTransmit.authDelete(ApiURL.AReportDetails, jsonObject.getString(MessageKey.Data), token);
@@ -934,7 +963,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.Check, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_CHECK:
-                res = messageTransmit.authPut(ApiURL.Check, jsonObject.getString(MessageKey.Data), token);
+                Check check =null;
+                check=objectMapper.readValue(msgData, Check.class);
+                res = messageTransmit.authPut(ApiURL.Check, jsonObject.getString(MessageKey.Data), token,check.getCheckId());
                 break;
             case MessageType.DELETE_CHECK:
                 res = messageTransmit.authDelete(ApiURL.Check, jsonObject.getString(MessageKey.Data), token);
@@ -946,7 +977,15 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.Department, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_DEPARTMENT:
-                res = messageTransmit.authPut(ApiURL.Department, jsonObject.getString(MessageKey.Data), token);
+                Department department=null;
+                JSONObject jsonObject1 = new JSONObject(jsonObject.getString(MessageKey.Data));
+                jsonObject1.remove("createdAt");
+                JSONObject j= jsonObject1;
+                String s=j.toString();
+                department=objectMapper.readValue(s, Department.class);
+                Log.d("newJson",department.toString()+"");
+
+                res = messageTransmit.authPut(ApiURL.Department, s, token,department.getDepartmentId());
                 break;
             case MessageType.DELETE_DEPARTMENT:
                 res = messageTransmit.authDelete(ApiURL.Department, jsonObject.getString(MessageKey.Data), token);
@@ -958,7 +997,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.Offer, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_OFFER:
-                res = messageTransmit.authPut(ApiURL.Offer, jsonObject.getString(MessageKey.Data), token);
+                Offer offer =null;
+                offer=objectMapper.readValue(msgData, Offer.class);
+                res = messageTransmit.authPut(ApiURL.Offer, jsonObject.getString(MessageKey.Data), token,offer.getId());
                 break;
             case MessageType.DELETE_OFFER:
                 res = messageTransmit.authDelete(ApiURL.Offer, jsonObject.getString(MessageKey.Data), token);
@@ -970,7 +1011,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.Payment, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_PAYMENT:
-                res = messageTransmit.authPut(ApiURL.Payment, jsonObject.getString(MessageKey.Data), token);
+                Payment payment=null;
+                payment=objectMapper.readValue(msgData, Payment.class);
+                res = messageTransmit.authPut(ApiURL.Payment, jsonObject.getString(MessageKey.Data), token,payment.getPaymentId());
                 break;
             case MessageType.DELETE_PAYMENT:
                 res = messageTransmit.authDelete(ApiURL.Payment, jsonObject.getString(MessageKey.Data), token);
@@ -982,7 +1025,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.Permission, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_PERMISSION:
-                res = messageTransmit.authPut(ApiURL.Permission, jsonObject.getString(MessageKey.Data), token);
+                Permissions permissions=null;
+                permissions=objectMapper.readValue(msgData, Permissions.class);
+                res = messageTransmit.authPut(ApiURL.Permission, jsonObject.getString(MessageKey.Data), token,permissions.getId());
                 break;
             case MessageType.DELETE_PERMISSION:
                 res = messageTransmit.authDelete(ApiURL.Permission, jsonObject.getString(MessageKey.Data), token);
@@ -994,7 +1039,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.UserPermission, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_USER_PERMISSION:
-                res = messageTransmit.authPut(ApiURL.UserPermission, jsonObject.getString(MessageKey.Data), token);
+                UserPermissions userPermissions=null;
+                userPermissions=objectMapper.readValue(msgData, UserPermissions.class);
+                res = messageTransmit.authPut(ApiURL.UserPermission, jsonObject.getString(MessageKey.Data), token,userPermissions.getUserPermissionsId());
                 break;
             case MessageType.DELETE_USER_PERMISSION:
                 res = messageTransmit.authDelete(ApiURL.UserPermission, jsonObject.getString(MessageKey.Data), token);
@@ -1002,24 +1049,28 @@ public class SyncMessage extends Service {
 
             //End region
 
-            //region SALE
-            case MessageType.ADD_SALE:
-                res = messageTransmit.authPost(ApiURL.Sale, jsonObject.getString(MessageKey.Data), token);
+            //region ORDER
+            case MessageType.ADD_ORDER:
+                res = messageTransmit.authPost(ApiURL.ORDER, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.UPDATE_SALE:
-                res = messageTransmit.authPut(ApiURL.Sale, jsonObject.getString(MessageKey.Data), token);
+            case MessageType.UPDATE_ORDER:
+                Order order=null;
+                order=objectMapper.readValue(msgData, Order.class);
+                res = messageTransmit.authPut(ApiURL.ORDER, jsonObject.getString(MessageKey.Data), token,order.getOrderId());
                 break;
-            case MessageType.DELETE_SALE:
-                res = messageTransmit.authDelete(ApiURL.Sale, jsonObject.getString(MessageKey.Data), token);
+            case MessageType.DELETE_ORDER:
+                res = messageTransmit.authDelete(ApiURL.ORDER, jsonObject.getString(MessageKey.Data), token);
                 break;
-            //endregion SALE
+            //endregion Order
 
             //region Z REPORT
             case MessageType.ADD_Z_REPORT:
                 res = messageTransmit.authPost(ApiURL.ZReport, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_Z_REPORT:
-                res = messageTransmit.authPut(ApiURL.ZReport, jsonObject.getString(MessageKey.Data), token);
+                ZReport zReport=null;
+                zReport=objectMapper.readValue(msgData, ZReport.class);
+                res = messageTransmit.authPut(ApiURL.ZReport, jsonObject.getString(MessageKey.Data), token,zReport.getzReportId());
                 break;
             case MessageType.DELETE_Z_REPORT:
                 res = messageTransmit.authDelete(ApiURL.ZReport, jsonObject.getString(MessageKey.Data), token);
@@ -1030,7 +1081,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.Club, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_CLUB:
-                res = messageTransmit.authPut(ApiURL.Club, jsonObject.getString(MessageKey.Data), token);
+                Club club=null;
+                club=objectMapper.readValue(msgData, Club.class);
+                res = messageTransmit.authPut(ApiURL.Club, jsonObject.getString(MessageKey.Data), token,club.getClubId());
                 break;
             case MessageType.DELETE_CLUB:
                 res = messageTransmit.authDelete(ApiURL.Club, jsonObject.getString(MessageKey.Data), token);
@@ -1040,7 +1093,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.SumPoint, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_SUM_POINT:
-                res = messageTransmit.authPut(ApiURL.SumPoint, jsonObject.getString(MessageKey.Data), token);
+                SumPoint sumPoint=null;
+                sumPoint=objectMapper.readValue(msgData, SumPoint.class);
+                res = messageTransmit.authPut(ApiURL.SumPoint, jsonObject.getString(MessageKey.Data), token,sumPoint.getSumPointId());
                 break;
             case MessageType.DELETE_SUM_POINT:
                 res = messageTransmit.authDelete(ApiURL.SumPoint, jsonObject.getString(MessageKey.Data), token);
@@ -1051,7 +1106,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.ValueOfPoint, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_VALUE_OF_POINT:
-                res = messageTransmit.authPut(ApiURL.ValueOfPoint, jsonObject.getString(MessageKey.Data), token);
+                ValueOfPoint valueOfPoint=null;
+                valueOfPoint=objectMapper.readValue(msgData, ValueOfPoint.class);
+                res = messageTransmit.authPut(ApiURL.ValueOfPoint, jsonObject.getString(MessageKey.Data), token,valueOfPoint.valueOfPointId);
                 break;
             case MessageType.DELETE_VALUE_OF_POINT:
                 res = messageTransmit.authDelete(ApiURL.ValueOfPoint, jsonObject.getString(MessageKey.Data), token);
@@ -1063,7 +1120,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_USED_POINT:
-                res = messageTransmit.authPut(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token);
+                UsedPoint usedPoint =null;
+                usedPoint=objectMapper.readValue(msgData, UsedPoint.class);
+                res = messageTransmit.authPut(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token,usedPoint.getUsedPointId());
                 break;
             case MessageType.DELETE_USED_POINT:
                 res = messageTransmit.authDelete(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token);
@@ -1074,7 +1133,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.City, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_CITY:
-                res = messageTransmit.authPut(ApiURL.City, jsonObject.getString(MessageKey.Data), token);
+                City city=null;
+                city=objectMapper.readValue(msgData, City.class);
+                res = messageTransmit.authPut(ApiURL.City, jsonObject.getString(MessageKey.Data), token,city.getCityId());
                 break;
             case MessageType.DELETE_CITY:
                 res = messageTransmit.authDelete(ApiURL.City, jsonObject.getString(MessageKey.Data), token);
@@ -1085,21 +1146,25 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.Customer, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_CUSTOMER:
-                res = messageTransmit.authPut(ApiURL.Customer, jsonObject.getString(MessageKey.Data), token);
+                Customer customer=null;
+                customer=objectMapper.readValue(msgData, Customer.class);
+                res = messageTransmit.authPut(ApiURL.Customer, jsonObject.getString(MessageKey.Data), token,customer.getCustomerId());
                 break;
             case MessageType.DELETE_CUSTOMER:
                 res = messageTransmit.authDelete(ApiURL.Customer, jsonObject.getString(MessageKey.Data), token);
                 break;
 
 
-            case MessageType.ADD_ORDER:
-                res = messageTransmit.authPost(ApiURL.Order, jsonObject.getString(MessageKey.Data), token);
+            case MessageType.ADD_ORDER_DETAILS:
+                res = messageTransmit.authPost(ApiURL.ORDER_DETAILS, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.UPDATE_ORDER:
-                res = messageTransmit.authPut(ApiURL.Order, jsonObject.getString(MessageKey.Data), token);
+            case MessageType.UPDATE_ORDER_DETAILS:
+                OrderDetails orderDetails=null;
+                orderDetails=objectMapper.readValue(msgData, OrderDetails.class);
+                res = messageTransmit.authPut(ApiURL.ORDER_DETAILS, jsonObject.getString(MessageKey.Data), token,orderDetails.getOrderDetailsId());
                 break;
-            case MessageType.DELETE_ORDER:
-                res = messageTransmit.authDelete(ApiURL.Order, jsonObject.getString(MessageKey.Data), token);
+            case MessageType.DELETE_ORDER_DETAILS:
+                res = messageTransmit.authDelete(ApiURL.ORDER_DETAILS, jsonObject.getString(MessageKey.Data), token);
                 break;
 
 
@@ -1107,7 +1172,10 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.Product, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_PRODUCT:
-                res = messageTransmit.authPut(ApiURL.Product, jsonObject.getString(MessageKey.Data), token);
+                Product product=null;
+                product=objectMapper.readValue(msgData, Product.class);
+                Log.d("product111111",product.toString());
+                res = messageTransmit.authPut(ApiURL.Product, jsonObject.getString(MessageKey.Data), token,product.getProductId());
                 break;
             case MessageType.DELETE_PRODUCT:
                 res = messageTransmit.authDelete(ApiURL.Product, jsonObject.getString(MessageKey.Data), token);
@@ -1118,7 +1186,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.User, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_USER:
-                res = messageTransmit.authPut(ApiURL.User, jsonObject.getString(MessageKey.Data), token);
+                User user=null;
+                user=objectMapper.readValue(msgData, User.class);
+                res = messageTransmit.authPut(ApiURL.User, jsonObject.getString(MessageKey.Data), token,user.getUserId());
                 break;
             case MessageType.DELETE_USER:
                 res = messageTransmit.authDelete(ApiURL.User, jsonObject.getString(MessageKey.Data), token);
@@ -1129,7 +1199,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.Currencies, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_CURRENCY:
-                res = messageTransmit.authPut(ApiURL.Currencies, jsonObject.getString(MessageKey.Data), token);
+                Currency currency=null;
+                currency=objectMapper.readValue(msgData, Currency.class);
+                res = messageTransmit.authPut(ApiURL.Currencies, jsonObject.getString(MessageKey.Data), token,currency.getCurrencyId());
                 break;
             case MessageType.DELETE_CURRENCY:
                 res = messageTransmit.authDelete(ApiURL.Currencies, jsonObject.getString(MessageKey.Data), token);
@@ -1140,7 +1212,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.CurrencyType, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_CURRENCY_TYPE:
-                res = messageTransmit.authPut(ApiURL.CurrencyType, jsonObject.getString(MessageKey.Data), token);
+                CurrencyType currencyType=null;
+                currencyType=objectMapper.readValue(msgData, CurrencyType.class);
+                res = messageTransmit.authPut(ApiURL.CurrencyType, jsonObject.getString(MessageKey.Data), token,currencyType.getCurrencyTypeId());
                 break;
             case MessageType.DELETE_CURRENCY_TYPE:
                 res = messageTransmit.authDelete(ApiURL.CurrencyType, jsonObject.getString(MessageKey.Data), token);
@@ -1152,7 +1226,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.CurrencyReturn, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_CURRENCY_RETURN:
-                res = messageTransmit.authPut(ApiURL.CurrencyReturn, jsonObject.getString(MessageKey.Data), token);
+                CurrencyReturns currencyReturns=null;
+                currencyReturns=objectMapper.readValue(msgData, CurrencyReturns.class);
+                res = messageTransmit.authPut(ApiURL.CurrencyReturn, jsonObject.getString(MessageKey.Data), token,currencyReturns.getCurrencyReturnsId());
                 break;
             case MessageType.DELETE_CURRENCY_RETURN:
                 res = messageTransmit.authDelete(ApiURL.CurrencyReturn, jsonObject.getString(MessageKey.Data), token);
@@ -1163,7 +1239,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_CURRENCY_OPERATION:
-                res = messageTransmit.authPut(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
+                CurrencyOperation currencyOperation=null;
+                currencyOperation=objectMapper.readValue(msgData, CurrencyOperation.class);
+                res = messageTransmit.authPut(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token,currencyOperation.getCurrencyOperationId());
                 break;
             case MessageType.DELETE_CURRENCY_OPERATION:
                 res = messageTransmit.authDelete(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
@@ -1174,7 +1252,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_CASH_PAYMENT:
-                res = messageTransmit.authPut(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
+                CashPayment cashPayment=null;
+                cashPayment=objectMapper.readValue(msgData, CashPayment.class);
+                res = messageTransmit.authPut(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token,cashPayment.getCashPaymentId());
                 break;
             case MessageType.DELETE_CASH_PAYMENT:
                 res = messageTransmit.authDelete(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
@@ -1187,7 +1267,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_CREDIT_CARD_PAYMENT:
-                res = messageTransmit.authPut(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
+                CreditCardPayment creditCardPayment=null;
+                creditCardPayment=objectMapper.readValue(msgData, CreditCardPayment.class);
+                res = messageTransmit.authPut(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token,creditCardPayment.getCreditCardPaymentId());
                 break;
             case MessageType.DELETE_CREDIT_CARD_PAYMENT:
                 res = messageTransmit.authDelete(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
@@ -1199,7 +1281,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.CustomerAssistant, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_CUSTOMER_ASSISTANT:
-                res = messageTransmit.authPut(ApiURL.CustomerAssistant, jsonObject.getString(MessageKey.Data), token);
+                CustomerAssistant customerAssistant=null;
+                customerAssistant=objectMapper.readValue(msgData, CustomerAssistant.class);
+                res = messageTransmit.authPut(ApiURL.CustomerAssistant, jsonObject.getString(MessageKey.Data), token,customerAssistant.getCustAssistantId());
                 break;
             case MessageType.DELETE_CUSTOMER_ASSISTANT:
                 res = messageTransmit.authDelete(ApiURL.CustomerAssistant, jsonObject.getString(MessageKey.Data), token);
@@ -1210,7 +1294,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.CustomerMeasurement, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_CUSTOMER_MEASUREMENT:
-                res = messageTransmit.authPut(ApiURL.CustomerMeasurement, jsonObject.getString(MessageKey.Data), token);
+                CustomerMeasurement customerMeasurement=null;
+                customerMeasurement=objectMapper.readValue(msgData, CustomerMeasurement.class);
+                res = messageTransmit.authPut(ApiURL.CustomerMeasurement, jsonObject.getString(MessageKey.Data), token,customerMeasurement.getCustomerMeasurementId());
                 break;
             case MessageType.DELETE_CUSTOMER_MEASUREMENT:
                 res = messageTransmit.authDelete(ApiURL.CustomerMeasurement, jsonObject.getString(MessageKey.Data), token);
@@ -1221,7 +1307,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.MeasurementsDetails, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_MEASUREMENTS_DETAILS:
-                res = messageTransmit.authPut(ApiURL.MeasurementsDetails, jsonObject.getString(MessageKey.Data), token);
+                MeasurementsDetails measurementsDetails=null;
+                measurementsDetails=objectMapper.readValue(msgData, MeasurementsDetails.class);
+                res = messageTransmit.authPut(ApiURL.MeasurementsDetails, jsonObject.getString(MessageKey.Data), token,measurementsDetails.getMeasurementsDetailsId());
                 break;
             case MessageType.DELETE_MEASUREMENTS_DETAILS:
                 res = messageTransmit.authDelete(ApiURL.MeasurementsDetails, jsonObject.getString(MessageKey.Data), token);
@@ -1232,7 +1320,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.MeasurementDynamicVariable, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_MEASUREMENTS_DYNAMIC_VARIABLE:
-                res = messageTransmit.authPut(ApiURL.MeasurementDynamicVariable, jsonObject.getString(MessageKey.Data), token);
+                MeasurementDynamicVariable measurementDynamicVariable=null;
+                measurementDynamicVariable=objectMapper.readValue(msgData, MeasurementDynamicVariable.class);
+                res = messageTransmit.authPut(ApiURL.MeasurementDynamicVariable, jsonObject.getString(MessageKey.Data), token,measurementDynamicVariable.getMeasurementDynamicVariableId());
                 break;
             case MessageType.DELETE_MEASUREMENTS_DYNAMIC_VARIABLE:
                 res = messageTransmit.authDelete(ApiURL.MeasurementDynamicVariable, jsonObject.getString(MessageKey.Data), token);
@@ -1243,7 +1333,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.ScheduleWorker, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_SCHEDULE_WORKERS:
-                res = messageTransmit.authPut(ApiURL.ScheduleWorker, jsonObject.getString(MessageKey.Data), token);
+                ScheduleWorkers scheduleWorkers=null;
+                scheduleWorkers=objectMapper.readValue(msgData, ScheduleWorkers.class);
+                res = messageTransmit.authPut(ApiURL.ScheduleWorker, jsonObject.getString(MessageKey.Data), token,scheduleWorkers.getScheduleWorkersId());
                 break;
             case MessageType.DELETE_SCHEDULE_WORKERS:
                 res = messageTransmit.authDelete(ApiURL.ScheduleWorker, jsonObject.getString(MessageKey.Data), token);

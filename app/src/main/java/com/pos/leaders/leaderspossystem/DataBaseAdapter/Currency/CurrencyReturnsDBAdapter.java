@@ -32,7 +32,7 @@ public class CurrencyReturnsDBAdapter {
 
     protected static final String CurrencyReturns_COLUMN_CurencyType = "currency_type";
 
-    public static final String DATABASE_CREATE = "CREATE TABLE `CurrencyReturns` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `saleId` INTEGER, `amount` REAL NOT NULL,'createDate'  TEXT DEFAULT current_timestamp, `currency_type` INTEGER)";
+    public static final String DATABASE_CREATE = "CREATE TABLE `CurrencyReturns` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `orderId` INTEGER, `amount` REAL NOT NULL,'createDate'  TIMESTAMP DEFAULT current_timestamp, `currency_type` INTEGER)";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.

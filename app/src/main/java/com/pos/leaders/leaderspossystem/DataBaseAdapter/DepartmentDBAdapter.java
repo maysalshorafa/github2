@@ -33,7 +33,7 @@ public class DepartmentDBAdapter {
     protected static final String DEPARTMENTS_COLUMN_DISENABLED = "hide";
 
     public static final String DATABASE_CREATE = "CREATE TABLE departments ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "`name` TEXT NOT NULL , `creatingDate` TEXT NOT NULL DEFAULT current_timestamp, " +
+            "`name` TEXT NOT NULL , `creatingDate` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
             "`byUser` INTEGER, `hide` INTEGER DEFAULT 0, FOREIGN KEY(`byUser`) REFERENCES `users.id` )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -84,8 +84,8 @@ public class DepartmentDBAdapter {
         val.put(DEPARTMENTS_COLUMN_ID, department.getDepartmentId());
         val.put(DEPARTMENTS_COLUMN_NAME, department.getName());
         val.put(DEPARTMENTS_COLUMN_BYUSER, department.getByUser());
-        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, String.valueOf(department.getCreatedAt()));
         val.put(DEPARTMENTS_COLUMN_DISENABLED, department.isHide() ? 1 : 0);
+        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, String.valueOf(department.getCreatedAt()));
 
         try {
 
@@ -151,7 +151,6 @@ public class DepartmentDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(DEPARTMENTS_COLUMN_NAME, department.getName());
-        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, String.valueOf(department.getCreatedAt()));
         val.put(DEPARTMENTS_COLUMN_BYUSER, department.getByUser());
         val.put(DEPARTMENTS_COLUMN_DISENABLED, department.isHide());
         try {
@@ -172,7 +171,6 @@ public class DepartmentDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(DEPARTMENTS_COLUMN_NAME, department.getName());
-        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, String.valueOf(department.getCreatedAt()));
         val.put(DEPARTMENTS_COLUMN_BYUSER, department.getByUser());
         val.put(DEPARTMENTS_COLUMN_DISENABLED, department.isHide());
 
