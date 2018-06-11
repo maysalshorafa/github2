@@ -116,6 +116,7 @@ import org.json.JSONObject;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -2179,7 +2180,7 @@ public class MainActivity extends AppCompatActivity {
             }.execute();
         }
     */
-    private void printAndOpenCashBoxBTP880(String mainAns, final String mainMer, final String mainCli) {
+    private void printAndOpenCashBoxBTP880(final String mainAns, final String mainMer, final String mainCli) {
         final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(MainActivity.this);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
 
@@ -2210,7 +2211,42 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected Void doInBackground(Void... params) {
                 InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
-                if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
+                if (mainAns.equals("PINPAD")) {
+                    HashMap<String, String> clientNote = new HashMap<String, String>();
+                    HashMap<String, String> sellerNote = new HashMap<String, String>();
+
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(mainMer);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Iterator<String> itr = null;
+                    try {
+                        itr = jsonObject.getJSONObject("receipt").keys();
+
+                        while (itr.hasNext()) {
+                            String key = itr.next();
+                            if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("BOTH")) {
+                                clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                            } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("CLIENT")) {
+                                clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                            } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("SELLER")) {
+                                sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Bitmap seller = invoiceImg.pinPadInvoice(SESSION._SALE, false, sellerNote);
+                    pos.imageStandardModeRasterPrint(seller, CONSTANT.PRINTER_PAGE_WIDTH);
+                    pos.systemFeedLine(2);
+                    pos.systemCutPaper(66, 0);
+                    Bitmap client = invoiceImg.pinPadInvoice(SESSION._SALE, false, clientNote);
+                    pos.imageStandardModeRasterPrint(client, CONSTANT.PRINTER_PAGE_WIDTH);
+
+                } else if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
                     pos.imageStandardModeRasterPrint(invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer), CONSTANT.PRINTER_PAGE_WIDTH);
                     pos.systemFeedLine(2);
                     pos.systemCutPaper(66, 0);
@@ -2273,8 +2309,8 @@ public class MainActivity extends AppCompatActivity {
                     byte b = 0;
                     try {
                         if (mainAns.equals("PINPAD")) {
-                            Map<String, String> clientNote = new ArrayMap<>();
-                            Map<String, String> sellerNote = new ArrayMap<>();
+                            HashMap<String, String> clientNote = new HashMap<String, String>();
+                            HashMap<String, String> sellerNote = new HashMap<String, String>();
 
                             JSONObject jsonObject = new JSONObject(mainMer);
                             Iterator<String> itr = null;
@@ -2292,16 +2328,12 @@ public class MainActivity extends AppCompatActivity {
                                         sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
                                     }
                                 }
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
                             Bitmap seller = invoiceImg.pinPadInvoice(SESSION._SALE, false, sellerNote);
 
-
                             HPRTPrinterHelper.PrintBitmap(seller, b, b, 300);
-
                             try {
                                 HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
                             } catch (Exception e) {
@@ -2309,8 +2341,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                             Bitmap client = invoiceImg.pinPadInvoice(SESSION._SALE, false, clientNote);
                             HPRTPrinterHelper.PrintBitmap(client, b, b, 300);
-
-
 
                         } else if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
                             Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer);
@@ -2353,7 +2383,42 @@ public class MainActivity extends AppCompatActivity {
             InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
             byte b = 0;
             try {
-                if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
+                if (mainAns.equals("PINPAD")) {
+                    HashMap<String, String> clientNote = new HashMap<String, String>();
+                    HashMap<String, String> sellerNote = new HashMap<String, String>();
+
+                    JSONObject jsonObject = new JSONObject(mainMer);
+                    Iterator<String> itr = null;
+                    try {
+                        itr = jsonObject.getJSONObject("receipt").keys();
+
+                        while (itr.hasNext()) {
+                            String key = itr.next();
+                            if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("BOTH")) {
+                                clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                            } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("CLIENT")) {
+                                clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                            } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("SELLER")) {
+                                sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Bitmap seller = invoiceImg.pinPadInvoice(SESSION._SALE, false, sellerNote);
+                    AidlUtil.getInstance().printBitmap(seller);
+
+                    //Thread.sleep(100);
+
+                    AidlUtil.getInstance().feed();
+                    AidlUtil.getInstance().cut();
+
+
+                    Bitmap client = invoiceImg.pinPadInvoice(SESSION._SALE, false, clientNote);
+                    AidlUtil.getInstance().printBitmap(client);
+
+                } else if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
                     Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer);
 
                     AidlUtil.getInstance().printBitmap(bitmap);

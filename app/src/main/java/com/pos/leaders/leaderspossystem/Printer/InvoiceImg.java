@@ -22,11 +22,15 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by KARAM on 25/02/2017.
@@ -88,7 +92,7 @@ public class InvoiceImg {
         canvas.translate(0, 0);
         Bitmap temp = null;
         for (Bitmap bitmap : bitmaps) {
-            Log.i(LOG_TAG, bitmap.getWidth() + "");
+            //Log.i(LOG_TAG, bitmap.getWidth() + "");
             if (bitmap.getWidth() < width) {
                 canvas.drawBitmap(bitmap, 0, 0, null);
                 canvas.translate(bitmap.getWidth(), 0);
@@ -611,7 +615,7 @@ public class InvoiceImg {
         return make(blocks);
     }
 
-    public Bitmap pinPadInvoice(Order order, Boolean isCopy, Map<String,String> mainMer) {
+    public Bitmap pinPadInvoice(Order order, Boolean isCopy, HashMap<String, String> mainMer) {
         final List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(order));
         String status = context.getString(R.string.source_invoice);
@@ -711,10 +715,20 @@ public class InvoiceImg {
 
 
         //// TODO: 05/06/2018 printing this part not working fine
-        for (ArrayMap.Entry<String, String> entry : mainMer.entrySet()) {
-            blocks.add(new Block("\u200f" +entry.getValue(),25.0f,Color.BLACK,(int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5)).Left());
-            blocks.add(new Block("\u200e" +entry.getKey(),25.0f,Color.BLACK,(int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5)));
+        Log.e("printer", mainMer.toString());
+        Set set = mainMer.entrySet();
+        Iterator iterator = set.iterator();
+
+        String ccrn = "\u200e", ccrv="";
+        while (iterator.hasNext()) {
+            Map.Entry mentry = (Map.Entry)iterator.next();
+            ccrn += "" + mentry.getKey().toString() + newLineL;
+
+            ccrv += "" + mentry.getValue().toString().replaceAll("\r\n","").toString() + "\n";
         }
+        blocks.add(new Block(ccrv,21.0f,Color.BLACK,(int) (CONSTANT.PRINTER_PAGE_WIDTH*0.5 )).Left());
+        blocks.add(new Block(ccrn,21.0f,Color.BLACK,(int) (CONSTANT.PRINTER_PAGE_WIDTH *0.5)).Left());
+        blocks.add(lineR.Left());
 
         return make(blocks);
     }

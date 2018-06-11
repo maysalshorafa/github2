@@ -246,7 +246,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
                 Product_Management_Edit=0;
                 Product_Management_View=0;
                 final String[] items = {
-                        getString(R.string.edit),
+                        getString(R.string.edit_product),
                         getString(R.string.delete),
                         getString(R.string.view)  };
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProductCatalogActivity.this);
