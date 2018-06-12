@@ -79,6 +79,8 @@
         <activity android:name=".LogInActivity" />
         <activity
             android:name=".MainActivity"
+            android:hardwareAccelerated="true"
+            android:largeHeap="true"
             android:label="@string/title_main_sales_activity" />
         <activity
             android:name=".Tools.OldCashActivity"

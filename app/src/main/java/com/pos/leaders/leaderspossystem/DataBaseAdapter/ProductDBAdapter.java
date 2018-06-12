@@ -147,6 +147,14 @@ public class ProductDBAdapter {
         return product;
     }
 
+    public int getProductsCount() {
+        String countQuery = "SELECT  * FROM " + PRODUCTS_TABLE_NAME;
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
+    }
+
     public Product getProductByBarCode(String barcode){
         Product product = null;
         Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where barcode='" + barcode + "'", null);

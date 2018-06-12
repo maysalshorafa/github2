@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.LogInActivity;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.Settings.AppCompatPreferenceActivity;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 import com.pos.leaders.leaderspossystem.updater.AutoUpdateApk;
 
@@ -45,6 +47,7 @@ public class TitleBar {
     private static AutoUpdateApk aua = null;
     private static Clock clock=null;
     private static long lastUpdateCheck;
+
     public static void setTitleBar(final AppCompatActivity context) {
         final ViewGroup actionBarLayout = (ViewGroup) context.getLayoutInflater().inflate(R.layout.title_bar, null);
         ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);

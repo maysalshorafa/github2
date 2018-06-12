@@ -3448,12 +3448,10 @@ public class MainActivity extends AppCompatActivity {
 
            }
             return super.dispatchKeyEvent(event);
-
        }
        if(event.getKeyCode()==KeyEvent.KEYCODE_BACK) {
            return super.dispatchKeyEvent(event);
        }
-
         return true;
     }
 
