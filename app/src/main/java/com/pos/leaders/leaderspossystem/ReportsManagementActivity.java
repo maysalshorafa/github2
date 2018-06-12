@@ -95,14 +95,14 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                         .setMessage(getString(R.string.create_z_report_message))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                //(long id, Date creationDate, User user, ORDER startSale, ORDER endSale)
+                                //(long id, Date creationDate, Employee user, ORDER startSale, ORDER endSale)
                                 if(lastZReport == null) {
                                     lastZReport = new ZReport();
                                     lastZReport.setEndOrderId(0);
                                 }
 
-                                ZReport z=new ZReport(0, new Timestamp(System.currentTimeMillis()) , SESSION._USER,lastZReport.getEndOrderId()+1,lastSale);
-                                z.setByUser(SESSION._USER.getUserId());
+                                ZReport z=new ZReport(0, new Timestamp(System.currentTimeMillis()) , SESSION._EMPLOYEE,lastZReport.getEndOrderId()+1,lastSale);
+                                z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
                                 double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
                                 totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
                                 long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
@@ -145,7 +145,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
             public void onClick(View v) {
                 PrintTools pt=new PrintTools(ReportsManagementActivity.this);
                 if (lastZReport!=null){ // test if have at least i row in ZReportTable Then make XReport
-                Bitmap bmap = pt.createXReport(lastZReport.getEndOrderId()+1,lastSale.getOrderId(),SESSION._USER,new Date());
+                Bitmap bmap = pt.createXReport(lastZReport.getEndOrderId()+1,lastSale.getOrderId(),SESSION._EMPLOYEE,new Date());
 
                     pt.PrintReport(bmap);
                     //create and print x report

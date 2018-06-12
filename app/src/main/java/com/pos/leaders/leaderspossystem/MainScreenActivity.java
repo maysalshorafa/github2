@@ -242,11 +242,11 @@ public class MainScreenActivity extends Activity {
 
 
 		if (SESSION._ORDERS != null) {
-			sale = new Order(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), 0, false, 0,0);
+			sale = new Order(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), 0, false, 0,0);
 		}
 		else
 		{
-			SESSION._ORDERS =new Order(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), 0, false, 0,0);
+			SESSION._ORDERS =new Order(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), 0, false, 0,0);
 		}
 
 		if (SESSION._ORDER_DETAILES != null) {
@@ -429,7 +429,7 @@ public class MainScreenActivity extends Activity {
 		btWorkerManagement.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent=new Intent(MainScreenActivity.this,WorkerManagementActivity.class);
+				Intent intent=new Intent(MainScreenActivity.this,EmployeeManagementActivity.class);
 				startActivity(intent);
 			}
 		});

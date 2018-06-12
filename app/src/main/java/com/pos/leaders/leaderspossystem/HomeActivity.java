@@ -13,10 +13,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class HomeActivity extends Activity {
 	SharedPreferences prefs = null;
 
 	EditText etUserName, etPassword;
-	UserDBAdapter userDBAdapter;
+	EmployeeDBAdapter userDBAdapter;
 	ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
 	String str ;
 	@Override
@@ -62,7 +62,7 @@ public class HomeActivity extends Activity {
 		prefs = getSharedPreferences("com.pos.leaders.leaderspossystem", MODE_PRIVATE);
 
 		SESSION._ORDER_DETAILES = new ArrayList<OrderDetails>();
-		userDBAdapter = new UserDBAdapter(this);
+		userDBAdapter = new EmployeeDBAdapter(this);
 		userDBAdapter.open();
 
 		scheduleWorkersDBAdapter = new ScheduleWorkersDBAdapter(this);
@@ -74,7 +74,7 @@ public class HomeActivity extends Activity {
 		btReg.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent=new Intent(HomeActivity.this,AddUserActivity.class);
+				Intent intent=new Intent(HomeActivity.this,AddEmployeeActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -84,9 +84,9 @@ public class HomeActivity extends Activity {
 		btLogIn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				User u = userDBAdapter.logIn(etUserName.getText().toString(), etPassword.getText().toString());
+				Employee u = userDBAdapter.logIn(etUserName.getText().toString(), etPassword.getText().toString());
 				if (u != null) {
-					SESSION._USER = new User(u);
+					SESSION._EMPLOYEE = new Employee(u);
 					Log.i("HomeActivity", u.toString());
 					Toast.makeText(getApplicationContext(), "Hello " + u.getFullName() + " !!", Toast.LENGTH_SHORT).show();
 					Intent intent = new Intent(getApplicationContext(), OldDashBoard.class);
@@ -94,15 +94,15 @@ public class HomeActivity extends Activity {
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 					intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, str);
 			//		intent.putExtra("permissions_name",u.getPermtionName());
-					long scheduleID = scheduleWorkersDBAdapter.insertEntry(u.getUserId());
-					SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, u.getUserId(), new Date().getTime(), new Date().getTime());
+					long scheduleID = scheduleWorkersDBAdapter.insertEntry(u.getEmployeeId());
+					SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, u.getEmployeeId(), new Date().getTime(), new Date().getTime());
 					/*
 					String message = "hello";
                     intent.putExtra("customerName", message);
 					*/
 					startActivity(intent);
 				} else {
-					Toast.makeText(getApplicationContext(), "User name or password does`t exist!! try again.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), "Employee name or password does`t exist!! try again.", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});

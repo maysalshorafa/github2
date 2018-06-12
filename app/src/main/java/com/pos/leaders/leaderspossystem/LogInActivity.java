@@ -15,12 +15,12 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -36,12 +36,12 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     private Button btn_0, btn_1, btn_2, btn_3, btn_4, btn_5, btn_6, btn_7, btn_8, btn_9, btn_del;
     private EditText et;
     private Button btn_login , btn_schedule_workers;
-    private UserDBAdapter userDBAdapter;
+    private EmployeeDBAdapter userDBAdapter;
     private ZReport lastZReport;
     public static final String LEADPOS_MAKE_A_REPORT = "LEADPOS_make_a_report";
     public static double LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT = 0.0;
 
-    private static User DEFAULT_USER = null;
+    private static Employee DEFAULT_USER = null;
 
     private SQLiteDatabase db;
 
@@ -118,7 +118,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
 
         SESSION._ORDER_DETAILES = new ArrayList<OrderDetails>();
 
-        userDBAdapter = new UserDBAdapter(this);
+        userDBAdapter = new EmployeeDBAdapter(this);
 
         btn_0 = (Button) findViewById(R.id.touchPad_bt0);
         btn_0.setOnClickListener(this);
@@ -174,10 +174,10 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     }
 
     private void MakeDefaultUser(){
-        DEFAULT_USER = new User();
+        DEFAULT_USER = new Employee();
         DEFAULT_USER.setFirstName("LeadPOS");
         DEFAULT_USER.setLastName("Developer");
-        DEFAULT_USER.setUserId(0L);
+        DEFAULT_USER.setEmployeeId(0L);
         DEFAULT_USER.setPassword("117181916131");
     }
 
@@ -191,7 +191,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
             ArrayList<Integer> permissions = new ArrayList<>();
 
 
-            SESSION._USER = new User(DEFAULT_USER);
+            SESSION._EMPLOYEE = new Employee(DEFAULT_USER);
 
             permissions.add(0,2);//report
             permissions.add(1,3);//products
@@ -209,17 +209,17 @@ public class LogInActivity extends Activity implements View.OnClickListener {
             startActivity(intent);
             finish();
         } else {
-            User user = userDBAdapter.logIn(et.getText().toString());
+            Employee user = userDBAdapter.logIn(et.getText().toString());
             if (user == null) {
                 Toast.makeText(this, getResources().getString(R.string.wrong_password), Toast.LENGTH_SHORT).show();
             } else {
-                UserPermissionsDBAdapter userPermissionsDBAdapter = new UserPermissionsDBAdapter(this);
+                EmployeePermissionsDBAdapter userPermissionsDBAdapter = new EmployeePermissionsDBAdapter(this);
                 userPermissionsDBAdapter.open();
-                ArrayList<Integer> permissions = userPermissionsDBAdapter.getPermissions(user.getUserId());
+                ArrayList<Integer> permissions = userPermissionsDBAdapter.getPermissions(user.getEmployeeId());
 
                 // success to log in
 
-                SESSION._USER = new User(user);
+                SESSION._EMPLOYEE = new Employee(user);
                 Toast.makeText(getApplicationContext(), "Hello " + user.getFullName() + " !!", Toast.LENGTH_SHORT).show();
 
 

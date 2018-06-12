@@ -10,9 +10,9 @@ import java.util.List;
  * Created by KARAM on 16/10/2016.
  */
 
-public class User {
-    private long userId;
-    private String userName;
+public class Employee {
+    private long employeeId;
+    private String employeeName;
     private String password;
     private String firstName;
     private String lastName;
@@ -26,15 +26,15 @@ public class User {
     @JsonIgnore
     private List<Permissions> permissionsList;
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setEmployeeId(long employeeId) {
+        this.employeeId = employeeId;
     }
 
 
 
-    public User(long userId, String userName, String password, String firstName, String lastName, Timestamp createdAt, boolean hide, String phoneNumber, double present, double hourlyWage ) {
-        this.userId = userId;
-        this.userName = userName;
+    public Employee(long employeeId, String employeeName, String password, String firstName, String lastName, Timestamp createdAt, boolean hide, String phoneNumber, double present, double hourlyWage ) {
+        this.employeeId = employeeId;
+        this.employeeName = employeeName;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -44,18 +44,18 @@ public class User {
         this.present = present;
         this.hourlyWage = hourlyWage;
     }
-    public User(User user){
-        this(user.getUserId(),user.getUserName(),user.getPassword(),user.getFirstName(),
+    public Employee(Employee user){
+        this(user.getEmployeeId(),user.getEmployeeName(),user.getPassword(),user.getFirstName(),
                 user.getLastName(),user.getCreatedAt(),user.isHide(),user.getPhoneNumber(),user.getPresent(),user.getHourlyWage());
     }
-    public User(){}
+    public Employee(){}
 
     @JsonIgnore
     public String getFullName(){
         return this.firstName+" "+this.lastName;
     }
-    public String getUserName(){
-        return this.userName;
+    public String getEmployeeName(){
+        return this.employeeName;
     }
     public double getPresent(){
         return this.present;
@@ -68,8 +68,8 @@ public class User {
         return firstName;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getEmployeeId() {
+        return employeeId;
     }
 
 
@@ -118,8 +118,8 @@ public class User {
 		this.present = present;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
 	}
 
     public List<Permissions> getPermissionsList() {
@@ -148,10 +148,10 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Employee{" +
                 "createdAt=" + createdAt +
-                ", userId=" + userId +
-                ", userName='" + userName + '\'' +
+                ", employeeId=" + employeeId +
+                ", employeeName='" + employeeName + '\'' +
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

@@ -14,7 +14,7 @@ public class AReport {
     private Timestamp createdAt;
     private long byUserID;
     @JsonIgnore
-    private User byUser;
+    private Employee byUser;
     private double amount;
     private long lastOrderId;
     @JsonIgnore
@@ -36,7 +36,7 @@ public class AReport {
         this.lastZReportID = lastZReportID;
     }
 
-    public AReport(Timestamp createdAt, User byUser, Order lastSale, ZReport lastZReport, double amount) {
+    public AReport(Timestamp createdAt, Employee byUser, Order lastSale, ZReport lastZReport, double amount) {
         this.createdAt = createdAt;
         this.byUser = byUser;
         this.lastSale = lastSale;
@@ -68,7 +68,7 @@ public class AReport {
         return byUserID;
     }
 
-    public User getByUser() {
+    public Employee getByUser() {
         return byUser;
     }
 
@@ -109,7 +109,7 @@ public class AReport {
         this.byUserID = byUserID;
     }
 
-    public void setByUser(User byUser) {
+    public void setByUser(Employee byUser) {
         this.byUser = byUser;
     }
 

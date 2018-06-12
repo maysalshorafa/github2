@@ -73,7 +73,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Club;
@@ -91,7 +91,7 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
@@ -208,8 +208,8 @@ public class SalesCartActivity extends AppCompatActivity {
     SaleDetailsListViewAdapter saleDetailsListViewAdapter;
     View selectedIteminCartList;
     OrderDetails selectedOrderOnCart = null;
-    private List<User> custmerAssestList;
-    private List<User> AllCustmerAssestList;
+    private List<Employee> custmerAssestList;
+    private List<Employee> AllCustmerAssestList;
     public CustomerAssetDB custmerAssetDB;
     public CustomerAssistantCatalogGridViewAdapter custmerAssestCatlogGridViewAdapter;
     private boolean isGrid = true;
@@ -816,9 +816,9 @@ public class SalesCartActivity extends AppCompatActivity {
 
 
         if (SESSION._ORDERS != null) {
-            sale = new Order(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), 0, false, 0, 0);
+            sale = new Order(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), 0, false, 0, 0);
         } else {
-            SESSION._ORDERS = new Order(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), 0, false, 0, 0);
+            SESSION._ORDERS = new Order(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), 0, false, 0, 0);
         }
 
         if (SESSION._ORDER_DETAILES != null) {
@@ -1030,7 +1030,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                         cashETCash.setBackgroundResource(R.drawable.catalogproduct_item_bg);
                                         String str = cashETCash.getText().toString();
                                         int indexOfItem = SESSION._ORDER_DETAILES.indexOf(selectedOrderOnCart);
-                                        double X = SESSION._USER.getPresent();
+                                        double X = SESSION._EMPLOYEE.getPresent();
                                         if (sw.isChecked()) {
                                             if (!(str.equals(""))) {
                                                 double d = Double.parseDouble(str);
@@ -1106,7 +1106,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                     public void onClick(View v) {
                                         String str = cashETCash.getText().toString();
                                         int indexOfItem = SESSION._ORDER_DETAILES.indexOf(selectedOrderOnCart);
-                                        double X = SESSION._USER.getPresent();
+                                        double X = SESSION._EMPLOYEE.getPresent();
                                         if (sw.isChecked()) {
                                             if (!(str.equals(""))) {
                                                 double d = Double.parseDouble(str);
@@ -1350,7 +1350,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         public void afterTextChanged(Editable s) {
                             et.setBackgroundResource(R.drawable.catalogproduct_item_bg);
                             String str = et.getText().toString();
-                            double X = SESSION._USER.getPresent();
+                            double X = SESSION._EMPLOYEE.getPresent();
                             if (sw.isChecked()) {
                                 if (!(str.equals(""))) {
                                     double d = Double.parseDouble(str);
@@ -1418,7 +1418,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             String str = et.getText().toString();
-                            double X = SESSION._USER.getPresent();
+                            double X = SESSION._EMPLOYEE.getPresent();
                             if (sw.isChecked()) {
                                 if (!(str.equals(""))) {
 
@@ -1536,7 +1536,7 @@ public class SalesCartActivity extends AppCompatActivity {
             return;
         }
         if (Double.parseDouble(str) != 0)
-            addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._USER.getUserId(),""));
+            addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._EMPLOYEE.getEmployeeId(),""));
     }
 
 
@@ -1592,7 +1592,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 break;
             case R.id.touchPadFragment_btEnter:
                 if (!touchPadPressed.equals(""))
-                    addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._USER.getUserId(),""));
+                    addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._EMPLOYEE.getEmployeeId(),""));
                 touchPadPressed = "";
                 break;
             case R.id.touchPadFragment_btDot:
@@ -2170,9 +2170,9 @@ public class SalesCartActivity extends AppCompatActivity {
 
                         printer.PRN_PrintDotBitmap(invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainCli), 0);
                     } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                        printer.PRN_PrintDotBitmap(invoiceImg.normalInvoice(SESSION._ORDERS.getCashPaymentId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._USER, SESSION._CHECKS_HOLDER), 0);
+                        printer.PRN_PrintDotBitmap(invoiceImg.normalInvoice(SESSION._ORDERS.getCashPaymentId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER), 0);
                     } else {
-                        printer.PRN_PrintDotBitmap(invoiceImg.normalInvoice(SESSION._ORDERS.getCashPaymentId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._USER, null), 0);
+                        printer.PRN_PrintDotBitmap(invoiceImg.normalInvoice(SESSION._ORDERS.getCashPaymentId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null), 0);
                     }
                     return null;
                 }
@@ -2216,9 +2216,9 @@ public class SalesCartActivity extends AppCompatActivity {
                     pos.systemCutPaper(66, 0);
                     pos.imageStandardModeRasterPrint(invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainCli), CONSTANT.PRINTER_PAGE_WIDTH);
                 } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                    pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._USER, SESSION._CHECKS_HOLDER), CONSTANT.PRINTER_PAGE_WIDTH);
+                    pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER), CONSTANT.PRINTER_PAGE_WIDTH);
                 } else {
-                    pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._USER, null), CONSTANT.PRINTER_PAGE_WIDTH);
+                    pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null), CONSTANT.PRINTER_PAGE_WIDTH);
                 }
                 return null;
             }
@@ -2325,10 +2325,10 @@ public class SalesCartActivity extends AppCompatActivity {
                             Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainCli);
                             HPRTPrinterHelper.PrintBitmap(bitmap2, b, b, 300);
                         } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._USER, SESSION._CHECKS_HOLDER);
+                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER);
                             HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
                         } else {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._USER, null);
+                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null);
                             HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
                         }
                     } catch (Exception e) {
@@ -2368,10 +2368,10 @@ public class SalesCartActivity extends AppCompatActivity {
                     AidlUtil.getInstance().printBitmap(bitmap2);
                     //Thread.sleep(100);
                 } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                    Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._USER, SESSION._CHECKS_HOLDER);
+                    Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER);
                     AidlUtil.getInstance().printBitmap(bitmap);
                 } else {
-                    Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._USER, null);
+                    Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null);
                     AidlUtil.getInstance().printBitmap(bitmap);
                 }
             } catch (Exception e) {
@@ -2441,10 +2441,10 @@ public class SalesCartActivity extends AppCompatActivity {
                             Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainCli);
                             printSMS230(bitmap2);
                         } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._USER, SESSION._CHECKS_HOLDER);
+                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER);
                             printSMS230(bitmap);
                         } else {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._USER, null);
+                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null);
                             printSMS230(bitmap);
                         }
                     } catch (Exception e) {
@@ -2570,7 +2570,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 orderDBAdapter.close();
                 custmerAssetDB.close();
                 SESSION._ORDERS.setOrders(SESSION._ORDER_DETAILES);
-                SESSION._ORDERS.setUser(SESSION._USER);
+                SESSION._ORDERS.setUser(SESSION._EMPLOYEE);
 
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(SalesCartActivity.this);
                 paymentDBAdapter.open();
@@ -2705,7 +2705,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 orderDBAdapter.close();
                 custmerAssetDB.close();
                 SESSION._ORDERS.setOrders(SESSION._ORDER_DETAILES);
-                SESSION._ORDERS.setUser(SESSION._USER);
+                SESSION._ORDERS.setUser(SESSION._EMPLOYEE);
 
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(SalesCartActivity.this);
                 paymentDBAdapter.open();
@@ -3225,7 +3225,7 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     public void callPopupOrderSalesMan(final OrderDetails order) {
-        UserDBAdapter userDB = new UserDBAdapter(this);
+        EmployeeDBAdapter userDB = new EmployeeDBAdapter(this);
         userDB.open();
         final CustomerAssetDB customerAssistantDB = new CustomerAssetDB(this);
         customerAssistantDB.open();
@@ -3253,7 +3253,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
                     public void onClick(View arg0) {
-                        Intent intent = new Intent(SalesCartActivity.this, AddUserActivity.class);
+                        Intent intent = new Intent(SalesCartActivity.this, AddEmployeeActivity.class);
                         startActivity(intent);
 
                         popupWindow.dismiss();
@@ -3278,7 +3278,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                        @Override
                                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                                            if(!orderIdList.contains(order)){
-                                                               custmerAssetstIdList.add(custmerAssestList.get(position).getUserId());
+                                                               custmerAssetstIdList.add(custmerAssestList.get(position).getEmployeeId());
                                                                orderIdList.add(order);
                                                            }
 
@@ -3317,7 +3317,7 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     public void callPopupForSalesMan() {
-        UserDBAdapter userDB = new UserDBAdapter(this);
+        EmployeeDBAdapter userDB = new EmployeeDBAdapter(this);
         userDB.open();
         final CustomerAssetDB customerAssistantDb = new CustomerAssetDB(this);
         customerAssistantDb.open();
@@ -3357,7 +3357,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
                     public void onClick(View arg0) {
-                        Intent intent = new Intent(SalesCartActivity.this, AddUserActivity.class);
+                        Intent intent = new Intent(SalesCartActivity.this, AddEmployeeActivity.class);
                         startActivity(intent);
 
                         popupWindow.dismiss();
@@ -3384,7 +3384,7 @@ public class SalesCartActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 forSaleMan = true;
-                custmerSaleAssetstId = custmerAssestList.get(position).getUserId();
+                custmerSaleAssetstId = custmerAssestList.get(position).getEmployeeId();
                 salesSaleMan.setText(custmerAssestList.get(position).getFullName());
                 popupWindow.dismiss();
             }

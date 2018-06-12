@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.R;
 
@@ -112,9 +112,9 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
         TextView salesCase=(TextView)gridView.findViewById(R.id.salesManGridView_TVSaleCase);
         TextView salesDate=(TextView)gridView.findViewById(R.id.salesManGridView_TVSaleDate);
         TextView saleId=(TextView)gridView.findViewById(R.id.salesManGridView_TVSaleId);
-        UserDBAdapter userDBAdapter=new UserDBAdapter(context);
+        EmployeeDBAdapter userDBAdapter=new EmployeeDBAdapter(context);
         userDBAdapter.open();
-        String userName=userDBAdapter.getUserName(customerAssests.get(position).getCustomerAssistantID());
+        String userName=userDBAdapter.getEmployeesName(customerAssests.get(position).getCustomerAssistantID());
       //  saleManId.setText(userName);
         salesCase.setText(""+customerAssests.get(position).getSalesCase());
         tvSalesAmount.setText(Util.makePrice(customerAssests.get(position).getAmount()));

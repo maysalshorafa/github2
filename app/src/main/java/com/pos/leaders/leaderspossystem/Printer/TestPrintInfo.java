@@ -681,7 +681,7 @@ public class TestPrintInfo {
 	/**
 	 * Name��TestUserDefinedCharacter
 	 * 
-	 * Function�� test User-Defined Character
+	 * Function�� test Employee-Defined Character
 	 * 
 	 * Parameter��
 	 * @param pos_sdk[in]��SDK variable
@@ -741,7 +741,7 @@ public class TestPrintInfo {
 		}
 		
 		
-		//Choose Font User Defined
+		//Choose Font Employee Defined
 		error_code = pos_sdk.textUserDefinedCharacterEnable(1);
 		if(error_code != POS_SUCCESS){
 			return error_code;
@@ -763,7 +763,7 @@ public class TestPrintInfo {
 		//feed line
 		error_code = pos_sdk.systemFeedLine(1);
 		
-		//Cancel Font User Defined of CharCode
+		//Cancel Font Employee Defined of CharCode
 		error_code = pos_sdk.textUserDefinedCharacterCancel(48);
 		error_code = pos_sdk.textUserDefinedCharacterCancel(49);
 		error_code = pos_sdk.textUserDefinedCharacterCancel(50);

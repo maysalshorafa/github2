@@ -28,7 +28,7 @@ public class Order {
 	@JsonIgnore
 	private List<OrderDetails> orders;
     @JsonIgnore
-	private User user;
+	private Employee user;
     @JsonIgnore
 	private Payment payment;
 	@JsonIgnore
@@ -64,9 +64,9 @@ public class Order {
 		this.totalPaidAmount = totalPaidAmount;
 	}
 
-	public Order(long orderId, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, User user) {
+	public Order(long orderId, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, Employee user) {
 		this.orderId = orderId;
-		this.byUser = user.getUserId();
+		this.byUser = user.getEmployeeId();
 		this.createdAt = createdAt;
 		this.replacementNote = replacementNote;
 		this.status = status;
@@ -123,7 +123,7 @@ public class Order {
         return orders;
     }
 
-    public User getUser() {
+    public Employee getUser() {
         return user;
     }
 
@@ -180,7 +180,7 @@ public class Order {
         this.orders = orders;
     }
 
-    public void setUser(User user) {
+    public void setUser(Employee user) {
         this.user = user;
     }
 

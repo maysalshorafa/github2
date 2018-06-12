@@ -41,8 +41,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.AReportDetails;
@@ -75,8 +75,8 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.SumPoint;
 import com.pos.leaders.leaderspossystem.Models.UsedPoint;
-import com.pos.leaders.leaderspossystem.Models.User;
-import com.pos.leaders.leaderspossystem.Models.Permission.UserPermissions;
+import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Models.Permission.EmployeesPermissions;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
@@ -511,10 +511,10 @@ public class SyncMessage extends Service {
 
                 //region UserPermtiossion
                 case MessageType.ADD_USER_PERMISSION:
-                    UserPermissions userPermissions = null;
-                    userPermissions = objectMapper.readValue(msgData, UserPermissions.class);
+                    EmployeesPermissions userPermissions = null;
+                    userPermissions = objectMapper.readValue(msgData, EmployeesPermissions.class);
 
-                    UserPermissionsDBAdapter userPermissionsDBAdapter = new UserPermissionsDBAdapter(this);
+                    EmployeePermissionsDBAdapter userPermissionsDBAdapter = new EmployeePermissionsDBAdapter(this);
                     userPermissionsDBAdapter.open();
                     rID = userPermissionsDBAdapter.insertEntry(userPermissions);
                     userPermissionsDBAdapter.close();
@@ -679,29 +679,29 @@ public class SyncMessage extends Service {
                 //endregion PRODUCT
 
                 //region USER
-                case MessageType.ADD_USER:
-                    User u;
-                    u = objectMapper.readValue(msgData, User.class);
+                case MessageType.ADD_EMPLOYEE:
+                    Employee u;
+                    u = objectMapper.readValue(msgData, Employee.class);
 
-                    UserDBAdapter userDBAdapter = new UserDBAdapter(this);
+                    EmployeeDBAdapter userDBAdapter = new EmployeeDBAdapter(this);
                     userDBAdapter.open();
                     rID = userDBAdapter.insertEntry(u);
                     userDBAdapter.close();
                     break;
-                case MessageType.UPDATE_USER:
-                    User updateUser;
-                    updateUser = objectMapper.readValue(msgData, User.class);
+                case MessageType.UPDATE_EMPLOYEE:
+                    Employee updateUser;
+                    updateUser = objectMapper.readValue(msgData, Employee.class);
 
-                    UserDBAdapter updateUserDBAdapter = new UserDBAdapter(this);
+                    EmployeeDBAdapter updateUserDBAdapter = new EmployeeDBAdapter(this);
                     updateUserDBAdapter.open();
                     rID = updateUserDBAdapter.updateEntryBo(updateUser);
                     updateUserDBAdapter.close();
                     break;
-                case MessageType.DELETE_USER:
-                    User deleteUser;
-                    deleteUser = objectMapper.readValue(msgData, User.class);
+                case MessageType.DELETE_EMPLOYEE:
+                    Employee deleteUser;
+                    deleteUser = objectMapper.readValue(msgData, Employee.class);
 
-                    UserDBAdapter deleteUserDBAdapter = new UserDBAdapter(this);
+                    EmployeeDBAdapter deleteUserDBAdapter = new EmployeeDBAdapter(this);
                     deleteUserDBAdapter.open();
                     rID = deleteUserDBAdapter.deleteEntryBo(deleteUser);
                     deleteUserDBAdapter.close();
@@ -1030,15 +1030,15 @@ public class SyncMessage extends Service {
 
             //region UserPermissions
             case MessageType.ADD_USER_PERMISSION:
-                res = messageTransmit.authPost(ApiURL.UserPermission, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authPost(ApiURL.EMPLOYEE_PERMISSION, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_USER_PERMISSION:
-                UserPermissions userPermissions=null;
-                userPermissions=objectMapper.readValue(msgData, UserPermissions.class);
-                res = messageTransmit.authPut(ApiURL.UserPermission, jsonObject.getString(MessageKey.Data), token,userPermissions.getUserPermissionsId());
+                EmployeesPermissions userPermissions=null;
+                userPermissions=objectMapper.readValue(msgData, EmployeesPermissions.class);
+                res = messageTransmit.authPut(ApiURL.EMPLOYEE_PERMISSION, jsonObject.getString(MessageKey.Data), token,userPermissions.getEmployeePermissionId());
                 break;
             case MessageType.DELETE_USER_PERMISSION:
-                res = messageTransmit.authDelete(ApiURL.UserPermission, jsonObject.getString(MessageKey.Data), token);
+                res = messageTransmit.authDelete(ApiURL.EMPLOYEE_PERMISSION, jsonObject.getString(MessageKey.Data), token);
                 break;
 
             //End region
@@ -1181,19 +1181,19 @@ public class SyncMessage extends Service {
                 break;
 
 
-            case MessageType.ADD_USER:
-                res = messageTransmit.authPost(ApiURL.User, jsonObject.getString(MessageKey.Data), token);
+            case MessageType.ADD_EMPLOYEE:
+                res = messageTransmit.authPost(ApiURL.Employee, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.UPDATE_USER:
-                User user=null;
+            case MessageType.UPDATE_EMPLOYEE:
+                Employee user=null;
                 JSONObject newUserJson = new JSONObject(jsonObject.getString(MessageKey.Data));
                 newUserJson.remove("createdAt");
-                user=objectMapper.readValue(newUserJson.toString(), User.class);
-                res = messageTransmit.authPut(ApiURL.User, newUserJson.toString(), token,user.getUserId());
+                user=objectMapper.readValue(newUserJson.toString(), Employee.class);
+                res = messageTransmit.authPut(ApiURL.Employee, newUserJson.toString(), token,user.getEmployeeId());
                 break;
-            case MessageType.DELETE_USER:
+            case MessageType.DELETE_EMPLOYEE:
                 JSONObject newDeleteUserJson = new JSONObject(jsonObject.getString(MessageKey.Data));
-                res = messageTransmit.authDelete(ApiURL.User, newDeleteUserJson.getString("userId"), token);
+                res = messageTransmit.authDelete(ApiURL.Employee, newDeleteUserJson.getString("userId"), token);
                 break;
             //Currencies
 

@@ -15,10 +15,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Tools.PermissionsGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
@@ -33,13 +33,13 @@ import static android.widget.AbsListView.CHOICE_MODE_MULTIPLE;
  * Created by KARAM on 22/10/2016.
  */
 
-public class AddUserActivity extends AppCompatActivity {
+public class AddEmployeeActivity extends AppCompatActivity {
 
     EditText etUserName, etPassword, etREPassword, etFirstName, etLastName, etPhoneNumber, etPresent, etHourlyWage;
     Button btAdd, btCancel;
     ListView lvPermissions;
-    UserDBAdapter userDBAdapter;
-    User user;
+    EmployeeDBAdapter userDBAdapter;
+    Employee user;
     final List<View> selectedViews = new ArrayList<View>();
     List<String> selectedFromList = new ArrayList<String>();
     ;
@@ -80,9 +80,9 @@ public class AddUserActivity extends AppCompatActivity {
         btCancel = (Button) findViewById(R.id.addUser_BTCancel);
         lvPermissions = (ListView) findViewById(R.id.addUser_LVPermissions);
 
-        userDBAdapter = new UserDBAdapter(this);
+        userDBAdapter = new EmployeeDBAdapter(this);
 
-        final UserPermissionsDBAdapter userPermissionsDBAdapter = new UserPermissionsDBAdapter(this);
+        final EmployeePermissionsDBAdapter userPermissionsDBAdapter = new EmployeePermissionsDBAdapter(this);
         user = null;
         PermissionsDBAdapter permissionsDBAdapter = new PermissionsDBAdapter(this);
         permissionsDBAdapter.open();
@@ -104,11 +104,11 @@ public class AddUserActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             long i = (long) extras.get("userId");
-            if (WorkerManagementActivity.User_Management_Edit == 8) {
+            if (EmployeeManagementActivity.User_Management_Edit == 8) {
                 btAdd.setText(R.string.edit);
-                WorkerManagementActivity.User_Management_Edit =0;
+                EmployeeManagementActivity.User_Management_Edit =0;
             }
-            if (WorkerManagementActivity.User_Management_View == 7) {
+            if (EmployeeManagementActivity.User_Management_View == 7) {
                 btAdd.setVisibility(View.GONE);
                 etPassword.setEnabled(false);
                 etREPassword.setEnabled(false);
@@ -118,13 +118,13 @@ public class AddUserActivity extends AppCompatActivity {
                 etPhoneNumber.setEnabled(false);
                 etHourlyWage.setEnabled(false);
                 etPresent.setEnabled(false);
-                WorkerManagementActivity.User_Management_View =0;
+                EmployeeManagementActivity.User_Management_View =0;
             }
             userDBAdapter.open();
-            user = userDBAdapter.getUserByID(i);
+            user = userDBAdapter.getEmployeeByID(i);
             userDBAdapter.close();
 
-            etUserName.setText(user.getUserName());
+            etUserName.setText(user.getEmployeeName());
             etPassword.setText(user.getPassword());
             etREPassword.setText(user.getPassword());
             etFirstName.setText(user.getFirstName());
@@ -160,7 +160,7 @@ public class AddUserActivity extends AppCompatActivity {
                 userDBAdapter.open();
                 if (user == null) {
                     if (!_userName.equals("")) {
-                        if (userDBAdapter.availableUserName(_userName)) {
+                        if (userDBAdapter.availableEmployeeName(_userName)) {
                             if (etPassword.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), getString(R.string.please_set_password), Toast.LENGTH_LONG).show();
                             } else if (!(etPassword.getText().toString().equals(etREPassword.getText().toString()))) {
@@ -176,7 +176,7 @@ public class AddUserActivity extends AppCompatActivity {
                                         , etLastName.getText().toString(), etPhoneNumber.getText().toString()
                                         , Double.parseDouble(etPresent.getText().toString()), Double.parseDouble(etHourlyWage.getText().toString()));
                                 if (i > 0) {
-                                    UserPermissionsDBAdapter userPermissionAdapter = new UserPermissionsDBAdapter(AddUserActivity.this);
+                                    EmployeePermissionsDBAdapter userPermissionAdapter = new EmployeePermissionsDBAdapter(AddEmployeeActivity.this);
                                     userPermissionAdapter.open();
                                     for (Permissions p : permissionsList) {
                                         if (p.isChecked()) {
@@ -216,19 +216,19 @@ public class AddUserActivity extends AppCompatActivity {
                         } else {
                             try {
 
-                                user.setUserName(etUserName.getText().toString());
+                                user.setEmployeeName(etUserName.getText().toString());
                                 user.setFirstName(etFirstName.getText().toString());
                                 user.setLastName(etLastName.getText().toString());
                                 user.setPhoneNumber(etPhoneNumber.getText().toString());
                                 user.setHourlyWage(Double.parseDouble(etHourlyWage.getText().toString()));
                                 user.setPresent(Double.parseDouble(etPresent.getText().toString()));
-                                UserPermissionsDBAdapter userPermissionAdapter = new UserPermissionsDBAdapter(AddUserActivity.this);
+                                EmployeePermissionsDBAdapter userPermissionAdapter = new EmployeePermissionsDBAdapter(AddEmployeeActivity.this);
                                 userPermissionAdapter.open();
                                 for (int i = 0; i <= userPermissions.size() - 1; i++) {
                                     for (Permissions p : permissionsList) {
                                         if (p.getId() == userPermissions.get(i)) {
                                             if (!p.isChecked()) {
-                                                userPermissionAdapter.deletePermissions(user.getUserId(), (int) p.getId());
+                                                userPermissionAdapter.deletePermissions(user.getEmployeeId(), (int) p.getId());
 
                                             }
                                         }
@@ -248,7 +248,7 @@ public class AddUserActivity extends AppCompatActivity {
 
                                         }
                                         if (addPerm) {
-                                            userPermissionAdapter.insertEntry(p.getId(), user.getUserId());
+                                            userPermissionAdapter.insertEntry(p.getId(), user.getEmployeeId());
                                         }
                                     }
 
@@ -271,7 +271,7 @@ public class AddUserActivity extends AppCompatActivity {
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddUserActivity.this, WorkerManagementActivity.class);
+                Intent intent = new Intent(AddEmployeeActivity.this, EmployeeManagementActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);             }
         });

@@ -9,7 +9,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Accounting;
@@ -51,7 +51,7 @@ public class BKMVDATA {
     private OrderDBAdapter saleDBAdapter;
     private OrderDetailsDBAdapter orderDBAdapter;
     private PaymentDBAdapter paymentDBAdapter;
-    private UserDBAdapter userDBAdapter;
+    private EmployeeDBAdapter userDBAdapter;
     private ProductDBAdapter productDBAdapter;
 
     private AReportDBAdapter aReportDBAdapter;
@@ -78,7 +78,7 @@ public class BKMVDATA {
         saleDBAdapter = new OrderDBAdapter(context);
         orderDBAdapter = new OrderDetailsDBAdapter(context);
         paymentDBAdapter = new PaymentDBAdapter(context);
-        userDBAdapter = new UserDBAdapter(context);
+        userDBAdapter = new EmployeeDBAdapter(context);
         productDBAdapter = new ProductDBAdapter(context);
 
 
@@ -275,7 +275,7 @@ public class BKMVDATA {
                     o.setProduct(new Product(-1, context.getResources().getString(R.string.general), o.getUnitPrice(), s.getByUser()));
                 }
             }
-            s.setUser(userDBAdapter.getUserByID(s.getByUser()));
+            s.setUser(userDBAdapter.getEmployeeByID(s.getByUser()));
         }
         orderDBAdapter.close();
         productDBAdapter.close();

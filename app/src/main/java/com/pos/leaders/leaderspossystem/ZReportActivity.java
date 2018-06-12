@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -30,7 +30,7 @@ public class ZReportActivity extends AppCompatActivity {
     private ZReportListViewAdapter adapter;
     private List<ZReport> zReportList;
     private ZReportDBAdapter zReportDBAdapter;
-    private UserDBAdapter userDBAdapter;
+    private EmployeeDBAdapter userDBAdapter;
 
     ListView lvReports;
     Button btCancel,btOk;
@@ -57,14 +57,14 @@ public class ZReportActivity extends AppCompatActivity {
 
 
         zReportDBAdapter = new ZReportDBAdapter(this);
-        userDBAdapter = new UserDBAdapter(this);
+        userDBAdapter = new EmployeeDBAdapter(this);
         userDBAdapter.open();
         zReportDBAdapter.open();
         zReportList = new ArrayList<ZReport>();
         zReportList = zReportDBAdapter.getAll();
         zReportDBAdapter.close();
         for (ZReport z:zReportList){
-            z.setUser(userDBAdapter.getUserByID((int)z.getByUser()));
+            z.setUser(userDBAdapter.getEmployeeByID((int)z.getByUser()));
         }
         userDBAdapter.close();
         adapter = new ZReportListViewAdapter(this, R.layout.list_view_z_report, zReportList);

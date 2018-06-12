@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.R;
 
 import java.util.List;
@@ -18,10 +18,10 @@ import java.util.List;
 
 public class CustomerAssistantCatalogGridViewAdapter extends BaseAdapter {
     private Context context;
-    private List<User> customersAssest;
+    private List<Employee> customersAssest;
     private LayoutInflater inflater;
 
-    public CustomerAssistantCatalogGridViewAdapter(Context context, List<User> customersAssest) {
+    public CustomerAssistantCatalogGridViewAdapter(Context context, List<Employee> customersAssest) {
         this.context = context;
         this.customersAssest = customersAssest;
     }
@@ -47,7 +47,7 @@ public class CustomerAssistantCatalogGridViewAdapter extends BaseAdapter {
      * @return The data at the specified position.
      */
     @Override
-    public User getItem(int position) {
+    public Employee getItem(int position) {
         return customersAssest.get(position);
     }
 
@@ -61,7 +61,7 @@ public class CustomerAssistantCatalogGridViewAdapter extends BaseAdapter {
      */
     @Override
     public long getItemId(int position) {
-        return (long)customersAssest.get(position).getUserId();
+        return (long)customersAssest.get(position).getEmployeeId();
     }
 
 

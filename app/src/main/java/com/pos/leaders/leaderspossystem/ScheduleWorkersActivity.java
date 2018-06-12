@@ -13,9 +13,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 
 import java.util.Date;
@@ -36,7 +36,7 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
         log_out = (Button) findViewById(R.id.btn_log_out);
         cancel = (Button) findViewById(R.id.btn_cancel);
         userPassWord = (EditText) findViewById(R.id.ET_userPassword);
-        final UserDBAdapter userDBAdapter = new UserDBAdapter(this);
+        final EmployeeDBAdapter userDBAdapter = new EmployeeDBAdapter(this);
         userDBAdapter.open();
         final ScheduleWorkersDBAdapter scheduleWorkersDBAdapter = new ScheduleWorkersDBAdapter(this);
         scheduleWorkersDBAdapter.open();
@@ -72,9 +72,9 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
                 boolean isValidPassword =userDBAdapter.isValidPassword(passWord);
                 if(isValidPassword){
                     // if password valid get userByPassword
-                    User user = userDBAdapter.getUserByPassword(passWord);
+                    Employee user = userDBAdapter.getEmployeesByPassword(passWord);
                         //login case
-                        long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getUserId());
+                        long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getEmployeeId());
                         if(scheduleID>0){
                             Toast.makeText(ScheduleWorkersActivity.this,getString(R.string.welcome)+user.getFullName()+getString(R.string.we_wish_to_you_a_happy_business_day),Toast.LENGTH_LONG).show();
                             onBackPressed();
@@ -89,9 +89,9 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
         log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User user = userDBAdapter.getUserByPassword(passWord);
-                ScheduleWorkers scheduleWorkers = scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(user.getUserId());
-                scheduleWorkersDBAdapter.updateEntry(user.getUserId(),new Date());
+                Employee user = userDBAdapter.getEmployeesByPassword(passWord);
+                ScheduleWorkers scheduleWorkers = scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(user.getEmployeeId());
+                scheduleWorkersDBAdapter.updateEntry(user.getEmployeeId(),new Date());
                 long r=0,h=0,m=0,s=0;
                 r= DateConverter.getDateDiff(new Date(scheduleWorkers.getStartTime()),new Date(), TimeUnit.MILLISECONDS);
                 h=r/(1000*60*60);

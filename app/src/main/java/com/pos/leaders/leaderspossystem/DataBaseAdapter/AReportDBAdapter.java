@@ -30,7 +30,7 @@ public class AReportDBAdapter {
     // Column Names
     protected static final String A_REPORT_COLUMN_ID = "id";
     protected static final String A_REPORT_COLUMN_CREATEDATE = "createDate";
-    protected static final String A_REPORT_COLUMN_BYUSER = "byUser";
+    protected static final String A_REPORT_COLUMN_BYUSER = "byEmployee";
     protected static final String A_REPORT_COLUMN_AMOUNT = "amount";
     protected static final String A_REPORT_COLUMN_LASTSALEID = "lastSaleID";
     protected static final String A_REPORT_COLUMN_LASTZREPORTID = "lastZReportID";
@@ -41,7 +41,7 @@ public class AReportDBAdapter {
             + A_REPORT_COLUMN_BYUSER +"` INTEGER, " +
             " `"+ A_REPORT_COLUMN_AMOUNT +"` REAL,  `"+ A_REPORT_COLUMN_LASTSALEID +"` INTEGER , " +
               "`"+ A_REPORT_COLUMN_LASTZREPORTID +"` INTEGER , " +
-            "FOREIGN KEY(`"+ A_REPORT_COLUMN_BYUSER +"`) REFERENCES `users.id` )";
+            "FOREIGN KEY(`"+ A_REPORT_COLUMN_BYUSER +"`) REFERENCES `employees.id` )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.

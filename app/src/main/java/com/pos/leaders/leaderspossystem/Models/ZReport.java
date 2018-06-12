@@ -14,7 +14,7 @@ public class ZReport {
     private Timestamp createdAt;
     private long byUser;
     @JsonIgnore
-    private User user;
+    private Employee user;
     private long startOrderId;
     private double amount;
     @JsonIgnore
@@ -49,25 +49,25 @@ public class ZReport {
         this.totalAmount = totalAmount;
     }
 
-    public ZReport(long zReportId, Timestamp createdAt, User user, Order startSale, Order endSale) {
+    public ZReport(long zReportId, Timestamp createdAt, Employee user, Order startSale, Order endSale) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.user = user;
         this.startSale = startSale;
         this.endSale = endSale;
 
-        this.byUser=user.getUserId();
+        this.byUser=user.getEmployeeId();
         this.startOrderId =startSale.getOrderId();
         this.endOrderId =endSale.getOrderId();
     }
 
-    public ZReport(long zReportId, Timestamp createdAt, User user, long startOrderId, Order endSale) {
+    public ZReport(long zReportId, Timestamp createdAt, Employee user, long startOrderId, Order endSale) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.user = user;
         this.endSale = endSale;
 
-        this.byUser=user.getUserId();
+        this.byUser=user.getEmployeeId();
         this.startOrderId = startOrderId;
         this.endOrderId =endSale.getOrderId();
     }
@@ -109,11 +109,11 @@ public class ZReport {
         this.byUser = byUser;
     }
 
-    public User getUser() {
+    public Employee getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Employee user) {
         this.user = user;
     }
 

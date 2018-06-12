@@ -15,11 +15,11 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Reports.UserAttendanceReport;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
-import com.pos.leaders.leaderspossystem.Tools.WorkerGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.EmployeeGridViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +28,16 @@ import java.util.List;
  * Created by KARAM on 25/10/2016.
  */
 
-public class WorkerManagementActivity  extends AppCompatActivity {
-    List<User> users;
+public class EmployeeManagementActivity extends AppCompatActivity {
+    List<Employee> users;
     ArrayList<Integer>permissions_name;
-    UserDBAdapter userDBAdapter;
+    EmployeeDBAdapter userDBAdapter;
     GridView gvUsers;
     Button btAddUser,btCancel;
     private static final int CHANGE_PASSWORD_DIALOG = 656;
     public static int User_Management_View ;
     public  static int  User_Management_Edit;
-    User user;
+    Employee user;
     public static final String LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME = "LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME";
     public String btnName="";
 
@@ -64,7 +64,7 @@ public class WorkerManagementActivity  extends AppCompatActivity {
         btAddUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(WorkerManagementActivity.this, AddUserActivity.class);
+                Intent intent = new Intent(EmployeeManagementActivity.this, AddEmployeeActivity.class);
                 startActivity(intent);
             }
         });
@@ -80,12 +80,12 @@ public class WorkerManagementActivity  extends AppCompatActivity {
         //endregion
 
 
-        userDBAdapter = new UserDBAdapter(this);
+        userDBAdapter = new EmployeeDBAdapter(this);
         userDBAdapter.open();
-        users = userDBAdapter.getAllUsers();
+        users = userDBAdapter.getAllEmployee();
         user = null;
 
-        final WorkerGridViewAdapter adapter = new WorkerGridViewAdapter(this, users);
+        final EmployeeGridViewAdapter adapter = new EmployeeGridViewAdapter(this, users);
         gvUsers.setAdapter(adapter);
         gvUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -98,7 +98,7 @@ public class WorkerManagementActivity  extends AppCompatActivity {
                         getString(R.string.change_password),
                         getString(R.string.delete),
                         getString(R.string.report)};
-                AlertDialog.Builder builder = new AlertDialog.Builder(WorkerManagementActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(EmployeeManagementActivity.this);
                 builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
@@ -106,14 +106,14 @@ public class WorkerManagementActivity  extends AppCompatActivity {
                         switch (item) {
                             case 0:
                               User_Management_View=7;
-                                intent = new Intent(WorkerManagementActivity.this, AddUserActivity.class);
-                                intent.putExtra("userId", users.get(position).getUserId());
+                                intent = new Intent(EmployeeManagementActivity.this, AddEmployeeActivity.class);
+                                intent.putExtra("userId", users.get(position).getEmployeeId());
                                 intent.putExtra(LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME, btnName);
                                 startActivity(intent);
                             case 1:
                                 User_Management_Edit=8;
-                                intent = new Intent(WorkerManagementActivity.this, AddUserActivity.class);
-                                intent.putExtra("userId", users.get(position).getUserId());
+                                intent = new Intent(EmployeeManagementActivity.this, AddEmployeeActivity.class);
+                                intent.putExtra("userId", users.get(position).getEmployeeId());
                                 intent.putExtra(LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME, btnName);
                                 startActivity(intent);
                                 break;
@@ -123,12 +123,12 @@ public class WorkerManagementActivity  extends AppCompatActivity {
 
                                 break;
                             case 3:
-                                new AlertDialog.Builder(WorkerManagementActivity.this)
+                                new AlertDialog.Builder(EmployeeManagementActivity.this)
                                         .setTitle(getString(R.string.delete)+" "+getString(R.string.users))
                                         .setMessage(getString(R.string.delete_user_message))
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
-                                                userDBAdapter.deleteEntry(users.get(position).getUserId());
+                                                userDBAdapter.deleteEntry(users.get(position).getEmployeeId());
                                                 users.remove(users.get(position));
                                                 gvUsers.setAdapter(adapter);
                                             }
@@ -142,8 +142,8 @@ public class WorkerManagementActivity  extends AppCompatActivity {
                                         .show();
                                 break;
                             case 4:
-                                intent = new Intent(WorkerManagementActivity.this, UserAttendanceReport.class);
-                                intent.putExtra("userID", users.get(position).getUserId());
+                                intent = new Intent(EmployeeManagementActivity.this, UserAttendanceReport.class);
+                                intent.putExtra("userID", users.get(position).getEmployeeId());
                                 startActivity(intent);
                                 //Toast.makeText(getApplicationContext(),"this function not available.",Toast.LENGTH_LONG).show();
                                 break;
@@ -160,7 +160,7 @@ public class WorkerManagementActivity  extends AppCompatActivity {
         switch (dialogID) {
             case CHANGE_PASSWORD_DIALOG:
                 //cash
-                final Dialog changePasswordDialog = new Dialog(WorkerManagementActivity.this);
+                final Dialog changePasswordDialog = new Dialog(EmployeeManagementActivity.this);
                 changePasswordDialog.setTitle(R.string.change_password);
                 changePasswordDialog.setContentView(R.layout.dialog_change_password);
                 changePasswordDialog.show();
@@ -171,20 +171,20 @@ public class WorkerManagementActivity  extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (etPassword.getText().toString().equals("")) {
-                            Toast.makeText(WorkerManagementActivity.this, "Please clubType new password.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(EmployeeManagementActivity.this, "Please clubType new password.", Toast.LENGTH_LONG).show();
                             } else if (!(etPassword.getText().toString().equals(etRePassword.getText().toString()))) {
 
-                            Toast.makeText(WorkerManagementActivity.this, "Password does`t match.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(EmployeeManagementActivity.this, "Password does`t match.", Toast.LENGTH_LONG).show();
                         } else {
                             String _passWord = etPassword.getText().toString();
                             if(userDBAdapter.availablePassWord(_passWord)){
                                 user.setPassword(etPassword.getText().toString());
                                 userDBAdapter.updateEntry(user);
-                                Toast.makeText(WorkerManagementActivity.this, "Success, setting new password.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(EmployeeManagementActivity.this, "Success, setting new password.", Toast.LENGTH_LONG).show();
                                 changePasswordDialog.cancel();
                             }
                             else {
-                                Toast.makeText(WorkerManagementActivity.this, "password is not available", Toast.LENGTH_LONG).show();
+                                Toast.makeText(EmployeeManagementActivity.this, "password is not available", Toast.LENGTH_LONG).show();
 
                             }
                         }

@@ -27,7 +27,7 @@ public class OrderDBAdapter {
 	protected static final String ORDER_TABLE_NAME = "_Order";
 	// Column Names
 	protected static final String ORDER_COLUMN_ID = "id";
-	protected static final String ORDER_COLUMN_BYUSER = "byUser";
+	protected static final String ORDER_COLUMN_BYUSER = "byEmployee";
 	protected static final String ORDER_COLUMN_ORDERDATE = "order_date";
 	protected static final String ORDER_COLUMN_REPLACEMENTNOTE = "replacementNote";
 	protected static final String ORDER_COLUMN_STATUS = "status";
@@ -37,9 +37,9 @@ public class OrderDBAdapter {
 	protected static final String ORDER_COLUMN_CUSTOMER_NAME = "customer_name";
 
 
-	public static final String DATABASE_CREATE = "CREATE TABLE _Order( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byUser` INTEGER, `order_date` TIMESTAMP DEFAULT current_timestamp, " +
+	public static final String DATABASE_CREATE = "CREATE TABLE _Order( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byEmployee` INTEGER, `order_date` TIMESTAMP DEFAULT current_timestamp, " +
 			"`replacementNote` INTEGER DEFAULT 0, `status` INTEGER DEFAULT 0, total_price REAL, total_paid_amount REAL, customerId  INTEGER DEFAULT 0 ,customer_name  TEXT, " +
-			"FOREIGN KEY(`byUser`) REFERENCES `users.id`)";
+			"FOREIGN KEY(`byEmployee`) REFERENCES `employees.id`)";
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
 	// Context of the application using the database.
@@ -200,18 +200,21 @@ public class OrderDBAdapter {
 				saleList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
+		Log.d("salesList",saleList.toString());
 		orderList=getListBetweenTwoDates(from,to,saleList);
+		Log.d("orderList",orderList.toString());
 
 		return orderList;
 	}
 	public List<Order> getListBetweenTwoDates(long from, long to,List<Order>orderList){
-		List<Order>orders=orderList;
+		List<Order>orders=new ArrayList<Order>() ;
 
 		for (int i=0;i<orderList.size();i++){
 			if(orderList.get(i).getCreatedAt().after(new Timestamp(from))&&orderList.get(i).getCreatedAt().before(new Timestamp(to))){
 				orders.add(orderList.get(i));
 			}
 		}
+		Log.d("order",orderList.toString());
 		return orders;
 	}
 

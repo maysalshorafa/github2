@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.R;
 
 import java.util.List;
@@ -16,12 +16,12 @@ import java.util.List;
  * Created by KARAM on 25/10/2016.
  */
 
-public class WorkerGridViewAdapter extends BaseAdapter {
+public class EmployeeGridViewAdapter extends BaseAdapter {
 	private Context context;
-	private List<User> workers;
+	private List<Employee> workers;
 	private LayoutInflater inflater;
 
-	public WorkerGridViewAdapter(Context context,List<User> workers) {
+	public EmployeeGridViewAdapter(Context context, List<Employee> workers) {
 		this.context = context;
 		this.workers = workers;
 	}
@@ -47,7 +47,7 @@ public class WorkerGridViewAdapter extends BaseAdapter {
 	 * @return The data at the specified position.
 	 */
 	@Override
-	public User getItem(int position) {
+	public Employee getItem(int position) {
 		return workers.get(position);
 	}
 
@@ -61,7 +61,7 @@ public class WorkerGridViewAdapter extends BaseAdapter {
 	 */
 	@Override
 	public long getItemId(int position) {
-		return (long)workers.get(position).getUserId();
+		return (long)workers.get(position).getEmployeeId();
 	}
 
 
@@ -99,7 +99,7 @@ public class WorkerGridViewAdapter extends BaseAdapter {
 		TextView tvPhoneNumber=(TextView)gridView.findViewById(R.usedPointId.workerGridView_TVPhoneNumber);
 		TextView tvPresent=(TextView)gridView.findViewById(R.usedPointId.workerGridView_TVPresent);
 
-		tvUserName.setText(workers.get(position).getUserName());
+		tvUserName.setText(workers.get(position).getEmployeeName());
 		tvPhoneNumber.setText(workers.get(position).getPhoneNumber());
 		tvPresent.setText(workers.get(position).getPresent()+"");
 **/

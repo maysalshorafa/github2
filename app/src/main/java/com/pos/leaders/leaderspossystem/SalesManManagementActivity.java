@@ -12,21 +12,21 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
-import com.pos.leaders.leaderspossystem.Tools.WorkerGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.EmployeeGridViewAdapter;
 
 import java.util.List;
 
 public class SalesManManagementActivity extends AppCompatActivity {
 
-    List<User> users;
-    UserDBAdapter userDBAdapter;
+    List<Employee> users;
+    EmployeeDBAdapter userDBAdapter;
     GridView gvSalesMan;
     Button btAddSalesMan,btCancel;
     private static final int CHANGE_PASSWORD_DIALOG = 656;
-    User user;
+    Employee user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +49,7 @@ public class SalesManManagementActivity extends AppCompatActivity {
         btAddSalesMan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SalesManManagementActivity.this, AddUserActivity.class);
+                Intent intent = new Intent(SalesManManagementActivity.this, AddEmployeeActivity.class);
                 startActivity(intent);
             }
         });
@@ -65,12 +65,12 @@ public class SalesManManagementActivity extends AppCompatActivity {
         //endregion
 
 
-        userDBAdapter= new UserDBAdapter(this);
+        userDBAdapter= new EmployeeDBAdapter(this);
         userDBAdapter.open();
         users = userDBAdapter.getAllSalesMAn();
         user = null;
 
-        final WorkerGridViewAdapter adapter = new WorkerGridViewAdapter(this, users);
+        final EmployeeGridViewAdapter adapter = new EmployeeGridViewAdapter(this, users);
         gvSalesMan.setAdapter(adapter);
         gvSalesMan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -91,15 +91,15 @@ public class SalesManManagementActivity extends AppCompatActivity {
                         switch (item) {
 
                             case 0:
-                                WorkerManagementActivity.User_Management_View=7;
-                                intent = new Intent(SalesManManagementActivity.this, AddUserActivity.class);
-                                intent.putExtra("userId", users.get(position).getUserId());
-                                intent.putExtra(WorkerManagementActivity.LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME, getString(R.string.view));
+                                EmployeeManagementActivity.User_Management_View=7;
+                                intent = new Intent(SalesManManagementActivity.this, AddEmployeeActivity.class);
+                                intent.putExtra("userId", users.get(position).getEmployeeId());
+                                intent.putExtra(EmployeeManagementActivity.LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME, getString(R.string.view));
                                 startActivity(intent);
                                 break;
                             case 1:
                                 intent = new Intent(SalesManManagementActivity.this, SalesAssistantDetailesSalesMangmentActivity.class);
-                                intent.putExtra("userId", users.get(position).getUserId());
+                                intent.putExtra("userId", users.get(position).getEmployeeId());
                                 startActivity(intent);
                                 break;
                         }

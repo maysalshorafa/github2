@@ -12,7 +12,7 @@ public interface ApiURL {
     String Club = "Club";
     String City = "City";
     String Customer = "Customer";
-    String User = "User";
+    String Employee = "Employee";
     String ORDER_DETAILS = "OrderDetails";
     String AReport = "AReport";
     String AReportDetails = "AReportDetails";
@@ -36,7 +36,7 @@ public interface ApiURL {
     String CompanyCredentials = "CompanyCredentials";
     String Currencies = "Currencies";
     String Sync = "sync";
-    String UserPermission="UserPermission";
+    String EMPLOYEE_PERMISSION ="EmployeePermission";
     String SumPoint="SumPoint";
     String ValueOfPoint="ValueOfPoint";
     String UsedPoint="UsedPoint";

@@ -42,8 +42,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserPermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 
@@ -145,33 +145,33 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
 
         db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
-        db.execSQL(UserDBAdapter.DATABASE_CREATE);
-        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (1,'user1','user','user','"+new Timestamp(System.currentTimeMillis())+"','1234',0,046316969,20,35);");
-        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (2,'master','master','master','"+new Timestamp(System.currentTimeMillis())+"','123456',0,046316969,20,35);");
-        db.execSQL(UserPermissionsDBAdapter.DATABASE_CREATE);
+        db.execSQL(EmployeeDBAdapter.DATABASE_CREATE);
+        db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (1,'user1','user','user','"+new Timestamp(System.currentTimeMillis())+"','1234',0,046316969,20,35);");
+        db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (2,'master','master','master','"+new Timestamp(System.currentTimeMillis())+"','123456',0,046316969,20,35);");
+        db.execSQL(EmployeePermissionsDBAdapter.DATABASE_CREATE);
 
-        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (1 , 'main screen');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (1 , 'sales cart');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (2 , 'report');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (3 , 'product');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (4 , 'department');");
-        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (5 , 'user');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (5 , 'employee');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (6 , 'Schedule Workers');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (7 , 'back up');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (8 , 'settings');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (9 , 'user club');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (10 , 'sales man');");
 
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(1,1,1);");
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(2,2,1);");
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(3,2,3);");
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(4,2,4);");
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(5,2,5);");
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(6,2,6);");
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(7,2,7);");
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(8,2,8);");
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(9,2,9);");
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(10,2,10);");
-        db.execSQL("insert into "+UserPermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(11,2,2);");
+        db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(1,1,1);");
+        db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(2,2,1);");
+        db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(3,2,3);");
+        db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(4,2,4);");
+        db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(5,2,5);");
+        db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(6,2,6);");
+        db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(7,2,7);");
+        db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(8,2,8);");
+        db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(9,2,9);");
+        db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(10,2,10);");
+        db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(11,2,2);");
       /**  db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(11,2,4.2,2.3);");
         db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(12,2,3.2,2.3);");
         db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(13,2,2.3,2.3);");**/
@@ -201,7 +201,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (1,'type1','type1',1,.2,0,0,0);");
         db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (2,'type2','type2',2,0,50,200,0);");
         db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (0,'type3','type3',0,0,0,0,0);");
-        db.execSQL("insert into "+UserDBAdapter.USERS_TABLE_NAME+"  values (4,'test1','test1','test1','"+new Timestamp(System.currentTimeMillis())+"','12',0,046316969,20,35);");
+        db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (4,'test1','test1','test1','"+new Timestamp(System.currentTimeMillis())+"','12',0,046316969,20,35);");
 
 
         updateDataBase(db);

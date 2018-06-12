@@ -27,7 +27,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
@@ -57,7 +57,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
     ListView lvOrders;
     EditText etFrom, etTo;
     OrderDBAdapter orderDBAdapter;
-    UserDBAdapter userDBAdapter;
+    EmployeeDBAdapter userDBAdapter;
     PaymentDBAdapter paymentDBAdapter;
     private static final int DIALOG_FROM_DATE = 825;
     private static final int DIALOG_TO_DATE = 324;
@@ -113,7 +113,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
         orderDBAdapter = new OrderDBAdapter(this);
 
-        userDBAdapter = new UserDBAdapter(this);
+        userDBAdapter = new EmployeeDBAdapter(this);
         paymentDBAdapter = new PaymentDBAdapter(this);
         paymentDBAdapter.open();
         setDate();
@@ -130,7 +130,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
         orderDBAdapter.close();
         for (Order s : _saleList) {
             userDBAdapter.open();
-            s.setUser(userDBAdapter.getUserByID(s.getByUser()));
+            s.setUser(userDBAdapter.getEmployeeByID(s.getByUser()));
             userDBAdapter.close();
 
             paymentDBAdapter.open();
@@ -168,7 +168,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     if (o.getProductId() != -1) {
                         o.setProduct(productDBAdapter.getProductByID(o.getProductId()));
                     } else {
-                        o.setProduct(new Product(-1, getApplicationContext().getResources().getString(R.string.general), o.getUnitPrice(), SESSION._USER.getUserId()));
+                        o.setProduct(new Product(-1, getApplicationContext().getResources().getString(R.string.general), o.getUnitPrice(), SESSION._EMPLOYEE.getEmployeeId()));
                     }
                 }
                 productDBAdapter.close();
@@ -211,7 +211,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
 
                 sale.setOrders(orders);
-                sale.setUser(SESSION._USER);
+                sale.setUser(SESSION._EMPLOYEE);
                 //region Print Button
                 final Button print = (Button) view.findViewById(R.id.listSaleManagement_BTView);
                 print.setOnClickListener(new View.OnClickListener() {
@@ -225,15 +225,15 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         if (checks.size() > 0){
                                             Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                                            SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._USER, checks);
+                                            SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, checks);
                                             startActivity(i);
-                                            // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._USER, checks));
+                                            // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._EMPLOYEE, checks));
                                         }
                                         else{
                                             Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                                            SETTINGS.copyInvoiceBitMap =invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._USER, null);
+                                            SETTINGS.copyInvoiceBitMap =invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, null);
                                             startActivity(i);
-                                         // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._USER, null));
+                                         // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._EMPLOYEE, null));
 
                                         }
                                     }
@@ -280,7 +280,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                         else
                             print(invoiceImg.cancelingInvoice(sale, false, null));
                         sale.setPayment(new Payment(payments.get(0)));
-                        long sID = saleDBAdapter.insertEntry(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name());
+                        long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name());
 
                         saleDBAdapter.close();
                         PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(OrdersManagementActivity.this);
@@ -322,7 +322,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                 if (!word.equals("")) {
                     for (Order c : All_orders) {
 
-                        if (c.getUser().getUserName().toLowerCase().contains(word.toLowerCase()) ||(c.getOrderId() + "").contains(word.toLowerCase())
+                        if (c.getUser().getEmployeeName().toLowerCase().contains(word.toLowerCase()) ||(c.getOrderId() + "").contains(word.toLowerCase())
                                 || (c.getCreatedAt() + "").contains(word.toLowerCase())) {
                             _saleList.add(c);
 

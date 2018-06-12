@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Permission.UserPermissions;
+import com.pos.leaders.leaderspossystem.Models.Permission.EmployeesPermissions;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -20,16 +20,16 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
  * Created by KARAM on 29/10/2016.
  */
 
-public class UserPermissionsDBAdapter {
+public class EmployeePermissionsDBAdapter {
 	// Table Name
-	public static final String USERPERMISSIONS_TABLE_NAME = "userPermissions";
+	public static final String USERPERMISSIONS_TABLE_NAME = "EmployeePermissions";
 	// Column Names
-	protected static final String USERPERMISSIONS_COLUMN_USERID = "userId";
+	protected static final String USERPERMISSIONS_COLUMN_USERID = "employeeId";
 	protected static final String USERPERMISSIONS_COLUMN_PERMISSIONSID = "permissionId";
 
 	protected static final String USERPERMISSIONS_COLUMN_ID = "id";
 
-	public static final String DATABASE_CREATE = "CREATE TABLE `userPermissions` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userId` INTEGER , `permissionId` INTEGER,"+
+	public static final String DATABASE_CREATE = "CREATE TABLE `EmployeePermissions` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userId` INTEGER , `permissionId` INTEGER,"+
 			"FOREIGN KEY(`userId`) REFERENCES `users.id`,FOREIGN KEY(`permissionId`) REFERENCES `permissions.id`)";
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
@@ -38,12 +38,12 @@ public class UserPermissionsDBAdapter {
 	// Database open/upgrade helper
 	private DbHelper dbHelper;
 
-	public UserPermissionsDBAdapter(Context context) {
+	public EmployeePermissionsDBAdapter(Context context) {
 		this.context = context;
 		this.dbHelper = new DbHelper(context);
 	}
 
-	public UserPermissionsDBAdapter open() throws SQLException {
+	public EmployeePermissionsDBAdapter open() throws SQLException {
 		this.db = dbHelper.getWritableDatabase();
 		return this;
 	}
@@ -51,7 +51,7 @@ public class UserPermissionsDBAdapter {
 
 
 		public long insertEntry( long permissionsId, long userId) {
-			UserPermissions userPermissions = new UserPermissions(Util.idHealth(this.db, USERPERMISSIONS_TABLE_NAME, USERPERMISSIONS_COLUMN_ID),userId,permissionsId);
+			EmployeesPermissions userPermissions = new EmployeesPermissions(Util.idHealth(this.db, USERPERMISSIONS_TABLE_NAME, USERPERMISSIONS_COLUMN_ID),userId,permissionsId);
 			sendToBroker(MessageType.ADD_USER_PERMISSION, userPermissions, this.context);
 
 			try {
@@ -62,11 +62,11 @@ public class UserPermissionsDBAdapter {
 				return 0;
 			}
 		}
-	public long insertEntry(UserPermissions userPermissions){
+	public long insertEntry(EmployeesPermissions userPermissions){
 		ContentValues val = new ContentValues();
-		val.put(USERPERMISSIONS_COLUMN_ID,userPermissions.getUserPermissionsId());
+		val.put(USERPERMISSIONS_COLUMN_ID,userPermissions.getEmployeePermissionId());
 		//Assign values for each row.
-		val.put(USERPERMISSIONS_COLUMN_USERID, userPermissions.getUserId());
+		val.put(USERPERMISSIONS_COLUMN_USERID, userPermissions.getEmployeeId());
 		val.put(USERPERMISSIONS_COLUMN_PERMISSIONSID, userPermissions.getPermissionId());
 
 		try {
@@ -94,7 +94,7 @@ public class UserPermissionsDBAdapter {
 	}
     public ArrayList<Long> getSalesManId() {
         ArrayList<Long> salesManId = new ArrayList<Long>();
-        UserPermissions userPermissions=null;
+        EmployeesPermissions userPermissions=null;
         Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where permissionId='" + 10 + "'" , null);
         cursor1.moveToFirst();
 
@@ -105,8 +105,8 @@ public class UserPermissionsDBAdapter {
             return  salesManId;
         }
         while(!cursor1.isAfterLast()){
-            userPermissions= new UserPermissions(Long.parseLong(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_ID))),Long.parseLong(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_USERID))),Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_PERMISSIONSID))));
-            salesManId.add( userPermissions.getUserId());
+            userPermissions= new EmployeesPermissions(Long.parseLong(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_ID))),Long.parseLong(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_USERID))),Integer.parseInt(cursor1.getString(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_PERMISSIONSID))));
+            salesManId.add( userPermissions.getEmployeeId());
             cursor1.moveToNext();
         }
         return salesManId;

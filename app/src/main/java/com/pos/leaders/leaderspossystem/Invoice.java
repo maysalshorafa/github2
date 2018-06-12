@@ -57,7 +57,7 @@ public class Invoice extends Activity {
             tvProductsPrices.append(o.getItemTotalPrice() + "\n\r");
         }
 
-        tvCashier.setText(SESSION._USER.getFullName());
+        tvCashier.setText(SESSION._EMPLOYEE.getFullName());
         tvDate.setText(DateConverter.dateToString(new Date().getTime()));
         //// TODO: 08/04/2017 Fill all the field and lock this example:
         // http://stackoverflow.com/questions/29730402/how-to-convert-android-view-to-pdf

@@ -61,7 +61,7 @@
             android:name=".ProductCatalogActivity"
             android:label="@string/title_activity_product_catalog" />
         <activity android:name=".MainScreenActivity" />
-        <activity android:name=".AddUserActivity"
+        <activity android:name=".AddEmployeeActivity"
             android:label="@string/title_add_user_activity"
             />
         <activity android:name=".OfferActivity" />
@@ -147,7 +147,7 @@
             android:name=".CurrencyReturnsCustomDialogActivity"
             android:theme="@style/AppTheme.PopUp" />
         <activity android:name=".PrinterStub" />
-        <activity android:name=".WorkerManagementActivity"
+        <activity android:name=".EmployeeManagementActivity"
             android:label="@string/title_activity_worker_management_activity"/>
         <activity android:name=".CustomerAndClub.CustomerMeasurementManagementActivity"
             android:label="@string/title_activity_customer_measurement_management_activity"/>

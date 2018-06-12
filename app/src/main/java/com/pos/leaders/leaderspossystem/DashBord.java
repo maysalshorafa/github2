@@ -40,7 +40,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBA
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
@@ -48,7 +48,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
@@ -81,8 +81,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     Button salesCart, report, product, department, users, backUp, customerClub, logOut, offers, settings , schedule_workers;
     Button btZReport, btAReport;
     AReportDBAdapter aReportDBAdapter;
-    User user = new User();
-    UserDBAdapter userDBAdapter;
+    Employee user = new Employee();
+    EmployeeDBAdapter userDBAdapter;
     ArrayList<Integer> permissions_name;
     ArrayList<Permissions> permissions = new ArrayList<Permissions>();
     ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
@@ -193,8 +193,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             public void onClick(View v) {
                 /*scheduleWorkersDBAdapter=new ScheduleWorkersDBAdapter(getApplicationContext());
                 scheduleWorkersDBAdapter.open();
-                ScheduleWorkers scheduleWorkers = scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(SESSION._USER.getCashPaymentId());
-                scheduleWorkersDBAdapter.updateEntry(SESSION._USER.getCashPaymentId(),new Date());*/
+                ScheduleWorkers scheduleWorkers = scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(SESSION._EMPLOYEE.getCashPaymentId());
+                scheduleWorkersDBAdapter.updateEntry(SESSION._EMPLOYEE.getCashPaymentId(),new Date());*/
                 Intent intent = new Intent(DashBord.this, LogInActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 /**
@@ -215,7 +215,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             @Override
             public void onClick(View v) {
                 final AReport _aReport = new AReport();
-                _aReport.setByUserID(SESSION._USER.getUserId());
+                _aReport.setByUserID(SESSION._EMPLOYEE.getEmployeeId());
                 _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
                 AReport aReport = getLastAReport();
@@ -254,8 +254,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                     lastZReport = new ZReport();
                                     lastZReport.setEndOrderId(0);
                                 }
-                                ZReport z = new ZReport(0,  new Timestamp(System.currentTimeMillis()), SESSION._USER, lastZReport.getEndOrderId() + 1, lastSale);
-                                z.setByUser(SESSION._USER.getUserId());
+                                ZReport z = new ZReport(0,  new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE, lastZReport.getEndOrderId() + 1, lastSale);
+                                z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
                                 double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
                                 totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
                                 long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
@@ -329,7 +329,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         users.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), WorkerManagementActivity.class);
+                i = new Intent(getApplicationContext(), EmployeeManagementActivity.class);
                 i.putIntegerArrayListExtra("permissions_name", permissions_name);
                 startActivity(i);
             }
@@ -867,7 +867,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         name=sheet.getCell(4, row).getContents();
                         barcode=sheet.getCell(6, row).getContents();
                         price=new BigDecimal(sheet.getCell(1, row).getContents().replaceAll(" ","")).toString();
-                        resultSet.add(new Product(i++,name,Double.parseDouble(price),barcode,1, SESSION._USER.getUserId()));
+                        resultSet.add(new Product(i++,name,Double.parseDouble(price),barcode,1, SESSION._EMPLOYEE.getEmployeeId()));
                     }
                     catch (Exception ex){
                         Log.e("",ex.getMessage());

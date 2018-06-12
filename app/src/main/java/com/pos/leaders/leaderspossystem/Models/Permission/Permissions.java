@@ -20,11 +20,11 @@ public class Permissions {
 	public static final String PERMISSIONS_ROLE_REPORTS = "Reports";
 	public static final String PERMISSIONS_ROLE_R = "";
 
-	public static final String PERMISSIONS_MAIN_SCREEN = "main screen";
+	public static final String PERMISSIONS_MAIN_SCREEN = "sales cart";
 	public static final String PERMISSIONS_REPORT = "report";
 	public static final String PERMISSIONS_PRODUCT = "product";
 	public static final String PERMISSIONS_DEPARTMENT = "department";
-	public static final String PERMISSIONS_USER = "user";
+	public static final String PERMISSIONS_USER = "employee";
 	public static final String PERMISSIONS_SCHEDULE_WORKERS = "Schedule Workers";
 	public static final String PERMISSIONS_BACK_UP = "back up";
 	public static final String PERMISSIONS_SETTINGS = "settings";

@@ -39,7 +39,7 @@ public class ProductDBAdapter {
     protected static final String PRODUCTS_COLUMN_CREATINGDATE = "creatingDate";
     protected static final String PRODUCTS_COLUMN_DISENABLED = "hide";
     protected static final String PRODUCTS_COLUMN_DEPARTMENTID = "depId";
-    protected static final String PRODUCTS_COLUMN_BYUSER = "byUser";
+    protected static final String PRODUCTS_COLUMN_BYUSER = "byEmployee";
     protected static final String PRODUCTS_COLUMN_status = "status";
     protected static final String PRODUCTS_COLUMN_with_pos = "with_pos";
     protected static final String PRODUCTS_COLUMN_with_point_system = "with_point_system";
@@ -51,8 +51,8 @@ public class ProductDBAdapter {
             "`name` TEXT NOT NULL, `barcode` TEXT UNIQUE , `description` TEXT,"+
             "`price` REAL NOT NULL, `costPrice` REAL, `withTax` INTEGER NOT NULL DEFAULT 1, "+
             "`weighable` INTEGER NOT NULL DEFAULT 0, `creatingDate` TIMESTAMP NOT NULL DEFAULT current_timestamp, "+
-            "`hide` INTEGER DEFAULT 0, `depId` INTEGER NOT NULL, `byUser` INTEGER NOT NULL, `status` INTEGER NOT NULL DEFAULT 0 ,  `with_pos` INTEGER NOT NULL DEFAULT 1, `with_point_system` INTEGER NOT NULL DEFAULT 1,"+
-            "FOREIGN KEY(`depId`) REFERENCES `departments.id`, FOREIGN KEY(`byUser`) REFERENCES `users.id` )";
+            "`hide` INTEGER DEFAULT 0, `depId` INTEGER NOT NULL, `byEmployee` INTEGER NOT NULL, `status` INTEGER NOT NULL DEFAULT 0 ,  `with_pos` INTEGER NOT NULL DEFAULT 1, `with_point_system` INTEGER NOT NULL DEFAULT 1,"+
+            "FOREIGN KEY(`depId`) REFERENCES `departments.id`, FOREIGN KEY(`byEmployee`) REFERENCES `employees.id` )";
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
