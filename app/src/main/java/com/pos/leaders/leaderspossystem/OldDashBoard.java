@@ -159,7 +159,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
                 if (!(permissions_name.toLowerCase().contains("main screen"))) {
                     grid.getChildAt(pos).setClickable(false);
                 } else {
-                    i = new Intent(getApplicationContext(), MainActivity.class);
+                    i = new Intent(getApplicationContext(), SalesCartActivity.class);
                     i.putExtra("permissions_name", permissions_name);
                     startActivity(i);
 

@@ -2,8 +2,6 @@ package com.pos.leaders.leaderspossystem.Models;
 
 import android.content.Context;
 
-import com.pos.leaders.leaderspossystem.MainActivity;
-
 /**
  * Created by KARAM on 19/10/2016.
  */

@@ -156,6 +156,8 @@ public class UserDBAdapter {
     }
 
     public int deleteEntry(long id) {
+        UserDBAdapter userDBAdapter=new UserDBAdapter(context);
+        userDBAdapter.open();
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -164,6 +166,9 @@ public class UserDBAdapter {
         String where = USERS_COLUMN_ID + " = ?";
         try {
             db.update(USERS_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+            User user = userDBAdapter.getUserByID(id);
+            Log.d("uuuuu",user+"");
+            sendToBroker(MessageType.DELETE_USER, user, this.context);
             return 1;
         } catch (SQLException ex) {
             Log.e("UserDB deleteEntry", "enable hide Entry at " + USERS_TABLE_NAME + ": " + ex.getMessage());

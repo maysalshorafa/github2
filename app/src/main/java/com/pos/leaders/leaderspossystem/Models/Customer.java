@@ -141,11 +141,6 @@ public class Customer {
     public void setAddress(String address) {
         this.street = address;
     }
-
-    public String getCustmerName(){
-        return this.firstName;
-    }
-
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }

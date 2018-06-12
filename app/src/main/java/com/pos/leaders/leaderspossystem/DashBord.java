@@ -78,7 +78,7 @@ import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE
 
 public class DashBord extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private boolean enableBackButton = true;
-    Button mainScreen, report, product, department, users, backUp, customerClub, logOut, offers, settings , schedule_workers;
+    Button salesCart, report, product, department, users, backUp, customerClub, logOut, offers, settings , schedule_workers;
     Button btZReport, btAReport;
     AReportDBAdapter aReportDBAdapter;
     User user = new User();
@@ -173,7 +173,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         permissionsDBAdapter.close();
 
 
-        mainScreen = (Button) findViewById(R.id.mainScreen);
+        salesCart = (Button) findViewById(R.id.mainScreen);
         btAReport = (Button) findViewById(R.id.dashboard_btAreport);
         btZReport = (Button) findViewById(R.id.dashboard_btZreport);
         report = (Button) findViewById(R.id.report);
@@ -291,10 +291,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         });
         //endregion z report button
 
-        mainScreen.setOnClickListener(new View.OnClickListener() {
+        salesCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), MainActivity.class);
+                i = new Intent(getApplicationContext(), SalesCartActivity.class);
                 startActivity(i);
             }
         });
@@ -369,7 +369,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         settings.setEnabled(false);
         btAReport.setEnabled(false);
         btZReport.setEnabled(false);
-        mainScreen.setEnabled(false);
+        salesCart.setEnabled(false);
     }
 
     public void EnableButtons() {
@@ -379,14 +379,14 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     if (needAReport()) {
                         btAReport.setEnabled(true);
                         btZReport.setEnabled(false);
-                        mainScreen.setEnabled(false);
+                        salesCart.setEnabled(false);
                     } else {
                         if (lastSale == null) {
                             btZReport.setEnabled(false);
                         } else
                             btZReport.setEnabled(true);
                         btAReport.setEnabled(false);
-                        mainScreen.setEnabled(true);
+                        salesCart.setEnabled(true);
                     }
                     break;
 

@@ -115,6 +115,8 @@ public class DepartmentDBAdapter {
     }
 
     public int deleteEntry(long id) {
+        DepartmentDBAdapter departmentDBAdapter=new DepartmentDBAdapter(context);
+        departmentDBAdapter.open();
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -123,6 +125,8 @@ public class DepartmentDBAdapter {
         String where = DEPARTMENTS_COLUMN_ID + " = ?";
         try {
             db.update(DEPARTMENTS_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+            Department department = departmentDBAdapter.getDepartmentByID(id);
+            sendToBroker(MessageType.DELETE_DEPARTMENT, department, this.context);
             return 1;
         } catch (SQLException ex) {
             Log.e("Department DB delete", "enable hide Entry at " + DEPARTMENTS_TABLE_NAME + ": " + ex.getMessage());

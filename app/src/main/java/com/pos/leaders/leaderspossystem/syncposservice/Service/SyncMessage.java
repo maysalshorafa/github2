@@ -913,9 +913,6 @@ public class SyncMessage extends Service {
             } catch (Exception e) {
                 try {
                     msgData = jsonObject.getJSONObject(MessageKey.Data).toString();
-                    if(msgData.contains("createdAt")){
-                        Log.d("createddate",msgData);
-                    }
                 } catch (Exception ex) {
                     msgData = msgData.substring(1);
                     msgData = msgData.substring(0, msgData.length() - 1);
@@ -978,17 +975,14 @@ public class SyncMessage extends Service {
                 break;
             case MessageType.UPDATE_DEPARTMENT:
                 Department department=null;
-                JSONObject jsonObject1 = new JSONObject(jsonObject.getString(MessageKey.Data));
-                jsonObject1.remove("createdAt");
-                JSONObject j= jsonObject1;
-                String s=j.toString();
-                department=objectMapper.readValue(s, Department.class);
-                Log.d("newJson",department.toString()+"");
-
-                res = messageTransmit.authPut(ApiURL.Department, s, token,department.getDepartmentId());
+                JSONObject newDepartmentJson= new JSONObject(jsonObject.getString(MessageKey.Data));
+                newDepartmentJson.remove("createdAt");
+                department=objectMapper.readValue(newDepartmentJson.toString(), Department.class);
+                res = messageTransmit.authPut(ApiURL.Department, newDepartmentJson.toString(), token,department.getDepartmentId());
                 break;
             case MessageType.DELETE_DEPARTMENT:
-                res = messageTransmit.authDelete(ApiURL.Department, jsonObject.getString(MessageKey.Data), token);
+                JSONObject newDeleteDepartmentJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authDelete(ApiURL.Department, newDeleteDepartmentJson.getString("departmentId"), token);
                 break;
             //endregion DEPARTMENT
 
@@ -1059,7 +1053,8 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPut(ApiURL.ORDER, jsonObject.getString(MessageKey.Data), token,order.getOrderId());
                 break;
             case MessageType.DELETE_ORDER:
-                res = messageTransmit.authDelete(ApiURL.ORDER, jsonObject.getString(MessageKey.Data), token);
+                JSONObject newDeleteOrderJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authDelete(ApiURL.ORDER, newDeleteOrderJson.getString("orderId"), token);
                 break;
             //endregion Order
 
@@ -1086,7 +1081,8 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPut(ApiURL.Club, jsonObject.getString(MessageKey.Data), token,club.getClubId());
                 break;
             case MessageType.DELETE_CLUB:
-                res = messageTransmit.authDelete(ApiURL.Club, jsonObject.getString(MessageKey.Data), token);
+                JSONObject newDeleteClubJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authDelete(ApiURL.Club, newDeleteClubJson.getString("clubId"), token);
                 break;
             // Sum Point Region
             case MessageType.ADD_SUM_POINT:
@@ -1151,7 +1147,8 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPut(ApiURL.Customer, jsonObject.getString(MessageKey.Data), token,customer.getCustomerId());
                 break;
             case MessageType.DELETE_CUSTOMER:
-                res = messageTransmit.authDelete(ApiURL.Customer, jsonObject.getString(MessageKey.Data), token);
+                JSONObject newDeleteCustomerJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authDelete(ApiURL.Customer, newDeleteCustomerJson.getString("customerId"), token);
                 break;
 
 
@@ -1173,12 +1170,14 @@ public class SyncMessage extends Service {
                 break;
             case MessageType.UPDATE_PRODUCT:
                 Product product=null;
-                product=objectMapper.readValue(msgData, Product.class);
-                Log.d("product111111",product.toString());
-                res = messageTransmit.authPut(ApiURL.Product, jsonObject.getString(MessageKey.Data), token,product.getProductId());
+                JSONObject newProductJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                newProductJson.remove("createdAt");
+                product=objectMapper.readValue(newProductJson.toString(), Product.class);
+                res = messageTransmit.authPut(ApiURL.Product, newProductJson.toString(), token,product.getProductId());
                 break;
             case MessageType.DELETE_PRODUCT:
-                res = messageTransmit.authDelete(ApiURL.Product, jsonObject.getString(MessageKey.Data), token);
+                JSONObject newDeleteProductJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authDelete(ApiURL.Product, newDeleteProductJson.getString("productId"), token);
                 break;
 
 
@@ -1187,11 +1186,14 @@ public class SyncMessage extends Service {
                 break;
             case MessageType.UPDATE_USER:
                 User user=null;
-                user=objectMapper.readValue(msgData, User.class);
-                res = messageTransmit.authPut(ApiURL.User, jsonObject.getString(MessageKey.Data), token,user.getUserId());
+                JSONObject newUserJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                newUserJson.remove("createdAt");
+                user=objectMapper.readValue(newUserJson.toString(), User.class);
+                res = messageTransmit.authPut(ApiURL.User, newUserJson.toString(), token,user.getUserId());
                 break;
             case MessageType.DELETE_USER:
-                res = messageTransmit.authDelete(ApiURL.User, jsonObject.getString(MessageKey.Data), token);
+                JSONObject newDeleteUserJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authDelete(ApiURL.User, newDeleteUserJson.getString("userId"), token);
                 break;
             //Currencies
 
@@ -1282,11 +1284,14 @@ public class SyncMessage extends Service {
                 break;
             case MessageType.UPDATE_CUSTOMER_ASSISTANT:
                 CustomerAssistant customerAssistant=null;
-                customerAssistant=objectMapper.readValue(msgData, CustomerAssistant.class);
-                res = messageTransmit.authPut(ApiURL.CustomerAssistant, jsonObject.getString(MessageKey.Data), token,customerAssistant.getCustAssistantId());
+                JSONObject newCustomerAssistantJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                newCustomerAssistantJson.remove("createdAt");
+                customerAssistant=objectMapper.readValue(newCustomerAssistantJson.toString(), CustomerAssistant.class);
+                res = messageTransmit.authPut(ApiURL.CustomerAssistant, newCustomerAssistantJson.toString(), token,customerAssistant.getCustAssistantId());
                 break;
             case MessageType.DELETE_CUSTOMER_ASSISTANT:
-                res = messageTransmit.authDelete(ApiURL.CustomerAssistant, jsonObject.getString(MessageKey.Data), token);
+                JSONObject newDeleteCustomerAssistantJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authDelete(ApiURL.CustomerAssistant, newDeleteCustomerAssistantJson.getString("custAssistantId"), token);
                 break;
 
             //CustomerMeasurement
@@ -1295,8 +1300,10 @@ public class SyncMessage extends Service {
                 break;
             case MessageType.UPDATE_CUSTOMER_MEASUREMENT:
                 CustomerMeasurement customerMeasurement=null;
-                customerMeasurement=objectMapper.readValue(msgData, CustomerMeasurement.class);
-                res = messageTransmit.authPut(ApiURL.CustomerMeasurement, jsonObject.getString(MessageKey.Data), token,customerMeasurement.getCustomerMeasurementId());
+                JSONObject newCustomerMeasurementJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                newCustomerMeasurementJson.remove("visitDate");
+                customerMeasurement=objectMapper.readValue(newCustomerMeasurementJson.toString(), CustomerMeasurement.class);
+                res = messageTransmit.authPut(ApiURL.CustomerMeasurement, newCustomerMeasurementJson.toString(), token,customerMeasurement.getCustomerMeasurementId());
                 break;
             case MessageType.DELETE_CUSTOMER_MEASUREMENT:
                 res = messageTransmit.authDelete(ApiURL.CustomerMeasurement, jsonObject.getString(MessageKey.Data), token);
@@ -1334,8 +1341,10 @@ public class SyncMessage extends Service {
                 break;
             case MessageType.UPDATE_SCHEDULE_WORKERS:
                 ScheduleWorkers scheduleWorkers=null;
-                scheduleWorkers=objectMapper.readValue(msgData, ScheduleWorkers.class);
-                res = messageTransmit.authPut(ApiURL.ScheduleWorker, jsonObject.getString(MessageKey.Data), token,scheduleWorkers.getScheduleWorkersId());
+                JSONObject newScheduleWorkersJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                newScheduleWorkersJson.remove("createdAt");
+                scheduleWorkers=objectMapper.readValue(newScheduleWorkersJson.toString(), ScheduleWorkers.class);
+                res = messageTransmit.authPut(ApiURL.ScheduleWorker,newScheduleWorkersJson.toString(), token,scheduleWorkers.getScheduleWorkersId());
                 break;
             case MessageType.DELETE_SCHEDULE_WORKERS:
                 res = messageTransmit.authDelete(ApiURL.ScheduleWorker, jsonObject.getString(MessageKey.Data), token);

@@ -135,7 +135,7 @@ import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CREDIT_CARD;
  * Created by Karam on 21/11/2016.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class SalesCartActivity extends AppCompatActivity {
     private static final int REQUEST_CASH_ACTIVITY_WITH_CURRENCY_CODE = 590;
     private static final int REQUEST_CASH_ACTIVITY_CODE = 600;
     private static final int REQUEST_CHECKS_ACTIVITY_CODE = 753;
@@ -291,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
         TitleBar.setTitleBar(this);
 
         if (!Util.isSyncServiceRunning(this)) {
-            Intent intent = new Intent(MainActivity.this, SyncMessage.class);
+            Intent intent = new Intent(SalesCartActivity.this, SyncMessage.class);
             intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, SETTINGS.BO_SERVER_URL);
             startService(intent);
         }
@@ -302,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
         btAddProductShortLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, ProductsActivity.class);
+                Intent i = new Intent(SalesCartActivity.this, ProductsActivity.class);
                 startActivity(i);
             }
         });
@@ -459,7 +459,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 clubDiscount = 0;
-                Context c = MainActivity.this;
+                Context c = SalesCartActivity.this;
                 if (SESSION._ORDER_DETAILES.size() > 0)
                     new AlertDialog.Builder(c)
                             .setTitle(c.getResources().getString(R.string.clearCartAlertTitle))
@@ -793,7 +793,7 @@ public class MainActivity extends AppCompatActivity {
                     etSearch.setText("");
                     //etSearch.requestFocus();
                 } else
-                    Toast.makeText(MainActivity.this, "Input is empty.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SalesCartActivity.this, "Input is empty.", Toast.LENGTH_SHORT).show();
                 //OpenCashBox();
 
             }
@@ -916,7 +916,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if (selectedIteminCartList != null) {
                             if (SESSION._ORDER_DETAILES.contains(selectedOrderOnCart)) {
-                                final Dialog cashDialog = new Dialog(MainActivity.this);
+                                final Dialog cashDialog = new Dialog(SalesCartActivity.this);
                                 cashDialog.setTitle(R.string.multi_count);
                                 cashDialog.setContentView(R.layout.cash_payment_dialog);
                                 cashDialog.show();
@@ -958,10 +958,10 @@ public class MainActivity extends AppCompatActivity {
                                 Switch s = (Switch) cashDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
                                 s.setVisibility(View.GONE);
                             } else {
-                                Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.please_select_item), Toast.LENGTH_SHORT);
+                                Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.please_select_item), Toast.LENGTH_SHORT);
                             }
                         } else {
-                            Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.please_add_item), Toast.LENGTH_SHORT);
+                            Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.please_add_item), Toast.LENGTH_SHORT);
                         }
                     }
                 });
@@ -973,7 +973,7 @@ public class MainActivity extends AppCompatActivity {
                             if (SESSION._ORDER_DETAILES.contains(selectedOrderOnCart)) {
                                 final TextView discountPercentage = (TextView) view.findViewById(R.id.discountPercentage);
                                 final TextView tvDiscountPercentage = (TextView) view.findViewById(R.id.tvDiscountPercentageAmount);
-                                final Dialog cashDialog = new Dialog(MainActivity.this);
+                                final Dialog cashDialog = new Dialog(SalesCartActivity.this);
                                 cashDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 // cashDialog.setTitle(R.string.please_select_discount_offer);
                                 cashDialog.show();
@@ -1058,7 +1058,7 @@ public class MainActivity extends AppCompatActivity {
                                                 } else {
                                                     totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
                                                     priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
-                                                    Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                                     cashETCash.setBackgroundResource(R.drawable.backtext);
 
                                                 }
@@ -1088,7 +1088,7 @@ public class MainActivity extends AppCompatActivity {
                                                 } else {
                                                     totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
                                                     priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
-                                                    Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                                     cashETCash.setBackgroundResource(R.drawable.backtext);
 
                                                 }
@@ -1118,7 +1118,7 @@ public class MainActivity extends AppCompatActivity {
                                                     refreshCart();
                                                     cashDialog.cancel();
                                                 } else {
-                                                    Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                                 }
                                             }} else {
                                             if (!(str.equals(""))) {
@@ -1131,17 +1131,17 @@ public class MainActivity extends AppCompatActivity {
                                                     refreshCart();
                                                     cashDialog.cancel();
                                                 } else {
-                                                    Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }
                                     }
                                 });
                             } else {
-                                Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.please_select_item), Toast.LENGTH_SHORT);
+                                Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.please_select_item), Toast.LENGTH_SHORT);
                             }
                         } else {
-                            Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.please_add_item), Toast.LENGTH_SHORT);
+                            Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.please_add_item), Toast.LENGTH_SHORT);
                         }
                     }
                 });
@@ -1173,11 +1173,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (SESSION._ORDER_DETAILES.size() > 0) {
                     if (SETTINGS.enableCurrencies) {
-                        Intent intent = new Intent(MainActivity.this, CashActivity.class);
+                        Intent intent = new Intent(SalesCartActivity.this, CashActivity.class);
                         intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, saleTotalPrice);
                         startActivityForResult(intent, REQUEST_CASH_ACTIVITY_WITH_CURRENCY_CODE);
                     } else {
-                        Intent intent = new Intent(MainActivity.this, OldCashActivity.class);
+                        Intent intent = new Intent(SalesCartActivity.this, OldCashActivity.class);
                         intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, saleTotalPrice);
                         startActivityForResult(intent, REQUEST_CASH_ACTIVITY_CODE);
                     }
@@ -1197,12 +1197,12 @@ public class MainActivity extends AppCompatActivity {
                 if (SESSION._ORDER_DETAILES.size() > 0 && SETTINGS.creditCardEnable) {
                     if (SETTINGS.pinpadEnable) {//pinpad is active
                         Log.i("CreditCard", "PinPad is active");
-                        Intent intent = new Intent(MainActivity.this, PinpadActivity.class);
+                        Intent intent = new Intent(SalesCartActivity.this, PinpadActivity.class);
                         intent.putExtra(PinpadActivity.LEADERS_POS_PIN_PAD_TOTAL_PRICE, saleTotalPrice);
                         startActivityForResult(intent, REQUEST_PIN_PAD_ACTIVITY_CODE);
                     } else {//old school
                         //final String __customerName = customerName_EditText.getText().toString();
-                        Intent intent = new Intent(MainActivity.this, MainCreditCardActivity.class);
+                        Intent intent = new Intent(SalesCartActivity.this, MainCreditCardActivity.class);
                         intent.putExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, saleTotalPrice);
                         startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
                     }
@@ -1220,7 +1220,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (SESSION._ORDER_DETAILES.size() > 0) {
-                    Intent intent = new Intent(MainActivity.this, ChecksActivity.class);
+                    Intent intent = new Intent(SalesCartActivity.this, ChecksActivity.class);
                     customerName = customerName_EditText.getText().toString();
 
                     intent.putExtra("_Price", saleTotalPrice);
@@ -1257,7 +1257,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     clearCart();
-                    Toast.makeText(MainActivity.this, getString(R.string.deal_number) + " " + SESSION.TEMP_NUMBER, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SalesCartActivity.this, getString(R.string.deal_number) + " " + SESSION.TEMP_NUMBER, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -1272,7 +1272,7 @@ public class MainActivity extends AppCompatActivity {
                 if (SESSION._SALES != null && SESSION._SALES.size() > 0) {
                     showAlertDialogResumePauseSale();
                 } else {
-                    Toast.makeText(MainActivity.this, getString(R.string.there_is_no_sale_on_pause), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SalesCartActivity.this, getString(R.string.there_is_no_sale_on_pause), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -1289,7 +1289,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (SESSION._ORDERS != null && SESSION._ORDER_DETAILES != null) {
-                    final Dialog discountDialog = new Dialog(MainActivity.this);
+                    final Dialog discountDialog = new Dialog(SalesCartActivity.this);
                     discountDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     //discountDialog.setTitle(R.string.please_select_discount_offer);
                     discountDialog.setContentView(R.layout.discount_dialog);
@@ -1375,7 +1375,7 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         totalDiscount.setText(Util.makePrice(valueOfDiscount)+getString(R.string.ins));
                                         priceAfterDiscount.setText(tvTotalPrice.getText().toString());
-                                        Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                         et.setBackgroundResource(R.drawable.backtext);
                                     }
 
@@ -1403,7 +1403,7 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         totalDiscount.setText(Util.makePrice(valueOfDiscount)+getString(R.string.ins));
                                         priceAfterDiscount.setText(tvTotalPrice.getText().toString());
-                                        Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                         et.setBackgroundResource(R.drawable.backtext);
                                     }
                                 }else {
@@ -1436,7 +1436,7 @@ public class MainActivity extends AppCompatActivity {
                                         refreshCart();
                                         discountDialog.cancel();
                                     } else {
-                                        Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
 
                                     }
                                 }
@@ -1452,7 +1452,7 @@ public class MainActivity extends AppCompatActivity {
                                         refreshCart();
                                         discountDialog.cancel();
                                     } else {
-                                        Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }
@@ -1460,7 +1460,7 @@ public class MainActivity extends AppCompatActivity {
                     });
 
                 } else {
-                    Toast.makeText(MainActivity.this, getBaseContext().getString(R.string.please_add_item), Toast.LENGTH_SHORT);
+                    Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.please_add_item), Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -1514,7 +1514,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 resumeSale(SESSION._SALES.get(position).second);
-                Toast.makeText(MainActivity.this, getString(R.string.resume_deal_number) + " " + (SESSION._SALES.get(position).first), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SalesCartActivity.this, getString(R.string.resume_deal_number) + " " + (SESSION._SALES.get(position).first), Toast.LENGTH_SHORT).show();
                 SESSION._SALES.remove(SESSION._SALES.get(position));
 
                 builder.cancel();
@@ -1909,7 +1909,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (stausForRule5) {
 
-            AlertDialog alertDialog1 = new AlertDialog.Builder(MainActivity.this).create();
+            AlertDialog alertDialog1 = new AlertDialog.Builder(SalesCartActivity.this).create();
             alertDialog1.setTitle("Alert");
             alertDialog1.setMessage("Did you want to buy this product with offer and take gift");
             alertDialog1.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
@@ -2068,12 +2068,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void enterKeyPressed(String barcodeScanned) {
         Product product = productDBAdapter.getProductByBarCode(barcodeScanned);
-        final Intent intent = new Intent(MainActivity.this, ProductsActivity.class);
+        final Intent intent = new Intent(SalesCartActivity.this, ProductsActivity.class);
         intent.putExtra("barcode", barcodeScanned);
         if (product != null) {
             addToCart(product);
         } else {
-            new AlertDialog.Builder(MainActivity.this)
+            new AlertDialog.Builder(SalesCartActivity.this)
                     .setTitle("Add Product")
                     .setMessage("Are you want to add this product?")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -2098,7 +2098,7 @@ public class MainActivity extends AppCompatActivity {
         productLoadItemOffset += productCountLoad;
         final int id = prseedButtonDepartments.getId();
         final String searchWord = etSearch.getText().toString();
-        final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+        final ProgressDialog dialog = new ProgressDialog(SalesCartActivity.this);
         dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish));
 
         new AsyncTask<Void, Void, Void>() {
@@ -2180,10 +2180,10 @@ public class MainActivity extends AppCompatActivity {
         }
     */
     private void printAndOpenCashBoxBTP880(String mainAns, final String mainMer, final String mainCli) {
-        final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(MainActivity.this);
+        final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(SalesCartActivity.this);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
 
-        final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+        final ProgressDialog dialog = new ProgressDialog(SalesCartActivity.this);
         dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
 
         new AsyncTask<Void, Void, Void>() {
@@ -2209,7 +2209,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void... params) {
-                InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
+                InvoiceImg invoiceImg = new InvoiceImg(SalesCartActivity.this);
                 if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
                     pos.imageStandardModeRasterPrint(invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainMer), CONSTANT.PRINTER_PAGE_WIDTH);
                     pos.systemFeedLine(2);
@@ -2229,7 +2229,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void printAndOpenCashBoxHPRT_TP805(final String mainAns, final String mainMer, final String mainCli) {
         if (HPRT_TP805.connect(this)) {
-            final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+            final ProgressDialog dialog = new ProgressDialog(SalesCartActivity.this);
             dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
 
             new AsyncTask<Void, Void, Void>() {
@@ -2269,7 +2269,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 protected Void doInBackground(Void... params) {
-                    InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
+                    InvoiceImg invoiceImg = new InvoiceImg(SalesCartActivity.this);
                     byte b = 0;
                     try {
                         if (mainAns.equals("PINPAD")) {
@@ -2346,11 +2346,11 @@ public class MainActivity extends AppCompatActivity {
     private void printAndOpenCashBoxSUNMI_T1(String mainAns, final String mainMer, final String mainCli) {
         //AidlUtil.getInstance().connectPrinterService(this);
         if (AidlUtil.getInstance().isConnect()) {
-            final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+            final ProgressDialog dialog = new ProgressDialog(SalesCartActivity.this);
             dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
 
             dialog.show();
-            InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
+            InvoiceImg invoiceImg = new InvoiceImg(SalesCartActivity.this);
             byte b = 0;
             try {
                 if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
@@ -2405,13 +2405,13 @@ public class MainActivity extends AppCompatActivity {
         paperWidth = 832; // 4inch (832 dot)
         paperWidth = 576; // 3inch (576 dot)1
         paperWidth = 384; // 2inch (384 dot)
-        MiniPrinterFunctions.PrintBitmapImage(MainActivity.this, port,portSettings, bitmap, paperWidth, true, true);
+        MiniPrinterFunctions.PrintBitmapImage(SalesCartActivity.this, port,portSettings, bitmap, paperWidth, true, true);
 
     }
 
     private void printAndOpenCashBoxSM_S230I(String mainAns, final String mainMer, final String mainCli) {
         if (true) {
-            final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+            final ProgressDialog dialog = new ProgressDialog(SalesCartActivity.this);
             dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
 
             new AsyncTask<Void, Void, Void>() {
@@ -2430,7 +2430,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 protected Void doInBackground(Void... params) {
-                    InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
+                    InvoiceImg invoiceImg = new InvoiceImg(SalesCartActivity.this);
                     byte b = 0;
                     try {
                         if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
@@ -2499,7 +2499,7 @@ public class MainActivity extends AppCompatActivity {
                 if (data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote).equals("anyType{}"))
                     return;
                 SESSION._ORDERS.setTotalPaidAmount(SESSION._ORDERS.getTotalPrice());
-                saleDBAdapter = new OrderDBAdapter(MainActivity.this);
+                saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
@@ -2537,8 +2537,8 @@ public class MainActivity extends AppCompatActivity {
 
                 creditCardPaymentDBAdapter.close();
 
-                orderDBAdapter = new OrderDetailsDBAdapter(MainActivity.this);
-                custmerAssetDB = new CustomerAssetDB(MainActivity.this);
+                orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
+                custmerAssetDB = new CustomerAssetDB(SalesCartActivity.this);
                 orderDBAdapter.open();
                 custmerAssetDB.open();
                 SESSION._ORDERS.setOrderId(saleID);
@@ -2572,7 +2572,7 @@ public class MainActivity extends AppCompatActivity {
                 SESSION._ORDERS.setOrders(SESSION._ORDER_DETAILES);
                 SESSION._ORDERS.setUser(SESSION._USER);
 
-                PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(MainActivity.this);
+                PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(SalesCartActivity.this);
                 paymentDBAdapter.open();
 
                 long paymentID = paymentDBAdapter.insertEntry(CREDIT_CARD, saleTotalPrice, saleID);
@@ -2657,7 +2657,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //region save the transaction
                 SESSION._ORDERS.setTotalPaidAmount(SESSION._ORDERS.getTotalPrice());
-                saleDBAdapter = new OrderDBAdapter(MainActivity.this);
+                saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
@@ -2672,8 +2672,8 @@ public class MainActivity extends AppCompatActivity {
 
                 creditCardPaymentDBAdapter.close();
 
-                orderDBAdapter = new OrderDetailsDBAdapter(MainActivity.this);
-                custmerAssetDB = new CustomerAssetDB(MainActivity.this);
+                orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
+                custmerAssetDB = new CustomerAssetDB(SalesCartActivity.this);
                 orderDBAdapter.open();
                 custmerAssetDB.open();
                 SESSION._ORDERS.setOrderId(saleID);
@@ -2707,7 +2707,7 @@ public class MainActivity extends AppCompatActivity {
                 SESSION._ORDERS.setOrders(SESSION._ORDER_DETAILES);
                 SESSION._ORDERS.setUser(SESSION._USER);
 
-                PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(MainActivity.this);
+                PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(SalesCartActivity.this);
                 paymentDBAdapter.open();
 
                 long paymentID = paymentDBAdapter.insertEntry(CREDIT_CARD, saleTotalPrice, saleID);
@@ -2746,7 +2746,7 @@ public class MainActivity extends AppCompatActivity {
 
                 final double result = data.getDoubleExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, 0.0f);
                 SESSION._ORDERS.setTotalPaidAmount(result);
-                saleDBAdapter = new OrderDBAdapter(MainActivity.this);
+                saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
@@ -2776,8 +2776,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 saleDBAdapter.close();
 
-                orderDBAdapter = new OrderDetailsDBAdapter(MainActivity.this);
-                custmerAssetDB = new CustomerAssetDB(MainActivity.this);
+                orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
+                custmerAssetDB = new CustomerAssetDB(SalesCartActivity.this);
                 orderDBAdapter.open();
                 custmerAssetDB.open();
                 SESSION._ORDERS.setOrderId(saleID);
@@ -2838,9 +2838,9 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CASH_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
-                saleDBAdapter = new OrderDBAdapter(MainActivity.this);
-                orderDBAdapter = new OrderDetailsDBAdapter(MainActivity.this);
-                custmerAssetDB = new CustomerAssetDB(MainActivity.this);
+                saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
+                orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
+                custmerAssetDB = new CustomerAssetDB(SalesCartActivity.this);
                 long tempSaleId=0;
                 saleDBAdapter.open();
                 orderDBAdapter.open();
@@ -2931,9 +2931,9 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
-                saleDBAdapter = new OrderDBAdapter(MainActivity.this);
-                orderDBAdapter = new OrderDetailsDBAdapter(MainActivity.this);
-                custmerAssetDB = new CustomerAssetDB(MainActivity.this);
+                saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
+                orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
+                custmerAssetDB = new CustomerAssetDB(SalesCartActivity.this);
                 cashPaymentDBAdapter.open();
                 saleDBAdapter.open();
                 orderDBAdapter.open();
@@ -3112,7 +3112,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
                     public void onClick(View arg0) {
-                        Intent intent = new Intent(MainActivity.this, AddNewCustomer.class);
+                        Intent intent = new Intent(SalesCartActivity.this, AddNewCustomer.class);
                         startActivity(intent);
 
                         popupWindow.dismiss();
@@ -3161,7 +3161,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 customer = customerList.get(position);
-                customerName = customer.getCustmerName();
+                customerName = customer.getFirstName();
                 customerClubId = customer.getClub();
                 customerId = customer.getCustomerId();
                 customerName_EditText.setText(customerName);
@@ -3203,7 +3203,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!word.equals("")) {
                     for (Customer c : AllCustmerList) {
 
-                        if (c.getCustmerName().toLowerCase().contains(word.toLowerCase()) ||
+                        if (c.getFirstName().toLowerCase().contains(word.toLowerCase()) ||
                                 c.getPhoneNumber().toLowerCase().contains(word.toLowerCase()) ||
                                 c.getStreet().toLowerCase().contains(word.toLowerCase())) {
                             customerList.add(c);
@@ -3253,7 +3253,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
                     public void onClick(View arg0) {
-                        Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
+                        Intent intent = new Intent(SalesCartActivity.this, AddUserActivity.class);
                         startActivity(intent);
 
                         popupWindow.dismiss();
@@ -3357,7 +3357,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
                     public void onClick(View arg0) {
-                        Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
+                        Intent intent = new Intent(SalesCartActivity.this, AddUserActivity.class);
                         startActivity(intent);
 
                         popupWindow.dismiss();

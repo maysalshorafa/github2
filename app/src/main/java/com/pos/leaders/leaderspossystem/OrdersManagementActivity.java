@@ -51,12 +51,12 @@ import java.util.List;
  * Created by KARAM on 26/10/2016.
  * Editing by KARAM on 10/04/2017.
  */
-public class SalesManagementActivity extends AppCompatActivity {
+public class OrdersManagementActivity extends AppCompatActivity {
 
     TextView customer;
-    ListView lvSales;
+    ListView lvOrders;
     EditText etFrom, etTo;
-    OrderDBAdapter saleDBAdapter;
+    OrderDBAdapter orderDBAdapter;
     UserDBAdapter userDBAdapter;
     PaymentDBAdapter paymentDBAdapter;
     private static final int DIALOG_FROM_DATE = 825;
@@ -69,7 +69,7 @@ public class SalesManagementActivity extends AppCompatActivity {
     List<Order> _saleList;
     List<OrderDetails> orders;
     List<Check> checks;
-    List<Order> All_sales;
+    List<Order> All_orders;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +80,7 @@ public class SalesManagementActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sales_management);
         TitleBar.setTitleBar(this);
-        lvSales = (ListView) findViewById(R.id.saleManagement_LVSales);
+        lvOrders = (ListView) findViewById(R.id.saleManagement_LVSales);
         etFrom = (EditText) findViewById(R.id.saleManagement_ETFrom);
         etTo = (EditText) findViewById(R.id.saleManagement_ETTo);
 
@@ -111,7 +111,7 @@ public class SalesManagementActivity extends AppCompatActivity {
             }
         });
 
-        saleDBAdapter = new OrderDBAdapter(this);
+        orderDBAdapter = new OrderDBAdapter(this);
 
         userDBAdapter = new UserDBAdapter(this);
         paymentDBAdapter = new PaymentDBAdapter(this);
@@ -122,12 +122,12 @@ public class SalesManagementActivity extends AppCompatActivity {
 
     private void setDate() {
         //List<ORDER> _saleList=new ArrayList<ORDER>();
-        saleDBAdapter.open();
-        _saleList = saleDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime());
+        orderDBAdapter.open();
+        _saleList = orderDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime());
        // Collections.sort(_saleList, new OutcomeDescComparator());
 
-        All_sales = _saleList;
-        saleDBAdapter.close();
+        All_orders = _saleList;
+        orderDBAdapter.close();
         for (Order s : _saleList) {
             userDBAdapter.open();
             s.setUser(userDBAdapter.getUserByID(s.getByUser()));
@@ -151,18 +151,18 @@ public class SalesManagementActivity extends AppCompatActivity {
 		}*/
         adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, _saleList);
 
-        lvSales.setAdapter(adapter);
+        lvOrders.setAdapter(adapter);
 
 
-        lvSales.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvOrders.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 final Order sale = _saleList.get(position);
-                OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(SalesManagementActivity.this);
+                OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(OrdersManagementActivity.this);
                 orderDBAdapter.open();
                 orders = orderDBAdapter.getOrderBySaleID(sale.getOrderId());
                 orderDBAdapter.close();
-                ProductDBAdapter productDBAdapter = new ProductDBAdapter(SalesManagementActivity.this);
+                ProductDBAdapter productDBAdapter = new ProductDBAdapter(OrdersManagementActivity.this);
                 productDBAdapter.open();
                 for (OrderDetails o : orders) {
                     if (o.getProductId() != -1) {
@@ -173,7 +173,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                 }
                 productDBAdapter.close();
 
-                PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(SalesManagementActivity.this);
+                PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(OrdersManagementActivity.this);
                 paymentDBAdapter.open();
                 final List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(sale.getOrderId());
 
@@ -186,7 +186,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                 for (Payment p : payments) {
                     switch (p.getPaymentWay()) {
                         case CONSTANT.CHECKS:
-                            ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(SalesManagementActivity.this);
+                            ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(OrdersManagementActivity.this);
                             checksDBAdapter.open();
                             checks.addAll(checksDBAdapter.getPaymentBySaleID(sale.getOrderId()));
                             checksDBAdapter.close();
@@ -207,7 +207,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                     previousView.setBackgroundColor(getResources().getColor(R.color.transparent));
                     previousView = view;
                 }
-                final InvoiceImg invoiceImg = new InvoiceImg(SalesManagementActivity.this);
+                final InvoiceImg invoiceImg = new InvoiceImg(OrdersManagementActivity.this);
 
 
                 sale.setOrders(orders);
@@ -218,19 +218,19 @@ public class SalesManagementActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         //send customerName copy from the in voice
-                        new AlertDialog.Builder(SalesManagementActivity.this)
+                        new AlertDialog.Builder(OrdersManagementActivity.this)
                                 .setTitle(getString(R.string.copyinvoice))
                                 .setMessage(getString(R.string.print_copy_invoice))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         if (checks.size() > 0){
-                                            Intent i = new Intent(SalesManagementActivity.this, SalesHistoryCopySales.class);
+                                            Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
                                             SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._USER, checks);
                                             startActivity(i);
                                             // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._USER, checks));
                                         }
                                         else{
-                                            Intent i = new Intent(SalesManagementActivity.this, SalesHistoryCopySales.class);
+                                            Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
                                             SETTINGS.copyInvoiceBitMap =invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._USER, null);
                                             startActivity(i);
                                          // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._USER, null));
@@ -255,7 +255,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                 btnRN.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(SalesManagementActivity.this);
+                        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
                         saleDBAdapter.open();
                         sale.setReplacementNote(sale.getReplacementNote() + 1);
                         saleDBAdapter.updateEntry(sale);
@@ -272,7 +272,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                 btnCan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(SalesManagementActivity.this);
+                        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
                         saleDBAdapter.open();
                         saleDBAdapter.deleteEntry(sale.getOrderId());
                         if (checks.size() > 0)
@@ -283,7 +283,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                         long sID = saleDBAdapter.insertEntry(SESSION._USER.getUserId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name());
 
                         saleDBAdapter.close();
-                        PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(SalesManagementActivity.this);
+                        PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(OrdersManagementActivity.this);
                         paymentDBAdapter1.open();
                         paymentDBAdapter1.insertEntry(sale.getPayment().getPaymentWay(), sale.getTotalPrice() * -1, sID);
                         paymentDBAdapter1.close();
@@ -305,7 +305,7 @@ public class SalesManagementActivity extends AppCompatActivity {
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                lvSales.setTextFilterEnabled(true);
+                lvOrders.setTextFilterEnabled(true);
 
             }
 
@@ -320,7 +320,7 @@ public class SalesManagementActivity extends AppCompatActivity {
                 String word = etSearch.getText().toString();
 
                 if (!word.equals("")) {
-                    for (Order c : All_sales) {
+                    for (Order c : All_orders) {
 
                         if (c.getUser().getUserName().toLowerCase().contains(word.toLowerCase()) ||(c.getOrderId() + "").contains(word.toLowerCase())
                                 || (c.getCreatedAt() + "").contains(word.toLowerCase())) {
@@ -329,11 +329,11 @@ public class SalesManagementActivity extends AppCompatActivity {
                         }
                     }
                 } else {
-                    _saleList = All_sales;
+                    _saleList = All_orders;
                 }
                 adapter = new SaleManagementListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_sales_management, _saleList);
 
-                lvSales.setAdapter(adapter);
+                lvOrders.setAdapter(adapter);
             }
         });
 

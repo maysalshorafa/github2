@@ -24,7 +24,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class ReportsManagementActivity  extends AppCompatActivity {
-    Button btnZ, btnZView,btnX, btnSales,btnExFiles ,btnSalesMan;
+    Button btnZ, btnZView,btnX, btnOrder,btnExFiles ,btnSalesMan;
 
     ZReportDBAdapter zReportDBAdapter;
     OrderDBAdapter saleDBAdapter;
@@ -53,7 +53,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         btnX=(Button)findViewById(R.id.reportManagementActivity_btnX);
         btnX.setText("X " + getString(R.string.report));
 
-        btnSales =(Button)findViewById(R.id.reportManagementActivity_btnSaleManagement);
+        btnOrder =(Button)findViewById(R.id.reportManagementActivity_btnSaleManagement);
         btnExFiles = (Button) findViewById(R.id.reportManagementActivity_btnExtractingFiles);
 
         zReportDBAdapter = new ZReportDBAdapter(this);
@@ -168,10 +168,10 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        btnSales.setOnClickListener(new View.OnClickListener() {
+        btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ReportsManagementActivity.this, SalesManagementActivity.class);
+                Intent intent = new Intent(ReportsManagementActivity.this, OrdersManagementActivity.class);
                 startActivity(intent);
             }
         });

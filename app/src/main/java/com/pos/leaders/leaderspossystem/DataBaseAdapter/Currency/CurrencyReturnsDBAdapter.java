@@ -26,7 +26,7 @@ public class CurrencyReturnsDBAdapter {
     protected static final String CurrencyReturnsDBAdapterTabelName = "CurrencyReturns";
     // Column Names
     protected static final String CurrencyReturns_COLUMN_ID = "id";
-    protected static final String CurrencyReturns_COLUMN_SALEID = "saleId";
+    protected static final String CurrencyReturns_COLUMN_SALEID = "orderId";
     protected static final String CurrencyReturns_COLUMN_AMOUNT = "amount";
     protected static final String CurrencyReturns_COLUMN_CREATEDATE = "createDate";
 

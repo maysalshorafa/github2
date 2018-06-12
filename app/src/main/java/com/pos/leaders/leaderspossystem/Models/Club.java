@@ -36,6 +36,10 @@ public class Club {
         this.amount=amount;
         this.point=point;
     }
+    public Club(Club club) {
+        this(club.getClubId(),club.getName(),club.getDescription(),club.getType(),club.getPercent(),club.getAmount(),club.getPoint());
+    }
+
 
     public long getClubId() {
         return clubId;

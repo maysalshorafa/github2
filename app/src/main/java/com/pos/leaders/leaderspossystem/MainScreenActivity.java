@@ -437,7 +437,7 @@ public class MainScreenActivity extends Activity {
 		btSalesManagement.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent=new Intent(MainScreenActivity.this,SalesManagementActivity.class);
+				Intent intent=new Intent(MainScreenActivity.this,OrdersManagementActivity.class);
 				startActivity(intent);
 			}
 		});

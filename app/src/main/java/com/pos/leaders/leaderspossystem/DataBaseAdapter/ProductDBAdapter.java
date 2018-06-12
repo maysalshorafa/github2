@@ -163,6 +163,8 @@ public class ProductDBAdapter {
     }
 
     public int deleteEntry(long id) {
+        ProductDBAdapter productDBAdapter=new ProductDBAdapter(context);
+        productDBAdapter.open();
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -171,6 +173,8 @@ public class ProductDBAdapter {
         String where = PRODUCTS_COLUMN_ID + " = ?";
         try {
             db.update(PRODUCTS_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+            Product product=productDBAdapter.getProductByID(id);
+            sendToBroker(MessageType.DELETE_PRODUCT, product, this.context);
             return 1;
         } catch (SQLException ex) {
             Log.e("Product deleteEntry", "enable hide Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());

@@ -150,7 +150,7 @@ public class User {
     public String toString() {
         return "User{" +
                 "createdAt=" + createdAt +
-                ", accountingId=" + userId +
+                ", userId=" + userId +
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +

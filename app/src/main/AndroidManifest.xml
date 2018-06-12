@@ -66,14 +66,14 @@
             />
         <activity android:name=".OfferActivity" />
         <activity android:name=".OfferRuleActivity" />
-        <activity android:name=".SalesManagementActivity"
+        <activity android:name=".OrdersManagementActivity"
             android:label="@string/title_sales_management_activity" />
         <activity android:name=".Reports.UserAttendanceReport"
             android:label="@string/title_user_attendance_report_activity"/>
         <activity android:name="." />
         <activity android:name=".AddOfferActivity" />
         <activity android:name=".LogInActivity" />
-        <activity android:name=".MainActivity"
+        <activity android:name=".SalesCartActivity"
             android:label="@string/title_main_sales_activity"/>
         <activity
             android:name=".Tools.OldCashActivity"
