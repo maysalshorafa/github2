@@ -34,7 +34,7 @@ public class DepartmentDBAdapter {
 
     public static final String DATABASE_CREATE = "CREATE TABLE departments ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "`name` TEXT NOT NULL , `creatingDate` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
-            "`byUser` INTEGER, `hide` INTEGER DEFAULT 0, FOREIGN KEY(`byEmployee`) REFERENCES `employees.id` )";
+            "`byEmployee` INTEGER, `hide` INTEGER DEFAULT 0, FOREIGN KEY(`byEmployee`) REFERENCES `employees.id` )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.

@@ -212,7 +212,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(IdsCounterDBAdapter.INIT(tblNames));
 
 
-        db.execSQL("INSERT INTO products (id, name,barcode,description,price,costPrice,depId,byUser,status) VALUES (8, 'Test',10,'Test',10,10,1,1,1);");
+        db.execSQL("INSERT INTO products (id, name,barcode,description,price,costPrice,depId,byEmployee,status) VALUES (8, 'Test',10,'Test',10,10,1,1,1);");
 
     }
 
