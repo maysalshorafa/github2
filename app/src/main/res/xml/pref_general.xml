@@ -1,0 +1,59 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="General" android:summary="GENERAL">
+
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="@string/company_name"
+        android:enabled="false"
+        android:inputType="textCapWords"
+        android:key="pref_title_about_company_name"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_about_company_name" />
+
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="@string/private_company"
+        android:enabled="false"
+        android:inputType="textCapWords"
+        android:key="private_company"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/private_company" />
+
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="@string/tax"
+        android:enabled="false"
+        android:inputType="textCapWords"
+        android:key="tax"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/tax" />
+
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="@string/terminal_number"
+        android:enabled="false"
+        android:inputType="textCapWords"
+        android:key="terminal_number"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Terminal" />
+
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="@string/invoice_note"
+        android:enabled="false"
+        android:inputType="textCapWords"
+        android:key="invoice_note"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/invoice_note" />
+
+
+</PreferenceScreen>

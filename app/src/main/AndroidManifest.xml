@@ -53,28 +53,35 @@
         <activity
             android:name=".syncposservice.SetupActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DepartmentActivity"
-            android:label="@string/title_activity_departments_activity"/>
-        <activity android:name=".ProductsActivity"
-            android:label="@string/title_activity_products_activity"/>
+        <activity
+            android:name=".DepartmentActivity"
+            android:label="@string/title_activity_departments_activity" />
+        <activity
+            android:name=".ProductsActivity"
+            android:label="@string/title_activity_products_activity" />
         <activity
             android:name=".ProductCatalogActivity"
             android:label="@string/title_activity_product_catalog" />
         <activity android:name=".MainScreenActivity" />
-        <activity android:name=".AddUserActivity"
-            android:label="@string/title_add_user_activity"
-            />
+        <activity
+            android:name=".AddUserActivity"
+            android:label="@string/title_add_user_activity" />
         <activity android:name=".OfferActivity" />
         <activity android:name=".OfferRuleActivity" />
-        <activity android:name=".SalesManagementActivity"
+        <activity
+            android:name=".SalesManagementActivity"
             android:label="@string/title_sales_management_activity" />
-        <activity android:name=".Reports.UserAttendanceReport"
-            android:label="@string/title_user_attendance_report_activity"/>
+        <activity
+            android:name=".Reports.UserAttendanceReport"
+            android:label="@string/title_user_attendance_report_activity" />
         <activity android:name="." />
         <activity android:name=".AddOfferActivity" />
         <activity android:name=".LogInActivity" />
-        <activity android:name=".MainActivity"
-            android:label="@string/title_main_sales_activity"/>
+        <activity
+            android:name=".MainActivity"
+            android:hardwareAccelerated="true"
+            android:largeHeap="true"
+            android:label="@string/title_main_sales_activity" />
         <activity
             android:name=".Tools.OldCashActivity"
             android:theme="@style/AppTheme.PopUp" />
@@ -84,26 +91,33 @@
         <activity
             android:name=".ChecksActivity"
             android:theme="@style/AppTheme.PopUp" />
-        <activity android:name=".ImportProductsActivity"
-            android:label="@string/title_import_product_activity"/>
+        <activity
+            android:name=".ImportProductsActivity"
+            android:label="@string/title_import_product_activity" />
         <activity
             android:name=".OfferProductCartActivity"
             android:theme="@style/AppTheme.PopUp" />
-        <activity android:name=".ReportsActivity"
-            android:label="@string/title_reports_activity"/>
-        <activity android:name=".ZReportActivity"
-            android:label="@string/title_zreports_activity"/>
-        <activity android:name=".ReportsManagementActivity"
-            android:label="@string/title_reports_management_activity"/>
-        <activity android:name=".ReportZDetailsActivity"
-            android:label="@string/title_report_zdetails_activity"/>
-        <activity android:name=".BackupActivity"
-            android:label="@string/title_backup_activity"/>
+        <activity
+            android:name=".ReportsActivity"
+            android:label="@string/title_reports_activity" />
+        <activity
+            android:name=".ZReportActivity"
+            android:label="@string/title_zreports_activity" />
+        <activity
+            android:name=".ReportsManagementActivity"
+            android:label="@string/title_reports_management_activity" />
+        <activity
+            android:name=".ReportZDetailsActivity"
+            android:label="@string/title_report_zdetails_activity" />
+        <activity
+            android:name=".BackupActivity"
+            android:label="@string/title_backup_activity" />
         <activity android:name=".InitActivity" />
         <activity android:name=".SetupNewPOSActivity" />
         <activity android:name=".Invoice" />
-        <activity android:name=".CreditCard.CreditCardByPhone"
-            android:label="@string/title_credit_card_by_phone_activity"/>
+        <activity
+            android:name=".CreditCard.CreditCardByPhone"
+            android:label="@string/title_credit_card_by_phone_activity" />
         <activity
             android:name=".SettingActivity"
             android:label="@string/settings" />
@@ -111,18 +125,24 @@
             android:name=".OpenFormatActivity"
             android:label="@string/title_activity_open_format"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".OldDashBoard"
+        <activity
+            android:name=".OldDashBoard"
             android:label="@string/title_activity_open_format">
+
             <!-- Main Activity -->
         </activity>
-        <activity android:name=".CustomerAndClub.Customer"
-            android:label="@string/title_customer_and_club_management_activity"/>
-        <activity android:name=".CustomerAndClub.AddNewCustomer"
-            android:label="@string/title_add_new_customer_activity"/>
-        <activity android:name=".CustomerAndClub.Coustmer_Group"
-            android:label="@string/title_add_new_club_activity"/>
-        <activity android:name=".CustomerAndClub.CustmerManagementActivity"
-            android:label="@string/title_customer_management_activity"/>
+        <activity
+            android:name=".CustomerAndClub.Customer"
+            android:label="@string/title_customer_and_club_management_activity" />
+        <activity
+            android:name=".CustomerAndClub.AddNewCustomer"
+            android:label="@string/title_add_new_customer_activity" />
+        <activity
+            android:name=".CustomerAndClub.Coustmer_Group"
+            android:label="@string/title_add_new_club_activity" />
+        <activity
+            android:name=".CustomerAndClub.CustmerManagementActivity"
+            android:label="@string/title_customer_management_activity" />
 
         <service
             android:name=".syncposservice.Service.SyncMessage"
@@ -138,40 +158,49 @@
         <activity
             android:name=".CustomerAndClub.ClubManagementActivity"
             android:label="@string/title_club_management_activity" />
-        <activity android:name=".DashBord"
+        <activity
+            android:name=".DashBord"
             android:label="@string/title_activity_dashboard_activty" />
-        <activity android:name=".SalesManManagementActivity"
+        <activity
+            android:name=".SalesManManagementActivity"
             android:label="@string/title_sales_man_management_activity" />
         <activity android:name=".SalesAssistantDetailesSalesMangmentActivity" />
         <activity
             android:name=".CurrencyReturnsCustomDialogActivity"
             android:theme="@style/AppTheme.PopUp" />
         <activity android:name=".PrinterStub" />
-        <activity android:name=".WorkerManagementActivity"
-            android:label="@string/title_activity_worker_management_activity"/>
-        <activity android:name=".CustomerAndClub.CustomerMeasurementManagementActivity"
-            android:label="@string/title_activity_customer_measurement_management_activity"/>
+        <activity
+            android:name=".WorkerManagementActivity"
+            android:label="@string/title_activity_worker_management_activity" />
+        <activity
+            android:name=".CustomerAndClub.CustomerMeasurementManagementActivity"
+            android:label="@string/title_activity_customer_measurement_management_activity" />
         <activity android:name=".CreditCard.MainCreditCardActivity" />
         <activity
             android:name=".SetUpManagement"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CustomerAndClub.AddCustomerMeasurement"
-            android:label="@string/title_activity_add_customer_measurement_activity"/>
+        <activity
+            android:name=".CustomerAndClub.AddCustomerMeasurement"
+            android:label="@string/title_activity_add_customer_measurement_activity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="fc2345a479e793a78d4e617ce9a0fe1e2c8e93fc" />
 
         <activity android:name=".SalesHistoryCopySales" />
-
-        <activity android:name=".AddNewDepartment"
-            android:label="@string/title_activity_add_new_department_activity" ></activity>
+        <activity
+            android:name=".AddNewDepartment"
+            android:label="@string/title_activity_add_new_department_activity" />
         <activity android:name=".ScheduleWorkersActivity" />
-        <activity android:name=".SettingsTab.SettingsTab"
-            android:label="@string/title_activity_setting_tab_activity"></activity>
-        <activity android:name=".Pinpad.PinpadActivity"
-                   android:label="@string/title_activity_pinpad"></activity>
-
+        <activity
+            android:name=".SettingsTab.SettingsTab"
+            android:label="@string/title_activity_setting_tab_activity" />
+        <activity
+            android:name=".Pinpad.PinpadActivity"
+            android:label="@string/title_activity_pinpad" />
+        <activity
+            android:name=".Settings.SettingsActivity"
+            android:label="@string/title_activity_settings" />
     </application>
 
 </manifest>

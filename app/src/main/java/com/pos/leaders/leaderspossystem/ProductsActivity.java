@@ -257,6 +257,17 @@ public class ProductsActivity  extends AppCompatActivity  {
             return false;
         }
 
+        String tempBarcode = etBarcode.getText().toString();
+        if (tempBarcode.contains("\r\n")) {
+            tempBarcode.replace("\r\n", "");
+        } else if (tempBarcode.contains("\r")) {
+            tempBarcode.replace("\r", "");
+        } else if (tempBarcode.contains("\n")) {
+            tempBarcode.replace("\n", "");
+        }
+
+        etBarcode.setText(tempBarcode);
+
         if (editableProduct == null) {
             boolean availableBarCode= productDBAdapter.isValidBarcode(etBarcode.getText().toString());
             boolean availableProductName= productDBAdapter.availableProductName(etName.getText().toString());

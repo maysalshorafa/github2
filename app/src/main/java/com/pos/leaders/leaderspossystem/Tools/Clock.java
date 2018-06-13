@@ -34,8 +34,8 @@ public class Clock
     {
         this(context, Clock.TICKPERMINUTE);
     }
-    public Clock(Context context,int tickMethod)
-    {
+
+    public Clock(Context context,int tickMethod) {
         this.Context=context;
         this.TickMethod=tickMethod;
         this.Time=new Time();
@@ -54,13 +54,13 @@ public class Clock
                 break;
         }
     }
-    private void Tick(long tickInMillis)
-    {
+
+    private void Tick(long tickInMillis) {
         Clock.this.Time.set(Clock.this.Time.toMillis(true)+tickInMillis);
         this.NotifyOnTickListners();
     }
-    private void NotifyOnTickListners()
-    {
+
+    private void NotifyOnTickListners() {
         switch (TickMethod)
         {
             case 0:
@@ -78,8 +78,8 @@ public class Clock
         }
 
     }
-    private void StartTickPerSecond()
-    {
+
+    private void StartTickPerSecond() {
         this.Handler=new Handler();
         this.Ticker = new Runnable()
         {
@@ -94,24 +94,22 @@ public class Clock
         this.Ticker.run();
 
     }
-    private void StartTickPerMinute()
-    {
+
+    private void StartTickPerMinute() {
         this.IntentReceiver= new BroadcastReceiver()
         {
             @Override
             public void onReceive(Context context, Intent intent)
             {
                 Tick(60000);
-
             }
         };
         this.IntentFilter = new IntentFilter();
         this.IntentFilter.addAction(Intent.ACTION_TIME_TICK);
         this.Context.registerReceiver(this.IntentReceiver, this.IntentFilter, null, this.Handler);
-
     }
-    public void StopTick()
-    {
+
+    public void StopTick() {
         if(this.IntentReceiver!=null)
         {
             this.Context.unregisterReceiver(this.IntentReceiver);
@@ -121,12 +119,12 @@ public class Clock
             this.Handler.removeCallbacks(this.Ticker);
         }
     }
-    public Time GetCurrentTime()
-    {
+
+    public Time GetCurrentTime() {
         return this.Time;
     }
-    public void AddClockTickListner(OnClockTickListner listner)
-    {
+
+    public void AddClockTickListner(OnClockTickListner listner) {
         this.OnClockTickListenerList.add(listner);
 
     }

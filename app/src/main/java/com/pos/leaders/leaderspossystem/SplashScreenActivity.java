@@ -522,7 +522,7 @@ public class SplashScreenActivity extends Activity {
             //end
             //FloatPoint
             if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT)) {
-                floatPoint =cSharedPreferences.getInt(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT,2);
+                floatPoint = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, "2"));
                 SETTINGS.decimalNumbers=floatPoint;
             }
             else {

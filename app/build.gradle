@@ -47,6 +47,14 @@ android {
 }
 
 
+
+
+
+
+
+
+
+
 dependencies {
     compile fileTree(include: ['**/*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -62,5 +70,6 @@ dependencies {
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.sun.mail:android-mail:1.5.5'
     compile 'com.sun.mail:android-activation:1.5.5'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
     testCompile 'junit:junit:4.12'
 }

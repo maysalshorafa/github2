@@ -236,7 +236,7 @@
     <string name="not_inserted_checks">لم يتم ادخال اي شيكات</string>
     <string name="check_pid_error">المبلغ المدخل غير كافي لتغطية السعر الكلي.</string>
     <string name="dont_need_to_add_another_check">لا يوجد حاجه لادخال شيك اخر.</string>
-    <string name="the_number_of_hours_you_work_is">عدد ساعات العمل هي:</string>
+    <string name="the_number_of_hours_you_work_is">"عدد ساعات العمل هي "</string>
     <string name="we_wish_to_you_a_happy_business_day">نتمنى لك يوم عمل سعيد.</string>
     <string name="invalid_payments_number">ادخل عدد الدفعات الصحيح بين 2 و 36.</string>
     <string name="customer_measurement">قياسات الزباين</string>
@@ -245,7 +245,7 @@
     <string name="measurement_type">نوع</string>
     <string name="measurement_name">الاسم</string>
     <string name="measurement_value">القيمة</string>
-    <string name="measurement_id">رقم</string>
+    <string name="measurement_id">رقم الهوية</string>
     <string name="cancel_measurement">الغاء القياس</string>
     <string name="duplicate_measurement">تكرار القياس</string>
     <string name="update_measurement">تحديث القياس</string>
@@ -333,6 +333,11 @@
 
     <string name="pinpad_connection_error">Please call the support team.</string>
     <string name="transaction_error">Transaction error</string>
+
     <string name="balance">ميزانيه</string>
+
+    <string name="title_activity_setting_tab_activity">קטלוג מוצרים</string>
+
+
 </resources>
 
