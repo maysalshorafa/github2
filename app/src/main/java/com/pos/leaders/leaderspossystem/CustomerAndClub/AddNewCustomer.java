@@ -11,10 +11,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
@@ -30,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    String street="" , job="" , email="" , houseNo="" , postalCode="" , country="" , countryCode="";
+    int cityId=0;
     EditText etCustomerFirstName, etCustomerLastName, etStreet, etJob, etEmail, etPhoneNo, etHouseNumber, etPostalCode, etCountry, etCountryCode;
     Button btAddCustomer, btCancel;
     Spinner selectCitySpinner, selectClubSpinner;
@@ -41,10 +45,12 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     ArrayList<Integer> permissions_name;
     RadioButton maleRadioButton, femaleRadioButton;
     RadioGroup radioGender;
-    String gender = null;
+    String gender = "";
     final List<String> club = new ArrayList<String>();
-    long clubID;
+    long clubID=0;
     long customerId;
+    ImageView advanceFeature;
+    TextView advance;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +87,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             customer = customerDBAdapter.getCustomerByID(customerId);
             etCustomerFirstName.setText(customer.getFirstName());
             etCustomerLastName.setText(customer.getLastName());
-            etJob.setText(customer.getJob());
+           etJob.setText(customer.getJob());
             etEmail.setText(customer.getEmail());
             etPhoneNo.setText(customer.getPhoneNumber());
             etStreet.setText(customer.getStreet());
@@ -119,6 +125,14 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);             }
         });
+        advanceFeature.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                advanceFeature.setVisibility(View.INVISIBLE);
+                advance.setVisibility(View.INVISIBLE);
+              secondCustomerInformation.setVisibility(View.VISIBLE);
+                  }
+        });
 
         btAddCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,47 +141,35 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 Intent intent;
                 if (customer == null) {
                     if (!_customerName.equals("")) {
+                        if(secondCustomerInformation.getVisibility()== View.VISIBLE){
+                        street=etStreet.getText().toString();
+                        job=etJob.getText().toString();
+                        email=etEmail.getText().toString();
+                        houseNo=etHouseNumber.getText().toString();
+                        postalCode=etPostalCode.getText().toString();
+                        country=etCountry.getText().toString();
+                        countryCode=etCountryCode.getText().toString();
+                            cityId=  (int) selectCitySpinner.getSelectedItemId();
+
+                        }
+                        for (int i = 0; i < groupList.size(); i++) {
+                            Club group = groupList.get(i);
+                            if (group.getName().equalsIgnoreCase( selectClubSpinner.getSelectedItem().toString())) {
+                                clubID = group.getClubId();
+                            }
+
+
+                        }
                             if (etCustomerFirstName.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), getString(R.string.please_insert_first_name), Toast.LENGTH_LONG).show();
                             } else if (etCustomerLastName.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), getString(R.string.please_insert_last_name), Toast.LENGTH_LONG).show();
-                            } else if (etEmail.getText().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_email), Toast.LENGTH_LONG).show();
-                            } else if (gender.equals("")) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_gender), Toast.LENGTH_LONG).show();
-                            } else if (etJob.getText().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_job), Toast.LENGTH_LONG).show();
                             } else if (etPhoneNo.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
-                            } else if (etStreet.getText().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_street), Toast.LENGTH_LONG).show();
-                            } else if (selectClubSpinner.getSelectedItem().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_club), Toast.LENGTH_LONG).show();
-                            } else if (selectCitySpinner.getSelectedItem().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_city), Toast.LENGTH_LONG).show();
-                            } else if (etHouseNumber.getText().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_house_number), Toast.LENGTH_LONG).show();
-                            } else if (etPostalCode.getText().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_postal_code), Toast.LENGTH_LONG).show();
-                            } else if (etCountry.getText().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_country), Toast.LENGTH_LONG).show();
-                            } else if (etCountryCode.getText().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_country_code), Toast.LENGTH_LONG).show();
                             } else {
-                                for (int i = 0; i < groupList.size(); i++) {
-                                    Club group = groupList.get(i);
-                                    if (group.getName().equalsIgnoreCase( selectClubSpinner.getSelectedItem().toString())) {
-                                        clubID = group.getClubId();
-                                    }
-
-
-                                }
                                 long i = customerDBAdapter.insertEntry(etCustomerFirstName.getText().toString(),
-                                        etCustomerLastName.getText().toString(), gender, etEmail.getText().toString(),
-                                        etJob.getText().toString(), etPhoneNo.getText().toString(), etStreet.getText().toString(),
-                                        (int) selectCitySpinner.getSelectedItemId(), clubID,
-                                        etHouseNumber.getText().toString(), etPostalCode.getText().toString(),
-                                        etCountry.getText().toString(), etCountryCode.getText().toString());
+                                        etCustomerLastName.getText().toString(), gender, email, job, etPhoneNo.getText().toString(), street, cityId, clubID, houseNo, etPostalCode.getText().toString(),
+                                       country, countryCode,0);
                                 if (i > 0) {
                                     Toast.makeText(getApplicationContext(), getString(R.string.success_adding_new_customer), Toast.LENGTH_LONG).show();
                                     try {
@@ -184,61 +186,49 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 } else {
                     // Edit mode
                     if (_customerName != "") {
+                        if(secondCustomerInformation.getVisibility()== View.VISIBLE){
+                            street=etStreet.getText().toString();
+                            job=etJob.getText().toString();
+                            email=etEmail.getText().toString();
+                            houseNo=etHouseNumber.getText().toString();
+                            postalCode=etPostalCode.getText().toString();
+                            country=etCountry.getText().toString();
+                            countryCode=etCountryCode.getText().toString();
+                            for (int i = 0; i < cityList.size(); i++) {
+                                City city = cityList.get(i);
+                                if (city.getName().equalsIgnoreCase(selectCitySpinner.getSelectedItem().toString())) {
+                                    cityId = (int) city.getCityId();
+                                }
+                            }
+                        }
+                        for (int i = 0; i < groupList.size(); i++) {
+                            Club group = groupList.get(i);
+                            if (group.getName() .equalsIgnoreCase(selectClubSpinner.getSelectedItem().toString())) {
+                                clubID= group.getClubId();
+
+                            }
+                        }
                         if (etCustomerFirstName.getText().toString().equals("")) {
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_first_name), Toast.LENGTH_LONG).show();
                         } else if (etCustomerLastName.getText().toString().equals("")) {
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_last_name), Toast.LENGTH_LONG).show();
-                        } else if (etEmail.getText().toString().equals("")) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_email), Toast.LENGTH_LONG).show();
-                        } else if (gender.equals("")) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_gender), Toast.LENGTH_LONG).show();
-                        } else if (etJob.getText().toString().equals("")) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_job), Toast.LENGTH_LONG).show();
                         } else if (etPhoneNo.getText().toString().equals("")) {
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
-                        } else if (etStreet.getText().toString().equals("")) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_street), Toast.LENGTH_LONG).show();
-                        } else if (selectClubSpinner.getSelectedItem().toString().equals("")) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_club), Toast.LENGTH_LONG).show();
-                        } else if (selectCitySpinner.getSelectedItem().toString().equals("")) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_city), Toast.LENGTH_LONG).show();
-                        } else if (etHouseNumber.getText().toString().equals("")) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_house_number), Toast.LENGTH_LONG).show();
-                        } else if (etPostalCode.getText().toString().equals("")) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_postal_code), Toast.LENGTH_LONG).show();
-                        } else if (etCountry.getText().toString().equals("")) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_country), Toast.LENGTH_LONG).show();
-                        } else if (etCountryCode.getText().toString().equals("")) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_country_code), Toast.LENGTH_LONG).show();
                         } else {
                             try {
                                 customer.setFirstName(etCustomerFirstName.getText().toString());
                                 customer.setLastName(etCustomerLastName.getText().toString());
-                                customer.setJob(etJob.getText().toString());
-                                customer.setEmail(etEmail.getText().toString());
+                                customer.setJob(job);
+                                customer.setEmail(email);
                                 customer.setPhoneNumber(etPhoneNo.getText().toString());
-                                customer.setStreet(etStreet.getText().toString());
-                                customer.setHouseNumber(etHouseNumber.getText().toString());
-                                customer.setPostalCode(etPostalCode.getText().toString());
-                                customer.setCountry(etCountry.getText().toString());
-                                customer.setCountryCode(etCountryCode.getText().toString());
+                                customer.setStreet(street);
+                                customer.setHouseNumber(houseNo);
+                                customer.setPostalCode(postalCode);
+                                customer.setCountry(country);
+                                customer.setCountryCode(countryCode);
                                 customer.setGender(gender);
-                                for (int i = 0; i < groupList.size(); i++) {
-                                    Club group = groupList.get(i);
-                                    if (group.getName() .equalsIgnoreCase(selectClubSpinner.getSelectedItem().toString())) {
-                                       long editingClubID = group.getClubId();
-                                        customer.setClub(editingClubID);
-                                    }
-                                }
-                                for (int i = 0; i < cityList.size(); i++) {
-                                    City city = cityList.get(i);
-                                    if (city.getName().equalsIgnoreCase(selectCitySpinner.getSelectedItem().toString())) {
-                                        long cityId = city.getCityId();
-                                        customer.setCity((int) cityId);
-                                    }
-                                }
-
-
+                                customer.setClub(clubID);
+                                customer.setCity(cityId);
                                 customerDBAdapter.updateEntry(customer);
                                 customerDBAdapter.updateEntry(customer);
                                 Toast.makeText(getApplicationContext(), getString(R.string.success_edit_customer), Toast.LENGTH_SHORT).show();
@@ -276,10 +266,12 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         etPhoneNo = (EditText) findViewById(R.id.etCustomerPhoneNumber);
         etCountry = (EditText) findViewById(R.id.etCustomerCountry);
         etCountryCode = (EditText) findViewById(R.id.etCustomerCountryCode);
-        etHouseNumber = (EditText) findViewById(R.id.etHouseNumber);
+       etHouseNumber = (EditText) findViewById(R.id.etHouseNumber);
         etPostalCode = (EditText) findViewById(R.id.etCustomerPostalCode);
         btAddCustomer = (Button) findViewById(R.id.add_Custmer);
         btCancel = (Button) findViewById(R.id.addCustmer_BTCancel);
+        advanceFeature=(ImageView)findViewById(R.id.advanceFeature);
+        advance=(TextView)findViewById(R.id.advance);
         customerDBAdapter = new CustomerDBAdapter(this);
         customerDBAdapter.open();
         selectCitySpinner = (Spinner) findViewById(R.id.customerCitySpinner);
@@ -341,5 +333,8 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+    @Override
+    public void onBackPressed() {
     }
 }

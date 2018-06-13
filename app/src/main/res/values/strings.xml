@@ -50,7 +50,7 @@
     <string name="show_club">Show Club </string>
     <string name="show_customer">Show Customer </string>
     <string name="discount_percentage">Discount</string>
-    <string name="add_customer_club"> Add Customer Club </string>
+    <string name="add_customer_club">Customer Club </string>
     <!--Product Management-->
     <string name="edit_product">Edit Product</string>
     <string name="add_product">Add Product</string>
@@ -185,7 +185,7 @@
     <string name="barcode">Barcode</string>
     <string name="description">Description</string>
     <string name="cost_price">Cost Price</string>
-    <string name="with_tax">With Tax</string>
+    <string name="with_tax">A must for VAT</string>
     <string name="without_tax">Without Tax</string>
     <string name="weighable">Weighable</string>
     <string name="department_name">Department Name</string>
@@ -387,7 +387,7 @@
     <string name="email">Email</string>
     <string name="phone">Phone</string>
     <string name="address">Address</string>
-    <string name="add_to_city"> Add to City</string>
+    <string name="add_to_city">City</string>
     <string name="title_activity_temp_cash_activty">TempCashActivty</string>
     <string name="title_activity_dashboard_activty" translatable="false">Dashboard</string>
     <string name="title_activity_club_management">ClubManagementActivity</string>
@@ -583,9 +583,13 @@
     <string name="pinpad_connection_error">Please call the support team.</string>
     <string name="transaction_error">Transaction error</string>
     <string name="pinpad_wait_for_finish">Continue the transaction using your pin-pad.</string>
+
+    <string name="balance">Balance</string>
+
     <string name="pref_title_about_company_name">Company Name</string>
 
     <string name="pinpad">Pin-Pad</string>
+
 
 </resources>
 

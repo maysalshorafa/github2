@@ -154,12 +154,12 @@ public class MainActivity extends AppCompatActivity {
     Button btnPercentProduct, btnPauseSale, btnResumeSale;
     ImageButton search_person;
     Button  btnCash, btnCreditCard, btnOtherWays;
-    TextView tvTotalPrice, tvTotalSaved, salesSaleMan;
+    TextView tvTotalPrice, tvTotalSaved, salesSaleMan,customerBalance;
     EditText etSearch;
     ImageButton btnDone;
     ImageButton btnGrid, btnList;
     ScrollView scDepartment;
-    LinearLayout llDepartments;
+    LinearLayout llDepartments,linearLayoutCustomerBalance;
     FrameLayout fragmentTouchPad;
     GridView gvProducts;
     ListView lvProducts;
@@ -332,6 +332,7 @@ public class MainActivity extends AppCompatActivity {
         btnGrid = (ImageButton) findViewById(R.id.mainActivity_btnGrid);
         btnList = (ImageButton) findViewById(R.id.mainActivity_btnList);
         salesSaleMan = (TextView) findViewById(R.id.salesSaleMan);
+        customerBalance=(TextView)findViewById(R.id.customerBalance);
         custmerAssetstIdList = new ArrayList<Long>();
         orderIdList=new ArrayList<OrderDetails>();
         orderId=new ArrayList<Long>();
@@ -367,6 +368,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         llDepartments = (LinearLayout) findViewById(R.id.mainActivity_LLDepartment);
+        linearLayoutCustomerBalance=(LinearLayout)findViewById(R.id.linearLayoutCustomerBalance);
         departmentDBAdapter = new DepartmentDBAdapter(this);
         productDBAdapter = new ProductDBAdapter(this);
         customerDBAdapter = new CustomerDBAdapter(this);
@@ -1639,6 +1641,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clearCart() {
+        linearLayoutCustomerBalance.setVisibility(View.INVISIBLE);
         valueOfDiscount=0.0;
         clubDiscount = 0;
         clubPoint = 0;
@@ -2653,6 +2656,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+                //update customer balance
+                if(SESSION._SALE.getTotalPrice()<0&&customer!=null){
+                    Customer upDateCustomer=customer;
+                    upDateCustomer.setBalance(SESSION._SALE.getTotalPrice()+customer.getBalance());
+                    customerDBAdapter.updateEntry(upDateCustomer);
+                }
                 orderDBAdapter.close();
                 custmerAssetDB.close();
                 SESSION._SALE.setOrders(SESSION._ORDERS);
@@ -2788,6 +2797,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+                //update customer balance
+                if(SESSION._SALE.getTotalPrice()<0&&customer!=null){
+                    Customer upDateCustomer=customer;
+                    upDateCustomer.setBalance(SESSION._SALE.getTotalPrice()+customer.getBalance());
+                    customerDBAdapter.updateEntry(upDateCustomer);
+                }
                 orderDBAdapter.close();
                 custmerAssetDB.close();
                 SESSION._SALE.setOrders(SESSION._ORDERS);
@@ -2893,7 +2908,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-
+                //update customer balance
+                if(SESSION._SALE.getTotalPrice()<0&&customer!=null){
+                    Customer upDateCustomer=customer;
+                    upDateCustomer.setBalance(SESSION._SALE.getTotalPrice()+customer.getBalance());
+                    customerDBAdapter.updateEntry(upDateCustomer);
+                }
                 orderDBAdapter.close();
 
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
@@ -2994,6 +3014,13 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+                //update customer balance
+                    if(SESSION._SALE.getTotalPrice()<0&&customer!=null){
+                        Customer upDateCustomer=customer;
+                        upDateCustomer.setBalance(SESSION._SALE.getTotalPrice()+customer.getBalance());
+                      customerDBAdapter.updateEntry(upDateCustomer);
+                    }
+
                 orderDBAdapter.close();
                 custmerAssetDB.close();
                 // End Order And CustomerAssistant Region
@@ -3097,6 +3124,12 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }
+                }
+                //update customer balance
+                if(SESSION._SALE.getTotalPrice()<0&&customer!=null){
+                    Customer upDateCustomer=customer;
+                    upDateCustomer.setBalance(SESSION._SALE.getTotalPrice()+customer.getBalance());
+                    customerDBAdapter.updateEntry(upDateCustomer);
                 }
                 orderDBAdapter.close();
                 custmerAssetDB.close();
@@ -3265,6 +3298,10 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 popupWindow.dismiss();
+                calculateTotalPrice();
+                linearLayoutCustomerBalance.setVisibility(View.VISIBLE);
+                customerBalance.setText(""+Math.abs(customer.getBalance()));
+
             }
         });
 

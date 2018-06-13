@@ -20,12 +20,13 @@ public class Customer {
     String postalCode;
     String country;
     String countryCode;
+    Double balance;
 
 
     public Customer() {
     }
 
-    public Customer(long customerId, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode) {
+    public Customer(long customerId, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode,double balance) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -41,13 +42,14 @@ public class Customer {
         this.postalCode = postalCode;
         this.country = country;
         this.countryCode = countryCode;
+        this.balance=balance;
     }
 
     public Customer(Customer customer){
         this(customer.getCustomerId(),customer.getFirstName(),customer.getLastName(),customer.getGender(),
                 customer.getEmail(),customer.getJob(),customer.getPhoneNumber(),customer.getStreet(),
                 customer.getHide(),customer.getCity(),customer.getClub(),customer.getHouseNumber()
-                ,customer.getPostalCode(),customer.getCountry(),customer.getCountryCode());
+                ,customer.getPostalCode(),customer.getCountry(),customer.getCountryCode(),customer.getBalance());
     }
 
     public String getLastName() {
@@ -108,6 +110,14 @@ public class Customer {
 
     public boolean getHide() {
         return hide;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 
     public void setCustomerId(long customerId) {
@@ -184,5 +194,27 @@ public class Customer {
 
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId=" + customerId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", gender='" + gender + '\'' +
+                ", email='" + email + '\'' +
+                ", job='" + job + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", street='" + street + '\'' +
+                ", hide=" + hide +
+                ", city=" + city +
+                ", club=" + club +
+                ", houseNumber='" + houseNumber + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", country='" + country + '\'' +
+                ", countryCode='" + countryCode + '\'' +
+                ", balance=" + balance +
+                '}';
     }
 }
