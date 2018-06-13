@@ -24,7 +24,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class ReportsManagementActivity  extends AppCompatActivity {
-    Button btnZ, btnZView,btnX, btnSales,btnExFiles ,btnSalesMan;
+    Button btnZ, btnZView,btnX, btnOrder,btnExFiles ,btnSalesMan;
 
     ZReportDBAdapter zReportDBAdapter;
     OrderDBAdapter saleDBAdapter;
@@ -53,7 +53,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         btnX=(Button)findViewById(R.id.reportManagementActivity_btnX);
         btnX.setText("X " + getString(R.string.report));
 
-        btnSales =(Button)findViewById(R.id.reportManagementActivity_btnSaleManagement);
+        btnOrder =(Button)findViewById(R.id.reportManagementActivity_btnSaleManagement);
         btnExFiles = (Button) findViewById(R.id.reportManagementActivity_btnExtractingFiles);
 
         zReportDBAdapter = new ZReportDBAdapter(this);
@@ -95,14 +95,14 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                         .setMessage(getString(R.string.create_z_report_message))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                //(long id, Date creationDate, User user, Sale startSale, Sale endSale)
+                                //(long id, Date creationDate, Employee user, ORDER startSale, ORDER endSale)
                                 if(lastZReport == null) {
                                     lastZReport = new ZReport();
                                     lastZReport.setEndOrderId(0);
                                 }
 
-                                ZReport z=new ZReport(0, new Timestamp(System.currentTimeMillis()) , SESSION._USER,lastZReport.getEndOrderId()+1,lastSale);
-                                z.setByUser(SESSION._USER.getUserId());
+                                ZReport z=new ZReport(0, new Timestamp(System.currentTimeMillis()) , SESSION._EMPLOYEE,lastZReport.getEndOrderId()+1,lastSale);
+                                z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
                                 double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
                                 totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
                                 long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
@@ -145,7 +145,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
             public void onClick(View v) {
                 PrintTools pt=new PrintTools(ReportsManagementActivity.this);
                 if (lastZReport!=null){ // test if have at least i row in ZReportTable Then make XReport
-                Bitmap bmap = pt.createXReport(lastZReport.getEndOrderId()+1,lastSale.getOrderId(),SESSION._USER,new Date());
+                Bitmap bmap = pt.createXReport(lastZReport.getEndOrderId()+1,lastSale.getOrderId(),SESSION._EMPLOYEE,new Date());
 
                     pt.PrintReport(bmap);
                     //create and print x report
@@ -168,10 +168,10 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        btnSales.setOnClickListener(new View.OnClickListener() {
+        btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ReportsManagementActivity.this, SalesManagementActivity.class);
+                Intent intent = new Intent(ReportsManagementActivity.this, OrdersManagementActivity.class);
                 startActivity(intent);
             }
         });

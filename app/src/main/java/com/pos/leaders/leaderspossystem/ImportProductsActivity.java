@@ -278,7 +278,7 @@ public class ImportProductsActivity extends Activity {
                         name=sheet.getCell(1, row).getContents();
                         barcode=sheet.getCell(2, row).getContents();
                         price=new BigDecimal(sheet.getCell(4, row).getContents().replaceAll(" ","")).toString();
-                        resultSet.add(new Product(Integer.parseInt(id),name,Double.parseDouble(price),barcode,1, SESSION._USER.getUserId()));
+                        resultSet.add(new Product(Integer.parseInt(id),name,Double.parseDouble(price),barcode,1, SESSION._EMPLOYEE.getEmployeeId()));
                     }
                     catch (Exception ex){
                         Log.e("",ex.getMessage());
@@ -329,7 +329,7 @@ public class ImportProductsActivity extends Activity {
                 int totalRows = 0;
                 for (Sheet sh:w.getSheets()) {
                     totalRows += sh.getRows();
-                    Department d = new Department(sh.getName(), new Timestamp(System.currentTimeMillis()), SESSION._USER.getUserId());
+                    Department d = new Department(sh.getName(), new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId());
                     List<Product> products = new ArrayList<>();
                     for (int row = 1; row < sh.getRows(); row++) {
                         try {
@@ -342,7 +342,7 @@ public class ImportProductsActivity extends Activity {
                             costPrice = sh.getCell(4, row).getContents();
                             if(costPrice.equals(""))
                                 costPrice = "0";
-                            products.add(new Product(name, Double.parseDouble(price), Double.parseDouble(costPrice), barcode, SESSION._USER.getUserId()));
+                            products.add(new Product(name, Double.parseDouble(price), Double.parseDouble(costPrice), barcode, SESSION._EMPLOYEE.getEmployeeId()));
                         }
                         catch (Exception ex){
                             Log.e("",ex.getMessage());

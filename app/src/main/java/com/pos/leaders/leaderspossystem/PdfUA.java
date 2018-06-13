@@ -21,7 +21,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
@@ -29,7 +29,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
 public class PdfUA {
 
    public static PdfPTable currencyTable = new PdfPTable(4);
-    public static User user;
+    public static Employee user;
    public static ZReport zReport;
  /**   public static void  createZReportPdf(Context context, long id, long from, long to, boolean isCopy, double totalZReportAmount) throws IOException, DocumentException {
      Document document = new Document();
@@ -112,9 +112,9 @@ public class PdfUA {
             document.close();
     }**/
     public static void  printUserReport(Context context, List<ScheduleWorkers>scheduleWorkersArrayList,long userId,Date from ,Date to) throws IOException, DocumentException {
-        UserDBAdapter userDBAdapter = new UserDBAdapter(context);
+        EmployeeDBAdapter userDBAdapter = new EmployeeDBAdapter(context);
         userDBAdapter.open();
-        User user = userDBAdapter.getUserByID(userId);
+        Employee user = userDBAdapter.getEmployeeByID(userId);
         // create file , document region
         Document document = new Document();
         String fileName = "randompdf.pdf";
@@ -141,7 +141,7 @@ public class PdfUA {
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.user_name)+":" + user.getFullName() , Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._USER.getFullName(), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
         //end
 
         //date table from , to
@@ -202,10 +202,10 @@ public class PdfUA {
         zReportDBAdapter.open();
          zReport = zReportDBAdapter.getByID(id);
         zReportDBAdapter.close();
-        UserDBAdapter userDBAdapter = new UserDBAdapter(context);
+        EmployeeDBAdapter userDBAdapter = new EmployeeDBAdapter(context);
         userDBAdapter.open();
-        user = userDBAdapter.getUserByID(zReport.getByUser());
-        zReport.setUser(userDBAdapter.getUserByID(zReport.getByUser()));
+        user = userDBAdapter.getEmployeeByID(zReport.getByUser());
+        zReport.setUser(userDBAdapter.getEmployeeByID(zReport.getByUser()));
         userDBAdapter.close();
         AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
         aReportDBAdapter.open();

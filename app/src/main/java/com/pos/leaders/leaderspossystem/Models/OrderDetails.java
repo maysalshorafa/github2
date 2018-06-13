@@ -213,7 +213,7 @@ public class OrderDetails {
     @Override
     public String toString() {
         return "OrderDetails{" +
-                "accountingId=" + orderDetailsId +
+                "orderDetailsId=" + orderDetailsId +
                 ", productId=" + productId +
                 ", quantity=" + quantity +
                 ", userOffer=" + userOffer +

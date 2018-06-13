@@ -12,7 +12,7 @@ import android.text.TextPaint;
 
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
@@ -30,7 +30,7 @@ import java.util.Locale;
 
 public class BitmapInvoice {
 
-    public static Bitmap print(int id, List<OrderDetails> orders, Order sale, boolean isCopy, User user, Context context) {
+    public static Bitmap print(int id, List<OrderDetails> orders, Order sale, boolean isCopy, Employee user, Context context) {
         //miriam_libre_bold.ttf
         //miriam_libre_regular.ttf
         //carmelitregular.ttf
@@ -457,7 +457,7 @@ public class BitmapInvoice {
         return String.format(new Locale("en"), "%.2f", d);
     }
 
-    public static Bitmap xPrint(Context context, User user, long date, double usd_plus, double usd_minus, double eur_plus, double eur_minus, double gbp_plus, double gbp_minus, double sheqle_plus, double sheqle_minus, double cash_plus, double cash_minus, double check_plus, double check_minus, double creditCard_plus, double creditCard_minus, double starterAmount) {
+    public static Bitmap xPrint(Context context, Employee user, long date, double usd_plus, double usd_minus, double eur_plus, double eur_minus, double gbp_plus, double gbp_minus, double sheqle_plus, double sheqle_minus, double cash_plus, double cash_minus, double check_plus, double check_minus, double creditCard_plus, double creditCard_minus, double starterAmount) {
         //miriam_libre_bold.ttf
         //miriam_libre_regular.ttf
         //carmelitregular.ttf

@@ -31,7 +31,7 @@ public class CustomerMeasurementDBAdapter {
     //end
     // Create Table
     public static final String DATABASE_CREATE = "CREATE TABLE " + CUSTOMER_MEASUREMENT_TABLE_NAME
-            + " ( `" + CUSTOMER_MEASUREMENT_COLUMN_ID + "` INTEGER PRIMARY KEY AUTOINCREMENT, `" + CUSTOMER_MEASUREMENT_COLUMN_CUSTOMER_ID + "` INTEGER, `" + CUSTOMER_MEASUREMENT_COLUMN_USER_ID + "` INTEGER, " + " `" + CUSTOMER_MEASUREMENT_COLUMN_VISIT_DATE + "` TEXT DEFAULT current_timestamp)";
+            + " ( `" + CUSTOMER_MEASUREMENT_COLUMN_ID + "` INTEGER PRIMARY KEY AUTOINCREMENT, `" + CUSTOMER_MEASUREMENT_COLUMN_CUSTOMER_ID + "` INTEGER, `" + CUSTOMER_MEASUREMENT_COLUMN_USER_ID + "` INTEGER, " + " `" + CUSTOMER_MEASUREMENT_COLUMN_VISIT_DATE + "` TIMESTAMP DEFAULT current_timestamp)";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -74,7 +74,6 @@ public class CustomerMeasurementDBAdapter {
         val.put(CUSTOMER_MEASUREMENT_COLUMN_ID, customerMeasurement.getCustomerMeasurementId());
         val.put(CUSTOMER_MEASUREMENT_COLUMN_CUSTOMER_ID, customerMeasurement.getCustomerId());
         val.put(CUSTOMER_MEASUREMENT_COLUMN_USER_ID,customerMeasurement.getUserId());
-        val.put(CUSTOMER_MEASUREMENT_COLUMN_VISIT_DATE, String.valueOf(customerMeasurement.getVisitDate()));
 
         try {
             return db.insert(CUSTOMER_MEASUREMENT_TABLE_NAME, null, val);

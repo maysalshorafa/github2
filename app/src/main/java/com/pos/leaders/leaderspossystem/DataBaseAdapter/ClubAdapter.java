@@ -232,6 +232,8 @@ public class ClubAdapter {
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(Group_COLUMN_DISENABLED))));
     }
     public int deleteEntry(long id) {
+        ClubAdapter clubAdapter=new ClubAdapter(context);
+        clubAdapter.open();
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -240,6 +242,9 @@ public class ClubAdapter {
         String where = Group_COLUMN__ID + " = ?";
         try {
             db.update(Group_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+            Club club=clubAdapter.getClubById(id);
+            sendToBroker(MessageType.DELETE_CLUB, club, this.context);
+
             return 1;
         } catch (SQLException ex) {
             Log.e("Club deleteEntry", "enable hide Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());
@@ -261,7 +266,20 @@ public class ClubAdapter {
             return 0;
         }
     }
+    public Club getClubById(long id) {
+        Club club = null;
+        Cursor cursor = db.rawQuery("select * from " + Group_COLUMN_Name + " where id='" + id + "'", null);
+        if (cursor.getCount() < 1) // UserName Not Exist
+        {
+            cursor.close();
+            return club;
+        }
+        cursor.moveToFirst();
+        club = new Club(createNewGroup(cursor));
+        cursor.close();
 
+        return club;
+    }
 
 }
 

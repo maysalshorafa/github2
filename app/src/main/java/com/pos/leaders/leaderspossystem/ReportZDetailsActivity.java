@@ -58,7 +58,7 @@ public class ReportZDetailsActivity extends Activity {
         }
         pt=new PrintTools(ReportZDetailsActivity.this);
         p=pt.createZReport(id,from,to,true,totalZReportAmount);
-        // p=pt.createXReport(id,from, SESSION._USER,new java.util.Date()); // testing xReport
+        // p=pt.createXReport(id,from, SESSION._EMPLOYEE,new java.util.Date()); // testing xReport
         ((ImageView)findViewById(R.id.reportZDetails_ivInvoice)).setImageBitmap(p);
 
         btCancel.setOnClickListener(new View.OnClickListener() {

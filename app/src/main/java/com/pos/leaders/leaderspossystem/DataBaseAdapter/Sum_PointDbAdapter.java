@@ -22,12 +22,12 @@ public class Sum_PointDbAdapter {
     public static final String SUM_POINT_TABLE_NAME = "SumPoint";
     // Column Names
     protected static final String SUM_POINT_COLUMN_ID = "id";
-    protected static final String SUM_POINT_COLUMN_SALE_ID = "saleId";
+    protected static final String SUM_POINT_COLUMN_SALE_ID = "orderId";
     protected static final String SUM_POINT_COLUMN_POINT = "pointAmount";
     protected static final String SUM_POINT_COLUMN_CUSTOMER = "customerId";
 
 
-    public static final String DATABASE_CREATE= "CREATE TABLE sumPoint ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  , `saleId` INTEGER ,"+" `pointAmount` INTEGER , `"+ SUM_POINT_COLUMN_CUSTOMER +"` INTEGER, FOREIGN KEY(`saleId`) REFERENCES `_Order.id` )";
+    public static final String DATABASE_CREATE= "CREATE TABLE sumPoint ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  , `orderId` INTEGER ,"+" `pointAmount` INTEGER , `"+ SUM_POINT_COLUMN_CUSTOMER +"` INTEGER, FOREIGN KEY(`orderId`) REFERENCES `_Order.id` )";
     private SQLiteDatabase db;
 
     private final Context context;

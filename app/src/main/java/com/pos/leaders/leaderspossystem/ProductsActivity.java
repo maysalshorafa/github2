@@ -257,17 +257,6 @@ public class ProductsActivity  extends AppCompatActivity  {
             return false;
         }
 
-        String tempBarcode = etBarcode.getText().toString();
-        if (tempBarcode.contains("\r\n")) {
-            tempBarcode.replace("\r\n", "");
-        } else if (tempBarcode.contains("\r")) {
-            tempBarcode.replace("\r", "");
-        } else if (tempBarcode.contains("\n")) {
-            tempBarcode.replace("\n", "");
-        }
-
-        etBarcode.setText(tempBarcode);
-
         if (editableProduct == null) {
             boolean availableBarCode= productDBAdapter.isValidBarcode(etBarcode.getText().toString());
             boolean availableProductName= productDBAdapter.availableProductName(etName.getText().toString());
@@ -281,7 +270,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                     check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
                         etDescription.getText().toString(), Double.parseDouble(etPrice.getText().toString()),
                         Double.parseDouble(etCostPrice.getText().toString()), withTax,
-                       withWeighable, depID, SESSION._USER.getUserId(), with_pos, with_point_system);
+                       withWeighable, depID, SESSION._EMPLOYEE.getEmployeeId(), with_pos, with_point_system);
                 if (check > 0) {
                     Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_product), Toast.LENGTH_LONG).show();
                     return true;

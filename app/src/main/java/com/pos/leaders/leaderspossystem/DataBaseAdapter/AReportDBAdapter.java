@@ -30,18 +30,18 @@ public class AReportDBAdapter {
     // Column Names
     protected static final String A_REPORT_COLUMN_ID = "id";
     protected static final String A_REPORT_COLUMN_CREATEDATE = "createDate";
-    protected static final String A_REPORT_COLUMN_BYUSER = "byUser";
+    protected static final String A_REPORT_COLUMN_BYUSER = "byEmployee";
     protected static final String A_REPORT_COLUMN_AMOUNT = "amount";
     protected static final String A_REPORT_COLUMN_LASTSALEID = "lastSaleID";
     protected static final String A_REPORT_COLUMN_LASTZREPORTID = "lastZReportID";
 
 
     public static final String DATABASE_CREATE = "CREATE TABLE "+ A_REPORT_TABLE_NAME
-            +" ( `"+ A_REPORT_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ A_REPORT_COLUMN_CREATEDATE +"` TEXT DEFAULT current_timestamp,  `"
+            +" ( `"+ A_REPORT_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ A_REPORT_COLUMN_CREATEDATE +"` TIMESTAMP DEFAULT current_timestamp,  `"
             + A_REPORT_COLUMN_BYUSER +"` INTEGER, " +
             " `"+ A_REPORT_COLUMN_AMOUNT +"` REAL,  `"+ A_REPORT_COLUMN_LASTSALEID +"` INTEGER , " +
               "`"+ A_REPORT_COLUMN_LASTZREPORTID +"` INTEGER , " +
-            "FOREIGN KEY(`"+ A_REPORT_COLUMN_BYUSER +"`) REFERENCES `users.id` )";
+            "FOREIGN KEY(`"+ A_REPORT_COLUMN_BYUSER +"`) REFERENCES `employees.id` )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -83,7 +83,6 @@ public class AReportDBAdapter {
         ContentValues val = new ContentValues();
 
         val.put(A_REPORT_COLUMN_ID, aReport.getaReportId());
-        val.put(A_REPORT_COLUMN_CREATEDATE, String.valueOf(aReport.getCreatedAt()));
         val.put(A_REPORT_COLUMN_BYUSER, aReport.getByUserID());
         val.put(A_REPORT_COLUMN_AMOUNT, aReport.getAmount());
         val.put(A_REPORT_COLUMN_LASTSALEID, aReport.getLastOrderId());

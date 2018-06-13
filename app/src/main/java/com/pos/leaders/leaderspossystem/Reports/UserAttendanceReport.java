@@ -28,7 +28,7 @@ import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
-import com.pos.leaders.leaderspossystem.Tools.UserAttendanceReportListViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.EmployeeAttendanceReportListViewAdapter;
 import com.sun.pdfview.PDFFile;
 import com.sun.pdfview.PDFPage;
 
@@ -62,7 +62,7 @@ public class UserAttendanceReport extends AppCompatActivity {
 	long userID;
 	private static final int DIALOG_FROM_DATE = 825;
 	private static final int DIALOG_TO_DATE = 324;
-	UserAttendanceReportListViewAdapter adapter;
+	EmployeeAttendanceReportListViewAdapter adapter;
 	Bitmap page=null ;
 	public static final String SAMPLE_FILE = "randompdf.pdf";
 	ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
@@ -168,7 +168,7 @@ public class UserAttendanceReport extends AppCompatActivity {
 
 		tvTotalHour.setText(String.format("%02d:%02d:%02d",h,m,s));
 
-		adapter = new UserAttendanceReportListViewAdapter(this, R.layout.list_adapter_row_attendance, _scheduleWorkersList);
+		adapter = new EmployeeAttendanceReportListViewAdapter(this, R.layout.list_adapter_row_attendance, _scheduleWorkersList);
 		lvReport.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		try {

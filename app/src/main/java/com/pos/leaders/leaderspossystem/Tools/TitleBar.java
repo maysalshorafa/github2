@@ -63,7 +63,7 @@ public class TitleBar {
         actionBar.setDisplayShowCustomEnabled(true);
         actionBarLayout.setLayoutParams(params);
         actionBar.setCustomView(actionBarLayout);
-        if (SESSION._USER == null) {
+        if (SESSION._EMPLOYEE == null) {
             Intent intent = new Intent(context, LogInActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             SESSION._LogOut();
@@ -111,10 +111,10 @@ public class TitleBar {
 
 
         final TextView tvUsername = (TextView) context.findViewById(R.id.titleBar_tvUsername);
-        if (SESSION._USER == null){
+        if (SESSION._EMPLOYEE == null){
             tvUsername.setText("");
         } else {
-            tvUsername.setText(SESSION._USER.getFullName());
+            tvUsername.setText(SESSION._EMPLOYEE.getFullName());
         }
 
         final TextView tvActivityTitle = (TextView) context.findViewById(R.id.titleBar_tvActivityLabel);

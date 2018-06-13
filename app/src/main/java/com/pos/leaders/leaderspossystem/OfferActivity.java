@@ -288,7 +288,7 @@ public class OfferActivity extends Activity {
 
 	private Offer addOffer(int item,List<Product> lp){
         Offer offer=new Offer(etName.getText().toString(),DateConverter.stringToDate(etStartDate.getText().toString()),
-                DateConverter.stringToDate(etEndDate.getText().toString()),new Date(),true, SESSION._USER.getId(),item);
+                DateConverter.stringToDate(etEndDate.getText().toString()),new Date(),true, SESSION._EMPLOYEE.getId(),item);
         double x=0,y=0,y2=0,p=0;
 
         x=Double.parseDouble((!etX.getText().toString().equals("")) ? etX.getText().toString() :"0");

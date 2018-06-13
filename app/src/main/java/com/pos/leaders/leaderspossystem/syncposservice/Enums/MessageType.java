@@ -40,9 +40,9 @@ public interface MessageType{
     String UPDATE_USER_PERMISSION = "UpdateUserPermission";
     String DELETE_USER_PERMISSION = "DeleteUserPermission";
 
-    String ADD_SALE = "AddOrder";
-    String UPDATE_SALE = "UpdateOrder";
-    String DELETE_SALE = "DeleteOrder";
+    String ADD_ORDER = "AddOrder";
+    String UPDATE_ORDER = "UpdateOrder";
+    String DELETE_ORDER = "DeleteOrder";
 
     String ADD_Z_REPORT = "AddZReport";
     String UPDATE_Z_REPORT = "UpdateZReport";
@@ -92,13 +92,13 @@ public interface MessageType{
     String UPDATE_PRODUCT = "UpdateProduct";
     String DELETE_PRODUCT = "DeleteProduct";
 
-    String ADD_USER = "AddUser";
-    String UPDATE_USER = "UpdateUser";
-    String DELETE_USER = "DeleteUser";
+    String ADD_EMPLOYEE = "AddEmployee";
+    String UPDATE_EMPLOYEE = "UpdateEmployee";
+    String DELETE_EMPLOYEE = "DeleteEmployee";
 
-    String ADD_ORDER = "AddOrderDetails";
-    String UPDATE_ORDER = "UpdateOrderDetails";
-    String DELETE_ORDER = "DeleteOrderDetails";
+    String ADD_ORDER_DETAILS = "AddOrderDetails";
+    String UPDATE_ORDER_DETAILS = "UpdateOrderDetails";
+    String DELETE_ORDER_DETAILS = "DeleteOrderDetails";
 
     String ADD_CURRENCY_OPERATION = "AddCurrencyOperation";
     String UPDATE_CURRENCY_OPERATION = "UpdateCurrencyOperation";

@@ -30,8 +30,8 @@ public class MessageTransmit {
     public MessageTransmit(String domainURL){
         if(domainURL.length()>0){
             char c = domainURL.charAt(domainURL.length() - 1);
-        if(c!='/')
-            domainURL += "/";}
+            if(c!='/')
+                domainURL += "/";}
         this.domainURL = domainURL;
         client = new OkHttpClient();
     }
@@ -55,20 +55,21 @@ public class MessageTransmit {
         return response.body().string();
     }
 
- /**   public String authPut(String url, String json,String token) throws IOException {
-        RequestBody body = RequestBody.create(JSON, json);
-        Request request = new Request.Builder().url(domainURL + url).put(body).addHeader(AUTHORIZATION, token).build();
-        Response response = client.newCall(request).execute();
+    /**   public String authPut(String url, String json,String token) throws IOException {
+     RequestBody body = RequestBody.create(JSON, json);
+     Request request = new Request.Builder().url(domainURL + url).put(body).addHeader(AUTHORIZATION, token).build();
+     Response response = client.newCall(request).execute();
 
-        return response.body().string();
-    }**/
-    public String authPut(String url, String json,String token) throws IOException {
+     return response.body().string();
+     }**/
+    public String authPut(String url, String json,String token, long id) throws IOException {
         RequestBody body = RequestBody.create(JSON, json);
         JSONObject jsonObject;
         Request request;
+
         try {
             jsonObject = new JSONObject(json);
-            request = new Request.Builder().url(domainURL + url+"/"+jsonObject.get("id")).put(body).addHeader(AUTHORIZATION, token).build();
+            request = new Request.Builder().url(domainURL + url+"/"+id).put(body).addHeader(AUTHORIZATION, token).build();
         } catch (JSONException e) {
             e.printStackTrace();
             return "Error";
@@ -99,3 +100,4 @@ public class MessageTransmit {
         return response.body().string();
     }
 }
+

@@ -41,7 +41,7 @@ public class CurrencyDBAdapter {
     public static final String DATABASE_CREATE = "CREATE TABLE "+ CURRENCY_TABLE_NAME
             +" ( `"+ CURRENCY_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ CURRENCY_COLUMN_NAME +"` TEXT ,  `"
             + CURRENCY_COLUMN_CURRENCYCODE +"` TEXT, `" + CURRENCY_COLUMN_COUNTRY +"` TEXT, " +
-            " `"+ CURRENCYCOLUMN_RATE +"` REAL,  `"  + CURRENCYCOLUMN_CREATEDATE +"` TEXT DEFAULT current_timestamp)";
+            " `"+ CURRENCYCOLUMN_RATE +"` REAL,  `"  + CURRENCYCOLUMN_CREATEDATE +"` TIMESTAMP DEFAULT current_timestamp)";
 
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -93,8 +93,6 @@ public class CurrencyDBAdapter {
         val.put(CURRENCY_COLUMN_COUNTRY, currency.getCountry());
         val.put(CURRENCYCOLUMN_RATE, currency.getRate());
 
-        val.put(CURRENCYCOLUMN_CREATEDATE, String.valueOf(currency.getLastUpdate()));
-
         try {
             return db.insert(CURRENCY_TABLE_NAME, null, val);
         } catch (Exception ex) {
@@ -121,7 +119,6 @@ public class CurrencyDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(CURRENCY_COLUMN_NAME, currency.getName());
-        val.put(CURRENCYCOLUMN_CREATEDATE,String.valueOf( currency.getLastUpdate()));
         val.put(CURRENCY_COLUMN_COUNTRY, currency.getCountry());
         val.put(CURRENCY_COLUMN_CURRENCYCODE, currency.getCurrencyCode());
         val.put(CURRENCYCOLUMN_RATE, currency.getRate());

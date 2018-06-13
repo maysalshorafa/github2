@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
-import com.pos.leaders.leaderspossystem.MainActivity;
+import com.pos.leaders.leaderspossystem.SalesCartActivity;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 
@@ -88,7 +88,7 @@ public class CashActivity extends AppCompatActivity {
         //check extras
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            totalPrice = (double) extras.get(MainActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE);
+            totalPrice = (double) extras.get(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE);
             totalPriceInDefaultValue = totalPrice;
         } else {
             onBackPressed();

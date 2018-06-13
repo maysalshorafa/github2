@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.MainActivity;
+import com.pos.leaders.leaderspossystem.SalesCartActivity;
 import com.pos.leaders.leaderspossystem.R;
 
 /**
@@ -112,7 +112,7 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
 
         final Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            totalPrice = (double) extras.get(MainActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE);
+            totalPrice = (double) extras.get(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE);
             custmer_nameS = (String) extras.get("_custmer");
             tv.setText(valueView(totalPrice) + " " + getResources().getText(R.string.ins));
             custmer_name.setText(custmer_nameS);

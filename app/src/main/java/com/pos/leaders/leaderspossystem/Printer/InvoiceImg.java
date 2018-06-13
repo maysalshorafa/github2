@@ -15,7 +15,7 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
@@ -196,7 +196,7 @@ public class InvoiceImg {
         return blocks;
     }
 
-    public Bitmap normalInvoice(long id, List<OrderDetails> orders, Order sale, boolean isCopy, User user, List<Check> checks) {
+    public Bitmap normalInvoice(long id, List<OrderDetails> orders, Order sale, boolean isCopy, Employee user, List<Check> checks) {
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(sale));
         Block lineR = new Block("\u200E" + line + "\u200E", 30.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);

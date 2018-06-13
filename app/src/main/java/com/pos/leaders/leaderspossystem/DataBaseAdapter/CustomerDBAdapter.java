@@ -268,8 +268,9 @@ public class CustomerDBAdapter {
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_HOUSE_NUMBER)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_POSTAL_CODE)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY)),
-                cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))));
-        if (c.getCustmerName() == null) {
+                cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))));
+        if (c.getFirstName() == null) {
             c.setFirstName("");
         }
 
@@ -295,7 +296,8 @@ public class CustomerDBAdapter {
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_HOUSE_NUMBER)),
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_POSTAL_CODE)),
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY)),
-                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE)))));
+                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE)))));
             cursor.moveToNext();
         }
         return customerMs;
@@ -321,7 +323,8 @@ public class CustomerDBAdapter {
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_HOUSE_NUMBER)),
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_POSTAL_CODE)),
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY)),
-                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE)))));
+                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE)))));
             cursor.moveToNext();
         }
         return customerMs;
@@ -329,10 +332,14 @@ public class CustomerDBAdapter {
 
     public int deleteEntry(long id) {
         ContentValues updatedValues = new ContentValues();
+        CustomerDBAdapter customerDBAdapter =new CustomerDBAdapter(context);
+        customerDBAdapter.open();
         updatedValues.put(CUSTOMER_COLUMN_DISENABLED, 1);
         String where = CUSTOMER_COLUMN_ID + " = ?";
         try {
             db.update(CUSTOMER_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+            Customer customer=customerDBAdapter.getCustomerByID(id);
+            sendToBroker(MessageType.DELETE_CUSTOMER, customer, this.context);
             return 1;
         } catch (SQLException ex) {
             Log.e("CustomerDB deleteEntry", "enable hide Entry at " + CUSTOMER_TABLE_NAME + ": " + ex.getMessage());
@@ -378,7 +385,8 @@ public class CustomerDBAdapter {
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_HOUSE_NUMBER)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_POSTAL_CODE)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY)),
-                cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))));
+                cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))));
     }
 
 

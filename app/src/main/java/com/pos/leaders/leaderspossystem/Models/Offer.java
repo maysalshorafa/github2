@@ -1,9 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
-import com.pos.leaders.leaderspossystem.Tools.CustomerDateAndTimeDeserialize;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,7 +36,7 @@ public class Offer {
 	@JsonIgnore
     private List<Club> clubs;
 	@JsonIgnore
-    private User user;
+    private Employee user;
 	@JsonIgnore
     private Rule rule;
 	//endregion

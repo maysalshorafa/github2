@@ -81,7 +81,6 @@ public class DepartmentActivity extends AppCompatActivity {
                                 break;
                             case 1:
                                 new AlertDialog.Builder(DepartmentActivity.this)
-                                        .setTitle(getString(R.string.delete) + " " + getString(R.string.product))
                                         .setMessage(getString(R.string.delete))
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {

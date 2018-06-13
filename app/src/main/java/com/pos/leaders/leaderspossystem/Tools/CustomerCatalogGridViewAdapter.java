@@ -102,7 +102,7 @@ import java.util.List;
             //TextView tvFullName=(TextView)gridView.findViewById(R.id.custmerGridView_TVFullName);
             TextView tvPhoneNumber=(TextView)gridView.findViewById(R.id.custmerGridView_TVPhoneNumber);
 
-            tvCustmerName.setText(customers.get(position).getCustmerName());
+            tvCustmerName.setText(customers.get(position).getFirstName());
             //   tvFullName.setText(customers.get(position).getFullName());
             tvPhoneNumber.setText(customers.get(position).getPhoneNumber());
 

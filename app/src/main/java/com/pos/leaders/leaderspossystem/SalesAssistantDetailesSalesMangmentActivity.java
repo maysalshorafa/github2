@@ -16,7 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SalesManDetailsGridViewAdapter;
@@ -52,9 +52,9 @@ public class SalesAssistantDetailesSalesMangmentActivity extends AppCompatActivi
         TitleBar.setTitleBar(this);
         Bundle bundle = getIntent().getExtras();
         long userId = (long) bundle.get("userId");
-        UserDBAdapter userDBAdapter=new UserDBAdapter(this);
+        EmployeeDBAdapter userDBAdapter=new EmployeeDBAdapter(this);
         userDBAdapter.open();
-        String userName=userDBAdapter.getUserName(userId);
+        String userName=userDBAdapter.getEmployeesName(userId);
 
         etUserName=(TextView) findViewById(R.id.etUserName);
         etAmount=(TextView)findViewById(R.id.etAmount);

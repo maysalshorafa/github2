@@ -29,12 +29,12 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
@@ -59,8 +59,8 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     Button mainScreen, report, product, department, users, backUp, customerClub, logOut, schedule_workers, settings;
     Button btZReport, btAReport;
     AReportDBAdapter aReportDBAdapter;
-    User user = new User();
-    UserDBAdapter userDBAdapter;
+    Employee user = new Employee();
+    EmployeeDBAdapter userDBAdapter;
     ArrayList<Integer> permissions_name;
     ArrayList<Permissions> permissions = new ArrayList<Permissions>();
     ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
@@ -206,7 +206,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onClick(View v) {
                 final AReport _aReport = new AReport();
-                _aReport.setByUserID(SESSION._USER.getUserId());
+                _aReport.setByUserID(SESSION._EMPLOYEE.getEmployeeId());
                 _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
                 AReport aReport = getLastAReport();
@@ -242,8 +242,8 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                     lastZReport.setEndOrderId(0);
                 }
 
-                ZReport z=new ZReport(0,  new Timestamp(System.currentTimeMillis()) , SESSION._USER,lastZReport.getEndOrderId()+1,lastSale);
-                z.setByUser(SESSION._USER.getUserId());
+                ZReport z=new ZReport(0,  new Timestamp(System.currentTimeMillis()) , SESSION._EMPLOYEE,lastZReport.getEndOrderId()+1,lastSale);
+                z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
                 double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
                 totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
                 long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
@@ -270,7 +270,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         mainScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), MainActivity.class);
+                i = new Intent(getApplicationContext(), SalesCartActivity.class);
                 startActivity(i);
             }
         });
@@ -305,7 +305,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         users.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), WorkerManagementActivity.class);
+                i = new Intent(getApplicationContext(), EmployeeManagementActivity.class);
                 i.putIntegerArrayListExtra("permissions_name", permissions_name);
                 startActivity(i);
             }

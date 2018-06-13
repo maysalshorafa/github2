@@ -12,8 +12,8 @@ public interface ApiURL {
     String Club = "Club";
     String City = "City";
     String Customer = "Customer";
-    String User = "User";
-    String Order = "OrderDetails";
+    String Employee = "Employee";
+    String ORDER_DETAILS = "OrderDetails";
     String AReport = "AReport";
     String AReportDetails = "AReportDetails";
     String Check = "Check";
@@ -21,7 +21,7 @@ public interface ApiURL {
     String Offer = "Offer";
     String Payment = "Payment";
     String Permission = "Permission";
-    String Sale = "Order";
+    String ORDER = "Order";
     String ZReport = "ZReport";
     String Rule3 = "Rule3";
     String Rule7 = "Rule7";
@@ -36,7 +36,7 @@ public interface ApiURL {
     String CompanyCredentials = "CompanyCredentials";
     String Currencies = "Currencies";
     String Sync = "sync";
-    String UserPermission="UserPermission";
+    String EMPLOYEE_PERMISSION ="EmployeePermission";
     String SumPoint="SumPoint";
     String ValueOfPoint="ValueOfPoint";
     String UsedPoint="UsedPoint";

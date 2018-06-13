@@ -30,11 +30,11 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Dash_bord_adapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UserDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -57,8 +57,8 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
     GridView grid;
     String permissions_name;
     AReportDBAdapter aReportDBAdapter;
-    User user=new User();
-    UserDBAdapter userDBAdapter;
+    Employee user=new Employee();
+    EmployeeDBAdapter userDBAdapter;
     ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
     long currencyType;
     String[] dashbord_text = {
@@ -66,7 +66,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
             "Report",
             "Product",
             "Department",
-            "User",
+            "Employee",
             "Offers",
             "BackUp",
             "Tax",
@@ -133,7 +133,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
         im = (ImageView) findViewById(R.id.home);
         Dash_bord_adapter adapter = new Dash_bord_adapter(OldDashBoard.this, dashbord_text, imageId);
         aReportDBAdapter = new AReportDBAdapter(this);
-        userDBAdapter = new UserDBAdapter(this);
+        userDBAdapter = new EmployeeDBAdapter(this);
         userDBAdapter.open();
         aReportDBAdapter.open();
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "Rubik-Bold.ttf");
@@ -159,7 +159,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
                 if (!(permissions_name.toLowerCase().contains("main screen"))) {
                     grid.getChildAt(pos).setClickable(false);
                 } else {
-                    i = new Intent(getApplicationContext(), MainActivity.class);
+                    i = new Intent(getApplicationContext(), SalesCartActivity.class);
                     i.putExtra("permissions_name", permissions_name);
                     startActivity(i);
 
@@ -194,7 +194,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
                 if (!(permissions_name.toLowerCase().contains("users"))) {
                     grid.getChildAt(pos).setClickable(false);
                 } else {
-                    i = new Intent(getApplicationContext(), AddUserActivity.class);
+                    i = new Intent(getApplicationContext(), AddEmployeeActivity.class);
                     startActivity(i);
                 }
                 break;
@@ -316,7 +316,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
 
 
         if (aReport != null && zReport != null) {
-            _aReport.setByUserID(SESSION._USER.getUserId());
+            _aReport.setByUserID(SESSION._EMPLOYEE.getEmployeeId());
             _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
 
@@ -331,7 +331,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
             }
 
         } else if(aReport==null) {
-            _aReport.setByUserID(SESSION._USER.getUserId());
+            _aReport.setByUserID(SESSION._EMPLOYEE.getEmployeeId());
             _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             _aReport.setLastZReportID(-1);
             _aReport.setLastOrderId(-1);

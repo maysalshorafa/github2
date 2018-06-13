@@ -38,7 +38,7 @@ public class CustomerAssetDB {
 
     public static final String DATABASE_CREATE = "CREATE TABLE `"+CustmerAsset_TabelName+"` ( `"+ CUSTMER_ASSEST_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, "+
             "`"+ ORDER_ID +"` INTEGER ,"+
-            "`"+CustmerAssest_COLUMN_ID+"` INTEGER NOT NULL, `"+ CUSTMER_ASSEST_COLUMN_AMOUNT +"` REAL, `"+ CUSTMER_ASSEST_COLUMN_TYPE +"` INTEGER DEFAULT 0, `"+ CUSTMER_ASSEST_COLUMN_CASE +"` TEXT, `"+ CustmerAssest_COLUMN_CEATEDATE +"` TEXT DEFAULT current_timestamp );";
+            "`"+CustmerAssest_COLUMN_ID+"` INTEGER NOT NULL, `"+ CUSTMER_ASSEST_COLUMN_AMOUNT +"` REAL, `"+ CUSTMER_ASSEST_COLUMN_TYPE +"` INTEGER DEFAULT 0, `"+ CUSTMER_ASSEST_COLUMN_CASE +"` TEXT, `"+ CustmerAssest_COLUMN_CEATEDATE +"` TIMESTAMP DEFAULT current_timestamp );";
 
     private SQLiteDatabase db;
     private final Context context;
@@ -92,8 +92,6 @@ public class CustomerAssetDB {
         val.put(CUSTMER_ASSEST_COLUMN_AMOUNT, assest.getAmount());
         val.put(CUSTMER_ASSEST_COLUMN_TYPE, assest.getType());
         val.put(CUSTMER_ASSEST_COLUMN_CASE, assest.getSalesCase());
-        val.put(CustmerAssest_COLUMN_CEATEDATE, String.valueOf(assest.getCreatedAt()));
-
         try {
             return db.insert(CustmerAsset_TabelName, null, val);
         } catch (SQLException ex) {

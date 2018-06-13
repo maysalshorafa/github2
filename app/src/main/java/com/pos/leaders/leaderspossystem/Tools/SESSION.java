@@ -6,10 +6,10 @@ import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
-import com.pos.leaders.leaderspossystem.Models.Permission.UserPermissions;
+import com.pos.leaders.leaderspossystem.Models.Permission.EmployeesPermissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
-import com.pos.leaders.leaderspossystem.Models.User;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -20,12 +20,12 @@ import java.util.List;
  */
 
 public class SESSION {
-	public static User _USER = null;
+	public static Employee _EMPLOYEE = null;
 	public static OrderDetails _ORDER;
-	public static List<OrderDetails> _ORDERS;
-	public static Order _SALE;
+	public static List<OrderDetails> _ORDER_DETAILES;
+	public static Order _ORDERS;
 	public static ScheduleWorkers _SCHEDULEWORKERS;
-	public static UserPermissions _USERPERMISSIONS;
+	public static EmployeesPermissions _USERPERMISSIONS;
 	public static CreditCardPayment _TEMP_CREDITCARD_PAYMNET;
 	public static List<Product> _TEMPOFFERPRODUCTS;
 	public static List<Pair<Integer, Order>> _SALES;
@@ -35,9 +35,9 @@ public class SESSION {
 	public static long firstIDOffset = 10000000000000000L;
 
 	public static void _LogOut() {
-		SESSION._USER = null;
+		SESSION._EMPLOYEE = null;
+		SESSION._ORDER_DETAILES = null;
 		SESSION._ORDERS = null;
-		SESSION._SALE = null;
 		SESSION._SCHEDULEWORKERS = null;
 		SESSION._USERPERMISSIONS = null;
 		SESSION._CHECKS_HOLDER = null;
@@ -46,8 +46,8 @@ public class SESSION {
 	}
 
 	public static void _Rest() {
-		SESSION._ORDERS = new ArrayList<OrderDetails>();
-		SESSION._SALE = new Order(SESSION._USER.getUserId(),new Timestamp(System.currentTimeMillis()), 0, false, 0, 0);
+		SESSION._ORDER_DETAILES = new ArrayList<OrderDetails>();
+		SESSION._ORDERS = new Order(SESSION._EMPLOYEE.getEmployeeId(),new Timestamp(System.currentTimeMillis()), 0, false, 0, 0);
 		SESSION._CHECKS_HOLDER = new ArrayList<Check>();
 		SESSION._ORDER = null;
 

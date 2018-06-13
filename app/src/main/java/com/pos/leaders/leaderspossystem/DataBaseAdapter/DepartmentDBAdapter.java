@@ -29,12 +29,12 @@ public class DepartmentDBAdapter {
     protected static final String DEPARTMENTS_COLUMN_ID = "id";
     protected static final String DEPARTMENTS_COLUMN_NAME = "name";
     protected static final String DEPARTMENTS_COLUMN_CREATINGDATE = "creatingDate";
-    protected static final String DEPARTMENTS_COLUMN_BYUSER = "byUser";
+    protected static final String DEPARTMENTS_COLUMN_BYUSER = "byEmployee";
     protected static final String DEPARTMENTS_COLUMN_DISENABLED = "hide";
 
     public static final String DATABASE_CREATE = "CREATE TABLE departments ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "`name` TEXT NOT NULL , `creatingDate` TEXT NOT NULL DEFAULT current_timestamp, " +
-            "`byUser` INTEGER, `hide` INTEGER DEFAULT 0, FOREIGN KEY(`byUser`) REFERENCES `users.id` )";
+            "`name` TEXT NOT NULL , `creatingDate` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
+            "`byEmployee` INTEGER, `hide` INTEGER DEFAULT 0, FOREIGN KEY(`byEmployee`) REFERENCES `employees.id` )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -84,8 +84,8 @@ public class DepartmentDBAdapter {
         val.put(DEPARTMENTS_COLUMN_ID, department.getDepartmentId());
         val.put(DEPARTMENTS_COLUMN_NAME, department.getName());
         val.put(DEPARTMENTS_COLUMN_BYUSER, department.getByUser());
-        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, String.valueOf(department.getCreatedAt()));
         val.put(DEPARTMENTS_COLUMN_DISENABLED, department.isHide() ? 1 : 0);
+        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, String.valueOf(department.getCreatedAt()));
 
         try {
 
@@ -115,6 +115,8 @@ public class DepartmentDBAdapter {
     }
 
     public int deleteEntry(long id) {
+        DepartmentDBAdapter departmentDBAdapter=new DepartmentDBAdapter(context);
+        departmentDBAdapter.open();
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -123,6 +125,8 @@ public class DepartmentDBAdapter {
         String where = DEPARTMENTS_COLUMN_ID + " = ?";
         try {
             db.update(DEPARTMENTS_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+            Department department = departmentDBAdapter.getDepartmentByID(id);
+            sendToBroker(MessageType.DELETE_DEPARTMENT, department, this.context);
             return 1;
         } catch (SQLException ex) {
             Log.e("Department DB delete", "enable hide Entry at " + DEPARTMENTS_TABLE_NAME + ": " + ex.getMessage());
@@ -151,7 +155,6 @@ public class DepartmentDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(DEPARTMENTS_COLUMN_NAME, department.getName());
-        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, String.valueOf(department.getCreatedAt()));
         val.put(DEPARTMENTS_COLUMN_BYUSER, department.getByUser());
         val.put(DEPARTMENTS_COLUMN_DISENABLED, department.isHide());
         try {
@@ -172,7 +175,6 @@ public class DepartmentDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(DEPARTMENTS_COLUMN_NAME, department.getName());
-        val.put(DEPARTMENTS_COLUMN_CREATINGDATE, String.valueOf(department.getCreatedAt()));
         val.put(DEPARTMENTS_COLUMN_BYUSER, department.getByUser());
         val.put(DEPARTMENTS_COLUMN_DISENABLED, department.isHide());
 
