@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
     TextView orderSalesMan;
     ImageView deleteOrderSalesMan;
     String fromEditText="";
-
+    static List<String> printedRows;
     double valueOfDiscount=0;
 
     @Override
@@ -1483,6 +1483,20 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 
+        printedRows = new ArrayList<String>();
+        printedRows.add(0, "סוג אשראי");
+        printedRows.add(1, "מספר תשלומים");
+        printedRows.add(2, "מספר כרטיס");
+        printedRows.add(3, "שם מסוף");
+        printedRows.add(4, "מספר אישור");
+        printedRows.add(5, "UID");
+        printedRows.add(6, "תאריך ושעת העסקה");
+        printedRows.add(7, "מטבע");
+        printedRows.add(8, "סכום העסקה");
+        printedRows.add(9, "סוג העסקה");
+        printedRows.add(10, "מספר שובר");
+        printedRows.add(11, "סכום העסקה לאחר המרה");
+
         //check starting day report A
     }
 
@@ -2227,13 +2241,15 @@ public class MainActivity extends AppCompatActivity {
 
                         while (itr.hasNext()) {
                             String key = itr.next();
-                            if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("BOTH")) {
-                                clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                            } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("CLIENT")) {
-                                clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                            } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("SELLER")) {
-                                sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                            if (printedRows.contains(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"))) {
+                                if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("BOTH")) {
+                                    clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                    sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("CLIENT")) {
+                                    clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("SELLER")) {
+                                    sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                }
                             }
                         }
                     } catch (JSONException e) {
@@ -2319,13 +2335,15 @@ public class MainActivity extends AppCompatActivity {
 
                                 while (itr.hasNext()) {
                                     String key = itr.next();
-                                    if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("BOTH")) {
-                                        clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                        sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                    } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("CLIENT")) {
-                                        clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                    } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("SELLER")) {
-                                        sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                    if (printedRows.contains(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"))) {
+                                        if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("BOTH")) {
+                                            clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                            sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                        } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("CLIENT")) {
+                                            clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                        } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("SELLER")) {
+                                            sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                        }
                                     }
                                 }
                             } catch (JSONException e) {
@@ -2394,13 +2412,15 @@ public class MainActivity extends AppCompatActivity {
 
                         while (itr.hasNext()) {
                             String key = itr.next();
-                            if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("BOTH")) {
-                                clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                            } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("CLIENT")) {
-                                clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                            } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("SELLER")) {
-                                sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                            if (printedRows.contains(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"))) {
+                                if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("BOTH")) {
+                                    clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                    sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("CLIENT")) {
+                                    clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("SELLER")) {
+                                    sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
+                                }
                             }
                         }
                     } catch (JSONException e) {
@@ -2498,6 +2518,7 @@ public class MainActivity extends AppCompatActivity {
                     InvoiceImg invoiceImg = new InvoiceImg(MainActivity.this);
                     byte b = 0;
                     try {
+                        //// TODO: 13/06/2018 adding pinpad support
                         if (SESSION._SALE.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
                             Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._SALE, false, mainMer);
 
@@ -3342,7 +3363,7 @@ public class MainActivity extends AppCompatActivity {
         lvCustomerAssistant.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                                        @Override
                                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                           if(!orderIdList.contains(order)){
+                                                           if (!orderIdList.contains(order)) {
                                                                custmerAssetstIdList.add(custmerAssestList.get(position).getUserId());
                                                                orderIdList.add(order);
                                                            }
@@ -3353,6 +3374,7 @@ public class MainActivity extends AppCompatActivity {
                                                        }
                                                    }
         );
+
         lvCustomerAssistant.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {

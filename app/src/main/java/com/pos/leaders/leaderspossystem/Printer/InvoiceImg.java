@@ -724,8 +724,16 @@ public class InvoiceImg {
             Map.Entry mentry = (Map.Entry)iterator.next();
             ccrn += "" + mentry.getKey().toString() + newLineL;
 
-            ccrv += "" + mentry.getValue().toString().replaceAll("\r\n","").toString() + "\n";
+            ccrv += " " + mentry.getValue().toString().replaceAll("\r\n","").toString() + "\n";
         }
+
+        if (mainMer.get("מספר כרטיס").length() > 5) {
+            ccrn += "" + "מספר טלפון של לקוח" + newLineL;
+            ccrn += "" + "חתימת לקוח" + newLineL;
+            ccrv += "____________________" + "\n";
+            ccrv += "____________________" + "\n";
+        }
+
         blocks.add(new Block(ccrv,21.0f,Color.BLACK,(int) (CONSTANT.PRINTER_PAGE_WIDTH*0.5 )).Left());
         blocks.add(new Block(ccrn,21.0f,Color.BLACK,(int) (CONSTANT.PRINTER_PAGE_WIDTH *0.5)).Left());
         blocks.add(lineR.Left());

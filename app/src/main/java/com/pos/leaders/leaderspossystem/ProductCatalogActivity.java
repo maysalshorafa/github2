@@ -107,14 +107,11 @@ public class ProductCatalogActivity extends AppCompatActivity {
         etSearch = (EditText) findViewById(R.id.productCatalog_ETSearch);
         llDepartments=(LinearLayout)findViewById(R.id.productCatalog_LLDepartment);
 
-
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         //layoutParams.setMargins(0, 10, 10, 40);
         layoutParams.setMargins(0, 10, 10, 0);
-
-
 
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
