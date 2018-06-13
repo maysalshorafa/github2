@@ -255,9 +255,9 @@ public class InvoiceImg {
 
         blocks.add(lineR.Left());
 
-        Block addsTax = new Block("\u200E" + context.getString(R.string.without_tax) + newLineL + context.getString(R.string.tax) + ": " + SETTINGS.tax + newLineL + context.getString(R.string.with_tax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block addsTax = new Block("\u200E" + context.getString(R.string.with_tax) + newLineL + context.getString(R.string.tax) + ": " + SETTINGS.tax + newLineL + context.getString(R.string.without_tax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         double noTax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
-        Block numTax = new Block("\u200E" + String.format(new Locale("en"), "\u200E%.2f\n\u200E%.2f\n\u200E%.2f", noTax, noTax * (SETTINGS.tax / 100),sale.getTotalPrice(), 0.0f), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block numTax = new Block("\u200E" + String.format(new Locale("en"), "\u200E%.2f\n\u200E%.2f\n\u200E%.2f", noTax, noTax * (SETTINGS.tax / 100), 0.0f), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         blocks.add(numTax.Left());
         blocks.add(addsTax.Left());
         blocks.add(lineR.Left());
@@ -391,9 +391,9 @@ public class InvoiceImg {
         toPid.Bold();
         blocks.add(toPid);
 
-        Block addsTax = new Block("\u200e" + context.getString(R.string.without_tax) + newLineL + context.getString(R.string.tax) + SETTINGS.tax + newLineL + context.getString(R.string.with_tax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+        Block addsTax = new Block("\u200e" + context.getString(R.string.with_tax) + newLineL + context.getString(R.string.tax) + SETTINGS.tax + newLineL + context.getString(R.string.without_tax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
         double noTax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
-        Block numTax = new Block(String.format(new Locale("en"), "\u200F%.2f\n\u200F%.2f\n\u200F%.2f", noTax, noTax * (SETTINGS.tax / 100),sale.getTotalPrice(), 0.0f), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+        Block numTax = new Block("\u200E" + String.format(new Locale("en"), "\u200E%.2f\n\u200E%.2f\n\u200E%.2f", noTax, noTax * (SETTINGS.tax / 100), 0.0f), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         blocks.add(numTax.Left());
         blocks.add(addsTax.Left());
 
