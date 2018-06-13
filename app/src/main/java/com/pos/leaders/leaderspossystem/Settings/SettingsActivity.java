@@ -2,11 +2,14 @@ package com.pos.leaders.leaderspossystem.Settings;
 
 
 import android.annotation.TargetApi;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -21,16 +24,35 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.text.format.Time;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.LogInActivity;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.Tools.Clock;
+import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
+import com.pos.leaders.leaderspossystem.Tools.OnClockTickListner;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.SyncStatus;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
 
 import static com.pos.leaders.leaderspossystem.SettingsTab.BOPOSVersionSettings.BO_SETTING;
 import static com.pos.leaders.leaderspossystem.SettingsTab.PinpadTap.PINPAD_PREFERENCES;
@@ -48,6 +70,10 @@ import static com.pos.leaders.leaderspossystem.SettingsTab.PinpadTap.PINPAD_PREF
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
     public final static String POS_Management = "POS_Management";
+    private ActionBar actionBar;
+    private static Clock clock=null;
+    private static ImageView ivInternet;
+    private static ImageView ivSync ;
 
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
 
@@ -131,30 +157,128 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupActionBar();
-/*
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //setupActionBar();
 
-        // Remove notification bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
+        //region titlebar
+
+        final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(R.layout.title_bar, null);
+        ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+
+        // Set up your ActionBar
+        actionBar = getSupportActionBar();
+        // TODO: Remove the redundant calls to getSupportActionBar()
+        //       and use variable actionBar instead
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBarLayout.setLayoutParams(params);
+        actionBar.setCustomView(actionBarLayout);
+        if (SESSION._USER == null) {
+            Intent intent = new Intent(this, LogInActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            SESSION._LogOut();
+            this.startActivity(intent);
+            //terminal stop
+            //System.exit(0);
+        }
+
+        TypedValue tv = new TypedValue();
+        if (this.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            int actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        }
+
+
+        long date;
+        final Calendar ca = Calendar.getInstance();
+        final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        // You customization
+        final int actionBarColor = getResources().getColor(R.color.primaryColor);
+        actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
+
+        final TextView tvDate = (TextView) findViewById(R.id.titleBar_tvClock);
+        tvDate.setText(format.format(ca.getTime()));
+
+        if (clock == null) {
+            clock = new Clock(this);
+            clock.AddClockTickListner(new OnClockTickListner() {
+                @Override
+                public void OnSecondTick(Time currentTime) {
+
+                }
+
+                @Override
+                public void OnMinuteTick(Time currentTime) {
+                    tvDate.setText(format.format(currentTime.toMillis(true)).toString());
+                }
+            });
+        }
+
+
+
+        final TextView tvTerminalID = (TextView) findViewById(R.id.titleBar_tvTerminalID);
+        tvTerminalID.setText("Terminal "+ SETTINGS.posID);
+
+
+
+        final TextView tvUsername = (TextView) findViewById(R.id.titleBar_tvUsername);
+        if (SESSION._USER == null){
+            tvUsername.setText("");
+        } else {
+            tvUsername.setText(SESSION._USER.getFullName());
+        }
+
+        final TextView tvActivityTitle = (TextView) findViewById(R.id.titleBar_tvActivityLabel);
+        PackageManager packageManager = getPackageManager();
+
+        try {
+            ActivityInfo info = packageManager.getActivityInfo(getComponentName(), 0);
+            tvActivityTitle.setText(getString(info.labelRes));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception ex) {
+
+        }
+
+
+        ivInternet = (ImageView) findViewById(R.id.titleBar_ivInternetStatus);
+
+        ivInternet.setVisibility(View.GONE);
+
+
+        ivSync = (ImageView) findViewById(R.id.titleBar_ivSync);
+
+        ivSync.setVisibility(View.GONE);
 
     }
-
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
      */
     private void setupActionBar() {
-        //TitleBar.setTitleBar((AppCompatActivity) getContext());
-
        ActionBar actionBar = getSupportActionBar();
         Log.e("Actionbar", "Settings");
         if (actionBar != null) {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
-            Log.e("Actionbar", "Settings");
 
+            Log.e("Actionbar", "Settings");
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // API 5+ solution
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     /**
      * {@inheritDoc}
