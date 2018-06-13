@@ -74,10 +74,10 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             etCustomerLastName.setEnabled(false);
             etCountry.setEnabled(false);
             etStreet.setEnabled(false);
-//            etJob.setEnabled(false);
+            etJob.setEnabled(false);
             etEmail.setEnabled(false);
             etPhoneNo.setEnabled(false);
-         //   etHouseNumber.setEnabled(false);
+            etHouseNumber.setEnabled(false);
             etPostalCode.setEnabled(false);
             etCountryCode.setEnabled(false);
             CustmerManagementActivity.Customer_Management_View=0;
@@ -149,18 +149,17 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                         postalCode=etPostalCode.getText().toString();
                         country=etCountry.getText().toString();
                         countryCode=etCountryCode.getText().toString();
-                            for (int i = 0; i < groupList.size(); i++) {
-                                Club group = groupList.get(i);
-                                if (group.getName().equalsIgnoreCase( selectClubSpinner.getSelectedItem().toString())) {
-                                    clubID = group.getClubId();
-                                }
-
-
-                            }
                             cityId=  (int) selectCitySpinner.getSelectedItemId();
 
                         }
+                        for (int i = 0; i < groupList.size(); i++) {
+                            Club group = groupList.get(i);
+                            if (group.getName().equalsIgnoreCase( selectClubSpinner.getSelectedItem().toString())) {
+                                clubID = group.getClubId();
+                            }
 
+
+                        }
                             if (etCustomerFirstName.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), getString(R.string.please_insert_first_name), Toast.LENGTH_LONG).show();
                             } else if (etCustomerLastName.getText().toString().equals("")) {
@@ -195,13 +194,6 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                             postalCode=etPostalCode.getText().toString();
                             country=etCountry.getText().toString();
                             countryCode=etCountryCode.getText().toString();
-                            for (int i = 0; i < groupList.size(); i++) {
-                                Club group = groupList.get(i);
-                                if (group.getName() .equalsIgnoreCase(selectClubSpinner.getSelectedItem().toString())) {
-                                    clubID= group.getClubId();
-
-                                }
-                            }
                             for (int i = 0; i < cityList.size(); i++) {
                                 City city = cityList.get(i);
                                 if (city.getName().equalsIgnoreCase(selectCitySpinner.getSelectedItem().toString())) {
@@ -209,7 +201,13 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                 }
                             }
                         }
+                        for (int i = 0; i < groupList.size(); i++) {
+                            Club group = groupList.get(i);
+                            if (group.getName() .equalsIgnoreCase(selectClubSpinner.getSelectedItem().toString())) {
+                                clubID= group.getClubId();
 
+                            }
+                        }
                         if (etCustomerFirstName.getText().toString().equals("")) {
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_first_name), Toast.LENGTH_LONG).show();
                         } else if (etCustomerLastName.getText().toString().equals("")) {
@@ -335,5 +333,8 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+    @Override
+    public void onBackPressed() {
     }
 }

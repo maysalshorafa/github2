@@ -333,6 +333,6 @@
 
     <string name="pinpad_connection_error">Please call the support team.</string>
     <string name="transaction_error">Transaction error</string>
-
+    <string name="balance">ميزانيه</string>
 </resources>
 
