@@ -237,6 +237,17 @@ public class ProductsActivity  extends AppCompatActivity  {
     }
 
     private boolean addEditProduct() {
+        String tempBarcode = etBarcode.getText().toString();
+        String newBarCode="";
+        if (tempBarcode.contains("\r\n")) {
+            newBarCode =tempBarcode.replace("\r\n", "");
+        } else if (tempBarcode.contains("\r")) {
+            newBarCode = tempBarcode.replace("\r", "");
+        } else if (tempBarcode.contains("\n")) {
+            newBarCode =tempBarcode.replace("\n", "");
+        }
+        etBarcode.setText(newBarCode);
+
         ///to save on sqlite
         if (etName.getText().toString().equals("")) {
             return false;
