@@ -665,6 +665,7 @@ public class InvoiceImg {
         blocks.add(name);
 
         Block lineR = new Block("\u200E" + line, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block rest = new Block("\u200E" , 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(lineR.Left());
 
         Block toPid = new Block("\u200F" + context.getString(R.string.total_price) + " \t \t \t \t \t \t \t \t \t \t \t \t " + "\u200F" + String.format(new Locale("en"), "%.2f", order.getTotalPrice()) + "", 40f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
@@ -727,15 +728,21 @@ public class InvoiceImg {
             ccrv += " " + mentry.getValue().toString().replaceAll("\r\n","").toString() + "\n";
         }
 
-        if (mainMer.get("מספר כרטיס").length() > 5) {
-            ccrn += "" + "מספר טלפון של לקוח" + newLineL;
-            ccrn += "" + "חתימת לקוח" + newLineL;
-            ccrv += "____________________" + "\n";
-            ccrv += "____________________" + "\n";
-        }
+        blocks.add(new Block(ccrv, 21.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5)).Left());
+        blocks.add(new Block(ccrn, 21.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5)).Left());
 
-        blocks.add(new Block(ccrv,21.0f,Color.BLACK,(int) (CONSTANT.PRINTER_PAGE_WIDTH*0.5 )).Left());
-        blocks.add(new Block(ccrn,21.0f,Color.BLACK,(int) (CONSTANT.PRINTER_PAGE_WIDTH *0.5)).Left());
+
+        String ss = "\u200e",sv="";
+        if (mainMer.get("מספר כרטיס").length() > 5) {
+            ss += "" + "מספר טלפון של לקוח" + newLineL;
+            ss += "" + "חתימת לקוח" + newLineL;
+            sv += "____________________" + "\n";
+            sv += "____________________" + "\n";
+
+            blocks.add(rest.Left());
+            blocks.add(new Block(sv, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5)).Left());
+            blocks.add(new Block(ss, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5)).Left());
+        }
         blocks.add(lineR.Left());
 
         return make(blocks);
