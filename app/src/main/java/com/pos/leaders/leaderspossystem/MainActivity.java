@@ -977,7 +977,7 @@ public class MainActivity extends AppCompatActivity {
                                 cashDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 // cashDialog.setTitle(R.string.please_select_discount_offer);
                                 cashDialog.show();
-                                cashDialog.setContentView(R.layout.discount_dialog);
+                                cashDialog.setContentView(R.layout.cash_payment_dialog);
                                 final Button cashBTOk = (Button) cashDialog.findViewById(R.id.cashPaymentDialog_BTOk);
                                 final EditText cashETCash = (EditText) cashDialog.findViewById(R.id.cashPaymentDialog_TECash);
                                 final Switch sw = (Switch) cashDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);

@@ -407,7 +407,7 @@
     <string name="retry">Retry</string>
     <string name="internet_access">No internet access.</string>
     <!--DashBord String-->
-    <string name="main_screen">Main Screen</string>
+    <string name="main_screen">Sales Cart</string>
     <string name="department">Department</string>
     <string name="back_up">BackUp</string>
     <string name="hours_of_work">Hours Of Work</string>
