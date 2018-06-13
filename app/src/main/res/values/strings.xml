@@ -389,7 +389,7 @@
     <string name="address">Address</string>
     <string name="add_to_city"> Add to City</string>
     <string name="title_activity_temp_cash_activty">TempCashActivty</string>
-    <string name="title_activity_dashboard_activty">Dashboard</string>
+    <string name="title_activity_dashboard_activty" translatable="false">Dashboard</string>
     <string name="title_activity_club_management">ClubManagementActivity</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
@@ -513,12 +513,12 @@
     <string name="delete_check">Delete Check</string>
     <string name="pos_setting">POS Setting</string>
     <string name="no_of_float_point">No Of Float Point:</string>
-    <string name="printer_type">Printer Type:</string>
-    <string name="server_info">Server Information:</string>
+    <string name="printer_type">Printer Type</string>
+    <string name="server_info">Server Information</string>
     <string name="update_setting">Update Setting</string>
     <string name="update_general_setting">Update General Setting</string>
     <string name="if_you_want_to_update_general_setting_click_ok">If you want to update General Setting click OK</string>
-    <string name="pos_sales">PosSales: </string>
+    <string name="pos_sales">PosSales</string>
     <string name="customer_have_money_from_point_more_than_total_price"> Customer Have Money From Point More Than Total Price</string>
     <string name="customer_have_money_from_point_equal_total_price"> Customer Have Money From Point Equal Total Price</string>
     <string name="customer_have_money_from_point_less_then_total_price"> Customer Have Money From Point Less Than Total Price</string>
@@ -528,7 +528,7 @@
 
     <string name="thanks">Thanks </string>
     <string name="welcome">Welcome </string>
-    <string name="the_number_of_hours_you_work_is">The number of hours you work is :</string>
+    <string name="the_number_of_hours_you_work_is">The number of hours you work is</string>
     <string name="we_wish_to_you_a_happy_business_day">We wish to you a happy business day !</string>
     <string name="enter_user_password">Enter User Password</string>
     <string name="dont_need_to_add_another_check">Dont need to add another Check!</string>

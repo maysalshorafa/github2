@@ -2,7 +2,7 @@
 <resources>
 
     <string name="_new">חדש</string>
-    <string name="edit">מדידה משוכפלת</string>
+    <string name="edit">ערוך</string>
     <string name="change_password">שנה סיסמא</string>
     <string name="delete">הסרה</string>
     <string name="report">דווח</string>
@@ -132,7 +132,7 @@
 
 
     <string name="general_customer">לקוח כללי</string>
-    <string name="main_screen">מסך ראשי</string>
+    <string name="main_screen">מסך מכירות</string>
 
 
 
@@ -208,7 +208,7 @@
     <string name="proportion">אחוז</string>
     <string name="advance">מתקדם</string>
 
-    <string name="pos_sales">כה\'\'כ מצטבר: </string>
+    <string name="pos_sales">כה\'\'כ מצטב</string>
 
     <string name="copy_date">תאריך הדפסה</string>
 
@@ -261,7 +261,7 @@
     <string name="choose_no_of_float_point">בחר מספר הספרות</string>
     <string name="choose_printer_type">סוג מדפסת</string>
     <string name="clear">נקה</string>
-    <string name="clear_cart">נקה סל</string>
+    <string name="clear_cart">נקה הסל</string>
     <string name="club">מועדון</string>
     <string name="club_general_type">מועדון כללי</string>
     <string name="club_name_is_not_available_try_to_use_another_club_name">שם מועדון לקוחות תפוס, נסה שם אחר.</string>
@@ -330,7 +330,87 @@
 
     <string name="pinpad_connection_error">Please call the support team.</string>
     <string name="transaction_error">Transaction error</string>
-
+    <string name="credit_card_is_activated_in_pos">שירות כרטיס האשראי מופעל</string>
+    <string name="credit_card_is_not_activated_in_pos">שירות כרטיס האשראי אינו מופעל</string>
+    <string name="currency_is_activated_in_pos">שירות תמיכה במטבעות מופעל</string>
+    <string name="currency_is_not_activated_in_pos">שירות תמיכה במטבעות אינו מופעל</string>
+    <string name="customer_measurement_is_activated_in_pos">שירות מעכב אחר מדידות הלקוח מופעל</string>
+    <string name="customer_measurement_is_not_activated_in_pos">שירות מעכב אחר מדידות הלקוח אינו מופעל</string>
+    <string name="male">זכר</string>
+    <string name="measurement_id">ת\'\'ז</string>
+    <string name="measurement_name">שם</string>
+    <string name="measurement_type">סוג</string>
+    <string name="measurement_value">ערך</string>
+    <string name="no_of_float_point">מספר ספרות אחר הנקודה</string>
+    <string name="no_of_measurement">מספר המדידות</string>
+    <string name="not_selected_products">בחר מוצר</string>
+    <string name="not_valid_date">אנא הכנס תאריך תקין</string>
+    <string name="offer_management">הנהלת המבצעים</string>
+    <string name="offer_rule_management">הנהלת חוקיות המבצעים</string>
+    <string name="pay_by_credit_card">תשלום דרך כרטיס אשראי</string>
+    <string name="pay_cash">תשלום מזומן</string>
+    <string name="phone">מספר נייד</string>
+    <string name="pinpad_wait_for_finish">תמשיך את העסקה דרך ה pin-pad</string>
+    <string name="please_add_product_then_continue">כדי למשךת אנא הכנס מוצר</string>
+    <string name="please_insert_city">בחר עיר</string>
+    <string name="please_insert_club">בחר מעדון</string>
+    <string name="active_currency_service_in_pos"></string>
+    <string name="please_wait">המתן...</string>
+    <string name="point">נקודות</string>
+    <string name="pos_db_version_no">גרסת מסד הנתונים</string>
+    <string name="pos_setting">הגדרות קופה</string>
+    <string name="pos_version_no">גרסת קופה</string>
+    <string name="postal_code">מיקוד</string>
+    <string name="pref_header_general">כללי</string>
+    <string name="price_after_discount">מחיר אחר הנחה</string>
+    <string name="print">הדפסה</string>
+    <string name="print_copy_invoice">האם תרצה להדפיס עותק?</string>
+    <string name="printer_type">סוג המדפסת</string>
+    <string name="product_barcode_not_available">באר-קוד קיים במערכת</string>
+    <string name="product_name_not_available">שם טפוס</string>
+    <string name="replacement_expiration_date">תאריך סיום פתק החלפה</string>
+    <string name="restore">שחזור</string>
+    <string name="retry">נסה שוב</string>
+    <string name="rule_name">שם חוק הנחבה</string>
+    <string name="sales_history">דוח מכירות</string>
+    <string name="sales_man_report">דוח אנשי מכירות</string>
+    <string name="sales_management">הנהלת מכירות</string>
+    <string name="schedule_workers">שעון נוכחות</string>
+    <string name="select_all_Department_products">סמן כל המוצרים השייכם למחלקה זו</string>
+    <string name="selected">נבחר</string>
+    <string name="server_info">מידע על השרת</string>
+    <string name="settings">הגדרות</string>
+    <string name="setup_new_pos">התקנת קופה חדשה</string>
+    <string name="shekel">ש\'\'ח</string>
+    <string name="show_club">הצגת מועדוני לקוחות</string>
+    <string name="show_customer">הצגת לקוחות</string>
+    <string name="show_customer_measurement">הצגת מדידות עבור לקוח</string>
+    <string name="show_products">הצגת המוצרים</string>
+    <string name="source_date">תאריך מקור</string>
+    <string name="street">רחוב</string>
+    <string name="success_adding_new_club">התוסף מעדון לקוחות בהצלחה</string>
+    <string name="success_adding_new_customer">התוסף לקוח חדש בהצלחה</string>
+    <string name="success_edit_POS_setting">עודכן הגדרות קופה בהצלחה</string>
+    <string name="success_edit_customer">עודכן הלקוח בהצלחה</string>
+    <string name="success_to_add_new_department">התוסף מחלקה חדשה בהצלחה</string>
+    <string name="success_to_restore">הקופה שוחזירה בהצלחה</string>
+    <string name="success_to_save_settings">נשמרת הגדרות הקופה בהצלחה</string>
+    <string name="terminal_password">סיסמה</string>
+    <string name="thanks">תודה</string>
+    <string name="the_number_of_hours_you_work_is">שעות עבודתך הינה</string>
+    <string name="terminal_number" translatable="false">מספר מסוף</string>
+    <string name="there_is_no_disk_on_key">לא נמצא דיסק חצוני</string>
+    <string name="title_activity_add_customer_measurement_activity">חלון הוספת מדידה עבור לקוח</string>
+    <string name="title_activity_add_new_department_activity">הוספת מחלקה</string>
+    <string name="title_activity_club_management">מעדון לקוחות</string>
+    <string name="title_activity_customer_measurement_management_activity">מדידות לקוחות</string>
+    <string name="title_activity_dashboard_activty"></string>
+    <string name="title_activity_departments_activity">מחלקות</string>
+    <string name="title_activity_notify_service">מרכז מידע</string>
+    <string name="title_activity_open_format">מבנה אחיד</string>
+    <string name="title_activity_pinpad">Pin-Pad</string>
+    <string name="title_activity_product_catalog">קטלוג מוצרים</string>
+    <string name="title_activity_products_activity">חלון מוצרים</string>
 
 
 </resources>
