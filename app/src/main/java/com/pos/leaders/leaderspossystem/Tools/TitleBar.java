@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.LogInActivity;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.Settings.AppCompatPreferenceActivity;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 import com.pos.leaders.leaderspossystem.updater.AutoUpdateApk;
 
@@ -43,7 +45,9 @@ public class TitleBar {
     private static ImageView ivSync ;
     private static Timer timer = null;
     private static AutoUpdateApk aua = null;
+    private static Clock clock=null;
     private static long lastUpdateCheck;
+
     public static void setTitleBar(final AppCompatActivity context) {
         final ViewGroup actionBarLayout = (ViewGroup) context.getLayoutInflater().inflate(R.layout.title_bar, null);
         ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
@@ -76,25 +80,29 @@ public class TitleBar {
 
         long date;
         final Calendar ca = Calendar.getInstance();
-        final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         // You customization
         final int actionBarColor = context.getResources().getColor(R.color.primaryColor);
         actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
 
         final TextView tvDate = (TextView) context.findViewById(R.id.titleBar_tvClock);
-        tvDate.setText(DateFormat.format("dd-MM-yyyy HH:mm", ca.getTime()));
-        Clock clock = new Clock(context);
-        clock.AddClockTickListner(new OnClockTickListner() {
-            @Override
-            public void OnSecondTick(Time currentTime) {
+        tvDate.setText(format.format(ca.getTime()));
 
-            }
+        if (clock == null) {
+            clock = new Clock(context);
+            clock.AddClockTickListner(new OnClockTickListner() {
+                @Override
+                public void OnSecondTick(Time currentTime) {
 
-            @Override
-            public void OnMinuteTick(Time currentTime) {
-                tvDate.setText(DateFormat.format("dd-MM-yyyy HH:mm",currentTime.toMillis(true)).toString());
-            }
-        });
+                }
+
+                @Override
+                public void OnMinuteTick(Time currentTime) {
+                    tvDate.setText(format.format(currentTime.toMillis(true)).toString());
+                }
+            });
+        }
+
 
 
         final TextView tvTerminalID = (TextView) context.findViewById(R.id.titleBar_tvTerminalID);
@@ -177,14 +185,16 @@ public class TitleBar {
         });
         refreshStatus(context);
 
+        if(!SETTINGS.timerState){
 
-      if(!SETTINGS.timerState){
+            SETTINGS.timerState = true;
+            timer  = new Timer();
+            timer.schedule(new LoggingTask(), 10800000, 10800000);
 
-          SETTINGS.timerState = true;
-          timer  = new Timer();
-          timer.schedule(new LoggingTask(), 10800000, 10800000);
+        }
 
-      }
+        //region Auto Update
+        /*
         if(aua==null){
             aua = new AutoUpdateApk(context);
             aua.addObserver(new Observer() {
@@ -202,10 +212,10 @@ public class TitleBar {
         } else if(new Date().getTime()-lastUpdateCheck>(1000)*(60)*(3)){
             aua.checkUpdatesManually();
             lastUpdateCheck=new Date().getTime();
-        }
+        }*/
 
+        //endregion
     }
-
 
     private static void refreshStatus(Context context){
         switch (SESSION.internetStatus) {

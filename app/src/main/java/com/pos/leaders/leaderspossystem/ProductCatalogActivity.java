@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
@@ -38,6 +39,7 @@ import java.util.List;
 public class ProductCatalogActivity extends AppCompatActivity {
     private Button btCreate, btImport;
     EditText etSearch;
+    TextView tvCount;
     private GridView gvProducts;
     ProductDBAdapter productDBAdapter;
     DepartmentDBAdapter departmentDBAdapter;
@@ -59,7 +61,6 @@ public class ProductCatalogActivity extends AppCompatActivity {
     public void CancelClickButton(View v){
         onBackPressed();
     }
-
 
     @Override
     protected void onResume() {
@@ -106,6 +107,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
         gvProducts = (GridView) findViewById(R.id.productCatalog_GVProducts);
         etSearch = (EditText) findViewById(R.id.productCatalog_ETSearch);
         llDepartments=(LinearLayout)findViewById(R.id.productCatalog_LLDepartment);
+        tvCount = (TextView) findViewById(R.id.productCatalog_etProductCount);
 
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -171,6 +173,8 @@ public class ProductCatalogActivity extends AppCompatActivity {
 
         productDBAdapter = new ProductDBAdapter(this);
         productDBAdapter.open();
+
+        tvCount.setText("Product Count " + productDBAdapter.getProductsCount());
 
         productsList = productDBAdapter.getTopProducts(productLoadItemOffset,productCountLoad);
         filter_productsList = productsList;

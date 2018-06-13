@@ -229,7 +229,8 @@ public class ImportProductsActivity extends Activity {
                             tvStatus.setText(msg);
                             if(lsProducts.size()!=0||lsDepartment.size()>0) {
                                 btnSave.setVisibility(View.VISIBLE);
-                                lvDepartment.setVisibility(View.VISIBLE);
+                                //// TODO: 12/06/2018 VISIBLE
+                                lvDepartment.setVisibility(View.GONE);
                             }
 
 

@@ -1,0 +1,48 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="@string/FE_version_no"
+        android:enabled="false"
+        android:inputType="textCapWords"
+        android:key="LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_FE_VERSION"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/FE_version_no" />
+
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="@string/bo_version_no"
+        android:enabled="false"
+        android:inputType="textCapWords"
+        android:key="LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_VERSION"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/bo_version_no" />
+
+
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="@string/bo_db_version_no"
+        android:enabled="false"
+        android:inputType="textCapWords"
+        android:key="LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_DB_VERSION"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/bo_db_version_no" />
+
+    <EditTextPreference
+        android:key="pos_version_no"
+        android:enabled="false"
+        android:title="@string/pos_version_no" />
+
+    <EditTextPreference
+        android:key="pos_db_version_no"
+        android:enabled="false"
+        android:title="@string/pos_db_version_no" />
+
+
+</PreferenceScreen>

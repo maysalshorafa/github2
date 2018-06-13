@@ -37,9 +37,9 @@ public class MessagesCreator {
      */
     public static String authentication(String posID,String PosPass,String companyName) throws JSONException {
         JSONObject object = new JSONObject();
-        object.put(MessageKey.PosID, posID);
-        object.put(MessageKey.PosPass, PosPass);
-        object.put(MessageKey.companyName, companyName);
+        object.put(MessageKey.PosID, posID);//posID
+        object.put(MessageKey.PosPass, PosPass);//posPass
+        object.put(MessageKey.companyName, companyName);//companyName
         return object.toString();
     }
 
