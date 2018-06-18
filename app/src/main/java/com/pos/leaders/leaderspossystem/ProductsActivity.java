@@ -41,7 +41,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     List<Department> listDepartment;
     List<String> departmentsName;
 
-    Button btSave,btnCancel,btnContinue;
+    Button btSave,btnCancel;
     EditText etName,etBarcode,etDescription,etPrice,etCostPrice;
     Switch swWithTax,swWeighable;
 	static ListView lvDepartment;
@@ -86,8 +86,6 @@ public class ProductsActivity  extends AppCompatActivity  {
         etCostPrice=(EditText)findViewById(R.id.ETCostPrice);
         swWithTax=(Switch)findViewById(R.id.SWWithTax);
         swWeighable=(Switch)findViewById(R.id.SWWeighable);
-        btnContinue=(Button)findViewById(R.id.productActivity_btnContinue);
-
         productDBAdapter=new ProductDBAdapter(this);
         productDBAdapter.open();
 
@@ -96,7 +94,7 @@ public class ProductsActivity  extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 addEditProduct();
-                onBackPressed();
+                setNewProduct();
             }
         });
 
@@ -113,15 +111,6 @@ public class ProductsActivity  extends AppCompatActivity  {
                 Intent intent = new Intent(ProductsActivity.this, ProductCatalogActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);            }
-        });
-
-        btnContinue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(addEditProduct())
-                    setNewProduct();
-
-            }
         });
 
         // Department list
@@ -205,7 +194,6 @@ public class ProductsActivity  extends AppCompatActivity  {
                     swWithTax.setChecked(editableProduct.isWithTax());
                     swWeighable.setChecked(editableProduct.isWeighable());
                     Department d = departmentDBAdapter.getDepartmentByID(editableProduct.getDepartmentId());
-                    btnContinue.setVisibility(View.GONE);
                     selectedDepartment = d.getName();
                     for (Department dep : listDepartment) {
                         if (dep.getDepartmentId() == (editableProduct.getDepartmentId())) {
@@ -246,8 +234,9 @@ public class ProductsActivity  extends AppCompatActivity  {
         } else if (tempBarcode.contains("\n")) {
             newBarCode =tempBarcode.replace("\n", "");
         }
-        etBarcode.setText(newBarCode);
-
+        if(newBarCode!=""){
+            etBarcode.setText(newBarCode);
+        }
         ///to save on sqlite
         if (etName.getText().toString().equals("")) {
             return false;
@@ -331,7 +320,6 @@ public class ProductsActivity  extends AppCompatActivity  {
         etCostPrice.setText("");
         swWithTax.setChecked(false);
         swWeighable.setChecked(false);
-        btnContinue.setVisibility(View.VISIBLE);
         editableProduct = null;
     }
 
