@@ -103,7 +103,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
         lvPermissions.setChoiceMode(CHOICE_MODE_MULTIPLE);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            long i = (long) extras.get("userId");
+            long i = (long) extras.get("employeeId");
             if (EmployeeManagementActivity.User_Management_Edit == 8) {
                 btAdd.setText(R.string.edit);
                 EmployeeManagementActivity.User_Management_Edit =0;

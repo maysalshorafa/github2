@@ -29,8 +29,8 @@ public class EmployeePermissionsDBAdapter {
 
 	protected static final String USERPERMISSIONS_COLUMN_ID = "id";
 
-	public static final String DATABASE_CREATE = "CREATE TABLE `EmployeePermissions` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userId` INTEGER , `permissionId` INTEGER,"+
-			"FOREIGN KEY(`userId`) REFERENCES `users.id`,FOREIGN KEY(`permissionId`) REFERENCES `permissions.id`)";
+	public static final String DATABASE_CREATE = "CREATE TABLE `EmployeePermissions` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `employeeId` INTEGER , `permissionId` INTEGER,"+
+			"FOREIGN KEY(`employeeId`) REFERENCES `employees.id`)";
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
 	// Context of the application using the database.
@@ -72,13 +72,13 @@ public class EmployeePermissionsDBAdapter {
 		try {
 			return db.insert(USERPERMISSIONS_TABLE_NAME, null, val);
 		} catch (SQLException ex) {
-			Log.e("UserPermion DB insert", "inserting Entry at " + USERPERMISSIONS_TABLE_NAME + ": " + ex.getMessage());
+			Log.e("employeePermission DB insert", "inserting Entry at " + USERPERMISSIONS_TABLE_NAME + ": " + ex.getMessage());
 			return 0;
 		}
 	}
 	public ArrayList<Integer> getPermissions(long user_id) {
 		ArrayList<Integer> permissions = new ArrayList<Integer>();
-		Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where userId='" + user_id + "'" , null);
+		Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where employeeId='" + user_id + "'" , null);
 		cursor1.moveToFirst();
 
 		if (cursor1.getCount() < 1) // UserName Not Exist

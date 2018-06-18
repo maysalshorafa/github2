@@ -51,7 +51,7 @@ public class SalesAssistantDetailesSalesMangmentActivity extends AppCompatActivi
 
         TitleBar.setTitleBar(this);
         Bundle bundle = getIntent().getExtras();
-        long userId = (long) bundle.get("userId");
+        long userId = (long) bundle.get("employeeId");
         EmployeeDBAdapter userDBAdapter=new EmployeeDBAdapter(this);
         userDBAdapter.open();
         String userName=userDBAdapter.getEmployeesName(userId);

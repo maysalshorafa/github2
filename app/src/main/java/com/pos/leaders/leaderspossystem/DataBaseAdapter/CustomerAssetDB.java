@@ -24,15 +24,15 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 
 public class CustomerAssetDB {
 
-    public static final String CustmerAsset_TabelName = "CustmerAssest";
+    public static final String CustmerAsset_TabelName = "CustomerAssistant";
     // Column Names
     protected static final String CUSTMER_ASSEST_ID = "id";
 
     protected static final String ORDER_ID = "order_id";
-    protected static final String CustmerAssest_COLUMN_ID = "custmerAssestID";
+    protected static final String CustmerAssest_COLUMN_ID = "customerAssistantID";
     protected static final String CUSTMER_ASSEST_COLUMN_AMOUNT = "amount";
     protected static final String CUSTMER_ASSEST_COLUMN_TYPE = "type";
-    protected static final String CUSTMER_ASSEST_COLUMN_CASE = "salescase";
+    protected static final String CUSTMER_ASSEST_COLUMN_CASE = "salesCase";
     protected static final String CustmerAssest_COLUMN_CEATEDATE = "saleDate";
 
 
@@ -77,7 +77,7 @@ public class CustomerAssetDB {
         try {
             return insertEntry(assest);
         } catch (SQLException ex) {
-            Log.e("Assest DB insert", "inserting Entry at " + CustmerAsset_TabelName + ": " + ex.getMessage());
+            Log.e("AssistantDB insert", "inserting Entry at " + CustmerAsset_TabelName + ": " + ex.getMessage());
             return -1;
         }
     }
@@ -99,18 +99,30 @@ public class CustomerAssetDB {
             return -1;
         }
     }
-    public List<CustomerAssistant> getBetweenTwoDates(long userId,long from,long to){
-        List<CustomerAssistant> customerAssestList = new ArrayList<CustomerAssistant>();
-        Cursor cursor = db.rawQuery("select * from " + CustmerAsset_TabelName + " where " + CustmerAssest_COLUMN_CEATEDATE + "<='" + to + "' and " +  CustmerAssest_COLUMN_CEATEDATE + ">='" + from + "' and " + CustmerAssest_COLUMN_ID +
-                "="+ userId   ,null);
+
+
+    public List<CustomerAssistant> getBetweenTwoDates(long employeeId,long from, long to){
+        List<CustomerAssistant> customerAssistants = new ArrayList<CustomerAssistant>();
+        List<CustomerAssistant> customerAssistantList = new ArrayList<CustomerAssistant>();
+
+        Cursor cursor = db.rawQuery("select * from "+ CustmerAsset_TabelName +" where "+ CustmerAssest_COLUMN_ID +" = "+employeeId+" order by "+ CustmerAssest_COLUMN_CEATEDATE +" DESC",null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
-             customerAssestList.add(createNewAssistent(cursor));
+            customerAssistants.add(createNewAssistent(cursor));
             cursor.moveToNext();
         }
-
-        return customerAssestList;
+        customerAssistantList=getListBetweenTwoDates(from,to,customerAssistants);
+        return customerAssistantList;
+    }
+    public List<CustomerAssistant> getListBetweenTwoDates(long from, long to,List<CustomerAssistant>customerAssistantList){
+        List<CustomerAssistant>customerAssistants=new ArrayList<CustomerAssistant>() ;
+        for (int i=0;i<customerAssistantList.size();i++){
+            if(customerAssistantList.get(i).getCreatedAt().after(new Timestamp(from))&&customerAssistantList.get(i).getCreatedAt().before(new Timestamp(to))){
+                customerAssistants.add(customerAssistantList.get(i));
+            }
+        }
+        return customerAssistants;
     }
 
     private CustomerAssistant createNewAssistent(Cursor cursor){
@@ -151,11 +163,15 @@ public class CustomerAssetDB {
         return users;
     }
     public double getTotalAmountForAssistant( long id,long from , long to){
+        CustomerAssetDB customerAssetDB = new CustomerAssetDB(context);
+        customerAssetDB.open();
+        List<CustomerAssistant>customerAssistants=new ArrayList<CustomerAssistant>();
         double amount = 0;
         CustomerAssistant customerAssistant=null;
-        Cursor cursor = db.rawQuery("select SUM(amount) from "+CustmerAsset_TabelName+" where "+CustmerAssest_COLUMN_ID+" = "+id+ " and " +  CustmerAssest_COLUMN_CEATEDATE + "<=" + to + " and " +  CustmerAssest_COLUMN_CEATEDATE + ">=" + from ,null);
-        if (cursor.moveToFirst()) {
-            return cursor.getInt(0);
+        customerAssistants=customerAssetDB.getBetweenTwoDates(id,from,to);
+        for (int i=0;i<customerAssistants.size();i++){
+            amount+=customerAssistants.get(i).getAmount();
         }
-        return  0;
-}}
+        return  amount;
+    }
+}

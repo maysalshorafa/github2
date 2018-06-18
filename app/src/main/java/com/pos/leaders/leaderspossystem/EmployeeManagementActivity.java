@@ -107,13 +107,13 @@ public class EmployeeManagementActivity extends AppCompatActivity {
                             case 0:
                               User_Management_View=7;
                                 intent = new Intent(EmployeeManagementActivity.this, AddEmployeeActivity.class);
-                                intent.putExtra("userId", users.get(position).getEmployeeId());
+                                intent.putExtra("employeeId", users.get(position).getEmployeeId());
                                 intent.putExtra(LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME, btnName);
                                 startActivity(intent);
                             case 1:
                                 User_Management_Edit=8;
                                 intent = new Intent(EmployeeManagementActivity.this, AddEmployeeActivity.class);
-                                intent.putExtra("userId", users.get(position).getEmployeeId());
+                                intent.putExtra("employeeId", users.get(position).getEmployeeId());
                                 intent.putExtra(LEAD_POS_RESULT_INTENT_CODE_ADD_USER_ACTIVITY_BUTTON_ADD_USER_NAME, btnName);
                                 startActivity(intent);
                                 break;
@@ -143,7 +143,7 @@ public class EmployeeManagementActivity extends AppCompatActivity {
                                 break;
                             case 4:
                                 intent = new Intent(EmployeeManagementActivity.this, UserAttendanceReport.class);
-                                intent.putExtra("userID", users.get(position).getEmployeeId());
+                                intent.putExtra("employeeId", users.get(position).getEmployeeId());
                                 startActivity(intent);
                                 //Toast.makeText(getApplicationContext(),"this function not available.",Toast.LENGTH_LONG).show();
                                 break;

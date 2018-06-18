@@ -9,7 +9,7 @@
     <string name="ins">₪</string>
     <string name="refresh">Refresh</string>
     <string name="add">Add</string>
-    <string name="user_name">User Name</string>
+    <string name="user_name">Employee Name</string>
     <string name="total_amount">Total Amount</string>
     <string name="sale_type">Sale Type</string>
     <string name="sale_id">Sale Id</string>
@@ -545,8 +545,8 @@
     <string name="details">Details</string>
     <string name="cashiers">Cashiers :</string>
     <!-- Activity Label -->
-    <string name="title_add_user_activity">Add User Activity</string>
-    <string name="title_sales_management_activity">Sales Management Activity</string>
+    <string name="title_add_user_activity">Add Employee Activity</string>
+    <string name="title_sales_management_activity">Order Management Activity</string>
     <string name="title_sales_man_management_activity">SalesMan Management Activity</string>
     <string name="title_user_attendance_report_activity">User Attendance Report</string>
     <string name="title_main_sales_activity">Sales Screen</string>
@@ -562,7 +562,7 @@
     <string name="title_add_new_club_activity">Add New Club Activity</string>
     <string name="title_customer_management_activity">Customer ManagementActivity</string>
     <string name="title_club_management_activity">Club Management Activity</string>
-    <string name="title_activity_worker_management_activity">Worker Management Activity</string>
+    <string name="title_activity_worker_management_activity">Employee Management Activity</string>
     <string name="title_activity_customer_measurement_management_activity">Customer Measurement Activity</string>
     <string name="title_activity_add_customer_measurement_activity">Add Customer Measurement Activity</string>
     <string name="title_activity_add_new_department_activity">Add New Department Activity</string>

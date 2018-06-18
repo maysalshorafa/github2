@@ -139,7 +139,7 @@ public class UserAttendanceReport extends AppCompatActivity {
 		scheduleWorkersDBAdapter.open();
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			userID = extras.getLong("userID");
+			userID = extras.getLong("employeeId");
 		}
 		LayoutInflater inflater = getLayoutInflater();
 		ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_user_attendence_report, lvReport, false);

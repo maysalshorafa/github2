@@ -27,14 +27,14 @@ public class ScheduleWorkersDBAdapter {
     protected static final String SCHEDULEWORKERS_TABLE_NAME = "scheduleWorkers";
     // Column Names
     protected static final String SCHEDULEWORKERS_COLUMN_ID = "id";
-    protected static final String SCHEDULEWORKERS_COLUMN_USERID = "userId";
+    protected static final String SCHEDULEWORKERS_COLUMN_USERID = "employeeId";
     protected static final String SCHEDULEWORKERS_COLUMN_DATE = "date";
     protected static final String SCHEDULEWORKERS_COLUMN_STARTTIME = "startTime";
     protected static final String SCHEDULEWORKERS_COLUMN_EXITTIME = "exitTime";
 
     public static final String DATABASE_CREATE="CREATE TABLE scheduleWorkers ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, "+
-            "`userId` INTEGER, `date` TEXT DEFAULT current_timestamp, `startTime` TEXT, `exitTime` TEXT, "+
-            "FOREIGN KEY(`userId`) REFERENCES `users.id` )";
+            "`employeeId` INTEGER, `date` TEXT DEFAULT current_timestamp, `startTime` TEXT, `exitTime` TEXT, "+
+            "FOREIGN KEY(`employeeId`) REFERENCES `employees.id` )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
