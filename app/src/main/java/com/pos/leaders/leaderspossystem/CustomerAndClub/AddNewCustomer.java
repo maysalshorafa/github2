@@ -334,7 +334,5 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-    @Override
-    public void onBackPressed() {
-    }
+
 }
