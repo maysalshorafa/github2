@@ -185,7 +185,7 @@
     <string name="barcode">Barcode</string>
     <string name="description">Description</string>
     <string name="cost_price">Cost Price</string>
-    <string name="with_tax">A must for VAT</string>
+    <string name="with_tax">With Tax</string>
     <string name="without_tax">Without Tax</string>
     <string name="weighable">Weighable</string>
     <string name="department_name">Department Name</string>
