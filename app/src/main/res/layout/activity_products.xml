@@ -264,21 +264,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/add"
+            android:text="@string/save"
             android:textColor="#fff"
             android:textSize="20dp" />
 
-        <Button
-
-            android:id="@+id/productActivity_btnContinue"
-            style="@style/AppTheme.bt_yellow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/_continue"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
 
         <Button
 
