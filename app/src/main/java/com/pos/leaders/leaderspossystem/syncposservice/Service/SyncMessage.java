@@ -510,7 +510,7 @@ public class SyncMessage extends Service {
                 //endregion PERMISSION
 
                 //region UserPermtiossion
-                case MessageType.ADD_USER_PERMISSION:
+                case MessageType.ADD_EMPLOYEE_PERMISSION:
                     EmployeesPermissions userPermissions = null;
                     userPermissions = objectMapper.readValue(msgData, EmployeesPermissions.class);
 
@@ -519,9 +519,9 @@ public class SyncMessage extends Service {
                     rID = userPermissionsDBAdapter.insertEntry(userPermissions);
                     userPermissionsDBAdapter.close();
                     break;
-                case MessageType.UPDATE_USER_PERMISSION:
+                case MessageType.UPDATE_EMPLOYEE_PERMISSION:
                     break;
-                case MessageType.DELETE_USER_PERMISSION:
+                case MessageType.DELETE_EMPLOYEE_PERMISSION:
                     break;
 
 
@@ -1029,15 +1029,15 @@ public class SyncMessage extends Service {
             //endregion PERMISSION
 
             //region UserPermissions
-            case MessageType.ADD_USER_PERMISSION:
+            case MessageType.ADD_EMPLOYEE_PERMISSION:
                 res = messageTransmit.authPost(ApiURL.EMPLOYEE_PERMISSION, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.UPDATE_USER_PERMISSION:
+            case MessageType.UPDATE_EMPLOYEE_PERMISSION:
                 EmployeesPermissions userPermissions=null;
                 userPermissions=objectMapper.readValue(msgData, EmployeesPermissions.class);
                 res = messageTransmit.authPut(ApiURL.EMPLOYEE_PERMISSION, jsonObject.getString(MessageKey.Data), token,userPermissions.getEmployeePermissionId());
                 break;
-            case MessageType.DELETE_USER_PERMISSION:
+            case MessageType.DELETE_EMPLOYEE_PERMISSION:
                 res = messageTransmit.authDelete(ApiURL.EMPLOYEE_PERMISSION, jsonObject.getString(MessageKey.Data), token);
                 break;
 

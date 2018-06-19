@@ -52,7 +52,7 @@ public class EmployeePermissionsDBAdapter {
 
 		public long insertEntry( long permissionsId, long userId) {
 			EmployeesPermissions userPermissions = new EmployeesPermissions(Util.idHealth(this.db, USERPERMISSIONS_TABLE_NAME, USERPERMISSIONS_COLUMN_ID),userId,permissionsId);
-			sendToBroker(MessageType.ADD_USER_PERMISSION, userPermissions, this.context);
+			sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION, userPermissions, this.context);
 
 			try {
 				long insertResult = insertEntry(userPermissions);
