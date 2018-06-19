@@ -280,10 +280,12 @@ public class ProductsActivity  extends AppCompatActivity  {
                 }
                 else {
                 if(!availableProductName) {
+                    etName.setBackgroundResource(R.drawable.backtext);
                     Toast.makeText(getApplicationContext(), getString(R.string.product_name_not_available), Toast.LENGTH_LONG).show();
                     return false;
                 }
                 if(!availableBarCode) {
+                    etBarcode.setBackgroundResource(R.drawable.backtext);
                     Toast.makeText(getApplicationContext(), getString(R.string.product_barcode_not_available), Toast.LENGTH_LONG).show();
                     return false;
                 }
