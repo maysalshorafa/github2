@@ -716,13 +716,15 @@ public class SyncMessage extends Service {
 
                 //region Z REPORT
                 case MessageType.ADD_Z_REPORT:
+                    /*
                     ZReport zReport = null;
                     zReport = objectMapper.readValue(msgData, ZReport.class);
 
                     ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(this);
                     zReportDBAdapter.open();
                     rID = zReportDBAdapter.insertEntry(zReport);
-                    zReportDBAdapter.close();
+                    zReportDBAdapter.close();*/
+                    rID = 1;
 
                     break;
                 case MessageType.UPDATE_Z_REPORT:
