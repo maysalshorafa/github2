@@ -96,26 +96,28 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             etCountry.setText(customer.getCountry());
             etCountryCode.setText(customer.getCountryCode());
             btAddCustomer.setText(getResources().getText(R.string.edit));
-            if (customer.getGender().equalsIgnoreCase( getString(R.string.male)) ){
-                radioGender.check(R.id.male);
-            } else if(customer.getGender().equalsIgnoreCase( getString(R.string.female)) ){
-                radioGender.check(R.id.female);
-            }
-             for (int i = 0; i < groupList.size(); i++) {
-             Club group = groupList.get(i);
-             if (group.getClubId() == customer.getClub()) {
-             selectClubSpinner.setSelection(i);
+            if(secondCustomerInformation.getVisibility()== View.VISIBLE) {
+                if (customer.getGender().equalsIgnoreCase(getString(R.string.male))) {
+                    radioGender.check(R.id.male);
+                } else if (customer.getGender().equalsIgnoreCase(getString(R.string.female))) {
+                    radioGender.check(R.id.female);
+                }
 
-             }
-             }
-            for (int i = 0; i < cityList.size(); i++) {
-                City city = cityList.get(i);
-                if (city.getCityId() == customer.getCity()) {
-                    selectCitySpinner.setSelection(i);
+                for (int i = 0; i < cityList.size(); i++) {
+                    City city = cityList.get(i);
+                    if (city.getCityId() == customer.getCity()) {
+                        selectCitySpinner.setSelection(i);
+
+                    }
+                }
+            }
+            for (int i = 0; i < groupList.size(); i++) {
+                Club group = groupList.get(i);
+                if (group.getClubId() == customer.getClub()) {
+                    selectClubSpinner.setSelection(i);
 
                 }
             }
-
         }
 
         btCancel.setOnClickListener(new View.OnClickListener() {

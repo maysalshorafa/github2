@@ -1193,7 +1193,7 @@ public class SyncMessage extends Service {
                 break;
             case MessageType.DELETE_EMPLOYEE:
                 JSONObject newDeleteUserJson = new JSONObject(jsonObject.getString(MessageKey.Data));
-                res = messageTransmit.authDelete(ApiURL.Employee, newDeleteUserJson.getString("userId"), token);
+                res = messageTransmit.authDelete(ApiURL.Employee, newDeleteUserJson.getString("employeeId"), token);
                 break;
             //Currencies
 
