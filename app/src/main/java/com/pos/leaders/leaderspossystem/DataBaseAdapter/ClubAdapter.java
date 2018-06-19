@@ -268,7 +268,7 @@ public class ClubAdapter {
     }
     public Club getClubById(long id) {
         Club club = null;
-        Cursor cursor = db.rawQuery("select * from " + Group_COLUMN_Name + " where id='" + id + "'", null);
+        Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME + " where id='" + id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();
