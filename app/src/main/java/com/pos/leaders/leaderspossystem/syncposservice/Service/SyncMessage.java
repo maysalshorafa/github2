@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
@@ -310,7 +311,9 @@ public class SyncMessage extends Service {
                     }
                 }
             }
-            ObjectMapper objectMapper = new ObjectMapper();
+            //ObjectMapper objectMapper = new ObjectMapper();
+            ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             objectMapper.setDateFormat(dateFormat);
 
@@ -319,14 +322,15 @@ public class SyncMessage extends Service {
 
                 //region A REPORT
                 case MessageType.ADD_A_REPORT:
+                    /*
                     AReport aReport = null;
                     aReport = objectMapper.readValue(msgData, AReport.class);
 
                     AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(this);
                     aReportDBAdapter.open();
                     rID = aReportDBAdapter.insertEntry(aReport);
-                    aReportDBAdapter.close();
-
+                    aReportDBAdapter.close();*/
+                    rID = 1;
                     break;
                 case MessageType.UPDATE_A_REPORT:
                     break;
@@ -335,6 +339,7 @@ public class SyncMessage extends Service {
                 //endregion A REPORT
                 //region A REPORT Details
                 case MessageType.ADD_A_REPORT_DETAILS:
+                    /*
                     AReportDetails aReportDetails = null;
                     aReportDetails = objectMapper.readValue(msgData, AReportDetails.class);
 
@@ -342,7 +347,8 @@ public class SyncMessage extends Service {
                     aReportDetailsDBAdapter.open();
                     rID = aReportDetailsDBAdapter.insertEntry(aReportDetails);
                     aReportDetailsDBAdapter.close();
-
+*/
+                    rID = 1;
                     break;
                 case MessageType.UPDATE_A_REPORT_DETAILS:
                     break;

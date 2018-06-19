@@ -21,6 +21,7 @@ public class Payment {
 	private String paymentWay;
 	private long orderId;
 	private double amount;
+	private boolean hide;
 
 	@JsonIgnore
     private Locale locale = new Locale("en");
@@ -45,6 +46,11 @@ public class Payment {
 	}
 
 	//region Getters
+
+	public boolean isHide() {
+		return hide;
+	}
+
 	public long getPaymentId() {
 		return paymentId;
 	}
@@ -76,6 +82,11 @@ public class Payment {
 	//endregion
 
 	//region Setters
+
+
+	public void setHide(boolean hide) {
+		this.hide = hide;
+	}
 
 	@JsonIgnore
 	public void setCashPayments(List<CashPayment> cashPayments) {

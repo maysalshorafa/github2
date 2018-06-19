@@ -12,7 +12,7 @@ public interface MessageType{
     String UPDATE_A_REPORT = "UpdateAreport";
     String DELETE_A_REPORT = "DeleteAreport";
 
-    String ADD_A_REPORT_DETAILS = "AddAreportDetails";
+    String ADD_A_REPORT_DETAILS = "AddAReportDetails";
     String UPDATE_A_REPORT_DETAILS = "UpdateAreportDetails";
     String DELETE_A_REPORT_DETAILS = "DeleteAreportDetails";
 

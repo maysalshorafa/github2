@@ -10,7 +10,7 @@ public class AReportDetails {
     private double amount;
     private long type;
     private double amount_in_basic_currency ;
-
+    //{\"amount\":888.0,\"type\":0,\"amount_in_basic_currency\":888.0,\"hide\":false,\"areportDetailsId\":\"40000000000000000\",\"areportId\":40000000000000000}
 
     public AReportDetails() {
     }

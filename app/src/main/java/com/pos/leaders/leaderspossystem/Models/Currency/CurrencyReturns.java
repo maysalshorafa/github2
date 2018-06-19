@@ -12,30 +12,12 @@ public class CurrencyReturns {
     private double amount;
     private long currency_type;
     private Timestamp createdAt;
+    private boolean hide;
+
+    // Constructors
     public CurrencyReturns() {
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-
-    public long getCurrency_type() {
-        return currency_type;
-    }
-
-    public void setCurrency_type(long currency_type) {
-        this.currency_type = currency_type;
-    }
-
-
-
-
-    // Constructors
     public CurrencyReturns(long currencyReturnsId, long orderId, double amount, Timestamp createdAt, long currency_type) {
         this.currencyReturnsId = currencyReturnsId;
         this.amount = amount;
@@ -48,11 +30,10 @@ public class CurrencyReturns {
         this(p.getCurrencyReturnsId(),  p.getOrderId(),p.getAmount(),p.getCreatedAt(),p.getCurrency_type());
     }
 
-    // Getters
+    //region Getters
     public long getCurrencyReturnsId() {
         return currencyReturnsId;
     }
-
 
     public long getOrderId() {
         return orderId;
@@ -61,6 +42,47 @@ public class CurrencyReturns {
     public double getAmount() {
         return amount;
     }
+
+    public long getCurrency_type() {
+        return currency_type;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public boolean isHide() {
+        return hide;
+    }
+
+    //endregion
+
+    //region setters
+    public void setCurrencyReturnsId(long currencyReturnsId) {
+        this.currencyReturnsId = currencyReturnsId;
+    }
+
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setCurrency_type(long currency_type) {
+        this.currency_type = currency_type;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setHide(boolean hide) {
+        this.hide = hide;
+    }
+
+    //endregion
 
     @Override
     public String toString() {
