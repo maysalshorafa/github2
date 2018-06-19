@@ -173,6 +173,10 @@
     <string name="user_name_is_empty">يرجى تعبئة اسم الموظف .</string>
     <string name="success_to_add_product">تم اضافة منتوج بنجاح.</string>
     <string name="fail_to_add_product">فشلت عملية اضافة منتج.</string>
+    <string name="insert_product_name">يرجى اضافة اسم المنتوج.</string>
+    <string name="insert_product_barcode">يرجى اضافة اسم رقم المنتوج.</string>
+    <string name="insert_product_price">يرجى اضافة سعر المنتوج.</string>
+
     <!-- OldCustomer Message -->
     <string name="please_insert_first_name">الرجاء ادخال الاسم الاول.</string>
     <string name="please_insert_last_name">الرجاء ادخال الاسم الاخير.</string>

@@ -589,6 +589,10 @@
     <string name="pref_title_about_company_name">Company Name</string>
 
     <string name="pinpad">Pin-Pad</string>
+    <string name="insert_product_name">Please insert Product Name.</string>
+    <string name="insert_product_barcode">Please insert Product Barcode.</string>
+    <string name="insert_product_price">Please insert Product Price.</string>
+
 
 
 </resources>

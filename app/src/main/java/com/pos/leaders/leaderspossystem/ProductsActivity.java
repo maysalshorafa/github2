@@ -93,7 +93,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addEditProduct();
+                if(addEditProduct())
                 setNewProduct();
             }
         });
@@ -225,6 +225,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     }
 
     private boolean addEditProduct() {
+        double price=0 , costPrice=0;
         String tempBarcode = etBarcode.getText().toString();
         String newBarCode="";
         if (tempBarcode.contains("\r\n")) {
@@ -233,32 +234,42 @@ public class ProductsActivity  extends AppCompatActivity  {
             newBarCode = tempBarcode.replace("\r", "");
         } else if (tempBarcode.contains("\n")) {
             newBarCode =tempBarcode.replace("\n", "");
+        }else {
+            newBarCode=tempBarcode;
         }
-        if(newBarCode!=""){
             etBarcode.setText(newBarCode);
-        }
+
         ///to save on sqlite
         if (etName.getText().toString().equals("")) {
-            return false;
+            Toast.makeText(getApplicationContext(), getString(R.string.insert_product_name), Toast.LENGTH_LONG).show();
+            etName.setBackgroundResource(R.drawable.backtext);
+
         } else if (etBarcode.getText().toString().equals("")) {
-            return false;
-        } else if (etPrice.getText().toString().equals("") || etCostPrice.getText().toString().equals("")) {
-            return false;
+            Toast.makeText(getApplicationContext(), getString(R.string.insert_product_barcode), Toast.LENGTH_LONG).show();
+            etBarcode.setBackgroundResource(R.drawable.backtext);
+        } else if (etPrice.getText().toString().equals("") ) {
+            Toast.makeText(getApplicationContext(), getString(R.string.insert_product_price), Toast.LENGTH_LONG).show();
+            etPrice.setBackgroundResource(R.drawable.backtext);
         }
 
         if (editableProduct == null) {
             boolean availableBarCode= productDBAdapter.isValidBarcode(etBarcode.getText().toString());
             boolean availableProductName= productDBAdapter.availableProductName(etName.getText().toString());
 
-            if(availableProductName&&availableBarCode){
+            if(availableProductName&&availableBarCode&& !etPrice.getText().toString().equals("")){
                     for (Department d : listDepartment) {
                         if (d.isChecked()) {
                             depID = d.getDepartmentId();
                         }
                     }
+                    if(!etPrice.getText().toString().equals("")){
+                        price=Double.parseDouble(etPrice.getText().toString());
+                    }
+                if(!etCostPrice.getText().toString().equals("")){
+                    costPrice=Double.parseDouble(etCostPrice.getText().toString());
+                }
                     check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
-                        etDescription.getText().toString(), Double.parseDouble(etPrice.getText().toString()),
-                        Double.parseDouble(etCostPrice.getText().toString()), withTax,
+                        etDescription.getText().toString(), price, costPrice, withTax,
                        withWeighable, depID, SESSION._EMPLOYEE.getEmployeeId(), with_pos, with_point_system);
                 if (check > 0) {
                     Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_product), Toast.LENGTH_LONG).show();
@@ -270,14 +281,27 @@ public class ProductsActivity  extends AppCompatActivity  {
                 else {
                 if(!availableProductName) {
                     Toast.makeText(getApplicationContext(), getString(R.string.product_name_not_available), Toast.LENGTH_LONG).show();
+                    return false;
                 }
                 if(!availableBarCode) {
                     Toast.makeText(getApplicationContext(), getString(R.string.product_barcode_not_available), Toast.LENGTH_LONG).show();
+                    return false;
                 }
 
                 }
 
         } else {
+            if(!etPrice.getText().toString().equals("")){
+                price=Double.parseDouble(etPrice.getText().toString());
+            }else {
+                price=editableProduct.getPrice();
+            }
+            if(!etCostPrice.getText().toString().equals("")){
+                costPrice=Double.parseDouble(etCostPrice.getText().toString());
+            }
+            else {
+                costPrice=editableProduct.getCostPrice();
+            }
             for (Department d : listDepartment) {
                 if (d.isChecked()) {
                 depID = d.getDepartmentId();               }
@@ -286,8 +310,8 @@ public class ProductsActivity  extends AppCompatActivity  {
             editableProduct.setName(etName.getText().toString());
             editableProduct.setBarCode(etBarcode.getText().toString());
             editableProduct.setDescription(etDescription.getText().toString());
-            editableProduct.setPrice(Double.parseDouble(etPrice.getText().toString()));
-            editableProduct.setCostPrice(Double.parseDouble(etCostPrice.getText().toString()));
+            editableProduct.setPrice(price);
+            editableProduct.setCostPrice(costPrice);
             editableProduct.setWithTax(withTax);
             editableProduct.setWeighable(withWeighable);
             editableProduct.setDepartmentId(depID);
@@ -305,6 +329,9 @@ public class ProductsActivity  extends AppCompatActivity  {
     }
 
 	private void setNewProduct() {
+        etName.setBackgroundResource(R.drawable.catalogproduct_item_bg);
+        etBarcode.setBackgroundResource(R.drawable.catalogproduct_item_bg);
+        etPrice.setBackgroundResource(R.drawable.catalogproduct_item_bg);
         if (previouslySelectedItem != null)
             previouslySelectedItem.setBackgroundColor(
                     getResources().getColor(R.color.transparent));

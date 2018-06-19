@@ -100,7 +100,11 @@ public class ImportProductsActivity extends Activity {
                             for (Product p : lsProducts) {
                                 p.setDepartmentId(departmentMap.get(selectedDepartment));
                                 count++;
-                                productDBAdapter.insertEntry(p);
+                                boolean availableBarCode= productDBAdapter.isValidBarcode(p.getBarCode());
+                                boolean availableProductName= productDBAdapter.availableProductName(p.getName());
+                                if(availableProductName&&availableBarCode) {
+                                    productDBAdapter.insertEntry(p);
+                                }
                             }
                             if (lsProducts.size() == count) {//success to add all the products
                             } else {
@@ -179,10 +183,12 @@ public class ImportProductsActivity extends Activity {
 
                     productDBAdapter.open();
                     for (Product p : d.getProducts()) {
-                        boolean availableBarCode = productDBAdapter.isValidBarcode(p.getBarCode());
-                        if(availableBarCode){
+                        boolean availableBarCode= productDBAdapter.isValidBarcode(p.getBarCode());
+                        boolean availableProductName= productDBAdapter.availableProductName(p.getName());
+                        if(availableProductName&&availableBarCode) {
                             productDBAdapter.insertEntry(p.getName(), p.getBarCode(), "", p.getPrice(), p.getCostPrice(), true, false, depID, p.getByUser(), 1, 1);
-                        }                    }
+                        }
+                    }
                     productDBAdapter.close();
                 }
                 return null;
