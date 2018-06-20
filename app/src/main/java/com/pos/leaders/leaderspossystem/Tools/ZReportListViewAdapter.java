@@ -22,12 +22,13 @@ public class ZReportListViewAdapter extends ArrayAdapter {
     private int resource;
     private LayoutInflater inflater;
     private Context context;
-
+    int bgColor =0;
     public ZReportListViewAdapter(Context context, int resource, List<ZReport> ZReportList) {
         super(context, resource, ZReportList);
         this.context = context;
         this.ZReportList = ZReportList;
         this.resource = resource;
+        bgColor=0;
         inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -52,7 +53,10 @@ public class ZReportListViewAdapter extends ArrayAdapter {
         holder.tvZUserName.setText("");
         if(ZReportList.get(position).getUser()!=null)
             holder.tvZUserName.setText(ZReportList.get(position).getUser().getFullName());
-
+        if(bgColor%2==0){
+            convertView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
+        }
+        bgColor++;
         return convertView;
     }
 
