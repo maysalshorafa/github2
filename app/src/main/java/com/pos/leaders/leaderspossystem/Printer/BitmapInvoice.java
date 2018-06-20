@@ -517,7 +517,7 @@ public class BitmapInvoice {
 
 
         String names = "", in = "", out = "", total = "";
-        names += "מזומן" + "\n" + "אשראי" + "\n" + "המחאות" + "\n" + "קרן" + "\n" + "סה''כ";
+        names +="\u200F"+context.getString(R.string.cash) + "\n" +"\u200F"+context.getString(R.string.credit_card)+ "\n" +"\u200F"+ context.getString(R.string.checks) + "\n"+ "\u200F"+context.getString(R.string.a_report_amount) + "\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
 
         in += dTS(cash_plus) + "\n" + dTS(creditCard_plus) + "\n" + dTS(check_plus) + "\n" + "~" + "\n" + dTS(cash_plus + check_plus + creditCard_plus);
         out += dTS(cash_minus) + "\n" + dTS(creditCard_minus) + "\n" + dTS(check_minus) + "\n" + "~" + "\n" + dTS(cash_minus + check_minus + creditCard_minus);

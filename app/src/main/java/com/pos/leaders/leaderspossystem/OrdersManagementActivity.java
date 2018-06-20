@@ -325,7 +325,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     for (Order c : All_orders) {
 
                         if (c.getUser().getEmployeeName().toLowerCase().contains(word.toLowerCase()) ||(c.getOrderId() + "").contains(word.toLowerCase())
-                                || (c.getCreatedAt() + "").contains(word.toLowerCase())) {
+                                || (c.getTotalPrice() + "").contains(word.toLowerCase())|| (c.getTotalPaidAmount() + "").contains(word.toLowerCase())) {
                             _saleList.add(c);
 
                         }

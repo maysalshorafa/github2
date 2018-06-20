@@ -101,7 +101,7 @@
     <!--menu-->
     <string name="products">Products</string>
     <string name="departments">Departments</string>
-    <string name="users">Users</string>
+    <string name="users">Employees</string>
     <string name="offers">Offers</string>
     <string name="reports">Reports</string>
     <string name="setting">Setting</string>

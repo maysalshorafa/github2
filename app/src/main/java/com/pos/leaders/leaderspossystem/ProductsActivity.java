@@ -1,6 +1,5 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -108,9 +107,11 @@ public class ProductsActivity  extends AppCompatActivity  {
                     departmentDBAdapter.close();
                     productDBAdapter.close();}
                 catch (Exception ex){}
-                Intent intent = new Intent(ProductsActivity.this, ProductCatalogActivity.class);
+               /** Intent intent = new Intent(ProductsActivity.this, ProductCatalogActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);            }
+                startActivity(intent); **/
+            onBackPressed();
+            }
         });
 
         // Department list
