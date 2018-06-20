@@ -125,7 +125,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
     private void setDate() {
         //List<ORDER> _saleList=new ArrayList<ORDER>();
         orderDBAdapter.open();
-        _saleList = orderDBAdapter.getBetweenTwoDates(from.getTime()+ DAY_MINUS_ONE_SECOND, to.getTime());
+        _saleList = orderDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime()+ DAY_MINUS_ONE_SECOND);
        // Collections.sort(_saleList, new OutcomeDescComparator());
 
         All_orders = _saleList;

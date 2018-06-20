@@ -189,24 +189,19 @@ public class OrderDBAdapter {
 	}
 
 	public List<Order> getBetweenTwoDates(long from, long to){
-		List<Order> saleList = new ArrayList<Order>();
 		List<Order> orderList = new ArrayList<Order>();
 
-		Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" order by "+ ORDER_COLUMN_ORDERDATE +" DESC",null);
+		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_ORDERDATE + " between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')", null);
 		cursor.moveToFirst();
 
 		while (!cursor.isAfterLast()) {
 			if (cursor.getInt(cursor.getColumnIndex(ORDER_COLUMN_STATUS)) < 1)
-				saleList.add(makeSale(cursor));
+				orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
-		Log.d("salesList",saleList.toString());
-		orderList=getListBetweenTwoDates(from,to,saleList);
-		Log.d("orderList",orderList.toString());
-
 		return orderList;
 	}
-	public List<Order> getListBetweenTwoDates(long from, long to,List<Order>orderList){
+	/*public List<Order> getListBetweenTwoDates(long from, long to,List<Order>orderList){
 		List<Order>orders=new ArrayList<Order>() ;
 
 		for (int i=0;i<orderList.size();i++){
@@ -216,7 +211,7 @@ public class OrderDBAdapter {
 		}
 		Log.d("order",orderList.toString());
 		return orders;
-	}
+	}*/
 
 	public Order getLast(){
 		Order sale = null;
