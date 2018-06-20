@@ -431,7 +431,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     @Override
     protected void onResume() {
         super.onResume();
-
+        SplashScreenActivity.readSettings(this);
         OrderDBAdapter saleDBAdapter = new OrderDBAdapter(DashBord.this);
         saleDBAdapter.open();
         lastSale = saleDBAdapter.getLast();

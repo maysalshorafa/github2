@@ -55,6 +55,12 @@ public class ZReportActivity extends AppCompatActivity {
         btCancel = (Button) findViewById(R.id.ZReportActivity_btnCancel);
         lvReports = (ListView) findViewById(R.id.ZReportActivity_lvReports);
 
+        btCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         zReportDBAdapter = new ZReportDBAdapter(this);
         userDBAdapter = new EmployeeDBAdapter(this);

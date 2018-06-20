@@ -70,6 +70,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
     List<OrderDetails> orders;
     List<Check> checks;
     List<Order> All_orders;
+
+    private final static int DAY_MINUS_ONE_SECOND = 86399999;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,7 +125,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
     private void setDate() {
         //List<ORDER> _saleList=new ArrayList<ORDER>();
         orderDBAdapter.open();
-        _saleList = orderDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime());
+        _saleList = orderDBAdapter.getBetweenTwoDates(from.getTime()+ DAY_MINUS_ONE_SECOND, to.getTime());
        // Collections.sort(_saleList, new OutcomeDescComparator());
 
         All_orders = _saleList;

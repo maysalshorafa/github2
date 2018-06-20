@@ -12,6 +12,8 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.format.Time;
+import android.util.Log;
+
 public class Clock
 {
     public static final int TICKPERSECOND=0;
@@ -106,7 +108,12 @@ public class Clock
         };
         this.IntentFilter = new IntentFilter();
         this.IntentFilter.addAction(Intent.ACTION_TIME_TICK);
-        this.Context.registerReceiver(this.IntentReceiver, this.IntentFilter, null, this.Handler);
+        try {
+
+            this.Context.registerReceiver(this.IntentReceiver, this.IntentFilter, null, this.Handler);
+        } catch (Exception e) {
+            Log.i("Clock", e.getMessage(), e);
+        }
     }
 
     public void StopTick() {

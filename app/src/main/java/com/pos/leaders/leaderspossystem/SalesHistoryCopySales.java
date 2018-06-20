@@ -13,10 +13,11 @@ import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 
 public class SalesHistoryCopySales extends AppCompatActivity {
-    Button btCancel,btPrint;
+    Button btCancel, btPrint;
     ImageView invoiceImageView;
-    String status ;
-    Bitmap invoiceBitMab=null;
+    String status;
+    Bitmap invoiceBitMab = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,26 +29,26 @@ public class SalesHistoryCopySales extends AppCompatActivity {
 
         setContentView(R.layout.activity_sales_history_copy_sales);
         Bundle extras = getIntent().getExtras();
-        btCancel=(Button)findViewById(R.id.salesHistory_btCancel);
-        btPrint=(Button)findViewById(R.id.salesHistory_btPrint);
-  // btPrint.setVisibility(View.INVISIBLE);
-        invoiceImageView=(ImageView)findViewById(R.id.salesHistory_ivCopyInvoice);
-        invoiceBitMab= SETTINGS.copyInvoiceBitMap;
+        btCancel = (Button) findViewById(R.id.salesHistory_btCancel);
+        btPrint = (Button) findViewById(R.id.salesHistory_btPrint);
+        // btPrint.setVisibility(View.INVISIBLE);
+        invoiceImageView = (ImageView) findViewById(R.id.salesHistory_ivCopyInvoice);
+        invoiceBitMab = SETTINGS.copyInvoiceBitMap;
         invoiceImageView.setImageBitmap(invoiceBitMab);
-      btCancel.setOnClickListener(new View.OnClickListener() {
+        btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-    onBackPressed();
-    }
+                onBackPressed();
+            }
         });
+
         btPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               PrintTools printTools = new PrintTools(SalesHistoryCopySales.this);
+                PrintTools printTools = new PrintTools(SalesHistoryCopySales.this);
                 printTools.PrintReport(invoiceBitMab);
                 onBackPressed();
             }
         });
     }
-
 }

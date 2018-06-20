@@ -26,7 +26,6 @@ public class SETTINGS {
 	public static boolean enableCurrencies ;
 	public static int decimalNumbers  ;
 
-
 	public static boolean enableCustomerMeasurement;
 
 	public static boolean creditCardEnable;

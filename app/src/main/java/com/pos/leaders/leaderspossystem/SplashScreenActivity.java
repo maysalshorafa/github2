@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -285,7 +286,7 @@ public class SplashScreenActivity extends Activity {
                 BoSetting();
                 Log.d("TAG", "Setup default preferences");
             }
-            if(newPosManagement()) {
+            if(readSettings(this)) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -479,73 +480,70 @@ public class SplashScreenActivity extends Activity {
         mOutput.close();
         mInput.close();
     }
-    private boolean newPosManagement() {
+
+    public static boolean readSettings(Context context) {
         /// sharedPreferences for Setting
-        SharedPreferences cSharedPreferences = getSharedPreferences(POS_Management, MODE_PRIVATE);
-        if(cSharedPreferences!=null){
+        Log.i("POS Managment", "Reading file...");
+        SharedPreferences cSharedPreferences = context.getSharedPreferences(POS_Management, MODE_PRIVATE);
+        if (cSharedPreferences != null) {
             //CreditCard
             if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD)) {
-                creditCardEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD,false);
-                SETTINGS.creditCardEnable=creditCardEnable;
-            }
-            else {
+                creditCardEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, false);
+                SETTINGS.creditCardEnable = creditCardEnable;
+            } else {
                 return false;
             }
             // end CreditCard
 
             if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD)) {
                 pinpadEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD, false);
-                SETTINGS.pinpadEnable=pinpadEnable;
-            }
-            else {
+                SETTINGS.pinpadEnable = pinpadEnable;
+            } else {
                 return false;
             }
 
             //Currency
             if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY)) {
-                currencyEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY,false);
-                SETTINGS.enableCurrencies=currencyEnable;
+                currencyEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, false);
+                SETTINGS.enableCurrencies = currencyEnable;
 
-            }
-            else {
+            } else {
                 return false;
             }
             //end
             //CustomerMeasurement
             if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT)) {
-                customerMeasurementEnable =cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT,false);
-                SETTINGS.enableCustomerMeasurement=customerMeasurementEnable;
-            }
-            else {
+                customerMeasurementEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, false);
+                SETTINGS.enableCustomerMeasurement = customerMeasurementEnable;
+            } else {
                 return false;
             }
             //end
             //FloatPoint
             if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT)) {
                 floatPoint = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, "2"));
-                SETTINGS.decimalNumbers=floatPoint;
-            }
-            else {
+                SETTINGS.decimalNumbers = floatPoint;
+            } else {
                 return false;
             }
             //end
             //PrinterType
             if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE)) {
-                printerType =cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE,PrinterType.HPRT_TP805.name());
+                printerType = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, PrinterType.HPRT_TP805.name());
                 PrinterType printer = PrinterType.valueOf(printerType);
-                SETTINGS.printer=printer;
-            }
-            else {
-                Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
-                startActivity(i);
+                SETTINGS.printer = printer;
+            } else {
+                Intent i = new Intent(context, SetUpManagement.class);
+                context.startActivity(i);
             }
 
-        }else {
-            Intent i = new Intent(SplashScreenActivity.this, SetUpManagement.class);
-            startActivity(i);
+        } else {
+            Intent i = new Intent(context, SetUpManagement.class);
+            context.startActivity(i);
         }
-   return true;
+        return true;
     }
+
     // get BoSetting and store in shared preference file
     private void BoSetting() {
         final SharedPreferences preferences =getSharedPreferences(BO_SETTING, MODE_PRIVATE);

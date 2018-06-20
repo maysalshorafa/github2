@@ -8,7 +8,7 @@
         android:title="@string/pref_header_general" />
 
     <header
-        android:fragment="com.pos.leaders.leaderspossystem.Settings.SettingsActivity$NotificationPreferenceFragment"
+        android:fragment="com.pos.leaders.leaderspossystem.Settings.SettingsActivity$POSManagmentPreferenceFragment"
 
         android:title="@string/pos_setting" />
 
