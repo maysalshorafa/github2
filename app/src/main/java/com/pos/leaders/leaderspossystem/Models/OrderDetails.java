@@ -184,7 +184,7 @@ public class OrderDetails {
 	}
 
 	public int decreaseCount(){
-		if(this.quantity >1) {
+		if(this.quantity >=1) {
 			this.quantity--;
 		}
 		return this.quantity;
