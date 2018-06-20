@@ -1683,6 +1683,7 @@ public class SalesCartActivity extends AppCompatActivity {
         SESSION._ORDER_DETAILES = s.getOrders();
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
+        setCustomer(SESSION._ORDERS.getCustomer());
         refreshCart();
     }
 
@@ -3278,29 +3279,10 @@ public class SalesCartActivity extends AppCompatActivity {
         gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                customer = customerList.get(position);
-                customerName = customer.getFirstName();
-                customerClubId = customer.getClub();
-                customerId = customer.getCustomerId();
-                customerName_EditText.setText(customerName);
-                // get club Information
-                Club club = clubAdapter.getGroupInfo(customerClubId);
-                clubType = club.getType();
-                clubName = club.getName();
-                if (clubType == 1) {
-                    clubDiscount = club.getPercent();
-                } else if (clubType == 2) {
-
-                    clubAmount = club.getAmount();
-                    clubPoint = club.getPoint();
-                } else if (clubType == 0) {
-                }
-
+                setCustomer(customerList.get(position));
+                SESSION._ORDERS.setCustomer_name(customerList.get(position).getFirstName());
+                SESSION._ORDERS.setCustomer(customerList.get(position));
                 popupWindow.dismiss();
-                calculateTotalPrice();
-                linearLayoutCustomerBalance.setVisibility(View.VISIBLE);
-                customerBalance.setText(""+Math.abs(customer.getBalance()));
-
             }
         });
 
@@ -3600,4 +3582,27 @@ public class SalesCartActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void setCustomer(Customer customer) {
+        this.customer = customer;
+        this.customerName = customer.getFirstName();
+        this.customerClubId = customer.getClub();
+        this.customerId = customer.getCustomerId();
+
+        customerName_EditText.setText(customerName);
+
+        Club club = clubAdapter.getGroupInfo(customerClubId);
+        clubType = club.getType();
+        clubName = club.getName();
+        if (clubType == 1) {
+            clubDiscount = club.getPercent();
+        } else if (clubType == 2) {
+            clubAmount = club.getAmount();
+            clubPoint = club.getPoint();
+        } else if (clubType == 0) {
+        }
+
+        calculateTotalPrice();
+        linearLayoutCustomerBalance.setVisibility(View.VISIBLE);
+        customerBalance.setText(Util.makePrice(Math.abs(customer.getBalance())));
+    }
 }

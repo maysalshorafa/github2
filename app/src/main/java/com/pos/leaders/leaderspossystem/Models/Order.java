@@ -12,6 +12,7 @@ import java.util.Locale;
 /**
  * Created by KARAM on 19/10/2016.
  */
+//// TODO: 20/06/2018 Optimize: remove cusomerName
 
 public class Order {
 	private long orderId;
@@ -27,23 +28,23 @@ public class Order {
 	private String customer_name = null;
 	@JsonIgnore
 	private List<OrderDetails> orders;
-    @JsonIgnore
+	@JsonIgnore
 	private Employee user;
-    @JsonIgnore
+	@JsonIgnore
 	private Payment payment;
 	@JsonIgnore
 	private Customer customer;
 
-    @JsonIgnore
-    private Locale locale = new Locale("en");
+	@JsonIgnore
+	private Locale locale = new Locale("en");
 
 	// region Constructors
 
 
-    public Order() {
-    }
+	public Order() {
+	}
 
-    public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name) {
+	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name) {
 		this.orderId = orderId;
 		this.byUser = byUser;
 		this.createdAt = createdAt;
@@ -52,7 +53,20 @@ public class Order {
 		this.totalPrice = totalPrice;
 		this.totalPaidAmount = totalPaidAmount;
 		this.customerId = customerId;
-		this.customer_name=customer_name;
+		this.customer_name = customer_name;
+	}
+
+	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name, Customer customer) {
+		this.orderId = orderId;
+		this.byUser = byUser;
+		this.createdAt = createdAt;
+		this.replacementNote = replacementNote;
+		this.status = status;
+		this.totalPrice = totalPrice;
+		this.totalPaidAmount = totalPaidAmount;
+		this.customerId = customerId;
+		this.customer_name = customer_name;
+		this.customer = customer;
 	}
 
 	public Order(long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount) {
@@ -73,28 +87,28 @@ public class Order {
 		this.totalPrice = totalPrice;
 		this.totalPaidAmount = totalPaidAmount;
 
-		this.user=user;
+		this.user = user;
 	}
 
 	public Order(Order s) {
-		this(s.getOrderId(),s.getByUser(),s.getCreatedAt(),s.getReplacementNote(),s.isStatus(),s.getTotalPrice(),s.getTotalPaidAmount(),s.getCustomerId(),s.getCustomer_name());
+		this(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name(), s.getCustomer());
 	}
 
-	public static Order newInstance(Order s){
-		return new Order(s.getOrderId(),s.getByUser(),s.getCreatedAt(),s.getReplacementNote(),s.isStatus(),s.getTotalPrice(),s.getTotalPaidAmount(),s.getCustomerId(),s.getCustomer_name());
+	public static Order newInstance(Order s) {
+		return new Order(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name());
 	}
 
 	//endregion
 
 	//region Getter
 
-    public long getOrderId() {
-        return orderId;
-    }
+	public long getOrderId() {
+		return orderId;
+	}
 
-    public long getByUser() {
-        return byUser;
-    }
+	public long getByUser() {
+		return byUser;
+	}
 
 	public Timestamp getCreatedAt() {
 		return createdAt;
@@ -105,102 +119,101 @@ public class Order {
 	}
 
 	public int getReplacementNote() {
-        return replacementNote;
-    }
+		return replacementNote;
+	}
 
-    public boolean isStatus() {
-        return status;
-    }
+	public boolean isStatus() {
+		return status;
+	}
 
-    public double getTotalPrice() {
-        return totalPrice;
-    }
+	public double getTotalPrice() {
+		return totalPrice;
+	}
 
-    public double getTotalPaidAmount() {
-        return totalPaidAmount;
-    }
-    public List<OrderDetails> getOrders() {
-        return orders;
-    }
+	public double getTotalPaidAmount() {
+		return totalPaidAmount;
+	}
 
-    public Employee getUser() {
-        return user;
-    }
+	public List<OrderDetails> getOrders() {
+		return orders;
+	}
 
-    public Payment getPayment() {
-        return payment;
-    }
+	public Employee getUser() {
+		return user;
+	}
 
-    public Locale getLocale() {
-        return locale;
-    }
+	public Payment getPayment() {
+		return payment;
+	}
 
-    public long getCustomerId() {
-        return customerId;
-    }
+	public Locale getLocale() {
+		return locale;
+	}
 
-    public String getCustomer_name() {
-        return customer_name;
-    }
+	public long getCustomerId() {
+		return customerId;
+	}
+
+	public String getCustomer_name() {
+		return customer_name;
+	}
 
 
-
-    //endregion
+	//endregion
 
 	//region Setter
 
 
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
 
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
+	public void setOrderId(long orderId) {
+		this.orderId = orderId;
+	}
 
-    public void setOrderId(long orderId) {
-        this.orderId = orderId;
-    }
+	public void setByUser(long byUser) {
+		this.byUser = byUser;
+	}
 
-    public void setByUser(long byUser) {
-        this.byUser = byUser;
-    }
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
 
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public void setReplacementNote(int replacementNote) {
-        this.replacementNote = replacementNote;
-    }
+	public void setReplacementNote(int replacementNote) {
+		this.replacementNote = replacementNote;
+	}
 
 
-    public void setTotalPaidAmount(double total_paid_amount) {
-        this.totalPaidAmount = total_paid_amount;
-    }
+	public void setTotalPaidAmount(double total_paid_amount) {
+		this.totalPaidAmount = total_paid_amount;
+	}
 
-    public void setOrders(List<OrderDetails> orders) {
-        this.orders = orders;
-    }
+	public void setOrders(List<OrderDetails> orders) {
+		this.orders = orders;
+	}
 
-    public void setUser(Employee user) {
-        this.user = user;
-    }
+	public void setUser(Employee user) {
+		this.user = user;
+	}
 
-    public void setPayment(Payment payment) {
-        this.payment = payment;
-    }
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
 
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
 
-    public void setCustomerId(long customerId) {
-        this.customerId = customerId;
-    }
+	public void setCustomerId(long customerId) {
+		this.customerId = customerId;
+	}
 
-    public void setCustomer_name(String customer_name) {
-        this.customer_name = customer_name;
-    }
+	public void setCustomer_name(String customer_name) {
+		this.customer_name = customer_name;
+	}
 
-    //endregion
+	//endregion
 
 	@Override
 	public String toString() {
@@ -220,36 +233,36 @@ public class Order {
 
 		String recordType = "320", OP = "+", mOP = "-";
 
-		if (totalPrice < 0){
+		if (totalPrice < 0) {
 			recordType = "330";
 			OP = "-";
 			//total_paid_amount *= -1;
 		}
 		double totalPriceBeforeDiscount = 0;
 		for (OrderDetails o : orders) {
-			totalPriceBeforeDiscount += (o.getUnitPrice()*o.getQuantity());
+			totalPriceBeforeDiscount += (o.getUnitPrice() * o.getQuantity());
 		}
-		if(totalPrice <0){
-            totalPrice *= -1;
+		if (totalPrice < 0) {
+			totalPrice *= -1;
 
 		}
 		double totalSaved = totalPriceBeforeDiscount - totalPrice;
-		if(totalSaved<0)
+		if (totalSaved < 0)
 			totalSaved *= -1;
 		//totalSaved = (totalSaved / (1 + SETTINGS.tax / 100));
-		if(totalPaidAmount < 0) {
+		if (totalPaidAmount < 0) {
 			totalSaved = 0;
 			totalPriceBeforeDiscount = totalPrice;
 		}
 
 		double noTax = totalPrice / (1 + (SETTINGS.tax / 100));
-		if(noTax<0)
+		if (noTax < 0)
 			noTax *= -1;
-		double tax = totalPrice -noTax;
+		double tax = totalPrice - noTax;
 		String name = "";
-		if(user.getFullName().length()>9)
+		if (user.getFullName().length() > 9)
 			name = user.getFullName().substring(0, 9);
-		else{
+		else {
 			name = String.format("%9s", user.getFullName());
 		}
 
@@ -257,10 +270,10 @@ public class Order {
 		return "C100" + String.format(locale, "%09d", rowNumber) + pc + recordType + String.format(locale, "%020d", orderId) + DateConverter.getYYYYMMDD(new Timestamp(System.currentTimeMillis())) + DateConverter.getHHMM(new Timestamp(System.currentTimeMillis()))
 				+ String.format(locale, "%50s", "OldCustomer") + Util.spaces(50) + Util.spaces(10) + Util.spaces(30) + Util.spaces(8) + Util.spaces(30) + Util.spaces(2) + Util.spaces(15) + Util.spaces(9)
 				+ DateConverter.getYYYYMMDD(new Timestamp(System.currentTimeMillis())) + Util.spaces(15) + Util.spaces(3)
-				+ OP + Util.x12V99(totalPriceBeforeDiscount/(1+(SETTINGS.tax/100)))
-				+ mOP + Util.x12V99(((totalSaved)/(1+(SETTINGS.tax/100))))
+				+ OP + Util.x12V99(totalPriceBeforeDiscount / (1 + (SETTINGS.tax / 100)))
+				+ mOP + Util.x12V99(((totalSaved) / (1 + (SETTINGS.tax / 100))))
 				+ OP + Util.x12V99(noTax)
-				+ OP + Util.x12V99(tax+0.004)
+				+ OP + Util.x12V99(tax + 0.004)
 				+ OP + Util.x12V99(totalPrice)
 				+ OP + String.format(locale, "%09.0f", 0.0f) + String.format(locale, "%02d", (int) ((0.0f - Math.floor(0.0f) + 0.001) * 100))
 				+ Util.spaces(13) + "a0" + Util.spaces(8) + "b0" + "0" + DateConverter.getYYYYMMDD(new Timestamp(System.currentTimeMillis())) + Util.spaces(7) + name + String.format(locale, "%07d", orderId)
@@ -268,8 +281,9 @@ public class Order {
 
 
 	}
-	static class test{
-		public static void main1(String[] args){
+
+	static class test {
+		public static void main1(String[] args) {
 			double num = 414.70;
 			double tax = 17.0;
 
@@ -280,9 +294,17 @@ public class Order {
 
 
 			String st = String.format("%2.2f", num - Double.parseDouble(str));
-			System.out.println((num-withouttax)+"\n"+Util.x12V99(num-withouttax+0.004));
+			System.out.println((num - withouttax) + "\n" + Util.x12V99(num - withouttax + 0.004));
 			//print(Double.parseDouble(st));
 		}
 
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	public Customer getCustomer() {
+		return customer;
 	}
 }
