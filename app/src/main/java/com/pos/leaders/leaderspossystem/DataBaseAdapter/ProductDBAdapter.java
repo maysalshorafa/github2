@@ -85,7 +85,7 @@ public class ProductDBAdapter {
 
         long id = insertEntry(p);
         if (id > 0) {
-            Product boProduct=p;
+            Product boProduct = p;
             boProduct.setName(Util.getString(boProduct.getName()));
             boProduct.setDescription(Util.getString(boProduct.getDescription()));
             boProduct.setBarCode(Util.getString(boProduct.getBarCode()));
@@ -95,6 +95,18 @@ public class ProductDBAdapter {
     }
 
     public long insertEntry(Product p) {
+        Product product = getProductByBarCode(p.getBarCode());
+        if (product != null) {
+            Log.i("Inserting product", "barcode is exist");
+            return product.getProductId();
+        }
+        Product productCheckName = null;
+        productCheckName = getByProductName(p.getName());
+        if (productCheckName != null) {
+            Log.i("Inserting product", "name is busy");
+            return productCheckName.getProductId();
+        }
+
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(PRODUCTS_COLUMN_ID, p.getProductId());
@@ -358,6 +370,17 @@ public class ProductDBAdapter {
         // Product Name available
         return true;
     }
+    public Product getByProductName(String productName) {
+        Cursor cursor = db.query(PRODUCTS_TABLE_NAME, null, PRODUCTS_COLUMN_NAME + "=?", new String[]{productName}, null, null, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+            //Product Name not available
+            return makeProduct(cursor);
+        }
+        // Product Name available
+        return null;
+    }
+
     public List<Product> getAllProductsByHint(String hint , int from , int count ){
         List<Product> productsList =new ArrayList<Product>();
 
