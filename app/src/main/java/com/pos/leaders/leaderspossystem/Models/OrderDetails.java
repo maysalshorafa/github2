@@ -156,7 +156,7 @@ public class OrderDetails {
 	//region Setters
 
 	public int setCount(int count) {
-        if (count > 1)
+        if (count >=1)
             this.quantity = count;
         return this.quantity;
     }
@@ -184,7 +184,7 @@ public class OrderDetails {
 	}
 
 	public int decreaseCount(){
-		if(this.quantity >=1) {
+		if(this.quantity >1) {
 			this.quantity--;
 		}
 		return this.quantity;
