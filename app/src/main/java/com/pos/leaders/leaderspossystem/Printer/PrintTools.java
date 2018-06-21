@@ -161,11 +161,12 @@ public class PrintTools {
                 protected void onPostExecute(Void aVoid) {
                     try {
                         HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
+                        dialog.cancel();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                    dialog.cancel();
+
                 }
 
                 @Override

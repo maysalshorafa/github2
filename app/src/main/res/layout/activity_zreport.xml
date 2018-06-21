@@ -43,7 +43,7 @@ android:orientation="vertical">
 
             <EditText
                 android:id="@+id/zReportManagement_ETFrom"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
@@ -72,11 +72,11 @@ android:orientation="vertical">
 
             <EditText
                 android:id="@+id/zReportManagement_ETTo"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bubble"
-                android:paddingLeft="5dp" />
+                android:layout_marginRight="8dp" />
 
         </LinearLayout>
 
@@ -88,7 +88,8 @@ android:orientation="vertical">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:layout_marginTop="16dp">
 
         <ListView
             android:id="@+id/ZReportActivity_lvReports"
