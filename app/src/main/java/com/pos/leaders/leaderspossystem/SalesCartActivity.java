@@ -3286,7 +3286,6 @@ public class SalesCartActivity extends AppCompatActivity {
             }
         });
 
-
         customer_id.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -3584,7 +3583,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
     private void setCustomer(Customer customer) {
         this.customer = customer;
-        this.customerName = customer.getFirstName();
+        this.customerName = customer.getFullName();
         this.customerClubId = customer.getClub();
         this.customerId = customer.getCustomerId();
 

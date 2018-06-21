@@ -1,5 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Created by Win8.1 on 7/3/2017.
  */
@@ -50,6 +52,14 @@ public class Customer {
                 customer.getEmail(),customer.getJob(),customer.getPhoneNumber(),customer.getStreet(),
                 customer.getHide(),customer.getCity(),customer.getClub(),customer.getHouseNumber()
                 ,customer.getPostalCode(),customer.getCountry(),customer.getCountryCode(),customer.getBalance());
+    }
+    @JsonIgnore
+    public String getFullName() {
+        if (firstName == null)
+            firstName = "";
+        if (lastName == null)
+            lastName = "";
+        return firstName + " " + lastName;
     }
 
     public String getLastName() {

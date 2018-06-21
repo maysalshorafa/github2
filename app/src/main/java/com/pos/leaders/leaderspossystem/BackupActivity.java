@@ -102,6 +102,7 @@ public class BackupActivity extends AppCompatActivity {
                 final ProgressDialog progressDialog=new ProgressDialog(BackupActivity.this);
                 progressDialog.setTitle(getBaseContext().getString(R.string.backup));
                 progressDialog.setMessage(getBaseContext().getString(R.string.wait_for_finish));
+
                 new AsyncTask<Void,Void,Void>(){
                     @Override
                     protected void onPreExecute() {
@@ -111,6 +112,7 @@ public class BackupActivity extends AppCompatActivity {
                     @Override
                     protected Void doInBackground(Void... params) {
                         if(position==0){
+                            backup = new Backup(BackupActivity.this, folderName);
                             backup.backupProducts();
                         }
                         else{

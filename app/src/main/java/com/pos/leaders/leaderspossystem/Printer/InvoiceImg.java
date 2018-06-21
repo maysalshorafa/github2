@@ -248,7 +248,7 @@ public class InvoiceImg {
         blocks.add(name);
 
         Block toPidText = new Block("\u200E" + context.getString(R.string.total_price), 40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
-        Block toPid = new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), 40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block toPid = new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         toPid.Left();
         toPidText.Left();
         toPid.Bold();
@@ -259,7 +259,7 @@ public class InvoiceImg {
 
         blocks.add(lineR.Left());
 
-        Block addsTax = new Block("\u200E" + context.getString(R.string.with_tax) + newLineL + context.getString(R.string.tax) + ": " + SETTINGS.tax + newLineL + context.getString(R.string.without_tax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block addsTax = new Block("\u200E" + context.getString(R.string.with_tax) + newLineL + context.getString(R.string.tax) + ": " + Util.makePrice(SETTINGS.tax) + newLineL + context.getString(R.string.without_tax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         double noTax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
         Block numTax = new Block("\u200E" + String.format(new Locale("en"), "\u200E%.2f\n\u200E%.2f\n\u200E%.2f", noTax, noTax * (SETTINGS.tax / 100), 0.0f), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         blocks.add(numTax.Left());
