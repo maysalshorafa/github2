@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
 
-import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,7 +51,8 @@ public class ZReportListViewAdapter extends ArrayAdapter {
         }
 
         holder.tvZID.setText(" "+ZReportList.get(position).getzReportId());
-        holder.tvZCreateDate.setText(String.format(new Locale("en"),DateConverter.DateToString(new Date(ZReportList.get(position).getCreatedAt().getTime()))));
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        holder.tvZCreateDate.setText(String.format(new Locale("en"),format.format(ZReportList.get(position).getCreatedAt())));
         holder.tvZUserName.setText(SESSION._EMPLOYEE.getEmployeeName());
         if(ZReportList.get(position).getUser()!=null)
             holder.tvZUserName.setText(ZReportList.get(position).getUser().getFullName());
