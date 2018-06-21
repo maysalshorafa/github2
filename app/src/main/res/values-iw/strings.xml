@@ -44,7 +44,7 @@
     <string name="invoice_with_tax">חש\' מס-קבלה</string>
     <string name="credit_invoice">חש\' זיכוי</string>
     <string name="replacement_invoice">פתק החלפה</string>
-    <string name="copyinvoice">לחבר</string>
+    <string name="copyinvoice">הפקת עותק</string>
     <string name="cancel_invoice">ביטול עסקה</string>
 
     <!--Z Report-->
@@ -411,7 +411,7 @@
     <string name="title_activity_pinpad">Pin-Pad</string>
     <string name="title_activity_product_catalog">קטלוג מוצרים</string>
     <string name="title_activity_products_activity">חלון מוצרים</string>
-    <string name="paid_by">אשולם ב:-</string>
+    <string name="paid_by">שולם ב</string>
     <string name="product_quantity">כמות פריטים</string>
 
 
