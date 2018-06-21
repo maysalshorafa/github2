@@ -9,20 +9,18 @@ import android.graphics.Typeface;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
-import android.util.ArrayMap;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
-import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -197,6 +195,7 @@ public class InvoiceImg {
     }
 
     public Bitmap normalInvoice(long id, List<OrderDetails> orders, Order sale, boolean isCopy, Employee user, List<Check> checks) {
+        int count =0;
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(sale));
         Block lineR = new Block("\u200E" + line + "\u200E", 30.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
@@ -211,26 +210,23 @@ public class InvoiceImg {
         blocks.add(inum);
 
 
-        Block name = new Block("\u200E" + context.getString(R.string.product) + newLineL, 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.3));
-        Block barcode = new Block("\u200E" + context.getString(R.string.productID) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.4));
+        Block name = new Block("\u200E" + context.getString(R.string.product) + newLineL, 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
         Block counter = new Block("\u200E" + context.getString(R.string.qty) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
-        Block price = new Block("\u200E" + context.getString(R.string.price) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
+        Block unitPrice = new Block("\u200E" + context.getString(R.string.price) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.2));
+        Block price = new Block("\u200E" + context.getString(R.string.total) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
 
         double SaleOriginalityPrice = 0, saleTotalPrice = 0;
         double totalSaved = 0.0;
         for (OrderDetails o : orders) {
+            count+=o.getQuantity();
             if (o.getProduct().getName().equals("General"))
                 o.getProduct().setName(context.getString(R.string.general));
             int cut = 11;
             if (o.getProduct().getName().length() < cut)
                 cut = o.getProduct().getName().length();
             name.text += (o.getProduct().getName().substring(0, cut) + newLineL);
-            String bc = "0000000000";
-            if (o.getProduct().getBarCode() != null)
-                if (!(o.getProduct().getBarCode().equals("")))
-                    bc = o.getProduct().getBarCode();
-            barcode.text += bc + "\n";
             counter.text += o.getQuantity() + "\n";
+            unitPrice.text +=String.format(new Locale("en"), "%.2f", o.getUnitPrice()) + "\n";
             price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
             SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
             saleTotalPrice += o.getItemTotalPrice();
@@ -238,37 +234,41 @@ public class InvoiceImg {
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);
 
         blocks.add(price.Left());
-
+        blocks.add(unitPrice.Left());
         blocks.add(counter.Left());
-
-        blocks.add(barcode.Left());
-
         //name.text = String.format(new Locale("he"), name.text);
         name.Left();
         blocks.add(name);
-
+     Block productCountText = new Block("\u200E" + context.getString(R.string.product)+" "+context.getString(R.string.qty), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+      Block productCount = new Block("\u200E" + String.valueOf(count), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         Block toPidText = new Block("\u200E" + context.getString(R.string.total_price), 40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block toPid = new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+       productCount.Left();
+       productCountText.Left();
         toPid.Left();
         toPidText.Left();
         toPid.Bold();
         toPidText.Bold();
         blocks.add(lineR.Left());
+        blocks.add(productCount);
+        blocks.add(productCountText);
+        blocks.add(lineR.Left());
         blocks.add(toPid);
         blocks.add(toPidText);
-
         blocks.add(lineR.Left());
 
-        Block addsTax = new Block("\u200E" + context.getString(R.string.with_tax) + newLineL + context.getString(R.string.tax) + ": " + Util.makePrice(SETTINGS.tax) + newLineL + context.getString(R.string.without_tax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block addsTax = new Block("\u200E" + context.getString(R.string.tax) + ": "+Util.makePrice(SETTINGS.tax) , 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         double noTax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
-        Block numTax = new Block("\u200E" + String.format(new Locale("en"), "\u200E%.2f\n\u200E%.2f\n\u200E%.2f", noTax, noTax * (SETTINGS.tax / 100), 0.0f), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
-        blocks.add(numTax.Left());
+        Block addsTaxValue = new Block(Util.makePrice(noTax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        // Block numTax = new Block("\u200E" + String.format(new Locale("en"), "\u200E%.2f\n\u200E%.2f\n\u200E%.2f", noTax * (SETTINGS.tax / 100), 0.0f), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        //blocks.add(numTax.Left());
+        blocks.add(addsTaxValue.Left());
         blocks.add(addsTax.Left());
         blocks.add(lineR.Left());
 
 
         //pid and price
-
+        //Block paidBy = new Block("\u200E" + "Paid By", 40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         String strPaymentWay = sale.getPayment().getPaymentWay().toString();
         switch (sale.getPayment().getPaymentWay().toString()) {
             case CONSTANT.CASH:
@@ -295,7 +295,7 @@ public class InvoiceImg {
         }
         Block b_returned = new Block("\u200E" + context.getString(R.string.returned) + "\n" + Util.makePrice(calcReturned), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
 
-
+       // blocks.add(paidBy);
         blocks.add(b_returned.Left());
         blocks.add(b_given.Left());
         blocks.add(b_total.Left());
@@ -318,7 +318,13 @@ public class InvoiceImg {
 
             blocks.add(lineR.Left());
         }
-        blocks.add(new Block("\u200e" + context.getString(R.string.cashier) + ": " + user.getFullName(), 30.0f, Color.BLACK).Left());
+        Block cashier = new Block("\u200e" + context.getString(R.string.cashier)+ " " , 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+        Block cashierName = new Block("\u200E" +  user.getFullName(), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+
+        cashier.Left();
+        cashierName.Left();
+        blocks.add(cashierName);
+        blocks.add(cashier);
 
         Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getCreatedAt()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
@@ -333,7 +339,7 @@ public class InvoiceImg {
         }
 
         Block thanks = new Block(SETTINGS.returnNote, 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
-        blocks.add(thanks.Center());
+        blocks.add(thanks.Left());
 
         return make(blocks);
     }

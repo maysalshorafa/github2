@@ -97,10 +97,10 @@ public class ZReportActivity extends AppCompatActivity {
         }
         userDBAdapter.close();
         adapter = new ZReportListViewAdapter(this, R.layout.list_view_z_report, zReportList);
-        lvReports.setAdapter(adapter);//endregion init
         LayoutInflater inflater = getLayoutInflater();
         ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_z_reports, lvReports, false);
         lvReports.addHeaderView(header, null, false);
+        lvReports.setAdapter(adapter);//endregion init
         setDate();
 
     }
