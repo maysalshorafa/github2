@@ -65,7 +65,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 1;
 
     protected static final String DATABASE_NAME = "POSDB.db";
     protected static final String CONTACTS_TABLE_NAME = "contacts";
@@ -239,19 +239,19 @@ public class DbHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(oldVersion<2){
+        /*if(oldVersion<2){
             db.execSQL(DATABASE_ADD_COLUMN_AMOUNT);
             db.execSQL(DATABASE_ADD_COLUMN_TOTAL_AMOUNT);
             DATABASE_ENABEL_ALTER_COLUMN = true;
 
             //method to updateDataBaseVersion2
-            /*updateDataBase(db);
+            *//*updateDataBase(db);
             db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "CustomerMeasurement" + " INTEGER DEFAULT 0;");
             db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "MeasurementsDetails" + " INTEGER DEFAULT 0;");
             db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "MeasurementDynamicVariable" + " INTEGER DEFAULT 0;");
-*/
+              *//*
             //end
-        }
+        }*/
 /*
         if(oldVersion<3) {
 
