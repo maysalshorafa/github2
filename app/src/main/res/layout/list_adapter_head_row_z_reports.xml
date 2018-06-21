@@ -2,15 +2,13 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:stretchColumns="*"
-    >
+    android:stretchColumns="*">
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:background="@color/header_color"
             android:padding="8dp"
             android:text="@string/no"
@@ -20,9 +18,8 @@
             />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:background="@color/header_color"
             android:padding="8dp"
             android:text="@string/user_name"
@@ -31,9 +28,8 @@
             android:textStyle="bold"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:background="@color/header_color"
             android:padding="8dp"
             android:text="@string/amount"
@@ -42,9 +38,8 @@
             android:textStyle="bold"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
 
             android:background="@color/header_color"
             android:padding="8dp"
@@ -54,9 +49,8 @@
             android:textStyle="bold"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:background="@color/header_color"
             android:padding="8dp"
             android:text="@string/date"
