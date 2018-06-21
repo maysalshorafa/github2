@@ -12,6 +12,7 @@ import com.pos.leaders.leaderspossystem.R;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by TOSHIBA on 05/01/2017.
@@ -50,7 +51,7 @@ public class ZReportListViewAdapter extends ArrayAdapter {
         }
 
         holder.tvZID.setText(" "+ZReportList.get(position).getzReportId());
-        holder.tvZCreateDate.setText(DateConverter.DateToString(new Date(ZReportList.get(position).getCreatedAt().getTime())));
+        holder.tvZCreateDate.setText(String.format(new Locale("en"),DateConverter.DateToString(new Date(ZReportList.get(position).getCreatedAt().getTime()))));
         holder.tvZUserName.setText(SESSION._EMPLOYEE.getEmployeeName());
         if(ZReportList.get(position).getUser()!=null)
             holder.tvZUserName.setText(ZReportList.get(position).getUser().getFullName());
