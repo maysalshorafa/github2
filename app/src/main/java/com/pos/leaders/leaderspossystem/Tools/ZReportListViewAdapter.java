@@ -42,17 +42,20 @@ public class ZReportListViewAdapter extends ArrayAdapter {
             holder.tvZID = (TextView) convertView.findViewById(R.id.listViewItemZReport_tvZID);
             holder.tvZCreateDate = (TextView) convertView.findViewById(R.id.listViewItemZReport_tvZCreateDate);
             holder.tvZUserName = (TextView) convertView.findViewById(R.id.listViewItemZReport_tvZUserName);
-
+            holder.tvZAmount = (TextView) convertView.findViewById(R.id.listViewItemZReport_tvZAmount);
+            holder.tvZPosSales = (TextView) convertView.findViewById(R.id.listViewItemZReport_tvZPosSales);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.tvZID.setText(context.getString(R.string.z_number)+" "+ZReportList.get(position).getzReportId());
+        holder.tvZID.setText(" "+ZReportList.get(position).getzReportId());
         holder.tvZCreateDate.setText(DateConverter.DateToString(new Date(ZReportList.get(position).getCreatedAt().getTime())));
-        holder.tvZUserName.setText("");
+        holder.tvZUserName.setText(SESSION._EMPLOYEE.getEmployeeName());
         if(ZReportList.get(position).getUser()!=null)
             holder.tvZUserName.setText(ZReportList.get(position).getUser().getFullName());
+        holder.tvZAmount.setText(ZReportList.get(position).getAmount()+"");
+        holder.tvZPosSales.setText(ZReportList.get(position).getTotalAmount()+"");
         if(bgColor%2==0){
             convertView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
         }
@@ -64,5 +67,8 @@ public class ZReportListViewAdapter extends ArrayAdapter {
         private TextView tvZID;
         private TextView tvZUserName;
         private TextView tvZCreateDate;
+        private TextView tvZAmount;
+        private TextView tvZPosSales;
+
     }
 }

@@ -271,7 +271,7 @@ public class SalesCartActivity extends AppCompatActivity {
     List<OrderDetails> orderIdList;
     List<Long> orderId;
     long custmerSaleAssetstId;
-    TextView orderSalesMan;
+    TextView orderSalesMan , orderCount;
     ImageView deleteOrderSalesMan;
     String fromEditText="";
     static List<String> printedRows;
@@ -872,6 +872,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     }
                 });
                 orderSalesMan = (TextView) view.findViewById(R.id.orderSaleMan);
+                orderCount = (TextView) view.findViewById(R.id.rowSaleDetails_TVCount);
                 deleteOrderSalesMan=(ImageView)view.findViewById(R.id.deleteOrderSalesMan);
                 orderSalesMan.
                         setOnClickListener(new View.OnClickListener() {
@@ -901,6 +902,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         increaseItemOnCart(position);
+                        orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
                     }
                 });
                 Button btnMOne = (Button) view.findViewById(R.id.rowSaleDetails_MethodsMOne);
@@ -908,6 +910,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         decreaseItemOnCart(position);
+                        orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
                     }
                 });
                 //discount Button.
@@ -943,8 +946,8 @@ public class SalesCartActivity extends AppCompatActivity {
                                             pid = Integer.parseInt(cashETCash.getText().toString());
                                         int indexOfItem = SESSION._ORDER_DETAILES.indexOf(selectedOrderOnCart);
                                         SESSION._ORDER_DETAILES.get(indexOfItem).setCount(pid);
-                                        refreshCart();
-
+                                        calculateTotalPrice();
+                                        orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
                                         cashDialog.cancel();
                                     }
                                 });
@@ -1116,7 +1119,8 @@ public class SalesCartActivity extends AppCompatActivity {
 
                                                 if (discount <= (X / 100)) {
                                                     SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(discount * 100);
-                                                    refreshCart();
+                                                    calculateTotalPrice();
+                                                    orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
                                                     cashDialog.cancel();
                                                 } else {
                                                     Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
@@ -1129,7 +1133,8 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(val);
                                                     //SESSION._ORDER_DETAILES.get(indexOfItem).setPaidAmount(((SESSION._ORDER_DETAILES.get(indexOfItem).getUnitPrice()*count) * ((1 - (val / 100))) / count));
 
-                                                    refreshCart();
+                                                    calculateTotalPrice();
+                                                    orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
                                                     cashDialog.cancel();
                                                 } else {
                                                     Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
@@ -2055,12 +2060,12 @@ public class SalesCartActivity extends AppCompatActivity {
 
     private void increaseItemOnCart(int index) {
         SESSION._ORDER_DETAILES.get(index).increaseCount();
-        refreshCart();
+        calculateTotalPrice();
     }
 
     private void decreaseItemOnCart(int index) {
         SESSION._ORDER_DETAILES.get(index).decreaseCount();
-        refreshCart();
+        calculateTotalPrice();
     }
 
     private void refreshCart() {
@@ -2082,7 +2087,6 @@ public class SalesCartActivity extends AppCompatActivity {
         }
 
     }
-
     private void enterKeyPressed(String barcodeScanned) {
         Product product = productDBAdapter.getProductByBarCode(barcodeScanned);
         final Intent intent = new Intent(SalesCartActivity.this, ProductsActivity.class);

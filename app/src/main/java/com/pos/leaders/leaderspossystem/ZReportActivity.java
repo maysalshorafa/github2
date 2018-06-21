@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -96,6 +98,9 @@ public class ZReportActivity extends AppCompatActivity {
         userDBAdapter.close();
         adapter = new ZReportListViewAdapter(this, R.layout.list_view_z_report, zReportList);
         lvReports.setAdapter(adapter);//endregion init
+        LayoutInflater inflater = getLayoutInflater();
+        ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_z_reports, lvReports, false);
+        lvReports.addHeaderView(header, null, false);
         setDate();
 
     }
