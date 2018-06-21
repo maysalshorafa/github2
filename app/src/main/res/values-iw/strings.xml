@@ -411,6 +411,6 @@
     <string name="title_activity_pinpad">Pin-Pad</string>
     <string name="title_activity_product_catalog">קטלוג מוצרים</string>
     <string name="title_activity_products_activity">חלון מוצרים</string>
-
+    <string name="product_quantity">כמות פריטים</string>
 
 </resources>
