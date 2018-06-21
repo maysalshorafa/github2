@@ -75,7 +75,13 @@ public class AccessToken extends AsyncTask<Context,Void,String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        progressDialog.cancel();
+        try {
+            progressDialog.cancel();
+        } catch (IllegalArgumentException iae) {
+            if(iae.getMessage()!=null) {
+                Log.e("closing dialog", iae.getMessage(), iae);
+            }
+        }
         if( !s.equals("") )
             SESSION.token = s;
     }

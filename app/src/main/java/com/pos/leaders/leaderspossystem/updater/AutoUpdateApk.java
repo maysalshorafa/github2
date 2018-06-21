@@ -256,6 +256,7 @@ public class AutoUpdateApk extends Observable {
                 context.registerReceiver(connectivity_receiver,
                         new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
             } catch (IllegalArgumentException iae) {
+                Log.e("register Receiver", "auto update receiver");
                 if (iae.getMessage() != null) {
                     Log.e("register Receiver", iae.getMessage(), iae);
                 }

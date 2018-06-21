@@ -221,6 +221,15 @@ public class TitleBar {
         //endregion
     }
 
+    public static void removeTitleBard(final AppCompatActivity context) {
+        if (clock != null) {
+            clock.StopTick();
+        }
+        if (aua != null) {
+
+        }
+    }
+
     private static void refreshStatus(Context context){
         switch (SESSION.internetStatus) {
             case CONNECTED:
