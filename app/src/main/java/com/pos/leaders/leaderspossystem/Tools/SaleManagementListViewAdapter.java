@@ -14,6 +14,7 @@ import com.pos.leaders.leaderspossystem.R;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by KARAM on 26/10/2016.
@@ -66,7 +67,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
 		holder.tvPaid.setText(Util.makePrice(salesList.get(position).getTotalPaidAmount()) + " " + context.getString(R.string.ins));
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-		holder.tvDate.setText(format.format(salesList.get(position).getCreatedAt()));
+		holder.tvDate.setText(String.format(new Locale("en"),DateConverter.DateToString(salesList.get(position).getCreatedAt())));
 		holder.tvUseName.setText(salesList.get(position).getUser().getFullName());
 		holder.FL.setVisibility(View.GONE);
 

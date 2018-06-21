@@ -592,8 +592,7 @@
     <string name="insert_product_name">Please insert Product Name.</string>
     <string name="insert_product_barcode">Please insert Product Barcode.</string>
     <string name="insert_product_price">Please insert Product Price.</string>
-
-
+    <string name="paid_by">Paid By</string>
 
 </resources>
 
