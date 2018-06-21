@@ -252,8 +252,14 @@ public class AutoUpdateApk extends Observable {
         raise_notification();
 
         if( haveInternetPermissions() ) {
-            context.registerReceiver( connectivity_receiver,
-                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            try {
+                context.registerReceiver(connectivity_receiver,
+                        new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            } catch (IllegalArgumentException iae) {
+                if (iae.getMessage() != null) {
+                    Log.e("register Receiver", iae.getMessage(), iae);
+                }
+            }
         }
     }
 
@@ -376,8 +382,14 @@ public class AutoUpdateApk extends Observable {
                 Log.d("checking connection2", e.getMessage());
                 // handle timeout
             } catch (IOException e) {
-                Log.d("checking connection", e.getMessage());
+                if(e.getMessage() != null) {
+                    Log.d("checking connection", e.getMessage());
+                }
                 // handle I/0 errors
+            } catch (Exception ex){
+                if(ex.getMessage() != null) {
+                    Log.e("checking connection", ex.getMessage());
+                }
             } finally {
                 long elapsed = System.currentTimeMillis() - start;
                 Log_v(TAG, "update check finished in " + elapsed + "ms");

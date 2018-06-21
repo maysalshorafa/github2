@@ -49,7 +49,8 @@ public class SETTINGS {
 
 	//public static final String UPDATER_API_URL_PATH = "http://185.118.252.26:8091/updateApkNV/";
 	public static final String UPDATER_API_URL_PATH = "/updateApk/";
-	public static final String UPDATER_SERVER_URL = "http://185.118.252.26:8090";
+	//public static final String UPDATER_SERVER_URL = "http://185.118.252.26:8090";
+	public static final String UPDATER_SERVER_URL = "http://185.118.252.26:8070";
 	//public static final String UPDATER_SERVER_URL = "http://192.168.1.109:8090";
 
 	public static Bitmap copyInvoiceBitMap ; // add here to avoid recycle bitmap exception when used reference between two different activity

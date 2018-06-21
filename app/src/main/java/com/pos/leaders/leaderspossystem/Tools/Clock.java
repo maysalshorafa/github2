@@ -111,7 +111,11 @@ public class Clock
         try {
 
             this.Context.registerReceiver(this.IntentReceiver, this.IntentFilter, null, this.Handler);
-        } catch (Exception e) {
+        } catch(IllegalArgumentException iae){
+            if (iae.getMessage() != null) {
+                Log.e("clock Receiver", iae.getMessage(), iae);
+            }
+        }catch (Exception e) {
             Log.i("Clock", e.getMessage(), e);
         }
     }
