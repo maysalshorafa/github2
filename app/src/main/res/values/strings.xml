@@ -513,7 +513,7 @@
     <string name="success_edit_POS_setting">Success Edit POS Setting</string>
     <string name="delete_check">Delete Check</string>
     <string name="pos_setting">POS Setting</string>
-    <string name="no_of_float_point">No Of Float Point:</string>
+    <string name="no_of_float_point">No Of Float Point</string>
     <string name="printer_type">Printer Type</string>
     <string name="server_info">Server Information</string>
     <string name="update_setting">Update Setting</string>
