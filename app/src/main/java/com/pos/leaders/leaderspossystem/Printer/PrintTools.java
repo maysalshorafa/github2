@@ -161,6 +161,7 @@ public class PrintTools {
                 protected void onPostExecute(Void aVoid) {
                     try {
                         HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
+                        HPRTPrinterHelper.ClearPageModePrintAreaData();
                         dialog.cancel();
                     } catch (Exception e) {
                         e.printStackTrace();
