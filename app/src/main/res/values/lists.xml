@@ -1,7 +1,6 @@
 <resources>
 
     <string-array name="offers_list">
-
         <item>x on paid_amount y</item>
         <item>buy x and get the least paid_amount with p</item>
         <item>p on every invoice</item>

@@ -354,7 +354,7 @@
     <string name="please_add_product_then_continue">כדי למשךת אנא הכנס מוצר</string>
     <string name="please_insert_city">בחר עיר</string>
     <string name="please_insert_club">בחר מעדון</string>
-    <string name="active_currency_service_in_pos"></string>
+    <string name="active_currency_service_in_pos">תפעיל מודל המתח</string>
     <string name="please_wait">המתן...</string>
     <string name="point">נקודות</string>
     <string name="pos_db_version_no">גרסת מסד הנתונים</string>
@@ -398,13 +398,12 @@
     <string name="terminal_password">סיסמה</string>
     <string name="thanks">תודה</string>
     <string name="the_number_of_hours_you_work_is">שעות עבודתך הינה</string>
-    <string name="terminal_number" translatable="false">מספר מסוף</string>
+    <string name="terminal_number">מספר מסוף</string>
     <string name="there_is_no_disk_on_key">לא נמצא דיסק חצוני</string>
     <string name="title_activity_add_customer_measurement_activity">חלון הוספת מדידה עבור לקוח</string>
     <string name="title_activity_add_new_department_activity">הוספת מחלקה</string>
     <string name="title_activity_club_management">מעדון לקוחות</string>
     <string name="title_activity_customer_measurement_management_activity">מדידות לקוחות</string>
-    <string name="title_activity_dashboard_activty"></string>
     <string name="title_activity_departments_activity">מחלקות</string>
     <string name="title_activity_notify_service">מרכז מידע</string>
     <string name="title_activity_open_format">מבנה אחיד</string>
@@ -413,6 +412,123 @@
     <string name="title_activity_products_activity">חלון מוצרים</string>
     <string name="paid_by">שולם ב</string>
     <string name="product_quantity">כמות פריטים</string>
+    <string name="z_report">דוח Z</string>
+    <string name="z_report_view">הצגת דוחות Z</string>
+    <string name="x_report">דוח X</string>
+    <string name="x_report_view">הצגת דוחות X</string>
+    <string name="x">x</string>
+    <string name="worker_management">ניהול עובדים</string>
+    <string name="welcome">ברוך הבא</string>
+    <string name="we_wish_to_you_a_happy_business_day">יום עבודה נעים</string>
+    <string name="wait_for_finish_printing">המתן לסיום</string>
+    <string name="version_info">אודות הגרסה</string>
+    <string name="valid_expired_card">הכניס תאריך הכרטיס</string>
+    <string name="valid_ID">הכנס ת\'\'ז</string>
+    <string name="valid_CCV">הכנס מספר CCV</string>
+    <string name="type">סוג</string>
+    <string name="update_setting">עדכון הגדרות</string>
+    <string name="update_measurement">עדכן מדידות</string>
+    <string name="update_general_setting">עדכן הגדרות כלליות</string>
+    <string name="update_department">עדכן המחלקה</string>
+    <string name="total_return">עודף</string>
+    <string name="total_required">סכום נדרש</string>
+    <string name="total_discount">סה\'\'כ הנחה</string>
+    <string name="title_zreports_activity">דוח Z</string>
+    <string name="title_user_attendance_report_activity">שעון נוכחות</string>
+    <string name="title_sales_management_activity">ניהול מכירות</string>
+    <string name="title_sales_man_management_activity">ניהול אנשי מכירות</string>
+    <string name="title_reports_management_activity">ניהול דוחות</string>
+    <string name="title_reports_activity">דוחות</string>
+    <string name="title_report_zdetails_activity">פרטי דוח Z</string>
+    <string name="title_main_sales_activity">מכירות</string>
+    <string name="title_import_product_activity">יבוא מוצרים</string>
+    <string name="title_customer_management_activity">ניהול לקוחות</string>
+    <string name="title_customer_and_club_management_activity">לקוחות ומעדונים</string>
+    <string name="title_credit_card_by_phone_activity">כרטיס אשראי דרך טלפון</string>
+    <string name="title_club_management_activity">ניהול מעדון</string>
+    <string name="title_backup_activity">גיבוי</string>
+    <string name="title_add_user_activity">הוספת עובד</string>
+    <string name="title_add_new_customer_activity">הוספת לקוח</string>
+    <string name="title_add_new_club_activity">הוספת מעדון</string>
+    <string name="title_activity_worker_management_activity">ניהול עובדים</string>
+    <string name="title_activity_temp_cash_activty">מזומן</string>
+    <string name="title_activity_settings">הגדרות</string>
+    <string name="title_activity_setting_tab_activity">הגדרות</string>
+    <string name="tendered">להציע</string>
+    <string name="active_customer_measurement_service_in_pos">תפעיל שירות המידיות</string>
+    <string name="active_pin_pad_service_in_pos">תפעיל שירות ה PIN-PAD</string>
+    <string name="balance">מאזן</string>
+    <string name="insert_product_barcode">תכניס את הבארקוד</string>
+    <string name="insert_product_name">תכניס שם מוצר</string>
+    <string name="insert_product_price">תכניס מחיר מכירה</string>
+    <string name="pinpad">Pin-Pad</string>
+    <string name="please_insert_club_description">נא להכניס תיאור</string>
+    <string name="please_insert_club_name">נא להכניס שם מעדון</string>
+    <string name="please_insert_club_percentage">נא להכניס אחוז הנחה</string>
+    <string name="please_insert_country">נא לבחור מדינה</string>
+    <string name="please_insert_country_code">לא להכניס קוד מדינה</string>
+    <string name="please_insert_department_name_with_out_spaces">לא להכניס שם מחלקה בלי רוחים</string>
+    <string name="please_insert_email">נא להכניס דואר אלקטרוני</string>
+    <string name="please_insert_gender">לא לבחור מין</string>
 
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
 
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="printers_list_preference">
+        <item>BTP880</item>
+        <item>HPRT_TP805</item>
+        <item>SUNMI_T1</item>
+        <item>SM_S230I</item>
+        <item>WINTEC_BUILDIN</item>
+
+    </string-array>
+    <string-array name="float_point_list_preference">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string name="please_insert_house_number">נא להכניס מספר בית</string>
+    <string name="please_insert_job">נא להכניס שם עהעבודה</string>
+    <string name="please_insert_last_name">נא להכניס שם משפחה</string>
+    <string name="please_insert_street">נא להכניס שם רחוב</string>
+    <string name="please_remember_your_password">תזכור הסיסמה</string>
+    <string name="please_insert_phone_no">נא להכניס מספר נייד</string>
+    <string name="please_insert_postal_code">נא להכניס מיקוד</string>
 </resources>

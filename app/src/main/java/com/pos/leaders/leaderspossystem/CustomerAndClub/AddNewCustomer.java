@@ -256,7 +256,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         cityDbAdapter.open();
         ClubAdapter groupAdapter = new ClubAdapter(AddNewCustomer.this);
         groupAdapter.open();
-        secondCustomerInformation=(LinearLayout)findViewById(R.id.secondCustomerInformation);
+        secondCustomerInformation=(LinearLayout)findViewById(R.id.add_new_customer_secondCustomerInformation);
         etCustomerFirstName = (EditText) findViewById(R.id.etCustomerFirstName);
         etCustomerLastName = (EditText) findViewById(R.id.etCustomerLastName);
         etStreet = (EditText) findViewById(R.id.etCustomerStreet);
