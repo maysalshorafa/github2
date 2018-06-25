@@ -535,11 +535,19 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
             final Button btOK = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTOk);
             final Button btCancel = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTCancel);
-            btCancel.setVisibility(View.GONE);
             final EditText et = (EditText) discountDialog.findViewById(R.id.cashPaymentDialog_TECash);
             final Switch sw = (Switch) discountDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
             sw.setVisibility(View.GONE);
             discountDialog.setCanceledOnTouchOutside(false);
+
+            btCancel.setOnClickListener(new View.OnClickListener()
+
+            {
+                @Override
+                public void onClick(View v) {
+                    discountDialog.dismiss();
+                }
+            });
 
             discountDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
@@ -547,7 +555,6 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     DashBord.this.onResume();
                 }
             });
-
             et.setHint(R.string.amount);
             et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
@@ -613,6 +620,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             Spinner sSecondCurrency = (Spinner) aReportDialog.findViewById(R.id.aReportDetailsDialog_SPForSecondCurrency);
             Spinner sThirdCurrency = (Spinner) aReportDialog.findViewById(R.id.aReportDetailsDialog_SPForThirdCurrency);
             Spinner sForthCurrency = (Spinner) aReportDialog.findViewById(R.id.aReportDetailsDialog_SPForForthCurrency);
+            final Button btCancel = (Button) aReportDialog.findViewById(R.id.cashPaymentDialog_BTCancel);
             sFirstCurrency.setAdapter(dataAdapter);
             sSecondCurrency.setAdapter(dataAdapter);
             sThirdCurrency.setAdapter(dataAdapter);
@@ -639,6 +647,14 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     DashBord.this.onResume();
+                }
+            });
+            btCancel.setOnClickListener(new View.OnClickListener()
+
+            {
+                @Override
+                public void onClick(View v) {
+                  aReportDialog.dismiss();
                 }
             });
             addSecondCurrency.setOnClickListener(new View.OnClickListener()
