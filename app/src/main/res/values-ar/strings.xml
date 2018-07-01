@@ -441,6 +441,7 @@
     <string name="clear_cart">تنظيف سلة المبيعات</string>
     <string name="clear">تنظيف</string>
     <string name="active_pin_pad_service_in_pos">اذا اردت ان تفعل خدمة PIN-PAD بالنظام اضغط المربع المجاور لها</string>
+    <string name="not_selected_products">الرجاء اختيار منتوج</string>
 
     <string-array name="credit_card_type">
         <!--  <item>רגיל</item>

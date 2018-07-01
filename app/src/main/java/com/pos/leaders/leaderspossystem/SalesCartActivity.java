@@ -1688,7 +1688,8 @@ public class SalesCartActivity extends AppCompatActivity {
         SESSION._ORDER_DETAILES = s.getOrders();
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
-        setCustomer(SESSION._ORDERS.getCustomer());
+        if(SESSION._ORDERS.getCustomer()!=null)
+            setCustomer(SESSION._ORDERS.getCustomer());
         refreshCart();
     }
 
