@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="2"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/list_multi_currencies_payment_due"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingStart="@dimen/default_margin_padding"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/list_multi_currencies_payment_tendered"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingStart="@dimen/default_margin_padding"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/list_multi_currencies_payment_change"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingStart="@dimen/default_margin_padding"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/list_multi_currencies_payment_method"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingStart="@dimen/default_margin_padding"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/list_multi_currencies_payment_currency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingStart="@dimen/default_margin_padding"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/list_multi_currencies_payment_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/default_margin_padding"
+        android:layout_marginStart="@dimen/default_margin_padding"
+        android:text="X" />
+</LinearLayout>

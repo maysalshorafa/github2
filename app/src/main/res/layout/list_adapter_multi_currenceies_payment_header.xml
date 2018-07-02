@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/form_background_dark"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/default_margin_padding"
+    android:paddingTop="@dimen/default_margin_padding">
+
+    <TextView
+        android:id="@+id/list_multi_currencies_payment_due"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingStart="@dimen/default_margin_padding"
+        android:text="@string/due"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/list_multi_currencies_payment_tendered"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingStart="@dimen/default_margin_padding"
+        android:text="@string/tendered"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/list_multi_currencies_payment_change"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingStart="@dimen/default_margin_padding"
+        android:text="@string/change"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/list_multi_currencies_payment_method"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingStart="@dimen/default_margin_padding"
+        android:text="@string/method"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/list_multi_currencies_payment_currency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingStart="@dimen/default_margin_padding"
+        android:text="@string/currency"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/list_multi_currencies_payment_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/default_margin_padding"
+        android:layout_marginStart="@dimen/default_margin_padding"
+        android:text="X"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+</LinearLayout>
