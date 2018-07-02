@@ -232,6 +232,8 @@
     <string name="TouchPad_7">7</string>
     <string name="TouchPad_8">8</string>
     <string name="TouchPad_9">9</string>
+    <string name="TouchPad_dot">.</string>
+    <string name="TouchPad_ce">CE</string>
     <string name="_amount">ערך</string>
     <string name="_continue">המשך</string>
     <string name="_description">תיאור</string>
