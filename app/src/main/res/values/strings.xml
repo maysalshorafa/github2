@@ -594,6 +594,8 @@
     <string name="insert_product_price">Please insert Product Price.</string>
     <string name="paid_by">Paid By</string>
     <string name="product_quantity">Product quantity</string>
+    <string name="payment_list">Payment list</string>
+    <string name="quick_cash_payment">Quick cash payment</string>
 </resources>
 
 

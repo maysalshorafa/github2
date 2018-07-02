@@ -63,12 +63,13 @@
             android:name=".ProductCatalogActivity"
             android:label="@string/title_activity_product_catalog" />
         <activity android:name=".MainScreenActivity" />
-
-        <activity android:name=".AddEmployeeActivity"
+        <activity
+            android:name=".AddEmployeeActivity"
             android:label="@string/title_add_user_activity" />
         <activity android:name=".OfferActivity" />
         <activity android:name=".OfferRuleActivity" />
-        <activity android:name=".OrdersManagementActivity"
+        <activity
+            android:name=".OrdersManagementActivity"
             android:label="@string/title_sales_management_activity" />
         <activity
             android:name=".Reports.UserAttendanceReport"
@@ -76,12 +77,11 @@
         <activity android:name="." />
         <activity android:name=".AddOfferActivity" />
         <activity android:name=".LogInActivity" />
-
-        <activity android:name=".SalesCartActivity"
+        <activity
+            android:name=".SalesCartActivity"
             android:hardwareAccelerated="true"
-            android:largeHeap="true"
-            android:label="@string/title_main_sales_activity"/>
-
+            android:label="@string/title_main_sales_activity"
+            android:largeHeap="true" />
         <activity
             android:name=".Tools.OldCashActivity"
             android:theme="@style/AppTheme.PopUp" />
@@ -164,18 +164,19 @@
         <activity
             android:name=".SalesManManagementActivity"
             android:label="@string/title_sales_man_management_activity" />
-        <activity android:name=".SalesAssistantDetailesSalesMangmentActivity"
+        <activity
+            android:name=".SalesAssistantDetailesSalesMangmentActivity"
             android:label="@string/title_sales_man_management_activity" />
         <activity
             android:name=".CurrencyReturnsCustomDialogActivity"
             android:theme="@style/AppTheme.PopUp" />
         <activity android:name=".PrinterStub" />
-
-        <activity android:name=".EmployeeManagementActivity"
-            android:label="@string/title_activity_worker_management_activity"/>
-        <activity android:name=".CustomerAndClub.CustomerMeasurementManagementActivity"
-            android:label="@string/title_activity_customer_measurement_management_activity"/>
-
+        <activity
+            android:name=".EmployeeManagementActivity"
+            android:label="@string/title_activity_worker_management_activity" />
+        <activity
+            android:name=".CustomerAndClub.CustomerMeasurementManagementActivity"
+            android:label="@string/title_activity_customer_measurement_management_activity" />
         <activity android:name=".CreditCard.MainCreditCardActivity" />
         <activity
             android:name=".SetUpManagement"
@@ -202,6 +203,7 @@
         <activity
             android:name=".Settings.SettingsActivity"
             android:label="@string/title_activity_settings" />
+        <activity android:name=".Payment.MultiCurrenciesPaymentActivity"></activity>
     </application>
 
 </manifest>

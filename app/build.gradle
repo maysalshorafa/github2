@@ -19,6 +19,7 @@ android {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips", "mips64", "x86_64", "arm64-v8a"
         }
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -45,14 +46,6 @@ android {
         exclude 'META-INF/LGPL2.1'
     }
 }
-
-
-
-
-
-
-
-
 
 
 dependencies {

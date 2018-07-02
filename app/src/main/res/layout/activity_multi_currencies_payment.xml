@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context="com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/MultiCurrenciesPaymentActivity_llPriceBackgrounf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/DarkSeaGreen"
+            android:orientation="vertical"
+            android:paddingRight="@dimen/default_margin_padding"
+            android:paddingStart="@dimen/default_margin_padding">
+
+            <TextView
+                android:id="@+id/MultiCurrenciesPaymentActivity_tvTotalPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin_padding"
+                android:layout_marginTop="@dimen/default_margin_padding"
+                android:text="@string/total_price"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/MultiCurrenciesPaymentActivity_tvTotalPriceValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin_padding"
+                android:layout_marginTop="@dimen/default_margin_padding"
+                android:text="245 $"
+                android:textAlignment="center"
+                android:textSize="36sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/MultiCurrenciesPaymentActivity_tvReturn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin_padding"
+                android:layout_marginTop="@dimen/default_margin_padding"
+                android:text="return"
+                android:textAlignment="textEnd"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/MultiCurrenciesPaymentActivity_llNumberPad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Number Pad"
+                android:textAlignment="center"
+                android:textSize="50sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:background="@color/backgroundColor"
+        android:orientation="vertical"
+        android:padding="@dimen/default_margin_padding">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/payment_list"
+            android:textAlignment="center"
+            android:textColor="?android:attr/textColorLink" />
+
+        <ListView
+            android:id="@+id/MultiCurrenciesPaymentActivity_lvPaymentList"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/quick_cash_payment"
+                android:textAlignment="center"
+                android:textColor="?android:attr/textColorLink" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_1"
+                    style="@style/AppTheme.bt_green"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="1" />
+
+                <Button
+                    android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_5"
+                    style="@style/AppTheme.bt_green"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="5" />
+
+                <Button
+                    android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_10"
+                    style="@style/AppTheme.bt_green"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="10" />
+
+                <Button
+                    android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_20"
+                    style="@style/AppTheme.bt_green"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="20" />
+
+                <Button
+                    android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_50"
+                    style="@style/AppTheme.bt_green"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="50" />
+
+                <Button
+                    android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_100"
+                    style="@style/AppTheme.bt_green"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="100" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
