@@ -2,16 +2,20 @@ package com.pos.leaders.leaderspossystem.Payment;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.SalesCartActivity;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
-import org.w3c.dom.Text;
+import java.util.ArrayList;
 
 public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
@@ -25,7 +29,10 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
     private TextView tvTotalPrice,tvExcess;
     private LinearLayout llTotalPriceBackground;
-    private Button btQuick_1,btQuick_5,btQuick_10,btQuick_20,btQuick_50, btQuick_100;
+
+    private ListView lvPaymentTable;
+    private PaymentTableAdapter paymentTableAdapter;
+    private ArrayList<PaymentTable> paymentTables = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,29 +50,27 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         tvTotalPrice = (TextView) findViewById(R.id.MultiCurrenciesPaymentActivity_tvTotalPriceValue);
         tvExcess = (TextView) findViewById(R.id.MultiCurrenciesPaymentActivity_tvReturn);
         llTotalPriceBackground = (LinearLayout) findViewById(R.id.MultiCurrenciesPaymentActivity_llPriceBackgrounf);
-        setQuickPriceButton();
+        lvPaymentTable = (ListView) findViewById(R.id.MultiCurrenciesPaymentActivity_lvPaymentList);
 
         tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + defaultCurrency);
+        paymentTables.add(new PaymentTable(totalPrice, Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + "")));
+
+        paymentTableAdapter = new PaymentTableAdapter(this, R.layout.list_adapter_multi_currencies_payment, paymentTables);
+
+        //set list view header
+        LayoutInflater inflater = getLayoutInflater();
+        ViewGroup header = (ViewGroup) inflater.inflate(R.layout.list_adapter_multi_currenceies_payment_header, lvPaymentTable, false);
+        lvPaymentTable.addHeaderView(header, null, false);
+
+        //set list value
+        lvPaymentTable.setAdapter(paymentTableAdapter);
+        paymentTableAdapter.notifyDataSetChanged();
 
     }
 
-    private void setQuickPriceButton() {
-        btQuick_1 = (Button) findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickPrice_1);
-        btQuick_5 = (Button) findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickPrice_5);
-        btQuick_10 = (Button) findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickPrice_10);
-        btQuick_20 = (Button) findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickPrice_20);
-        btQuick_50 = (Button) findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickPrice_50);
-        btQuick_100 = (Button) findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickPrice_100);
-
-        btQuick_1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+    private void insertNewRow(double val, String currency) {
+        //// TODO: 02/07/2018
     }
-
-    quickPrice
 
     private void setExcess() {
         excess = totalPrice - totalPaid;
@@ -78,5 +83,30 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         } else {
             llTotalPriceBackground.setBackgroundColor(R.color.light_dangers1);
         }
+    }
+
+    public void paymentQuickPriceClick(View v) {
+        double val = 0;
+        switch (v.getId()) {
+            case R.id.MultiCurrenciesPaymentActivity_btQuickPrice_1:
+                val = 1;
+                break;
+            case R.id.MultiCurrenciesPaymentActivity_btQuickPrice_5:
+                val = 5;
+                break;
+            case R.id.MultiCurrenciesPaymentActivity_btQuickPrice_10:
+                val = 10;
+                break;
+            case R.id.MultiCurrenciesPaymentActivity_btQuickPrice_20:
+                val = 20;
+                break;
+            case R.id.MultiCurrenciesPaymentActivity_btQuickPrice_50:
+                val = 50;
+                break;
+            case R.id.MultiCurrenciesPaymentActivity_btQuickPrice_100:
+                val = 100;
+                break;
+        }
+        insertNewRow(val, defaultCurrency + "");
     }
 }

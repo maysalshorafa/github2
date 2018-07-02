@@ -61,12 +61,11 @@
             android:gravity="bottom"
             android:orientation="vertical">
 
-            <TextView
+            <fragment
+                android:id="@+id/fragment"
+                android:name="com.pos.leaders.leaderspossystem.Tools.MultiCurrenciesFragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Number Pad"
-                android:textAlignment="center"
-                android:textSize="50sp" />
+                android:layout_height="match_parent" />
         </LinearLayout>
 
     </LinearLayout>
@@ -115,6 +114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:onClick="paymentQuickPriceClick"
                     android:text="1" />
 
                 <Button
@@ -123,6 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:onClick="paymentQuickPriceClick"
                     android:text="5" />
 
                 <Button
@@ -131,6 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:onClick="paymentQuickPriceClick"
                     android:text="10" />
 
                 <Button
@@ -139,6 +141,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:onClick="paymentQuickPriceClick"
                     android:text="20" />
 
                 <Button
@@ -147,6 +150,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:onClick="paymentQuickPriceClick"
                     android:text="50" />
 
                 <Button
@@ -155,6 +159,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:onClick="paymentQuickPriceClick"
                     android:text="100" />
             </LinearLayout>
         </LinearLayout>
