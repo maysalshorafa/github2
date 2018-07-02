@@ -11,34 +11,59 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="2">
-
-    <TextView
-        android:id="@+id/multiCurrenciesFragment_amount"
-        style="@style/AppTheme.btn_white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:hint="@string/amount"
-        android:layout_weight="1"/>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
             android:orientation="horizontal"
-            android:layout_weight="1">
-        <Spinner
-            android:id="@+id/multiCurrenciesFragment_currenciesSpinner"
+            >
+        <TextView
+            android:id="@+id/multiCurrenciesFragment_amount"
+            style="@style/AppTheme.btn_white"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="40dp"
-            android:textStyle="bold"
+            android:layout_height="match_parent"
+            android:hint="@string/amount" />
+</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:background="@drawable/layout_border"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-         ></Spinner>
-            </LinearLayout>
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="4dp"
+                android:padding="4dp"
+                android:text="@string/currency"
+                android:textSize="30sp" />
+
+            <View
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:background="@color/black" />
+
+            <Spinner
+                android:id="@+id/multiCurrenciesFragment_currenciesSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="40dp"
+                android:textStyle="bold"></Spinner>
+
+            <View
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:background="@color/black" />
         </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -153,14 +178,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="3">
 
                 <Button
                     android:id="@+id/multiCurrenciesFragment_bt0"
                     style="@style/AppTheme.btn_white"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="2.3"
                     android:text="@string/TouchPad_0" />
 
                 <Button
@@ -168,9 +194,8 @@
                     style="@style/AppTheme.btn_white"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight=".7"
                     android:text="@string/TouchPad_dot" />
-
 
 
             </LinearLayout>
@@ -182,19 +207,21 @@
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:orientation="vertical">
+
             <Button
                 android:id="@+id/multiCurrenciesFragment_btCE"
                 style="@style/AppTheme.btn_white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".85"
+                android:layout_weight=".75"
                 android:text="@string/TouchPad_ce" />
+
             <Button
                 android:id="@+id/multiCurrenciesFragment_btClear"
                 style="@style/AppTheme.bt_yellow"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".85"
+                android:layout_weight=".75"
                 android:text="@string/clear" />
 
             <Button
@@ -202,11 +229,45 @@
                 style="@style/AppTheme.bt_green"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight=".6"
+                android:layout_weight=".5"
                 android:text="@string/add_payment" />
 
 
         </LinearLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+    <TextView
+        android:id="@+id/multiCurrenciesFragment_amount"
+        style="@style/AppTheme.btn_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:hint="@string/amount"
+        android:layout_weight="1"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+        <Spinner
+            android:id="@+id/multiCurrenciesFragment_currenciesSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="40dp"
+            android:textStyle="bold"
+
+         ></Spinner>
+            </LinearLayout>
+        </LinearLayout>
 
 </LinearLayout>
