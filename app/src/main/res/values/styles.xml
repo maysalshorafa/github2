@@ -66,6 +66,12 @@
         <item name="android:textSize">18sp</item>
         <item name="android:layout_margin">4dp</item>
     </style>
+    <style name="AppTheme.btn_white" parent="AppTheme.bt_normal">
+        <item name="android:background">@drawable/bt_white</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_margin">4dp</item>
+    </style>
 
     <style name="AppTheme.dashboard_bt" parent="AppTheme.bt_dark">
         <item name="android:textSize">24sp</item>

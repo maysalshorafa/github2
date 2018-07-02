@@ -329,6 +329,8 @@
     <string name="TouchPad_7">7</string>
     <string name="TouchPad_8">8</string>
     <string name="TouchPad_9">9</string>
+    <string name="TouchPad_dot">.</string>
+    <string name="TouchPad_ce">CE</string>
     <string name="_return">باقي</string>
     <string name="a_report_amount">اساس</string>
     <string name="active_credit_card_service_in_pos">الرجاء تفعيل خدمة الدفع عن طريق بطاقة الائتمان</string>
@@ -343,6 +345,9 @@
     <string name="title_activity_setting_tab_activity">קטלוג מוצרים</string>
     <string name="paid_by">دفع بواسطة</string>
     <string name="product_quantity">كمية المنتوجات</string>
+    <string name="clear">حذف</string>
+    <string name="add_payment">اضافة مبلغ</string>
+
 
 
 </resources>

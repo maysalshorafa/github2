@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+    <TextView
+        android:id="@+id/multiCurrenciesFragment_amount"
+        style="@style/AppTheme.btn_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:hint="@string/amount"
+        android:layout_weight="1"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+        <Spinner
+            android:id="@+id/multiCurrenciesFragment_currenciesSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="40dp"
+            android:textStyle="bold"
+
+         ></Spinner>
+            </LinearLayout>
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <Button
+                    android:id="@+id/multiCurrenciesFragment_bt7"
+                    style="@style/AppTheme.btn_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/TouchPad_7" />
+
+                <Button
+                    android:id="@+id/multiCurrenciesFragment_bt8"
+                    style="@style/AppTheme.btn_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/TouchPad_8" />
+
+                <Button
+                    android:id="@+id/multiCurrenciesFragment_bt9"
+                    style="@style/AppTheme.btn_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/TouchPad_9" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <Button
+                    android:id="@+id/multiCurrenciesFragment_bt4"
+                    style="@style/AppTheme.btn_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/TouchPad_4" />
+
+                <Button
+                    android:id="@+id/multiCurrenciesFragment_bt5"
+                    style="@style/AppTheme.btn_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/TouchPad_5" />
+
+                <Button
+                    android:id="@+id/multiCurrenciesFragment_bt6"
+                    style="@style/AppTheme.btn_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/TouchPad_6" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/multiCurrenciesFragment_bt1"
+                    style="@style/AppTheme.btn_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/TouchPad_1" />
+
+                <Button
+                    android:id="@+id/multiCurrenciesFragment_bt2"
+                    style="@style/AppTheme.btn_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/TouchPad_2" />
+
+                <Button
+                    android:id="@+id/multiCurrenciesFragment_bt3"
+                    style="@style/AppTheme.btn_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/TouchPad_3" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/multiCurrenciesFragment_bt0"
+                    style="@style/AppTheme.btn_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/TouchPad_0" />
+
+                <Button
+                    android:id="@+id/multiCurrenciesFragment_btDot"
+                    style="@style/AppTheme.btn_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/TouchPad_dot" />
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/multiCurrenciesFragment_btCE"
+                style="@style/AppTheme.btn_white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".85"
+                android:text="@string/TouchPad_ce" />
+            <Button
+                android:id="@+id/multiCurrenciesFragment_btClear"
+                style="@style/AppTheme.bt_yellow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".85"
+                android:text="@string/clear" />
+
+            <Button
+                android:id="@+id/multiCurrenciesFragment_btAddPayment"
+                style="@style/AppTheme.bt_green"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight=".6"
+                android:text="@string/add_payment" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

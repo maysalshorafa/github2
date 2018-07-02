@@ -95,6 +95,8 @@
     <string name="TouchPad_7">7</string>
     <string name="TouchPad_8">8</string>
     <string name="TouchPad_9">9</string>
+    <string name="TouchPad_dot">.</string>
+    <string name="TouchPad_ce">C</string>
     <string name="empty_password">Please insert your password</string>
     <string name="wrong_password">Please insert valid password</string>
     <string name="schedule_workers">Time Attendance</string>
@@ -501,7 +503,7 @@
 
     <string name="advance">Advance</string>
     <string name="clear">Clear</string>
-
+    <string name="add_payment">Add Payment</string>
     <string name="invalid_payments_number">Please insert valid payments number between 2 and 36.</string>
     <string name="active_currency_service_in_pos">If you want to active Currency Service in your Pos Check the Currency CheckBox</string>
     <string name="active_credit_card_service_in_pos">If you want to active CreditCard Service in your Pos Check the CreditCard CheckBox</string>
