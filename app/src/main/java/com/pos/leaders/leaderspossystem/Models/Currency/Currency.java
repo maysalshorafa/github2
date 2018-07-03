@@ -77,4 +77,16 @@ public class Currency {
     public void setRate(double rate) {
         this.rate = rate;
     }
+
+    @Override
+    public String toString() {
+        return "Currency{" +
+                "currencyId=" + currencyId +
+                ", name='" + name + '\'' +
+                ", country='" + country + '\'' +
+                ", currencyCode='" + currencyCode + '\'' +
+                ", rate=" + rate +
+                ", lastUpdate=" + lastUpdate +
+                '}';
+    }
 }

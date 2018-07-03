@@ -1,28 +1,27 @@
 package com.pos.leaders.leaderspossystem.Payment;
 
+import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.SalesCartActivity;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
@@ -42,7 +41,9 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     private ListView lvPaymentTable;
     private PaymentTableAdapter paymentTableAdapter;
     private ArrayList<PaymentTable> paymentTables = new ArrayList<>();
-
+    String currencyType="";
+    List<Currency> currenciesList;
+    private List<CurrencyType> currencyTypesList = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,16 +86,29 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.MultiCurrenciesPaymentActivity_flNumberPad, mcf);
         transaction.commit();
+
+        //Getting default currencies name and values
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
+        currencyTypeDBAdapter.open();
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        currencyTypeDBAdapter.close();
+        //get currency value
+        CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(MultiCurrenciesPaymentActivity.this);
+        currencyDBAdapter.open();
+        currenciesList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
+
+
     }
 
-    private void insertNewRow(double val, String currency) {
-        totalPaid += val;
+    private void insertNewRow(double val, String currency,double currencyRate) {
+        //get currency rate
+        totalPaid += val*currencyRate;
         setExcess();
         updateView();
 
         PaymentTable lastPaymentTable = paymentTables.get(paymentTables.size() - 1);
         //(double due, double tendered, double change, String paymentMethod, CurrencyType currency)
-        paymentTables.add(paymentTables.size() - 1, new PaymentTable(lastPaymentTable.getDue(), val, ((excess <= 0) ? excess : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, defaultCurrency + "")));
+        paymentTables.add(paymentTables.size() - 1, new PaymentTable(lastPaymentTable.getDue(), val, ((excess <= 0) ? excess : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, currency + "")));
 
         lastPaymentTable.setDue(excess);
         lastPaymentTable.setTendered(Double.NaN);
@@ -139,14 +153,23 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 val = 100;
                 break;
         }
-        insertNewRow(val, defaultCurrency + "");
+        insertNewRow(val, defaultCurrency + "",getCurrencyRate(defaultCurrency+""));
     }
 
     public void multiCurrenciesConfirmClick(View v) {
         if (v.getId() ==R.id.multiCurrenciesFragment_btAddPayment) {
+            currencyType=String.valueOf(mcf.currencySpinner.getSelectedItem().toString());
             double val = Double.parseDouble(mcf.amount.getText().toString());
-            insertNewRow(val, defaultCurrency + "");
+            insertNewRow(val, currencyType + "",getCurrencyRate(currencyType));
             mcf.clearScreen();
         }
+    }
+    public  double getCurrencyRate(String currencyType){
+        for (int i=0;i<currenciesList.size();i++){
+            if(currenciesList.get(i).getCountry().equals(currencyType)) {
+                return currenciesList.get(i).getRate();
+            }
+        }
+          return 1;
     }
 }
