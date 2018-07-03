@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -30,6 +32,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     private double totalPrice, excess, totalPaid = 0.0;
 
     private char defaultCurrency = '\u20aa';//ILS
+
     private char excessCurrency = '\u20aa';//ILS
 
     private TextView tvTotalPrice,tvExcess;
@@ -43,6 +46,11 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Remove notification bar
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_multi_currencies_payment);
 
         //check extras
@@ -71,16 +79,6 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         //set list value
         lvPaymentTable.setAdapter(paymentTableAdapter);
         paymentTableAdapter.notifyDataSetChanged();
-
-        lvPaymentTable.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(view.getId()==R.id.list_multi_currencies_payment_delete){
-                    Toast.makeText(MultiCurrenciesPaymentActivity.this, view.getId()+"", Toast.LENGTH_SHORT).show();
-                }
-                Log.i("click " + position, view.getId() + " " + id);
-            }
-        });
 
         //set fragment
         mcf = new MultiCurrenciesFragment();

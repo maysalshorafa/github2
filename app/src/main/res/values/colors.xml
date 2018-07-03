@@ -73,7 +73,7 @@
     <color name="Coral">#FF7F50</color>
     <color name="HotPink">#FF69B4</color>
     <color name="Tomato">#FF6347</color>
-    <color name="OrangeRed">#FF4500</color>
+    <color name="OrangeRed">#ff4500</color>
     <color name="DeepPink">#FF1493</color>
     <color name="Fuchsia">#FF00FF</color>
     <color name="Magenta">#FF00FF</color>
@@ -82,7 +82,7 @@
     <color name="LightGoldenrodYellow">#FAFAD2</color>
     <color name="Linen">#FAF0E6</color>
     <color name="AntiqueWhite">#FAEBD7</color>
-    <color name="Salmon">#FA8072</color>
+    <color name="Salmon">#fa8072</color>
     <color name="GhostWhite">#F8F8FF</color>
     <color name="MintCream">#F5FFFA</color>
     <color name="WhiteSmoke">#F5F5F5</color>
