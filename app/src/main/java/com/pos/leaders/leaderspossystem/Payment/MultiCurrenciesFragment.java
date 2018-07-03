@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -26,8 +27,9 @@ import java.util.List;
 
 public class MultiCurrenciesFragment extends Fragment {
     String touchPadPressed ="";
-    Button bt1 , bt2 , bt3 , bt4 , bt5 , bt6 ,bt7, bt8 , bt9 , btCe , btClear , btConfirmation , btDot , bt0;
+    Button bt1 , bt2 , bt3 , bt4 , bt5 , bt6 ,bt7, bt8 , bt9  , btClear , btConfirmation , btDot , bt0;
     TextView amount;
+    ImageView imageCe;
     Spinner currencySpinner;
     List<Currency> currenciesList;
     private List<CurrencyType> currencyTypesList = null;
@@ -45,7 +47,7 @@ public class MultiCurrenciesFragment extends Fragment {
         bt2=(Button)v.findViewById(R.id.multiCurrenciesFragment_bt2);
         bt1=(Button)v.findViewById(R.id.multiCurrenciesFragment_bt1);
         bt0=(Button)v.findViewById(R.id.multiCurrenciesFragment_bt0);
-        btCe=(Button)v.findViewById(R.id.multiCurrenciesFragment_btCE);
+        imageCe=(ImageView) v.findViewById(R.id.multiCurrenciesFragment_btCE);
         btClear=(Button)v.findViewById(R.id.multiCurrenciesFragment_btClear);
         btDot=(Button)v.findViewById(R.id.multiCurrenciesFragment_btDot);
         btConfirmation=(Button)v.findViewById(R.id.multiCurrenciesFragment_btAddPayment);
@@ -146,7 +148,7 @@ public class MultiCurrenciesFragment extends Fragment {
 
             }
         });
-        btCe.setOnClickListener(new View.OnClickListener() {
+        imageCe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!touchPadPressed.equals(""))

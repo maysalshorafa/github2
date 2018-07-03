@@ -331,6 +331,8 @@
     <string name="TouchPad_9">9</string>
     <string name="TouchPad_dot">.</string>
     <string name="TouchPad_ce">CE</string>
+    <string name="back">رجوع</string>
+    <string name="check_out">خروج</string>
     <string name="_return">باقي</string>
     <string name="a_report_amount">اساس</string>
     <string name="active_credit_card_service_in_pos">الرجاء تفعيل خدمة الدفع عن طريق بطاقة الائتمان</string>

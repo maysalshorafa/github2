@@ -97,6 +97,8 @@
     <string name="TouchPad_9">9</string>
     <string name="TouchPad_dot">.</string>
     <string name="TouchPad_ce">C</string>
+    <string name="back">back</string>
+    <string name="check_out">Check Out</string>
     <string name="empty_password">Please insert your password</string>
     <string name="wrong_password">Please insert valid password</string>
     <string name="schedule_workers">Time Attendance</string>
