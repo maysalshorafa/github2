@@ -169,18 +169,19 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/multiCurrenciesFragment_btDot"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="." />
-
-                <Button
                     android:id="@+id/multiCurrenciesFragment_bt0"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:text="0" />
+
+                <Button
+                    android:id="@+id/multiCurrenciesFragment_btDot"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:text="." />
+
             </LinearLayout>
 
         </LinearLayout>
