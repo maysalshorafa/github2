@@ -1,4 +1,4 @@
-package com.pos.leaders.leaderspossystem.Tools;
+package com.pos.leaders.leaderspossystem.Payment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +15,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBA
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,8 +157,7 @@ public class MultiCurrenciesFragment extends Fragment {
         btClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               touchPadPressed="";
-                amount.setText(touchPadPressed);
+               clearScreen();
             }
         });
         btDot.setOnClickListener(new View.OnClickListener() {
@@ -168,9 +168,10 @@ public class MultiCurrenciesFragment extends Fragment {
                 amount.setText(touchPadPressed);
             }
         });
-
-
-
         return v;
+    }
+    public void clearScreen() {
+        touchPadPressed="";
+        amount.setText(touchPadPressed);
     }
 }

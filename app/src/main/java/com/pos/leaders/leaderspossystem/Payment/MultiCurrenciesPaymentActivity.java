@@ -1,14 +1,19 @@
 package com.pos.leaders.leaderspossystem.Payment;
 
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.R;
@@ -29,6 +34,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
     private TextView tvTotalPrice,tvExcess;
     private LinearLayout llTotalPriceBackground;
+    MultiCurrenciesFragment mcf;
 
     private ListView lvPaymentTable;
     private PaymentTableAdapter paymentTableAdapter;
@@ -66,11 +72,39 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         lvPaymentTable.setAdapter(paymentTableAdapter);
         paymentTableAdapter.notifyDataSetChanged();
 
+        lvPaymentTable.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(view.getId()==R.id.list_multi_currencies_payment_delete){
+                    Toast.makeText(MultiCurrenciesPaymentActivity.this, view.getId()+"", Toast.LENGTH_SHORT).show();
+                }
+                Log.i("click " + position, view.getId() + " " + id);
+            }
+        });
+
+        //set fragment
+        mcf = new MultiCurrenciesFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.MultiCurrenciesPaymentActivity_flNumberPad, mcf);
+        transaction.commit();
     }
 
     private void insertNewRow(double val, String currency) {
-        //// TODO: 02/07/2018
+        totalPaid += val;
+        setExcess();
+        updateView();
+
+        PaymentTable lastPaymentTable = paymentTables.get(paymentTables.size() - 1);
+        //(double due, double tendered, double change, String paymentMethod, CurrencyType currency)
+        paymentTables.add(paymentTables.size() - 1, new PaymentTable(lastPaymentTable.getDue(), val, ((excess <= 0) ? excess : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, defaultCurrency + "")));
+
+        lastPaymentTable.setDue(excess);
+        lastPaymentTable.setTendered(Double.NaN);
+        paymentTableAdapter.notifyDataSetChanged();
+
     }
+
+
 
     private void setExcess() {
         excess = totalPrice - totalPaid;
@@ -108,5 +142,13 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 break;
         }
         insertNewRow(val, defaultCurrency + "");
+    }
+
+    public void multiCurrenciesConfirmClick(View v) {
+        if (v.getId() ==R.id.multiCurrenciesFragment_btAddPayment) {
+            double val = Double.parseDouble(mcf.amount.getText().toString());
+            insertNewRow(val, defaultCurrency + "");
+            mcf.clearScreen();
+        }
     }
 }

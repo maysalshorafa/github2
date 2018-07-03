@@ -102,7 +102,6 @@ import com.pos.leaders.leaderspossystem.Tools.CashActivity;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.MultiCurrenciesFragment;
 import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;

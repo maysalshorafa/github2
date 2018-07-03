@@ -58,19 +58,23 @@ public class PaymentTableAdapter extends ArrayAdapter<PaymentTable> {
         final PaymentTable paymentTable = getItem(position);
 
         holder.tvDue.setText(Util.makePrice(paymentTable.getDue()));
-        if(!Double.isNaN(paymentTable.getTendered()))
+        if(!Double.isNaN(paymentTable.getTendered())) {
             holder.tvTendered.setText(Util.makePrice(paymentTable.getTendered()));
-        else
+            holder.tvDelete.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.tvTendered.setText("");
             holder.tvDelete.setVisibility(View.INVISIBLE);
+        }
 
-        holder.tvDelete.setOnClickListener(new View.OnClickListener() {
+        /*holder.tvDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 remove(paymentTable);
             }
-        });
+        });*/
 
-        if(paymentTable.getChange()>0)
+        if(!Double.isNaN(paymentTable.getChange()))
             holder.tvChange.setText(Util.makePrice(paymentTable.getChange()));
         else
             holder.tvChange.setText("");

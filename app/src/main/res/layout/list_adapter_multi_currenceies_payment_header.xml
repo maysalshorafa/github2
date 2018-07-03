@@ -8,7 +8,7 @@
     android:paddingTop="@dimen/default_margin_padding">
 
     <TextView
-        android:id="@+id/list_multi_currencies_payment_due"
+        android:id="@+id/list_header_multi_currencies_payment_due"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -18,7 +18,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/list_multi_currencies_payment_tendered"
+        android:id="@+id/list_header_multi_currencies_payment_tendered"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -28,7 +28,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/list_multi_currencies_payment_change"
+        android:id="@+id/list_header_multi_currencies_payment_change"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -38,7 +38,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/list_multi_currencies_payment_method"
+        android:id="@+id/list_header_multi_currencies_payment_method"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -48,7 +48,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/list_multi_currencies_payment_currency"
+        android:id="@+id/list_header_multi_currencies_payment_currency"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -58,12 +58,13 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/list_multi_currencies_payment_delete"
+        android:id="@+id/list_header_multi_currencies_payment_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/default_margin_padding"
         android:layout_marginStart="@dimen/default_margin_padding"
         android:text="X"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="invisible" />
 </LinearLayout>

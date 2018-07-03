@@ -61,11 +61,12 @@
             android:gravity="bottom"
             android:orientation="vertical">
 
-            <fragment
-                android:id="@+id/fragment"
-                android:name="com.pos.leaders.leaderspossystem.Tools.MultiCurrenciesFragment"
+            <FrameLayout
+                android:id="@+id/MultiCurrenciesPaymentActivity_flNumberPad"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent">
+
+            </FrameLayout>
         </LinearLayout>
 
     </LinearLayout>
@@ -88,7 +89,7 @@
         <ListView
             android:id="@+id/MultiCurrenciesPaymentActivity_lvPaymentList"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="match_parent"
