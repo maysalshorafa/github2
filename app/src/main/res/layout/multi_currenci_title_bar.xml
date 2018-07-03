@@ -14,9 +14,9 @@
             android:layout_height="match_parent"
             android:drawableLeft="@drawable/back"
             android:text="@string/back"
-            android:background="@drawable/buttonstate"
             android:layout_margin="8dp"
             android:padding="8dp"
+            android:background="@drawable/layout_border"
             />
 
         <TextView
