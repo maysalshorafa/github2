@@ -1,9 +1,11 @@
 package com.pos.leaders.leaderspossystem.Payment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +90,12 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (excess <= 0) {
-                    //// TODO: 04/07/2018 result sale cart activity.
+                    Log.d("PaymentTables",paymentTables.toString());
+                    Intent i = new Intent();
+                    i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE, paymentTables.toString());
+
+                    setResult(RESULT_OK, i);
+                    finish();
                 }
             }
         });

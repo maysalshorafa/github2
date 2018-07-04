@@ -111,6 +111,7 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -141,6 +142,7 @@ public class SalesCartActivity extends AppCompatActivity {
     private static final int REQUEST_CHECKS_ACTIVITY_CODE = 753;
     private static final int REQUEST_CREDIT_CARD_ACTIVITY_CODE = 801;
     private static final int REQUEST_PIN_PAD_ACTIVITY_CODE = 907;
+    private static final int REQUEST_MULTI_CURRENCY_ACTIVITY_CODE = 444;
     public static final String COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE = "com_pos_leaders_cart_total_price";
     String transID = "";
 
@@ -1183,7 +1185,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         //Intent intent = new Intent(SalesCartActivity.this, CashActivity.class);
                         Intent intent = new Intent(SalesCartActivity.this, MultiCurrenciesPaymentActivity.class);
                         intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, saleTotalPrice);
-                        startActivityForResult(intent, REQUEST_CASH_ACTIVITY_WITH_CURRENCY_CODE);
+                        startActivityForResult(intent, REQUEST_MULTI_CURRENCY_ACTIVITY_CODE);
                     } else {
                         Intent intent = new Intent(SalesCartActivity.this, OldCashActivity.class);
                         intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, saleTotalPrice);
@@ -3156,6 +3158,116 @@ public class SalesCartActivity extends AppCompatActivity {
             }
         }
         //endregion
+        if (requestCode == REQUEST_MULTI_CURRENCY_ACTIVITY_CODE) {
+            if (resultCode == RESULT_OK) {
+                JSONArray jsonArray = null;
+                try {
+                    CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
+                    PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
+                    saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
+                    orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
+                    custmerAssetDB = new CustomerAssetDB(SalesCartActivity.this);
+                    cashPaymentDBAdapter.open();
+                    saleDBAdapter.open();
+                    orderDBAdapter.open();
+                    custmerAssetDB.open();
+                    paymentDBAdapter.open();
+                    long tempSaleId=0;
+                    double TotalPaidAmount=0;
+                    double change=0;
+
+                    String MultiCurrencyResult = data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE);
+                    jsonArray = new JSONArray(MultiCurrencyResult);
+                    for(int i=0; i<jsonArray.length()-1;i++){
+                     JSONObject jsonObject=jsonArray.getJSONObject(i);
+                     TotalPaidAmount+=jsonObject.getDouble("tendered");
+                        change=jsonObject.getDouble("change");
+                    }
+                    SESSION._ORDERS.setTotalPaidAmount(TotalPaidAmount);
+                    saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
+                    SESSION._ORDERS.setOrderId(saleIDforCash);
+                    currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this,change,new Order(SESSION._ORDERS));
+                    for(int i=0; i<jsonArray.length()-1;i++){
+                        JSONObject jsonObject=jsonArray.getJSONObject(i);
+                        cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("due"), jsonObject.getJSONObject("currency").getLong("currencyTypeId"), new Timestamp(System.currentTimeMillis()));
+
+                    }
+                    cashPaymentDBAdapter.close();
+                    // Club with point and amount
+                    if (clubType == 2) {
+                        pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
+                        sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
+                    }
+
+                    if (equalUsedPoint) {
+                        saleTotalPrice = 0.0;
+                        SESSION._ORDERS.setTotalPrice(saleTotalPrice);
+                        saleDBAdapter.updateEntry(SESSION._ORDERS);
+                        usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    }
+                    if (lessUsedPoint) {
+                        saleTotalPrice = 0.0;
+                        SESSION._ORDERS.setTotalPrice(saleTotalPrice);
+                        saleDBAdapter.updateEntry(SESSION._ORDERS);
+                        usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    }
+                    if (biggerUsedPoint) {
+                        SESSION._ORDERS.setTotalPrice(saleTotalPrice);
+                        saleDBAdapter.updateEntry(SESSION._ORDERS);
+                        usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    }
+                    if (forSaleMan) {
+                        tempSaleId =saleIDforCash;
+                        custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._ORDERS.getTotalPrice(), 0, "ORDER", SESSION._ORDERS.getCreatedAt());
+                    }
+                    // insert order region
+                    for (OrderDetails o : SESSION._ORDER_DETAILES) {
+                        long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                        orderId.add(orderid);
+                        //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+                    }
+                    // ORDER_DETAILS Sales man Region
+                    for (int i=0;i<orderIdList.size();i++) {
+                        OrderDetails order = orderIdList.get(i);
+                        long customerAssestId= custmerAssetstIdList.get(i);
+                        for (int j = 0; j< SESSION._ORDER_DETAILES.size(); j++) {
+                            OrderDetails o = SESSION._ORDER_DETAILES.get(j);
+                            long tempOrderId =orderId.get(i);
+                            if (o==order) {
+                                if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
+                                    o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
+                                    custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPaidAmount(), 0, "ORDER_DETAILS", SESSION._ORDERS.getCreatedAt());
+                                }
+                            }
+                        }
+                    }
+                    //update customer balance
+                    if(SESSION._ORDERS.getTotalPrice()<0&&customer!=null){
+                        Customer upDateCustomer=customer;
+                        upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice()+customer.getBalance());
+                        customerDBAdapter.updateEntry(upDateCustomer);
+                    }
+                    orderDBAdapter.close();
+                    custmerAssetDB.close();
+                    // End ORDER_DETAILS And CustomerAssistant Region
+
+                    // Payment Region
+                    long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash);
+
+                    Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
+
+                    SESSION._ORDERS.setPayment(payment);
+
+                    paymentDBAdapter.close();
+
+                    printAndOpenCashBox("", "", "",REQUEST_CASH_ACTIVITY_CODE);
+
+                    return;
+                }
+                catch (Exception e){
+
+                }
+            }}
 
     }
 
