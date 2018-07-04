@@ -56,6 +56,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
@@ -77,6 +79,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Employee;
@@ -279,7 +283,8 @@ public class SalesCartActivity extends AppCompatActivity {
     String fromEditText="";
     static List<String> printedRows;
     double valueOfDiscount=0;
-
+    List<Currency> currenciesList;
+    private List<CurrencyType> currencyTypesList = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -308,7 +313,16 @@ public class SalesCartActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
+       //Getting default currencies name and values
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
+        currencyTypeDBAdapter.open();
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        currencyTypeDBAdapter.close();
+        //get currency value
+        CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(SalesCartActivity.this);
+        currencyDBAdapter.open();
+        currenciesList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
+        currencyDBAdapter.close();
         search_person = (ImageButton) findViewById(R.id.searchPerson);
         drawerLayout = (DrawerLayout) findViewById(R.id.mainActivity_drawerLayout);
 
@@ -3178,10 +3192,11 @@ public class SalesCartActivity extends AppCompatActivity {
 
                     String MultiCurrencyResult = data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE);
                     jsonArray = new JSONArray(MultiCurrencyResult);
+                    Log.d("MultiCurrencyResult",MultiCurrencyResult);
                     for(int i=0; i<jsonArray.length()-1;i++){
                      JSONObject jsonObject=jsonArray.getJSONObject(i);
-                     TotalPaidAmount+=jsonObject.getDouble("tendered");
-                        change=jsonObject.getDouble("change");
+                     TotalPaidAmount+=jsonObject.getDouble("tendered")*getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
+                        change=Math.abs(jsonObject.getDouble("change"));
                     }
                     SESSION._ORDERS.setTotalPaidAmount(TotalPaidAmount);
                     saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
@@ -3189,7 +3204,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this,change,new Order(SESSION._ORDERS));
                     for(int i=0; i<jsonArray.length()-1;i++){
                         JSONObject jsonObject=jsonArray.getJSONObject(i);
-                        cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("due"), jsonObject.getJSONObject("currency").getLong("currencyTypeId"), new Timestamp(System.currentTimeMillis()));
+                        cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("due"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()));
 
                     }
                     cashPaymentDBAdapter.close();
@@ -3269,6 +3284,12 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
             }}
 
+    }
+
+    private long getCurrencyIdByType(String type) {
+        CurrencyTypeDBAdapter currency=new CurrencyTypeDBAdapter(this);
+        currency.open();
+        return  currency.getCurrencyIdByType(type);
     }
 
     /**
@@ -3721,5 +3742,13 @@ public class SalesCartActivity extends AppCompatActivity {
         calculateTotalPrice();
         linearLayoutCustomerBalance.setVisibility(View.VISIBLE);
         customerBalance.setText(Util.makePrice(Math.abs(customer.getBalance())));
+    }
+    public double getCurrencyRate(String currencyType){
+        for (int i=0;i<currenciesList.size();i++){
+            if(currenciesList.get(i).getCountry().equals(currencyType)) {
+                return currenciesList.get(i).getRate();
+            }
+        }
+        return 1;
     }
 }
