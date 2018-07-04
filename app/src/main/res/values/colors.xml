@@ -47,7 +47,7 @@
 
 
     <!--netColor-->
-    <color name="White">#FFFFFF</color>
+    <color name="White">#ffffff</color>
     <color name="Ivory">#FFFFF0</color>
     <color name="LightYellow">#FFFFE0</color>
     <color name="Yellow">#FFFF00</color>

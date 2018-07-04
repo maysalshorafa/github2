@@ -5,43 +5,46 @@
     android:layout_height="wrap_content"
 
   >
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <Button
+            android:id="@+id/MultiCurrenciesTitlebar_btBack"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:drawableLeft="@drawable/back"
-            android:text="@string/back"
             android:layout_margin="8dp"
+            android:drawableStart="@drawable/back"
             android:padding="8dp"
-            android:background="@drawable/layout_border"
-            />
+            android:text="@string/back" />
 
         <TextView
-            android:id="@+id/textView15"
+            android:id="@+id/MultiCurrenciesTitlebar_tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="@string/payment" />
+            android:text="@string/payment"
+            android:textColor="@color/White"
+            android:textSize="24sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="end">
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal">
+
             <Button
+                android:id="@+id/MultiCurrenciesTitlebar_btCheckOut"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:drawableRight="@drawable/forward"
-                android:text="@string/check_out"
-                android:background="@drawable/layout_border"
                 android:layout_margin="8dp"
-                android:padding="8dp"
+                android:drawableEnd="@drawable/forward"
 
-               />
-            </LinearLayout>
+                android:padding="8dp"
+                android:text="@string/check_out" />
         </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

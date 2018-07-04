@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -14,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:hint="@string/amount"
             android:textSize="20sp" />
 
@@ -21,7 +23,8 @@
             android:id="@+id/multiCurrenciesFragment_currenciesSpinner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3" />
+            android:layout_weight="3"
+            android:spinnerMode="dialog" />
     </LinearLayout>
 
     <LinearLayout
@@ -32,6 +35,7 @@
 
         <Button
             android:id="@+id/multiCurrenciesFragment_bt7"
+            style="@style/AppTheme.bt_normal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_column="0"
@@ -40,6 +44,7 @@
 
         <Button
             android:id="@+id/multiCurrenciesFragment_bt8"
+            style="@style/AppTheme.bt_normal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_column="1"
@@ -48,20 +53,23 @@
 
         <Button
             android:id="@+id/multiCurrenciesFragment_bt9"
+            style="@style/AppTheme.bt_normal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
 
+            android:layout_height="match_parent"
             android:layout_column="2"
             android:layout_weight="1"
             android:text="9" />
 
-        <Button
+        <ImageButton
             android:id="@+id/multiCurrenciesFragment_btCE"
+            style="@style/AppTheme.bt_normal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_column="3"
             android:layout_weight="1"
-            android:drawableStart="@drawable/back_space" />
+            android:src="@drawable/back_space" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -72,9 +80,10 @@
 
         <Button
             android:id="@+id/multiCurrenciesFragment_bt4"
+            style="@style/AppTheme.bt_normal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
 
+            android:layout_height="match_parent"
             android:layout_column="0"
             android:layout_weight="1"
             android:gravity="center"
@@ -82,9 +91,10 @@
 
         <Button
             android:id="@+id/multiCurrenciesFragment_bt5"
+            style="@style/AppTheme.bt_normal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
 
+            android:layout_height="match_parent"
             android:layout_column="1"
             android:layout_weight="1"
             android:gravity="center"
@@ -92,9 +102,10 @@
 
         <Button
             android:id="@+id/multiCurrenciesFragment_bt6"
+            style="@style/AppTheme.bt_normal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
 
+            android:layout_height="match_parent"
             android:layout_column="2"
             android:layout_weight="1"
             android:gravity="center"
@@ -133,33 +144,37 @@
 
                 <Button
                     android:id="@+id/multiCurrenciesFragment_bt1"
+                    style="@style/AppTheme.bt_normal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_column="0"
 
+                    android:layout_column="0"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="1" />
 
                 <Button
-                    android:id="@+id/multiCurrenciesFragment_bt3"
+                    android:id="@+id/multiCurrenciesFragment_bt2"
+                    style="@style/AppTheme.bt_normal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_column="2"
 
+                    android:layout_column="1"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="2" />
+
+                <Button
+                    android:id="@+id/multiCurrenciesFragment_bt3"
+                    style="@style/AppTheme.bt_normal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:layout_column="2"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="3" />
 
-                <Button
-                    android:id="@+id/multiCurrenciesFragment_bt2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_column="1"
-
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="2" />
             </LinearLayout>
 
             <LinearLayout
@@ -170,6 +185,7 @@
 
                 <Button
                     android:id="@+id/multiCurrenciesFragment_bt0"
+                    style="@style/AppTheme.bt_normal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -177,6 +193,7 @@
 
                 <Button
                     android:id="@+id/multiCurrenciesFragment_btDot"
+                    style="@style/AppTheme.bt_normal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"

@@ -13,6 +13,8 @@ import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by KARAM on 02/07/2018.
@@ -25,6 +27,7 @@ public class PaymentTableAdapter extends ArrayAdapter<PaymentTable> {
     private LayoutInflater inflater;
     private Context context;
     int bgColor =0;
+    private Map<String, Character> currencySymbols;
 
     public PaymentTableAdapter(Context context,int resource, ArrayList<PaymentTable> paymentTables) {
         super(context, resource, paymentTables);
@@ -32,6 +35,13 @@ public class PaymentTableAdapter extends ArrayAdapter<PaymentTable> {
         this.paymentTables = paymentTables;
         this.resource = resource;
         inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        currencySymbols = new HashMap<>();
+
+        currencySymbols.put("ILS", new Character('\u20aa'));
+        currencySymbols.put("USD", new Character('\u0024'));
+        currencySymbols.put("GBP", new Character('\u00a3'));
+        currencySymbols.put("EUR", new Character('\u20ac'));
+
     }
 
     @NonNull
@@ -57,9 +67,10 @@ public class PaymentTableAdapter extends ArrayAdapter<PaymentTable> {
         // Get the data item for this position
         final PaymentTable paymentTable = getItem(position);
 
-        holder.tvDue.setText(Util.makePrice(paymentTable.getDue()));
+        String sym = " " + currencySymbols.get(paymentTable.getCurrency().getType());
+        holder.tvDue.setText(Util.makePrice(paymentTable.getDue()) + sym);
         if(!Double.isNaN(paymentTable.getTendered())) {
-            holder.tvTendered.setText(Util.makePrice(paymentTable.getTendered()));
+            holder.tvTendered.setText(Util.makePrice(paymentTable.getTendered()) + sym);
             holder.tvDelete.setVisibility(View.VISIBLE);
         }
         else {
@@ -75,7 +86,7 @@ public class PaymentTableAdapter extends ArrayAdapter<PaymentTable> {
         });*/
 
         if(!Double.isNaN(paymentTable.getChange()))
-            holder.tvChange.setText(Util.makePrice(paymentTable.getChange()));
+            holder.tvChange.setText(Util.makePrice(paymentTable.getChange()) + sym);
         else
             holder.tvChange.setText("");
 

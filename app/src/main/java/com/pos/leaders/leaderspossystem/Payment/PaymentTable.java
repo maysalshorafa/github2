@@ -1,5 +1,9 @@
 package com.pos.leaders.leaderspossystem.Payment;
 
+import android.util.Log;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 
 /**
@@ -71,7 +75,18 @@ public class PaymentTable {
         this.currency = currency;
     }
 
-
     //endregion Setters
 
+    @Override
+    public String toString() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            if(e.getMessage()!=null) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+            }
+            return "";
+        }
+    }
 }
