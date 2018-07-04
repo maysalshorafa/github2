@@ -60,8 +60,7 @@
                 <Spinner
                     android:id="@+id/MultiCurrenciesPaymentActivity_spCurrency"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:spinnerMode="dialog" />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 

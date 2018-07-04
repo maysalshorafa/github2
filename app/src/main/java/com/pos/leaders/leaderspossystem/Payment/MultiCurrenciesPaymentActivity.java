@@ -205,13 +205,15 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     }
 
     private void insertNewRow(double val, String currency,double currencyRate) {
+        if(excess<=0)
+            return;
         //get currency rate
         totalPaid += val * currencyRate;
         double beforeChangeExcess = excess;
         setExcess();
         updateView();
 
-        paymentTables.add(paymentTables.size() - 1, new PaymentTable(beforeChangeExcess/currencyRate, val, ((excess <= 0) ? excess : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, currency + "")));
+        paymentTables.add(paymentTables.size() - 1, new PaymentTable(beforeChangeExcess/currencyRate, val, ((excess <= 0) ? (excess/currencyRate) : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, currency + "")));
 
         updateLastRow();
     }
@@ -256,10 +258,12 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
     public void multiCurrenciesConfirmClick(View v) {
         if (v.getId() ==R.id.multiCurrenciesFragment_btAddPayment) {
-            currencyType=String.valueOf(mcf.currencySpinner.getSelectedItem().toString());
-            double val = Double.parseDouble(mcf.amount.getText().toString());
-            insertNewRow(val, currencyType + "",getCurrencyRate(currencyType));
-            mcf.clearScreen();
+            if((mcf.amount.getText().toString()!="")) {
+                currencyType = String.valueOf(mcf.currencySpinner.getSelectedItem().toString());
+                double val = Double.parseDouble(mcf.amount.getText().toString());
+                insertNewRow(val, currencyType + "", getCurrencyRate(currencyType));
+                mcf.clearScreen();
+            }
         }
     }
     public double getCurrencyRate(String currencyType){
