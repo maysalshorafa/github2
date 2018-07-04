@@ -78,12 +78,13 @@ public class PaymentTableAdapter extends ArrayAdapter<PaymentTable> {
             holder.tvDelete.setVisibility(View.INVISIBLE);
         }
 
-        /*holder.tvDelete.setOnClickListener(new View.OnClickListener() {
+        holder.tvDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                remove(paymentTable);
+                MultiCurrenciesPaymentActivity multiCurrenciesPaymentActivity = (MultiCurrenciesPaymentActivity) getContext();
+                multiCurrenciesPaymentActivity.deleteRow(position);
             }
-        });*/
+        });
 
         if(!Double.isNaN(paymentTable.getChange()))
             holder.tvChange.setText(Util.makePrice(paymentTable.getChange()) + sym);

@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.Tools;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,6 +118,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		holder.btnDelete.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				Log.i("delete click", "onClick: "+position);
 				ChecksActivity checksActivity = (ChecksActivity)getContext();
 				checksActivity.delete(position);
 			}

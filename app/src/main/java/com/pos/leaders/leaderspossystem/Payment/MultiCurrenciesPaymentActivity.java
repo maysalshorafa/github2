@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
@@ -171,6 +170,23 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
         setExcess();
         updateView();
+    }
+
+    public void deleteRow(int position) {
+        paymentTables.remove(position);
+        ArrayList<PaymentTable> tempArray = new ArrayList<>(paymentTables);
+        paymentTables.clear();
+        paymentTables.add(new PaymentTable(totalPrice, Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + "")));
+        excess = totalPrice;
+        totalPaid = 0;
+        for(int i=0;i<tempArray.size()-1;i++) {
+            insertNewRow(tempArray.get(i).getTendered(), tempArray.get(i).getCurrency().getType(), getCurrencyRate(tempArray.get(i).getCurrency().getType()));
+        }
+        if (tempArray.size()-1 == 0) {
+            setExcess();
+            updateView();
+            updateLastRow();
+        }
     }
 
     private void updateLastRow() {
