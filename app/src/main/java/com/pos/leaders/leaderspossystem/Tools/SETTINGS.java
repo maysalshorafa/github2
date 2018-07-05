@@ -37,7 +37,12 @@ public class SETTINGS {
 	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
 
 	//public static String BO_SERVER_URL = "http://18.220.245.144:8080/webapi";
-	public static String BO_SERVER_URL = "https://api.leadpos.io/webapi/";
+	//public static String BO_SERVER_URL = "https://api.leadpos.io/webapi/";
+
+	//public static String BO_SERVER_URL = "http://ec2-18-220-245-144.us-east-2.compute.amazonaws.com:8080/webapi";
+	public static String BO_SERVER_URL = "https://api.leadpos.io/webapi";
+	//public static String BO_SERVER_URL = "http://api_01.leadpos.io:8080/webapi";
+
 	//public static String BO_SERVER_URL = "http://ec2-18-220-245-144.us-east-2.compute.amazonaws.com:8080/webapi";
 
 	//public static String BO_SERVER_URL = "http://192.168.1.18:8080/webapi/";

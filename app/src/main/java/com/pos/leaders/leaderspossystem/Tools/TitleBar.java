@@ -1,6 +1,5 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -9,9 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.format.DateFormat;
 import android.text.format.Time;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +18,10 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.LogInActivity;
 import com.pos.leaders.leaderspossystem.R;
-import com.pos.leaders.leaderspossystem.Settings.AppCompatPreferenceActivity;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
-import com.pos.leaders.leaderspossystem.updater.AutoUpdateApk;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,7 +37,6 @@ public class TitleBar {
     private static ImageView ivInternet;
     private static ImageView ivSync ;
     private static Timer timer = null;
-    private static AutoUpdateApk aua = null;
     private static Clock clock=null;
     private static long lastUpdateCheck;
 
@@ -194,39 +185,12 @@ public class TitleBar {
 
         }
 
-        //region Auto Update
-        try {
-            if (aua == null) {
-                aua = new AutoUpdateApk(context);
-                aua.addObserver(new Observer() {
-                    @Override
-                    public void update(Observable o, Object data) {
-                        if (((String) data).equalsIgnoreCase(AutoUpdateApk.AUTOUPDATE_GOT_UPDATE)) {
-                            android.util.Log.i("AutoUpdateApkActivity", "Have just received update!");
-                        }
-                        if (((String) data).equalsIgnoreCase(AutoUpdateApk.AUTOUPDATE_HAVE_UPDATE)) {
-                            android.util.Log.i("AutoUpdateApkActivity", "There's an update available!");
-                        }
-                    }
-                });
-                lastUpdateCheck = new Date().getTime();
-            } else if (new Date().getTime() - lastUpdateCheck > (1000) * (60) * (3)) {
-                aua.checkUpdatesManually();
-                lastUpdateCheck = new Date().getTime();
-            }
-        } catch (Exception e) {
-            Log.e("Auto Update", e.getMessage(), e);
-        }
 
-        //endregion
     }
 
     public static void removeTitleBard(final AppCompatActivity context) {
         if (clock != null) {
             clock.StopTick();
-        }
-        if (aua != null) {
-
         }
     }
 
@@ -272,6 +236,4 @@ class LoggingTask extends TimerTask{
     public void run() {
         sendLogFile();
     }
-
-
 }

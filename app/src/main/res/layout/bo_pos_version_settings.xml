@@ -65,7 +65,7 @@ android:orientation="vertical">
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/setUpManagementCurrencyCheckBox"
+                android:id="@+id/setUpManagement_tvPOSDBVersion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -98,7 +98,7 @@ android:orientation="vertical">
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/setUpManagementCurrencyCheckBox"
+                android:id="@+id/setUpManagement_tvBoVersion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
