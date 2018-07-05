@@ -94,6 +94,13 @@ public class PaymentTableAdapter extends ArrayAdapter<PaymentTable> {
         holder.tvMethod.setText(paymentTable.getPaymentMethod().toString());
 
         holder.tvCurrency.setText(paymentTable.getCurrency().getType());
+        if(bgColor%2==0){
+            convertView.setBackgroundColor(context.getResources().getColor(R.color.white));
+        }else {
+            convertView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
+
+        }
+        bgColor++;
 
         return convertView;
     }

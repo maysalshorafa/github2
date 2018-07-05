@@ -156,7 +156,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     tvTotalPriceWithMultiCurrency.setVisibility(View.VISIBLE);
                     tvTotalPriceWithMultiCurrency.setText(Util.makePrice(totalPrice / selectedCurrencyRate) + " " + currenciesNames.get(position));
                 }else {
-                    tvTotalPriceWithMultiCurrency.setVisibility(View.INVISIBLE);
+                    tvTotalPriceWithMultiCurrency.setVisibility(View.GONE);
 
                 }
                 updateLastRow();
@@ -220,7 +220,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             setExcess();
             updateView();
         paymentTables.add(paymentTables.size() - 1, new PaymentTable(beforeChangeExcess/currencyRate, val, ((excess <= 0) ? (excess/currencyRate) : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, currency + "")));
-
+        paymentTableAdapter.notifyDataSetChanged();
         updateLastRow();
         }
         else {

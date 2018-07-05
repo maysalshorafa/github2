@@ -48,7 +48,7 @@
                 android:layout_marginTop="8dp"
                 android:text="245 $"
                 android:textAlignment="center"
-                android:textSize="36sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:visibility="invisible"/>
 
@@ -100,7 +100,9 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:text="@string/check_out"
-                android:layout_margin="8dp"
+                android:layout_margin="16dp"
+                android:paddingTop="8dp"
+                android:textColor="@color/white"
                 />
         </LinearLayout>
 
@@ -126,7 +128,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".35"
-            android:layout_margin="8dp"/>
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
