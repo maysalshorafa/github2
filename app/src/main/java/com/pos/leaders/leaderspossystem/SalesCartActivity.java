@@ -3196,7 +3196,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     for(int i=0; i<jsonArray.length()-1;i++){
                      JSONObject jsonObject=jsonArray.getJSONObject(i);
                      TotalPaidAmount+=jsonObject.getDouble("tendered")*getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
-                        change=Math.abs(jsonObject.getDouble("change"));
+                        change=Math.abs(jsonObject.getDouble("change"))*getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
                     }
                     SESSION._ORDERS.setTotalPaidAmount(TotalPaidAmount);
                     saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);

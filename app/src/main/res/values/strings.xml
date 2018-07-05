@@ -574,7 +574,7 @@
     <string name="title_activity_departments_activity">Departments Activity</string>
     <string name="title_activity_products_activity">Products Activity</string>
     <string name="title_activity_pinpad">Pin-Pad Activity</string>
-
+    <string name="multi_currencies_payment_activity">MultiCurrenciesPaymentActivity</string>
 
     <string name="currency_is_activated_in_pos">Currency is activated in POS</string>
     <string name="currency_is_not_activated_in_pos">Currency is not activated in POS</string>
@@ -603,7 +603,9 @@
     <string name="due">Due</string>
     <string name="change">Change</string>
     <string name="method">Method</string>
-    <string name="how_mutch_to_return">How Mutch To Return</string>
+    <string name="how_mutch_to_return">How Match To Return</string>
+    <string name="please_insert_correct_value_in_multi_currency_activity">Please insert correct value between 0 and 10000</string>
+    <string name="are_you_want_to_cancel_payment_activity">Are you want to stop payment activity ?</string>
 </resources>
 
 

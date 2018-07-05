@@ -98,6 +98,7 @@ public class PaymentTableAdapter extends ArrayAdapter<PaymentTable> {
         return convertView;
     }
 
+
     public class ViewHolder {
         TextView tvDue;
         TextView tvTendered;
@@ -106,4 +107,5 @@ public class PaymentTableAdapter extends ArrayAdapter<PaymentTable> {
         TextView tvCurrency;
         TextView tvDelete;
     }
+
 }

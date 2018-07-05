@@ -57,14 +57,15 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <TextView
+    <Button
         android:id="@+id/list_header_multi_currencies_payment_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/default_margin_padding"
         android:layout_marginStart="@dimen/default_margin_padding"
-        android:text="X"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:visibility="invisible" />
+        style="@style/AppTheme.bt_yellow"
+       android:text="@string/clear"/>
+
 </LinearLayout>

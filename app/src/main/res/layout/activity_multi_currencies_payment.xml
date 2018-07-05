@@ -17,7 +17,6 @@
             android:id="@+id/MultiCurrenciesPaymentActivity_llPriceBackgrounf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/Salmon"
             android:orientation="vertical"
             android:paddingRight="@dimen/default_margin_padding"
             android:paddingStart="@dimen/default_margin_padding">
@@ -41,6 +40,18 @@
                 android:textAlignment="center"
                 android:textSize="36sp"
                 android:textStyle="bold" />
+            <TextView
+                android:id="@+id/MultiCurrenciesPaymentActivity_tvTotalPriceValueWithMultiCurrency"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:text="245 $"
+                android:textAlignment="center"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                android:visibility="invisible"/>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -78,9 +89,19 @@
                 android:id="@+id/MultiCurrenciesPaymentActivity_flNumberPad"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:layout_weight=".5">
 
             </FrameLayout>
+            <Button
+                android:id="@+id/MultiCurrenciesTitlebar_btCheckOut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="@string/check_out"
+                android:layout_margin="8dp"
+                />
         </LinearLayout>
 
     </LinearLayout>
@@ -103,13 +124,16 @@
         <ListView
             android:id="@+id/MultiCurrenciesPaymentActivity_lvPaymentList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:layout_weight=".35"
+            android:layout_margin="8dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="bottom"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="1.5">
 
             <TextView
                 android:layout_width="match_parent"

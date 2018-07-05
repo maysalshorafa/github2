@@ -349,7 +349,9 @@
     <string name="product_quantity">كمية المنتوجات</string>
     <string name="clear">حذف</string>
     <string name="add_payment">اضافة مبلغ</string>
-
+    <string name="please_insert_correct_value_in_multi_currency_activity">الرجاء ادخال قيمة صحيحة بين 0 وال 100000</string>
+    <string name="are_you_want_to_cancel_payment_activity">هل تريد انهاء شاشة الدفع ؟</string>
+    <string name="multi_currencies_payment_activity">شاشة الدفع بالعملات</string>
 
 
 </resources>

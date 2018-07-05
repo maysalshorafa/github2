@@ -1,22 +1,26 @@
 package com.pos.leaders.leaderspossystem.Payment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
@@ -24,6 +28,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.SalesCartActivity;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
@@ -41,7 +46,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 //'\u20aa'
     private String excessCurrency = "ILS";//ILS
 
-    private TextView tvTotalPrice,tvExcess;
+    private TextView tvTotalPrice,tvExcess,tvTotalPriceWithMultiCurrency;
     private Spinner spCurrency;
     private LinearLayout llTotalPriceBackground;
     MultiCurrenciesFragment mcf;
@@ -53,7 +58,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     List<Currency> currenciesList;
     private List<CurrencyType> currencyTypesList = null;
     private List<String> currenciesNames = null;
-
+    Button btCheckOut;
     private static android.support.v7.app.ActionBar actionBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,27 +71,9 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_multi_currencies_payment);
 
         //region set title bar
-        ViewGroup actionBarLayout = (ViewGroup) this.getLayoutInflater().inflate(R.layout.multi_currenci_title_bar, null);
-        ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
-
-        // Set up your ActionBar
-        actionBar = this.getSupportActionBar();
-        this.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        this.getSupportActionBar().setHomeButtonEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBarLayout.setLayoutParams(params);
-        actionBar.setCustomView(actionBarLayout);
-
-        actionBarLayout.findViewById(R.id.MultiCurrenciesTitlebar_btBack).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-        actionBarLayout.findViewById(R.id.MultiCurrenciesTitlebar_btCheckOut).setOnClickListener(new View.OnClickListener() {
+        TitleBar.setTitleBar(this);
+        btCheckOut=(Button)findViewById(R.id.MultiCurrenciesTitlebar_btCheckOut);
+        btCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (excess <= 0) {
@@ -102,7 +89,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         //endregion title bar
 
         //check extras
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         if (extras != null) {
             totalPrice = (double) extras.get(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE);
         } else {
@@ -110,6 +97,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         }
 
         tvTotalPrice = (TextView) findViewById(R.id.MultiCurrenciesPaymentActivity_tvTotalPriceValue);
+        tvTotalPriceWithMultiCurrency = (TextView) findViewById(R.id.MultiCurrenciesPaymentActivity_tvTotalPriceValueWithMultiCurrency);
         tvExcess = (TextView) findViewById(R.id.MultiCurrenciesPaymentActivity_tvReturn);
         llTotalPriceBackground = (LinearLayout) findViewById(R.id.MultiCurrenciesPaymentActivity_llPriceBackgrounf);
         lvPaymentTable = (ListView) findViewById(R.id.MultiCurrenciesPaymentActivity_lvPaymentList);
@@ -118,13 +106,12 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + defaultCurrency);
         paymentTables.add(new PaymentTable(totalPrice, Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + "")));
 
-        paymentTableAdapter = new PaymentTableAdapter(this, R.layout.list_adapter_multi_currencies_payment, paymentTables);
+        paymentTableAdapter = new PaymentTableAdapter(MultiCurrenciesPaymentActivity.this, R.layout.list_adapter_multi_currencies_payment, paymentTables);
 
         //set list view header
         LayoutInflater inflater = getLayoutInflater();
         ViewGroup header = (ViewGroup) inflater.inflate(R.layout.list_adapter_multi_currenceies_payment_header, lvPaymentTable, false);
         lvPaymentTable.addHeaderView(header, null, false);
-
         //set list value
         lvPaymentTable.setAdapter(paymentTableAdapter);
         paymentTableAdapter.notifyDataSetChanged();
@@ -165,7 +152,13 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedCurrencyRate = getCurrencyRate(currenciesNames.get(position));
                 setExcess();
-                tvTotalPrice.setText(Util.makePrice(totalPrice / selectedCurrencyRate) + " " + currenciesNames.get(position));
+                if(selectedCurrencyRate>1) {
+                    tvTotalPriceWithMultiCurrency.setVisibility(View.VISIBLE);
+                    tvTotalPriceWithMultiCurrency.setText(Util.makePrice(totalPrice / selectedCurrencyRate) + " " + currenciesNames.get(position));
+                }else {
+                    tvTotalPriceWithMultiCurrency.setVisibility(View.INVISIBLE);
+
+                }
                 updateLastRow();
             }
 
@@ -174,9 +167,22 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             }
         });
         //endregion spinner
-
+     header.findViewById(R.id.list_header_multi_currencies_payment_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              paymentTables.clear();
+                excess=totalPrice;
+                totalPaid=0;
+                paymentTables.add(new PaymentTable(totalPrice, Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + "")));
+                setExcess();
+                updateView();
+                paymentTableAdapter.notifyDataSetChanged();
+            }
+        });
         setExcess();
         updateView();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     public void deleteRow(int position) {
@@ -205,17 +211,21 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     }
 
     private void insertNewRow(double val, String currency,double currencyRate) {
-        if(excess<=0)
-            return;
-        //get currency rate
-        totalPaid += val * currencyRate;
-        double beforeChangeExcess = excess;
-        setExcess();
-        updateView();
-
+        if(val>0&&val<=10000){
+            if(excess<=0)
+                return;
+            //get currency rate
+            totalPaid += val * currencyRate;
+            double beforeChangeExcess = excess;
+            setExcess();
+            updateView();
         paymentTables.add(paymentTables.size() - 1, new PaymentTable(beforeChangeExcess/currencyRate, val, ((excess <= 0) ? (excess/currencyRate) : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, currency + "")));
 
         updateLastRow();
+        }
+        else {
+            Toast.makeText(MultiCurrenciesPaymentActivity.this,getString(R.string.please_insert_correct_value_in_multi_currency_activity),Toast.LENGTH_LONG).show();
+        }
     }
 
     private void setExcess() {
@@ -225,9 +235,13 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
     private void updateView() {
         if (excess <= 0) {
-            llTotalPriceBackground.setBackgroundColor(R.color.light_green1);
+            llTotalPriceBackground.setBackgroundColor(getResources().getColor(R.color.light_green1));
+            btCheckOut.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
+
         } else {
-            llTotalPriceBackground.setBackgroundColor(R.color.light_dangers1);
+            llTotalPriceBackground.setBackgroundColor(getResources().getColor(R.color.light_dangers1));
+            btCheckOut.setBackground(getResources().getDrawable(R.drawable.bt_dangers_pressed));
+
         }
     }
 
@@ -274,4 +288,28 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         }
         return 1;
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) // Press Back Icon
+        {
+            new AlertDialog.Builder(MultiCurrenciesPaymentActivity.this)
+                    .setTitle(getString(R.string.cancel_invoice))
+                    .setMessage(getString(R.string.are_you_want_to_cancel_payment_activity))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

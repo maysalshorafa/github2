@@ -203,7 +203,9 @@
         <activity
             android:name=".Settings.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".Payment.MultiCurrenciesPaymentActivity"></activity>
+        <activity android:name=".Payment.MultiCurrenciesPaymentActivity"
+            android:label="@string/multi_currencies_payment_activity"></activity>
+
     </application>
 
 </manifest>
