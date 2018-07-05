@@ -7,10 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -48,7 +46,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
     private TextView tvTotalPrice,tvExcess,tvTotalPriceWithMultiCurrency;
     private Spinner spCurrency;
-    private LinearLayout llTotalPriceBackground;
+    private LinearLayout llTotalPriceBackground,llMultiCurrencyHeaderLayout;
     MultiCurrenciesFragment mcf;
 
     private ListView lvPaymentTable;
@@ -100,6 +98,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         tvTotalPriceWithMultiCurrency = (TextView) findViewById(R.id.MultiCurrenciesPaymentActivity_tvTotalPriceValueWithMultiCurrency);
         tvExcess = (TextView) findViewById(R.id.MultiCurrenciesPaymentActivity_tvReturn);
         llTotalPriceBackground = (LinearLayout) findViewById(R.id.MultiCurrenciesPaymentActivity_llPriceBackgrounf);
+        llMultiCurrencyHeaderLayout = (LinearLayout) findViewById(R.id.MultiCurrenciesPaymentActivity_llHeader);
         lvPaymentTable = (ListView) findViewById(R.id.MultiCurrenciesPaymentActivity_lvPaymentList);
         spCurrency = (Spinner) findViewById(R.id.MultiCurrenciesPaymentActivity_spCurrency);
 
@@ -107,11 +106,12 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         paymentTables.add(new PaymentTable(totalPrice, Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + "")));
 
         paymentTableAdapter = new PaymentTableAdapter(MultiCurrenciesPaymentActivity.this, R.layout.list_adapter_multi_currencies_payment, paymentTables);
-
+/**
         //set list view header
         LayoutInflater inflater = getLayoutInflater();
         ViewGroup header = (ViewGroup) inflater.inflate(R.layout.list_adapter_multi_currenceies_payment_header, lvPaymentTable, false);
-        lvPaymentTable.addHeaderView(header, null, false);
+        lvPaymentTable.addHeaderView(header, null, false);**/
+
         //set list value
         lvPaymentTable.setAdapter(paymentTableAdapter);
         paymentTableAdapter.notifyDataSetChanged();
@@ -154,9 +154,10 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 setExcess();
                 if(selectedCurrencyRate>1) {
                     tvTotalPriceWithMultiCurrency.setVisibility(View.VISIBLE);
-                    tvTotalPriceWithMultiCurrency.setText(Util.makePrice(totalPrice / selectedCurrencyRate) + " " + currenciesNames.get(position));
+                    tvTotalPriceWithMultiCurrency.setText(totalPrice+"/"+selectedCurrencyRate+"="+Util.makePrice(totalPrice / selectedCurrencyRate) + " " + currenciesNames.get(position));
                 }else {
                     tvTotalPriceWithMultiCurrency.setVisibility(View.GONE);
+                    tvTotalPriceWithMultiCurrency.setText("");
 
                 }
                 updateLastRow();
@@ -167,18 +168,6 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             }
         });
         //endregion spinner
-     header.findViewById(R.id.list_header_multi_currencies_payment_delete).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              paymentTables.clear();
-                excess=totalPrice;
-                totalPaid=0;
-                paymentTables.add(new PaymentTable(totalPrice, Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + "")));
-                setExcess();
-                updateView();
-                paymentTableAdapter.notifyDataSetChanged();
-            }
-        });
         setExcess();
         updateView();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -220,8 +209,8 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             setExcess();
             updateView();
         paymentTables.add(paymentTables.size() - 1, new PaymentTable(beforeChangeExcess/currencyRate, val, ((excess <= 0) ? (excess/currencyRate) : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, currency + "")));
-        paymentTableAdapter.notifyDataSetChanged();
         updateLastRow();
+            lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         }
         else {
             Toast.makeText(MultiCurrenciesPaymentActivity.this,getString(R.string.please_insert_correct_value_in_multi_currency_activity),Toast.LENGTH_LONG).show();
@@ -278,6 +267,15 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 insertNewRow(val, currencyType + "", getCurrencyRate(currencyType));
                 mcf.clearScreen();
             }
+        }
+        if (v.getId() ==R.id.list_header_multi_currencies_payment_delete) {
+            paymentTables.clear();
+            excess=totalPrice;
+            totalPaid=0;
+            paymentTables.add(new PaymentTable(totalPrice, Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + "")));
+            setExcess();
+            updateView();
+            paymentTableAdapter.notifyDataSetChanged();
         }
     }
     public double getCurrencyRate(String currencyType){

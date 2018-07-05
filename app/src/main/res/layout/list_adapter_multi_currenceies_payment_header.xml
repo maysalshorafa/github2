@@ -66,6 +66,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         style="@style/AppTheme.bt_yellow"
-       android:text="@string/clear"/>
+       android:text="@string/clear"
+        android:onClick="multiCurrenciesConfirmClick"/>
 
 </LinearLayout>

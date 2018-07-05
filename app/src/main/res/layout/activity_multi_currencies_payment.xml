@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:text="245 $"
                 android:textAlignment="center"
                 android:textSize="24sp"
@@ -122,12 +122,19 @@
             android:text="@string/payment_list"
             android:textAlignment="center"
             android:textColor="?android:attr/textColorLink" />
-
+<LinearLayout
+    android:orientation="horizontal"
+    android:id="@+id/MultiCurrenciesPaymentActivity_llHeader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <include layout="@layout/list_adapter_multi_currenceies_payment_header"/>
+</LinearLayout>
         <ListView
             android:id="@+id/MultiCurrenciesPaymentActivity_lvPaymentList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".35"
+            android:layout_weight=".42"
             />
 
         <LinearLayout
