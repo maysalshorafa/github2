@@ -31,8 +31,7 @@ public class SETTINGS {
 	public static boolean creditCardEnable;
 	public static boolean pinpadEnable;
 	public static boolean timerState = false;
-	//public static String BO_SERVER_URL = "http://172.16.0.44:8080/leadBO/webapi/";
-
+	public static String BO_SERVER_URL = "http://172.16.0.44:8080/CORE-0.0.1-SNAPSHOT/webapi/";
 
 	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
 
@@ -40,7 +39,7 @@ public class SETTINGS {
 	//public static String BO_SERVER_URL = "https://api.leadpos.io/webapi/";
 
 	//public static String BO_SERVER_URL = "http://ec2-18-220-245-144.us-east-2.compute.amazonaws.com:8080/webapi";
-	public static String BO_SERVER_URL = "https://api.leadpos.io/webapi";
+	//public static String BO_SERVER_URL = "https://api.leadpos.io/webapi";
 	//public static String BO_SERVER_URL = "http://api_01.leadpos.io:8080/webapi";
 
 	//public static String BO_SERVER_URL = "http://ec2-18-220-245-144.us-east-2.compute.amazonaws.com:8080/webapi";
@@ -49,8 +48,6 @@ public class SETTINGS {
 
 	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
 	//public static String BO_SERVER_URL = "http://192.168.1.18:8080/webapi/";
-
-
 
 	//public static final String UPDATER_API_URL_PATH = "http://192.168.1.19:8090/updateApk/";
 

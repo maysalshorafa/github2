@@ -326,7 +326,7 @@
     <string name="TouchPad_dot">.</string>
     <string name="TouchPad_ce">CE</string>
     <string name="back">رجوع</string>
-    <string name="check_out">خروج</string>
+    <string name="check_out">تنفيذ الدفع</string>
     <string name="_return">باقي</string>
     <string name="a_report_amount">اساس</string>
     <string name="active_credit_card_service_in_pos">الرجاء تفعيل خدمة الدفع عن طريق بطاقة الائتمان</string>
@@ -520,5 +520,11 @@
     </string-array>
     <string name="customer_have_money_from_point_equal_total_price">النقاط الخاصة بالزبون مساوية للسعر الكلي</string>
     <string name="customer_have_money_from_point_more_than_total_price">الزبون لديه نقاط تزيد عن السعر الكلي</string>
+    <string name="change">باقي</string>
+    <string name="how_mutch_to_return">باقي</string>
+    <string name="method">وسيلة</string>
+    <string name="payment_list">قائمة الدفعات</string>
+    <string name="quick_cash_payment">الدفع نقداً</string>
+    <string name="due">مستحق</string>
 </resources>
 

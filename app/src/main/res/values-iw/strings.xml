@@ -533,4 +533,16 @@
     <string name="please_remember_your_password">תזכור הסיסמה</string>
     <string name="please_insert_phone_no">נא להכניס מספר נייד</string>
     <string name="please_insert_postal_code">נא להכניס מיקוד</string>
+    <string name="add_payment">הוספת סכום</string>
+    <string name="are_you_want_to_cancel_payment_activity">האם ברצונך לבטל?</string>
+    <string name="back">חזרה</string>
+    <string name="change">עודף</string>
+    <string name="check_out">סיום</string>
+    <string name="how_mutch_to_return">עודף</string>
+    <string name="method">שיטה</string>
+    <string name="multi_currencies_payment_activity">תשלום במטבעות</string>
+    <string name="payment_list">רשימת תשלומים</string>
+    <string name="please_insert_correct_value_in_multi_currency_activity">הערך לא מתאים</string>
+    <string name="quick_cash_payment">תשלום מהיר</string>
+    <string name="due">מגיע</string>
 </resources>
