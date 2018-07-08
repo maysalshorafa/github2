@@ -6,4 +6,11 @@
         <attr name="drawableTopCompat" format="reference"/>
         <attr name="drawableBottomCompat" format="reference"/>
     </declare-styleable>
+
+    <declare-styleable name="IButtonStyle">
+        <attr name="button_text" />
+        <attr name="button_icon" format="integer" />
+    </declare-styleable>
+
+    <attr name="button_text" />
 </resources>

@@ -42,6 +42,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.Elements.IButton;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
@@ -79,8 +80,9 @@ import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE
 
 public class DashBord extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private boolean enableBackButton = true;
-    Button salesCart, report, product, department, users, backUp, customerClub, logOut, offers, settings , schedule_workers;
-    Button btZReport, btAReport;
+    IButton salesCart, report, product, department, backUp, customerClub, logOut, offers, settings , schedule_workers;
+    IButton users;
+    IButton btZReport, btAReport;
     AReportDBAdapter aReportDBAdapter;
     Employee user = new Employee();
     EmployeeDBAdapter userDBAdapter;
@@ -174,19 +176,19 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         permissionsDBAdapter.close();
 
 
-        salesCart = (Button) findViewById(R.id.mainScreen);
-        btAReport = (Button) findViewById(R.id.dashboard_btAreport);
-        btZReport = (Button) findViewById(R.id.dashboard_btZreport);
-        report = (Button) findViewById(R.id.report);
-        product = (Button) findViewById(R.id.product);
-        department = (Button) findViewById(R.id.department);
+        salesCart = (IButton) findViewById(R.id.mainScreen);
+        btAReport = (IButton) findViewById(R.id.dashboard_btAreport);
+        btZReport = (IButton) findViewById(R.id.dashboard_btZreport);
+        report = (IButton) findViewById(R.id.report);
+        product = (IButton) findViewById(R.id.product);
+        department = (IButton) findViewById(R.id.department);
         //offers = (Button) findViewById(R.id.offers);
-        users = (Button) findViewById(R.id.users);
-        schedule_workers = (Button) findViewById(R.id.schedule_workers);
-        backUp = (Button) findViewById(R.id.backUp);
-        logOut = (Button) findViewById(R.id.logOut);
-        customerClub = (Button) findViewById(R.id.coustmerClub);
-        settings = (Button) findViewById(R.id.settings);
+        users = (IButton) findViewById(R.id.users);
+        schedule_workers = (IButton) findViewById(R.id.schedule_workers);
+        backUp = (IButton) findViewById(R.id.backUp);
+        logOut = (IButton) findViewById(R.id.logOut);
+        customerClub = (IButton) findViewById(R.id.coustmerClub);
+        settings = (IButton) findViewById(R.id.settings);
 
         EnableButtons();
         logOut.setOnClickListener(new View.OnClickListener() {

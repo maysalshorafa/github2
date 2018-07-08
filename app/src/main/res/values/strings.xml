@@ -401,7 +401,7 @@
     <string name="x_report_view">X REPORT VIEW</string>
     <string name="z_report_view">Z REPORT VIEW</string>
     <string name="x_report">X REPORT</string>
-    <string name="z_report">Z REPORT</string>
+    <string name="z_report">Z Report</string>
 
 
     <!--online setup -->
@@ -607,12 +607,11 @@
     <string name="how_mutch_to_return">How Match To Return</string>
     <string name="please_insert_correct_value_in_multi_currency_activity">Please insert correct value between 0 and 10000</string>
     <string name="are_you_want_to_cancel_payment_activity">Are you want to stop payment activity ?</string>
+
     <string name="printer">Printer</string>
     <string name="printer_connect_error">Printer Connect Error</string>
     <string name="please_connect_the_printer">Please connect the Printer</string>
-
-
-
+    <string name="a_report">A Report</string>
 </resources>
 
 
