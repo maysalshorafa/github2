@@ -153,15 +153,29 @@
                             android:src="@drawable/delete_button"
                             android:text="@string/delete_check" />
 
-                        <TextView
-                            android:id="@+id/mainActivity_tvTotalSaved"
-                            android:layout_width="match_parent"
+                        <LinearLayout
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="TextView"
-                            android:textColor="@color/black"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/total_saved"
+                                android:textColor="@color/black"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/mainActivity_tvTotalSaved"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="TextView"
+                                android:textColor="@color/black"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                android:layout_marginStart="5dp"/>
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/mainActivity_tvTotalPrice"
@@ -268,7 +282,7 @@
 
                     <Button
                         android:id="@+id/mainActivity_btnCreditCard"
-                        style="@style/AppTheme.bt_normal"
+                        style="@style/AppTheme.bt_dark"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -276,7 +290,7 @@
 
                     <Button
                         android:id="@+id/mainActivity_btnOtherWays"
-                        style="@style/AppTheme.bt_normal"
+                        style="@style/AppTheme.bt_dark"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -284,7 +298,7 @@
 
                     <Button
                         android:id="@+id/mainActivity_btnCash"
-                        style="@style/AppTheme.bt_normal"
+                        style="@style/AppTheme.bt_dark"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"

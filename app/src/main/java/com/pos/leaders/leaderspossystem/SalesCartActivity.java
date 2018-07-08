@@ -2427,7 +2427,17 @@ public class SalesCartActivity extends AppCompatActivity {
             }.execute();
         }
         else{
-            Toast.makeText(this, "Please connect the printer", Toast.LENGTH_SHORT).show();
+            new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                    .setTitle(getString(R.string.printer))
+                    .setMessage(getString(R.string.please_connect_the_printer))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            //Toast.makeText(this, "Please connect the printer", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -2519,7 +2529,17 @@ public class SalesCartActivity extends AppCompatActivity {
             dialog.cancel();
             clearCart();
         } else {
-            Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+            new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                    .setTitle(getString(R.string.printer))
+                    .setMessage(getString(R.string.printer_connect_error))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            //Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
         }
     }
 

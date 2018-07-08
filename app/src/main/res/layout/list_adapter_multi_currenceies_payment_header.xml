@@ -65,7 +65,7 @@
         android:layout_marginStart="@dimen/default_margin_padding"
         android:textSize="18sp"
         android:textStyle="bold"
-        style="@style/AppTheme.bt_yellow"
+        style="@style/AppTheme.bt_dark"
        android:text="@string/clear"
         android:onClick="multiCurrenciesConfirmClick"/>
 

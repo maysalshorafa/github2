@@ -457,7 +457,17 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 if (HPRT_TP805.connect(this)) {
                     Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+                    new android.support.v7.app.AlertDialog.Builder(DashBord.this, android.app.AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                            .setTitle(getString(R.string.printer))
+                            .setMessage(getString(R.string.printer_connect_error))
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                 //   Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
                 }
                 break;
             case BTP880:
@@ -467,7 +477,16 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 if (AidlUtil.getInstance().isConnect()) {
                     Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+                    new android.support.v7.app.AlertDialog.Builder(DashBord.this, android.app.AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                            .setTitle(getString(R.string.printer))
+                            .setMessage(getString(R.string.printer_connect_error))
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
                 break;
         }

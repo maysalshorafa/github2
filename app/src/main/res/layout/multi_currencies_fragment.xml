@@ -23,7 +23,8 @@
             android:id="@+id/multiCurrenciesFragment_currenciesSpinner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3" />
+            android:layout_weight="3"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -34,7 +35,7 @@
 
         <Button
             android:id="@+id/multiCurrenciesFragment_bt7"
-            style="@style/AppTheme.bt_normal"
+            style="@style/AppTheme.bt_dark"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_column="0"
@@ -43,7 +44,7 @@
 
         <Button
             android:id="@+id/multiCurrenciesFragment_bt8"
-            style="@style/AppTheme.bt_normal"
+            style="@style/AppTheme.bt_dark"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_column="1"
@@ -52,7 +53,7 @@
 
         <Button
             android:id="@+id/multiCurrenciesFragment_bt9"
-            style="@style/AppTheme.bt_normal"
+            style="@style/AppTheme.bt_dark"
             android:layout_width="match_parent"
 
             android:layout_height="match_parent"
@@ -62,7 +63,7 @@
 
         <ImageButton
             android:id="@+id/multiCurrenciesFragment_btCE"
-            style="@style/AppTheme.bt_normal"
+            style="@style/AppTheme.bt_dark"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_column="3"
@@ -79,7 +80,7 @@
 
         <Button
             android:id="@+id/multiCurrenciesFragment_bt4"
-            style="@style/AppTheme.bt_normal"
+            style="@style/AppTheme.bt_dark"
             android:layout_width="match_parent"
 
             android:layout_height="match_parent"
@@ -90,7 +91,7 @@
 
         <Button
             android:id="@+id/multiCurrenciesFragment_bt5"
-            style="@style/AppTheme.bt_normal"
+            style="@style/AppTheme.bt_dark"
             android:layout_width="match_parent"
 
             android:layout_height="match_parent"
@@ -101,7 +102,7 @@
 
         <Button
             android:id="@+id/multiCurrenciesFragment_bt6"
-            style="@style/AppTheme.bt_normal"
+            style="@style/AppTheme.bt_dark"
             android:layout_width="match_parent"
 
             android:layout_height="match_parent"
@@ -143,7 +144,7 @@
 
                 <Button
                     android:id="@+id/multiCurrenciesFragment_bt1"
-                    style="@style/AppTheme.bt_normal"
+                    style="@style/AppTheme.bt_dark"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
 
@@ -154,7 +155,7 @@
 
                 <Button
                     android:id="@+id/multiCurrenciesFragment_bt2"
-                    style="@style/AppTheme.bt_normal"
+                    style="@style/AppTheme.bt_dark"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
 
@@ -165,7 +166,7 @@
 
                 <Button
                     android:id="@+id/multiCurrenciesFragment_bt3"
-                    style="@style/AppTheme.bt_normal"
+                    style="@style/AppTheme.bt_dark"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
 
@@ -184,7 +185,7 @@
 
                 <Button
                     android:id="@+id/multiCurrenciesFragment_bt0"
-                    style="@style/AppTheme.bt_normal"
+                    style="@style/AppTheme.bt_dark"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -192,7 +193,7 @@
 
                 <Button
                     android:id="@+id/multiCurrenciesFragment_btDot"
-                    style="@style/AppTheme.bt_normal"
+                    style="@style/AppTheme.bt_dark"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"

@@ -31,9 +31,7 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
-
 public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
-
     public static final String LEADERS_POS_CASH_MULTI_CURRENCY_TOTAL_PRICE = "LEADERS_POS_CASH_MULTI_CURRENCY_TOTAL_PRICE";
     public static final String RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE = "RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE";
 
@@ -101,7 +99,6 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         llMultiCurrencyHeaderLayout = (LinearLayout) findViewById(R.id.MultiCurrenciesPaymentActivity_llHeader);
         lvPaymentTable = (ListView) findViewById(R.id.MultiCurrenciesPaymentActivity_lvPaymentList);
         spCurrency = (Spinner) findViewById(R.id.MultiCurrenciesPaymentActivity_spCurrency);
-
         tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + defaultCurrency);
         paymentTables.add(new PaymentTable(totalPrice, Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + "")));
 
@@ -194,7 +191,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     private void updateLastRow() {
         PaymentTable lastPaymentTable = paymentTables.get(paymentTables.size() - 1);
         lastPaymentTable.setDue(excess / selectedCurrencyRate);
-        lastPaymentTable.setCurrency(new CurrencyType(1l, spCurrency.getSelectedItem().toString()));
+        lastPaymentTable.setCurrency(new CurrencyType(1l,spCurrency.getSelectedItem().toString()));
         lastPaymentTable.setTendered(Double.NaN);
         paymentTableAdapter.notifyDataSetChanged();
     }
@@ -228,8 +225,8 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             btCheckOut.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
 
         } else {
-            llTotalPriceBackground.setBackgroundColor(getResources().getColor(R.color.light_dangers1));
-            btCheckOut.setBackground(getResources().getDrawable(R.drawable.bt_dangers_pressed));
+        llTotalPriceBackground.setBackgroundColor(getResources().getColor(R.color.light_dangers1));
+         btCheckOut.setBackground(getResources().getDrawable(R.drawable.bt_dark));
 
         }
     }

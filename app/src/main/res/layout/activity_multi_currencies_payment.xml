@@ -14,7 +14,6 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/MultiCurrenciesPaymentActivity_llPriceBackgrounf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -30,6 +29,13 @@
                 android:text="@string/total_price"
                 android:textSize="18sp" />
 
+            <LinearLayout
+                android:id="@+id/MultiCurrenciesPaymentActivity_llPriceBackgrounf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingRight="@dimen/default_margin_padding"
+                android:paddingStart="@dimen/default_margin_padding">
             <TextView
                 android:id="@+id/MultiCurrenciesPaymentActivity_tvTotalPriceValue"
                 android:layout_width="match_parent"
@@ -40,6 +46,7 @@
                 android:textAlignment="center"
                 android:textSize="36sp"
                 android:textStyle="bold" />
+                </LinearLayout>
             <TextView
                 android:id="@+id/MultiCurrenciesPaymentActivity_tvTotalPriceValueWithMultiCurrency"
                 android:layout_width="match_parent"
@@ -67,12 +74,10 @@
                     android:layout_weight="1"
                     android:textAlignment="textEnd"
                     android:textSize="24sp" />
-
                 <Spinner
                     android:id="@+id/MultiCurrenciesPaymentActivity_spCurrency"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-
             </LinearLayout>
 
         </LinearLayout>
@@ -158,7 +163,7 @@
 
                 <Button
                     android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_1"
-                    style="@style/AppTheme.bt_green"
+                    style="@style/AppTheme.bt_dark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -167,7 +172,7 @@
 
                 <Button
                     android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_5"
-                    style="@style/AppTheme.bt_green"
+                    style="@style/AppTheme.bt_dark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -176,7 +181,7 @@
 
                 <Button
                     android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_10"
-                    style="@style/AppTheme.bt_green"
+                    style="@style/AppTheme.bt_dark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -185,7 +190,7 @@
 
                 <Button
                     android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_20"
-                    style="@style/AppTheme.bt_green"
+                    style="@style/AppTheme.bt_dark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -194,7 +199,7 @@
 
                 <Button
                     android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_50"
-                    style="@style/AppTheme.bt_green"
+                    style="@style/AppTheme.bt_dark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -203,7 +208,7 @@
 
                 <Button
                     android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_100"
-                    style="@style/AppTheme.bt_green"
+                    style="@style/AppTheme.bt_dark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
