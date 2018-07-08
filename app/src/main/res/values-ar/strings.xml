@@ -526,5 +526,6 @@
     <string name="payment_list">قائمة الدفعات</string>
     <string name="quick_cash_payment">الدفع نقداً</string>
     <string name="due">مستحق</string>
+    <string name="a_report">A تقرير</string>
 </resources>
 
