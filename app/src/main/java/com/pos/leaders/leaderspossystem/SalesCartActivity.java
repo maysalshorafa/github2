@@ -278,7 +278,7 @@ public class SalesCartActivity extends AppCompatActivity {
     List<OrderDetails> orderIdList;
     List<Long> orderId;
     long custmerSaleAssetstId;
-    TextView orderSalesMan , orderCount;
+    TextView orderSalesMan , orderCount ,orderTotalPrice ;
     ImageView deleteOrderSalesMan;
     String fromEditText="";
     static List<String> printedRows;
@@ -890,6 +890,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 });
                 orderSalesMan = (TextView) view.findViewById(R.id.orderSaleMan);
                 orderCount = (TextView) view.findViewById(R.id.rowSaleDetails_TVCount);
+                orderTotalPrice = (TextView) view.findViewById(R.id.rowSaleDetails_TVTotalPrice);
                 deleteOrderSalesMan=(ImageView)view.findViewById(R.id.deleteOrderSalesMan);
                 orderSalesMan.
                         setOnClickListener(new View.OnClickListener() {
@@ -920,6 +921,9 @@ public class SalesCartActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         increaseItemOnCart(position);
                         orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
+                        orderTotalPrice.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()*SESSION._ORDER_DETAILES.get(position).getUnitPrice()+getString(R.string.ins)+"");
+                        calculateTotalPrice();
+
                     }
                 });
                 Button btnMOne = (Button) view.findViewById(R.id.rowSaleDetails_MethodsMOne);
@@ -928,6 +932,9 @@ public class SalesCartActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         decreaseItemOnCart(position);
                         orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
+                        orderTotalPrice.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()*SESSION._ORDER_DETAILES.get(position).getUnitPrice()+getString(R.string.ins)+"");
+                        calculateTotalPrice();
+
                     }
                 });
                 //discount Button.
@@ -965,6 +972,8 @@ public class SalesCartActivity extends AppCompatActivity {
                                         SESSION._ORDER_DETAILES.get(indexOfItem).setCount(pid);
                                         calculateTotalPrice();
                                         orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
+                                        orderTotalPrice.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
+
                                         cashDialog.cancel();
                                     }
                                 });
@@ -1138,6 +1147,8 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(discount * 100);
                                                     calculateTotalPrice();
                                                     orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
+                                                    orderTotalPrice.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
+
                                                     cashDialog.cancel();
                                                 } else {
                                                     Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
@@ -1152,6 +1163,8 @@ public class SalesCartActivity extends AppCompatActivity {
 
                                                     calculateTotalPrice();
                                                     orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
+                                                    orderTotalPrice.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
+
                                                     cashDialog.cancel();
                                                 } else {
                                                     Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
