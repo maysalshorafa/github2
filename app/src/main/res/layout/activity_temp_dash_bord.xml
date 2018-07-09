@@ -33,7 +33,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             ibutton:button_icon="@drawable/a_report"
-            ibutton:button_text="@string/z_report"/>
+            ibutton:button_text="@string/a_report"/>
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/dashboard_btZreport"
