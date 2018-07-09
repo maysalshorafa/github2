@@ -529,7 +529,7 @@
 
     <string name="printer">الطابعة</string>
     <string name="please_connect_the_printer">الرجاء توصيل الطابعة</string>
-    <string name="printer_connect_error">يوجد خطا بتوصيل الطابعة</string>
+    <string name="printer_connect_error">الرجاء فحص توصيلات الطابعة ونوعها.</string>
     <string name="a_report">A تقرير</string>
 </resources>
 

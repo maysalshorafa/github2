@@ -610,7 +610,7 @@
 
     <string name="printer">Printer</string>
     <string name="printer_connect_error">Printer Connect Error</string>
-    <string name="please_connect_the_printer">Please connect the Printer</string>
+    <string name="please_connect_the_printer">Please check printer connection and printer type</string>
     <string name="a_report">A Report</string>
 </resources>
 

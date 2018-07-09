@@ -2531,7 +2531,7 @@ public class SalesCartActivity extends AppCompatActivity {
         } else {
             new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                     .setTitle(getString(R.string.printer))
-                    .setMessage(getString(R.string.printer_connect_error))
+                    .setMessage(getString(R.string.please_connect_the_printer))
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             finish();

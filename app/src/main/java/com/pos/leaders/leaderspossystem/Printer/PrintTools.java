@@ -5,22 +5,21 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
-import com.pos.leaders.leaderspossystem.Models.Payment;
-import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
@@ -184,7 +183,7 @@ public class PrintTools {
             }.execute();
 
         } else {
-            Toast.makeText(context, "Printer Connect Error!", Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(context, "Printer Connect Error!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -225,7 +224,7 @@ public class PrintTools {
                 }
             }.execute();
         } else {
-            Toast.makeText(context, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+          //  Toast.makeText(context, "Printer Connect Error!", Toast.LENGTH_LONG).show();
         }
     }
 
