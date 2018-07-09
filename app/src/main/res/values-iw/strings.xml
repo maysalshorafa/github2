@@ -546,4 +546,7 @@
     <string name="quick_cash_payment">תשלום מהיר</string>
     <string name="due">מגיע</string>
     <string name="a_report">A דוח</string>
+    <string name="printer">מדפסת</string>
+    <string name="printer_connect_error">שגיאה בחיבור המדפסת</string>
+    <string name="please_connect_the_printer">נא לחבר את המדפסת.</string>
 </resources>
