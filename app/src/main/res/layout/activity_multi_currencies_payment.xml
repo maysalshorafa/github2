@@ -73,11 +73,38 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textAlignment="textEnd"
-                    android:textSize="24sp" />
-                <Spinner
-                    android:id="@+id/MultiCurrenciesPaymentActivity_spCurrency"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textSize="24sp"
+                    android:layout_gravity="center"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/login_frame"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/MultiCurrenciesPaymentActivity_spCurrency"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:background="@android:color/transparent"
+                        android:gravity="center"
+                        android:spinnerMode="dropdown"
+                        android:dropDownWidth="120dp"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:src="@drawable/down_arrow" />
+
+                </RelativeLayout>
             </LinearLayout>
 
         </LinearLayout>
@@ -89,7 +116,10 @@
             android:layout_gravity="bottom"
             android:gravity="bottom"
             android:orientation="vertical">
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
             <FrameLayout
                 android:id="@+id/MultiCurrenciesPaymentActivity_flNumberPad"
                 android:layout_width="match_parent"

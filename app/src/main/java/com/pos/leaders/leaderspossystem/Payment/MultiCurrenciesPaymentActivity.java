@@ -140,10 +140,9 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currenciesNames);
 
         // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
+        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
         spCurrency.setAdapter(dataAdapter);
-
         spCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

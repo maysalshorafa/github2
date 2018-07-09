@@ -18,13 +18,37 @@
             android:gravity="center_vertical"
             android:hint="@string/amount"
             android:textSize="20sp" />
-
-        <Spinner
-            android:id="@+id/multiCurrenciesFragment_currenciesSpinner"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            />
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/login_frame"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <Spinner
+                android:id="@+id/multiCurrenciesFragment_currenciesSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:spinnerMode="dropdown"
+                android:dropDownWidth="120dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:src="@drawable/down_arrow" />
+
+        </RelativeLayout>
+
     </LinearLayout>
 
     <LinearLayout

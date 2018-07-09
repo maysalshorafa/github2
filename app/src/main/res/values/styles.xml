@@ -145,4 +145,9 @@
     <style name="SettingsFragmentStyle">
         <item name="android:windowBackground">@color/primaryColor2</item>
     </style>
+    <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
+    </style>
+
+    <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+    </style>
 </resources>
