@@ -7,7 +7,7 @@ import java.sql.Timestamp;
  */
 
 public class Currency {
-    private long currencyId;
+    private long id;
     private String name;
     private String country;
     private String currencyCode;
@@ -29,8 +29,8 @@ public class Currency {
 
 
 
-    public Currency(long currencyId, String name, String country, String currencyCode, double rate, Timestamp lastUpdate) {
-        this.currencyId = currencyId;
+    public Currency(long id, String name, String country, String currencyCode, double rate, Timestamp lastUpdate) {
+        this.id = id;
         this.name = name;
         this.country = country;
         this.currencyCode = currencyCode;
@@ -38,12 +38,12 @@ public class Currency {
         this.lastUpdate = lastUpdate;
     }
 
-    public long getCurrencyId() {
-        return currencyId;
+    public long getId() {
+        return id;
     }
 
-    public void setCurrencyId(long currencyId) {
-        this.currencyId = currencyId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -81,7 +81,7 @@ public class Currency {
     @Override
     public String toString() {
         return "Currency{" +
-                "currencyId=" + currencyId +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", country='" + country + '\'' +
                 ", currencyCode='" + currencyCode + '\'' +

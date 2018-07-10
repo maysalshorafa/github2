@@ -235,7 +235,8 @@
             android:layout_weight="3"
             android:gravity="center"
             android:onClick="multiCurrenciesConfirmClick"
-            android:text="@string/add_payment" />
+            android:text="@string/add_payment"
+            android:textSize="17sp"/>
     </LinearLayout>
 
 

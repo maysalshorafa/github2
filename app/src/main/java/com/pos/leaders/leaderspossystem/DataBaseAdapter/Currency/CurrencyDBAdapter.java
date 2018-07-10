@@ -85,7 +85,7 @@ public class CurrencyDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(CURRENCY_COLUMN_ID, currency.getCurrencyId());
+        val.put(CURRENCY_COLUMN_ID, currency.getId());
 
 
         val.put(CURRENCY_COLUMN_NAME, currency.getName());
@@ -124,7 +124,7 @@ public class CurrencyDBAdapter {
         val.put(CURRENCYCOLUMN_RATE, currency.getRate());
 
         String where = CURRENCY_COLUMN_ID + " = ?";
-        db.update(CURRENCY_TABLE_NAME, val, where, new String[]{currency.getCurrencyId() + ""});
+        db.update(CURRENCY_TABLE_NAME, val, where, new String[]{currency.getId() + ""});
     }
 
     public List<Currency> getAllCurrencyLastUpdate(List<CurrencyType> currency) {
@@ -150,6 +150,28 @@ public class CurrencyDBAdapter {
                 cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_COUNTRY)),
                 Double.parseDouble( cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_RATE))),
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_CREATEDATE))));
+    }
+    public Currency getLastCurrency(){
+        Currency currency = new Currency();
+        Cursor cursor=null;
+            cursor = db.rawQuery("SELECT * FROM "+CURRENCY_TABLE_NAME+" ORDER BY id DESC LIMIT 1", null);
+        cursor.moveToFirst();
+                currency=build(cursor);
+        Log.d("Currency",currency.toString());
+        return currency;
+    }
+    public void deleteCurrencyList(){
+        db.execSQL("delete from "+ CURRENCY_TABLE_NAME);
+        }
+
+    public List<Currency> deleteOldRate(List<CurrencyType> currency) {
+        List<Currency> currencyList = new ArrayList<Currency>();
+        String name="";
+        for (int i=0;i<currency.size();i++) {
+            name = currency.get(i).getType();
+            db.execSQL("delete from " + CURRENCY_TABLE_NAME + " where " + CURRENCY_COLUMN_ID + " not in ( select " + CURRENCY_COLUMN_ID + " from " + CURRENCY_TABLE_NAME + " where " + CURRENCY_COLUMN_CURRENCYCODE + "='" + name + "'" + " order by " + CURRENCY_COLUMN_ID + " desc LIMIT 1)", null);
+        }
+        return currencyList;
     }
 
 }

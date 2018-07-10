@@ -330,7 +330,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
             bt.setLayoutParams(params);
             bt.setTag(d);
 
-            //bt.setCurrencyId(d.getCashPaymentId());
+            //bt.setId(d.getCashPaymentId());
             bt.setText(d.getName());
             bt.setTextAppearance(this, R.style.TextAppearance);
             bt.setBackground(getResources().getDrawable(R.drawable.bt_normal));

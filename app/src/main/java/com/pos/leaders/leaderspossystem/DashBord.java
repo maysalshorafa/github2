@@ -895,16 +895,16 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                             e.printStackTrace();
                         }
                         if (firstCurrencyInDefaultValue > 0) {
-                            aReportDetailsDBAdapter.insertEntry(aReportId, firstCurrencyInDefaultValue, fCurrency.getCurrencyId(), firstCurrencyInDefaultValue * fCurrency.getRate());
+                            aReportDetailsDBAdapter.insertEntry(aReportId, firstCurrencyInDefaultValue, fCurrency.getId(), firstCurrencyInDefaultValue * fCurrency.getRate());
                         }
                         if (secondCurrencyInDefaultValue > 0) {
-                            aReportDetailsDBAdapter.insertEntry(aReportId, secondCurrencyInDefaultValue, sCurrency.getCurrencyId(), secondCurrencyInDefaultValue * sCurrency.getRate());
+                            aReportDetailsDBAdapter.insertEntry(aReportId, secondCurrencyInDefaultValue, sCurrency.getId(), secondCurrencyInDefaultValue * sCurrency.getRate());
                         }
                         if (thirdCurrencyInDefaultValue > 0) {
-                            aReportDetailsDBAdapter.insertEntry(aReportId, thirdCurrencyInDefaultValue, tCurrency.getCurrencyId(), thirdCurrencyInDefaultValue * tCurrency.getRate());
+                            aReportDetailsDBAdapter.insertEntry(aReportId, thirdCurrencyInDefaultValue, tCurrency.getId(), thirdCurrencyInDefaultValue * tCurrency.getRate());
                         }
                         if (forthCurrencyInDefaultValue > 0) {
-                            aReportDetailsDBAdapter.insertEntry(aReportId, firstCurrencyInDefaultValue, forthCurrency.getCurrencyId(), forthCurrencyInDefaultValue * forthCurrency.getRate());
+                            aReportDetailsDBAdapter.insertEntry(aReportId, firstCurrencyInDefaultValue, forthCurrency.getId(), forthCurrencyInDefaultValue * forthCurrency.getRate());
                         }
 
                         aReportDialog.cancel();

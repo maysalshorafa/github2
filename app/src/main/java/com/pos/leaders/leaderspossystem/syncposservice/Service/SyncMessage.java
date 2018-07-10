@@ -14,23 +14,24 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
@@ -39,12 +40,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule11DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.AReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Check;
@@ -52,10 +49,9 @@ import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
-import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
-
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
@@ -63,23 +59,25 @@ import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasu
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDynamicVariable;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
 import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule11;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule8;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
+import com.pos.leaders.leaderspossystem.Models.Permission.EmployeesPermissions;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.SumPoint;
 import com.pos.leaders.leaderspossystem.Models.UsedPoint;
-import com.pos.leaders.leaderspossystem.Models.Employee;
-import com.pos.leaders.leaderspossystem.Models.Permission.EmployeesPermissions;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -88,7 +86,6 @@ import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.pos.leaders.leaderspossystem.syncposservice.MessagesCreator;
 import com.pos.leaders.leaderspossystem.syncposservice.Model.BrokerMessage;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.syncposservice.SetupFragments.Token;
 
 import org.json.JSONArray;
@@ -96,6 +93,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -171,7 +169,6 @@ public class SyncMessage extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         Log.i(TAG, "Service onStartCommand");
         try {
             messageTransmit = new MessageTransmit(intent.getStringExtra(API_DOMAIN_SYNC_MESSAGE));
@@ -193,6 +190,7 @@ public class SyncMessage extends Service {
                     //In this example we are just looping and waits for 1000 milliseconds in each loop.
                     while (isRunning) {
                         Log.i(TAG, "Service running");
+                        String currencyRes="";
                         broker.open();
                         List<BrokerMessage> bms = broker.getAllNotSyncedCommand();
                         for (BrokerMessage bm : bms) {
@@ -211,6 +209,18 @@ public class SyncMessage extends Service {
                         }
 
                         broker.close();
+                        //  Log.i("date", DateConverter.toDate(currency.getLastUpdate().getTime()));
+                        //Log.i("date", DateConverter.toDate(timestamp.getTime()));
+                        //if(!(DateConverter.toDate(currency.getLastUpdate().getTime()) == DateConverter.toDate(timestamp.getTime()))){
+
+                        try {
+                            updateCurrency();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        //}
 
                         try {
                             getSync();
@@ -1211,7 +1221,7 @@ public class SyncMessage extends Service {
             case MessageType.UPDATE_CURRENCY:
                 Currency currency=null;
                 currency=objectMapper.readValue(msgData, Currency.class);
-                res = messageTransmit.authPut(ApiURL.Currencies, jsonObject.getString(MessageKey.Data), token,currency.getCurrencyId());
+                res = messageTransmit.authPut(ApiURL.Currencies, jsonObject.getString(MessageKey.Data), token,currency.getId());
                 break;
             case MessageType.DELETE_CURRENCY:
                 res = messageTransmit.authDelete(ApiURL.Currencies, jsonObject.getString(MessageKey.Data), token);
@@ -1389,6 +1399,7 @@ public class SyncMessage extends Service {
         return true;
     }
 
+
     @Override
     public IBinder onBind(Intent arg0) {
         Log.i(TAG, "Service onBind");
@@ -1399,5 +1410,58 @@ public class SyncMessage extends Service {
     public void onDestroy() {
         isRunning = false;
         Log.i(TAG, "Service onDestroy");
+    }
+    public void updateCurrency() throws JSONException, IOException {
+        CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(this);
+        currencyDBAdapter.open();
+     Currency currency1 =currencyDBAdapter.getLastCurrency();
+        Timestamp timestamp =new Timestamp(System.currentTimeMillis());
+        Log.d("tttttt", DateConverter.toDate(timestamp.getTime())+"");
+        if (DateConverter.toDate(currency1.getLastUpdate().getTime()).equals(DateConverter.toDate(timestamp.getTime()))) {
+            //do nothing
+        }else {
+            String currencyRes=messageTransmit.getCurrency(ApiURL.Currencies);
+            Log.i("Currency", currencyRes);
+            //currencyDBAdapter.deleteCurrencyList();
+            ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            objectMapper.setDateFormat(dateFormat);
+            JSONObject jsonObject = null;
+            Log.i("Currency", currencyRes);
+
+            jsonObject = new JSONObject(currencyRes);
+            try {
+                String msgData = jsonObject.getString(MessageKey.responseBody);
+                Log.i("msgData",msgData);
+
+                if (msgData.startsWith("[")) {
+                    try {
+                        JSONArray jsonArray = new JSONArray(msgData);
+
+                        for (int i=0;i<jsonArray.length()-1;i++) {
+                            msgData = jsonArray.getJSONObject(i).toString();
+                            Currency currency = null;
+                            currency = objectMapper.readValue(msgData, Currency.class);
+                            currencyDBAdapter.insertEntry(currency);
+                        }
+                    } catch (Exception e) {
+             /* try {
+                  msgData = jsonObject.getJSONObject(MessageKey.Data).toString();
+              } catch (Exception ex) {
+                  msgData = msgData.substring(1);
+                  msgData = msgData.substring(0, msgData.length() - 1);
+              }**/
+                    }
+
+                }
+
+            }
+            catch (JSONException e){
+
+            }
+
+        }
+
+
     }
 }
