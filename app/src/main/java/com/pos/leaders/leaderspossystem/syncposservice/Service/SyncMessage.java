@@ -22,6 +22,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAd
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
@@ -1412,17 +1413,19 @@ public class SyncMessage extends Service {
         Log.i(TAG, "Service onDestroy");
     }
     public void updateCurrency() throws JSONException, IOException {
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
+        currencyTypeDBAdapter.open();
+        List<CurrencyType> currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        currencyTypeDBAdapter.close();
         CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(this);
         currencyDBAdapter.open();
-     Currency currency1 =currencyDBAdapter.getLastCurrency();
+     Currency lastCurrency =currencyDBAdapter.getLastCurrency();
         Timestamp timestamp =new Timestamp(System.currentTimeMillis());
-        Log.d("tttttt", DateConverter.toDate(timestamp.getTime())+"");
-        if (DateConverter.toDate(currency1.getLastUpdate().getTime()).equals(DateConverter.toDate(timestamp.getTime()))) {
+        if (DateConverter.toDate(lastCurrency.getLastUpdate().getTime()).equals(DateConverter.toDate(timestamp.getTime()))) {
             //do nothing
         }else {
-            String currencyRes=messageTransmit.getCurrency(ApiURL.Currencies);
+            String currencyRes = messageTransmit.getCurrency(ApiURL.Currencies);
             Log.i("Currency", currencyRes);
-            //currencyDBAdapter.deleteCurrencyList();
             ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             objectMapper.setDateFormat(dateFormat);
@@ -1432,36 +1435,28 @@ public class SyncMessage extends Service {
             jsonObject = new JSONObject(currencyRes);
             try {
                 String msgData = jsonObject.getString(MessageKey.responseBody);
-                Log.i("msgData",msgData);
 
                 if (msgData.startsWith("[")) {
                     try {
                         JSONArray jsonArray = new JSONArray(msgData);
 
-                        for (int i=0;i<jsonArray.length()-1;i++) {
+                        for (int i = 0; i < jsonArray.length() - 1; i++) {
                             msgData = jsonArray.getJSONObject(i).toString();
                             Currency currency = null;
                             currency = objectMapper.readValue(msgData, Currency.class);
                             currencyDBAdapter.insertEntry(currency);
                         }
                     } catch (Exception e) {
-             /* try {
-                  msgData = jsonObject.getJSONObject(MessageKey.Data).toString();
-              } catch (Exception ex) {
-                  msgData = msgData.substring(1);
-                  msgData = msgData.substring(0, msgData.length() - 1);
-              }**/
                     }
 
                 }
 
-            }
-            catch (JSONException e){
+            } catch (JSONException e) {
 
             }
+            currencyDBAdapter.deleteOldRate(currencyTypesList);
+
 
         }
-
-
     }
 }

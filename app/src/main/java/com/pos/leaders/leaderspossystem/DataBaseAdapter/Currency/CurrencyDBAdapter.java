@@ -164,14 +164,13 @@ public class CurrencyDBAdapter {
         db.execSQL("delete from "+ CURRENCY_TABLE_NAME);
         }
 
-    public List<Currency> deleteOldRate(List<CurrencyType> currency) {
-        List<Currency> currencyList = new ArrayList<Currency>();
+    public void deleteOldRate(List<CurrencyType> currency) {
         String name="";
         for (int i=0;i<currency.size();i++) {
             name = currency.get(i).getType();
-            db.execSQL("delete from " + CURRENCY_TABLE_NAME + " where " + CURRENCY_COLUMN_ID + " not in ( select " + CURRENCY_COLUMN_ID + " from " + CURRENCY_TABLE_NAME + " where " + CURRENCY_COLUMN_CURRENCYCODE + "='" + name + "'" + " order by " + CURRENCY_COLUMN_ID + " desc LIMIT 1)", null);
+            db.execSQL("delete from " + CURRENCY_TABLE_NAME + " where " + CURRENCY_COLUMN_ID + " not in ( select " + CURRENCY_COLUMN_ID + " from " + CURRENCY_TABLE_NAME + " where " + CURRENCY_COLUMN_CURRENCYCODE + "='" + name + "'" + " order by " + CURRENCY_COLUMN_ID + " desc LIMIT 1) AND currency_code ='"+name+"'");
         }
-        return currencyList;
+
     }
 
 }
