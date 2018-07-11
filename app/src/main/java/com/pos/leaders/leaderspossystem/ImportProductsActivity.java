@@ -186,7 +186,7 @@ public class ImportProductsActivity extends Activity {
                         boolean availableBarCode= productDBAdapter.isValidBarcode(p.getBarCode());
                         boolean availableProductName= productDBAdapter.availableProductName(p.getName());
                         if(availableProductName&&availableBarCode) {
-                            productDBAdapter.insertEntry(p.getName(), p.getBarCode(), "", p.getPrice(), p.getCostPrice(), true, false, depID, p.getByUser(), 1, 1);
+                            productDBAdapter.insertEntry(p.getName(), p.getBarCode(), "", p.getPrice(), p.getCostPrice(), true, false, depID, p.getByEmployee(), 1, 1);
                         }
                     }
                     productDBAdapter.close();
