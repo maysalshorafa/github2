@@ -56,6 +56,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
@@ -77,6 +79,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Department;
 import com.pos.leaders.leaderspossystem.Models.Employee;
@@ -91,6 +95,7 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
 import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
@@ -110,6 +115,7 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -140,6 +146,7 @@ public class SalesCartActivity extends AppCompatActivity {
     private static final int REQUEST_CHECKS_ACTIVITY_CODE = 753;
     private static final int REQUEST_CREDIT_CARD_ACTIVITY_CODE = 801;
     private static final int REQUEST_PIN_PAD_ACTIVITY_CODE = 907;
+    private static final int REQUEST_MULTI_CURRENCY_ACTIVITY_CODE = 444;
     public static final String COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE = "com_pos_leaders_cart_total_price";
     String transID = "";
 
@@ -271,12 +278,13 @@ public class SalesCartActivity extends AppCompatActivity {
     List<OrderDetails> orderIdList;
     List<Long> orderId;
     long custmerSaleAssetstId;
-    TextView orderSalesMan , orderCount;
+    TextView orderSalesMan , orderCount ,orderTotalPrice ;
     ImageView deleteOrderSalesMan;
     String fromEditText="";
     static List<String> printedRows;
     double valueOfDiscount=0;
-
+    List<Currency> currenciesList;
+    private List<CurrencyType> currencyTypesList = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -305,7 +313,16 @@ public class SalesCartActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
+       //Getting default currencies name and values
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
+        currencyTypeDBAdapter.open();
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        currencyTypeDBAdapter.close();
+        //get currency value
+        CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(SalesCartActivity.this);
+        currencyDBAdapter.open();
+        currenciesList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
+        currencyDBAdapter.close();
         search_person = (ImageButton) findViewById(R.id.searchPerson);
         drawerLayout = (DrawerLayout) findViewById(R.id.mainActivity_drawerLayout);
 
@@ -873,6 +890,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 });
                 orderSalesMan = (TextView) view.findViewById(R.id.orderSaleMan);
                 orderCount = (TextView) view.findViewById(R.id.rowSaleDetails_TVCount);
+                orderTotalPrice = (TextView) view.findViewById(R.id.rowSaleDetails_TVTotalPrice);
                 deleteOrderSalesMan=(ImageView)view.findViewById(R.id.deleteOrderSalesMan);
                 orderSalesMan.
                         setOnClickListener(new View.OnClickListener() {
@@ -903,6 +921,9 @@ public class SalesCartActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         increaseItemOnCart(position);
                         orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
+                        orderTotalPrice.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()*SESSION._ORDER_DETAILES.get(position).getUnitPrice()+getString(R.string.ins)+"");
+                        calculateTotalPrice();
+
                     }
                 });
                 Button btnMOne = (Button) view.findViewById(R.id.rowSaleDetails_MethodsMOne);
@@ -911,6 +932,9 @@ public class SalesCartActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         decreaseItemOnCart(position);
                         orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
+                        orderTotalPrice.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()*SESSION._ORDER_DETAILES.get(position).getUnitPrice()+getString(R.string.ins)+"");
+                        calculateTotalPrice();
+
                     }
                 });
                 //discount Button.
@@ -948,6 +972,8 @@ public class SalesCartActivity extends AppCompatActivity {
                                         SESSION._ORDER_DETAILES.get(indexOfItem).setCount(pid);
                                         calculateTotalPrice();
                                         orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
+                                        orderTotalPrice.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
+
                                         cashDialog.cancel();
                                     }
                                 });
@@ -1121,6 +1147,8 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(discount * 100);
                                                     calculateTotalPrice();
                                                     orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
+                                                    orderTotalPrice.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
+
                                                     cashDialog.cancel();
                                                 } else {
                                                     Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
@@ -1135,6 +1163,8 @@ public class SalesCartActivity extends AppCompatActivity {
 
                                                     calculateTotalPrice();
                                                     orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity()+"");
+                                                    orderTotalPrice.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
+
                                                     cashDialog.cancel();
                                                 } else {
                                                     Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
@@ -1179,9 +1209,10 @@ public class SalesCartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (SESSION._ORDER_DETAILES.size() > 0) {
                     if (SETTINGS.enableCurrencies) {
-                        Intent intent = new Intent(SalesCartActivity.this, CashActivity.class);
+                        //Intent intent = new Intent(SalesCartActivity.this, CashActivity.class);
+                        Intent intent = new Intent(SalesCartActivity.this, MultiCurrenciesPaymentActivity.class);
                         intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, saleTotalPrice);
-                        startActivityForResult(intent, REQUEST_CASH_ACTIVITY_WITH_CURRENCY_CODE);
+                        startActivityForResult(intent, REQUEST_MULTI_CURRENCY_ACTIVITY_CODE);
                     } else {
                         Intent intent = new Intent(SalesCartActivity.this, OldCashActivity.class);
                         intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, saleTotalPrice);
@@ -1688,7 +1719,8 @@ public class SalesCartActivity extends AppCompatActivity {
         SESSION._ORDER_DETAILES = s.getOrders();
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
-        setCustomer(SESSION._ORDERS.getCustomer());
+        if(SESSION._ORDERS.getCustomer()!=null)
+            setCustomer(SESSION._ORDERS.getCustomer());
         refreshCart();
     }
 
@@ -2395,7 +2427,17 @@ public class SalesCartActivity extends AppCompatActivity {
             }.execute();
         }
         else{
-            Toast.makeText(this, "Please connect the printer", Toast.LENGTH_SHORT).show();
+            new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                    .setTitle(getString(R.string.printer))
+                    .setMessage(getString(R.string.please_connect_the_printer))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            //Toast.makeText(this, "Please connect the printer", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -2487,7 +2529,17 @@ public class SalesCartActivity extends AppCompatActivity {
             dialog.cancel();
             clearCart();
         } else {
-            Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+            new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                    .setTitle(getString(R.string.printer))
+                    .setMessage(getString(R.string.please_connect_the_printer))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            //Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -3154,7 +3206,124 @@ public class SalesCartActivity extends AppCompatActivity {
             }
         }
         //endregion
+        if (requestCode == REQUEST_MULTI_CURRENCY_ACTIVITY_CODE) {
+            if (resultCode == RESULT_OK) {
+                JSONArray jsonArray = null;
+                try {
+                    CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
+                    PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
+                    saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
+                    orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
+                    custmerAssetDB = new CustomerAssetDB(SalesCartActivity.this);
+                    cashPaymentDBAdapter.open();
+                    saleDBAdapter.open();
+                    orderDBAdapter.open();
+                    custmerAssetDB.open();
+                    paymentDBAdapter.open();
+                    long tempSaleId=0;
+                    double TotalPaidAmount=0;
+                    double change=0;
 
+                    String MultiCurrencyResult = data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE);
+                    jsonArray = new JSONArray(MultiCurrencyResult);
+                    Log.d("MultiCurrencyResult",MultiCurrencyResult);
+                    for(int i=0; i<jsonArray.length()-1;i++){
+                     JSONObject jsonObject=jsonArray.getJSONObject(i);
+                     TotalPaidAmount+=jsonObject.getDouble("tendered")*getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
+                        change=Math.abs(jsonObject.getDouble("change"))*getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
+                    }
+                    SESSION._ORDERS.setTotalPaidAmount(TotalPaidAmount);
+                    saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
+                    SESSION._ORDERS.setOrderId(saleIDforCash);
+                    currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this,change,new Order(SESSION._ORDERS));
+                    for(int i=0; i<jsonArray.length()-1;i++){
+                        JSONObject jsonObject=jsonArray.getJSONObject(i);
+                        cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("due"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()));
+
+                    }
+                    cashPaymentDBAdapter.close();
+                    // Club with point and amount
+                    if (clubType == 2) {
+                        pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
+                        sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
+                    }
+
+                    if (equalUsedPoint) {
+                        saleTotalPrice = 0.0;
+                        SESSION._ORDERS.setTotalPrice(saleTotalPrice);
+                        saleDBAdapter.updateEntry(SESSION._ORDERS);
+                        usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    }
+                    if (lessUsedPoint) {
+                        saleTotalPrice = 0.0;
+                        SESSION._ORDERS.setTotalPrice(saleTotalPrice);
+                        saleDBAdapter.updateEntry(SESSION._ORDERS);
+                        usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    }
+                    if (biggerUsedPoint) {
+                        SESSION._ORDERS.setTotalPrice(saleTotalPrice);
+                        saleDBAdapter.updateEntry(SESSION._ORDERS);
+                        usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    }
+                    if (forSaleMan) {
+                        tempSaleId =saleIDforCash;
+                        custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._ORDERS.getTotalPrice(), 0, "ORDER", SESSION._ORDERS.getCreatedAt());
+                    }
+                    // insert order region
+                    for (OrderDetails o : SESSION._ORDER_DETAILES) {
+                        long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                        orderId.add(orderid);
+                        //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+                    }
+                    // ORDER_DETAILS Sales man Region
+                    for (int i=0;i<orderIdList.size();i++) {
+                        OrderDetails order = orderIdList.get(i);
+                        long customerAssestId= custmerAssetstIdList.get(i);
+                        for (int j = 0; j< SESSION._ORDER_DETAILES.size(); j++) {
+                            OrderDetails o = SESSION._ORDER_DETAILES.get(j);
+                            long tempOrderId =orderId.get(i);
+                            if (o==order) {
+                                if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
+                                    o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
+                                    custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPaidAmount(), 0, "ORDER_DETAILS", SESSION._ORDERS.getCreatedAt());
+                                }
+                            }
+                        }
+                    }
+                    //update customer balance
+                    if(SESSION._ORDERS.getTotalPrice()<0&&customer!=null){
+                        Customer upDateCustomer=customer;
+                        upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice()+customer.getBalance());
+                        customerDBAdapter.updateEntry(upDateCustomer);
+                    }
+                    orderDBAdapter.close();
+                    custmerAssetDB.close();
+                    // End ORDER_DETAILS And CustomerAssistant Region
+
+                    // Payment Region
+                    long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash);
+
+                    Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
+
+                    SESSION._ORDERS.setPayment(payment);
+
+                    paymentDBAdapter.close();
+
+                    printAndOpenCashBox("", "", "",REQUEST_CASH_ACTIVITY_CODE);
+
+                    return;
+                }
+                catch (Exception e){
+
+                }
+            }}
+
+    }
+
+    private long getCurrencyIdByType(String type) {
+        CurrencyTypeDBAdapter currency=new CurrencyTypeDBAdapter(this);
+        currency.open();
+        return  currency.getCurrencyIdByType(type);
     }
 
     /**
@@ -3607,5 +3776,13 @@ public class SalesCartActivity extends AppCompatActivity {
         calculateTotalPrice();
         linearLayoutCustomerBalance.setVisibility(View.VISIBLE);
         customerBalance.setText(Util.makePrice(Math.abs(customer.getBalance())));
+    }
+    public double getCurrencyRate(String currencyType){
+        for (int i=0;i<currenciesList.size();i++){
+            if(currenciesList.get(i).getCountry().equals(currencyType)) {
+                return currenciesList.get(i).getRate();
+            }
+        }
+        return 1;
     }
 }

@@ -1,7 +1,6 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -11,8 +10,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 
 import java.util.ArrayList;
@@ -64,27 +63,16 @@ public class ReportZDetailsActivity extends Activity {
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goHome();
+               onBackPressed();
             }
         });
         btPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pt.PrintReport(p);
-                goHome();
+                onBackPressed();
             }
         });
-    }
-    private void goHome() {
-        if (!goBack) {
-            Intent intent = new Intent(ReportZDetailsActivity.this, LogInActivity.class);
-            intent.putExtra("permissions_name", str);
-
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(LogInActivity.LEADPOS_MAKE_A_REPORT, LogInActivity.LEADPOS_MAKE_A_REPORT);
-            startActivity(intent);
-        }
-        finish();
     }
     @Override
     protected void onResume() {
@@ -97,11 +85,6 @@ public class ReportZDetailsActivity extends Activity {
 
         }
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        goHome();
     }
 
     private List<OrderDetails> orderList(List<Order> sales){

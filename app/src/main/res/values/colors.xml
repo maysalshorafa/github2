@@ -47,7 +47,7 @@
 
 
     <!--netColor-->
-    <color name="White">#FFFFFF</color>
+    <color name="White">#ffffff</color>
     <color name="Ivory">#FFFFF0</color>
     <color name="LightYellow">#FFFFE0</color>
     <color name="Yellow">#FFFF00</color>
@@ -73,7 +73,7 @@
     <color name="Coral">#FF7F50</color>
     <color name="HotPink">#FF69B4</color>
     <color name="Tomato">#FF6347</color>
-    <color name="OrangeRed">#FF4500</color>
+    <color name="OrangeRed">#ff4500</color>
     <color name="DeepPink">#FF1493</color>
     <color name="Fuchsia">#FF00FF</color>
     <color name="Magenta">#FF00FF</color>
@@ -82,7 +82,7 @@
     <color name="LightGoldenrodYellow">#FAFAD2</color>
     <color name="Linen">#FAF0E6</color>
     <color name="AntiqueWhite">#FAEBD7</color>
-    <color name="Salmon">#FA8072</color>
+    <color name="Salmon">#fa8072</color>
     <color name="GhostWhite">#F8F8FF</color>
     <color name="MintCream">#F5FFFA</color>
     <color name="WhiteSmoke">#F5F5F5</color>
@@ -133,7 +133,7 @@
     <color name="DarkViolet">#9400D3</color>
     <color name="MediumPurple">#9370DB</color>
     <color name="LightGreen">#90EE90</color>
-    <color name="DarkSeaGreen">#8FBC8F</color>
+    <color name="DarkSeaGreen">#8fbc8f</color>
     <color name="SaddleBrown">#8B4513</color>
     <color name="DarkMagenta">#8B008B</color>
     <color name="DarkRed">#8B0000</color>
@@ -212,8 +212,8 @@
     <color name="dark_blue1">#3b4151</color>
     <color name="dark_blue2">#0d0a11</color>
 
-    <color name="dark_disabled_blue1">#535354</color>
-    <color name="dark_disabled_blue2">#2F2D32</color>
+    <color name="dark_disabled_blue1">#afafaf</color>
+    <color name="dark_disabled_blue2">#7a7582</color>
 
     <color name="dark_press_blue1">#0d0a11</color>
     <color name="dark_press_blue2">#161921</color>

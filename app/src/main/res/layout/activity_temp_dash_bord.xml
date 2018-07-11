@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ibutton="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="10dp"
     android:weightSum="3">
@@ -17,54 +19,37 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"  >
 
-        <Button
+        <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/mainScreen"
-            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
-            android:layout_gravity="top"
             android:layout_weight="1"
-            android:drawableTop="@drawable/shopping_cart_icon"
-            android:gravity="center_horizontal"
-            android:text="@string/main_screen"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            ibutton:button_icon="@drawable/shopping_cart_icon"
+            ibutton:button_text="@string/main_screen"/>
 
-        <Button
+        <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/dashboard_btAreport"
-            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:layout_weight="1"
-            android:text="A"
-            android:textSize="80dp"
-            android:textStyle="bold" />
+            ibutton:button_icon="@drawable/a_report"
+            ibutton:button_text="@string/a_report"/>
 
-        <Button
+        <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/dashboard_btZreport"
-            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:layout_weight="1"
-            android:text="Z"
-            android:textSize="80dp"
-            android:textStyle="bold" />
+            ibutton:button_icon="@drawable/z_report"
+            ibutton:button_text="@string/z_report" />
 
-        <Button
+        <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/product"
-            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:layout_weight="1"
-            android:drawableTop="@drawable/product"
-            android:gravity="center_horizontal"
-            android:text="@string/products"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            ibutton:button_icon="@drawable/product"
+            ibutton:button_text="@string/products"/>
 
     </LinearLayout>
     <LinearLayout
@@ -77,20 +62,23 @@
         android:layout_weight="1"
         android:weightSum="4">
 
-        <Button
+        <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/department"
-            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:layout_weight="1"
-            android:drawableTop="@drawable/department"
-            android:gravity="center_horizontal"
-            android:text="@string/department"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            ibutton:button_icon="@drawable/department"
+            ibutton:button_text="@string/department" />
 
-        <Button
+        <com.pos.leaders.leaderspossystem.Elements.IButton
+            android:id="@+id/users"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            ibutton:button_text="@string/users"
+            ibutton:button_icon="@drawable/dash_user"/>
+
+      <!--  <Button
             android:id="@+id/users"
             style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
@@ -100,34 +88,24 @@
             android:drawableTop="@drawable/dash_user"
             android:gravity="center_horizontal"
             android:text="@string/users"
-            android:textSize="20dp"
-            android:textStyle="bold" />
 
-        <Button
+            android:visibility="gone"/>-->
+
+        <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/schedule_workers"
-            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:layout_weight="1"
-            android:drawableTop="@drawable/dash_user"
-            android:gravity="center_horizontal"
-            android:text="@string/schedule_workers"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            ibutton:button_icon="@drawable/dash_user"
+            ibutton:button_text="@string/schedule_workers" />
 
-        <Button
+        <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/backUp"
-            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:layout_weight="1"
-            android:drawableTop="@drawable/back_up"
-            android:gravity="center_horizontal"
-            android:text="@string/back_up"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            ibutton:button_icon="@drawable/back_up"
+            ibutton:button_text="@string/back_up"/>
     </LinearLayout>
 
     <LinearLayout
@@ -140,59 +118,37 @@
         android:orientation="horizontal"
         android:weightSum="4">
 
-        <Button
+        <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/coustmerClub"
-            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:layout_weight="1"
-            android:drawableTop="@drawable/custmer_club"
-            android:gravity="center_horizontal"
-            android:text="@string/customer_club"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            ibutton:button_icon="@drawable/custmer_club"
+            ibutton:button_text="@string/customer_club"/>
 
-        <Button
+        <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/report"
-            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:layout_weight="1"
-            android:drawableTop="@drawable/dash_report"
-            android:gravity="center_horizontal"
-            android:text="@string/reports"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+           ibutton:button_icon="@drawable/dash_report"
+           ibutton:button_text="@string/reports" />
 
-        <Button
+        <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/settings"
-            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:layout_weight="1"
-            android:drawableTop="@drawable/settings"
-            android:gravity="center_horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="@string/settings"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            ibutton:button_icon="@drawable/settings"
+            ibutton:button_text="@string/settings" />
 
-        <Button
+        <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/logOut"
-            style="@style/AppTheme.dashboard_bt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:layout_weight="1"
-            android:drawableTop="@drawable/log_out"
-            android:gravity="center_horizontal"
-            android:text="@string/log_out"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            ibutton:button_icon="@drawable/log_out"
+            ibutton:button_text="@string/log_out"/>
 
 
 

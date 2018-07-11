@@ -401,15 +401,13 @@ public class ChecksActivity extends AppCompatActivity {
 		outtoRight.setInterpolator(new AccelerateInterpolator());
 		return outtoRight;
 	}
-	public  void  delete(int pos){
+
+	public void delete(int pos){
 		adapter = new ChecksListViewAdapter(this, R.layout.list_adapter_row_checks, checkList);
 		lvChecks.setAdapter(adapter);
 		checkList.remove(pos);
 		adapter.remove(pos);
 		adapter.notifyDataSetChanged();
 		getTotal();
-
 	}
-
-
 }

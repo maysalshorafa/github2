@@ -95,6 +95,10 @@
     <string name="TouchPad_7">7</string>
     <string name="TouchPad_8">8</string>
     <string name="TouchPad_9">9</string>
+    <string name="TouchPad_dot">.</string>
+    <string name="TouchPad_ce">C</string>
+    <string name="back">back</string>
+    <string name="check_out">Check Out</string>
     <string name="empty_password">Please insert your password</string>
     <string name="wrong_password">Please insert valid password</string>
     <string name="schedule_workers">Time Attendance</string>
@@ -257,22 +261,23 @@
     <string name="settings">Settings</string>
     <string name="success_to_save_settings">Success to save settings.</string>
     <string name="fail_to_save_settings">Fail to save settings.</string>
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
+    <string name="pref_title_social_recommendations" translatable="false">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations" translatable="false">Recommendations for people to contact
         based on your message history
     </string>
     <string name="fail_to_make_internet_connection">Fail to Make Internet Connection.</string>
 
 
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
+    <string name="pref_title_display_name" translatable="false">Display name</string>
 
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+
+    <string name="pref_title_add_friends_to_messages" translatable="false">Add friends to messages</string>
     <string-array name="pref_example_list_titles">
         <item>Always</item>
         <item>When possible</item>
         <item>Never</item>
     </string-array>
+
     <string-array name="pref_example_list_values">
         <item>1</item>
         <item>0</item>
@@ -280,9 +285,9 @@
     </string-array>
 
     <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
+    <string name="pref_header_data_sync" translatable="false">Data &amp; sync</string>
 
-    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string name="pref_title_sync_frequency" translatable="false">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">
         <item>15 minutes</item>
         <item>30 minutes</item>
@@ -329,17 +334,17 @@
 
     <string-array name="multi_select_list_preference_default_value" />
 
-    <string name="pref_title_system_sync_settings">System sync settings</string>
+    <string name="pref_title_system_sync_settings" translatable="false">System sync settings</string>
 
     <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_header_notifications" translatable="false">Notifications</string>
 
-    <string name="pref_title_new_message_notifications">New message notifications</string>
+    <string name="pref_title_new_message_notifications" translatable="false">New message notifications</string>
 
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
+    <string name="pref_title_ringtone" translatable="false">Ringtone</string>
+    <string name="pref_ringtone_silent" translatable="false">Silent</string>
 
-    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="pref_title_vibrate" translatable="false">Vibrate</string>
     <string name="setup_new_pos">Setup New POS</string>
     <string name="restore">Restore</string>
     <string name="file_does_not_valid">File does not valid</string>
@@ -396,7 +401,7 @@
     <string name="x_report_view">X REPORT VIEW</string>
     <string name="z_report_view">Z REPORT VIEW</string>
     <string name="x_report">X REPORT</string>
-    <string name="z_report">Z REPORT</string>
+    <string name="z_report">Z Report</string>
 
 
     <!--online setup -->
@@ -438,7 +443,7 @@
     <string name="please_insert_job"> Please insert Job</string>
     <string name="please_insert_phone_no"> Please insert Phone No</string>
     <string name="please_insert_street"> Please insert Street</string>
-    <string name="please_insert_club"> Please Select Club</string>
+    <string name="please_insert_club">Please Select Club</string>
     <string name="please_insert_city"> Please Select City</string>
     <string name="please_insert_house_number"> Please insert house Number</string>
     <string name="please_insert_postal_code"> Please insert Postal Code</string>
@@ -467,7 +472,7 @@
     <string name="group_name"> Club Name</string>
     <string name="add_group"> Add Group</string>
     <string name="please_insert_club_name">Please insert Club Name.</string>
-    <string name="please_insert_club_description"> Please insert Description.</string>
+    <string name="please_insert_club_description">Please insert Description.</string>
     <string name="please_insert_club_percentage">Please insert discount percentage.</string>
     <string name="success_adding_new_club">Success, adding new club.</string>
     <string name="can_not_add_club_please_try_again">Can`t add club please try again.</string>
@@ -492,16 +497,16 @@
 
     <string name="different"> Different</string>
     <string name="out_put"> Out Put</string>
-    <string name="in_put"> InPut</string>
+    <string name="in_put">Input</string>
     <string name="currency">Currency</string>
-    <string name="usd">USD</string>
+    <string name="usd" translatable="false">USD</string>
     <string name="eur">EUR</string>
     <string name="gbp">GBP</string>
     <string name="shekel">SHEKEL</string>
 
     <string name="advance">Advance</string>
     <string name="clear">Clear</string>
-
+    <string name="add_payment">Add Payment</string>
     <string name="invalid_payments_number">Please insert valid payments number between 2 and 36.</string>
     <string name="active_currency_service_in_pos">If you want to active Currency Service in your Pos Check the Currency CheckBox</string>
     <string name="active_credit_card_service_in_pos">If you want to active CreditCard Service in your Pos Check the CreditCard CheckBox</string>
@@ -512,7 +517,7 @@
     <string name="success_edit_POS_setting">Success Edit POS Setting</string>
     <string name="delete_check">Delete Check</string>
     <string name="pos_setting">POS Setting</string>
-    <string name="no_of_float_point">No Of Float Point:</string>
+    <string name="no_of_float_point">No Of Float Point</string>
     <string name="printer_type">Printer Type</string>
     <string name="server_info">Server Information</string>
     <string name="update_setting">Update Setting</string>
@@ -570,7 +575,7 @@
     <string name="title_activity_departments_activity">Departments Activity</string>
     <string name="title_activity_products_activity">Products Activity</string>
     <string name="title_activity_pinpad">Pin-Pad Activity</string>
-
+    <string name="multi_currencies_payment_activity">MultiCurrenciesPaymentActivity</string>
 
     <string name="currency_is_activated_in_pos">Currency is activated in POS</string>
     <string name="currency_is_not_activated_in_pos">Currency is not activated in POS</string>
@@ -579,14 +584,14 @@
     <string name="customer_measurement_is_activated_in_pos">Customer Measurement is activated in POS</string>
     <string name="customer_measurement_is_not_activated_in_pos">Customer Measurement is not activated in POS</string>
 
-    <string name="ip">IP Address</string>
+    <string name="ip" translatable="false">IP Address</string>
     <string name="pinpad_connection_error">Please call the support team.</string>
     <string name="transaction_error">Transaction error</string>
     <string name="pinpad_wait_for_finish">Continue the transaction using your pin-pad.</string>
 
     <string name="balance">Balance</string>
 
-    <string name="pref_title_about_company_name">Company Name</string>
+    <string name="pref_title_about_company_name" translatable="false">Company Name</string>
 
     <string name="pinpad">Pin-Pad</string>
     <string name="insert_product_name">Please insert Product Name.</string>
@@ -594,6 +599,19 @@
     <string name="insert_product_price">Please insert Product Price.</string>
     <string name="paid_by">Paid By</string>
     <string name="product_quantity">Product quantity</string>
+    <string name="payment_list">Payment list</string>
+    <string name="quick_cash_payment">Quick cash payment</string>
+    <string name="due">Due</string>
+    <string name="change">Change</string>
+    <string name="method">Method</string>
+    <string name="how_mutch_to_return">How Match To Return</string>
+    <string name="please_insert_correct_value_in_multi_currency_activity">Please insert correct value between 0 and 10000</string>
+    <string name="are_you_want_to_cancel_payment_activity">Are you want to stop payment activity ?</string>
+
+    <string name="printer">Printer</string>
+    <string name="printer_connect_error">Printer Connect Error</string>
+    <string name="please_connect_the_printer">Please check printer connection and printer type</string>
+    <string name="a_report">A Report</string>
 </resources>
 
 

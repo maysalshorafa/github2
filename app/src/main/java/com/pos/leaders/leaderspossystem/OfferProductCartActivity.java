@@ -249,7 +249,7 @@ public class OfferProductCartActivity extends Activity {
         departmentDBAdapter.open();
         for (Department d : departmentDBAdapter.getAllDepartments()) {
             Button bt = new Button(this);
-            //bt.setCurrencyId(d.getCashPaymentId());
+            //bt.setId(d.getCashPaymentId());
             bt.setText(d.getName());
             bt.setTextAppearance(this, R.style.TextAppearance);
             bt.setBackground(getResources().getDrawable(R.drawable.btn_secondary));

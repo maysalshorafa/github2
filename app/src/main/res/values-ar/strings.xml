@@ -204,7 +204,6 @@
     <string name="delete_club_message"> هل تريد حذف هذا النادي من النظام ؟</string>
     <string name="customer">زبون</string>
     <string name="club">نادي اعضاء</string>
-    <string name="make_your_selection"></string>
     <string name="success_to_save_settings">تم حفظ اعدادات الشركة</string>
     <string name="currency">العملات</string>
     <string name="choose_no_of_float_point">اختر عدد المنازل العشرية</string>
@@ -273,12 +272,10 @@
     <string name="credit_card_number">رقم بطاقة الائتمان</string>
     <string name="credit_invoice">"فاتورة ائتمانية "</string>
     <string name="credit_type">نوع البطاقة</string>
-    <string name="customer_have_money_from_point_equal_total_price"></string>
     <string name="show_products">عرض المنتوجات</string>
     <string name="yes">نعم</string>
     <string name="customer_id">رقم المستخدم</string>
     <string name="deal_number">رقم الصفقة</string>
-    <string name="delete_all_selected_products"></string>
     <string name="delete_check">حذف الشيك</string>
     <string name="departments">الأقسام</string>
     <string name="details">التفاصيل</string>
@@ -290,17 +287,14 @@
     <string name="end_at">نهاية</string>
     <string name="error">اخطاء</string>
     <string name="error_on_restore_the_system">خطأ في استعادة النظام</string>
-    <string name="expired_card"></string>
     <string name="fail">فشل</string>
     <string name="fail_to_make_internet_connection">خطا في اتصال الانترنت</string>
     <string name="fail_to_save_settings">خطا في احفظ الاعدادات</string>
-    <string name="first_payment"></string>
     <string name="internet_not_connected">"الرجاء فحص الانترنت "</string>
     <string name="invoice_with_tax">فاتورة</string>
     <string name="list_of_pause_sales">قائمة المبيعات الموقفه</string>
     <string name="multi_count">قم بتحديد المنتوجات</string>
     <string name="no">لا</string>
-    <string name="no_of_float_point"></string>
     <string name="please_wait">الرجاء الانتظار</string>
     <string name="product_barcode_not_available">باركود المنتج غير صحيح</string>
     <string name="product_name_not_available">اسم النتوج غير متوفر</string>
@@ -329,21 +323,213 @@
     <string name="TouchPad_7">7</string>
     <string name="TouchPad_8">8</string>
     <string name="TouchPad_9">9</string>
+    <string name="TouchPad_dot">.</string>
+    <string name="TouchPad_ce">CE</string>
+    <string name="back">رجوع</string>
+    <string name="check_out">تنفيذ الدفع</string>
     <string name="_return">باقي</string>
     <string name="a_report_amount">اساس</string>
     <string name="active_credit_card_service_in_pos">الرجاء تفعيل خدمة الدفع عن طريق بطاقة الائتمان</string>
     <string name="ccv">CCV</string>
     <string name="ins">₪</string>
 
-    <string name="pinpad_connection_error">Please call the support team.</string>
+    <string name="pinpad_connection_error">الرجاء تحدث مع فريق الدعم الفني</string>
     <string name="transaction_error">Transaction error</string>
 
     <string name="balance">ميزانيه</string>
 
-    <string name="title_activity_setting_tab_activity">קטלוג מוצרים</string>
     <string name="paid_by">دفع بواسطة</string>
     <string name="product_quantity">كمية المنتوجات</string>
 
+    <string name="clear">حذف</string>
+    <string name="add_payment">اضافة مبلغ</string>
+    <string name="please_insert_correct_value_in_multi_currency_activity">الرجاء ادخال قيمة صحيحة بين 0 وال 100000</string>
+    <string name="are_you_want_to_cancel_payment_activity">هل تريد انهاء شاشة الدفع ؟</string>
+    <string name="multi_currencies_payment_activity">شاشة الدفع بالعملات</string>
 
+    <string name="x">x</string>
+    <string name="wrong_password">كلمة المرور غبر صالحة, الرجاء ادخال كلمة مرور اخرى</string>
+    <string name="worker_management">ادارة العمال</string>
+    <string name="welcome">مرحباً</string>
+    <string name="wait_for_finish_printing">الرجاء الانتظار حتى الانتهاء</string>
+    <string name="wait_for_accept">انتظار الموافقة</string>
+    <string name="valid_CCV">الرجاء ادخال ccv</string>
+    <string name="valid_ID">الرجاء ادخال رقم الهوية</string>
+    <string name="valid_expired_card">الرجاء ادخال تاريخ الصلاحية</string>
+    <string name="total_sales">المجموع الكلي</string>
+    <string name="total_discount">مجموع التخفيضات</string>
+    <string name="title_zreports_activity">تقرير z</string>
+    <string name="title_user_attendance_report_activity">تقارير الموظفين</string>
+    <string name="title_sales_management_activity">ادارة الطلبيات</string>
+    <string name="title_sales_man_management_activity">ادارة رجال المبيعات</string>
+    <string name="title_reports_management_activity">ادارة التقارير</string>
+    <string name="title_reports_activity">التقاير</string>
+    <string name="title_report_zdetails_activity">تفاصيل تقرير z</string>
+    <string name="title_main_sales_activity">شاشة المبيعات</string>
+    <string name="title_import_product_activity">استيراد منتوجات</string>
+    <string name="title_customer_management_activity">ادارة الزبائن</string>
+    <string name="title_customer_and_club_management_activity">ادارة النوادي والزبائن</string>
+    <string name="title_credit_card_by_phone_activity">بطاقة الائتمان باستخدام الهاتف</string>
+    <string name="title_club_management_activity">ادارة النادي</string>
+    <string name="title_backup_activity">دعم</string>
+    <string name="title_add_user_activity">اضافة موظف</string>
+    <string name="title_add_new_customer_activity">اضافة زبون جديد</string>
+    <string name="title_add_new_club_activity">اضافة نادي زبائن جديد</string>
+    <string name="title_activity_worker_management_activity">ادارة الموظفين</string>
+    <string name="title_activity_temp_cash_activty">الدفع نقدا</string>
+    <string name="title_activity_settings">الاعدادات</string>
+    <string name="title_activity_setting_tab_activity">Setting Tab Activity</string>
+    <string name="title_activity_products_activity">المنتوجات</string>
+    <string name="title_activity_product_catalog">مستعرض المنتوجات</string>
+    <string name="title_activity_pinpad">Pin-Pad</string>
+    <string name="title_activity_open_format">OpenFormatActivity</string>
+    <string name="title_activity_notify_service">ابلاغ الخدمة</string>
+    <string name="title_activity_departments_activity">الاقسام</string>
+    <string name="title_activity_customer_measurement_management_activity">قياسات الزبون</string>
+    <string name="title_activity_club_management">ادارة النوادي</string>
+    <string name="title_activity_add_new_department_activity">اضافة قسم جديد</string>
+    <string name="title_activity_add_customer_measurement_activity">اضافة قياسات للزبون</string>
+    <string name="there_is_no_sale_on_pause">فارغ</string>
+    <string name="there_is_no_disk_on_key">لم يتم العثور على قرص خارجي</string>
+    <string name="tendered">مناقصة</string>
+    <string name="shekel">الشيقل</string>
+    <string name="setup_new_pos">اعدادات النظام الجديد</string>
+    <string name="setting">الاعدادات</string>
+    <string name="set_price">عدل السعر</string>
+    <string name="server_info">معلومات حول الخادم</string>
+    <string name="selected">حدد</string>
+    <string name="select_all_Department_products">حدد اقسام المنتوجات</string>
+    <string name="rule_name">اسم القاعدة</string>
+    <string name="rule">قاعدة</string>
+    <string name="retry">اعد المحاولة</string>
+    <string name="resume_deal_number">"استعادة رقم المعاملة "</string>
+    <string name="restore">استعادة</string>
+    <string name="replacement_invoice">فاتورة الاستبدال</string>
+    <string name="replacement_expiration_date">تاريخ انتهاء الصلاحية التبديل</string>
+    <string name="printer_type">نوع الطابعة</string>
+    <string name="print_copy_invoice">هل تريد طباعة نسخة من الفاتورة؟</string>
+    <string name="price_after_discount">السعر بعد الخصم</string>
+    <string name="pos_sales">مبيعات النظام</string>
+    <string name="please_select_item">الرجاء حدد العناصر من سلة المبيعات</string>
+    <string name="please_select_discount_offer">حدد قيمة الخصم</string>
+    <string name="please_remember_your_password">الرجاء تذكر كلمة السر</string>
+    <string name="please_add_item">الرجاء اضف منتوجات لسلةالمبيعات</string>
+    <string name="pinpad_wait_for_finish">استمر بعمليةالدفع باستخدام ال pin-pad</string>
+    <string name="pinpad">Pin-Pad</string>
+    <string name="phone">التلفون</string>
+    <string name="pay_cash">الدفع نقدا</string>
+    <string name="pay_by_credit_card">الدفع بواسطة بطاقة الائتمان</string>
+    <string name="out_put">مخرجات</string>
+    <string name="opening_report">فتح التقرير</string>
+    <string name="open">مفتوح</string>
+    <string name="offer_rule_management">ادارة قواعد العروض</string>
+    <string name="offer_name">اسم العرض</string>
+    <string name="offer_management">ادارة العروض</string>
+    <string name="number_of_payments">عدد الدفعات</string>
+    <string name="not_valid_date">الرجاء ادخل تاريخ صحيح</string>
+    <string name="no_of_float_point">عدد المنازل العشريةالظاهرة بالنظام</string>
+    <string name="make_your_selection">حدد خياراتك</string>
+    <string name="key">مفتاح</string>
+    <string name="internet_access">لا يوجد اتصال بالانترنت</string>
+    <string name="integrated_payment">الدفع المتكامل</string>
+    <string name="in_put">مدخل</string>
+    <string name="import_wait">قراءة ملف</string>
+    <string name="if_you_want_to_update_general_setting_click_ok">إذا كنت ترغب في تحديث الاعدادات العامة ، انقر فوق تم</string>
+    <string name="id">رقم الهوية</string>
+    <string name="hello_blank_fragment">جزء فارغ</string>
+    <string name="go_back">ارجع</string>
+    <string name="general_product">منتوج عام</string>
+    <string name="general_customer">زبون</string>
+    <string name="gbp">GBP</string>
+    <string name="first_payment">" الدفعة الأولى"</string>
+    <string name="file_does_not_valid">ملف غير صحيح</string>
+    <string name="eur">EUR</string>
+    <string name="expired_card">انتهت صلاحية البطاقة</string>
+    <string name="department_management">ادارة الأقسام</string>
+    <string name="delete_all_selected_products">احذف المنتوجات المحددة</string>
+    <string name="customer_have_money_from_point_less_then_total_price">نقاط الزبون اقل من السعر الكلي</string>
+    <string name="clearCartAlertTitle">تنظيف سلة المبيعات</string>
+    <string name="clear_cart">تنظيف سلة المبيعات</string>
+    <string name="active_pin_pad_service_in_pos">اذا اردت ان تفعل خدمة PIN-PAD بالنظام اضغط المربع المجاور لها</string>
+    <string name="not_selected_products">الرجاء اختيار منتوج</string>
+
+
+    <string-array name="credit_card_type">
+        <!--  <item>רגיל</item>
+        <item>ישרא/אמקס קרדיט  ויזה/דיינרס עדיף \n\r    פלוס30 </item>
+        <item>חיוב מיידי</item>
+        <item> מועדון אשראי</item>
+        <item>סופר קרדיט</item>-->
+        <item>تقسيط</item>
+        <item>كريديت</item>
+        <!--  <item>עסקת מועדון בתשלומים</item>-->
+    </string-array>
+
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="printers_list_preference">
+        <item>BTP880</item>
+        <item>HPRT_TP805</item>
+        <item>SUNMI_T1</item>
+        <item>SM_S230I</item>
+        <item>WINTEC_BUILDIN</item>
+
+    </string-array>
+    <string-array name="float_point_list_preference">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string name="customer_have_money_from_point_equal_total_price">النقاط الخاصة بالزبون مساوية للسعر الكلي</string>
+    <string name="customer_have_money_from_point_more_than_total_price">الزبون لديه نقاط تزيد عن السعر الكلي</string>
+    <string name="change">باقي</string>
+    <string name="how_mutch_to_return">باقي</string>
+    <string name="method">وسيلة</string>
+    <string name="payment_list">قائمة الدفعات</string>
+    <string name="quick_cash_payment">الدفع نقداً</string>
+    <string name="due">مستحق</string>
+
+    <string name="printer">الطابعة</string>
+    <string name="please_connect_the_printer">الرجاء توصيل الطابعة</string>
+    <string name="printer_connect_error">الرجاء فحص توصيلات الطابعة ونوعها.</string>
+    <string name="a_report">A تقرير</string>
 </resources>
 

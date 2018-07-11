@@ -77,6 +77,13 @@ public class CurrencyTypeDBAdapter {
 
                        return 1;
             }
+    public  long getCurrencyIdByType(String type){
+        Cursor cursor=null;
+        cursor = db.rawQuery("select * from " + CurrencyType_TABLE_NAME + " where  "+ CurrencyType_COLUMN_Name +"='" + type + "'" , null);
+        cursor.moveToFirst();
+        CurrencyType currencyType = createNewCurrency(cursor);
+        return  currencyType.getCurrencyTypeId();
+    }
 
 
 }

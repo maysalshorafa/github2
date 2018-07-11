@@ -104,6 +104,10 @@ public class DateConverter {
         }
         return "";
     }
+    public static String toDate(long timestamp) {
+        Date date = new Date(timestamp);
+        return new SimpleDateFormat("yyyy-MM-dd").format(date);
+    }
 
     public static long dateToLong(Date date){
         return date.getTime();
@@ -290,5 +294,6 @@ public class DateConverter {
         DateFormat dateFormat = new SimpleDateFormat("HHmm",local);
         return dateFormat.format(date);
     }
+
 
 }

@@ -30,25 +30,25 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.Elements.IButton;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
@@ -79,8 +79,9 @@ import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE
 
 public class DashBord extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private boolean enableBackButton = true;
-    Button salesCart, report, product, department, users, backUp, customerClub, logOut, offers, settings , schedule_workers;
-    Button btZReport, btAReport;
+    IButton salesCart, report, product, department, backUp, customerClub, logOut, offers, settings , schedule_workers;
+    IButton users;
+    IButton btZReport, btAReport;
     AReportDBAdapter aReportDBAdapter;
     Employee user = new Employee();
     EmployeeDBAdapter userDBAdapter;
@@ -98,6 +99,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     private MSCardService sendservice;
     long aReportId;
     double totalZReportAmount =0;
+    boolean PRINTER_STATE=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,19 +176,19 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         permissionsDBAdapter.close();
 
 
-        salesCart = (Button) findViewById(R.id.mainScreen);
-        btAReport = (Button) findViewById(R.id.dashboard_btAreport);
-        btZReport = (Button) findViewById(R.id.dashboard_btZreport);
-        report = (Button) findViewById(R.id.report);
-        product = (Button) findViewById(R.id.product);
-        department = (Button) findViewById(R.id.department);
+        salesCart = (IButton) findViewById(R.id.mainScreen);
+        btAReport = (IButton) findViewById(R.id.dashboard_btAreport);
+        btZReport = (IButton) findViewById(R.id.dashboard_btZreport);
+        report = (IButton) findViewById(R.id.report);
+        product = (IButton) findViewById(R.id.product);
+        department = (IButton) findViewById(R.id.department);
         //offers = (Button) findViewById(R.id.offers);
-        users = (Button) findViewById(R.id.users);
-        schedule_workers = (Button) findViewById(R.id.schedule_workers);
-        backUp = (Button) findViewById(R.id.backUp);
-        logOut = (Button) findViewById(R.id.logOut);
-        customerClub = (Button) findViewById(R.id.coustmerClub);
-        settings = (Button) findViewById(R.id.settings);
+        users = (IButton) findViewById(R.id.users);
+        schedule_workers = (IButton) findViewById(R.id.schedule_workers);
+        backUp = (IButton) findViewById(R.id.backUp);
+        logOut = (IButton) findViewById(R.id.logOut);
+        customerClub = (IButton) findViewById(R.id.coustmerClub);
+        settings = (IButton) findViewById(R.id.settings);
 
         EnableButtons();
         logOut.setOnClickListener(new View.OnClickListener() {
@@ -242,7 +244,64 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         btZReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(DashBord.this)
+                if(PRINTER_STATE){
+                    new android.support.v7.app.AlertDialog.Builder(DashBord.this, android.app.AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                            .setTitle(getString(R.string.printer))
+                            .setMessage(getString(R.string.please_connect_the_printer))
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    new AlertDialog.Builder(DashBord.this)
+                                            .setTitle(getString(R.string.create_z_report))
+                                            .setMessage(getString(R.string.create_z_report_message))
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(DashBord.this);
+                                                    zReportDBAdapter.open();
+                                                    ZReport lastZReport = getLastZReport();
+
+                                                    if (lastZReport == null) {
+                                                        lastZReport = new ZReport();
+                                                        lastZReport.setEndOrderId(0);
+                                                    }
+                                                    ZReport z = new ZReport(0,  new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE, lastZReport.getEndOrderId() + 1, lastSale);
+                                                    z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
+                                                    double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
+                                                    totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
+                                                    long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
+                                                    z.setzReportId(zID);
+                                                    lastZReport = new ZReport(z);
+                                                    zReportDBAdapter.close();
+                                                    PrintTools pt = new PrintTools(DashBord.this);
+
+                                                    //create and print z report
+                                                    Bitmap bmap = pt.createZReport(lastZReport.getzReportId(), lastZReport.getStartOrderId(), lastZReport.getEndOrderId(), false,totalZReportAmount);
+                                                    if (bmap != null)
+                                                        pt.PrintReport(bmap);
+
+                                                    Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
+                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, lastZReport.getzReportId());
+                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, lastZReport.getStartOrderId());
+                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, lastZReport.getEndOrderId());
+                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
+
+                                                    startActivity(i);
+                                                    btZReport.setEnabled(false);
+                                                }
+                                            })
+                                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // do nothing
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show();                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+
+                }
+           else{
+                    new AlertDialog.Builder(DashBord.this)
                         .setTitle(getString(R.string.create_z_report))
                         .setMessage(getString(R.string.create_z_report_message))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -286,7 +345,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                             }
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                        .show();}
 
             }
         });
@@ -455,9 +514,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             case HPRT_TP805:
                 HPRT_TP805.setConnected(false);
                 if (HPRT_TP805.connect(this)) {
-                    Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+                    PRINTER_STATE=true;
+                 //   Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
                 }
                 break;
             case BTP880:
@@ -465,9 +525,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             case SUNMI_T1:
                 AidlUtil.getInstance().connectPrinterService(this);
                 if (AidlUtil.getInstance().isConnect()) {
-                    Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, "Printer Connect Success!", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+                    PRINTER_STATE=true;
+                    //Toast.makeText(this, "Please connect the printer", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -834,16 +895,16 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                             e.printStackTrace();
                         }
                         if (firstCurrencyInDefaultValue > 0) {
-                            aReportDetailsDBAdapter.insertEntry(aReportId, firstCurrencyInDefaultValue, fCurrency.getCurrencyId(), firstCurrencyInDefaultValue * fCurrency.getRate());
+                            aReportDetailsDBAdapter.insertEntry(aReportId, firstCurrencyInDefaultValue, fCurrency.getId(), firstCurrencyInDefaultValue * fCurrency.getRate());
                         }
                         if (secondCurrencyInDefaultValue > 0) {
-                            aReportDetailsDBAdapter.insertEntry(aReportId, secondCurrencyInDefaultValue, sCurrency.getCurrencyId(), secondCurrencyInDefaultValue * sCurrency.getRate());
+                            aReportDetailsDBAdapter.insertEntry(aReportId, secondCurrencyInDefaultValue, sCurrency.getId(), secondCurrencyInDefaultValue * sCurrency.getRate());
                         }
                         if (thirdCurrencyInDefaultValue > 0) {
-                            aReportDetailsDBAdapter.insertEntry(aReportId, thirdCurrencyInDefaultValue, tCurrency.getCurrencyId(), thirdCurrencyInDefaultValue * tCurrency.getRate());
+                            aReportDetailsDBAdapter.insertEntry(aReportId, thirdCurrencyInDefaultValue, tCurrency.getId(), thirdCurrencyInDefaultValue * tCurrency.getRate());
                         }
                         if (forthCurrencyInDefaultValue > 0) {
-                            aReportDetailsDBAdapter.insertEntry(aReportId, firstCurrencyInDefaultValue, forthCurrency.getCurrencyId(), forthCurrencyInDefaultValue * forthCurrency.getRate());
+                            aReportDetailsDBAdapter.insertEntry(aReportId, firstCurrencyInDefaultValue, forthCurrency.getId(), forthCurrencyInDefaultValue * forthCurrency.getRate());
                         }
 
                         aReportDialog.cancel();

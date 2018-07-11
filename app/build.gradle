@@ -19,6 +19,7 @@ android {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips", "mips64", "x86_64", "arm64-v8a"
         }
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -47,22 +48,14 @@ android {
 }
 
 
-
-
-
-
-
-
-
-
 dependencies {
     compile fileTree(include: ['**/*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.android.support:support-vector-drawable:24.2.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -71,5 +64,6 @@ dependencies {
     compile 'com.sun.mail:android-mail:1.5.5'
     compile 'com.sun.mail:android-activation:1.5.5'
     compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.weiwangcn.betterspinner:library-material:1.1.0'
     testCompile 'junit:junit:4.12'
 }
