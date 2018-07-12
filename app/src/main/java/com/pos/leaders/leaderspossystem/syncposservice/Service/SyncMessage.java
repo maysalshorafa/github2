@@ -96,6 +96,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -224,7 +225,8 @@ public class SyncMessage extends Service {
                         //}
 
                         try {
-                            getSync();
+                            //getSync();
+                            multiLineSync();
                         } catch (IOException | JSONException | NullPointerException e) {
                             //isRunning = false;
                             e.printStackTrace();
@@ -245,6 +247,49 @@ public class SyncMessage extends Service {
             Log.i(TAG, "Thread is running");
         }
         return Service.START_STICKY;
+    }
+
+    private void multiLineSync() throws JSONException, IOException {
+        List<Integer> AksFail = new ArrayList<>();
+        String res = "";
+        try {
+            res = messageTransmit.authGet(ApiURL.Task, token);
+        } catch (IOException e) {
+            Log.e("getsync exception", e.getMessage(), e);
+        }
+
+        if (res.length() != 0) {
+            if (!res.equals(MessageResult.Invalid) && res.charAt(0) == '{') {
+                Log.w("getSync", res);
+                JSONArray jsonArray = new JSONArray(res);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    try {
+                        if (executeMessage(jsonObject)) {
+
+                        } else {
+                            AksFail.add(jsonObject.getInt(MessageKey.Ak));
+                        }
+                    } catch (SQLiteConstraintException e) {
+                        Log.e("sync error", e.getMessage());
+                        AksFail.add(jsonObject.getInt(MessageKey.Ak));
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        AksFail.add(jsonObject.getInt(MessageKey.Ak));
+                    }
+                }
+
+                String resp = messageTransmit.authPost(ApiURL.Sync + "/" + jsonArray.getJSONObject(0).getLong(MessageKey.TrackingId), MessagesCreator.ackTrackID(AksFail), token);
+                Log.i(TAG, "getSync: " + resp);
+                multiLineSync();
+            } else if (res.equals(MessageResult.Invalid)) {
+                Log.i(TAG, "there is no update incoming.");
+            } else {
+                //todo: error 401,404,403
+                Log.i(TAG, "Can`t sync messages.");
+            }
+        }
     }
 
     private void getSync() throws IOException, JSONException {
