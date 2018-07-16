@@ -60,7 +60,6 @@ public class SetupNewPOSOnlineActivity extends Activity {
         setContentView(R.layout.activity_setup_new_posonline);
         etKey = (EditText) findViewById(R.id.setuponlinepos_etKey);
         btConnect = (Button) findViewById(R.id.setuponlinepos_btConnect);
-        MultiDex.install(this);
         context = this;
         //region check internet connection
         if(!SyncMessage.isConnected(this)) {
