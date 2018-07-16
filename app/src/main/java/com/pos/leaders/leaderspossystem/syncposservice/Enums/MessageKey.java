@@ -35,6 +35,7 @@ public interface MessageKey {
     String FEVersion = "FE-version";
 
     String TrackingId = "trackingId";
+    String False="false";
 
 
 

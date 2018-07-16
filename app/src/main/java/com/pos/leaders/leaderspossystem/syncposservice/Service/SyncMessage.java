@@ -253,13 +253,14 @@ public class SyncMessage extends Service {
         List<Integer> AksFail = new ArrayList<>();
         String res = "";
         try {
-            res = messageTransmit.authGet(ApiURL.Task, token);
+            res = messageTransmit.authGet(ApiURL.Sync, token);
+            Log.e("syncResponse",res);
         } catch (IOException e) {
             Log.e("getsync exception", e.getMessage(), e);
         }
 
         if (res.length() != 0) {
-            if (!res.equals(MessageResult.Invalid) && res.charAt(0) == '{') {
+            if (!res.equals(MessageResult.Invalid)) {
                 Log.w("getSync", res);
                 JSONArray jsonArray = new JSONArray(res);
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -279,8 +280,8 @@ public class SyncMessage extends Service {
                         AksFail.add(jsonObject.getInt(MessageKey.Ak));
                     }
                 }
-
                 String resp = messageTransmit.authPost(ApiURL.Sync + "/" + jsonArray.getJSONObject(0).getLong(MessageKey.TrackingId), MessagesCreator.ackTrackID(AksFail), token);
+                Log.d("AkBody",AksFail.toString());
                 Log.i(TAG, "getSync: " + resp);
                 multiLineSync();
             } else if (res.equals(MessageResult.Invalid)) {

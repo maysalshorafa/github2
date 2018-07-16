@@ -65,14 +65,18 @@ public class MessagesCreator {
     public static String ackTrackID(List<Integer> numbers) throws JSONException {
         JSONObject object = new JSONObject();
         StringBuilder strbul  = new StringBuilder();
-        strbul.append("");
-        Iterator<Integer> iter = numbers.iterator();
-        while(iter.hasNext())
-        {
-            strbul.append(iter.next());
-            if(iter.hasNext()){
-                strbul.append(",");
+        if(numbers.size()!=0){
+            strbul.append("");
+            Iterator<Integer> iter = numbers.iterator();
+            while(iter.hasNext())
+            {
+                strbul.append(iter.next());
+                if(iter.hasNext()){
+                    strbul.append(",");
+                }
             }
+        }else {
+            strbul.append(MessageKey.False);
         }
         object.put(MessageKey.Aks, strbul.toString());
         return object.toString();
