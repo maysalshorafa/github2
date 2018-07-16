@@ -617,6 +617,7 @@
     <string name="manage_stock">Manage Stock</string>
     <string name="stock_quantity">Stock Quantity</string>
     <string name="insert_product_dispaly_name">Please insert Product Display Name.</string>
+    <string name="insert_product_sku">Please insert sku number.</string>
 </resources>
 
 

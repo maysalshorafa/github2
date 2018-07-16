@@ -1025,7 +1025,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                 List<OrderDetails>list=new ArrayList<OrderDetails>();
                                 list.add(selectedOrderOnCart);
                                 final TextView discountType =(TextView)cashDialog.findViewById(R.id. cashPaymentDialog_TVStatus);
-                                discountType.append(":"+selectedOrderOnCart.getProduct().getName());
+                                discountType.append(":"+selectedOrderOnCart.getProduct().getDisplayName());
                                 totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
                                 priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
                                 sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

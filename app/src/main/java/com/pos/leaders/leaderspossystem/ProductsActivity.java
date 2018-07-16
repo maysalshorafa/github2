@@ -267,20 +267,22 @@ public class ProductsActivity  extends AppCompatActivity  {
         if (etName.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), getString(R.string.insert_product_name), Toast.LENGTH_LONG).show();
             etName.setBackgroundResource(R.drawable.backtext);
-
         } else if (etDisplayName.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), getString(R.string.insert_product_dispaly_name), Toast.LENGTH_LONG).show();
             etDisplayName.setBackgroundResource(R.drawable.backtext);
         } else if (etBarcode.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), getString(R.string.insert_product_barcode), Toast.LENGTH_LONG).show();
             etBarcode.setBackgroundResource(R.drawable.backtext);
+        } else if (etSku.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(), getString(R.string.insert_product_sku), Toast.LENGTH_LONG).show();
+            etSku.setBackgroundResource(R.drawable.backtext);
         } else if (etPrice.getText().toString().equals("") ) {
             Toast.makeText(getApplicationContext(), getString(R.string.insert_product_price), Toast.LENGTH_LONG).show();
             etPrice.setBackgroundResource(R.drawable.backtext);
         }
 
         if (editableProduct == null) {
-            boolean availableBarCode= productDBAdapter.isValidBarcode(etBarcode.getText().toString());
+            boolean availableBarCode= productDBAdapter.isValidSku(etSku.getText().toString());
             boolean availableProductName= productDBAdapter.availableProductName(etName.getText().toString());
 
             if(availableProductName&&availableBarCode&& !etPrice.getText().toString().equals("")){
@@ -296,7 +298,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                     etSku.setText(etBarcode.getText().toString());
                 }
 
-                if (!etStockQuantity.getText().toString().equals("")) {
+                if (etStockQuantity.getText().toString().equals("")) {
                     stockQuantity = 0;
                 }else{
                     stockQuantity = Integer.parseInt(etStockQuantity.getText().toString());
@@ -345,7 +347,7 @@ public class ProductsActivity  extends AppCompatActivity  {
             else {
                 costPrice=editableProduct.getCostPrice();
             }
-            if (!etStockQuantity.getText().toString().equals("")) {
+            if (etStockQuantity.getText().toString().equals("")) {
                 stockQuantity = 0;
             }else{
                 stockQuantity = Integer.parseInt(etStockQuantity.getText().toString());

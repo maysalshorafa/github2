@@ -181,10 +181,16 @@ public class Product {
         return productId;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
     public String getName() {
         return name;
     }
 
+    public String getSku() {
+        return sku;
+    }
     public String getBarCode() {
         return barCode;
     }
@@ -225,16 +231,10 @@ public class Product {
         return byEmployee;
     }
 
-    public String getSku() {
-        return sku;
-    }
+
 
     public ProductStatus getStatus() {
         return status;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 
     public double getRegularPrice() {

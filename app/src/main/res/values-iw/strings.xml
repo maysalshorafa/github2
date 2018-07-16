@@ -553,4 +553,5 @@
     <string name="manage_stock">ניהול אחסון</string>
     <string name="stock_quantity">כמות במחסן</string>
     <string name="insert_product_dispaly_name">נא להכניס שם הצגה</string>
+    <string name="insert_product_sku">נא להכניס זהות המוצר</string>
 </resources>

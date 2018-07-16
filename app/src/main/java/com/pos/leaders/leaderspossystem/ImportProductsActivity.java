@@ -100,8 +100,8 @@ public class ImportProductsActivity extends Activity {
                             for (Product p : lsProducts) {
                                 p.setDepartmentId(departmentMap.get(selectedDepartment));
                                 count++;
-                                boolean availableBarCode= productDBAdapter.isValidBarcode(p.getBarCode());
-                                boolean availableProductName= productDBAdapter.availableProductName(p.getName());
+                                boolean availableBarCode= productDBAdapter.isValidSku(p.getSku());
+                                boolean availableProductName= productDBAdapter.availableProductName(p.getDisplayName());
                                 if(availableProductName&&availableBarCode) {
                                     productDBAdapter.insertEntry(p);
                                 }
@@ -183,8 +183,8 @@ public class ImportProductsActivity extends Activity {
 
                     productDBAdapter.open();
                     for (Product p : d.getProducts()) {
-                        boolean availableBarCode= productDBAdapter.isValidBarcode(p.getBarCode());
-                        boolean availableProductName= productDBAdapter.availableProductName(p.getName());
+                        boolean availableBarCode= productDBAdapter.isValidSku(p.getSku());
+                        boolean availableProductName= productDBAdapter.availableProductName(p.getDisplayName());
                         if(availableProductName&&availableBarCode) {
                             productDBAdapter.insertEntry(p.getName(), p.getBarCode(),
                                     "", p.getPrice(), p.getCostPrice(), true, false, depID, p.getByEmployee(), 1, 1,

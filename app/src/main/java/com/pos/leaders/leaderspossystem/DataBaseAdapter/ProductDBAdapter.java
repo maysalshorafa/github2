@@ -107,22 +107,22 @@ public class ProductDBAdapter {
         long id = insertEntry(p);
         if (id > 0) {
           /*  Product boProduct = p;
-            boProduct.setName(Util.getString(boProduct.getName()));
+            boProduct.setName(Util.getString(boProduct.getDisplayName()));
             boProduct.setDescription(Util.getString(boProduct.getDescription()));
-            boProduct.setBarCode(Util.getString(boProduct.getBarCode()));*/
+            boProduct.setBarCode(Util.getString(boProduct.getSku()));*/
             sendToBroker(MessageType.ADD_PRODUCT, p, this.context);
         }
         return id;
     }
 
     public long insertEntry(Product p) {
-        Product product = getProductByBarCode(p.getBarCode());
+        Product product = getProductByBarCode(p.getSku());
         if (product != null) {
             Log.i("Inserting product", "barcode is exist");
             return product.getProductId();
         }
         Product productCheckName = null;
-        productCheckName = getByProductName(p.getName());
+        productCheckName = getByProductName(p.getDisplayName());
         if (productCheckName != null) {
             Log.i("Inserting product", "name is busy");
             return productCheckName.getProductId();
@@ -458,8 +458,8 @@ public class ProductDBAdapter {
         return productsList;
     }
     // methode to test if barcode is UNIQUE
-    public Boolean isValidBarcode(String barcode) {
-        Cursor cursor = db.query(PRODUCTS_TABLE_NAME, null, PRODUCTS_COLUMN_BARCODE + "=?", new String[]{barcode}, null, null, null);
+    public Boolean isValidSku(String sku) {
+        Cursor cursor = db.query(PRODUCTS_TABLE_NAME, null, PRODUCTS_COLUMN_SKU + "=?", new String[]{sku}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
 
