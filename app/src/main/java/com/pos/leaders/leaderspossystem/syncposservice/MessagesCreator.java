@@ -6,7 +6,8 @@ import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by KARAM on 27/07/2017.
@@ -58,6 +59,26 @@ public class MessagesCreator {
     public static String acknowledge(int ackNumber) throws JSONException {
         JSONObject object = new JSONObject();
         object.put(MessageKey.Acknowledge, ackNumber);
+        return object.toString();
+    }
+
+    public static String ackTrackID(List<Integer> numbers) throws JSONException {
+        JSONObject object = new JSONObject();
+        StringBuilder strbul  = new StringBuilder();
+        if(numbers.size()!=0){
+            strbul.append("");
+            Iterator<Integer> iter = numbers.iterator();
+            while(iter.hasNext())
+            {
+                strbul.append(iter.next());
+                if(iter.hasNext()){
+                    strbul.append(",");
+                }
+            }
+        }else {
+            strbul.append(MessageKey.False);
+        }
+        object.put(MessageKey.Aks, strbul.toString());
         return object.toString();
     }
 

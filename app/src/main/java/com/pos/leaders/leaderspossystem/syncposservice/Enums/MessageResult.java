@@ -5,6 +5,6 @@ package com.pos.leaders.leaderspossystem.syncposservice.Enums;
  */
 
 public interface MessageResult {
-    String Invalid = "Invalid";
+    String Invalid = "invalid";
     String OK = "ok";
 }
