@@ -70,15 +70,15 @@ public class Product {
     }
 
     // region Constructor
-    public Product(long productId, String name, String barCode, String description,
-                   double price, double costPrice, boolean withTax, boolean weighable,
-                   Timestamp createdAt, boolean hide, long departmentId, long byEmployee, int withPos, int withPointSystem) {
+
+
+    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax, boolean weighable, Timestamp createdAt, boolean hide, long departmentId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock) {
         this.productId = productId;
         this.name = name;
         this.barCode = barCode;
+        this.description = description;
         this.price = price;
         this.costPrice = costPrice;
-        this.description = description;
         this.withTax = withTax;
         this.weighable = weighable;
         this.createdAt = createdAt;
@@ -87,17 +87,22 @@ public class Product {
         this.byEmployee = byEmployee;
         this.withPos = withPos;
         this.withPointSystem = withPointSystem;
+        this.sku = sku;
+        this.status = status;
+        this.displayName = displayName;
+        this.regularPrice = regularPrice;
+        this.stockQuantity = stockQuantity;
+        this.manageStock = manageStock;
+        this.inStock = inStock;
     }
 
-    public Product(long productId, String name, String barCode, String description,
-                   double price, double costPrice, boolean withTax, boolean weighable,
-                   Timestamp createdAt, long departmentId, long byEmployee, int withPos, int withPointSystem) {
+    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax, boolean weighable, Timestamp createdAt, long departmentId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock) {
         this.productId = productId;
         this.name = name;
         this.barCode = barCode;
+        this.description = description;
         this.price = price;
         this.costPrice = costPrice;
-        this.description = description;
         this.withTax = withTax;
         this.weighable = weighable;
         this.createdAt = createdAt;
@@ -105,16 +110,24 @@ public class Product {
         this.byEmployee = byEmployee;
         this.withPos = withPos;
         this.withPointSystem = withPointSystem;
+        this.sku = sku;
+        this.status = status;
+        this.displayName = displayName;
+        this.regularPrice = regularPrice;
+        this.stockQuantity = stockQuantity;
+        this.manageStock = manageStock;
+        this.inStock = inStock;
     }
 
-    public Product(long productId, String name, double price, long byEmployee) {
+    public Product(long productId, String name,String displayName, double price, long byEmployee) {
         this.productId = productId;
         this.name = name;
+        this.displayName = displayName;
         this.price = price;
         this.byEmployee = byEmployee;
     }
 
-    public Product(long productId, String name, double price, String barCode, long departmentID, long byEmployee) {
+    public Product(long productId, String name,String displayName, double price, String barCode,String sku, long departmentID, long byEmployee) {
         this.productId = productId;
         this.name = name;
         this.price = price;
@@ -122,30 +135,38 @@ public class Product {
         this.departmentId = departmentID;
         this.withTax = true;
         this.byEmployee = byEmployee;
+        this.displayName = displayName;
+        this.sku = sku;
     }
 
-    public Product(String name, double price, double costPrice, String barCode, long byEmployee) {
+    public Product(String name,String displayName, double price, double costPrice, String barCode,String sku, long byEmployee) {
         this.name = name;
         this.price = price;
         this.costPrice = costPrice;
         this.barCode = barCode;
         this.withTax = true;
         this.byEmployee = byEmployee;
+        this.displayName = displayName;
+        this.sku = sku;
     }
 
-    public Product(long productId, String name, double price, long byEmployee, String barCode) {
+    public Product(long productId, String name, String displayName, double price, long byEmployee, String barCode,String sku) {
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.byEmployee = byEmployee;
         this.barCode = barCode;
+        this.displayName = displayName;
+        this.sku = sku;
     }
 
 
     public Product(Product product) {
         this(product.getProductId(), product.getName(), product.getBarCode(), product.getDescription(),
                 product.getPrice(), product.getCostPrice(), product.isWithTax(), product.isWeighable(),
-                product.getCreatedAt(), product.isHide(), product.getDepartmentId(), product.getByEmployee(), product.getWithPos(), product.getWithPointSystem());
+                product.getCreatedAt(), product.isHide(), product.getDepartmentId(), product.getByEmployee(),
+                product.getWithPos(), product.getWithPointSystem(), product.getSku(), product.getStatus(), product.getDisplayName(),
+                product.getRegularPrice(), product.getStockQuantity(), product.isManageStock(), product.isInStock());
     }
 
     public Product() {
@@ -154,6 +175,7 @@ public class Product {
     //endregion
 
     // region Getters
+
 
     public long getProductId() {
         return productId;
@@ -167,16 +189,16 @@ public class Product {
         return barCode;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public double getPrice() {
         return price;
     }
 
     public double getCostPrice() {
         return costPrice;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public boolean isWithTax() {
@@ -203,6 +225,34 @@ public class Product {
         return byEmployee;
     }
 
+    public String getSku() {
+        return sku;
+    }
+
+    public ProductStatus getStatus() {
+        return status;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public double getRegularPrice() {
+        return regularPrice;
+    }
+
+    public int getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public boolean isManageStock() {
+        return manageStock;
+    }
+
+    public boolean isInStock() {
+        return inStock;
+    }
+
     public List<Integer> getOffersIDs() {
         if (offersIDs.size() == 0)
             return null;
@@ -213,50 +263,87 @@ public class Product {
 
     //region Setters
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setBarCode(String barCode) {
         this.barCode = barCode;
-    }
-
-    public void setCostPrice(double costPrice) {
-        this.costPrice = costPrice;
-    }
-
-    public void setDepartmentId(long departmentId) {
-        this.departmentId = departmentId;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setPrice(double price) {
         this.price = price;
     }
 
-    public void setWeighable(boolean weighable) {
-        this.weighable = weighable;
+    public void setCostPrice(double costPrice) {
+        this.costPrice = costPrice;
     }
 
     public void setWithTax(boolean withTax) {
         this.withTax = withTax;
     }
 
-    public void setOffersIDs(List<Integer> offersIDs) {
-        this.offersIDs = offersIDs;
+    public void setWeighable(boolean weighable) {
+        this.weighable = weighable;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setHide(boolean hide) {
+        this.hide = hide;
+    }
+
+    public void setDepartmentId(long departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public void setByEmployee(long byEmployee) {
+        this.byEmployee = byEmployee;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public void setRegularPrice(double regularPrice) {
+        this.regularPrice = regularPrice;
+    }
+
+    public void setStockQuantity(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
+    }
+
+    public void setManageStock(boolean manageStock) {
+        this.manageStock = manageStock;
+    }
+
+    public void setInStock(boolean inStock) {
+        this.inStock = inStock;
     }
 
     //endregion
 
+
     @Override
     public String toString() {
         return "Product{" +
-                "barCode='" + barCode + '\'' +
-                ", productId=" + productId +
+                "productId=" + productId +
                 ", name='" + name + '\'' +
+                ", barCode='" + barCode + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", costPrice=" + costPrice +
@@ -268,7 +355,14 @@ public class Product {
                 ", byEmployee=" + byEmployee +
                 ", withPos=" + withPos +
                 ", withPointSystem=" + withPointSystem +
-
+                ", sku='" + sku + '\'' +
+                ", status=" + status +
+                ", displayName='" + displayName + '\'' +
+                ", regularPrice=" + regularPrice +
+                ", stockQuantity=" + stockQuantity +
+                ", manageStock=" + manageStock +
+                ", inStock=" + inStock +
+                ", offersIDs=" + offersIDs +
                 '}';
     }
 

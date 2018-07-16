@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Models.ProductStatus;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -97,17 +98,19 @@ public class ProductDBAdapter {
         return db;
     }
 
-    public long insertEntry(String name,String barCode,String description,double price,double costPrice,
-                           boolean withTax,boolean weighable,long depId,long byUser ,int pos,int point_system) {
-        Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price, costPrice, withTax, weighable, new Timestamp(System.currentTimeMillis()), depId, byUser, pos, point_system);
+    public long insertEntry(String name, String barCode, String description, double price, double costPrice,
+                            boolean withTax, boolean weighable, long depId, long byUser , int pos, int point_system,
+                            String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock) {
+        Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price,
+                costPrice, withTax, weighable, new Timestamp(System.currentTimeMillis()), depId, byUser, pos, point_system, sku, status, displayName, regularPrice, stockQuantity, manageStock, inStock);
 
         long id = insertEntry(p);
         if (id > 0) {
-            Product boProduct = p;
+          /*  Product boProduct = p;
             boProduct.setName(Util.getString(boProduct.getName()));
             boProduct.setDescription(Util.getString(boProduct.getDescription()));
-            boProduct.setBarCode(Util.getString(boProduct.getBarCode()));
-            sendToBroker(MessageType.ADD_PRODUCT, boProduct, this.context);
+            boProduct.setBarCode(Util.getString(boProduct.getBarCode()));*/
+            sendToBroker(MessageType.ADD_PRODUCT, p, this.context);
         }
         return id;
     }
@@ -139,6 +142,14 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_BYUSER, p.getByEmployee());
         val.put(PRODUCTS_COLUMN_with_pos,p.getWithPos());
         val.put(PRODUCTS_COLUMN_with_point_system,p.getWithPointSystem());
+
+        val.put(PRODUCTS_COLUMN_SKU, p.getSku());
+        val.put(PRODUCTS_COLUMN_STATUS, p.getStatus().getValue());
+        val.put(PRODUCTS_COLUMN_DISPLAY_NAME, p.getDisplayName());
+        val.put(PRODUCTS_COLUMN_REGULAR_PRICE, p.getRegularPrice());
+        val.put(PRODUCTS_COLUMN_STOCK_QUANTITY, p.getStockQuantity());
+        val.put(PRODUCTS_COLUMN_MANAGE_STOCK, p.isManageStock());
+        val.put(PRODUCTS_COLUMN_IN_STOCK, p.isInStock());
         try {
             return db.insert(PRODUCTS_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -187,7 +198,7 @@ public class ProductDBAdapter {
 
     public Product getProductByBarCode(String barcode){
         Product product = null;
-        Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where barcode='" + barcode + "'", null);
+        Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where barcode='" + barcode + "' or sku='" + barcode + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();
@@ -250,6 +261,16 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_DEPARTMENT_ID, product.getDepartmentId());
         val.put(PRODUCTS_COLUMN_BYUSER, product.getByEmployee());
 
+        val.put(PRODUCTS_COLUMN_SKU, product.getSku());
+        val.put(PRODUCTS_COLUMN_STATUS, product.getStatus().getValue());
+        val.put(PRODUCTS_COLUMN_DISPLAY_NAME, product.getDisplayName());
+        val.put(PRODUCTS_COLUMN_REGULAR_PRICE, product.getRegularPrice());
+        val.put(PRODUCTS_COLUMN_STOCK_QUANTITY, product.getStockQuantity());
+        val.put(PRODUCTS_COLUMN_MANAGE_STOCK, product.isManageStock());
+        val.put(PRODUCTS_COLUMN_IN_STOCK, product.isInStock());
+
+
+
         String where = PRODUCTS_COLUMN_ID + " = ?";
         db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getProductId() + ""});
         Product p=productDBAdapter.getProductByID(product.getProductId());
@@ -271,6 +292,14 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_WEIGHABLE, product.isWeighable());
         val.put(PRODUCTS_COLUMN_DEPARTMENT_ID, product.getDepartmentId());
         val.put(PRODUCTS_COLUMN_BYUSER, product.getByEmployee());
+
+        val.put(PRODUCTS_COLUMN_SKU, product.getSku());
+        val.put(PRODUCTS_COLUMN_STATUS, product.getStatus().getValue());
+        val.put(PRODUCTS_COLUMN_DISPLAY_NAME, product.getDisplayName());
+        val.put(PRODUCTS_COLUMN_REGULAR_PRICE, product.getRegularPrice());
+        val.put(PRODUCTS_COLUMN_STOCK_QUANTITY, product.getStockQuantity());
+        val.put(PRODUCTS_COLUMN_MANAGE_STOCK, product.isManageStock());
+        val.put(PRODUCTS_COLUMN_IN_STOCK, product.isInStock());
 
         try {
             String where = PRODUCTS_COLUMN_ID + " = ?";
@@ -357,7 +386,7 @@ public class ProductDBAdapter {
             weighableStatus=false;
         }
 
-        Product p=new Product(
+        Product p = new Product(
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_NAME)),
                 cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BARCODE)),
@@ -369,12 +398,26 @@ public class ProductDBAdapter {
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENT_ID))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_pos))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_point_system))));
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_point_system))),
+                cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_SKU)),
+                ProductStatus.valueOf(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_STATUS))),
+                cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISPLAY_NAME)),
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_REGULAR_PRICE))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_STOCK_QUANTITY))),
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_MANAGE_STOCK))),
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_IN_STOCK)))
+        );
         if(p.getDescription()==null){
             p.setDescription("");
         }
+        if(p.getDisplayName()==null){
+            p.setDisplayName("");
+        }
         if(Double.isNaN(p.getCostPrice())){
             p.setCostPrice(0.0f);
+        }
+        if(Double.isNaN(p.getRegularPrice())){
+            p.setRegularPrice(p.getPrice());
         }
         return p;
     }

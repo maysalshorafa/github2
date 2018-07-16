@@ -549,4 +549,8 @@
     <string name="printer">מדפסת</string>
     <string name="printer_connect_error">שגיאה בחיבור המדפסת</string>
     <string name="please_connect_the_printer">נא לחבר את המדפסת.</string>
+    <string name="display_name">שם הצגה</string>
+    <string name="manage_stock">ניהול אחסון</string>
+    <string name="stock_quantity">כמות במחסן</string>
+    <string name="insert_product_dispaly_name">נא להכניס שם הצגה</string>
 </resources>

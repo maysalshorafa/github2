@@ -5,5 +5,16 @@ package com.pos.leaders.leaderspossystem.Models;
  */
 
 public enum ProductStatus {
-    DRAFT, PENDING, PRIVATE, PUBLISHED
+    DRAFT("DRAFT"),
+    PENDING("PENDING"),
+    PRIVATE("PRIVATE"),
+    PUBLISHED("PUBLISHED");
+
+    private String value;
+    public String getValue() {
+        return value;
+    }
+    ProductStatus(final String value) {
+        this.value = value;
+    }
 }

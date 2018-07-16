@@ -1587,7 +1587,7 @@ public class SalesCartActivity extends AppCompatActivity {
             return;
         }
         if (Double.parseDouble(str) != 0)
-            addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._EMPLOYEE.getEmployeeId(),""));
+            addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general),getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._EMPLOYEE.getEmployeeId(),"",""));
     }
 
 
@@ -1643,7 +1643,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 break;
             case R.id.touchPadFragment_btEnter:
                 if (!touchPadPressed.equals(""))
-                    addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._EMPLOYEE.getEmployeeId(),""));
+                    addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._EMPLOYEE.getEmployeeId(), "", ""));
                 touchPadPressed = "";
                 break;
             case R.id.touchPadFragment_btDot:

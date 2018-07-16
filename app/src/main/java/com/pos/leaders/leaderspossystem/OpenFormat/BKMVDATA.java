@@ -272,7 +272,7 @@ public class BKMVDATA {
                 if (o.getProductId() != -1)
                     o.setProduct(productDBAdapter.getProductByID(o.getProductId()));
                 else {
-                    o.setProduct(new Product(-1, context.getResources().getString(R.string.general), o.getUnitPrice(), s.getByUser()));
+                    o.setProduct(new Product(-1, context.getResources().getString(R.string.general),context.getResources().getString(R.string.general), o.getUnitPrice(), s.getByUser()));
                 }
             }
             s.setUser(userDBAdapter.getEmployeeByID(s.getByUser()));
