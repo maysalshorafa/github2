@@ -45,7 +45,11 @@ android {
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
     }
+    configurations.all{
+                resolutionStrategy.force 'com.android.support:multidex:1.0.3'
+           }
 }
+
 
 
 dependencies {
@@ -60,7 +64,7 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:24.2.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:palette-v7:24.2.1'
-    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:multidex:1.0.3'
     compile 'com.sun.mail:android-mail:1.5.5'
     compile 'com.sun.mail:android-activation:1.5.5'
     compile 'com.android.support:recyclerview-v7:24.2.1'
