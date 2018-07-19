@@ -22,9 +22,9 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -42,7 +42,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
     TextView tvCount;
     private GridView gvProducts;
     ProductDBAdapter productDBAdapter;
-    DepartmentDBAdapter departmentDBAdapter;
+    CategoryDBAdapter departmentDBAdapter;
     List<Product> productsList;
     List<Product> filter_productsList;
     View previouslySelectedItem = null;
@@ -323,9 +323,9 @@ public class ProductCatalogActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         params.setMargins(2,6, 6, 2);
 
-        departmentDBAdapter=new DepartmentDBAdapter(this);
+        departmentDBAdapter=new CategoryDBAdapter(this);
         departmentDBAdapter.open();
-        for (Department d : departmentDBAdapter.getAllDepartments()) {
+        for (Category d : departmentDBAdapter.getAllDepartments()) {
             Button bt = new Button(this);
             bt.setLayoutParams(params);
             bt.setTag(d);
@@ -345,9 +345,9 @@ public class ProductCatalogActivity extends AppCompatActivity {
                     prseedButtonDepartments.setBackground(getResources().getDrawable(R.drawable.bt_normal));
                     v.setPressed(true);
                     v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
-                    final long departmentID = ((Department) v.getTag()).getDepartmentId();
+                    final long departmentID = ((Category) v.getTag()).getCategoryId();
                     prseedButtonDepartments = v;
-                    productsList = productDBAdapter.getAllProductsByDepartment(departmentID, productLoadItemOffset, productCountLoad);
+                    productsList = productDBAdapter.getAllProductsByCategory(departmentID, productLoadItemOffset, productCountLoad);
                     filter_productsList = productsList;
                     adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
                     gvProducts.setAdapter(adapter);
@@ -419,7 +419,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
                     productsList.addAll(productDBAdapter.getTopProducts(productLoadItemOffset,productCountLoad));
                 }
                 else{
-                    productsList.addAll(productDBAdapter.getAllProductsByDepartment(id,productLoadItemOffset,productCountLoad));
+                    productsList.addAll(productDBAdapter.getAllProductsByCategory(id,productLoadItemOffset,productCountLoad));
                 }
                 return null;
             }

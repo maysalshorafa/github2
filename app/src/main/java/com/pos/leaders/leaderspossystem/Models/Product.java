@@ -23,7 +23,7 @@ public class Product {
     private boolean weighable;
     private Timestamp createdAt;
     private boolean hide;
-    private long departmentId;
+    private long categoryId;
     private long byUser;
     private int withPos;
     private int withPointSystem;
@@ -64,7 +64,7 @@ public class Product {
     // region Constructor
     public Product(long productId, String name, String barCode, String description,
                    double price, double costPrice, boolean withTax, boolean weighable,
-                   Timestamp createdAt, boolean hide, long departmentId, long byUser , int withPos, int withPointSystem) {
+                   Timestamp createdAt, boolean hide, long categoryId, long byUser , int withPos, int withPointSystem) {
         this.productId = productId;
         this.name = name;
         this.barCode = barCode;
@@ -75,7 +75,7 @@ public class Product {
         this.weighable = weighable;
         this.createdAt = createdAt;
         this.hide = hide;
-        this.departmentId = departmentId;
+        this.categoryId = categoryId;
         this.byUser = byUser;
         this.withPos = withPos;
         this.withPointSystem = withPointSystem;
@@ -83,7 +83,7 @@ public class Product {
 
     public Product(long productId, String name, String barCode, String description,
                    double price, double costPrice, boolean withTax, boolean weighable,
-                   Timestamp createdAt, long departmentId, long byUser , int withPos, int withPointSystem) {
+                   Timestamp createdAt, long categoryId, long byUser , int withPos, int withPointSystem) {
         this.productId = productId;
         this.name = name;
         this.barCode = barCode;
@@ -93,7 +93,7 @@ public class Product {
         this.withTax = withTax;
         this.weighable = weighable;
         this.createdAt = createdAt;
-        this.departmentId = departmentId;
+        this.categoryId = categoryId;
         this.byUser = byUser;
         this.withPos = withPos;
         this.withPointSystem = withPointSystem;
@@ -110,7 +110,7 @@ public class Product {
         this.name = name;
         this.price = price;
         this.barCode=barCode;
-        this.departmentId=departmentID;
+        this.categoryId =departmentID;
         this.withTax=true;
         this.byUser = byUser;
     }
@@ -135,7 +135,7 @@ public class Product {
     public Product(Product product){
         this(product.getProductId(),product.getName(),product.getBarCode(),product.getDescription(),
                 product.getPrice(),product.getCostPrice(),product.isWithTax(),product.isWeighable(),
-                product.getCreatedAt(),product.isHide(),product.getDepartmentId(),product.getByUser(),product.getWithPos(),product.getWithPointSystem());
+                product.getCreatedAt(),product.isHide(),product.getCategoryId(),product.getByUser(),product.getWithPos(),product.getWithPointSystem());
     }
 
     public Product(){}
@@ -184,8 +184,8 @@ public class Product {
         return hide;
     }
 
-    public long getDepartmentId() {
-        return departmentId;
+    public long getCategoryId() {
+        return categoryId;
     }
 
     public long getByUser() {
@@ -210,8 +210,8 @@ public class Product {
 		this.costPrice = costPrice;
 	}
 
-	public void setDepartmentId(long departmentId) {
-		this.departmentId = departmentId;
+	public void setCategoryId(long categoryId) {
+		this.categoryId = categoryId;
 	}
 
 	public void setDescription(String description) {
@@ -253,7 +253,7 @@ public class Product {
                 ", weighable=" + weighable +
                 ", createdAt=" + createdAt +
                 ", hide=" + hide +
-                ", departmentId=" + departmentId +
+                ", categoryId=" + categoryId +
                 ", byUser=" + byUser +
                 ", withPos=" + withPos +
                 ", withPointSystem=" + withPointSystem +

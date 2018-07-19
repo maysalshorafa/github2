@@ -79,7 +79,7 @@ import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE
 
 public class DashBord extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private boolean enableBackButton = true;
-    IButton salesCart, report, product, department, backUp, customerClub, logOut, offers, settings , schedule_workers;
+    IButton salesCart, report, product, category, backUp, customerClub, logOut, offers, settings , schedule_workers;
     IButton users;
     IButton btZReport, btAReport;
     AReportDBAdapter aReportDBAdapter;
@@ -181,7 +181,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         btZReport = (IButton) findViewById(R.id.dashboard_btZreport);
         report = (IButton) findViewById(R.id.report);
         product = (IButton) findViewById(R.id.product);
-        department = (IButton) findViewById(R.id.department);
+        category = (IButton) findViewById(R.id.department);
         //offers = (Button) findViewById(R.id.offers);
         users = (IButton) findViewById(R.id.users);
         schedule_workers = (IButton) findViewById(R.id.schedule_workers);
@@ -372,10 +372,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 startActivity(i);
             }
         });
-        department.setOnClickListener(new View.OnClickListener() {
+        category.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), DepartmentActivity.class);
+                i = new Intent(getApplicationContext(), CategoryActivity.class);
                 startActivity(i);
             }
         });
@@ -432,8 +432,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         schedule_workers.setEnabled(false);
         users.setEnabled(false);
         backUp.setEnabled(false);
-        department.setEnabled(false);
-        department.setEnabled(false);
+        category.setEnabled(false);
+        category.setEnabled(false);
         customerClub.setEnabled(false);
         settings.setEnabled(false);
         btAReport.setEnabled(false);
@@ -465,8 +465,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 case Permissions.PERMISSIONS_PRODUCT:
                     product.setEnabled(true);
                     break;
-                case Permissions.PERMISSIONS_DEPARTMENT:
-                    department.setEnabled(true);
+                case Permissions.PERMISSIONS_CATEGORY:
+                    category.setEnabled(true);
                     break;
                 case Permissions.PERMISSIONS_USER:
                     users.setEnabled(true);

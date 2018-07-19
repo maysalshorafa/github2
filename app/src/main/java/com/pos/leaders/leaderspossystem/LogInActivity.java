@@ -196,7 +196,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
 
             permissions.add(0,2);//report
             permissions.add(1,3);//products
-            permissions.add(2,4);//department
+            permissions.add(2,4);//category
             permissions.add(3,5);//users
             permissions.add(4,7);//backup
             permissions.add(5,8);//settings

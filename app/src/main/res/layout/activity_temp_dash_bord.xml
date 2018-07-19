@@ -68,7 +68,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             ibutton:button_icon="@drawable/department"
-            ibutton:button_text="@string/department" />
+            ibutton:button_text="@string/category" />
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/users"

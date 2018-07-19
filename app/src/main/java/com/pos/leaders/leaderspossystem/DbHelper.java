@@ -22,7 +22,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferRuleDBAdapter;
@@ -122,7 +122,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.execSQL(OrderDBAdapter.DATABASE_CREATE);
         db.execSQL(ChecksDBAdapter.DATABASE_CREATE);
-        db.execSQL(DepartmentDBAdapter.DATABASE_CREATE);
+        db.execSQL(CategoryDBAdapter.DATABASE_CREATE);
         db.execSQL(CustomerAssetDB.DATABASE_CREATE);
 
         db.execSQL(OrderDetailsDBAdapter.DATABASE_CREATE);
@@ -153,7 +153,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (1 , 'sales cart');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (2 , 'report');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (3 , 'product');");
-        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (4 , 'department');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (4 , 'category');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (5 , 'employee');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (6 , 'Schedule Workers');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (7 , 'back up');");
@@ -194,7 +194,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (3 , 'EUR');");
 
         db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Timestamp(System.currentTimeMillis())+"');");
-        db.execSQL("insert into "+DepartmentDBAdapter.DEPARTMENTS_TABLE_NAME+" values(1, 'כללי','"+ new Timestamp(System.currentTimeMillis()) +"',1,0);");
+        db.execSQL("insert into "+ CategoryDBAdapter.CATEGORY_TABLE_NAME +" values(1, 'כללי','"+ new Timestamp(System.currentTimeMillis()) +"',1,0);");
         db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'test1','test1','female','11/8/1994','example@gmail.com','coder','123',0,'1',1,1,'1',1,'1',0.0);");
 
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (0,'Hifa');");
@@ -212,7 +212,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(IdsCounterDBAdapter.INIT(tblNames));
 
 
-        db.execSQL("INSERT INTO products (id, name,barcode,description,price,costPrice,depId,byEmployee,status) VALUES (8, 'Test',10,'Test',10,10,1,1,1);");
+        db.execSQL("INSERT INTO products (id, name,barcode,description,price,costPrice,categoryId,byEmployee,status) VALUES (8, 'Test',10,'Test',10,10,1,1,1);");
 
     }
 

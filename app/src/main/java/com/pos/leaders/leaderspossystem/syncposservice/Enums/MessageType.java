@@ -20,9 +20,9 @@ public interface MessageType{
     String UPDATE_CHECK = "UpdateCheck";
     String DELETE_CHECK = "DeleteCheck";
 
-    String ADD_DEPARTMENT = "AddDepartment";
-    String UPDATE_DEPARTMENT = "UpdateDepartment";
-    String DELETE_DEPARTMENT = "DeleteDepartment";
+    String ADD_CATEGORY = "AddCategory";
+    String UPDATE_CATEGORY = "UpdateCategory";
+    String DELETE_CATEGORY = "DeleteCategory";
 
     String ADD_OFFER = "AddOffer";
     String UPDATE_OFFER = "UpdateOffer";

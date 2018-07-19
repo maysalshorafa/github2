@@ -14,9 +14,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.Backup.Backup;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class BackupActivity extends AppCompatActivity {
     private Backup backup;
 
     ProductDBAdapter productDBAdapter;
-    DepartmentDBAdapter departmentDBAdapter;
+    CategoryDBAdapter departmentDBAdapter;
 
     Map<String,Long> departmentMap=new HashMap<String,Long>();
     List<String> departments;
@@ -60,11 +60,11 @@ public class BackupActivity extends AppCompatActivity {
 
         departments.add(getBaseContext().getString(R.string.all));
         productDBAdapter=new ProductDBAdapter(this);
-        departmentDBAdapter=new DepartmentDBAdapter(this);
+        departmentDBAdapter=new CategoryDBAdapter(this);
         departmentDBAdapter.open();
-        for (Department d :
+        for (Category d :
                 departmentDBAdapter.getAllDepartments()) {
-            departmentMap.put(d.getName(),d.getDepartmentId());
+            departmentMap.put(d.getName(),d.getCategoryId());
             departments.add(d.getName());
         }
 
@@ -117,7 +117,7 @@ public class BackupActivity extends AppCompatActivity {
                         }
                         else{
                             departmentDBAdapter.open();
-                            Department d=departmentDBAdapter.getDepartmentByID(departmentMap.get(departments.get(position)));
+                            Category d=departmentDBAdapter.getDepartmentByID(departmentMap.get(departments.get(position)));
                             departmentDBAdapter.close();
                             backup=new Backup(BackupActivity.this,folderName);
                             backup.backupProductOnDepartment(d);

@@ -21,9 +21,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -44,7 +44,7 @@ public class OfferProductCartActivity extends Activity {
     private GridView gvProducts;
     ListView lvProducts;
     ProductDBAdapter productDBAdapter;
-    DepartmentDBAdapter departmentDBAdapter;
+    CategoryDBAdapter departmentDBAdapter;
     List<Product> productsList;
     List<Product> filter_productsList;
     List<Product> selectedProductsList;
@@ -224,7 +224,7 @@ public class OfferProductCartActivity extends Activity {
                     @Override
                     protected Void doInBackground(Void... params) {
 
-                        for (Product p : productDBAdapter.getAllProductsByDepartment(depID)) {
+                        for (Product p : productDBAdapter.getAllProductsByCategory(depID)) {
                             if(!ProductAtList(selectedProductsList,p)){
                                 selectedProductsList.add(p);
                             }
@@ -245,9 +245,9 @@ public class OfferProductCartActivity extends Activity {
 
 
 
-        departmentDBAdapter=new DepartmentDBAdapter(this);
+        departmentDBAdapter=new CategoryDBAdapter(this);
         departmentDBAdapter.open();
-        for (Department d : departmentDBAdapter.getAllDepartments()) {
+        for (Category d : departmentDBAdapter.getAllDepartments()) {
             Button bt = new Button(this);
             //bt.setId(d.getCashPaymentId());
             bt.setText(d.getName());
@@ -263,7 +263,7 @@ public class OfferProductCartActivity extends Activity {
                     prseedButtonDepartments = v;
 
                     Log.i("starting time",new Date().toString());
-                    productsList = productDBAdapter.getAllProductsByDepartment(departmentID,productLoadItemOffset,productCountLoad);
+                    productsList = productDBAdapter.getAllProductsByCategory(departmentID,productLoadItemOffset,productCountLoad);
                     Log.i("Ending time",new Date().toString());
                     filter_productsList = productsList;
 
@@ -334,7 +334,7 @@ public class OfferProductCartActivity extends Activity {
                     productsList.addAll(productDBAdapter.getTopProducts(productLoadItemOffset,productCountLoad));
                 }
                 else{
-                    productsList.addAll(productDBAdapter.getAllProductsByDepartment(id,productLoadItemOffset,productCountLoad));
+                    productsList.addAll(productDBAdapter.getAllProductsByCategory(id,productLoadItemOffset,productCountLoad));
                 }
                 return null;
             }

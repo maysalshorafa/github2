@@ -9,8 +9,8 @@ import java.util.List;
  * Created by KARAM on 18/10/2016.
  */
 
-public class Department {
-    private long departmentId;
+public class Category {
+    private long categoryId;
     private String name;
 
     private Timestamp createdAt;
@@ -25,26 +25,26 @@ public class Department {
 
 
 
-    public Department(long departmentId, String name, Timestamp createdAt, long byUser, boolean hide) {
-        this.departmentId = departmentId;
+    public Category(long categoryId, String name, Timestamp createdAt, long byUser, boolean hide) {
+        this.categoryId = categoryId;
         this.name = name;
         this.createdAt = createdAt;
         this.byUser = byUser;
         this.hide = hide;
     }
 
-    public Department(String name, Timestamp createdAt, long byUser) {
+    public Category(String name, Timestamp createdAt, long byUser) {
         this.name = name;
         this.createdAt = createdAt;
         this.byUser = byUser;
         this.hide = false;
     }
 
-    public Department(Department d) {
-        new Department(d.getDepartmentId(), d.getName(), d.getCreatedAt(), d.getByUser(), d.isHide());
+    public Category(Category c) {
+        new Category(c.getCategoryId(), c.getName(), c.getCreatedAt(), c.getByUser(), c.isHide());
     }
 
-    public Department() {
+    public Category() {
 
     }
     //endregion
@@ -59,8 +59,8 @@ public class Department {
 		this.name = name;
 	}
 
-    public void setDepartmentId(long departmentId) {
-        this.departmentId = departmentId;
+    public void setCategoryId(long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public void setCreatedAt(Timestamp createdAt) {
@@ -79,8 +79,8 @@ public class Department {
 
 	// region Getters
 
-    public long getDepartmentId() {
-        return departmentId;
+    public long getCategoryId() {
+        return categoryId;
     }
 
     public String getName() {
@@ -117,9 +117,9 @@ public class Department {
 
 	@Override
 	public String toString() {
-		return "Department{" +
+		return "Category{" +
 				"byUser=" + byUser +
-				", depId=" + departmentId +
+				", categoryId=" + categoryId +
 				", name='" + name + '\'' +
 				", createdAt=" + createdAt +
 				", hide=" + hide +

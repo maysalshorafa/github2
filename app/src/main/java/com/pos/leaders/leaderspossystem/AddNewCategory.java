@@ -11,17 +11,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
-public class AddNewDepartment extends AppCompatActivity {
-    Button addNewDepartment, cancel;
-    EditText departmentName;
-    DepartmentDBAdapter departmentDBAdapter;
-    long departmentId;
-    Department department;
+public class AddNewCategory extends AppCompatActivity {
+    Button addNewCategory, cancel;
+    EditText categoryName;
+    CategoryDBAdapter categoryDBAdapter;
+    long categoryId;
+    Category category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,19 +30,19 @@ public class AddNewDepartment extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_add_new_department);
+        setContentView(R.layout.activity_add_new_category);
         TitleBar.setTitleBar(this);
-        addNewDepartment = (Button) findViewById(R.id.addNewDepartment);
+        addNewCategory = (Button) findViewById(R.id.addNewDepartment);
         cancel = (Button) findViewById(R.id.cancelAddDepartment);
-        departmentName = (EditText) findViewById(R.id.etdepartmentName);
-        departmentDBAdapter = new DepartmentDBAdapter(this);
-        departmentDBAdapter.open();
+        categoryName = (EditText) findViewById(R.id.etdepartmentName);
+        categoryDBAdapter = new CategoryDBAdapter(this);
+        categoryDBAdapter.open();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             //update case
-            departmentId = (long) bundle.get("departmentID");
-            department = departmentDBAdapter.getDepartmentByID(departmentId);
-            addNewDepartment.setText(getString(R.string.update_department));
+            categoryId = (long) bundle.get("categoryID");
+            category = categoryDBAdapter.getDepartmentByID(categoryId);
+            addNewCategory.setText(getString(R.string.update_category));
         }
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,38 +50,38 @@ public class AddNewDepartment extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        addNewDepartment.setOnClickListener(new View.OnClickListener() {
+        addNewCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //add new department region
-                if (department == null) {
+                //add new category region
+                if (category == null) {
                     //if empty input
-                    if (departmentName.getText().toString().equals("")) {
-                        Toast.makeText(getApplicationContext(), getString(R.string.please_insert_department_name), Toast.LENGTH_LONG).show();
+                    if (categoryName.getText().toString().equals("")) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.please_insert_category_name), Toast.LENGTH_LONG).show();
                     } else {
                         //test if unique name or not
                         boolean exist = false;
-                        exist = departmentDBAdapter.availableDepartmentName(departmentName.getText().toString());
+                        exist = categoryDBAdapter.availableDepartmentName(categoryName.getText().toString());
                         //not unique name
                         if (!exist) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_another_department_name), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_another_category_name), Toast.LENGTH_LONG).show();
                         }
                         //unique
                         else {
-                            long check = departmentDBAdapter.insertEntry(departmentName.getText().toString(), SESSION._EMPLOYEE.getEmployeeId());
+                            long check = categoryDBAdapter.insertEntry(categoryName.getText().toString(), SESSION._EMPLOYEE.getEmployeeId());
                             if (check > 0) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_new_department), Toast.LENGTH_LONG).show();
-                                Log.i("success", "added department");
+                                Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_new_category), Toast.LENGTH_LONG).show();
+                                Log.i("success", "added category");
                             } else {
-                                Toast.makeText(getApplicationContext(), getString(R.string.failed_to_add_new_department), Toast.LENGTH_LONG).show();
-                                Log.e("error", " adding department");
+                                Toast.makeText(getApplicationContext(), getString(R.string.failed_to_add_new_category), Toast.LENGTH_LONG).show();
+                                Log.e("error", " adding category");
                             }
                             try {
                                 Thread.sleep(500);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            Intent intent = new Intent(AddNewDepartment.this, DepartmentActivity.class);
+                            Intent intent = new Intent(AddNewCategory.this, CategoryActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                             startActivity(intent);
@@ -95,26 +95,26 @@ public class AddNewDepartment extends AppCompatActivity {
 
                 else {
                     //if empty input
-                    if (departmentName.getText().toString().equals("")) {
-                        Toast.makeText(getApplicationContext(), getString(R.string.please_insert_department_name), Toast.LENGTH_LONG).show();
+                    if (categoryName.getText().toString().equals("")) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.please_insert_category_name), Toast.LENGTH_LONG).show();
                     } else {
                         //test if unique name or not
                         boolean exist = false;
-                        exist = departmentDBAdapter.availableDepartmentName(departmentName.getText().toString());
+                        exist = categoryDBAdapter.availableDepartmentName(categoryName.getText().toString());
                         if (!exist) {
                             //not unique
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_another_department_name), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_another_category_name), Toast.LENGTH_LONG).show();
 
                         } else {
                             //unique name
-                            department.setName(departmentName.getText().toString());
-                            departmentDBAdapter.updateEntry(department);
+                            category.setName(categoryName.getText().toString());
+                            categoryDBAdapter.updateEntry(category);
                             try {
                                 Thread.sleep(500);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            Intent intent = new Intent(AddNewDepartment.this, DepartmentActivity.class);
+                            Intent intent = new Intent(AddNewCategory.this, CategoryActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                         }

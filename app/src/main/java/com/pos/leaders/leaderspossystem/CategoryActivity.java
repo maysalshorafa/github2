@@ -15,9 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Department;
-import com.pos.leaders.leaderspossystem.Tools.DepartmentGridViewAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.Category;
+import com.pos.leaders.leaderspossystem.Tools.CategoryGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.util.ArrayList;
@@ -27,15 +27,15 @@ import java.util.List;
  * Created by Karam on 18/10/2016.
  */
 
-public class DepartmentActivity extends AppCompatActivity {
+public class CategoryActivity extends AppCompatActivity {
 
-    DepartmentDBAdapter departmentDBAdapter;
-    EditText etDepartmentName;
-    Button btAddDepartment, btnCancel;
-    List<Department> listDepartment, filter_departmentList;
-    GridView gvDepartment;
+    CategoryDBAdapter categoryDBAdapter;
+    EditText etCategoryName;
+    Button btAddCategory, btnCancel;
+    List<Category> listCategory, filter_categoryList;
+    GridView gvCategory;
 
-    DepartmentGridViewAdapter adapter;
+    CategoryGridViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +45,14 @@ public class DepartmentActivity extends AppCompatActivity {
 
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.department_mangment);
+        setContentView(R.layout.category_mangment);
 
         TitleBar.setTitleBar(this);
 
         // Get Refferences of Views
-        gvDepartment = (GridView) findViewById(R.id.workerManagement_GVDEpartment);
-        etDepartmentName = (EditText) findViewById(R.id.ETdepartmentName);
-        btAddDepartment = (Button) findViewById(R.id.BTAddDepartment);
+        gvCategory = (GridView) findViewById(R.id.workerManagement_GVDEpartment);
+        etCategoryName = (EditText) findViewById(R.id.ETdepartmentName);
+        btAddCategory = (Button) findViewById(R.id.BTAddDepartment);
         btnCancel = (Button) findViewById(R.id.departmentActivity_btnCancel);
         makeList();
 
@@ -62,31 +62,31 @@ public class DepartmentActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        gvDepartment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 final String[] items = {
                         getString(R.string.edit),
                         getString(R.string.delete)};
-                AlertDialog.Builder builder = new AlertDialog.Builder(DepartmentActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(CategoryActivity.this);
                 builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         Intent intent;
                         switch (item) {
                             case 0:
-                                intent = new Intent(DepartmentActivity.this, AddNewDepartment.class);
-                                intent.putExtra("departmentID", listDepartment.get(position).getDepartmentId());
+                                intent = new Intent(CategoryActivity.this, AddNewCategory.class);
+                                intent.putExtra("categoryID", listCategory.get(position).getCategoryId());
                                 startActivity(intent);
                                 break;
                             case 1:
-                                new AlertDialog.Builder(DepartmentActivity.this)
+                                new AlertDialog.Builder(CategoryActivity.this)
                                         .setMessage(getString(R.string.delete))
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
-                                                departmentDBAdapter.deleteEntry(listDepartment.get(position).getDepartmentId());
-                                                listDepartment.remove(listDepartment.get(position));
-                                                gvDepartment.setAdapter(adapter);
+                                                categoryDBAdapter.deleteEntry(listCategory.get(position).getCategoryId());
+                                                listCategory.remove(listCategory.get(position));
+                                                gvCategory.setAdapter(adapter);
                                                 adapter.notifyDataSetChanged();
                                             }
                                         })
@@ -106,23 +106,23 @@ public class DepartmentActivity extends AppCompatActivity {
             }
         });
 
-        btAddDepartment.setOnClickListener(new View.OnClickListener() {
+        btAddCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DepartmentActivity.this, AddNewDepartment.class);
+                Intent intent = new Intent(CategoryActivity.this, AddNewCategory.class);
                 startActivity(intent);
             }
         });
-        etDepartmentName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etCategoryName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                etDepartmentName.setFocusable(true);
+                etCategoryName.setFocusable(true);
             }
         });
-        etDepartmentName.addTextChangedListener(new TextWatcher() {
+        etCategoryName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                gvDepartment.setTextFilterEnabled(true);
+                gvCategory.setTextFilterEnabled(true);
 
             }
 
@@ -133,35 +133,35 @@ public class DepartmentActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                filter_departmentList = new ArrayList<Department>();
-                String word = etDepartmentName.getText().toString();
+                filter_categoryList = new ArrayList<Category>();
+                String word = etCategoryName.getText().toString();
 
                 if (!word.equals("")) {
-                    for (Department d : listDepartment) {
+                    for (Category d : listCategory) {
 
                         if (d.getName().toLowerCase().contains(word.toLowerCase())) {
-                            filter_departmentList.add(d);
+                            filter_categoryList.add(d);
 
                         }
                     }
                 } else {
-                    filter_departmentList = listDepartment;
+                    filter_categoryList = listCategory;
                 }
-                adapter = new DepartmentGridViewAdapter(getApplicationContext(), filter_departmentList);
+                adapter = new CategoryGridViewAdapter(getApplicationContext(), filter_categoryList);
 
-                gvDepartment.setAdapter(adapter);
+                gvCategory.setAdapter(adapter);
             }
         });
     }
 
     private void makeList() {
-        // Department Data adapter
-        departmentDBAdapter = new DepartmentDBAdapter(this);
-        departmentDBAdapter.open();
+        // Category Data adapter
+        categoryDBAdapter = new CategoryDBAdapter(this);
+        categoryDBAdapter.open();
 
-        filter_departmentList = departmentDBAdapter.getAllDepartments();
-        listDepartment = filter_departmentList;
-        adapter = new DepartmentGridViewAdapter(this, listDepartment);
-        gvDepartment.setAdapter(adapter);
+        filter_categoryList = categoryDBAdapter.getAllDepartments();
+        listCategory = filter_categoryList;
+        adapter = new CategoryGridViewAdapter(this, listCategory);
+        gvCategory.setAdapter(adapter);
     }
 }

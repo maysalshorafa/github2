@@ -50,8 +50,8 @@
             android:name=".syncposservice.SetupActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".DepartmentActivity"
-            android:label="@string/title_activity_departments_activity" />
+            android:name=".CategoryActivity"
+            android:label="@string/title_activity_category_activity" />
         <activity
             android:name=".ProductsActivity"
             android:label="@string/title_activity_products_activity" />
@@ -187,8 +187,8 @@
 
         <activity android:name=".SalesHistoryCopySales" />
         <activity
-            android:name=".AddNewDepartment"
-            android:label="@string/title_activity_add_new_department_activity" />
+            android:name=".AddNewCategory"
+            android:label="@string/title_activity_add_new_category_activity" />
         <activity android:name=".ScheduleWorkersActivity" />
         <activity
             android:name=".SettingsTab.SettingsTab"

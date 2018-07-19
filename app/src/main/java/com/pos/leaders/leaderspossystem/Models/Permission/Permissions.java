@@ -11,7 +11,7 @@ public class Permissions {
 	public static final String PERMISSIONS_ROLE_ADMIN = "Admin";
 	public static final String PERMISSIONS_ROLE_POS = "pos";
 	public static final String PERMISSIONS_ROLE_PRODUCT_MANAGEMENT = "Product_Management";
-	public static final String PERMISSIONS_ROLE_DEPARTMENT_MANAGEMENT = "Department_Management";
+	public static final String PERMISSIONS_ROLE_DEPARTMENT_MANAGEMENT = "Category_Management";
 	public static final String PERMISSIONS_ROLE_USER = "Users";
 	public static final String PERMISSIONS_ROLE_OFFERS = "Schedule Workers";
 	public static final String PERMISSIONS_ROLE_PERMISSIONS = "Permissions";
@@ -23,7 +23,7 @@ public class Permissions {
 	public static final String PERMISSIONS_MAIN_SCREEN = "sales cart";
 	public static final String PERMISSIONS_REPORT = "report";
 	public static final String PERMISSIONS_PRODUCT = "product";
-	public static final String PERMISSIONS_DEPARTMENT = "department";
+	public static final String PERMISSIONS_CATEGORY = "category";
 	public static final String PERMISSIONS_USER = "employee";
 	public static final String PERMISSIONS_SCHEDULE_WORKERS = "Schedule Workers";
 	public static final String PERMISSIONS_BACK_UP = "back up";
@@ -31,7 +31,7 @@ public class Permissions {
 	public static final String PERMISSIONS_USER_CLUB = "user club";
 	public static final String PERMISSIONS_SALES_MAN = "sales man";
 
-	public static final String[] PERMISSIONS_NAMES = new String[]{PERMISSIONS_MAIN_SCREEN, PERMISSIONS_REPORT, PERMISSIONS_PRODUCT, PERMISSIONS_DEPARTMENT,
+	public static final String[] PERMISSIONS_NAMES = new String[]{PERMISSIONS_MAIN_SCREEN, PERMISSIONS_REPORT, PERMISSIONS_PRODUCT, PERMISSIONS_CATEGORY,
 			PERMISSIONS_USER, PERMISSIONS_SCHEDULE_WORKERS, PERMISSIONS_BACK_UP, PERMISSIONS_SETTINGS, PERMISSIONS_USER_CLUB, PERMISSIONS_SALES_MAN};
 
 	static public final String[] PERMISSIONS_ROLE = new String[]{PERMISSIONS_ROLE_ROOT, PERMISSIONS_ROLE_ADMIN, PERMISSIONS_ROLE_POS,

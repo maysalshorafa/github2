@@ -6,7 +6,7 @@
     <string name="account">حساب</string>
     <string name="add">اضافة</string>
     <string name="add_check">إضافة شيك</string>
-    <string name="add_department">إضافة قسم</string>
+    <string name="add_category">إضافة قسم</string>
     <string name="add_product">إضافة منتوج</string>
     <string name="add_to_cart">اضف الى سلة المشتريات</string>
     <string name="all">الكل</string>
@@ -66,8 +66,8 @@
     <string name="password"> كلمة المرور </string>
     <string name="hourly_wage">ساعات العمل </string>
     <string name="present">النسبة </string>
-    <string name="backup_department"> انشاء نسخة احتياطية للاقسام </string>
-    <string name="backup_products_by_department"> انشاء نسخة احتياطية للمنتوجات باستخدام الاقسام </string>
+    <string name="backup_category"> انشاء نسخة احتياطية للاقسام </string>
+    <string name="backup_products_by_category"> انشاء نسخة احتياطية للمنتوجات باستخدام الاقسام </string>
     <string name="Information">معلومات</string>
     <string name="other_ways">طرق اخرى</string>
     <string name="discount">خصم</string>
@@ -78,7 +78,7 @@
     <string name="search">بحث</string>
     <string name="create_new_product">منتج جديد</string>
     <string name="import_product">استيراد منتج</string>
-    <string name="department_name">اسم القسم</string>
+    <string name="category_name">اسم القسم</string>
     <string name="name">الاسم</string>
     <string name="barcode">الباركود</string>
     <string name="cost_price">سعر التكلفة</string>
@@ -150,16 +150,16 @@
     <string name="total_amount">المبلغ الكلي</string>
     <string name="view_sales">عرض المبيعات</string>
 
-    <!-- Department Activity String -->
-    <string name="insert_department_name_massage">ادخل اسم القسم.</string>
-    <string name="insert_new_department_name_massage">ادخل اسم جديد للقسم.</string>
+    <!-- Category Activity String -->
+    <string name="insert_category_name_massage">ادخل اسم القسم.</string>
+    <string name="insert_new_category_name_massage">ادخل اسم جديد للقسم.</string>
     <string name="description">وصف</string>
     <string name="please_add_product_then_continue">اضف المنتج ثم اكمل ..!</string>
     <string name="please_set_password">الرجاء تعين كلمة المرور .</string>
     <string name="password_does_not_match">كلمة المرور غير متطابقة.</string>
-    <string name="please_insert_department_name">الرجاء ادخال اسم القسم .</string>
-    <string name="please_insert_another_department_name">الرجاء ادخال اسم جديد للقسم .</string>
-    <string name="department_not_selected">لم يتم تحديد اسم القسم .</string>
+    <string name="please_insert_category_name">الرجاء ادخال اسم القسم .</string>
+    <string name="please_insert_another_category_name">الرجاء ادخال اسم جديد للقسم .</string>
+    <string name="category_not_selected">لم يتم تحديد اسم القسم .</string>
     <string name="error_to_update_product">لم يتم تعديل معلومات المنتج.</string>
     <string name="success_to_update_product">تم تعديل معلومات المنتج ...!</string>
 
@@ -232,10 +232,10 @@
     <string name="create_z_report_message">هل تريد انشاء تقرير Z؟</string>
     <string name="create_z_report">انشاء تقرير Z</string>
     <string name="delete_product_message">هل تريد حذف المنتوج؟</string>
-    <string name="success_to_add_new_department">تم اضافة قسم بنجاح</string>
-    <string name="failed_to_add_new_department">لم يتم اضافة قسم حاول مرة اخرى !</string>
-    <string name="update_department">تحديث معلومات القسم</string>
-    <string name="please_insert_department_name_with_out_spaces">اضف اسم القسم بدون فراغات.</string>
+    <string name="success_to_add_new_category">تم اضافة قسم بنجاح</string>
+    <string name="failed_to_add_new_category">لم يتم اضافة قسم حاول مرة اخرى !</string>
+    <string name="update_category">تحديث معلومات القسم</string>
+    <string name="please_insert_category_name_with_out_spaces">اضف اسم القسم بدون فراغات.</string>
     <string name="not_inserted_checks">لم يتم ادخال اي شيكات</string>
     <string name="check_pid_error">المبلغ المدخل غير كافي لتغطية السعر الكلي.</string>
     <string name="dont_need_to_add_another_check">لا يوجد حاجه لادخال شيك اخر.</string>
@@ -277,11 +277,11 @@
     <string name="customer_id">رقم المستخدم</string>
     <string name="deal_number">رقم الصفقة</string>
     <string name="delete_check">حذف الشيك</string>
-    <string name="departments">الأقسام</string>
+    <string name="categorys">الأقسام</string>
     <string name="details">التفاصيل</string>
     <string name="different">مختلف</string>
     <string name="do_you_want_to_restore_the_system">هل تريد استعادة النظام؟</string>
-    <string name="edit_department">تعديل القسم</string>
+    <string name="edit_category">تعديل القسم</string>
     <string name="edit_product">تعديل المنتوج</string>
     <string name="empty_password">ادخل الكلمة المرور</string>
     <string name="end_at">نهاية</string>
@@ -384,10 +384,10 @@
     <string name="title_activity_pinpad">Pin-Pad</string>
     <string name="title_activity_open_format">OpenFormatActivity</string>
     <string name="title_activity_notify_service">ابلاغ الخدمة</string>
-    <string name="title_activity_departments_activity">الاقسام</string>
+    <string name="title_activity_category_activity">الاقسام</string>
     <string name="title_activity_customer_measurement_management_activity">قياسات الزبون</string>
     <string name="title_activity_club_management">ادارة النوادي</string>
-    <string name="title_activity_add_new_department_activity">اضافة قسم جديد</string>
+    <string name="title_activity_add_new_category_activity">اضافة قسم جديد</string>
     <string name="title_activity_add_customer_measurement_activity">اضافة قياسات للزبون</string>
     <string name="there_is_no_sale_on_pause">فارغ</string>
     <string name="there_is_no_disk_on_key">لم يتم العثور على قرص خارجي</string>
@@ -398,7 +398,7 @@
     <string name="set_price">عدل السعر</string>
     <string name="server_info">معلومات حول الخادم</string>
     <string name="selected">حدد</string>
-    <string name="select_all_Department_products">حدد اقسام المنتوجات</string>
+    <string name="select_all_Category_products">حدد اقسام المنتوجات</string>
     <string name="rule_name">اسم القاعدة</string>
     <string name="rule">قاعدة</string>
     <string name="retry">اعد المحاولة</string>
@@ -445,7 +445,7 @@
     <string name="file_does_not_valid">ملف غير صحيح</string>
     <string name="eur">EUR</string>
     <string name="expired_card">انتهت صلاحية البطاقة</string>
-    <string name="department_management">ادارة الأقسام</string>
+    <string name="category_management">ادارة الأقسام</string>
     <string name="delete_all_selected_products">احذف المنتوجات المحددة</string>
     <string name="customer_have_money_from_point_less_then_total_price">نقاط الزبون اقل من السعر الكلي</string>
     <string name="clearCartAlertTitle">تنظيف سلة المبيعات</string>
