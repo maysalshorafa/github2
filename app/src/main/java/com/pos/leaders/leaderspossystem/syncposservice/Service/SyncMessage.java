@@ -708,6 +708,11 @@ public class SyncMessage extends Service {
                         rID = 0;
                         ex.printStackTrace();
                     }
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     productDBAdapter.close();
 
                     break;

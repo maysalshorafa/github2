@@ -33,8 +33,10 @@
         android:largeHeap="true"
         android:sharedUserId="android.uid.system"
         android:supportsRtl="true"
+        android:name="android.support.multidex.MultiDexApplication"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomeActivity" />
+        <activity android:name=".HomeActivity"
+            />
         <activity
             android:name=".SplashScreenActivity"
             android:launchMode="singleTask">
