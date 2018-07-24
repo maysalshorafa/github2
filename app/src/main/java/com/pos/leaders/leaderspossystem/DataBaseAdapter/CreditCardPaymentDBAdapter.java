@@ -80,7 +80,7 @@ public class CreditCardPaymentDBAdapter {
                             double firstPaymentAmount,double otherPaymentAmount,String cardHolder) {
         CreditCardPayment payment = new CreditCardPayment(Util.idHealth(this.db, TABLE_NAME, ID), saleId, amount, cccName,transactionType,
                 last4Digit,transactionId,answer,paymentsNumber,firstPaymentAmount,otherPaymentAmount,cardHolder,new Timestamp(System.currentTimeMillis()));
-        sendToBroker(MessageType.ADD_CREDIT_CARD_PAYMENT, payment, this.context);
+        //sendToBroker(MessageType.ADD_CREDIT_CARD_PAYMENT, payment, this.context);
 
         try {
             return insertEntry(payment);
