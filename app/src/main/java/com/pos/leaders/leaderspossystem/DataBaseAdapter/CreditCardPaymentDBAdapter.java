@@ -13,6 +13,8 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
@@ -154,4 +156,18 @@ public class CreditCardPaymentDBAdapter {
                 cursor.getInt(cursor.getColumnIndex(PAYMENTS_NUMBER)), cursor.getDouble(cursor.getColumnIndex(FIRST_PAYMENT_AMOUNT)), cursor.getDouble(cursor.getColumnIndex(OTHER_PAYMENT_AMOUNT)),
                 cursor.getString(cursor.getColumnIndex(CARDHOLDER)),Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CREATEDATE))));
     }
+    public List<CreditCardPayment> getPaymentByOrderID(long orderId) {
+        List<CreditCardPayment> orderPaymentList = new ArrayList<CreditCardPayment>();
+
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME +" where "+ORDERID+"="+orderId, null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            orderPaymentList.add(make(cursor));
+            cursor.moveToNext();
+        }
+
+        return orderPaymentList;
+    }
+
 }
