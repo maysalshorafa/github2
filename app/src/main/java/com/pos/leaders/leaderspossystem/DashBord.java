@@ -101,6 +101,17 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     double totalZReportAmount =0;
     boolean PRINTER_STATE=false;
 
+    ServiceConnection serviceConnection;
+    @Override
+    protected void onDestroy() {
+        unbindService(serviceConnection);
+        try {
+            TitleBar.removeTitleBard();
+        } catch (IllegalArgumentException iae) {
+
+        }
+        super.onDestroy();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,19 +133,18 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         Intent intent = new Intent();
         intent.setPackage("com.sunmi.mscardservice");
         intent.setAction("com.sunmi.mainservice.MainService");
+
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                sendservice = MSCardService.Stub.asInterface(service);
+            }
+            @Override
+            public void onServiceDisconnected(ComponentName name) {}
+        };
+
         try {
-            bindService(intent, new ServiceConnection() {
-
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder service) {
-                    sendservice = MSCardService.Stub.asInterface(service);
-                }
-
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
-
-                }
-            }, BIND_AUTO_CREATE);
+            bindService(intent, serviceConnection, BIND_AUTO_CREATE);
         } catch (Exception e) {
             Log.e("Sunmi MSC ", e.getMessage());
         }
