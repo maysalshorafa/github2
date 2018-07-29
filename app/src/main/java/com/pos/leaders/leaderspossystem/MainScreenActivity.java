@@ -547,7 +547,7 @@ public class MainScreenActivity extends Activity {
         printerController.PrinterController_Set_Right();
         for (Order o :
                 SESSION._ORDER_DETAILES) {
-            String s=o.getProduct().getName()+"       "+o.getQuantity()+"     "+o.getItemTotalPrice();
+            String s=o.getProduct().getDisplayName()+"       "+o.getQuantity()+"     "+o.getItemTotalPrice();
            // printerController.PrinterController_Take_The_Paper(1);
         }*/
 /*
@@ -582,7 +582,7 @@ public class MainScreenActivity extends Activity {
         printerController.PrinterController_Linefeed();
         for (Order o :
                 SESSION._ORDER_DETAILES) {
-            String s=o.getProduct().getName()+"       "+o.getQuantity()+"     "+o.getProduct().getPaidAmount();
+            String s=o.getProduct().getDisplayName()+"       "+o.getQuantity()+"     "+o.getProduct().getPaidAmount();
             printerController
                     .PrinterController_Print(s
                             .getBytes());

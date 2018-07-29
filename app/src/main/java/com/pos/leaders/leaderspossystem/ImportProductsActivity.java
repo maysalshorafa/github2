@@ -100,8 +100,8 @@ public class ImportProductsActivity extends Activity {
                             for (Product p : lsProducts) {
                                 p.setDepartmentId(departmentMap.get(selectedDepartment));
                                 count++;
-                                boolean availableBarCode= productDBAdapter.isValidBarcode(p.getBarCode());
-                                boolean availableProductName= productDBAdapter.availableProductName(p.getName());
+                                boolean availableBarCode= productDBAdapter.isValidSku(p.getSku());
+                                boolean availableProductName= productDBAdapter.availableProductName(p.getDisplayName());
                                 if(availableProductName&&availableBarCode) {
                                     productDBAdapter.insertEntry(p);
                                 }
@@ -183,10 +183,12 @@ public class ImportProductsActivity extends Activity {
 
                     productDBAdapter.open();
                     for (Product p : d.getProducts()) {
-                        boolean availableBarCode= productDBAdapter.isValidBarcode(p.getBarCode());
-                        boolean availableProductName= productDBAdapter.availableProductName(p.getName());
+                        boolean availableBarCode= productDBAdapter.isValidSku(p.getSku());
+                        boolean availableProductName= productDBAdapter.availableProductName(p.getDisplayName());
                         if(availableProductName&&availableBarCode) {
-                            productDBAdapter.insertEntry(p.getName(), p.getBarCode(), "", p.getPrice(), p.getCostPrice(), true, false, depID, p.getByUser(), 1, 1);
+                            productDBAdapter.insertEntry(p.getName(), p.getBarCode(),
+                                    "", p.getPrice(), p.getCostPrice(), true, false, depID, p.getByEmployee(), 1, 1,
+                                    p.getSku(), p.getStatus(), p.getDisplayName(), p.getRegularPrice(), p.getStockQuantity(), p.isManageStock(), p.isInStock());
                         }
                     }
                     productDBAdapter.close();
@@ -265,64 +267,6 @@ public class ImportProductsActivity extends Activity {
     static int failImportItems=0;
     static String msg="";
 
-    public List<Product> readProducts(String inputFile) throws IOException {
-        List<Product> resultSet = new ArrayList<Product>();
-        failImportItems=0;
-        File inputWorkbook = new File(inputFile);
-        if(inputWorkbook.exists()){
-            Workbook w;
-            try {
-                w = Workbook.getWorkbook(inputWorkbook);
-                // Get the first sheet
-                Sheet sheet = w.getSheet(0);
-                // Loop over column and lines
-                Log.i("Row ","id \t name \t barcode \t price");
-                for (int row = 1; row < sheet.getRows(); row++) {
-                    try {
-                        String name,barcode,id,price;
-                        id=sheet.getCell(0, row).getContents().replaceAll(" ","");
-                        name=sheet.getCell(1, row).getContents();
-                        barcode=sheet.getCell(2, row).getContents();
-                        price=new BigDecimal(sheet.getCell(4, row).getContents().replaceAll(" ","")).toString();
-                        resultSet.add(new Product(Integer.parseInt(id),name,Double.parseDouble(price),barcode,1, SESSION._EMPLOYEE.getEmployeeId()));
-                    }
-                    catch (Exception ex){
-                        Log.e("",ex.getMessage());
-                        failImportItems++;
-                    }
-
-
-                    /*for(int i=0; i<sheet.getColumns();i++){
-                        Cell cell = sheet.getCell(i, row);
-                    }
-
-                    if(cell.getContents().equalsIgnoreCase(key)){
-                        for (int i = 0; i < sheet.getColumns(); i++) {
-                            Cell cel = sheet.getCell(i, row);
-                            resultSet.add(cel.getContents());
-                        }
-                    }*/
-                    continue;
-                }
-                msg = String.format("file have %d products, %d successfully to read, %d errors",sheet.getRows()-1,sheet.getRows()-1-failImportItems,failImportItems);
-                //Toast.makeText(getBaseContext(),"fail to add "+failImportItems,Toast.LENGTH_LONG);
-
-            } catch (BiffException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        else
-        {
-            // resultSet.add("File not found..!");
-        }
-        if(resultSet.size()==0){
-            // resultSet.add("Data not found..!");
-        }
-        return resultSet;
-    }
-
     public List<Department> readProductsWithDepartments(String inputFile) throws IOException {
         List<Department> departments = new ArrayList<Department>();
         failImportItems=0;
@@ -341,14 +285,16 @@ public class ImportProductsActivity extends Activity {
                         try {
                             if(sh.getCell(1,row).getContents().toString().equals(""))
                                 break;
-                            String name,barcode,id,price,costPrice;
+                            String name,barcode,id,price,costPrice,displayName,sku;
                             name = sh.getCell(1, row).getContents().replaceAll("''", "``").replaceAll("'", "`").toString();
-                            barcode=sh.getCell(2, row).getContents();
-                            price=new BigDecimal(sh.getCell(3, row).getContents().replaceAll(" ","")).toString();
-                            costPrice = sh.getCell(4, row).getContents();
+                            displayName = sh.getCell(2, row).getContents().replaceAll("''", "``").replaceAll("'", "`").toString();
+                            barcode=sh.getCell(3, row).getContents();
+                            sku=sh.getCell(4, row).getContents();
+                            price=new BigDecimal(sh.getCell(5, row).getContents().replaceAll(" ","")).toString();
+                            costPrice = sh.getCell(6, row).getContents();
                             if(costPrice.equals(""))
                                 costPrice = "0";
-                            products.add(new Product(name, Double.parseDouble(price), Double.parseDouble(costPrice), barcode, SESSION._EMPLOYEE.getEmployeeId()));
+                            products.add(new Product(name,displayName, Double.parseDouble(price), Double.parseDouble(costPrice), barcode,sku, SESSION._EMPLOYEE.getEmployeeId()));
                         }
                         catch (Exception ex){
                             Log.e("",ex.getMessage());

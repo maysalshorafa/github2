@@ -1025,7 +1025,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                 List<OrderDetails>list=new ArrayList<OrderDetails>();
                                 list.add(selectedOrderOnCart);
                                 final TextView discountType =(TextView)cashDialog.findViewById(R.id. cashPaymentDialog_TVStatus);
-                                discountType.append(":"+selectedOrderOnCart.getProduct().getName());
+                                discountType.append(":"+selectedOrderOnCart.getProduct().getDisplayName());
                                 totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getDiscount()));
                                 priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity())+getString(R.string.ins));
                                 sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -1587,7 +1587,7 @@ public class SalesCartActivity extends AppCompatActivity {
             return;
         }
         if (Double.parseDouble(str) != 0)
-            addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._EMPLOYEE.getEmployeeId(),""));
+            addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general),getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._EMPLOYEE.getEmployeeId(),"",""));
     }
 
 
@@ -1643,7 +1643,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 break;
             case R.id.touchPadFragment_btEnter:
                 if (!touchPadPressed.equals(""))
-                    addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._EMPLOYEE.getEmployeeId(),""));
+                    addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._EMPLOYEE.getEmployeeId(), "", ""));
                 touchPadPressed = "";
                 break;
             case R.id.touchPadFragment_btDot:
