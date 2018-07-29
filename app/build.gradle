@@ -45,11 +45,12 @@ android {
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
     }
-
     configurations.all{
         resolutionStrategy.force 'com.android.support:multidex:1.0.3'
     }
+
 }
+
 
 
 dependencies {
