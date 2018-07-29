@@ -65,22 +65,13 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     protected static final String DATABASE_NAME = "POSDB.db";
-    protected static final String CONTACTS_TABLE_NAME = "contacts";
-    protected static final String CONTACTS_COLUMN_ID = "id";
-    protected static final String CONTACTS_COLUMN_NAME = "name";
-    protected static final String CONTACTS_COLUMN_EMAIL = "email";
-    protected static final String CONTACTS_COLUMN_STREET = "street";
-    protected static final String CONTACTS_COLUMN_CITY = "place";
-    protected static final String CONTACTS_COLUMN_PHONE = "phone";
-    private HashMap hp;
-    private Context context;
-    private static final String DATABASE_ADD_COLUMN_AMOUNT = "ALTER TABLE " + "z_report" + " ADD COLUMN " + "amount" + " REAL;"; // Add column to exist table
-    private static final String DATABASE_ADD_COLUMN_TOTAL_AMOUNT = "ALTER TABLE " + "z_report" + " ADD COLUMN " + "total_amount" + " REAL;"; // Add column to exist table
+
+    Context context;
+
     public static boolean DATABASE_ENABEL_ALTER_COLUMN = false;
-    //21
     public DbHelper(Context context)
     {
         super(context, DATABASE_NAME ,null,DATABASE_VERSION);
@@ -204,16 +195,29 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (2,'Golden','Golden',2,0,50,200,0);");
         db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (4,'test1','test1','test1','"+new Timestamp(System.currentTimeMillis())+"','12',0,046316969,20,35);");
 
-        updateDataBase(db);
+        db.execSQL(CustomerMeasurementDBAdapter.DATABASE_CREATE);
+        db.execSQL(MeasurementsDetailsDBAdapter.DATABASE_CREATE);
+        db.execSQL(MeasurementDynamicVariableDBAdapter.DATABASE_CREATE);
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (1,'משקל','Double','KG',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (2,'יד ימין 1','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (3,'יד ימין 2','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (4,'יד שמאל 1','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (5,'יד שמאל 2','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (6,'אחוז שומן 1','Double','%',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (7,'אחוז שומן 2','Double','%',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (8,'מותניים','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (9,'חזה','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (10,'רגל ימין 1','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (11,'רגל ימין 2','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (12,'רגל שמאל 1','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (13,'רגל שמאל 2','Double','CM',0);");
+        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (14,'סוג חלבון','String','E',0);");
 
         List<String> tblNames = tablesName(db);
         String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
         db.execSQL(dbc);
         db.execSQL(IdsCounterDBAdapter.INIT(tblNames));
-
-
         db.execSQL("INSERT INTO products (id, name,barcode,description,price,costPrice,categoryId,byEmployee,status) VALUES (8, 'Test',10,'Test',10,10,1,1,1);");
-
     }
 
     public int insertFromFile(Context context, int resourceId) throws IOException {
@@ -239,47 +243,9 @@ public class DbHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        /*if(oldVersion<2){
-            db.execSQL(DATABASE_ADD_COLUMN_AMOUNT);
-            db.execSQL(DATABASE_ADD_COLUMN_TOTAL_AMOUNT);
-            DATABASE_ENABEL_ALTER_COLUMN = true;
-
-            //method to updateDataBaseVersion2
-            *//*updateDataBase(db);
-            db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "CustomerMeasurement" + " INTEGER DEFAULT 0;");
-            db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "MeasurementsDetails" + " INTEGER DEFAULT 0;");
-            db.execSQL("ALTER TABLE " + "idsCounter" + " ADD COLUMN " + "MeasurementDynamicVariable" + " INTEGER DEFAULT 0;");
-              *//*
-            //end
-        }*/
-/*
-        if(oldVersion<3) {
-
-        }*/
-        // Log the version upgrade.
-        Log.w("TaskDBAdapter", "Upgrading from version " +oldVersion + " to " +newVersion + ", which will destroy all old data");
+        switch (oldVersion) {
+            case 1:
+                db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
+        }
     }
-
-    // DataBase Version2
-    public void updateDataBase(SQLiteDatabase db){
-        //CustomerMeasurement
-        db.execSQL(CustomerMeasurementDBAdapter.DATABASE_CREATE);
-        db.execSQL(MeasurementsDetailsDBAdapter.DATABASE_CREATE);
-        db.execSQL(MeasurementDynamicVariableDBAdapter.DATABASE_CREATE);
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (1,'משקל','Double','KG',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (2,'יד ימין 1','Double','CM',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (3,'יד ימין 2','Double','CM',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (4,'יד שמאל 1','Double','CM',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (5,'יד שמאל 2','Double','CM',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (6,'אחוז שומן 1','Double','%',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (7,'אחוז שומן 2','Double','%',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (8,'מותניים','Double','CM',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (9,'חזה','Double','CM',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (10,'רגל ימין 1','Double','CM',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (11,'רגל ימין 2','Double','CM',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (12,'רגל שמאל 1','Double','CM',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (13,'רגל שמאל 2','Double','CM',0);");
-        db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (14,'סוג חלבון','String','E',0);");
-    }
-
 }

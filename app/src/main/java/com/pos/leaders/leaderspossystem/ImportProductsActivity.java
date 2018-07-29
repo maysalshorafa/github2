@@ -100,8 +100,8 @@ public class ImportProductsActivity extends Activity {
                             for (Product p : lsProducts) {
                                 p.setCategoryId(departmentMap.get(selectedDepartment));
                                 count++;
-                                boolean availableBarCode= productDBAdapter.isValidBarcode(p.getBarCode());
-                                boolean availableProductName= productDBAdapter.availableProductName(p.getName());
+                                boolean availableBarCode= productDBAdapter.isValidSku(p.getSku());
+                                boolean availableProductName= productDBAdapter.availableProductName(p.getDisplayName());
                                 if(availableProductName&&availableBarCode) {
                                     productDBAdapter.insertEntry(p);
                                 }
@@ -183,10 +183,12 @@ public class ImportProductsActivity extends Activity {
 
                     productDBAdapter.open();
                     for (Product p : d.getProducts()) {
-                        boolean availableBarCode= productDBAdapter.isValidBarcode(p.getBarCode());
-                        boolean availableProductName= productDBAdapter.availableProductName(p.getName());
+                        boolean availableBarCode= productDBAdapter.isValidSku(p.getSku());
+                        boolean availableProductName= productDBAdapter.availableProductName(p.getDisplayName());
                         if(availableProductName&&availableBarCode) {
-                            productDBAdapter.insertEntry(p.getName(), p.getBarCode(), "", p.getPrice(), p.getCostPrice(), true, false, depID, p.getByUser(), 1, 1);
+                            productDBAdapter.insertEntry(p.getName(), p.getBarCode(),
+                                    "", p.getPrice(), p.getCostPrice(), true, false, depID, p.getByEmployee(), 1, 1,
+                                    p.getSku(), p.getStatus(), p.getDisplayName(), p.getRegularPrice(), p.getStockQuantity(), p.isManageStock(), p.isInStock());
                         }
                     }
                     productDBAdapter.close();
@@ -264,7 +266,6 @@ public class ImportProductsActivity extends Activity {
 
     static int failImportItems=0;
     static String msg="";
-
     public List<Product> readProducts(String inputFile) throws IOException {
         List<Product> resultSet = new ArrayList<Product>();
         failImportItems=0;
@@ -341,14 +342,16 @@ public class ImportProductsActivity extends Activity {
                         try {
                             if(sh.getCell(1,row).getContents().toString().equals(""))
                                 break;
-                            String name,barcode,id,price,costPrice;
+                            String name,barcode,id,price,costPrice,displayName,sku;
                             name = sh.getCell(1, row).getContents().replaceAll("''", "``").replaceAll("'", "`").toString();
-                            barcode=sh.getCell(2, row).getContents();
-                            price=new BigDecimal(sh.getCell(3, row).getContents().replaceAll(" ","")).toString();
-                            costPrice = sh.getCell(4, row).getContents();
+                            displayName = sh.getCell(2, row).getContents().replaceAll("''", "``").replaceAll("'", "`").toString();
+                            barcode=sh.getCell(3, row).getContents();
+                            sku=sh.getCell(4, row).getContents();
+                            price=new BigDecimal(sh.getCell(5, row).getContents().replaceAll(" ","")).toString();
+                            costPrice = sh.getCell(6, row).getContents();
                             if(costPrice.equals(""))
                                 costPrice = "0";
-                            products.add(new Product(name, Double.parseDouble(price), Double.parseDouble(costPrice), barcode, SESSION._EMPLOYEE.getEmployeeId()));
+                            products.add(new Product(name,displayName, Double.parseDouble(price), Double.parseDouble(costPrice), barcode,sku, SESSION._EMPLOYEE.getEmployeeId()));
                         }
                         catch (Exception ex){
                             Log.e("",ex.getMessage());

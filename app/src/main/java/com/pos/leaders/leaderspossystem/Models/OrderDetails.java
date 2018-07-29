@@ -194,13 +194,13 @@ public class OrderDetails {
         String s = "320", OP = "+", mOP = "-";
         double totalDiscount = (getItemTotalPrice() * discount / 100);
         double noTax = paidAmount / (1 + (SETTINGS.tax / 100));
-        if(product.getName().length()>29){
-            product.setName(product.getName().substring(0,29));
+        if(product.getDisplayName().length()>29){
+            product.setName(product.getDisplayName().substring(0,29));
         }
 
         return "D110" + String.format(Util.locale, "%09d", rowNumber) + companyID + s + String.format(Util.locale, "%020d", orderId) + String.format(Util.locale, "%04d", orderDetailsId)
                 + s + String.format(Util.locale, "%020d", orderId) + "3" + String.format(Util.locale, "%20s", productId) + String.format(Util.locale, "%30s", "sale")
-                + Util.spaces(50) + String.format(Util.locale, "%30s", product.getBarCode()) + Util.spaces(20)
+                + Util.spaces(50) + String.format(Util.locale, "%30s", product.getSku()) + Util.spaces(20)
                 + "+" + String.format(Util.locale, "%012d", quantity) + String.format(Util.locale, "%04d", (int) ((quantity - Math.floor(quantity) + 0.00001) * 10000))
                 + OP + Util.x12V99(noTax) + mOP + Util.x12V99(totalDiscount) + OP + Util.x12V99((noTax-totalDiscount)* quantity)
                 + String.format(Util.locale, "%02.0f", SETTINGS.tax) + String.format(Util.locale, "%02d", (int) ((SETTINGS.tax - Math.floor(SETTINGS.tax) + 0.001) * 100))

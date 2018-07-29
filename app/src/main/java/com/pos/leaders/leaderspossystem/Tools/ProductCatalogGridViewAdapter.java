@@ -92,8 +92,8 @@ public class ProductCatalogGridViewAdapter extends BaseAdapter {
 		TextView tvBarcode=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVBarCode);
 		TextView tvPrice=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVPrice);
 
-		tvName.setText(_Substring(products.get(position).getName()));
-		tvBarcode.setText(products.get(position).getBarCode());
+		tvName.setText(_Substring(products.get(position).getDisplayName()));
+		tvBarcode.setText(products.get(position).getSku());
 		tvPrice.setText(products.get(position).getPrice()+ " " +  context.getString(R.string.ins));
 
 

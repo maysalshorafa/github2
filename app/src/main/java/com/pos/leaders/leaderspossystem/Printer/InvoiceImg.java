@@ -217,12 +217,12 @@ public class InvoiceImg {
         double totalSaved = 0.0;
         for (OrderDetails o : orders) {
             count+=o.getQuantity();
-            if (o.getProduct().getName().equals("General"))
+            if (o.getProduct().getDisplayName().equals("General"))
                 o.getProduct().setName(context.getString(R.string.general));
             int cut = 11;
-            if (o.getProduct().getName().length() < cut)
-                cut = o.getProduct().getName().length();
-            name.text += (o.getProduct().getName().substring(0, cut) + newLineL);
+            if (o.getProduct().getDisplayName().length() < cut)
+                cut = o.getProduct().getDisplayName().length();
+            name.text += (o.getProduct().getDisplayName().substring(0, cut) + newLineL);
             counter.text += o.getQuantity() + "\n";
             unitPrice.text +=String.format(new Locale("en"), "%.2f", o.getUnitPrice()) + "\n";
             price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
@@ -366,12 +366,12 @@ public class InvoiceImg {
         double totalSaved = 0.0;
         for (OrderDetails o : sale.getOrders()) {
             count+=o.getQuantity();
-            if (o.getProduct().getName().equals("General"))
+            if (o.getProduct().getDisplayName().equals("General"))
                 o.getProduct().setName(context.getString(R.string.general));
             int cut = 11;
-            if (o.getProduct().getName().length() < cut)
-                cut = o.getProduct().getName().length();
-            name.text += (o.getProduct().getName().substring(0, cut) + newLineL);
+            if (o.getProduct().getDisplayName().length() < cut)
+                cut = o.getProduct().getDisplayName().length();
+            name.text += (o.getProduct().getDisplayName().substring(0, cut) + newLineL);
             counter.text += o.getQuantity() + "\n";
             unitPrice.text +=String.format(new Locale("en"), "%.2f", o.getUnitPrice()) + "\n";
             price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
@@ -477,12 +477,12 @@ public class InvoiceImg {
 
         for (OrderDetails o : sale.getOrders()) {
             count += o.getQuantity();
-            if (o.getProduct().getName().equals("General"))
+            if (o.getProduct().getDisplayName().equals("General"))
                 o.getProduct().setName(context.getString(R.string.general));
             int cut = 11;
-            if (o.getProduct().getName().length() < cut)
-                cut = o.getProduct().getName().length();
-            name.text += (o.getProduct().getName().substring(0, cut) + newLineL);
+            if (o.getProduct().getDisplayName().length() < cut)
+                cut = o.getProduct().getDisplayName().length();
+            name.text += (o.getProduct().getDisplayName().substring(0, cut) + newLineL);
             counter.text += o.getQuantity() + "\n";
             unitPrice.text += String.format(new Locale("en"), "%.2f", o.getUnitPrice()) + "\n";
             price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
@@ -586,12 +586,12 @@ public class InvoiceImg {
 
         for (OrderDetails o : sale.getOrders()) {
             count=o.getQuantity();
-            if (o.getProduct().getName().equals("General"))
+            if (o.getProduct().getDisplayName().equals("General"))
                 o.getProduct().setName(context.getString(R.string.general));
             int cut = 11;
-            if (o.getProduct().getName().length() < cut)
-                cut = o.getProduct().getName().length();
-            name.text += (o.getProduct().getName().substring(0, cut) + newLineL);
+            if (o.getProduct().getDisplayName().length() < cut)
+                cut = o.getProduct().getDisplayName().length();
+            name.text += (o.getProduct().getDisplayName().substring(0, cut) + newLineL);
             counter.text += o.getQuantity() + "\n";
             unitPrice.text += String.format(new Locale("en"), "%.2f", o.getUnitPrice()) + "\n";
             price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
@@ -670,12 +670,12 @@ public class InvoiceImg {
         double totalSaved = 0.0;
         for (OrderDetails o : order.getOrders()) {
             count=o.getQuantity();
-            if (o.getProduct().getName().equals("General"))
+            if (o.getProduct().getDisplayName().equals("General"))
                 o.getProduct().setName(context.getString(R.string.general));
             int cut = 11;
-            if (o.getProduct().getName().length() < cut)
-                cut = o.getProduct().getName().length();
-            name.text += (o.getProduct().getName().substring(0, cut) + newLineL);
+            if (o.getProduct().getDisplayName().length() < cut)
+                cut = o.getProduct().getDisplayName().length();
+            name.text += (o.getProduct().getDisplayName().substring(0, cut) + newLineL);
             counter.text += o.getQuantity() + "\n";
             unitPrice.text += String.format(new Locale("en"), "%.2f", o.getUnitPrice()) + "\n";
             price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";

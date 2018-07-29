@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -59,7 +60,6 @@ public class SetupNewPOSOnlineActivity extends Activity {
         setContentView(R.layout.activity_setup_new_posonline);
         etKey = (EditText) findViewById(R.id.setuponlinepos_etKey);
         btConnect = (Button) findViewById(R.id.setuponlinepos_btConnect);
-
         context = this;
         //region check internet connection
         if(!SyncMessage.isConnected(this)) {

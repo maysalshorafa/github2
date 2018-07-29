@@ -188,7 +188,7 @@ public class TitleBar {
 
     }
 
-    public static void removeTitleBard(final AppCompatActivity context) {
+    public static void removeTitleBard() {
         if (clock != null) {
             clock.StopTick();
         }

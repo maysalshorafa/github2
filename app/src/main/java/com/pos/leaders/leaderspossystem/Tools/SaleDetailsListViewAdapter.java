@@ -74,7 +74,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 		double discount = orderList.get(position).getDiscount();
 		price=orderList.get(position).getPaidAmount();
 		count=orderList.get(position).getQuantity();
-		holder.tvName.setText(_Substring(orderList.get(position).getProduct().getName()));
+		holder.tvName.setText(_Substring(orderList.get(position).getProduct().getDisplayName()));
 		holder.tvPrice.setText(String.format(new Locale("en"),"%.2f",price)+" "+ context.getString(R.string.ins));
 		holder.tvCount.setText(count+"");
 		holder.tvTotal.setText(String.format(new Locale("en"),"%.2f",(price*count))+ " " + context.getString(R.string.ins));

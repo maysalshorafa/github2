@@ -129,7 +129,7 @@ public class OfferProductCartActivity extends Activity {
                 String word = etSearch.getText().toString();
                 if (!word.equals("")) {
                     for (Product p : productsList) {
-                        if (p.getName().toLowerCase().contains(word.toLowerCase()) || p.getDescription().toLowerCase().contains(word.toLowerCase())) {
+                        if (p.getDisplayName().toLowerCase().contains(word.toLowerCase()) || p.getDescription().toLowerCase().contains(word.toLowerCase())) {
                             filter_productsList.add(p);
                         }
                     }

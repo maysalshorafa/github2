@@ -612,6 +612,12 @@
     <string name="printer_connect_error">Printer Connect Error</string>
     <string name="please_connect_the_printer">Please check printer connection and printer type</string>
     <string name="a_report">A Report</string>
+    <string name="display_name">Display Name</string>
+    <string name="sku" translatable="false">sku</string>
+    <string name="manage_stock">Manage Stock</string>
+    <string name="stock_quantity">Stock Quantity</string>
+    <string name="insert_product_dispaly_name">Please insert Product Display Name.</string>
+    <string name="insert_product_sku">Please insert sku number.</string>
 </resources>
 
 

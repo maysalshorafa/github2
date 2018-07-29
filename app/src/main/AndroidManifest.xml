@@ -27,20 +27,22 @@
     <application
         coreApp="true"
         android:allowBackup="true"
+        android:name="android.support.multidex.MultiDexApplication"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher__pos"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:sharedUserId="android.uid.system"
         android:supportsRtl="true"
+        android:name="android.support.multidex.MultiDexApplication"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomeActivity" />
+        <activity android:name=".HomeActivity"
+            />
         <activity
             android:name=".SplashScreenActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />

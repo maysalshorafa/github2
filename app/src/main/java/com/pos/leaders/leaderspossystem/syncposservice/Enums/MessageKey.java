@@ -13,6 +13,7 @@ public interface MessageKey {
     String Token = "token";
     String Data = "data";
     String Ak = "ak";
+    String Aks = "aks";
     String Acknowledge = "acknowledge";
 
     String CCPW = "ccpw";
@@ -32,6 +33,9 @@ public interface MessageKey {
     String version = "version";
     String dbVersion = "db-version";
     String FEVersion = "FE-version";
+
+    String TrackingId = "trackingId";
+    String False="false";
 
 
 

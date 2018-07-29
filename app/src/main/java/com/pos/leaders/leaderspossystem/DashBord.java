@@ -101,6 +101,17 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     double totalZReportAmount =0;
     boolean PRINTER_STATE=false;
 
+    ServiceConnection serviceConnection;
+    @Override
+    protected void onDestroy() {
+        unbindService(serviceConnection);
+        try {
+            TitleBar.removeTitleBard();
+        } catch (IllegalArgumentException iae) {
+
+        }
+        super.onDestroy();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,19 +133,18 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         Intent intent = new Intent();
         intent.setPackage("com.sunmi.mscardservice");
         intent.setAction("com.sunmi.mainservice.MainService");
+
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                sendservice = MSCardService.Stub.asInterface(service);
+            }
+            @Override
+            public void onServiceDisconnected(ComponentName name) {}
+        };
+
         try {
-            bindService(intent, new ServiceConnection() {
-
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder service) {
-                    sendservice = MSCardService.Stub.asInterface(service);
-                }
-
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
-
-                }
-            }, BIND_AUTO_CREATE);
+            bindService(intent, serviceConnection, BIND_AUTO_CREATE);
         } catch (Exception e) {
             Log.e("Sunmi MSC ", e.getMessage());
         }
@@ -925,74 +935,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
-    }
-
-    static int failImportItems=0;
-    static String msg="";
-
-    public List<Product> readProducts() throws IOException {
-        List<Product> resultSet = new ArrayList<Product>();
-        failImportItems=0;
-        //File inputWorkbook = new File(inputFile);
-       // if(inputWorkbook.exists()){
-            Workbook w;
-            try {
-                int i=0;
-                AssetManager am = getAssets();
-                InputStream in = am.open("product2017.xls");
-                w = Workbook.getWorkbook(in);
-                Sheet sheet = w.getSheet(0);
-                // Loop over column and lines
-                Log.i("Row ","id \t name \t barcode \t price");
-                for (int row = 1; row < sheet.getRows(); row++) {
-                    try {
-                        String name,barcode,id,price;
-                        id=sheet.getCell(0, row).getContents().replaceAll(" ","");
-                        name=sheet.getCell(4, row).getContents();
-                        barcode=sheet.getCell(6, row).getContents();
-                        price=new BigDecimal(sheet.getCell(1, row).getContents().replaceAll(" ","")).toString();
-                        resultSet.add(new Product(i++,name,Double.parseDouble(price),barcode,1, SESSION._EMPLOYEE.getEmployeeId()));
-                    }
-                    catch (Exception ex){
-                        Log.e("",ex.getMessage());
-                        failImportItems++;
-                    }
-
-
-                    /*for(int i=0; i<sheet.getColumns();i++){
-                        Cell cell = sheet.getCell(i, row);
-                    }
-
-                    if(cell.getContents().equalsIgnoreCase(key)){
-                        for (int i = 0; i < sheet.getColumns(); i++) {
-                            Cell cel = sheet.getCell(i, row);
-                            resultSet.add(cel.getContents());
-                        }
-                    }*/
-                    continue;
-                }
-                msg = String.format("file have %d products, %d successfully to read, %d errors",sheet.getRows()-1,sheet.getRows()-1-failImportItems,failImportItems);
-                //Toast.makeText(getBaseContext(),"fail to add "+failImportItems,Toast.LENGTH_LONG);
-
-            } catch (BiffException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        //}
-       // else
-      //  {
-            // resultSet.add("File not found..!");
-      //  }
-        if(resultSet.size()==0){
-            // resultSet.add("Data not found..!");
-        }
-        return resultSet;
     }
 }
