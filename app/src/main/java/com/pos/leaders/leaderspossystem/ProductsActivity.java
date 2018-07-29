@@ -15,13 +15,13 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductStatus;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.ProductDepartmentGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.ProductCategoryGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
@@ -35,10 +35,10 @@ import java.util.Map;
  */
 
 public class ProductsActivity  extends AppCompatActivity  {
-    private DepartmentDBAdapter departmentDBAdapter;
+    private CategoryDBAdapter departmentDBAdapter;
     private ProductDBAdapter productDBAdapter;
     ArrayAdapter<String> LAdapter;
-    List<Department> listDepartment;
+    List<Category> listDepartment;
     List<String> departmentsName;
 
     Button btSave,btnCancel;
@@ -122,22 +122,22 @@ public class ProductsActivity  extends AppCompatActivity  {
             }
         });
 
-        // Department list
-        departmentDBAdapter = new DepartmentDBAdapter(this);
+        // Category list
+        departmentDBAdapter = new CategoryDBAdapter(this);
         departmentDBAdapter.open();
 
 
         departmentsName=new ArrayList<String>();
         listDepartment = departmentDBAdapter.getAllDepartments();
-        final ProductDepartmentGridViewAdapter departmentGridViewAdapter = new ProductDepartmentGridViewAdapter(this, listDepartment);
+        final ProductCategoryGridViewAdapter departmentGridViewAdapter = new ProductCategoryGridViewAdapter(this, listDepartment);
 
         lvDepartment.setAdapter(departmentGridViewAdapter);
         lvDepartment.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        //departmentDBAdapter.close();
+        //categoryDBAdapter.close();
 
-        for (Department d : listDepartment) {
+        for (Category d : listDepartment) {
             departmentsName.add(d.getName());
-            departmentMap.put(d.getName(),d.getDepartmentId());
+            departmentMap.put(d.getName(),d.getCategoryId());
         }
 /**
         LAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,departmentsName);
@@ -149,7 +149,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         lvDepartment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
-                Department department = listDepartment.get(position);
+                Category department = listDepartment.get(position);
                 department.setChecked(!department.isChecked());
                 listDepartment.set(position, department);
                 departmentGridViewAdapter.updateRecords(listDepartment);
@@ -212,11 +212,11 @@ public class ProductsActivity  extends AppCompatActivity  {
                     etStockQuantity.setText(editableProduct.getStockQuantity() + "");
                     swWithTax.setChecked(editableProduct.isWithTax());
                     swWeighable.setChecked(editableProduct.isWeighable());
+                    Category d = departmentDBAdapter.getDepartmentByID(editableProduct.getCategoryId());
                     swManageStock.setChecked(editableProduct.isManageStock());
-                    Department d = departmentDBAdapter.getDepartmentByID(editableProduct.getDepartmentId());
                     selectedDepartment = d.getName();
-                    for (Department dep : listDepartment) {
-                        if (dep.getDepartmentId() == (editableProduct.getDepartmentId())) {
+                    for (Category dep : listDepartment) {
+                        if (dep.getCategoryId() == (editableProduct.getCategoryId())) {
                             dep.setChecked(true);
                         }
                     }
@@ -286,11 +286,13 @@ public class ProductsActivity  extends AppCompatActivity  {
             boolean availableProductName= productDBAdapter.availableProductName(etName.getText().toString());
 
             if(availableProductName&&availableBarCode&& !etPrice.getText().toString().equals("")){
-                for (Department d : listDepartment) {
-                    if (d.isChecked()) {
-                        depID = d.getDepartmentId();
+                    for (Category d : listDepartment) {
+                        if (d.isChecked()) {
+                            depID = d.getCategoryId();
+                        }
                     }
-                }
+       
+          
                 if(!etPrice.getText().toString().equals("")){
                     price=Double.parseDouble(etPrice.getText().toString());
                 }
@@ -347,14 +349,15 @@ public class ProductsActivity  extends AppCompatActivity  {
             else {
                 costPrice=editableProduct.getCostPrice();
             }
+            for (Category d : listDepartment) {
             if (etStockQuantity.getText().toString().equals("")) {
                 stockQuantity = 0;
             }else{
                 stockQuantity = Integer.parseInt(etStockQuantity.getText().toString());
             }
-            for (Department d : listDepartment) {
+           
                 if (d.isChecked()) {
-                depID = d.getDepartmentId();               }
+                depID = d.getCategoryId();               }
             }
             //// TODO: 27/10/2016 edit product
             editableProduct.setName(etName.getText().toString());
@@ -367,9 +370,10 @@ public class ProductsActivity  extends AppCompatActivity  {
             editableProduct.setCostPrice(costPrice);
             editableProduct.setWithTax(withTax);
             editableProduct.setWeighable(withWeighable);
+            editableProduct.setCategoryId(depID);
             editableProduct.setManageStock(manageStock);
             editableProduct.setInStock(stockQuantity>0);
-            editableProduct.setDepartmentId(depID);
+
             try {
                 productDBAdapter.updateEntry(editableProduct);
                 Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.success_to_update_product), Toast.LENGTH_SHORT);

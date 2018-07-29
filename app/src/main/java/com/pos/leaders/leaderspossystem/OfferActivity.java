@@ -1,46 +1,5 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.Spinner;
-import android.widget.Toast;
-
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferRuleDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Department;
-import com.pos.leaders.leaderspossystem.Models.Offer;
-import com.pos.leaders.leaderspossystem.Models.OfferRule;
-import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.R;
-import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.DepartmentGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 /**
  * Created by KARAM on 24/10/2016.
  */

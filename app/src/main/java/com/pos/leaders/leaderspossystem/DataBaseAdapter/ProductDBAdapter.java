@@ -38,8 +38,9 @@ public class ProductDBAdapter {
     protected static final String PRODUCTS_COLUMN_WITHTAX = "withTax";
     protected static final String PRODUCTS_COLUMN_WEIGHABLE = "weighable";
     protected static final String PRODUCTS_COLUMN_CREATINGDATE = "creatingDate";
-    protected static final String PRODUCTS_COLUMN_DISABLED = "hide";
-    protected static final String PRODUCTS_COLUMN_DEPARTMENT_ID = "depId";
+    protected static final String PRODUCTS_COLUMN_DISENABLED = "hide";
+    protected static final String PRODUCTS_COLUMN_CATEGORYID = "categoryId";
+
     protected static final String PRODUCTS_COLUMN_BYUSER = "byEmployee";
 
     protected static final String PRODUCTS_COLUMN_with_pos = "with_pos";
@@ -63,10 +64,10 @@ public class ProductDBAdapter {
             "`" + PRODUCTS_COLUMN_PRICE + "` REAL NOT NULL, `" + PRODUCTS_COLUMN_COSTPRICE + "` REAL, `" + PRODUCTS_COLUMN_WITHTAX + "` INTEGER NOT NULL DEFAULT 1, " +
             "`" + PRODUCTS_COLUMN_STOCK_QUANTITY + "` INTEGER , `" + PRODUCTS_COLUMN_MANAGE_STOCK + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_IN_STOCK + "` INTEGER NOT NULL DEFAULT 1, " +
             "`" + PRODUCTS_COLUMN_WEIGHABLE + "` INTEGER NOT NULL DEFAULT 0, `" + PRODUCTS_COLUMN_CREATINGDATE + "` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
-            "`" + PRODUCTS_COLUMN_DISABLED + "` INTEGER DEFAULT 0, `" + PRODUCTS_COLUMN_DEPARTMENT_ID + "` INTEGER NOT NULL, " +
+            "`" + PRODUCTS_COLUMN_DISABLED + "` INTEGER DEFAULT 0, `" + PRODUCTS_COLUMN_CATEGORYID + "` INTEGER NOT NULL, " +
             "`" + PRODUCTS_COLUMN_BYUSER + "` INTEGER NOT NULL, `" + PRODUCTS_COLUMN_STATUS + "` INTEGER NOT NULL DEFAULT 0 , " +
             "`" + PRODUCTS_COLUMN_with_pos + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_with_point_system + "` INTEGER NOT NULL DEFAULT 1," +
-            "FOREIGN KEY(`" + PRODUCTS_COLUMN_DEPARTMENT_ID + "`) REFERENCES `departments.id`, FOREIGN KEY(`" + PRODUCTS_COLUMN_BYUSER + "`) REFERENCES `employees.id` )";
+            "FOREIGN KEY(`" + PRODUCTS_COLUMN_CATEGORYID + "`) REFERENCES `Category.id`, FOREIGN KEY(`" + PRODUCTS_COLUMN_BYUSER + "`) REFERENCES `employees.id` )";
 
     public static final String DATABASE_UPDATE_FROM_V1_TO_V2 = "alter table products rename to product_v1;" + DATABASE_CREATE + "; " +
             "insert into products (id,displayName,barcode,description,price,costPrice,regularPrice,withTax,weighable,creatingDate,hide,depId,byEmployee,with_pos,with_point_system) " +
@@ -99,10 +100,11 @@ public class ProductDBAdapter {
     }
 
     public long insertEntry(String name, String barCode, String description, double price, double costPrice,
-                            boolean withTax, boolean weighable, long depId, long byUser , int pos, int point_system,
+                            boolean withTax, boolean weighable, long categoryId, long byUser , int pos, int point_system,
                             String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock) {
         Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price,
-                costPrice, withTax, weighable, new Timestamp(System.currentTimeMillis()), depId, byUser, pos, point_system, sku, status, displayName, regularPrice, stockQuantity, manageStock, inStock);
+                costPrice, withTax, weighable, new Timestamp(System.currentTimeMillis()), categoryId, byUser, pos, point_system, sku, status, displayName, regularPrice, stockQuantity, manageStock, inStock);
+
 
         long id = insertEntry(p);
         if (id > 0) {
@@ -138,11 +140,11 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_COSTPRICE, p.getCostPrice());
         val.put(PRODUCTS_COLUMN_WITHTAX, p.isWithTax());
         val.put(PRODUCTS_COLUMN_WEIGHABLE, p.isWeighable());
-        val.put(PRODUCTS_COLUMN_DEPARTMENT_ID, p.getDepartmentId());
+        val.put(PRODUCTS_COLUMN_CATEGORYID, p.getCategoryId());
+        val.put(PRODUCTS_COLUMN_BYUSER, p.getByUser());
         val.put(PRODUCTS_COLUMN_BYUSER, p.getByEmployee());
         val.put(PRODUCTS_COLUMN_with_pos,p.getWithPos());
         val.put(PRODUCTS_COLUMN_with_point_system,p.getWithPointSystem());
-
         val.put(PRODUCTS_COLUMN_SKU, p.getSku());
         val.put(PRODUCTS_COLUMN_STATUS, p.getStatus().getValue());
         val.put(PRODUCTS_COLUMN_DISPLAY_NAME, p.getDisplayName());
@@ -258,9 +260,10 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_COSTPRICE, product.getCostPrice());
         val.put(PRODUCTS_COLUMN_WITHTAX, product.isWithTax());
         val.put(PRODUCTS_COLUMN_WEIGHABLE, product.isWeighable());
-        val.put(PRODUCTS_COLUMN_DEPARTMENT_ID, product.getDepartmentId());
-        val.put(PRODUCTS_COLUMN_BYUSER, product.getByEmployee());
 
+        val.put(PRODUCTS_COLUMN_CATEGORYID, product.getCategoryId());
+        val.put(PRODUCTS_COLUMN_BYUSER, product.getByUser());
+        val.put(PRODUCTS_COLUMN_BYUSER, product.getByEmployee());
         val.put(PRODUCTS_COLUMN_SKU, product.getSku());
         val.put(PRODUCTS_COLUMN_STATUS, product.getStatus().getValue());
         val.put(PRODUCTS_COLUMN_DISPLAY_NAME, product.getDisplayName());
@@ -268,8 +271,6 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_STOCK_QUANTITY, product.getStockQuantity());
         val.put(PRODUCTS_COLUMN_MANAGE_STOCK, product.isManageStock());
         val.put(PRODUCTS_COLUMN_IN_STOCK, product.isInStock());
-
-
 
         String where = PRODUCTS_COLUMN_ID + " = ?";
         db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getProductId() + ""});
@@ -290,9 +291,10 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_COSTPRICE, product.getCostPrice());
         val.put(PRODUCTS_COLUMN_WITHTAX, product.isWithTax());
         val.put(PRODUCTS_COLUMN_WEIGHABLE, product.isWeighable());
-        val.put(PRODUCTS_COLUMN_DEPARTMENT_ID, product.getDepartmentId());
-        val.put(PRODUCTS_COLUMN_BYUSER, product.getByEmployee());
 
+        val.put(PRODUCTS_COLUMN_CATEGORYID, product.getCategoryId());
+        val.put(PRODUCTS_COLUMN_BYUSER, product.getByUser());
+        val.put(PRODUCTS_COLUMN_BYUSER, product.getByEmployee());
         val.put(PRODUCTS_COLUMN_SKU, product.getSku());
         val.put(PRODUCTS_COLUMN_STATUS, product.getStatus().getValue());
         val.put(PRODUCTS_COLUMN_DISPLAY_NAME, product.getDisplayName());
@@ -300,7 +302,6 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_STOCK_QUANTITY, product.getStockQuantity());
         val.put(PRODUCTS_COLUMN_MANAGE_STOCK, product.isManageStock());
         val.put(PRODUCTS_COLUMN_IN_STOCK, product.isInStock());
-
         try {
             String where = PRODUCTS_COLUMN_ID + " = ?";
             db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getProductId() + ""});
@@ -328,10 +329,10 @@ public class ProductDBAdapter {
         return productsList;
     }
 
-	public List<Product> getAllProductsByDepartment(long departmentId){
+	public List<Product> getAllProductsByCategory(long categoryId){
 		List<Product> productsList =new ArrayList<Product>();
 
-		Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_DEPARTMENT_ID +"="+departmentId+" and "+ PRODUCTS_COLUMN_DISABLED +"=0 order by id desc", null );
+		Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +"="+categoryId+" and "+ PRODUCTS_COLUMN_DISABLED +"=0 order by id desc", null );
 		cursor.moveToFirst();
 
 		while(!cursor.isAfterLast()){
@@ -342,10 +343,11 @@ public class ProductDBAdapter {
 		return productsList;
 	}
 
-    public List<Product> getAllProductsByDepartment(long departmentId,int from ,int count){
+    public List<Product> getAllProductsByCategory(long categoryId, int from , int count){
         List<Product> productsList =new ArrayList<Product>();
 
-        Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_DEPARTMENT_ID +"="+departmentId+" and "+ PRODUCTS_COLUMN_DISABLED +"=0 order by id desc limit "+from+","+count, null );
+        Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +"="+categoryId+" and "+PRODUCTS_COLUMN_DISENABLED+"=0 order by id desc limit "+from+","+count, null );
+
         cursor.moveToFirst();
 
         while(!cursor.isAfterLast()){
@@ -394,8 +396,8 @@ public class ProductDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_COSTPRICE))),
                 withTaxStatus, weighableStatus, Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CREATINGDATE))),
-                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISABLED))),
-                Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DEPARTMENT_ID))),
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_DISENABLED))),
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CATEGORYID))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BYUSER))),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_pos))),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_with_point_system))),

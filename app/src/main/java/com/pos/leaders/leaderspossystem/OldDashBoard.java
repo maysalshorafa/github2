@@ -65,7 +65,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
             "Main Screen",
             "Report",
             "Product",
-            "Department",
+            "Category",
             "Employee",
             "Offers",
             "BackUp",
@@ -183,10 +183,10 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
                 break;
             case 3:
 
-                if (!(permissions_name.toLowerCase().contains("department"))) {
+                if (!(permissions_name.toLowerCase().contains("category"))) {
                     grid.getChildAt(pos).setClickable(false);
                 } else {
-                    i = new Intent(getApplicationContext(), DepartmentActivity.class);
+                    i = new Intent(getApplicationContext(), CategoryActivity.class);
                     startActivity(i);
                 }
                 break;

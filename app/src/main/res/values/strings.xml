@@ -19,7 +19,7 @@
     <string name="hourly_wage">Hourly Wage</string>
     <string name="present">Present</string>
     <string name="log_out">Log Out</string>
-    <string name="department_management">Department Management</string>
+    <string name="category_management">Category Management</string>
     <string name="product_management">Product Management</string>
     <string name="offer_name">Offer Name</string>
     <string name="start_at">Start At</string>
@@ -54,8 +54,8 @@
     <!--Product Management-->
     <string name="edit_product">Edit Product</string>
     <string name="add_product">Add Product</string>
-    <string name="add_department">Add Department</string>
-    <string name="edit_department">Edit Department</string>
+    <string name="add_category">Add Category</string>
+    <string name="edit_category">Edit Category</string>
     <string name="permissions">Permissions</string>
     <string name="from">From</string>
     <string name="to">To</string>
@@ -72,12 +72,12 @@
     <string name="import_product">Import Products</string>
     <string name="create_new_product">Create New Product</string>
     <string name="make_your_selection">Make your selection</string>
-    <string name="please_insert_department_name">Please insert department name.</string>
-    <string name="please_insert_another_department_name">Please insert another department name.</string>
-    <string name="success_to_add_new_department">Success To Add New Department</string>
-    <string name="failed_to_add_new_department">Fail On Add New Department Please Try Again!</string>
-    <string name="update_department">Update Department</string>
-    <string name="please_insert_department_name_with_out_spaces">Please Insert Department Name WithOut Spaces.</string>
+    <string name="please_insert_category_name">Please insert Category name.</string>
+    <string name="please_insert_another_category_name">Please insert another category name.</string>
+    <string name="success_to_add_new_category">Success To Add New Category</string>
+    <string name="failed_to_add_new_category">Fail On Add New Category Please Try Again!</string>
+    <string name="update_category">Update Category</string>
+    <string name="please_insert_category_name_with_out_spaces">Please Insert Category Name WithOut Spaces.</string>
 
 
     <!--Splash Screen-->
@@ -104,7 +104,7 @@
     <string name="schedule_workers">Time Attendance</string>
     <!--menu-->
     <string name="products">Products</string>
-    <string name="departments">Departments</string>
+    <string name="category">Category</string>
     <string name="users">Employees</string>
     <string name="offers">Offers</string>
     <string name="reports">Reports</string>
@@ -192,7 +192,7 @@
     <string name="with_tax">With Tax</string>
     <string name="without_tax">Without Tax</string>
     <string name="weighable">Weighable</string>
-    <string name="department_name">Department Name</string>
+    <string name="category_name">Category Name</string>
     <string name="success_to_update_product">Product has been updated!</string>
 
     <string name="error_to_update_product">Failed to update this product.</string>
@@ -205,7 +205,7 @@
 
     <string name="import_wait">Reading the file</string>
     <string name="saving_data">Saving Data</string>
-    <string name="department_not_selected">Please select Department.</string>
+    <string name="category_not_selected">Please select Category.</string>
     <string name="select_products">Select Products</string>
 
     <!--Offers-->
@@ -213,7 +213,7 @@
     <string name="not_selected_products">Please Select Products</string>
     <string name="delete_all_selected_products">Delete All Selected Products</string>
     <string name="selected">Selected</string>
-    <string name="select_all_Department_products">Select All Department Products</string>
+    <string name="select_all_Category_products">Select All Category Products</string>
 
     <!--Invoice-->
     <string name="source_invoice">- Source -</string>
@@ -245,14 +245,14 @@
     <string name="print">Print</string>
 
     <!--Backup-->
-    <string name="backup_products_by_department">Backup Products By Departments</string>
-    <string name="backup_department">Backup Departments</string>
+    <string name="backup_products_by_category">Backup Products By Category</string>
+    <string name="backup_category">Backup Category</string>
     <string name="backup_all_system">Backup System</string>
     <string name="title_activity_settings">Settings</string>
     <string name="there_is_no_disk_on_key">There is no disk on key mounted.</string>
-    <!-- Strings related to Department -->
-    <string name="insert_department_name_massage">Please insert department name.</string>
-    <string name="insert_new_department_name_massage">Please insert new department name.</string>
+    <!-- Strings related to Category -->
+    <string name="insert_category_name_massage">Please insert category name.</string>
+    <string name="insert_new_category_name_massage">Please insert new category name.</string>
     <!-- Example General settings -->
     <string name="terminal_number">Terminal No</string>
     <string name="terminal_password"> Password</string>
@@ -413,7 +413,7 @@
     <string name="internet_access">No internet access.</string>
     <!--DashBord String-->
     <string name="main_screen">Sales Cart</string>
-    <string name="department">Department</string>
+    <string name="categorys">Category</string>
     <string name="back_up">BackUp</string>
     <string name="hours_of_work">Hours Of Work</string>
     <string name="customer_club">Customer Club</string>
@@ -570,9 +570,9 @@
     <string name="title_activity_worker_management_activity">Employee Management Activity</string>
     <string name="title_activity_customer_measurement_management_activity">Customer Measurement Activity</string>
     <string name="title_activity_add_customer_measurement_activity">Add Customer Measurement Activity</string>
-    <string name="title_activity_add_new_department_activity">Add New Department Activity</string>
+    <string name="title_activity_add_new_category_activity">Add New Category Activity</string>
     <string name="title_activity_setting_tab_activity">Setting Tab Activity</string>
-    <string name="title_activity_departments_activity">Departments Activity</string>
+    <string name="title_activity_category_activity">Category Activity</string>
     <string name="title_activity_products_activity">Products Activity</string>
     <string name="title_activity_pinpad">Pin-Pad Activity</string>
     <string name="multi_currencies_payment_activity">MultiCurrenciesPaymentActivity</string>

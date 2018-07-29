@@ -5,9 +5,9 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -49,19 +49,19 @@ public class Backup{
         downloadDir.mkdirs();
     }
 
-    public boolean backupProductOnDepartment(Department department) {
-        List<Department> dep = new ArrayList<Department>();
+    public boolean backupProductOnDepartment(Category department) {
+        List<Category> dep = new ArrayList<Category>();
         dep.add(department);
         return backupProductOnDepartment(dep);
     }
 
-    public boolean backupProductOnDepartment(List<Department> deps){
+    public boolean backupProductOnDepartment(List<Category> deps){
         ProductDBAdapter productDBAdapter=new ProductDBAdapter(context);
         productDBAdapter.open();
 
-        for (Department d : deps) {
+        for (Category d : deps) {
             File f=new File(downloadDir,"product_"+d.getName()+"_export.xls");
-            List<Product> products=productDBAdapter.getAllProductsByDepartment(d.getDepartmentId());
+            List<Product> products=productDBAdapter.getAllProductsByCategory(d.getCategoryId());
             try {
                 WritableWorkbook excelFile = Workbook.createWorkbook(f);
                 WritableSheet excelTable=excelFile.createSheet(d.getName(),0);
@@ -97,10 +97,10 @@ public class Backup{
     }
 
     public boolean backupDepartment(){
-        DepartmentDBAdapter departmentDBAdapter=new DepartmentDBAdapter(context);
+        CategoryDBAdapter departmentDBAdapter=new CategoryDBAdapter(context);
         departmentDBAdapter.open();
 
-        List<Department> departments=departmentDBAdapter.getAllDepartments();
+        List<Category> departments=departmentDBAdapter.getAllDepartments();
         File f=new File(downloadDir,"Departments_export.xls");
         try {
             WritableWorkbook excelFile = Workbook.createWorkbook(f);
@@ -109,7 +109,7 @@ public class Backup{
             excelTable.addCell(new Label(1,0,"Name"));
 
             for (int i=0;i<departments.size();i++){
-                excelTable.addCell(new Label(0,i+1,departments.get(i).getDepartmentId()+""));
+                excelTable.addCell(new Label(0,i+1,departments.get(i).getCategoryId()+""));
                 excelTable.addCell(new Label(1,i+1,departments.get(i).getName()));
             }
             excelFile.write();

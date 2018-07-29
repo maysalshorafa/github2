@@ -23,7 +23,7 @@ public class Product {
     private boolean weighable;
     private Timestamp createdAt;
     private boolean hide;
-    private long departmentId;
+    private long categoryId;
     private long byEmployee;
     private int withPos;
     private int withPointSystem;
@@ -72,7 +72,9 @@ public class Product {
     // region Constructor
 
 
-    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax, boolean weighable, Timestamp createdAt, boolean hide, long departmentId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock) {
+
+    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax, boolean weighable, Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock) {
+
         this.productId = productId;
         this.name = name;
         this.barCode = barCode;
@@ -83,8 +85,8 @@ public class Product {
         this.weighable = weighable;
         this.createdAt = createdAt;
         this.hide = hide;
-        this.departmentId = departmentId;
-        this.byEmployee = byEmployee;
+        this.categoryId = categoryId;
+        this.byUser = byUser;
         this.withPos = withPos;
         this.withPointSystem = withPointSystem;
         this.sku = sku;
@@ -96,7 +98,9 @@ public class Product {
         this.inStock = inStock;
     }
 
-    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax, boolean weighable, Timestamp createdAt, long departmentId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock) {
+
+    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax, boolean weighable, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock) {
+
         this.productId = productId;
         this.name = name;
         this.barCode = barCode;
@@ -106,8 +110,8 @@ public class Product {
         this.withTax = withTax;
         this.weighable = weighable;
         this.createdAt = createdAt;
-        this.departmentId = departmentId;
-        this.byEmployee = byEmployee;
+        this.categoryId = categoryId;
+        this.byUser = byUser;
         this.withPos = withPos;
         this.withPointSystem = withPointSystem;
         this.sku = sku;
@@ -127,12 +131,14 @@ public class Product {
         this.byEmployee = byEmployee;
     }
 
-    public Product(long productId, String name,String displayName, double price, String barCode,String sku, long departmentID, long byEmployee) {
+    public Product(long productId, String name,String displayName, double price, String barCode,String sku, long categoryId, long byEmployee) {
         this.productId = productId;
         this.name = name;
         this.price = price;
+        this.barCode=barCode;
+        this.categoryId =categoryId;
+        this.withTax=true;
         this.barCode = barCode;
-        this.departmentId = departmentID;
         this.withTax = true;
         this.byEmployee = byEmployee;
         this.displayName = displayName;
@@ -160,11 +166,10 @@ public class Product {
         this.sku = sku;
     }
 
-
     public Product(Product product) {
         this(product.getProductId(), product.getName(), product.getBarCode(), product.getDescription(),
                 product.getPrice(), product.getCostPrice(), product.isWithTax(), product.isWeighable(),
-                product.getCreatedAt(), product.isHide(), product.getDepartmentId(), product.getByEmployee(),
+                product.getCreatedAt(), product.isHide(), product.getCategoryId(), product.getByEmployee(),
                 product.getWithPos(), product.getWithPointSystem(), product.getSku(), product.getStatus(), product.getDisplayName(),
                 product.getRegularPrice(), product.getStockQuantity(), product.isManageStock(), product.isInStock());
     }
@@ -223,8 +228,8 @@ public class Product {
         return hide;
     }
 
-    public long getDepartmentId() {
-        return departmentId;
+    public long getCategoryId() {
+        return categoryId;
     }
 
     public long getByEmployee() {
@@ -274,6 +279,10 @@ public class Product {
     public void setDescription(String description) {
         this.description = description;
     }
+
+	public void setCategoryId(long categoryId) {
+		this.categoryId = categoryId;
+	}
 
     public void setPrice(double price) {
         this.price = price;
@@ -351,8 +360,9 @@ public class Product {
                 ", weighable=" + weighable +
                 ", createdAt=" + createdAt +
                 ", hide=" + hide +
-                ", departmentId=" + departmentId +
+                ", categoryId=" + categoryId +
                 ", byEmployee=" + byEmployee +
+
                 ", withPos=" + withPos +
                 ", withPointSystem=" + withPointSystem +
                 ", sku='" + sku + '\'' +

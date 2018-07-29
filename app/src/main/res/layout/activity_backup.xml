@@ -15,7 +15,7 @@
         android:layout_marginRight="40dp"
         android:layout_marginTop="0dp"
         android:gravity="center"
-        android:text="@string/backup_products_by_department"
+        android:text="@string/backup_products_by_category"
         android:textColor="@color/black"
         android:textSize="20dp"
         android:textStyle="bold" />
@@ -37,7 +37,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="@string/backup_department"
+            android:text="@string/backup_category"
             android:textColor="@color/white"
             android:textSize="18sp" />
 

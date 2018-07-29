@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.R;
 
 import java.util.List;
@@ -16,13 +16,13 @@ import java.util.List;
  * Created by KARAM on 23/10/2016.
  */
 
-public class DepartmentGridViewAdapter extends BaseAdapter {
+public class CategoryGridViewAdapter extends BaseAdapter {
 
 	private Context context;
-	private List<Department> departments;
+	private List<Category> departments;
 	private LayoutInflater inflater;
 
-	public DepartmentGridViewAdapter(Context context,List<Department> departments) {
+	public CategoryGridViewAdapter(Context context, List<Category> departments) {
 		this.context = context;
 		this.departments = departments;
 	}
@@ -48,7 +48,7 @@ public class DepartmentGridViewAdapter extends BaseAdapter {
 	 * @return The data at the specified position.
 	 */
 	@Override
-	public Department getItem(int position) {
+	public Category getItem(int position) {
 		return departments.get(position);
 	}
 
@@ -62,7 +62,7 @@ public class DepartmentGridViewAdapter extends BaseAdapter {
 	 */
 	@Override
 	public long getItemId(int position) {
-		return (long)departments.get(position).getDepartmentId();
+		return (long)departments.get(position).getCategoryId();
 	}
 
 

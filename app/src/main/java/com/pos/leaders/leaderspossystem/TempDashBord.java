@@ -291,7 +291,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         department.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), DepartmentActivity.class);
+                i = new Intent(getApplicationContext(), CategoryActivity.class);
                 startActivity(i);
             }
         });
@@ -379,7 +379,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                 case Permissions.PERMISSIONS_PRODUCT:
                     product.setEnabled(true);
                     break;
-                case Permissions.PERMISSIONS_DEPARTMENT:
+                case Permissions.PERMISSIONS_CATEGORY:
                     department.setEnabled(true);
                     break;
                 case Permissions.PERMISSIONS_USER:

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.R;
 
 import java.util.List;
@@ -16,12 +16,12 @@ import java.util.List;
  * Created by Win8.1 on 1/7/2018.
  */
 
-public class ProductDepartmentGridViewAdapter extends BaseAdapter {
+public class ProductCategoryGridViewAdapter extends BaseAdapter {
     private Context context;
-    private List<Department> departments;
+    private List<Category> departments;
     private LayoutInflater inflater;
 
-    public ProductDepartmentGridViewAdapter(Context context, List<Department> departments) {
+    public ProductCategoryGridViewAdapter(Context context, List<Category> departments) {
         this.context = context;
         this.departments = departments;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -57,7 +57,7 @@ public class ProductDepartmentGridViewAdapter extends BaseAdapter {
      */
     @Override
     public long getItemId(int position) {
-        return (long) departments.get(position).getDepartmentId();
+        return (long) departments.get(position).getCategoryId();
     }
 
     /**
@@ -80,19 +80,19 @@ public class ProductDepartmentGridViewAdapter extends BaseAdapter {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ProductDepartmentGridViewAdapter.ViewHolder holder = null;
+        ProductCategoryGridViewAdapter.ViewHolder holder = null;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.grid_view_product_department, parent, false);
 
-            holder = new ProductDepartmentGridViewAdapter.ViewHolder();
+            holder = new ProductCategoryGridViewAdapter.ViewHolder();
             holder.tvName = (TextView) convertView.findViewById(R.id.gridViewItemDepartment_TVName);
 
             convertView.setTag(holder);
         } else {
-            holder = (ProductDepartmentGridViewAdapter.ViewHolder) convertView.getTag();
+            holder = (ProductCategoryGridViewAdapter.ViewHolder) convertView.getTag();
         }
 
-        Department dep = departments.get(position);
+        Category dep = departments.get(position);
 
         holder.tvName.setText(dep.getName());
 
@@ -105,7 +105,7 @@ public class ProductDepartmentGridViewAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void updateRecords(List<Department> departments){
+    public void updateRecords(List<Category> departments){
         this.departments = departments;
 
         notifyDataSetChanged();

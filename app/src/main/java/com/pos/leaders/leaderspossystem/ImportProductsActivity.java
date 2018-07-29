@@ -16,9 +16,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -51,7 +51,7 @@ public class ImportProductsActivity extends Activity {
     Map<String,Long> departmentMap=new HashMap<String,Long>();
 
     List<Product> lsProducts = new ArrayList<Product>();
-    List<Department> lsDepartment = new ArrayList<Department>();
+    List<Category> lsDepartment = new ArrayList<Category>();
     ArrayList<String> departmentsName;
 
     @Override
@@ -87,7 +87,7 @@ public class ImportProductsActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(selectedDepartment.equals("")){
-                    Toast.makeText(ImportProductsActivity.this,getBaseContext().getString(R.string.department_not_selected),Toast.LENGTH_SHORT);
+                    Toast.makeText(ImportProductsActivity.this,getBaseContext().getString(R.string.category_not_selected),Toast.LENGTH_SHORT);
                 }
                 else {
                     final ProgressDialog dialog = new ProgressDialog(ImportProductsActivity.this);
@@ -98,7 +98,7 @@ public class ImportProductsActivity extends Activity {
                             productDBAdapter.open();
                             int count = 0;
                             for (Product p : lsProducts) {
-                                p.setDepartmentId(departmentMap.get(selectedDepartment));
+                                p.setCategoryId(departmentMap.get(selectedDepartment));
                                 count++;
                                 boolean availableBarCode= productDBAdapter.isValidSku(p.getSku());
                                 boolean availableProductName= productDBAdapter.availableProductName(p.getDisplayName());
@@ -135,16 +135,16 @@ public class ImportProductsActivity extends Activity {
                 }
             }
         });
-        DepartmentDBAdapter db=new DepartmentDBAdapter(getBaseContext());
+        CategoryDBAdapter db=new CategoryDBAdapter(getBaseContext());
         db.open();
 
         departmentsName = new ArrayList<String>();
-        List<Department> listDepartment = db.getAllDepartments();
-        //departmentDBAdapter.close();
+        List<Category> listDepartment = db.getAllDepartments();
+        //categoryDBAdapter.close();
 
-        for (Department d : listDepartment) {
+        for (Category d : listDepartment) {
             departmentsName.add(d.getName());
-            departmentMap.put(d.getName(),d.getDepartmentId());
+            departmentMap.put(d.getName(),d.getCategoryId());
         }
         LAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,departmentsName);
         lvDepartment.setAdapter(LAdapter);
@@ -174,9 +174,9 @@ public class ImportProductsActivity extends Activity {
             @Override
             protected Void doInBackground(Void... params) {
                 ProductDBAdapter productDBAdapter = new ProductDBAdapter(getBaseContext());
-                DepartmentDBAdapter departmentDBAdapter = new DepartmentDBAdapter(getBaseContext());
+                CategoryDBAdapter departmentDBAdapter = new CategoryDBAdapter(getBaseContext());
 
-                for (Department d : lsDepartment) {
+                for (Category d : lsDepartment) {
                     departmentDBAdapter.open();
                     long depID = departmentDBAdapter.insertEntry(d.getName(), d.getByUser());
                     departmentDBAdapter.close();
@@ -266,9 +266,66 @@ public class ImportProductsActivity extends Activity {
 
     static int failImportItems=0;
     static String msg="";
+    public List<Product> readProducts(String inputFile) throws IOException {
+        List<Product> resultSet = new ArrayList<Product>();
+        failImportItems=0;
+        File inputWorkbook = new File(inputFile);
+        if(inputWorkbook.exists()){
+            Workbook w;
+            try {
+                w = Workbook.getWorkbook(inputWorkbook);
+                // Get the first sheet
+                Sheet sheet = w.getSheet(0);
+                // Loop over column and lines
+                Log.i("Row ","id \t name \t barcode \t price");
+                for (int row = 1; row < sheet.getRows(); row++) {
+                    try {
+                        String name,barcode,id,price;
+                        id=sheet.getCell(0, row).getContents().replaceAll(" ","");
+                        name=sheet.getCell(1, row).getContents();
+                        barcode=sheet.getCell(2, row).getContents();
+                        price=new BigDecimal(sheet.getCell(4, row).getContents().replaceAll(" ","")).toString();
+                        resultSet.add(new Product(Integer.parseInt(id),name,Double.parseDouble(price),barcode,1, SESSION._EMPLOYEE.getEmployeeId()));
+                    }
+                    catch (Exception ex){
+                        Log.e("",ex.getMessage());
+                        failImportItems++;
+                    }
 
-    public List<Department> readProductsWithDepartments(String inputFile) throws IOException {
-        List<Department> departments = new ArrayList<Department>();
+
+                    /*for(int i=0; i<sheet.getColumns();i++){
+                        Cell cell = sheet.getCell(i, row);
+                    }
+
+                    if(cell.getContents().equalsIgnoreCase(key)){
+                        for (int i = 0; i < sheet.getColumns(); i++) {
+                            Cell cel = sheet.getCell(i, row);
+                            resultSet.add(cel.getContents());
+                        }
+                    }*/
+                    continue;
+                }
+                msg = String.format("file have %d products, %d successfully to read, %d errors",sheet.getRows()-1,sheet.getRows()-1-failImportItems,failImportItems);
+                //Toast.makeText(getBaseContext(),"fail to add "+failImportItems,Toast.LENGTH_LONG);
+
+            } catch (BiffException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            // resultSet.add("File not found..!");
+        }
+        if(resultSet.size()==0){
+            // resultSet.add("Data not found..!");
+        }
+        return resultSet;
+    }
+
+    public List<Category> readProductsWithDepartments(String inputFile) throws IOException {
+        List<Category> departments = new ArrayList<Category>();
         failImportItems=0;
         File inputWorkbook = new File(inputFile);
         if(inputWorkbook.exists()){
@@ -279,7 +336,7 @@ public class ImportProductsActivity extends Activity {
                 int totalRows = 0;
                 for (Sheet sh:w.getSheets()) {
                     totalRows += sh.getRows();
-                    Department d = new Department(sh.getName(), new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId());
+                    Category d = new Category(sh.getName(), new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId());
                     List<Product> products = new ArrayList<>();
                     for (int row = 1; row < sh.getRows(); row++) {
                         try {

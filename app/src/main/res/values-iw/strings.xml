@@ -11,7 +11,7 @@
 
     <!--menu-->
     <string name="products">פרטים</string>
-    <string name="departments">מחלקות</string>
+    <string name="categorys">מחלקות</string>
     <string name="users">משתמשים</string>
     <string name="offers">מבצעים</string>
     <string name="reports">דִווחות</string>
@@ -142,8 +142,8 @@
     <string name="edit_product">ערוך מוצר</string>
     <string name="add_product">הוספת מוצר</string>
     <string name="add">הוסף</string>
-    <string name="add_department">הוספת מחלקה</string>
-    <string name="edit_department">ערוך מחלקה</string>
+    <string name="add_category">הוספת מחלקה</string>
+    <string name="edit_category">ערוך מחלקה</string>
     <string name="permissions">הרשאות</string>
     <string name="from">מ</string>
     <string name="to">עד</string>
@@ -153,8 +153,8 @@
     <string name="account">חשבון</string>
     <string name="import_product">ייבוא מוצרים</string>
     <string name="create_new_product">צור מוצר חדש</string>
-    <string name="please_insert_department_name">הזן שם מחלקה.</string>
-    <string name="please_insert_another_department_name">שם המחלקה קיים, נא להזן שם אחר.</string>
+    <string name="please_insert_category_name">הזן שם מחלקה.</string>
+    <string name="please_insert_another_category_name">שם המחלקה קיים, נא להזן שם אחר.</string>
 
 
     <string name="user_name">שם משתמש</string>
@@ -167,7 +167,7 @@
     <string name="hourly_wage">שכר לשעה</string>
     <string name="present">הנחה באחוזים</string>
     <string name="log_out">להתנתק</string>
-    <string name="department_management">ניהול מחלקות</string>
+    <string name="category_management">ניהול מחלקות</string>
     <string name="product_management">ניהול פריטים</string>
     <string name="offer_name">שם המבצע</string>
     <string name="start_at">מתחיל ב</string>
@@ -193,7 +193,7 @@
     <string name="description">תיאור</string>
     <string name="cost_price">מחיר עלות</string>
     <string name="weighable">מוצר שקיל</string>
-    <string name="department_name">שם המחלקה</string>
+    <string name="category_name">שם המחלקה</string>
     <string name="success_to_update_product">המוצר עודכן!</string>
     <string name="error_to_update_product">עדכון המוצר נכשל.</string>
 
@@ -201,7 +201,7 @@
 
     <string name="import_wait">קורא את הקובץ</string>
     <string name="saving_data">שומר נתונים</string>
-    <string name="department_not_selected">נא לבחור מחלקה.</string>
+    <string name="category_not_selected">נא לבחור מחלקה.</string>
     <string name="select_products">בחר מוצרים</string>
     <string name="success_to_add_product">מוצר התוסף בהצלחה.</string>
     <string name="fail_to_add_product">כשלון בהוספת מוצר חדש.</string>
@@ -249,8 +249,8 @@
     <string name="address">כתובת</string>
     <string name="back_up">גיבוי</string>
     <string name="backup_all_system">גיבוי מלא</string>
-    <string name="backup_department">גיבוי מחלקות</string>
-    <string name="backup_products_by_department">גיבוי מוצרים</string>
+    <string name="backup_category">גיבוי מחלקות</string>
+    <string name="backup_products_by_category">גיבוי מוצרים</string>
     <string name="bo_db_version_no">מס\' גרסת מסד נתוני המשרד אחורי</string>
     <string name="bo_version_no">מס\' גרסת המשרד אחורי</string>
     <string name="can_not_add_club_please_try_again">כישלון, הוספת מועדון לקוחות</string>
@@ -308,7 +308,7 @@
     <string name="fail_to_make_internet_connection">חיבור לאינטרנט נכשל.</string>
     <string name="fail_to_save_settings">לא מצליח לשמור את ההגדרות.</string>
     <string name="female">נקבה</string>
-    <string name="failed_to_add_new_department">נכשל בהוספת מחלקה חדשה, נסה שוב!</string>
+    <string name="failed_to_add_new_category">נכשל בהוספת מחלקה חדשה, נסה שוב!</string>
     <string name="file_does_not_valid">לא תקין</string>
     <string name="gbp">GBP</string>
     <string name="gender">מין</string>
@@ -320,8 +320,8 @@
     <string name="id">ת\'\'ז</string>
     <string name="if_you_want_to_update_general_setting_click_ok">אם ברצונך לעדכן את הגדרות כלליות לחץ על אישור</string>
     <string name="ins">₪</string>
-    <string name="insert_department_name_massage">הזן שם מחלקה.</string>
-    <string name="insert_new_department_name_massage">אנא הכנס שם מחלקה חדש.</string>
+    <string name="insert_category_name_massage">הזן שם מחלקה.</string>
+    <string name="insert_new_category_name_massage">אנא הכנס שם מחלקה חדש.</string>
     <string name="integrated_payment">תשלום משולב</string>
     <string name="internet_access">אין חיבור לאינטרנט</string>
     <string name="internet_not_connected">בדוק את חיבור האינטרנט שלך ונסה שוב.</string>
@@ -378,7 +378,7 @@
     <string name="sales_man_report">דוח אנשי מכירות</string>
     <string name="sales_management">הנהלת מכירות</string>
     <string name="schedule_workers">שעון נוכחות</string>
-    <string name="select_all_Department_products">סמן כל המוצרים השייכם למחלקה זו</string>
+    <string name="select_all_Category_products">סמן כל המוצרים השייכם למחלקה זו</string>
     <string name="selected">נבחר</string>
     <string name="server_info">מידע על השרת</string>
     <string name="settings">הגדרות</string>
@@ -394,7 +394,7 @@
     <string name="success_adding_new_customer">התוסף לקוח חדש בהצלחה</string>
     <string name="success_edit_POS_setting">עודכן הגדרות קופה בהצלחה</string>
     <string name="success_edit_customer">עודכן הלקוח בהצלחה</string>
-    <string name="success_to_add_new_department">התוסף מחלקה חדשה בהצלחה</string>
+    <string name="success_to_add_new_category">התוסף מחלקה חדשה בהצלחה</string>
     <string name="success_to_restore">הקופה שוחזירה בהצלחה</string>
     <string name="success_to_save_settings">נשמרת הגדרות הקופה בהצלחה</string>
     <string name="terminal_password">סיסמה</string>
@@ -403,10 +403,10 @@
     <string name="terminal_number">מספר מסוף</string>
     <string name="there_is_no_disk_on_key">לא נמצא דיסק חצוני</string>
     <string name="title_activity_add_customer_measurement_activity">חלון הוספת מדידה עבור לקוח</string>
-    <string name="title_activity_add_new_department_activity">הוספת מחלקה</string>
+    <string name="title_activity_add_new_category_activity">הוספת מחלקה</string>
     <string name="title_activity_club_management">מעדון לקוחות</string>
     <string name="title_activity_customer_measurement_management_activity">מדידות לקוחות</string>
-    <string name="title_activity_departments_activity">מחלקות</string>
+    <string name="title_activity_category_activity">מחלקות</string>
     <string name="title_activity_notify_service">מרכז מידע</string>
     <string name="title_activity_open_format">מבנה אחיד</string>
     <string name="title_activity_pinpad">Pin-Pad</string>
@@ -431,7 +431,7 @@
     <string name="update_setting">עדכון הגדרות</string>
     <string name="update_measurement">עדכן מדידות</string>
     <string name="update_general_setting">עדכן הגדרות כלליות</string>
-    <string name="update_department">עדכן המחלקה</string>
+    <string name="update_category">עדכן המחלקה</string>
     <string name="total_return">עודף</string>
     <string name="total_required">סכום נדרש</string>
     <string name="total_discount">סה\'\'כ הנחה</string>
@@ -469,7 +469,7 @@
     <string name="please_insert_club_percentage">נא להכניס אחוז הנחה</string>
     <string name="please_insert_country">נא לבחור מדינה</string>
     <string name="please_insert_country_code">לא להכניס קוד מדינה</string>
-    <string name="please_insert_department_name_with_out_spaces">לא להכניס שם מחלקה בלי רוחים</string>
+    <string name="please_insert_category_name_with_out_spaces">לא להכניס שם מחלקה בלי רוחים</string>
     <string name="please_insert_email">נא להכניס דואר אלקטרוני</string>
     <string name="please_insert_gender">לא לבחור מין</string>
 

@@ -60,7 +60,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
@@ -82,7 +82,7 @@ import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Customer;
-import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
@@ -168,7 +168,7 @@ public class SalesCartActivity extends AppCompatActivity {
     FrameLayout fragmentTouchPad;
     GridView gvProducts;
     ListView lvProducts;
-    DepartmentDBAdapter departmentDBAdapter;
+    CategoryDBAdapter departmentDBAdapter;
     ProductDBAdapter productDBAdapter;
     OfferDBAdapter offerDBAdapter;
     ProductOfferDBAdapter productOfferDBAdapter;
@@ -384,7 +384,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
         llDepartments = (LinearLayout) findViewById(R.id.mainActivity_LLDepartment);
         linearLayoutCustomerBalance=(LinearLayout)findViewById(R.id.linearLayoutCustomerBalance);
-        departmentDBAdapter = new DepartmentDBAdapter(this);
+        departmentDBAdapter = new CategoryDBAdapter(this);
         productDBAdapter = new ProductDBAdapter(this);
         customerDBAdapter = new CustomerDBAdapter(this);
         clubAdapter = new ClubAdapter(this);
@@ -588,7 +588,7 @@ public class SalesCartActivity extends AppCompatActivity {
             }
         });
 
-        List<Department> departments = departmentDBAdapter.getAllDepartments();
+        List<Category> departments = departmentDBAdapter.getAllDepartments();
         int co = 2;
         for (int k = 0, r = 0, c = 0; k < departments.size(); k++) {
             if (k % 2 == 1) {
@@ -615,7 +615,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                         prseedButtonDepartments = v;
-                        productList = productDBAdapter.getAllProductsByDepartment(((Department) v.getTag()).getDepartmentId(), productLoadItemOffset, productCountLoad);
+                        productList = productDBAdapter.getAllProductsByCategory(((Category) v.getTag()).getCategoryId(), productLoadItemOffset, productCountLoad);
                         All_productsList = productList;
                         productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                         gvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -639,7 +639,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                         prseedButtonDepartments = v;
-                        productList = productDBAdapter.getAllProductsByDepartment(((Department) v.getTag()).getDepartmentId(), productLoadItemOffset, productCountLoad);
+                        productList = productDBAdapter.getAllProductsByCategory(((Category) v.getTag()).getCategoryId(), productLoadItemOffset, productCountLoad);
                         All_productsList = productList;
                         productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                         gvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -679,7 +679,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                     prseedButtonDepartments = v;
-                    productList = productDBAdapter.getAllProductsByDepartment(((Department) v.getTag()).getDepartmentId(), productLoadItemOffset, productCountLoad);
+                    productList = productDBAdapter.getAllProductsByCategory(((Category) v.getTag()).getCategoryId(), productLoadItemOffset, productCountLoad);
                     All_productsList = productList;
                     productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                     gvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -2176,7 +2176,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }else if (id == 0) {
                     productList.addAll(productDBAdapter.getTopProducts(productLoadItemOffset, productCountLoad));
                 } else {
-                    productList.addAll(productDBAdapter.getAllProductsByDepartment(id, productLoadItemOffset, productCountLoad));
+                    productList.addAll(productDBAdapter.getAllProductsByCategory(id, productLoadItemOffset, productCountLoad));
                 }
                 return null;
             }

@@ -33,7 +33,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepartmentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
@@ -65,7 +65,7 @@ import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasurement;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDynamicVariable;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
-import com.pos.leaders.leaderspossystem.Models.Department;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule11;
@@ -461,33 +461,33 @@ public class SyncMessage extends Service {
                     break;
                 //endregion CHECK
 
-                //region DEPARTMENT
-                case MessageType.ADD_DEPARTMENT:
-                    Department department = null;
-                    department = objectMapper.readValue(msgData, Department.class);
+                //region Category
+                case MessageType.ADD_CATEGORY:
+                    Category category = null;
+                    category = objectMapper.readValue(msgData, Category.class);
 
-                    DepartmentDBAdapter departmentDBAdapter = new DepartmentDBAdapter(this);
-                    departmentDBAdapter.open();
-                    rID = departmentDBAdapter.insertEntry(department);
-                    departmentDBAdapter.close();
+                    CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(this);
+                    categoryDBAdapter.open();
+                    rID = categoryDBAdapter.insertEntry(category);
+                    categoryDBAdapter.close();
                     break;
-                case MessageType.UPDATE_DEPARTMENT:
-                    Department updateDepartment = null;
-                    updateDepartment = objectMapper.readValue(msgData, Department.class);
-                    DepartmentDBAdapter updateDepartmentDBAdapter = new DepartmentDBAdapter(this);
-                    updateDepartmentDBAdapter.open();
-                    rID = updateDepartmentDBAdapter.updateEntryBo(updateDepartment);
-                    updateDepartmentDBAdapter.close();
+                case MessageType.UPDATE_CATEGORY:
+                    Category updateCategory = null;
+                    updateCategory = objectMapper.readValue(msgData, Category.class);
+                    CategoryDBAdapter updateCategoryDBAdapter = new CategoryDBAdapter(this);
+                    updateCategoryDBAdapter.open();
+                    rID = updateCategoryDBAdapter.updateEntryBo(updateCategory);
+                    updateCategoryDBAdapter.close();
                     break;
-                case MessageType.DELETE_DEPARTMENT:
-                    Department deleteDepartment = null;
-                    deleteDepartment = objectMapper.readValue(msgData, Department.class);
-                    DepartmentDBAdapter deleteDepartmentDBAdapter = new DepartmentDBAdapter(this);
-                    deleteDepartmentDBAdapter.open();
-                    rID = deleteDepartmentDBAdapter.deleteEntryBo(deleteDepartment);
-                    deleteDepartmentDBAdapter.close();
+                case MessageType.DELETE_CATEGORY:
+                    Category deleteCategory = null;
+                    deleteCategory = objectMapper.readValue(msgData, Category.class);
+                    CategoryDBAdapter deleteCategoryDBAdapter = new CategoryDBAdapter(this);
+                    deleteCategoryDBAdapter.open();
+                    rID = deleteCategoryDBAdapter.deleteEntryBo(deleteCategory);
+                    deleteCategoryDBAdapter.close();
                     break;
-                //endregion DEPARTMENT
+                //endregion Category
 
                 //region OFFER
                 case MessageType.ADD_OFFER:
@@ -1071,22 +1071,22 @@ public class SyncMessage extends Service {
                 break;
             //endregion CHECK
 
-            //region DEPARTMENT
-            case MessageType.ADD_DEPARTMENT:
-                res = messageTransmit.authPost(ApiURL.Department, jsonObject.getString(MessageKey.Data), token);
+            //region Category
+            case MessageType.ADD_CATEGORY:
+                res = messageTransmit.authPost(ApiURL.Category, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.UPDATE_DEPARTMENT:
-                Department department=null;
-                JSONObject newDepartmentJson= new JSONObject(jsonObject.getString(MessageKey.Data));
-                newDepartmentJson.remove("createdAt");
-                department=objectMapper.readValue(newDepartmentJson.toString(), Department.class);
-                res = messageTransmit.authPut(ApiURL.Department, newDepartmentJson.toString(), token,department.getDepartmentId());
+            case MessageType.UPDATE_CATEGORY:
+                Category category=null;
+                JSONObject newCategoryJson= new JSONObject(jsonObject.getString(MessageKey.Data));
+                newCategoryJson.remove("createdAt");
+                category=objectMapper.readValue(newCategoryJson.toString(), Category.class);
+                res = messageTransmit.authPut(ApiURL.Category, newCategoryJson.toString(), token,category.getCategoryId());
                 break;
-            case MessageType.DELETE_DEPARTMENT:
-                JSONObject newDeleteDepartmentJson = new JSONObject(jsonObject.getString(MessageKey.Data));
-                res = messageTransmit.authDelete(ApiURL.Department, newDeleteDepartmentJson.getString("departmentId"), token);
+            case MessageType.DELETE_CATEGORY:
+                JSONObject newDeleteCategoryJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authDelete(ApiURL.Category, newDeleteCategoryJson.getString("categoryId"), token);
                 break;
-            //endregion DEPARTMENT
+            //endregion Category
 
             //region OFFER
             case MessageType.ADD_OFFER:
