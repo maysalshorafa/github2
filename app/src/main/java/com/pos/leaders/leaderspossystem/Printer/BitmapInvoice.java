@@ -84,11 +84,11 @@ public class BitmapInvoice {
         String names = "", prices = "", count = "", barcode = "";
         for (OrderDetails o : orders) {
             int cut = 10;
-            if (o.getProduct().getName().length() < 10)
-                cut = o.getProduct().getName().length() - 1;
-            String productName = o.getProduct().getName().substring(0, cut);
+            if (o.getProduct().getDisplayName().length() < 10)
+                cut = o.getProduct().getDisplayName().length() - 1;
+            String productName = o.getProduct().getDisplayName().substring(0, cut);
             names += "\u200F" + productName + "\n";
-            barcode += o.getProduct().getBarCode() + "\n";
+            barcode += o.getProduct().getSku() + "\n";
             count += o.getQuantity() + "\n";
             prices += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
         }
@@ -134,13 +134,13 @@ public class BitmapInvoice {
         String str="";
         for (Order o : orders) {
             int cut=10;
-            if( o.getProduct().getName().length()<10)
-                cut=o.getProduct().getName().length()-1;
-            String productName=o.getProduct().getName().substring(0,cut);
+            if( o.getProduct().getDisplayName().length()<10)
+                cut=o.getProduct().getDisplayName().length()-1;
+            String productName=o.getProduct().getDisplayName().substring(0,cut);
             while (productName.length()<12){
                 productName+="\u3000";
             }
-            String Barcode=o.getProduct().getBarCode();
+            String Barcode=o.getProduct().getSku();
             while(Barcode.length()<12){
                 Barcode+="\u2007";
             }

@@ -36,6 +36,7 @@ public interface ApiURL {
     String CompanyCredentials = "CompanyCredentials";
     String Currencies = "Currencies";
     String Sync = "sync";
+    String Task = "Task";
     String EMPLOYEE_PERMISSION ="EmployeePermission";
     String SumPoint="SumPoint";
     String ValueOfPoint="ValueOfPoint";

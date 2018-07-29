@@ -170,7 +170,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     if (o.getProductId() != -1) {
                         o.setProduct(productDBAdapter.getProductByID(o.getProductId()));
                     } else {
-                        o.setProduct(new Product(-1, getApplicationContext().getResources().getString(R.string.general), o.getUnitPrice(), SESSION._EMPLOYEE.getEmployeeId()));
+                        o.setProduct(new Product(-1, getApplicationContext().getResources().getString(R.string.general),getApplicationContext().getResources().getString(R.string.general), o.getUnitPrice(), SESSION._EMPLOYEE.getEmployeeId()));
                     }
                 }
                 productDBAdapter.close();

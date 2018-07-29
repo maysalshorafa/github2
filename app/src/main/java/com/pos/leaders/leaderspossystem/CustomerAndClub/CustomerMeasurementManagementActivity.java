@@ -130,7 +130,7 @@ public class CustomerMeasurementManagementActivity  extends AppCompatActivity {
                         jsonObject = new JSONObject(storeList.get(noOfCustomOpt));
                         // get information from json
                         Long dynamicVariableId = jsonObject.getLong("dynamicVarId");  //json dynamicVarId
-                        MeasurementDynamicVariable measurementDynamicVariable= measurementDynamicVariableDBAdapter.getMeasurementDynamicVariableByID(dynamicVariableId); // getName of dynamicVariableMeasurement
+                        MeasurementDynamicVariable measurementDynamicVariable= measurementDynamicVariableDBAdapter.getMeasurementDynamicVariableByID(dynamicVariableId); // getDisplayName of dynamicVariableMeasurement
                         String name = measurementDynamicVariable.getName();
                         String elementValue = jsonObject.getString("value");  // json value
                         if(measurementDynamicVariable.getType().equalsIgnoreCase("boolean")){
