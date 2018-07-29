@@ -27,7 +27,6 @@
     <application
         coreApp="true"
         android:allowBackup="true"
-        android:name="android.support.multidex.MultiDexApplication"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher__pos"
         android:label="@string/app_name"

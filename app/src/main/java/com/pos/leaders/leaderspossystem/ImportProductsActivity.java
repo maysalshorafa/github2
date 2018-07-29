@@ -285,7 +285,7 @@ public class ImportProductsActivity extends Activity {
                         name=sheet.getCell(1, row).getContents();
                         barcode=sheet.getCell(2, row).getContents();
                         price=new BigDecimal(sheet.getCell(4, row).getContents().replaceAll(" ","")).toString();
-                        resultSet.add(new Product(Integer.parseInt(id),name,Double.parseDouble(price),barcode,1, SESSION._EMPLOYEE.getEmployeeId()));
+                            resultSet.add(new Product(Integer.parseInt(id),name,name,Double.parseDouble(price),barcode,barcode,1, SESSION._EMPLOYEE.getEmployeeId()));
                     }
                     catch (Exception ex){
                         Log.e("",ex.getMessage());

@@ -64,7 +64,7 @@ public class ProductDBAdapter {
             "`" + PRODUCTS_COLUMN_PRICE + "` REAL NOT NULL, `" + PRODUCTS_COLUMN_COSTPRICE + "` REAL, `" + PRODUCTS_COLUMN_WITHTAX + "` INTEGER NOT NULL DEFAULT 1, " +
             "`" + PRODUCTS_COLUMN_STOCK_QUANTITY + "` INTEGER , `" + PRODUCTS_COLUMN_MANAGE_STOCK + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_IN_STOCK + "` INTEGER NOT NULL DEFAULT 1, " +
             "`" + PRODUCTS_COLUMN_WEIGHABLE + "` INTEGER NOT NULL DEFAULT 0, `" + PRODUCTS_COLUMN_CREATINGDATE + "` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
-            "`" + PRODUCTS_COLUMN_DISABLED + "` INTEGER DEFAULT 0, `" + PRODUCTS_COLUMN_CATEGORYID + "` INTEGER NOT NULL, " +
+            "`" + PRODUCTS_COLUMN_DISENABLED + "` INTEGER DEFAULT 0, `" + PRODUCTS_COLUMN_CATEGORYID + "` INTEGER NOT NULL, " +
             "`" + PRODUCTS_COLUMN_BYUSER + "` INTEGER NOT NULL, `" + PRODUCTS_COLUMN_STATUS + "` INTEGER NOT NULL DEFAULT 0 , " +
             "`" + PRODUCTS_COLUMN_with_pos + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_with_point_system + "` INTEGER NOT NULL DEFAULT 1," +
             "FOREIGN KEY(`" + PRODUCTS_COLUMN_CATEGORYID + "`) REFERENCES `Category.id`, FOREIGN KEY(`" + PRODUCTS_COLUMN_BYUSER + "`) REFERENCES `employees.id` )";
@@ -141,7 +141,7 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_WITHTAX, p.isWithTax());
         val.put(PRODUCTS_COLUMN_WEIGHABLE, p.isWeighable());
         val.put(PRODUCTS_COLUMN_CATEGORYID, p.getCategoryId());
-        val.put(PRODUCTS_COLUMN_BYUSER, p.getByUser());
+        val.put(PRODUCTS_COLUMN_BYUSER, p.getByEmployee());
         val.put(PRODUCTS_COLUMN_BYUSER, p.getByEmployee());
         val.put(PRODUCTS_COLUMN_with_pos,p.getWithPos());
         val.put(PRODUCTS_COLUMN_with_point_system,p.getWithPointSystem());
@@ -219,7 +219,7 @@ public class ProductDBAdapter {
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
-        updatedValues.put(PRODUCTS_COLUMN_DISABLED, 1);
+        updatedValues.put(PRODUCTS_COLUMN_DISENABLED, 1);
 
         String where = PRODUCTS_COLUMN_ID + " = ?";
         try {
@@ -236,7 +236,7 @@ public class ProductDBAdapter {
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
-        updatedValues.put(PRODUCTS_COLUMN_DISABLED, 1);
+        updatedValues.put(PRODUCTS_COLUMN_DISENABLED, 1);
 
         String where = PRODUCTS_COLUMN_ID + " = ?";
         try {
@@ -262,7 +262,7 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_WEIGHABLE, product.isWeighable());
 
         val.put(PRODUCTS_COLUMN_CATEGORYID, product.getCategoryId());
-        val.put(PRODUCTS_COLUMN_BYUSER, product.getByUser());
+        val.put(PRODUCTS_COLUMN_BYUSER, product.getByEmployee());
         val.put(PRODUCTS_COLUMN_BYUSER, product.getByEmployee());
         val.put(PRODUCTS_COLUMN_SKU, product.getSku());
         val.put(PRODUCTS_COLUMN_STATUS, product.getStatus().getValue());
@@ -293,7 +293,7 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_WEIGHABLE, product.isWeighable());
 
         val.put(PRODUCTS_COLUMN_CATEGORYID, product.getCategoryId());
-        val.put(PRODUCTS_COLUMN_BYUSER, product.getByUser());
+        val.put(PRODUCTS_COLUMN_BYUSER, product.getByEmployee());
         val.put(PRODUCTS_COLUMN_BYUSER, product.getByEmployee());
         val.put(PRODUCTS_COLUMN_SKU, product.getSku());
         val.put(PRODUCTS_COLUMN_STATUS, product.getStatus().getValue());
@@ -317,7 +317,7 @@ public class ProductDBAdapter {
     public List<Product> getAllProducts(){
         List<Product> productsList =new ArrayList<Product>();
 
-        Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_DISABLED +"=0 order by id desc", null );
+        Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc", null );
         cursor.moveToFirst();
 
 
@@ -332,7 +332,7 @@ public class ProductDBAdapter {
 	public List<Product> getAllProductsByCategory(long categoryId){
 		List<Product> productsList =new ArrayList<Product>();
 
-		Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +"="+categoryId+" and "+ PRODUCTS_COLUMN_DISABLED +"=0 order by id desc", null );
+		Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +"="+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc", null );
 		cursor.moveToFirst();
 
 		while(!cursor.isAfterLast()){
@@ -361,7 +361,7 @@ public class ProductDBAdapter {
     public List<Product> getTopProducts(int from ,int count){
         List<Product> productsList =new ArrayList<Product>();
         //SELECT * FROM table limit 100, 200
-        Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_DISABLED +"=0 order by id desc limit "+from+","+count, null );
+        Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
         cursor.moveToFirst();
 
         while(!cursor.isAfterLast()){
@@ -448,7 +448,7 @@ public class ProductDBAdapter {
         List<Product> productsList =new ArrayList<Product>();
 
         Cursor cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
-                hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+ hint+"%'" +" and "+ PRODUCTS_COLUMN_DISABLED +"=0 order by id desc limit "+from+","+count, null );
+                hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+ hint+"%'" +" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
 
         cursor.moveToFirst();
 

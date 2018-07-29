@@ -86,7 +86,7 @@ public class Product {
         this.createdAt = createdAt;
         this.hide = hide;
         this.categoryId = categoryId;
-        this.byUser = byUser;
+        this.byEmployee = byEmployee;
         this.withPos = withPos;
         this.withPointSystem = withPointSystem;
         this.sku = sku;
@@ -111,7 +111,7 @@ public class Product {
         this.weighable = weighable;
         this.createdAt = createdAt;
         this.categoryId = categoryId;
-        this.byUser = byUser;
+        this.byEmployee = byEmployee;
         this.withPos = withPos;
         this.withPointSystem = withPointSystem;
         this.sku = sku;
@@ -306,10 +306,6 @@ public class Product {
 
     public void setHide(boolean hide) {
         this.hide = hide;
-    }
-
-    public void setDepartmentId(long departmentId) {
-        this.departmentId = departmentId;
     }
 
     public void setByEmployee(long byEmployee) {
