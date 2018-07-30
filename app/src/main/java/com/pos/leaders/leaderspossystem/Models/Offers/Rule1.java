@@ -49,7 +49,7 @@ public class Rule1 extends Rule {
     @Override
     public void execute(List<OrderDetails> orders, Offer offer) {
         for (OrderDetails o : orders) {
-            if (offer.getProducts().contains(o.getProduct())) {
+            /*if (offer.getProducts().contains(o.getProduct())) {
                 if (o.getQuantity() == this.quantity) {
                     o.setPaidAmount(price / quantity);
                 } else if (o.getQuantity() > this.quantity) {
@@ -60,7 +60,7 @@ public class Rule1 extends Rule {
                     o.setPaidAmount(price / quantity);
                 }
                 break;
-            }
+            }*/
         }
     }
 

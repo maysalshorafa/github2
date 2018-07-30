@@ -843,7 +843,7 @@ public class SalesCartActivity extends AppCompatActivity {
             lvOrder.setFocusable(false);
             offerDBAdapter = new OfferDBAdapter(this);
             offerDBAdapter.open();
-            List<Offer> offerList = offerDBAdapter.getAllOffersByStatus(1);
+            List<Offer> offerList = offerDBAdapter.getAllOffersByStatus(true);
 
             //  Offer offer=offerDBAdapter.getAllValidOffers();
 
@@ -1190,16 +1190,6 @@ public class SalesCartActivity extends AppCompatActivity {
 
         //endregion
 
-        offerDBAdapter = new OfferDBAdapter(this);
-        offerDBAdapter.open();
-        // Offer offer=offerDBAdapter.getAllValidOffers();
-        List<Offer> offerList = offerDBAdapter.getAllOffersByStatus(1);
-
-        if (offerList != null) {
-            calculateTotalPriceWithOffers(offerList);
-        } else {
-            calculateTotalPrice();
-        }
         //region Payment
 
         //region Cash
@@ -1693,7 +1683,7 @@ public class SalesCartActivity extends AppCompatActivity {
         offerDBAdapter.open();
         // Offer offer=offerDBAdapter.getAllValidOffers();
 
-        List<Offer> offerList = offerDBAdapter.getAllOffersByStatus(1);
+        List<Offer> offerList = offerDBAdapter.getAllOffersByStatus(true);
         if (offerList != null) {
 
             calculateTotalPriceWithOffers(offerList);
@@ -1733,112 +1723,6 @@ public class SalesCartActivity extends AppCompatActivity {
         amountForRule11 = 0;
         DiscountamountForRule11 = 0;
         ParcentForRule8 = 0.0;
-
-
-        Rule3DbAdapter rule3DbAdapter = new Rule3DbAdapter(this);
-        Rule7DbAdapter rule7DbAdapter = new Rule7DbAdapter(this);
-        Rule11DBAdapter rule11DbAdapter = new Rule11DBAdapter(this);
-        Rule8DBAdapter rule8DbAdapter = new Rule8DBAdapter(this);
-        Rule5DBAdapter rule5DBAdapter = new Rule5DBAdapter(this);
-
-
-        rule3DbAdapter.open();
-        rule7DbAdapter.open();
-        rule11DbAdapter.open();
-        rule8DbAdapter.open();
-        rule5DBAdapter.open();
-
-        ArrayList<Offer> templist = new ArrayList<Offer>();
-        for (int i = 0; i < templist.size(); i++) {
-            templist.add(offers.get(i));
-        }
-        for (int i = 0; i < offers.size(); i++) {
-            Offer offer = offers.get(i);
-
-
-            ////////get rule3 information
-
-
-            if (offer.getRuleName().equals(Rule.RULE3)) {
-
-                Rule3 rule3 = rule3DbAdapter.getParcentForRule3(offer.getRuleID());
-                if (rule3.getContain() == 1) {
-                    SumForRule3Status = true;
-                    availableRule3 = true;
-                    parcentForRule3 = rule3.getPercent();
-                } else if (rule3.getContain() == 0) {
-                    availableRule3 = true;
-                    parcentForRule3 = rule3.getPercent();
-
-                }
-
-
-///get Rule7 information
-            } else if (offer.getRuleName().equals(Rule.RULE7)) {
-
-                ProductOfferDBAdapter offersProducts = new ProductOfferDBAdapter(this);
-                offersProducts.open();
-                Rule7 rule7 = rule7DbAdapter.getPriceForRule7(offer.getRuleID());
-                priceFoeRule7 = rule7.getPrice();
-
-                productIDForRule7 = rule7.getProduct_id();
-
-                if (rule7.getContain_club() == 1) {
-                    clubStatusForRule7 = true;
-
-                } else {
-                    clubStatusForRule7 = false;
-                }
-            }
-
-            /////Get Rule11 information
-
-            else if (offer.getRuleName().equals(Rule.RULE11)) {
-                Rule11 rule11 = rule11DbAdapter.getAmountForRule11(offer.getRuleID());
-
-                if (rule11.getContain() == 1) {
-                    SumForRule11Status = true;
-                    availableRule11 = true;
-                    amountForRule11 = rule11.getAmount();
-                    DiscountamountForRule11 = rule11.getDiscountAmount();
-                } else if (rule11.getContain() == 0) {
-                    availableRule11 = true;
-                    amountForRule11 = rule11.getAmount();
-                    DiscountamountForRule11 = rule11.getDiscountAmount();
-                }
-                if (rule11.getClubContain() == 1) {
-                    clubStatusForRule11 = true;
-                } else {
-                    clubStatusForRule11 = false;
-                }
-
-            }
-            ///Get Rule8 information
-            else if (offer.getRuleName().equals(Rule.RULE8)) {
-                ProductOfferDBAdapter offersProducts = new ProductOfferDBAdapter(this);
-                offersProducts.open();
-                Rule8 rule8 = rule8DbAdapter.getParcentForRule8(offer.getRuleID());
-                ParcentForRule8 = rule8.getPercent();
-                productIDForRule8 = rule8.getProductID();
-
-                if (rule8.getContainClub() == 1) {
-                    clubStatusForRule8 = true;
-                } else {
-                    clubStatusForRule8 = false;
-                }
-            }
-            //////Get Rule5 information
-            else if (offer.getRuleName().equals(Rule.RULE5)) {
-                ProductOfferDBAdapter offersProducts = new ProductOfferDBAdapter(this);
-                offersProducts.open();
-
-                final Rule5 rule5 = rule5DBAdapter.getGiftForRule5(offer.getRuleID());
-                productIdForRule5 = rule5.getProductID();
-                priceForRule5 = rule5.getPrice();
-                giftProductIdForRule5 = rule5.getGift_id();
-
-            }
-        }
 
         ///end of offer list
         ////start order calculation and excecute offer
@@ -1995,21 +1879,10 @@ public class SalesCartActivity extends AppCompatActivity {
         SESSION._ORDERS.setTotalPrice(saleTotalPrice);
 
 
-        rule3DbAdapter.close();
-        rule7DbAdapter.close();
-        rule8DbAdapter.close();
-        rule11DbAdapter.close();
-        rule5DBAdapter.close();
+
         offerDBAdapter.close();
     }
 
-    protected void scanOffers() throws Exception {
-        for (OrderDetails o : SESSION._ORDER_DETAILES) {
-            if (o.getProduct().getOffersIDs() != null) {
-                offersList.get(o.getProduct().getOffersIDs().get(0)).getRule().execute(SESSION._ORDER_DETAILES, offersList.get(0));
-            }
-        }
-    }
 
     protected void calculateTotalPrice() {
 
@@ -2101,24 +1974,10 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     private void refreshCart() {
-
-        // getOffers();
         saleDetailsListViewAdapter.notifyDataSetChanged();
-        //lvOrder.setAdapter(saleDetailsListViewAdapter);
-        offerDBAdapter = new OfferDBAdapter(this);
-        offerDBAdapter.open();
-        // Offer offer=offerDBAdapter.getAllValidOffers();
-        List<Offer> offerList = offerDBAdapter.getAllOffersByStatus(1);
-        offerList = null;
-        if (offerList != null) {
-
-            calculateTotalPriceWithOffers(offerList);
-        } else {
-
-            calculateTotalPrice();
-        }
-
+        calculateTotalPrice();
     }
+
     private void enterKeyPressed(String barcodeScanned) {
         Product product = productDBAdapter.getProductByBarCode(barcodeScanned);
         final Intent intent = new Intent(SalesCartActivity.this, ProductsActivity.class);

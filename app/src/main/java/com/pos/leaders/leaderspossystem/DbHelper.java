@@ -63,7 +63,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -244,6 +244,9 @@ public class DbHelper extends SQLiteOpenHelper {
         switch (oldVersion) {
             case 1:
                 db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
+            case 2:
+                db.execSQL("drop table offers;");
+                db.execSQL(OfferDBAdapter.DATABASE_CREATE);
         }
     }
 }

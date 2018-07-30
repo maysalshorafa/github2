@@ -1095,7 +1095,7 @@ public class SyncMessage extends Service {
             case MessageType.UPDATE_OFFER:
                 Offer offer =null;
                 offer=objectMapper.readValue(msgData, Offer.class);
-                res = messageTransmit.authPut(ApiURL.Offer, jsonObject.getString(MessageKey.Data), token,offer.getId());
+                res = messageTransmit.authPut(ApiURL.Offer, jsonObject.getString(MessageKey.Data), token,offer.getOfferId());
                 break;
             case MessageType.DELETE_OFFER:
                 res = messageTransmit.authDelete(ApiURL.Offer, jsonObject.getString(MessageKey.Data), token);
