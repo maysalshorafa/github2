@@ -136,6 +136,21 @@ public class OfferDBAdapter {
 		}
 		return offerList;
 	}
+
+	public List<Offer> getAllActiveOffersByResourceIdResourceType(long id,ResourceType resourceType ) {
+		List<Offer> offerList = null;
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME +" where "+ OFFER_COLUMN_RESOURCE_TYPE+"="+resourceType.getValue() +" and "+OFFER_COLUMN_RESOURCE_ID+"=" + id +" and "+OFFER_COLUMN_ACTIVE+"=1  order by " + OFFER_COLUMN_ID + " desc", null);
+		cursor.moveToFirst();
+		if(cursor.getCount()>0) {
+			offerList = new ArrayList<Offer>();
+			while (!cursor.isAfterLast()) {
+				offerList.add(createOfferObject(cursor));
+				cursor.moveToNext();
+			}
+		}
+		return offerList;
+	}
+
 //+ OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by id desc"
 	public List<Offer> getAllOffersByStatus(boolean Status) {
 		List<Offer> offerList = new ArrayList<Offer>();

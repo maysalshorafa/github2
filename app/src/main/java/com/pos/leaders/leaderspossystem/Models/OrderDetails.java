@@ -25,6 +25,9 @@ public class OrderDetails {
 	@JsonIgnore
 	private Product product;
 
+	@JsonIgnore
+	public Offer offer;
+
 	public long getCustomer_assistance_id() {
 		return customer_assistance_id;
 	}
