@@ -4,8 +4,10 @@ import android.content.Context;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Offer;
-import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -21,28 +23,32 @@ public class OfferController {
         return offers;
     }
 
-    public static boolean check(Offer offer, OrderDetails orderDetails) {
-        //supporting offers
-        /*
-        {\"rules\":{\"product_sku\":hh, \"quantity\":55} ,\"action\":{\"Get gift product\"}}
-        {"rules":{"product_sku":hh, "quantity":55} ,"action":{"Price for Product":66.0}}
-         */
-        return offer.getDataAsJson().get("rules").get("quantity").intValue() >= orderDetails.getQuantity();
+    public static boolean check(Offer offer, OrderDetails orderDetails) throws JSONException {
+        String s=offer.getDataAsJson().toString();
+        JSONObject jsonObject = new JSONObject(s);
+        JSONObject rules = new JSONObject(jsonObject.get("rules").toString());
+
+    return orderDetails.getQuantity()% rules.getInt("quantity") >= 0;
     }
 
-    public static OrderDetails execute(Offer offer, OrderDetails orderDetails) {
-        if(!check(offer,orderDetails)) return orderDetails;
+    public static OrderDetails execute(Offer offer, OrderDetails orderDetails) throws JSONException {
         OrderDetails od = orderDetails;
-        String actionName = offer.getDataAsJson().get("action").get("name").textValue();
-        int quantity = offer.getDataAsJson().get("rules").get("quantity").intValue();
+        String s=offer.getDataAsJson().toString();
+        JSONObject jsonObject = new JSONObject(s);
+        JSONObject action = new JSONObject(jsonObject.get("action").toString());
+        JSONObject rules = new JSONObject(jsonObject.get("rules").toString());
+        String actionName = action.getString("name");
+        int quantity = rules.getInt("quantity");
         if(actionName.equals("Get gift product")){
-            od.setDiscount(1 / (quantity + 1));
-            od.increaseCount();
             od.offer = offer;
+
         } else if (actionName.equals("Price for Product")) {
-            od.setDiscount(1 - (100 / (od.getUnitPrice() * quantity)));
-            od.offer = offer;
-        }
+
+                od.offer = offer;
+             od.setDiscount(1/quantity);
+            }
+
+
         return od;
     }
 }

@@ -227,4 +227,12 @@ public class OrderDetails {
                 ", product=" + product +
                 '}';
     }
+
+	public Offer getOffer() {
+		return offer;
+	}
+
+	public void setOffer(Offer offer) {
+		this.offer = offer;
+	}
 }

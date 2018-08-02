@@ -13,6 +13,9 @@ import com.pos.leaders.leaderspossystem.Offers.ResourceType;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +46,7 @@ public class OfferDBAdapter {
 	protected static final String OFFER_COLUMN_BY_EMPLOYEE = "byEmployee";
 	protected static final String OFFER_COLUMN_CREATED_AT = "createdAt";
 	protected static final String OFFER_COLUMN_UPDATED_AT = "updatedAt";
+	protected static final String OFFER_COLUMN_HIDE = "hide";
 
 	public static final String DATABASE_CREATE = "CREATE TABLE "+OFFER_TABLE_NAME+" ( `" + OFFER_COLUMN_ID + "` INTEGER PRIMARY KEY AUTOINCREMENT, " +
 			"`" + OFFER_COLUMN_NAME + "` TEXT NOT NULL,`"+OFFER_COLUMN_RESOURCE_ID+"` INTEGER NOT NULL, `"+OFFER_COLUMN_RESOURCE_TYPE+"` TEXT NOT NULL,"+
@@ -50,7 +54,7 @@ public class OfferDBAdapter {
 			"`" + OFFER_COLUMN_END_DATE + "` TIMESTAMP NOT NULL DEFAULT current_timestamp, "+
 			"`" + OFFER_COLUMN_CREATED_AT + "` TIMESTAMP NOT NULL DEFAULT current_timestamp , " +
 			"`" + OFFER_COLUMN_UPDATED_AT + "` TIMESTAMP NOT NULL DEFAULT current_timestamp , " +
-			"`" + OFFER_COLUMN_ACTIVE + "` INTEGER DEFAULT 1, `" + OFFER_COLUMN_BY_EMPLOYEE + "` INTEGER," +
+			"`" + OFFER_COLUMN_ACTIVE + "` TEXT  , `" + OFFER_COLUMN_BY_EMPLOYEE + "` INTEGER," + "`" +OFFER_COLUMN_HIDE + "` INTEGER DEFAULT 0, " +
 			"`" + OFFER_COLUMN_DATA + "` TEXT NOT NULL)";
 
 	// Variable to hold the database instance
@@ -83,12 +87,12 @@ public class OfferDBAdapter {
         //Assign values for each row.
         val.put(OFFER_COLUMN_ID, offer.getOfferId());
         val.put(OFFER_COLUMN_NAME, offer.getName());
-		val.put(OFFER_COLUMN_ACTIVE, offer.isActive());
+		val.put(OFFER_COLUMN_ACTIVE, offer.isStatus());
 		val.put(OFFER_COLUMN_RESOURCE_ID, offer.getResourceId());
 		val.put(OFFER_COLUMN_RESOURCE_TYPE, offer.getResourceType().getValue());
-		val.put(OFFER_COLUMN_START_DATE, offer.getStart().toString());
-		val.put(OFFER_COLUMN_END_DATE, offer.getEnd().toString());
-		val.put(OFFER_COLUMN_DATA, offer.getData());
+		val.put(OFFER_COLUMN_START_DATE, offer.getStartDate().toString());
+		val.put(OFFER_COLUMN_END_DATE, offer.getEndDate().toString());
+		val.put(OFFER_COLUMN_DATA, offer.getOfferData());
 		val.put(OFFER_COLUMN_BY_EMPLOYEE, offer.getByEmployee());
 		val.put(OFFER_COLUMN_CREATED_AT, offer.getCreatedAt().toString());
 		val.put(OFFER_COLUMN_UPDATED_AT, offer.getUpdatedAt().toString());
@@ -101,10 +105,9 @@ public class OfferDBAdapter {
         }
 	}
 
-	public long insertEntry(String name, boolean active, long resourceId, ResourceType resourceType, Timestamp start, Timestamp end, String data, long byEmployee){
-
-		Offer offer = new Offer(Util.idHealth(this.db, OFFER_TABLE_NAME, OFFER_COLUMN_ID), name, active, resourceId, resourceType, start, end, data, byEmployee, new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()));
-        sendToBroker(MessageType.ADD_OFFER, offer, this.context);
+	public long insertEntry(String name, String active, long resourceId, ResourceType resourceType, Timestamp start, Timestamp end, String data, long byEmployee) throws JSONException, IOException {
+		Offer offer = new Offer(Util.idHealth(this.db, OFFER_TABLE_NAME, OFFER_COLUMN_ID), name, active, resourceId, resourceType, start, end, data.toString(), byEmployee, new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()));
+			sendToBroker(MessageType.ADD_OFFER, offer, this.context);
 
         try {
             return insertEntry(offer);
@@ -113,7 +116,6 @@ public class OfferDBAdapter {
             return -1;
         }
 	}
-
 	public Offer getOfferById(long id){
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where "+OFFER_COLUMN_ID+"='" + id + "'", null);
 		if (cursor.getCount() < 1) // Offer Not Exist
@@ -139,7 +141,7 @@ public class OfferDBAdapter {
 
 	public List<Offer> getAllActiveOffersByResourceIdResourceType(long id,ResourceType resourceType ) {
 		List<Offer> offerList = null;
-		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME +" where "+ OFFER_COLUMN_RESOURCE_TYPE+"="+resourceType.getValue() +" and "+OFFER_COLUMN_RESOURCE_ID+"=" + id +" and "+OFFER_COLUMN_ACTIVE+"=1  order by " + OFFER_COLUMN_ID + " desc", null);
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME +" where "+ OFFER_COLUMN_RESOURCE_TYPE+ " = '"+resourceType.getValue() +"' and "+OFFER_COLUMN_RESOURCE_ID+" = " + id +" and "+OFFER_COLUMN_ACTIVE+"=1  order by " + OFFER_COLUMN_ID + " desc", null);
 		cursor.moveToFirst();
 		if(cursor.getCount()>0) {
 			offerList = new ArrayList<Offer>();
@@ -181,9 +183,9 @@ public class OfferDBAdapter {
 	public Offer createOfferObject(Cursor cursor) {
 		return new Offer(Long.parseLong(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ID))),
 				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_NAME)),
-				Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ACTIVE))),
+				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ACTIVE)),
 				cursor.getLong(cursor.getColumnIndex(OFFER_COLUMN_RESOURCE_ID)),
-				ResourceType.valueOf(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RESOURCE_TYPE))),
+				ResourceType.valueFor(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_RESOURCE_TYPE))),
 				Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_START_DATE))),
 				Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_END_DATE))),
 				cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_DATA)),
@@ -208,4 +210,106 @@ public class OfferDBAdapter {
 		}
 		return offer;
 	}
+	public List<Offer> getBetweenTwoDates(long from, long to){
+		List<Offer> offerList = new ArrayList<Offer>();
+
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_CREATED_AT + " between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')"+ " and "+OFFER_COLUMN_ACTIVE + "=" + 1 , null);
+		cursor.moveToFirst();
+
+		while (!cursor.isAfterLast()) {
+			if (cursor.getInt(cursor.getColumnIndex(OFFER_COLUMN_ACTIVE)) ==1)
+				offerList.add(createOfferObject(cursor));
+			cursor.moveToNext();
+		}
+		return offerList;
+	}
+
+	public int deleteEntry(long id) {
+		OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
+		offerDBAdapter.open();
+		// Define the updated row content.
+		ContentValues updatedValues = new ContentValues();
+		// Assign values for each row.
+		updatedValues.put(OFFER_COLUMN_HIDE, 1);
+
+		String where = OFFER_COLUMN_ID + " = ?";
+		try {
+			db.update(OFFER_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+			Offer offer=offerDBAdapter.getOfferById(id);
+			sendToBroker(MessageType.DELETE_OFFER, offer, this.context);
+			return 1;
+		} catch (SQLException ex) {
+			Log.e("Offer deleteEntry", "enable hide Entry at " + OFFER_TABLE_NAME + ": " + ex.getMessage());
+			return 0;
+		}
+	}
+	public long deleteEntryBo(Offer offer) {
+		// Define the updated row content.
+		ContentValues updatedValues = new ContentValues();
+		// Assign values for each row.
+		updatedValues.put(OFFER_COLUMN_HIDE, 1);
+
+		String where = OFFER_COLUMN_ID + " = ?";
+		try {
+			db.update(OFFER_TABLE_NAME, updatedValues, where, new String[]{offer.getOfferId() + ""});
+			return 1;
+		} catch (SQLException ex) {
+			Log.e("Offer deleteEntry", "enable hide Entry at " + OFFER_TABLE_NAME + ": " + ex.getMessage());
+			return 0;
+		}
+	}
+
+	public void updateEntry(Offer offer) {
+		OfferDBAdapter offerDBAdapter = new OfferDBAdapter(context);
+		offerDBAdapter.open();
+		ContentValues val = new ContentValues();
+		//Assign values for each row.
+		val.put(OFFER_COLUMN_ID, offer.getOfferId());
+		val.put(OFFER_COLUMN_NAME, offer.getName());
+		val.put(OFFER_COLUMN_ACTIVE, offer.isStatus());
+		val.put(OFFER_COLUMN_RESOURCE_ID, offer.getResourceId());
+		val.put(OFFER_COLUMN_RESOURCE_TYPE, offer.getResourceType().getValue());
+		val.put(OFFER_COLUMN_START_DATE, offer.getStartDate().toString());
+		val.put(OFFER_COLUMN_END_DATE, offer.getEndDate().toString());
+		val.put(OFFER_COLUMN_DATA, offer.getOfferData());
+		val.put(OFFER_COLUMN_BY_EMPLOYEE, offer.getByEmployee());
+		val.put(OFFER_COLUMN_CREATED_AT, offer.getCreatedAt().toString());
+		val.put(OFFER_COLUMN_UPDATED_AT, offer.getUpdatedAt().toString());
+
+		String where = OFFER_COLUMN_ID + " = ?";
+		db.update(OFFER_TABLE_NAME, val, where, new String[]{offer.getOfferId() + ""});
+		Offer p=offerDBAdapter.getOfferById(offer.getOfferId());
+		Log.d("Update Object",p.toString());
+		sendToBroker(MessageType.UPDATE_OFFER, p, this.context);
+		offerDBAdapter.close();
+	}
+	public long updateEntryBo(Offer offer) {
+		OfferDBAdapter offerDBAdapter = new OfferDBAdapter(context);
+		offerDBAdapter.open();
+		ContentValues val = new ContentValues();
+		//Assign values for each row.
+		val.put(OFFER_COLUMN_ID, offer.getOfferId());
+		val.put(OFFER_COLUMN_NAME, offer.getName());
+		val.put(OFFER_COLUMN_ACTIVE, offer.isStatus());
+		val.put(OFFER_COLUMN_RESOURCE_ID, offer.getResourceId());
+		val.put(OFFER_COLUMN_RESOURCE_TYPE, offer.getResourceType().getValue());
+		val.put(OFFER_COLUMN_START_DATE, offer.getStartDate().toString());
+		val.put(OFFER_COLUMN_END_DATE, offer.getEndDate().toString());
+		val.put(OFFER_COLUMN_DATA, offer.getOfferData());
+		val.put(OFFER_COLUMN_BY_EMPLOYEE, offer.getByEmployee());
+		val.put(OFFER_COLUMN_CREATED_AT, offer.getCreatedAt().toString());
+		val.put(OFFER_COLUMN_UPDATED_AT, offer.getUpdatedAt().toString());
+
+		try {
+			String where = OFFER_COLUMN_ID + " = ?";
+			db.update(OFFER_TABLE_NAME, val, where, new String[]{offer.getOfferId() + ""});
+			Offer p=offerDBAdapter.getOfferById(offer.getOfferId());
+			Log.d("Update Object",p.toString());
+			offerDBAdapter.close();
+			return 1;
+		} catch (SQLException ex) {
+			return 0;
+		}
+	}
+
 }

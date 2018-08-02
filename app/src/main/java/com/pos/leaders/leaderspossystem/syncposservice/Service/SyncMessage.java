@@ -502,6 +502,18 @@ public class SyncMessage extends Service {
                 case MessageType.UPDATE_OFFER:
                     break;
                 case MessageType.DELETE_OFFER:
+                    Offer deleteOffer = null;
+                    deleteOffer = objectMapper.readValue(msgData, Offer.class);
+
+                    OfferDBAdapter deleteOfferDBAdapter = new OfferDBAdapter(this);
+                    deleteOfferDBAdapter.open();
+                    try {
+                        rID = deleteOfferDBAdapter.deleteEntryBo(deleteOffer);
+                    } catch (Exception ex) {
+                        rID = 0;
+                        ex.printStackTrace();
+                    }
+                    deleteOfferDBAdapter.close();
                     break;
                 //endregion OFFER
 
@@ -1090,7 +1102,12 @@ public class SyncMessage extends Service {
 
             //region OFFER
             case MessageType.ADD_OFFER:
-                res = messageTransmit.authPost(ApiURL.Offer, jsonObject.getString(MessageKey.Data), token);
+                JSONObject newDJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                JSONObject jsonObject1 = new JSONObject(newDJson.getString("offerData"));
+                newDJson.remove("offerData");
+                newDJson.put("offerData",jsonObject1);
+                Log.d("offerData111111",newDJson+"");
+                res = messageTransmit.authPost(ApiURL.Offer,newDJson.toString(), token);
                 break;
             case MessageType.UPDATE_OFFER:
                 Offer offer =null;
@@ -1098,7 +1115,8 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPut(ApiURL.Offer, jsonObject.getString(MessageKey.Data), token,offer.getOfferId());
                 break;
             case MessageType.DELETE_OFFER:
-                res = messageTransmit.authDelete(ApiURL.Offer, jsonObject.getString(MessageKey.Data), token);
+                JSONObject newDeleteOfferJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authDelete(ApiURL.Offer, newDeleteOfferJson.getString("offerId"), token);
                 break;
             //endregion OFFER
 

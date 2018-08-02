@@ -1,214 +1,399 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:layout_margin="40dp"
+android:background="@drawable/login_frame"
+android:weightSum="3">
+<LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <LinearLayout
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:orientation="horizontal"
+    android:weightSum="2">
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView15"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/name" />
-
-        <EditText
-            android:id="@+id/CreateOffer_etName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/offer_name"
-            android:inputType="textPersonName" />
-
-    </LinearLayout>
-
-    <LinearLayout
+        android:layout_margin="8dp"
+        android:text="@string/offers"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:textColor="@color/light_green2"
+        android:layout_weight=".5"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        />
+    <Button
+        android:id="@+id/addOffers"
+        style="@style/AppTheme.bt_green"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:text="@string/save"
+        android:textColor="#fff"
+        android:textSize="20dp"
+        android:layout_margin="8dp"/>
 
-        <TextView
-            android:id="@+id/textView17"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/start_at" />
-
-        <EditText
-            android:id="@+id/CreateOffer_etStart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="@string/start_at"
-            android:clickable="true"
-            android:editable="false"
-            android:inputType="textPersonName" />
-
-        <TextView
-            android:id="@+id/textView18"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/end_at" />
-
-        <EditText
-            android:id="@+id/CreateOffer_etEnd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="@string/end_at"
-            android:clickable="true"
-            android:editable="false"
-            android:inputType="textPersonName" />
-    </LinearLayout>
+</LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/rule" />
-
-        <Spinner
-            android:id="@+id/CreateOffer_spRuleName_1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Spinner
-            android:id="@+id/CreateOffer_spRuleOperation_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Spinner
-            android:id="@+id/CreateOffer_spRuleValue_1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Spinner
-            android:id="@+id/CreateOffer_spRuleAndOr_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/rule" />
-
-        <Spinner
-            android:id="@+id/CreateOffer_spRuleName_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Spinner
-            android:id="@+id/CreateOffer_spRuleOperation_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Spinner
-            android:id="@+id/CreateOffer_spRuleValue_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Spinner
-            android:id="@+id/CreateOffer_spRuleAndOr_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/action" />
-
-        <Spinner
-            android:id="@+id/CreateOffer_spActionName_1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Spinner
-            android:id="@+id/CreateOffer_spActionOperation_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/CreateOffer_etActionValue_1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="value"
-            android:inputType="textPersonName"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/action" />
-
-        <Spinner
-            android:id="@+id/CreateOffer_spActionName_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Spinner
-            android:id="@+id/CreateOffer_spActionOperation_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/CreateOffer_etActionValue_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="value"
-            android:inputType="textPersonName"/>
-    </LinearLayout>
-
-    <LinearLayout
+        android:id="@+id/mainCustomerInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom|end"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/CreateOffer_btCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cancel" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-        <Button
-            android:id="@+id/CreateOffer_btSave"
-            android:layout_width="wrap_content"
+
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/name"
+                android:textAlignment="textStart"
+                android:textColor="@color/text"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/CreateOffer_etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bubble"
+                android:padding="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.3"
+                android:gravity="center"
+                android:text="@string/start_at"
+                android:textAlignment="textStart"
+                android:textColor="@color/text"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/CreateOffer_etStart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:background="@drawable/bubble"
+                android:editable="false"
+                android:focusable="false"
+                android:inputType="phone"
+                android:padding="8dp" />
+
+            <ImageView
+                android:id="@+id/ImOffersStartDateCalender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.45"
+                android:editable="false"
+                android:src="@drawable/calender" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.3"
+                android:gravity="center"
+                android:text="@string/end_at"
+                android:textAlignment="textStart"
+                android:textColor="@color/text"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/CreateOffer_etEnd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:background="@drawable/bubble"
+                android:editable="false"
+                android:focusable="false"
+                android:inputType="phone"
+                android:padding="8dp" />
+
+            <ImageView
+                android:id="@+id/ImOffersEndDateCalender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.45"
+                android:editable="false"
+                android:src="@drawable/calender" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/form_background" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/save" />
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight=".5"
+                android:text="@string/rule"
+                android:textColor="@color/light_green2"
+                android:textSize="22sp"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_weight="1"
+           >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:text="If"
+                    android:textSize="18sp"
+                    android:layout_weight="1.3"/>
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/CreateOffer_spRuleName_1"
+                    android:layout_weight=".5"
+                    />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/selectOfferResourceType"
+                    android:src="@drawable/down_arrow"
+                    android:layout_weight="1.4"
+                    android:layout_gravity="bottom"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:text="Is"
+                    android:textSize="18sp"
+                    android:layout_weight="1.3"/>
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/CreateOffer_spRuleValue_1"
+                    android:layout_weight=".5"/>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/selectOfferProduct"
+                    android:src="@drawable/down_arrow"
+                    android:layout_weight="1.4"
+                    android:layout_gravity="bottom"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_weight="1"
+          >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:text="@string/rule"
+                    android:textSize="18sp"
+                    android:layout_weight="1.3"/>
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/CreateOffer_spRuleName_2"
+                    android:layout_weight=".5"
+                    />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/selectOfferResourceTypeValue"
+                    android:src="@drawable/down_arrow"
+                    android:layout_weight="1.4"
+                    android:layout_gravity="bottom"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/equal"
+                    />
+
+                <EditText
+                    android:id="@+id/CreateOffer_etRuleValue_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="value"
+                    android:inputType="number|numberDecimal"
+
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/form_background" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:orientation="horizontal"
+            android:weightSum="2"
+           >
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight=".5"
+                android:text="@string/action"
+                android:textColor="@color/light_green2"
+                android:textSize="22sp"
+                android:layout_gravity="center"
+
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_weight="1"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:text="@string/action"
+                    android:textSize="18sp"
+                    android:layout_weight="1.3"/>
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/CreateOffer_spActionName_1"
+                    android:layout_weight=".5"/>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/selectOfferActionType"
+                    android:src="@drawable/down_arrow"
+                    android:layout_weight="1.4"
+                    android:layout_gravity="bottom"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_weight="1"
+                android:id="@+id/actionValueForPriceType"
+                android:visibility="gone"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/equal"
+                    />
+
+                <EditText
+                    android:id="@+id/CreateOffer_etActionValue_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="value"
+                    android:inputType="number|numberDecimal"
+
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
     </LinearLayout>
+
 </LinearLayout>

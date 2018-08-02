@@ -619,6 +619,16 @@
     <string name="insert_product_dispaly_name">Please insert Product Display Name.</string>
     <string name="insert_product_sku">Please insert sku number.</string>
     <string name="action">action</string>
+    <string name="equal">equal</string>
+    <string name="insert_offer_name">please insert offer name</string>
+    <string name="determine_start_date">please insert offer start date</string>
+    <string name="determine_end_date">please insert end date</string>
+    <string name="success_adding_new_offers">Success insert offer</string>
+    <string name="can_not_add_offers_please_try_again">failed insert offer try again</string>
+    <string name="edit_offer">Update Offer</string>
+    <string name="delete_offer">are you want to delete offer?</string>
+    <string name="success_to_update_offer">success update</string>
+    <string name="error_to_update_offer">failed update</string>
 </resources>
 
 

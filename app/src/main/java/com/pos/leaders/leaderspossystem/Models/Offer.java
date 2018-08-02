@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.Offers.ResourceType;
@@ -13,17 +14,16 @@ import java.sql.Timestamp;
  * Created by KARAM on 30/07/2018.
  */
 
-public class Offer {
+public class Offer extends JSONObject {
 	//region Attribute
 	private long offerId;
 	private String name;
-	private boolean active;
+	private String status;
 	private long resourceId;
 	private ResourceType resourceType;
-	private Timestamp start;
-	private Timestamp end;
-	private String data;
-
+	private Timestamp startDate;
+	private Timestamp endDate;
+	private String offerData;
 	private long byEmployee;
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
@@ -36,28 +36,27 @@ public class Offer {
 	}
 
 
-	public Offer(long offerId, String name, boolean active, long resourceId, ResourceType resourceType, Timestamp start, Timestamp end, String data, long byEmployee, Timestamp createdAt, Timestamp updatedAt) {
+	public Offer(long offerId, String name, String status, long resourceId, ResourceType resourceType, Timestamp startDate, Timestamp endDate, String offerData, long byEmployee, Timestamp createdAt, Timestamp updatedAt) {
 		this.offerId = offerId;
 		this.name = name;
-		this.active = active;
+		this.status = status;
 		this.resourceId = resourceId;
 		this.resourceType = resourceType;
-		this.start = start;
-		this.end = end;
-		this.data = data;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.offerData = offerData;
 		this.byEmployee = byEmployee;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
-
 	//endregion
 
 	//region Method
-
+	@JsonIgnore
 	public JsonNode getDataAsJson() {
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			return objectMapper.readTree(this.data);
+			return objectMapper.readTree(this.offerData);
 		} catch (IOException e) {
 			return null;
 		}
@@ -75,8 +74,8 @@ public class Offer {
 		return offerId;
 	}
 
-	public boolean isActive() {
-		return active;
+	public String isStatus() {
+		return status;
 	}
 
 	public long getResourceId() {
@@ -87,16 +86,16 @@ public class Offer {
 		return resourceType;
 	}
 
-	public Timestamp getStart() {
-		return start;
+	public Timestamp getStartDate() {
+		return startDate;
 	}
 
-	public Timestamp getEnd() {
-		return end;
+	public Timestamp getEndDate() {
+		return endDate;
 	}
 
-	public String getData() {
-		return data;
+	public String getOfferData() {
+		return offerData;
 	}
 
 	public long getByEmployee() {
@@ -124,8 +123,8 @@ public class Offer {
 		this.offerId = offerId;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public void setResourceId(long resourceId) {
@@ -136,16 +135,16 @@ public class Offer {
 		this.resourceType = resourceType;
 	}
 
-	public void setStart(Timestamp start) {
-		this.start = start;
+	public void setStartDate(Timestamp startDate) {
+		this.startDate = startDate;
 	}
 
-	public void setEnd(Timestamp end) {
-		this.end = end;
+	public void setEndDate(Timestamp endDate) {
+		this.endDate = endDate;
 	}
 
-	public void setData(String data) {
-		this.data = data;
+	public void setOfferData(String offerData) {
+		this.offerData = offerData;
 	}
 
 	public void setByEmployee(long byEmployee) {
@@ -162,4 +161,20 @@ public class Offer {
 
 	//endregion
 
+	@Override
+	public String toString() {
+		return "Offer{" +
+				"offerId=" + offerId +
+				", name='" + name + '\'' +
+				", status=" + status +
+				", resourceId=" + resourceId +
+				", resourceType=" + resourceType +
+				", startDate=" + startDate +
+				", endDate=" + endDate +
+				", offerData='" + offerData + '\'' +
+				", byEmployee=" + byEmployee +
+				", createdAt=" + createdAt +
+				", updatedAt=" + updatedAt +
+				'}';
+	}
 }
