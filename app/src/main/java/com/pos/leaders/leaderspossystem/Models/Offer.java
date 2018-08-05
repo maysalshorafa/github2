@@ -1,205 +1,180 @@
 package com.pos.leaders.leaderspossystem.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pos.leaders.leaderspossystem.Offers.ResourceType;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.sql.Timestamp;
 
 /**
- * Created by KARAM on 23/10/2016.
- * Updated by KARAM on 01/08/2017.
+ * Created by KARAM on 30/07/2018.
  */
 
-public class Offer {
-	@JsonIgnore
-    public static final int Active = 1;
-	@JsonIgnore
-    public static final int Inactive = 0;
-
-
+public class Offer extends JSONObject {
 	//region Attribute
-	private long id;
+	private long offerId;
 	private String name;
-	private long startDate;
-	private long endDate;
-	private long creatingDate;
-	private int status;
-	private long byUser;
-    private String ruleName;
-    private long ruleID;
-
-    //region Attribute Objects
-	@JsonIgnore
-    private List<Product> products;
-	@JsonIgnore
-    private List<Club> clubs;
-	@JsonIgnore
-    private Employee user;
-	@JsonIgnore
-    private Rule rule;
-	//endregion
+	private String status;
+	private long resourceId;
+	private ResourceType resourceType;
+	private Timestamp startDate;
+	private Timestamp endDate;
+	private String offerData;
+	private long byEmployee;
+	private Timestamp createdAt;
+	private Timestamp updatedAt;
 
 	//endregion
 
 	//region Constructors
 
-    public Offer(){
+	public Offer() {
+	}
 
-    }
 
-	public Offer(long id, String name, long startDate, long endDate, long creatingDate, int status, long byUser,String ruleName,long ruleID) {
-		this.id=id;
+	public Offer(long offerId, String name, String status, long resourceId, ResourceType resourceType, Timestamp startDate, Timestamp endDate, String offerData, long byEmployee, Timestamp createdAt, Timestamp updatedAt) {
+		this.offerId = offerId;
 		this.name = name;
+		this.status = status;
+		this.resourceId = resourceId;
+		this.resourceType = resourceType;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.creatingDate = creatingDate;
-		this.status=status;
-        this.byUser = byUser;
-        this.ruleName = ruleName;
-        this.ruleID = ruleID;
-    }
-
-    public Offer(String name, long startDate, long endDate, long creatingDate, int status, long byUser,String ruleName,long ruleID) {
-        this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.creatingDate = creatingDate;
-        this.status=status;
-        this.byUser = byUser;
-        this.ruleName = ruleName;
-        this.ruleID = ruleID;
-    }
-
-
+		this.offerData = offerData;
+		this.byEmployee = byEmployee;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+	}
 	//endregion
 
 	//region Method
-
-	public boolean isValid() {
-		Date d = new Date();
-		if (d.after(new Date(startDate)) && d.before(new Date(endDate))) {
-			return true;
+	@JsonIgnore
+	public JsonNode getDataAsJson() {
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			return objectMapper.readTree(this.offerData);
+		} catch (IOException e) {
+			return null;
 		}
-		return false;
-	}
-
-	public void addProduct(Product p){
-        if(products.contains(p)){
-            products.remove(p);
-        }
-        else {
-		    if(products==null)
-			    products=new ArrayList<Product>();
-		    products.add(p);
-        }
 	}
 
 	//endregion
 
 	//region Getters
 
-	public long getId() {
-		return id;
-	}
-
 	public String getName() {
 		return name;
 	}
 
-	public long getStartDate() {
-		return startDate;
+	public long getOfferId() {
+		return offerId;
 	}
 
-	public long getEndDate() {
-		return endDate;
-	}
-
-	public long getCreatingDate() {
-		return creatingDate;
-	}
-
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-    public long getByUser() {
-        return byUser;
-    }
-
-    public String getRuleName() {
-        return ruleName;
-    }
-
-    public long getRuleID() {
-        return ruleID;
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-	public List<Club> getClubs() {
-		return clubs;
+	public long getResourceId() {
+		return resourceId;
 	}
 
-	public Rule getRule() {
-		return rule;
+	public ResourceType getResourceType() {
+		return resourceType;
+	}
+
+	public Timestamp getStartDate() {
+		return startDate;
+	}
+
+	public Timestamp getEndDate() {
+		return endDate;
+	}
+
+	public String getOfferData() {
+		return offerData;
+	}
+
+	public long getByEmployee() {
+		return byEmployee;
+	}
+
+	public Timestamp getCreatedAt() {
+		return createdAt;
+	}
+
+	public Timestamp getUpdatedAt() {
+		return updatedAt;
 	}
 
 	//endregion
 
 	//region Setters
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
-	public void setEndDate(long endDate) {
-		this.endDate = endDate;
-	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-    public void setByUser(long byUser) {
-        this.byUser = byUser;
-    }
-
-    public void setProducts(List<Product> products) {
-		this.products = products;
+	public void setOfferId(long offerId) {
+		this.offerId = offerId;
 	}
 
-	public void setStartDate(long startDate) {
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public void setResourceId(long resourceId) {
+		this.resourceId = resourceId;
+	}
+
+	public void setResourceType(ResourceType resourceType) {
+		this.resourceType = resourceType;
+	}
+
+	public void setStartDate(Timestamp startDate) {
 		this.startDate = startDate;
 	}
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setCreatingDate(long creatingDate) {
-        this.creatingDate = creatingDate;
-    }
-
-    public void setRuleName(String ruleName) {
-        this.ruleName = ruleName;
-    }
-
-    public void setRuleID(long ruleID) {
-        this.ruleID = ruleID;
-    }
-
-	public void setRule(Rule rule) {
-		this.rule = rule;
+	public void setEndDate(Timestamp endDate) {
+		this.endDate = endDate;
 	}
 
-	public void setClubs(List<Club> clubs) {
-		this.clubs = clubs;
+	public void setOfferData(String offerData) {
+		this.offerData = offerData;
+	}
+
+	public void setByEmployee(long byEmployee) {
+		this.byEmployee = byEmployee;
+	}
+
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public void setUpdatedAt(Timestamp updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	//endregion
 
+	@Override
+	public String toString() {
+		return "Offer{" +
+				"offerId=" + offerId +
+				", name='" + name + '\'' +
+				", status=" + status +
+				", resourceId=" + resourceId +
+				", resourceType=" + resourceType +
+				", startDate=" + startDate +
+				", endDate=" + endDate +
+				", offerData='" + offerData + '\'' +
+				", byEmployee=" + byEmployee +
+				", createdAt=" + createdAt +
+				", updatedAt=" + updatedAt +
+				'}';
+	}
 }

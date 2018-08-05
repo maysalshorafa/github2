@@ -60,6 +60,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 
 			holder.llMethods=(RelativeLayout)convertView.findViewById(R.id.rowSaleDetails_LLMethods);
 			holder.llSalesMan=(LinearLayout) convertView.findViewById(R.id.saleManLayout);
+			holder.llOfferName=(LinearLayout) convertView.findViewById(R.id.offerLayout);
 			holder.discountLayout=(LinearLayout) convertView.findViewById(R.id.discountLayout);
 			holder.tvPercentage=(TextView)convertView.findViewById(R.id.tvDiscountPercentageAmount);
 			holder.tvPercentageAmount=(TextView)convertView.findViewById(R.id.discountPercentage);
@@ -89,6 +90,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 			holder.llMethods.setVisibility(View.VISIBLE);
 			holder.llSalesMan.setVisibility(View.VISIBLE);
             holder.discountLayout.setVisibility(View.VISIBLE);
+			holder.llOfferName.setVisibility(View.VISIBLE);
 
             convertView.setBackgroundColor(context.getResources().getColor(R.color.list_background_color));
 		}
@@ -96,6 +98,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 			holder.llMethods.setVisibility(View.GONE);
 			holder.llSalesMan.setVisibility(View.GONE);
             holder.discountLayout.setVisibility(View.GONE);
+			holder.llOfferName.setVisibility(View.GONE);
 
             convertView.setBackgroundColor(context.getResources().getColor(R.color.white));
 		}
@@ -114,9 +117,11 @@ public 	class ViewHolder{
 		private LinearLayout discountLayout;
 		private TextView tvPercentage;
 		private TextView tvPercentageAmount;
+		private LinearLayout llOfferName;
 
 
-	}
+
+}
 
 
 	public void setSelected(int selected) {

@@ -63,7 +63,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -144,7 +144,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (3 , 'product');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (4 , 'category');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (5 , 'employee');");
-        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (6 , 'Schedule Workers');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (6 , 'Offers');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (7 , 'back up');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (8 , 'settings');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (9 , 'user club');");
@@ -246,6 +246,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
                 db.execSQL(CategoryDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
                 db.execSQL(PermissionsDBAdapter.FIX_DEPARTMENT_CATEGORY_V2);
+
+            case 2:
+                db.execSQL("drop table offers;");
+                db.execSQL(OfferDBAdapter.DATABASE_CREATE);
         }
     }
 }

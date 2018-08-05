@@ -166,6 +166,38 @@
             android:paddingLeft="5dp"
             />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/offerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/rowSaleDetails_LLMethods"
+        android:layout_toStartOf="@+id/rowSaleDetails_LLMethods"
+        android:orientation="horizontal"
+        android:visibility="gone"
+       >
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:textColor="@color/Black"
+            android:textSize="14sp"
+            android:paddingTop="5dp"
+            android:paddingLeft="5dp"
+            android:text="@string/offer_name"
+            />
+        <TextView
+            android:id="@+id/tvOfferName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:textColor="@color/Black"
+            android:textSize="14sp"
+            android:paddingTop="5dp"
+            android:paddingLeft="5dp"
+            />
+    </LinearLayout>
     <RelativeLayout
         android:id="@+id/rowSaleDetails_LLMethods"
         android:layout_width="match_parent"

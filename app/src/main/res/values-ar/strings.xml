@@ -536,5 +536,15 @@
     <string name="stock_quantity">كمية المخزون</string>
     <string name="insert_product_dispaly_name">الرجاء ادخال اسم للعرض</string>
     <string name="insert_product_sku">الرجاء ادخال رقم تعريف المنتوج</string>
+    <string name="insert_offer_name">الرجاء ادخال اسم الحملة.</string>
+    <string name="determine_start_date">الرجاء تحديد تاريخ بداية الحملة.</string>
+    <string name="determine_end_date">الرجاء تحديد تاريخ نهاية الحملة.</string>
+    <string name="success_adding_new_offers">م اضافة حملة بنجاح</string>
+    <string name="can_not_add_offers_please_try_again">م يتم اضافة حملة بنجاح الرجاء المحاولة لاحقا.</string>
+    <string name="edit_offer">تعديل الحملة</string>
+    <string name="delete_offer">هل تريد حذف هذه الحملة؟</string>
+    <string name="success_to_update_offer">تم تحديث الحملة</string>
+    <string name="error_to_update_offer">لم يتم تحديث الحملة.</string>
+
 </resources>
 
