@@ -96,6 +96,7 @@ public class OfferManagementActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        setDate();
 
     }
 

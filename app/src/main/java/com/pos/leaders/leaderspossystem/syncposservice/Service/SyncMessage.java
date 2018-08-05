@@ -500,6 +500,12 @@ public class SyncMessage extends Service {
                     offerDBAdapter.close();
                     break;
                 case MessageType.UPDATE_OFFER:
+                    Offer updateOffer = null;
+                    updateOffer = objectMapper.readValue(msgData, Offer.class);
+                    OfferDBAdapter updateOfferDBAdapter = new OfferDBAdapter(this);
+                    updateOfferDBAdapter.open();
+                    rID = updateOfferDBAdapter.updateEntryBo(updateOffer);
+                    updateOfferDBAdapter.close();
                     break;
                 case MessageType.DELETE_OFFER:
                     Offer deleteOffer = null;
@@ -1106,13 +1112,17 @@ public class SyncMessage extends Service {
                 JSONObject jsonObject1 = new JSONObject(newDJson.getString("offerData"));
                 newDJson.remove("offerData");
                 newDJson.put("offerData",jsonObject1);
-                Log.d("offerData111111",newDJson+"");
                 res = messageTransmit.authPost(ApiURL.Offer,newDJson.toString(), token);
                 break;
             case MessageType.UPDATE_OFFER:
                 Offer offer =null;
-                offer=objectMapper.readValue(msgData, Offer.class);
-                res = messageTransmit.authPut(ApiURL.Offer, jsonObject.getString(MessageKey.Data), token,offer.getOfferId());
+                JSONObject newOfferJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                JSONObject jsonObject2 = new JSONObject(newOfferJson.getString("offerData"));
+                newOfferJson.remove("offerData");
+                newOfferJson.put("offerData",jsonObject2);
+                Log.d("newOffer",newOfferJson.toString());
+             //   offer=objectMapper.readValue(msgData, Offer.class);
+                res = messageTransmit.authPut(ApiURL.Offer, newOfferJson.toString(), token,newOfferJson.getLong("offerId"));
                 break;
             case MessageType.DELETE_OFFER:
                 JSONObject newDeleteOfferJson = new JSONObject(jsonObject.getString(MessageKey.Data));

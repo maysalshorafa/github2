@@ -74,7 +74,7 @@ public class Offer extends JSONObject {
 		return offerId;
 	}
 
-	public String isStatus() {
+	public String getStatus() {
 		return status;
 	}
 

@@ -291,7 +291,6 @@ public class CreateOfferActivity extends AppCompatActivity {
         saveOffers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("tttt",spActionValue1.getText().toString());
                 OfferDBAdapter offerDBAdapter = new OfferDBAdapter(getApplicationContext());
                 offerDBAdapter.open();
                 JSONObject data=new JSONObject();
@@ -306,7 +305,6 @@ public class CreateOfferActivity extends AppCompatActivity {
                 }else if(action_name.equalsIgnoreCase("Get gift product")){
                     try {
                         data = makeDataForGiftOffer();
-                        Log.d("uuuu",makeDataForGiftOffer().toString()+"");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -344,6 +342,7 @@ public class CreateOfferActivity extends AppCompatActivity {
                     }
                 }
                 }else {
+                    data=new JSONObject();
                     if(action_name.equalsIgnoreCase(Action.Price_for_Product.getV())){
                         try {
                             data=  makeDataForPriceAndQuantityOffer();
@@ -353,7 +352,7 @@ public class CreateOfferActivity extends AppCompatActivity {
 
                     }else if(action_name.equalsIgnoreCase(Action.Get_gift_product.getV())){
                         try {
-                           makeDataForGiftOffer();
+                           data=makeDataForGiftOffer();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -369,17 +368,26 @@ public class CreateOfferActivity extends AppCompatActivity {
                         etEnd.setBackgroundResource(R.drawable.backtext);
                         Toast.makeText(getApplicationContext(), getString(R.string.determine_end_date), Toast.LENGTH_LONG).show();
                     } else {
+                        if(startTime== null){
+                            startTime = editableOffer.getStartDate();
+                        }
+                        if(endTime== null){
+                            endTime = editableOffer.getEndDate();
+                        }
+                        if(data.length()!=0){
+                            editableOffer.setOfferData(data.toString());
+
+                        }
                         editableOffer.setName(etOfferName.getText().toString());
                         editableOffer.setStartDate(startTime);
                         editableOffer.setEndDate(endTime);
-                        editableOffer.setOfferData(data.toString());
-
-
+                        editableOffer.setResourceId(product_id);
                         try {
                             offerDBAdapter.updateEntry(editableOffer);
                             Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.success_to_update_offer), Toast.LENGTH_SHORT);
                             onBackPressed();
                         } catch (Exception ex) {
+                            onBackPressed();
                             Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.error_to_update_offer), Toast.LENGTH_SHORT);
                         }
                     }
@@ -457,9 +465,6 @@ public class CreateOfferActivity extends AppCompatActivity {
         JSONObject data = new JSONObject();
         data.put("rules",rules);
         data.put("action",action);
-        Log.d("json objjj",rules.toString());
-        Log.d("json objjj",action.toString());
-        Log.d("json objjj",data.toString());
         return data;
     }
     private JSONObject makeDataForGiftOffer() throws JSONException {
@@ -471,10 +476,6 @@ public class CreateOfferActivity extends AppCompatActivity {
         JSONObject data = new JSONObject();
         data.put("rules",rules);
         data.put("action",action);
-        Log.d("json objjj",rules.toString());
-        Log.d("json objjj",action.toString());
-        Log.d("json objjj",data.toString());
-
         return data;
     }
 }

@@ -2016,39 +2016,6 @@ public class SalesCartActivity extends AppCompatActivity {
                             SaleOriginalityPrice += (orderDetails.getUnitPrice() * orderDetails.getQuantity());
                         }
                     }
-                    /**   if(actionName.equals("Get gift product")){
-
-                     saleTotalPrice += o.getItemTotalPrice()-o.getUnitPrice();
-                     SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
-                     }
-                     else if(actionName.equals("Price for Product")) {
-                     if(o.getQuantity()-quantity>=0){
-                     if(o.getQuantity()%quantity==0){
-                     saleTotalPrice += action.getDouble("value")*(o.getQuantity()/quantity);
-                     if(OfferQanPerUnitForProduct < o.getQuantity())
-                     {
-                     priceOfferPerUnitForProduct = action.getDouble("value")*(o.getQuantity()/quantity);
-                     }else{
-                     OfferQanPerUnitForProduct = OfferQanPerUnitForProduct - quantity;
-                     priceOfferPerUnitForProduct = action.getDouble("value")*(OfferQanPerUnitForProduct/quantity);
-                     }
-
-                     OfferQanPerUnitForProduct = o.getQuantity();
-                     Log.d("priceOfferPerUnitForProduct1",priceOfferPerUnitForProduct+" qan" + OfferQanPerUnitForProduct);
-
-                     SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
-                     }else {
-
-                     Log.d("priceOfferPerUnitForProduct2",priceOfferPerUnitForProduct+" qan" + OfferQanPerUnitForProduct);
-                     saleTotalPrice +=priceOfferPerUnitForProduct+ (o.getQuantity()-OfferQanPerUnitForProduct)*o.getUnitPrice();
-
-                     SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
-                     }}else {
-                     saleTotalPrice += o.getItemTotalPrice();
-
-                     SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
-                     }**/
-
 
                 } else {
                     saleTotalPrice += o.getItemTotalPrice();
@@ -2070,9 +2037,11 @@ public class SalesCartActivity extends AppCompatActivity {
             for (OrderDetails o : SESSION._ORDER_DETAILES) {
                 saleTotalPrice += o.getItemTotalPrice();
                 SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
+
             }
 
             if (clubType == 1) {
+
                 saleTotalPrice = saleTotalPrice - (int) saleTotalPrice * clubDiscount;
                 totalSaved = (SaleOriginalityPrice - saleTotalPrice);
                 tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
@@ -3833,7 +3802,7 @@ public class SalesCartActivity extends AppCompatActivity {
         List<Offer> offerList = new ArrayList<Offer>();
         offerList = OfferController.getOffersForResourceId(ResourceType.PRODUCT, orderDetails.getProductId(), getApplicationContext());
         if (offerList != null) {
-            for (int of = 0; of < offerList.size(); of++) {
+            for (int of = offerList.size()-1; of >=0 ; of--) {
                 if (OfferController.check(offerList.get(of), orderDetails)) {
                     o = OfferController.execute(offerList.get(of), orderDetails);
 
