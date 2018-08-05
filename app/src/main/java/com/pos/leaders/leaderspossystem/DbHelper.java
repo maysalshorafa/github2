@@ -245,7 +245,7 @@ public class DbHelper extends SQLiteOpenHelper {
             case 1:
                 db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
                 db.execSQL(CategoryDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
-
+                db.execSQL(PermissionsDBAdapter.FIX_DEPARTMENT_CATEGORY_V2);
         }
     }
 }
