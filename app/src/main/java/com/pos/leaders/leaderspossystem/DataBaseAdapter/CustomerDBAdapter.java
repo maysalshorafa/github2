@@ -388,6 +388,13 @@ public class CustomerDBAdapter {
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))));
     }
-
+    public boolean availableCustomerPhoneNo(String customerPhone) {
+        Cursor cursor = db.query(CUSTOMER_TABLE_NAME, null, CUSTOMER_COLUMN_PHONE_NUMBER + "=?", new String[]{customerPhone}, null, null, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+            return false;
+        }
+        return true;
+    }
 
 }

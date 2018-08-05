@@ -292,7 +292,6 @@
     <string name="delete_customer_message">האם ברצונך למחוק לקוח זה?</string>
     <string name="delete_product_message">האם ברצונך למחוק מוצר זה?</string>
     <string name="delete_user_message">האם ברצונך למחוק משתמש זה?</string>
-    <string name="department">מחלקה</string>
     <string name="different">שונה</string>
     <string name="discount_percentage">הנחה באחוזים</string>
     <string name="do_you_want_to_restore_the_system">האם אתה רוצה לשחזר את המערכת.</string>
@@ -554,4 +553,6 @@
     <string name="stock_quantity">כמות במחסן</string>
     <string name="insert_product_dispaly_name">נא להכניס שם הצגה</string>
     <string name="insert_product_sku">נא להכניס זהות המוצר</string>
+    <string name="please_insert_another_phone_no">נא להכניס מספר טלפון נוסף</string>
+
 </resources>

@@ -35,6 +35,7 @@ public class CategoryDBAdapter {
     public static final String DATABASE_CREATE = "CREATE TABLE Category ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "`name` TEXT NOT NULL , `creatingDate` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
             "`byEmployee` INTEGER, `hide` INTEGER DEFAULT 0, FOREIGN KEY(`byEmployee`) REFERENCES `employees.id` )";
+    public static final String DATABASE_UPDATE_FROM_V1_TO_V2 = "alter table departments rename to Category;";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.

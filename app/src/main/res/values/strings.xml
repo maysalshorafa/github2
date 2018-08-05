@@ -104,7 +104,6 @@
     <string name="schedule_workers">Time Attendance</string>
     <!--menu-->
     <string name="products">Products</string>
-    <string name="category">Category</string>
     <string name="users">Employees</string>
     <string name="offers">Offers</string>
     <string name="reports">Reports</string>
@@ -442,6 +441,7 @@
     <string name="please_insert_hourly_wage">Please insert hourly wage.</string>
     <string name="please_insert_job"> Please insert Job</string>
     <string name="please_insert_phone_no"> Please insert Phone No</string>
+    <string name="please_insert_another_phone_no"> Please insert another Phone No</string>
     <string name="please_insert_street"> Please insert Street</string>
     <string name="please_insert_club">Please Select Club</string>
     <string name="please_insert_city"> Please Select City</string>

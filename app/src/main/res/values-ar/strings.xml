@@ -100,7 +100,6 @@
     <string name="_continue">استمر</string>
     <!--DashBord String-->
     <string name="main_screen">شاشة المبيعات</string>
-    <string name="department">الاقسام</string>
     <string name="back_up">النسخ الاحتياطي</string>
     <string name="hours_of_work">ساعات العمل</string>
     <string name="customer_club">نادي المستخدمين</string>
@@ -184,6 +183,7 @@
     <string name="please_insert_gender"> الرجاء تحديد جنس الزبون.</string>
     <string name="please_insert_job"> الرجاء تحديدالمهنة.</string>
     <string name="please_insert_phone_no">الرجاء ادخال رقم الهاتف .</string>
+    <string name="please_insert_another_phone_no"> الرجاء ادخال رقم هاتف اخر</string>
     <string name="please_insert_street">الرجاء ادخال اسم الشارع .</string>
     <string name="please_insert_club"> الرجاء تحديد نادي الاعضاء</string>
     <string name="please_insert_city"> الرجاء تحديد اسم المدينة</string>

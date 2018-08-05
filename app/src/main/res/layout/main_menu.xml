@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
     <item android:id="@+id/menuItem_Department"
-        android:title="@string/category"
+        android:title="@string/categorys"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="end"

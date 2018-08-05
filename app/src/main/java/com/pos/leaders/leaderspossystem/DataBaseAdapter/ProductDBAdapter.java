@@ -70,7 +70,7 @@ public class ProductDBAdapter {
             "FOREIGN KEY(`" + PRODUCTS_COLUMN_CATEGORYID + "`) REFERENCES `Category.id`, FOREIGN KEY(`" + PRODUCTS_COLUMN_BYUSER + "`) REFERENCES `employees.id` )";
 
     public static final String DATABASE_UPDATE_FROM_V1_TO_V2 = "alter table products rename to product_v1;" + DATABASE_CREATE + "; " +
-            "insert into products (id,displayName,barcode,description,price,costPrice,regularPrice,withTax,weighable,creatingDate,hide,depId,byEmployee,with_pos,with_point_system) " +
+            "insert into products (id,displayName,barcode,description,price,costPrice,regularPrice,withTax,weighable,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system) " +
             "select id,name,barcode,description,price,costPrice,price,withTax,weighable,creatingDate,hide,depId,byEmployee,with_pos,with_point_system from product_v1;";
 
     // Variable to hold the database instance

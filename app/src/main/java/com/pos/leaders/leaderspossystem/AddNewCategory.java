@@ -63,7 +63,7 @@ public class AddNewCategory extends AppCompatActivity {
                         boolean exist = false;
                         exist = categoryDBAdapter.availableDepartmentName(categoryName.getText().toString());
                         //not unique name
-                        if (!exist) {
+                        if (!exist || categoryName.getText().toString().equalsIgnoreCase("all")) {
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_another_category_name), Toast.LENGTH_LONG).show();
                         }
                         //unique
