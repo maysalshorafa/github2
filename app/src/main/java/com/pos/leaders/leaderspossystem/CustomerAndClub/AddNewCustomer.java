@@ -34,7 +34,7 @@ import java.util.List;
 public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     String street="" , job="" , email="" , houseNo="" , postalCode="" , country="" , countryCode="";
     int cityId=0;
-    EditText etCustomerFirstName, etCustomerLastName, etStreet, etJob, etEmail, etPhoneNo, etHouseNumber, etPostalCode, etCountry, etCountryCode;
+    EditText etCustomerFirstName, etCustomerLastName, etStreet, etJob, etEmail, etPhoneNo, etHouseNumber, etPostalCode, etCountry, etCountryCode ;
     Button btAddCustomer, btCancel;
     Spinner selectCitySpinner, selectClubSpinner;
     CustomerDBAdapter customerDBAdapter;
@@ -50,7 +50,8 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     long clubID=0;
     long customerId;
     ImageView advanceFeature;
-    TextView advance;
+    TextView advance ,tvCustomerBalance;
+    LinearLayout CustomerBalance ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +81,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             etHouseNumber.setEnabled(false);
             etPostalCode.setEnabled(false);
             etCountryCode.setEnabled(false);
+            CustomerBalance.setVisibility(View.VISIBLE);
             CustmerManagementActivity.Customer_Management_View=0;
         }
         if (bundle != null) {
@@ -96,6 +98,8 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             etCountry.setText(customer.getCountry());
             etCountryCode.setText(customer.getCountryCode());
             btAddCustomer.setText(getResources().getText(R.string.edit));
+            tvCustomerBalance.setText(customer.getBalance()+"");
+
             if(secondCustomerInformation.getVisibility()== View.VISIBLE) {
                 if (customer.getGender().equalsIgnoreCase(getString(R.string.male))) {
                     radioGender.check(R.id.male);
@@ -278,6 +282,8 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         customerDBAdapter.open();
         selectCitySpinner = (Spinner) findViewById(R.id.customerCitySpinner);
         selectClubSpinner = (Spinner) findViewById(R.id.customerClubSpinner);
+        CustomerBalance = (LinearLayout)findViewById(R.id.CustomerBalance);
+        tvCustomerBalance = (TextView)findViewById(R.id.addNewCustomerBalanceValue);
         selectCitySpinner.setOnItemSelectedListener(this);
         selectClubSpinner.setOnItemSelectedListener(this);
         final List<String> city = new ArrayList<String>();

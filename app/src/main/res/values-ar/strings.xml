@@ -545,6 +545,11 @@
     <string name="delete_offer">هل تريد حذف هذه الحملة؟</string>
     <string name="success_to_update_offer">تم تحديث الحملة</string>
     <string name="error_to_update_offer">لم يتم تحديث الحملة.</string>
+    <string name="update_offer">تحديث الحملة</string>
+    <string name="please_determine_offer_rule">لرجاء تحديد نوع الحملة المطلوبة.</string>
+    <string name="please_determine_offer_action">لرجاء تحديد نتائج الحملة.</string>
+
+
 
 </resources>
 

@@ -629,6 +629,12 @@
     <string name="delete_offer">are you want to delete offer?</string>
     <string name="success_to_update_offer">success update</string>
     <string name="error_to_update_offer">failed update</string>
+    <string name="update_offer">Update Offer</string>
+    <string name="please_determine_offer_rule">please determine offer rule</string>
+    <string name="please_determine_offer_action">please determine offer action</string>
+
+
+
 </resources>
 
 

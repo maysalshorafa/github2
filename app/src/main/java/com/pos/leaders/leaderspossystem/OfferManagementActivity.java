@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -57,6 +58,7 @@ public class OfferManagementActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_offer_management2);
         TitleBar.setTitleBar(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         lvOffers = (ListView) findViewById(R.id.offerManagement_LVOffers);
         etFrom = (EditText) findViewById(R.id.offerManagement_ETFrom);
         etTo = (EditText) findViewById(R.id.offerManagement_ETTo);
@@ -247,5 +249,14 @@ public class OfferManagementActivity extends AppCompatActivity {
             }
         });
 
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) // Press Back Icon
+        {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

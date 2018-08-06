@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -52,7 +53,7 @@ public class CreateOfferActivity extends AppCompatActivity {
     int quantity=0;
     double priceForProduct=0;
     String action_name ="";
-    LinearLayout llActionValue;
+    LinearLayout llActionValue , ruleLayOut , actionLayOut;
     Offer editableOffer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class CreateOfferActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_offer);
 
         TitleBar.setTitleBar(this);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         etStart = (EditText) findViewById(R.id.CreateOffer_etStart);
         etEnd = (EditText) findViewById(R.id.CreateOffer_etEnd);
         etOfferName =(EditText) findViewById(R.id.CreateOffer_etName);
@@ -81,6 +82,8 @@ public class CreateOfferActivity extends AppCompatActivity {
         etActionValue_1 = (EditText) findViewById(R.id.CreateOffer_etActionValue_1);
         saveOffers =(Button)findViewById(R.id.addOffers);
         llActionValue = (LinearLayout)findViewById(R.id.actionValueForPriceType);
+        ruleLayOut = (LinearLayout)findViewById(R.id.ruleLayOut);
+        actionLayOut = (LinearLayout)findViewById(R.id.actionLayOut);
         selectOfferResourceType = (ImageView) findViewById(R.id.selectOfferResourceType);
         selectOfferProduct = (ImageView) findViewById(R.id.selectOfferProduct);
         selectOfferResourceTypeValue = (ImageView) findViewById(R.id.selectOfferResourceTypeValue);
@@ -97,9 +100,28 @@ public class CreateOfferActivity extends AppCompatActivity {
             if (extras.containsKey("offerId")) {
                 try {
                     editableOffer = offerDBAdapter.getOfferById(extras.getLong("offerId"));
-                etStart.setText(editableOffer.getStartDate()+"");
+                    if(editableOffer.getResourceType().equals(ResourceType.PRODUCT)) {
+                        Product product = productDBAdapter.getProductByID(editableOffer.getResourceId());
+                        spRuleValue_1.setText(product.getName());
+                    }
+                    etStart.setText(editableOffer.getStartDate()+"");
                 etEnd.setText(editableOffer.getEndDate()+"");
                 etOfferName.setText(editableOffer.getName());
+                    saveOffers.setText(getString(R.string.update_offer));
+                    spOfferRule.setText(editableOffer.getResourceType().getValue());
+                    spOfferRule1.setText("Quantity");
+                    String s = editableOffer.getDataAsJson().toString();
+                    JSONObject jsonObject = new JSONObject(s);
+                    JSONObject action = new JSONObject(jsonObject.get("action").toString());
+                    JSONObject rules = new JSONObject(jsonObject.get("rules").toString());
+                    String actionName = action.getString("name");
+                    int quantity = rules.getInt("quantity");
+                    etRuleValue_1.setText(quantity+"");
+                    spActionValue1.setText(actionName);
+                    if(actionName.equals(Action.Price_for_Product)) {
+                        etActionValue_1.setText(action.getDouble("value")+"");
+                    }
+
                 }
                 catch (Exception ex) {
                     ex.printStackTrace();
@@ -320,6 +342,12 @@ public class CreateOfferActivity extends AppCompatActivity {
                 } else if (etEnd.getText().toString().equals("")) {
                     etEnd.setBackgroundResource(R.drawable.backtext);
                     Toast.makeText(getApplicationContext(), getString(R.string.determine_end_date), Toast.LENGTH_LONG).show();
+                } else if (spOfferRule.getText().toString().equals("")||spOfferRule1.getText().toString().equals("")||spRuleValue_1.getText().toString().equals("")||etRuleValue_1.getText().toString().equals("")) {
+                    ruleLayOut.setBackgroundResource(R.drawable.backtext);
+                    Toast.makeText(getApplicationContext(), getString(R.string.please_determine_offer_rule), Toast.LENGTH_LONG).show();
+                } else if (spActionValue1.getText().toString().equals("")||etActionValue_1.getText().toString().equals("")) {
+                    actionLayOut.setBackgroundResource(R.drawable.backtext);
+                    Toast.makeText(getApplicationContext(), getString(R.string.please_determine_offer_action), Toast.LENGTH_LONG).show();
                 } else {
                     long i = 0;
                     try {
@@ -384,11 +412,11 @@ public class CreateOfferActivity extends AppCompatActivity {
                         editableOffer.setResourceId(product_id);
                         try {
                             offerDBAdapter.updateEntry(editableOffer);
-                            Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.success_to_update_offer), Toast.LENGTH_SHORT);
+                            Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.success_to_update_offer), Toast.LENGTH_SHORT).show();
                             onBackPressed();
                         } catch (Exception ex) {
                             onBackPressed();
-                            Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.error_to_update_offer), Toast.LENGTH_SHORT);
+                            Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.error_to_update_offer), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -477,5 +505,14 @@ public class CreateOfferActivity extends AppCompatActivity {
         data.put("rules",rules);
         data.put("action",action);
         return data;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) // Press Back Icon
+        {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
