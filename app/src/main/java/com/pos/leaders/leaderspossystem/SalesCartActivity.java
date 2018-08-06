@@ -3309,7 +3309,7 @@ public class SalesCartActivity extends AppCompatActivity {
         final Dialog customerDialog = new Dialog(SalesCartActivity.this);
         customerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         customerDialog.show();
-        customerDialog.setContentView(R.layout.custmer_assest_popup);
+        customerDialog.setContentView(R.layout.pop_up);
         customer_id = (EditText) customerDialog.findViewById(R.id.customer_name);
         final GridView gvCustomer = (GridView) customerDialog.findViewById(R.id.popUp_gvCustomer);
         gvCustomer.setNumColumns(3);
