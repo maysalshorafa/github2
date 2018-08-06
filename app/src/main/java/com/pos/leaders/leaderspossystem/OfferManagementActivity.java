@@ -96,7 +96,6 @@ public class OfferManagementActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        setDate();
 
     }
 
@@ -247,5 +246,11 @@ public class OfferManagementActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setDate();
     }
 }
