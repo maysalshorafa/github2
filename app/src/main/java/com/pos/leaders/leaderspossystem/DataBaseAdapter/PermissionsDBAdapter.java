@@ -26,6 +26,7 @@ public class PermissionsDBAdapter {
 	protected static final String PERMISSIONS_COLUMN_NAME = "name";
 
 	public static final String DATABASE_CREATE = "CREATE TABLE `permissions` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)";
+	public static final String FIX_DEPARTMENT_CATEGORY_V2 = "update " + PERMISSIONS_TABLE_NAME + " set " + PERMISSIONS_COLUMN_NAME + "='" + Permissions.PERMISSIONS_CATEGORY + "' where " + PERMISSIONS_COLUMN_NAME + "='department' and " + PERMISSIONS_COLUMN_ID + "=4;";
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
 	// Context of the application using the database.

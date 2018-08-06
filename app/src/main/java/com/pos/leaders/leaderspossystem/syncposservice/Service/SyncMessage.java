@@ -19,6 +19,7 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
@@ -33,7 +34,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
@@ -51,6 +51,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.LogInActivity;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.AReportDetails;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.Club;
@@ -65,7 +66,6 @@ import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasurement;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDynamicVariable;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
-import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Offers.Rule11;
@@ -493,15 +493,32 @@ public class SyncMessage extends Service {
                 case MessageType.ADD_OFFER:
                     Offer offer = null;
                     offer = objectMapper.readValue(msgData, Offer.class);
-
                     OfferDBAdapter offerDBAdapter = new OfferDBAdapter(this);
                     offerDBAdapter.open();
                     rID = offerDBAdapter.insertEntry(offer);
                     offerDBAdapter.close();
                     break;
                 case MessageType.UPDATE_OFFER:
+                    Offer updateOffer = null;
+                    updateOffer = objectMapper.readValue(msgData, Offer.class);
+                    OfferDBAdapter updateOfferDBAdapter = new OfferDBAdapter(this);
+                    updateOfferDBAdapter.open();
+                    rID = updateOfferDBAdapter.updateEntryBo(updateOffer);
+                    updateOfferDBAdapter.close();
                     break;
                 case MessageType.DELETE_OFFER:
+                    Offer deleteOffer = null;
+                    deleteOffer = objectMapper.readValue(msgData, Offer.class);
+
+                    OfferDBAdapter deleteOfferDBAdapter = new OfferDBAdapter(this);
+                    deleteOfferDBAdapter.open();
+                    try {
+                        rID = deleteOfferDBAdapter.deleteEntryBo(deleteOffer);
+                    } catch (Exception ex) {
+                        rID = 0;
+                        ex.printStackTrace();
+                    }
+                    deleteOfferDBAdapter.close();
                     break;
                 //endregion OFFER
 
@@ -1090,15 +1107,25 @@ public class SyncMessage extends Service {
 
             //region OFFER
             case MessageType.ADD_OFFER:
-                res = messageTransmit.authPost(ApiURL.Offer, jsonObject.getString(MessageKey.Data), token);
+                JSONObject newDJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                JSONObject jsonObject1 = new JSONObject(newDJson.getString("offerData"));
+                newDJson.remove("offerData");
+                newDJson.put("offerData",jsonObject1);
+                res = messageTransmit.authPost(ApiURL.Offer,newDJson.toString(), token);
                 break;
             case MessageType.UPDATE_OFFER:
                 Offer offer =null;
-                offer=objectMapper.readValue(msgData, Offer.class);
-                res = messageTransmit.authPut(ApiURL.Offer, jsonObject.getString(MessageKey.Data), token,offer.getId());
+                JSONObject newOfferJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                JSONObject jsonObject2 = new JSONObject(newOfferJson.getString("offerData"));
+                newOfferJson.remove("offerData");
+                newOfferJson.put("offerData",jsonObject2);
+                Log.d("newOffer",newOfferJson.toString());
+             //   offer=objectMapper.readValue(msgData, Offer.class);
+                res = messageTransmit.authPut(ApiURL.Offer, newOfferJson.toString(), token,newOfferJson.getLong("offerId"));
                 break;
             case MessageType.DELETE_OFFER:
-                res = messageTransmit.authDelete(ApiURL.Offer, jsonObject.getString(MessageKey.Data), token);
+                JSONObject newDeleteOfferJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authDelete(ApiURL.Offer, newDeleteOfferJson.getString("offerId"), token);
                 break;
             //endregion OFFER
 

@@ -12,7 +12,6 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -25,6 +24,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name="android.support.multidex.MultiDexApplication"
         coreApp="true"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
@@ -33,15 +33,14 @@
         android:largeHeap="true"
         android:sharedUserId="android.uid.system"
         android:supportsRtl="true"
-        android:name="android.support.multidex.MultiDexApplication"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomeActivity"
-            />
+        <activity android:name=".HomeActivity" />
         <activity
             android:name=".SplashScreenActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -182,7 +181,7 @@
             android:name=".CustomerAndClub.AddCustomerMeasurement"
             android:label="@string/title_activity_add_customer_measurement_activity" />
 
-        <meta-data
+        <meta-offerData
             android:name="io.fabric.ApiKey"
             android:value="fc2345a479e793a78d4e617ce9a0fe1e2c8e93fc" />
 
@@ -200,9 +199,11 @@
         <activity
             android:name=".Settings.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".Payment.MultiCurrenciesPaymentActivity"
-            android:label="@string/multi_currencies_payment_activity"></activity>
-
+        <activity
+            android:name=".Payment.MultiCurrenciesPaymentActivity"
+            android:label="@string/multi_currencies_payment_activity" />
+        <activity android:name=".Offers.CreateOfferActivity" />
+        <activity android:name=".OfferManagementActivity"></activity>
     </application>
 
 </manifest>

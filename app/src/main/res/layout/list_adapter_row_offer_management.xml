@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text="ID"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/listOfferManagement_TVOfferAction"
+        android:textSize="20sp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline25"
+        android:textDirection="anyRtl"
+        android:maxLines="1"
+        android:textColor="@color/Gray"
+        app:layout_constraintHorizontal_bias="0.0"
+        />
+
+    <android.support.constraint.Guideline
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/guideline25"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.77"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="208dp"
+        android:layout_height="28dp"
+        android:id="@+id/listOfferManagement_TVOfferEndDate"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="@+id/listOfferManagement_TVOfferAction"
+        app:layout_constraintRight_toLeftOf="@+id/listOfferManagement_TVOfferAction"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline26"
+        android:textDirection="anyRtl"
+        android:textColor="@color/Gray"
+        android:layout_marginTop="8dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        tools:layout_editor_absoluteY="17dp"
+        />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/guideline26"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/listOfferManagement_TVStartAt"
+        app:layout_constraintTop_toTopOf="@+id/listOfferManagement_TVOfferEndDate"
+        app:layout_constraintRight_toLeftOf="@+id/guideline26"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline29"
+        android:textDirection="anyRtl"
+        android:textColor="@color/Gray"
+        android:textSize="24sp"
+        />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/guideline29"
+
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp"
+        app:layout_constraintGuide_percent="0.35546875"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/listOfferManagement_TVResourceType"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline28"
+        app:layout_constraintTop_toTopOf="@+id/listOfferManagement_TVOfferEndDate"
+        android:textDirection="anyRtl"
+        app:layout_constraintRight_toLeftOf="@+id/guideline29"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:textColor="@color/Gray"
+        android:textSize="24sp"
+        />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/guideline28"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.20052083"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/listOfferManagement_TVOfferName"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintRight_toLeftOf="@+id/guideline28"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintTop_toTopOf="@+id/listOfferManagement_TVOfferEndDate"
+        android:textDirection="anyRtl"
+        android:textColor="@color/Gray"
+        android:textSize="24sp"/>
+
+</android.support.constraint.ConstraintLayout>

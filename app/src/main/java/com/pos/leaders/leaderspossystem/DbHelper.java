@@ -2,8 +2,10 @@ package com.pos.leaders.leaderspossystem;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
@@ -144,7 +146,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (3 , 'product');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (4 , 'category');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (5 , 'employee');");
-        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (6 , 'Schedule Workers');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (6 , 'Offers');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (7 , 'back up');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (8 , 'settings');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (9 , 'user club');");
@@ -241,11 +243,19 @@ public class DbHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        switch (oldVersion) {
-            case 1:
-                db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
-                db.execSQL(CategoryDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
-
+        try {
+            switch (oldVersion) {
+                case 1:
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[0]);
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[1]);
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[2]);
+                    db.execSQL(CategoryDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
+                    db.execSQL(PermissionsDBAdapter.FIX_DEPARTMENT_CATEGORY_V2);
+                    db.execSQL("drop table offers;");
+                    db.execSQL(OfferDBAdapter.DATABASE_CREATE);
+            }
+        } catch (SQLException e) {
+            Log.i("onUpgrade", e.getMessage(), e);
         }
     }
 }

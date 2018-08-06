@@ -89,7 +89,7 @@ public class ProductOfferDBAdapter {
 
 	public List<Product> getAllProductOffer(Offer offer) {
 		List<Product> products = new ArrayList<Product>();
-		Cursor cursor = db.rawQuery("select * from " + PRODUCTOFFER_TABLE_NAME + " where " + PRODUCTOFFER_COLUMN_OFFERID + "='" + offer.getId() + "'", null);
+		Cursor cursor = db.rawQuery("select * from " + PRODUCTOFFER_TABLE_NAME + " where " + PRODUCTOFFER_COLUMN_OFFERID + "='" + offer.getOfferId() + "'", null);
 		if (cursor.getCount() < 1) // Not Exist
 		{
 			cursor.close();
@@ -129,7 +129,7 @@ public class ProductOfferDBAdapter {
 		return ints;
 	}
 
-	public List<Integer> getProductOffers(long productID,List<Integer> offersID){
+	/*public List<Integer> getProductOffers(long productID,List<Integer> offersID){
         String whereCommand = "";
         List<Integer> offersIDs = new ArrayList<>();
         for(int i=0; i<offersID.size()-1;i++){
@@ -151,7 +151,7 @@ public class ProductOfferDBAdapter {
         cursor.close();
         return offersIDs;
     }
-
+*/
     public Boolean checkProductIntoOffers(long productID,int offerID) {
         Cursor cursor = db.rawQuery("select * from " + PRODUCTOFFER_TABLE_NAME + " where " + PRODUCTOFFER_COLUMN_OFFERID + "='" + offerID + "' and "+PRODUCTOFFER_COLUMN_PRODUCTID+" = '"+productID+"'", null);
         if (cursor.getCount() < 1){

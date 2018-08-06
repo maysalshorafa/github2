@@ -364,6 +364,7 @@
     <string name="postal_code">מיקוד</string>
     <string name="pref_header_general">כללי</string>
     <string name="price_after_discount">מחיר אחר הנחה</string>
+    <string name="price_before_discount">מחיר לפני הנחה</string>
     <string name="print">הדפסה</string>
     <string name="print_copy_invoice">האם תרצה להדפיס עותק?</string>
     <string name="printer_type">סוג המדפסת</string>
