@@ -13,6 +13,9 @@ import android.widget.TextView;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -57,6 +60,8 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 			holder.tvPrice=(TextView)convertView.findViewById(R.id.rowSaleDetails_TVPrice);
 			holder.tvCount=(TextView)convertView.findViewById(R.id.rowSaleDetails_TVCount);
 			holder.tvTotal=(TextView)convertView.findViewById(R.id.rowSaleDetails_TVTotalPrice);
+			holder.tvOfferName=(TextView)convertView.findViewById(R.id.tvOfferName);
+			holder.tvOriginalPrice=(TextView)convertView.findViewById(R.id.tvOrderListOriginalPriceValue);
 
 			holder.llMethods=(RelativeLayout)convertView.findViewById(R.id.rowSaleDetails_LLMethods);
 			holder.llSalesMan=(LinearLayout) convertView.findViewById(R.id.saleManLayout);
@@ -82,15 +87,11 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 		holder.tvPercentage.setText(R.string.discount_percentage);
 		holder.tvPercentageAmount.setText(String.format(new Locale("en"),"%.2f",(discount))+ " %");
 
-
 		//	callPopup();
-
-
 		if(selected==position&&selected!=-1){
 			holder.llMethods.setVisibility(View.VISIBLE);
 			holder.llSalesMan.setVisibility(View.VISIBLE);
             holder.discountLayout.setVisibility(View.VISIBLE);
-			holder.llOfferName.setVisibility(View.VISIBLE);
 
             convertView.setBackgroundColor(context.getResources().getColor(R.color.list_background_color));
 		}
@@ -98,10 +99,31 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 			holder.llMethods.setVisibility(View.GONE);
 			holder.llSalesMan.setVisibility(View.GONE);
             holder.discountLayout.setVisibility(View.GONE);
-			holder.llOfferName.setVisibility(View.GONE);
 
             convertView.setBackgroundColor(context.getResources().getColor(R.color.white));
 		}
+
+		//Offer
+		if ( orderList.get(position).getOffer()!= null) {
+			if (orderList.get(position).getDiscount() > 0) {
+				//show offer name
+				holder.llOfferName.setVisibility(View.VISIBLE);
+
+				try {
+					JSONObject jsonObject = orderList.get(position).getOffer().getDataAsJsonObject();
+					JSONObject action = new JSONObject(jsonObject.get("action").toString());
+                    holder.tvOfferName.setText(orderList.get(position).getOffer().getName() + " _ " + action.getString("name"));
+
+					holder.tvOriginalPrice.setText(Util.makePrice(orderList.get(position).getUnitPrice() * orderList.get(position).getQuantity()));
+					return convertView;
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		holder.llOfferName.setVisibility(View.GONE);
+
 		return convertView;
 	}
 
@@ -112,15 +134,14 @@ public 	class ViewHolder{
 		private TextView tvCount;
 		private TextView tvPrice;
 		private TextView tvTotal;
+		private TextView tvOfferName;
+		private TextView tvOriginalPrice;
 		private RelativeLayout llMethods;
 		private LinearLayout llSalesMan;
 		private LinearLayout discountLayout;
 		private TextView tvPercentage;
 		private TextView tvPercentageAmount;
 		private LinearLayout llOfferName;
-
-
-
 }
 
 
@@ -133,15 +154,10 @@ public 	class ViewHolder{
 			return str.substring(0,MINCHARNUMBER);
 		return str;
 	}
-
-
-
-
-
-
 	@Override
 	public void onClick(View v) {
-		}}
+
+	}}
 
 
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.Offers.ResourceType;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -58,6 +59,14 @@ public class Offer extends JSONObject {
 		try {
 			return objectMapper.readTree(this.offerData);
 		} catch (IOException e) {
+			return null;
+		}
+	}
+	@JsonIgnore
+	public JSONObject getDataAsJsonObject() {
+		try {
+			return new JSONObject(this.offerData);
+		} catch (JSONException e) {
 			return null;
 		}
 	}

@@ -409,6 +409,7 @@
     <string name="printer_type">نوع الطابعة</string>
     <string name="print_copy_invoice">هل تريد طباعة نسخة من الفاتورة؟</string>
     <string name="price_after_discount">السعر بعد الخصم</string>
+    <string name="price_before_discount">السعر قبل الخصم</string>
     <string name="pos_sales">مبيعات النظام</string>
     <string name="please_select_item">الرجاء حدد العناصر من سلة المبيعات</string>
     <string name="please_select_discount_offer">حدد قيمة الخصم</string>

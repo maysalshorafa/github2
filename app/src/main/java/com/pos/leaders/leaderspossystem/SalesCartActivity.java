@@ -919,25 +919,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 orderCount = (TextView) view.findViewById(R.id.rowSaleDetails_TVCount);
                 orderTotalPrice = (TextView) view.findViewById(R.id.rowSaleDetails_TVTotalPrice);
                 deleteOrderSalesMan = (ImageView) view.findViewById(R.id.deleteOrderSalesMan);
-                orderOfferName = (TextView) view.findViewById(R.id.tvOfferName);
-                if (SESSION._ORDER_DETAILES.get(position).getOffer() != null) {
 
-                    view.findViewById(R.id.offerLayout).setVisibility(View.VISIBLE);
-                    String s = SESSION._ORDER_DETAILES.get(position).getOffer().getDataAsJson().toString();
-                    JSONObject jsonObject = null;
-                    try {
-                        jsonObject = new JSONObject(s);
-                        JSONObject action = new JSONObject(jsonObject.get("action").toString());
-                        orderOfferName.setText(action.getString("name"));
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    view.findViewById(R.id.offerLayout).setVisibility(View.GONE);
-
-                }
                 orderSalesMan.
                         setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -1959,72 +1942,14 @@ public class SalesCartActivity extends AppCompatActivity {
             saleTotalPrice = 0;
             double SaleOriginalityPrice = 0;
             for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                OrderDetails orderDetails = calculateOfferForOrderDetails(o);
-                Log.d("hasOffer", orderDetails.getOffer() + "");
+                calculateOfferForOrderDetails(o);
                 if (o.getOffer() != null) {
-                    String s = o.getOffer().getDataAsJson().toString();
-                    JSONObject jsonObject = new JSONObject(s);
-                    JSONObject action = new JSONObject(jsonObject.get("action").toString());
-                    JSONObject rules = new JSONObject(jsonObject.get("rules").toString());
-                    String actionName = action.getString("name");
-                    int quantity = rules.getInt("quantity");
-
-                    if (actionName.equals("Price for Product")) {
-                        OfferQanPerUnitForProduct = o.getQuantity() / quantity;
-                        if (o.getQuantity() % quantity == 0) {
-                            saleTotalPrice += o.getItemTotalPrice() - o.getItemTotalPrice() * (1.0 / (quantity));
-                            OfferQanPerUnitForProduct = o.getQuantity() / quantity;
-                            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
-                        } else {
-                            if (o.getQuantity() < OfferQanPerUnitForProduct * quantity) {
-                                OfferQanPerUnitForProduct--;
-                            }
-                            saleTotalPrice += o.getItemTotalPrice() - OfferQanPerUnitForProduct * o.getUnitPrice();
-
-                            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
-                        }
-
-                    } else if (actionName.equals("Get gift product")) {
-                        if (orderDetails.getQuantity() % quantity == 0) {
-                            prevCount = orderDetails.getQuantity();
-                            if (prevCount > currCount)
-                            {
-                                currCount = prevCount;
-                                orderDetails.increaseCount();
-                                prevCount = orderDetails.getQuantity();
-                            }
-                            else{
-                                prevCount = currCount;
-                                orderDetails.decreaseCount();
-                                currCount = orderDetails.getQuantity();
-                            }
-                        }
-                        OfferQanGiftPerUnitForProduct = orderDetails.getQuantity() / (quantity + 1);
-                        Log.d("giftxyz1", OfferQanGiftPerUnitForProduct + " qan" + (quantity + 1));
-                        if (orderDetails.getQuantity() % (quantity + 1) == 0) {
-                            saleTotalPrice += orderDetails.getItemTotalPrice() - orderDetails.getItemTotalPrice() * (1.0 / (quantity + 1));
-                            OfferQanGiftPerUnitForProduct = orderDetails.getQuantity() / (quantity + 1);
-                            Log.d("giftxyz2", OfferQanGiftPerUnitForProduct + " qan" + (quantity + 1));
-                            SaleOriginalityPrice += (orderDetails.getUnitPrice() * orderDetails.getQuantity());
-                        } else {
-                            if (orderDetails.getQuantity() < OfferQanGiftPerUnitForProduct * (quantity + 1)) {
-                                OfferQanGiftPerUnitForProduct--;
-                                Log.d("giftxyz3", OfferQanGiftPerUnitForProduct + " qan" + (quantity + 1));
-                            }
-                            saleTotalPrice += orderDetails.getItemTotalPrice() - OfferQanGiftPerUnitForProduct * orderDetails.getUnitPrice();
-
-                            SaleOriginalityPrice += (orderDetails.getUnitPrice() * orderDetails.getQuantity());
-                        }
-                    }
-
-                } else {
-                    saleTotalPrice += o.getItemTotalPrice();
-
-                    SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
+                    Log.d("hasOffer", o.getOffer() + "");
                 }
-
-
+                saleTotalPrice += o.getItemTotalPrice();
+                SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
             }
+
             totalSaved = (SaleOriginalityPrice - saleTotalPrice);
             tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
             tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
@@ -3798,18 +3723,15 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     public OrderDetails calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
-        OrderDetails o = orderDetails;
         List<Offer> offerList = new ArrayList<Offer>();
         offerList = OfferController.getOffersForResourceId(ResourceType.PRODUCT, orderDetails.getProductId(), getApplicationContext());
         if (offerList != null) {
             for (int of = offerList.size()-1; of >=0 ; of--) {
                 if (OfferController.check(offerList.get(of), orderDetails)) {
-                    o = OfferController.execute(offerList.get(of), orderDetails);
-
+                    return OfferController.execute(offerList.get(of), orderDetails);
                 }
             }
         }
-
-        return o;
+        return orderDetails;
     }
 }

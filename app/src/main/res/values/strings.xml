@@ -127,6 +127,7 @@
     <string name="general_product">General Product</string>
     <string name="price">Price</string>
     <string name="price_after_discount">Price after discount</string>
+    <string name="price_before_discount">Price before discount</string>
 
     <string name="total_discount">Total Discount</string>
 
