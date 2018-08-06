@@ -39,7 +39,7 @@ public class InvoiceImg {
     private int width = CONSTANT.PRINTER_PAGE_WIDTH;
     private List<Block> blocks;
     private static final String LOG_TAG = "Printer Invoice";
-    private static final String line = "-----------------------------------------";
+    private static final String line = "-----------------------------------";
     private static final String newLineL = "\n" + "\u200E";
     private static final String newLineR = "\n" + "\u200F";
     private static final Block em = new Block("", 30.0f, Color.BLACK);
@@ -348,7 +348,6 @@ public class InvoiceImg {
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(sale));
         Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        blocks.addAll(Head(sale));
         String status = context.getString(R.string.source_invoice);
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
@@ -447,12 +446,35 @@ public class InvoiceImg {
             blocks.add(totSaved.Bold().Left());
         }
 
-        Block thanks = new Block("\u200e" + SETTINGS.returnNote, 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
-        blocks.add(thanks.Left());
+        String str = "";
+        for (String s : mainMer.split("\n")) {
+            if(!s.replaceAll(" ","").equals("")) {
+                if(s.contains("Powered")){
+                    continue;
+                }
+                if(s.contains("מספר כרטיס")){
+                    if(s.split("\\s+")[1].length()>4){
+                        String head = "מספר כרטיס";
+                        String ss = "";
+                        for(int i=0;i<s.split("\\s+")[1].length()-4;i++) {
+                            ss += "*";
+                        }
+                        ss += s.split("\\s+")[1].substring(s.split("\\s+")[1].length() - 4, s.split("\\s+")[1].length());
 
-        Block CC = new Block(mainMer, 25.0f, Color.BLACK).Left();
+                        str += "\u200E" + ss + "\t" + head + "\n";
+                        continue;
+                    }
+                }
+                str += "\u200E" + s + "\n";
+            }
+            Log.i("cc row", s);
+        }
+        Block CC = new Block("\u200E" + str, 25.0f, Color.BLACK).Left();
 
         blocks.add(CC);
+
+        Block thanks = new Block("\u200e" + SETTINGS.returnNote, 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        blocks.add(thanks.Left());
 
         return make(blocks);
     }
