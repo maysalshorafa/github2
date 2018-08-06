@@ -65,7 +65,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 2;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -251,8 +251,6 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[2]);
                     db.execSQL(CategoryDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
                     db.execSQL(PermissionsDBAdapter.FIX_DEPARTMENT_CATEGORY_V2);
-
-                case 2:
                     db.execSQL("drop table offers;");
                     db.execSQL(OfferDBAdapter.DATABASE_CREATE);
             }
