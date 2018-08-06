@@ -3521,10 +3521,9 @@ public class SalesCartActivity extends AppCompatActivity {
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(R.layout.custmer_assest_popup, null);
-        popupWindow = new PopupWindow(popupView, 800, ActionBar.LayoutParams.WRAP_CONTENT,
+        popupWindow = new PopupWindow(popupView, ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT,
                 true);
-
-        popupWindow.setTouchable(true);
+       popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
         final EditText customerAssistant = (EditText) popupView.findViewById(R.id.customerAssest_name);

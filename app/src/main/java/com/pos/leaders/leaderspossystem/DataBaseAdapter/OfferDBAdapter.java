@@ -221,6 +221,7 @@ public class OfferDBAdapter {
 				offerList.add(createOfferObject(cursor));
 			cursor.moveToNext();
 		}
+		Log.d("offerList",offerList.toString());
 		return offerList;
 	}
 

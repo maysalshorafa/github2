@@ -36,7 +36,7 @@
                     android:layout_marginTop="15dp"
                     android:layout_weight="1.7"
                     android:orientation="vertical"
-                    android:weightSum="4">
+                    android:weightSum="5">
 
                     <TextView
                         android:id="@+id/textView9"
@@ -71,6 +71,18 @@
                         android:gravity="center"
                         android:padding="8dp"
                         android:text="@string/phone_number"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/add_new_customer_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="70dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="@string/balance"
                         android:textAlignment="textStart"
                         android:textColor="@color/black"
                         android:textSize="20dp"
@@ -450,6 +462,42 @@
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/CustomerBalance"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="@string/balance"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/addNewCustomerBalanceValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="@string/balance"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
