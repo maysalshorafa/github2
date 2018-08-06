@@ -3280,7 +3280,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
     private void callPopup() {
 
-        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
+       /** LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
 
         View popupView = layoutInflater.inflate(R.layout.pop_up, null);
@@ -3305,21 +3305,25 @@ public class SalesCartActivity extends AppCompatActivity {
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
 
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-        customer_id = (EditText) popupView.findViewById(R.id.customer_name);
-        final GridView gvCustomer = (GridView) popupView.findViewById(R.id.popUp_gvCustomer);
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);*/
+        final Dialog customerDialog = new Dialog(SalesCartActivity.this);
+        customerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        customerDialog.show();
+        customerDialog.setContentView(R.layout.custmer_assest_popup);
+        customer_id = (EditText) customerDialog.findViewById(R.id.customer_name);
+        final GridView gvCustomer = (GridView) customerDialog.findViewById(R.id.popUp_gvCustomer);
         gvCustomer.setNumColumns(3);
 
-        btn_cancel = (Button) popupView.findViewById(R.id.btn_cancel);
+        btn_cancel = (Button) customerDialog.findViewById(R.id.btn_cancel);
 
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popupWindow.dismiss();
+                customerDialog.dismiss();
             }
         });
 
-        ((Button) popupView.findViewById(R.id.btn_add))
+        ((Button) customerDialog.findViewById(R.id.btn_add))
                 .setOnClickListener(new View.OnClickListener() {
 
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -3327,7 +3331,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         Intent intent = new Intent(SalesCartActivity.this, AddNewCustomer.class);
                         startActivity(intent);
 
-                        popupWindow.dismiss();
+                        customerDialog.dismiss();
 
 
                     }
@@ -3375,7 +3379,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 setCustomer(customerList.get(position));
                 SESSION._ORDERS.setCustomer_name(customerList.get(position).getFirstName());
                 SESSION._ORDERS.setCustomer(customerList.get(position));
-                popupWindow.dismiss();
+                customerDialog.dismiss();
             }
         });
 
@@ -3426,15 +3430,19 @@ public class SalesCartActivity extends AppCompatActivity {
         final CustomerAssetDB customerAssistantDB = new CustomerAssetDB(this);
         customerAssistantDB.open();
 
-        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        /**LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = layoutInflater.inflate(R.layout.custmer_assest_popup, null);
         popupWindow = new PopupWindow(popupView, 800, ActionBar.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-        final EditText customerAssistant = (EditText) popupView.findViewById(R.id.customerAssest_name);
-        ListView lvCustomerAssistant = (ListView) popupView.findViewById(R.id.customerAssistant_list_view);
-        Button btn_cancel = (Button) popupView.findViewById(R.id.btn_cancel);
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);**/
+        final Dialog salesManDialog = new Dialog(SalesCartActivity.this);
+        salesManDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        salesManDialog.show();
+        salesManDialog.setContentView(R.layout.custmer_assest_popup);
+        final EditText customerAssistant = (EditText) salesManDialog.findViewById(R.id.customerAssest_name);
+        ListView lvCustomerAssistant = (ListView) salesManDialog.findViewById(R.id.customerAssistant_list_view);
+        Button btn_cancel = (Button) salesManDialog.findViewById(R.id.btn_cancel);
 
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -3444,7 +3452,7 @@ public class SalesCartActivity extends AppCompatActivity {
         });
 
 
-        ((Button) popupView.findViewById(R.id.btn_add))
+        ((Button) salesManDialog.findViewById(R.id.btn_add))
                 .setOnClickListener(new View.OnClickListener() {
 
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -3452,7 +3460,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         Intent intent = new Intent(SalesCartActivity.this, AddEmployeeActivity.class);
                         startActivity(intent);
 
-                        popupWindow.dismiss();
+                        salesManDialog.dismiss();
                     }
                 });
 
@@ -3479,7 +3487,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                            }
                                                            orderSalesMan.setText(custmerAssestList.get(position).getFullName());
                                                            deleteOrderSalesMan.setVisibility(View.VISIBLE);
-                                                           popupWindow.dismiss();
+                                                           salesManDialog.dismiss();
                                                        }
                                                    }
         );
@@ -3518,25 +3526,29 @@ public class SalesCartActivity extends AppCompatActivity {
         final CustomerAssetDB customerAssistantDb = new CustomerAssetDB(this);
         customerAssistantDb.open();
 
-        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
+       /** LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(R.layout.custmer_assest_popup, null);
         popupWindow = new PopupWindow(popupView, ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT,
                 true);
        popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-        final EditText customerAssistant = (EditText) popupView.findViewById(R.id.customerAssest_name);
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);**/
+        final Dialog salesManDialog = new Dialog(SalesCartActivity.this);
+        salesManDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        salesManDialog.show();
+        salesManDialog.setContentView(R.layout.custmer_assest_popup);
+        final EditText customerAssistant = (EditText) salesManDialog.findViewById(R.id.customerAssest_name);
 
-        ListView lvCustomerAssistant = (ListView) popupView.findViewById(R.id.customerAssistant_list_view);
+        ListView lvCustomerAssistant = (ListView) salesManDialog.findViewById(R.id.customerAssistant_list_view);
 
-        Button btn_cancel = (Button) popupView.findViewById(R.id.btn_cancel);
-        Button btnDelete = (Button) popupView.findViewById(R.id.btn_delete);
+        Button btn_cancel = (Button) salesManDialog.findViewById(R.id.btn_cancel);
+        Button btnDelete = (Button) salesManDialog.findViewById(R.id.btn_delete);
         btnDelete.setVisibility(View.VISIBLE);
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popupWindow.dismiss();
+                salesManDialog.dismiss();
             }
         });
         btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -3547,7 +3559,7 @@ public class SalesCartActivity extends AppCompatActivity {
             }
         });
 
-        ((Button) popupView.findViewById(R.id.btn_add))
+        ((Button) salesManDialog.findViewById(R.id.btn_add))
                 .setOnClickListener(new View.OnClickListener() {
 
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -3555,7 +3567,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         Intent intent = new Intent(SalesCartActivity.this, AddEmployeeActivity.class);
                         startActivity(intent);
 
-                        popupWindow.dismiss();
+                        salesManDialog.dismiss();
 
 
                     }
@@ -3581,7 +3593,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 forSaleMan = true;
                 custmerSaleAssetstId = custmerAssestList.get(position).getEmployeeId();
                 salesSaleMan.setText(custmerAssestList.get(position).getFullName());
-                popupWindow.dismiss();
+                salesManDialog.dismiss();
             }
         });
         lvCustomerAssistant.setOnScrollListener(new AbsListView.OnScrollListener() {
