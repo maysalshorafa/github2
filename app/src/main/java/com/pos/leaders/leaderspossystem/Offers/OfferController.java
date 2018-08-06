@@ -39,15 +39,16 @@ public class OfferController {
         if(actionName.equals("Get gift product")){
 
             if (orderDetails.getQuantity() >= quantity) {
-                orderDetails.setDiscount(0);
-                int productGroup = orderDetails.getQuantity() / quantity;
-                double totalPrice = orderDetails.getItemTotalPrice();
+                if (orderDetails.getDiscount() == 0) {
+                    int productGroup = orderDetails.getQuantity() / quantity;
+                    double totalPrice = orderDetails.getItemTotalPrice();
 
-                orderDetails.setCount(orderDetails.getQuantity() + productGroup);
-                double newTotalPrice = orderDetails.getItemTotalPrice();
-                double discount = (1 - (totalPrice / newTotalPrice)) * 100;
+                    orderDetails.setCount(orderDetails.getQuantity() + productGroup);
+                    double newTotalPrice = orderDetails.getItemTotalPrice();
+                    double discount = (1 - (totalPrice / newTotalPrice)) * 100;
 
-                orderDetails.setDiscount(discount);
+                    orderDetails.setDiscount(discount);
+                }
             }
 
         } else if (actionName.equals("Price for Product")) {

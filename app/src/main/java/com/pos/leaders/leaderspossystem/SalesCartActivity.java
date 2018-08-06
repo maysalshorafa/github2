@@ -1503,7 +1503,9 @@ public class SalesCartActivity extends AppCompatActivity {
                                         double val = (1 - (d / originalTotalPrice)) * 100;
                                         valueOfDiscount = val;
                                         for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                                            o.setDiscount(val);
+                                            //chose the larges discount value
+                                            if(o.getDiscount()<valueOfDiscount)
+                                                o.setDiscount(valueOfDiscount);
                                         }
                                         refreshCart();
                                         discountDialog.cancel();
@@ -1519,7 +1521,9 @@ public class SalesCartActivity extends AppCompatActivity {
                                     if (val <= X) {
                                         valueOfDiscount = val;
                                         for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                                            o.setDiscount(val);
+                                            //chose the larges discount value
+                                            if(o.getDiscount()<valueOfDiscount)
+                                                o.setDiscount(valueOfDiscount);
                                         }
                                         refreshCart();
                                         discountDialog.cancel();
@@ -1990,31 +1994,21 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     private void addToCart(Product p) throws JSONException {
-        List<OrderDetails> orderList = new ArrayList<OrderDetails>();
-        List<Offer> offerList = new ArrayList<Offer>();
+        boolean isMatch = false;
 
-        /*if(p.getOffersIDs()==null){
-            ProductOfferDBAdapter productOfferDBAdapter = new ProductOfferDBAdapter(this);
-            productOfferDBAdapter.open();
-            p.setOffersIDs(productOfferDBAdapter.getProductOffers(p.getCashPaymentId(),offersIDsList));
-            productOfferDBAdapter.close();
-        }*/
         //test if cart have this order before insert to cart and order have'nt discount
         for (int i = 0; i < SESSION._ORDER_DETAILES.size(); i++) {
             OrderDetails o = SESSION._ORDER_DETAILES.get(i);
             Log.d("ORDER_DETAILS", o.toString());
             Log.d("Product", p.toString());
             if (o.getProduct().equals(p) && o.getDiscount() == 0 && o.getProduct().getProductId() != -1) {
-
-                orderList.add(o);
+                SESSION._ORDER_DETAILES.get(i).setCount(SESSION._ORDER_DETAILES.get(i).getQuantity() + 1);
+                isMatch = true;
+                break;
             }
         }
-        if (orderList.size() > 0) {
-            orderList.get(0).setCount(orderList.get(0).getQuantity() + 1);
-            calculateOfferForOrderDetails(orderList.get(0));
-        } else {
+        if (!isMatch) {
             SESSION._ORDER_DETAILES.add(new OrderDetails(1, 0, p, p.getPrice(), p.getPrice(), valueOfDiscount));
-
         }
 
         removeOrderItemSelection();
