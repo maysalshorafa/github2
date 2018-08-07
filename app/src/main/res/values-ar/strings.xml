@@ -551,7 +551,7 @@
     <string name="please_determine_offer_action">لرجاء تحديد نتائج الحملة.</string>
     <string name="create_offer_activity">انشاء حملات</string>
     <string name="management_offer_activity">ادارة الحملات</string>
-
+    <string name="cart_discount">تخفيض على كامل سلة المشتريات : </string>
 
 </resources>
 

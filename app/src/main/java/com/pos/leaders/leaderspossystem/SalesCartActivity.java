@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.tv.TvInputService;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -289,6 +290,10 @@ public class SalesCartActivity extends AppCompatActivity {
     List<Currency> currenciesList;
     private List<CurrencyType> currencyTypesList = null;
 
+    //Cart Discount View
+    private LinearLayout llCartDiscount;
+    private TextView tvCartDiscountValue,tvTotalPriceBeforeCartDiscount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -355,6 +360,14 @@ public class SalesCartActivity extends AppCompatActivity {
         custmerAssetstIdList = new ArrayList<Long>();
         orderIdList = new ArrayList<OrderDetails>();
         orderId = new ArrayList<Long>();
+
+
+
+        //cart discount init view
+        llCartDiscount = (LinearLayout) findViewById(R.id.saleCart_llCartDiscount);
+        tvCartDiscountValue = (TextView) findViewById(R.id.saleCart_llCartDiscountValue);
+        tvTotalPriceBeforeCartDiscount = (TextView) findViewById(R.id.saleCart_tvTotalPriceBeforeCartDiscount);
+
         //fragmentTouchPad = (FrameLayout) findViewById(R.id.mainActivity_fragmentTochPad);
 
         //region  Init cash drawer
@@ -1502,11 +1515,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                     if ((1 - (d / originalTotalPrice) <= (X / 100))) {
                                         double val = (1 - (d / originalTotalPrice)) * 100;
                                         valueOfDiscount = val;
-                                        for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                                            //chose the larges discount value
-                                            if(o.getDiscount()<valueOfDiscount)
-                                                o.setDiscount(valueOfDiscount);
-                                        }
+                                        SESSION._ORDERS.cartDiscount=val;
                                         refreshCart();
                                         discountDialog.cancel();
                                     } else {
@@ -1520,11 +1529,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                     valueOfDiscount = val;
                                     if (val <= X) {
                                         valueOfDiscount = val;
-                                        for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                                            //chose the larges discount value
-                                            if(o.getDiscount()<valueOfDiscount)
-                                                o.setDiscount(valueOfDiscount);
-                                        }
+                                        SESSION._ORDERS.cartDiscount=val;
                                         refreshCart();
                                         discountDialog.cancel();
                                     } else {
@@ -1718,6 +1723,7 @@ public class SalesCartActivity extends AppCompatActivity {
         clubAmount = 0;
         Ppoint = 0;
         salesSaleMan.setText(getString(R.string.sales_man));
+        SESSION._ORDERS.cartDiscount = 0;
         SESSION._Rest();
         customerName_EditText.setText("");
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
@@ -1729,18 +1735,13 @@ public class SalesCartActivity extends AppCompatActivity {
         offerDBAdapter.open();
         // Offer offer=offerDBAdapter.getAllValidOffers();
 
-        List<Offer> offerList = offerDBAdapter.getAllOffersByStatus(true);
-        if (offerList != null) {
 
-            calculateTotalPriceWithOffers(offerList);
-        } else {
-            try {
-                calculateTotalPrice();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
+        try {
+            calculateTotalPrice();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
 
     }
 
@@ -1942,49 +1943,47 @@ public class SalesCartActivity extends AppCompatActivity {
         tempSaleTotalPrice = 0;
         String a = tvTotalPrice.getText().toString();
         String b = a.replace(getString(R.string.ins), "");
-        if (customerClubId == 0) {
-            saleTotalPrice = 0;
-            double SaleOriginalityPrice = 0;
-            for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                calculateOfferForOrderDetails(o);
-                if (o.getOffer() != null) {
-                    Log.d("hasOffer", o.getOffer() + "");
-                }
-                o.setDiscount(o.getDiscount() + o.rowDiscount);
-                saleTotalPrice += o.getItemTotalPrice();
-                SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
+        double SaleOriginalityPrice = 0;
+
+
+        saleTotalPrice = 0;
+        for (OrderDetails o : SESSION._ORDER_DETAILES) {
+            calculateOfferForOrderDetails(o);
+            if (o.getOffer() != null) {
+                Log.d("hasOffer", o.getOffer() + "");
             }
-
-            totalSaved = (SaleOriginalityPrice - saleTotalPrice);
-            tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
-            tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
-            SESSION._ORDERS.setTotalPrice(saleTotalPrice);
-
-        } else {
-
-            saleTotalPrice = 0;
-            double SaleOriginalityPrice = 0;
-            for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                saleTotalPrice += o.getItemTotalPrice();
-                SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
-
-            }
-
-            if (clubType == 1) {
-
-                saleTotalPrice = saleTotalPrice - (int) saleTotalPrice * clubDiscount;
-                totalSaved = (SaleOriginalityPrice - saleTotalPrice);
-                tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
-                tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
-            } else if (clubType == 2 || clubType == 0) {
-                tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
-                totalSaved = (SaleOriginalityPrice - saleTotalPrice);
-                tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
-                //  clubPoint=  ( (int)(sale/clubAmount)*clubPoint);
-            }
-            SESSION._ORDERS.setTotalPrice(saleTotalPrice);
+            saleTotalPrice += o.getItemTotalPrice();
+            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
         }
 
+        if (SESSION._ORDERS.cartDiscount != 0) {
+            //show the discount view
+            llCartDiscount.setVisibility(View.VISIBLE);
+            tvTotalPriceBeforeCartDiscount.setVisibility(View.VISIBLE);
+
+            tvTotalPriceBeforeCartDiscount.setText(Util.makePrice(saleTotalPrice) + " " + getString(R.string.ins));
+            tvCartDiscountValue.setText(Util.makePrice(SESSION._ORDERS.cartDiscount) + " %");
+            //calculate new total price
+            saleTotalPrice = saleTotalPrice - (saleTotalPrice * (SESSION._ORDERS.cartDiscount / 100));
+        } else {
+            //hide cart discount view
+            llCartDiscount.setVisibility(View.GONE);
+            tvTotalPriceBeforeCartDiscount.setVisibility(View.GONE);
+        }
+
+        if (customerClubId != 0) {
+            if (clubType == 1) {
+                //club type clubDiscount
+                saleTotalPrice = saleTotalPrice - (saleTotalPrice * (clubDiscount / 100));
+            } else if (clubType == 2 || clubType == 0) {
+                //clubPoint = ((int) (saleTotalPrice / clubAmount) * clubPoint);
+            }
+        }
+
+        totalSaved = (SaleOriginalityPrice - saleTotalPrice);
+        tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
+        tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
+        SESSION._ORDERS.setTotalPrice(saleTotalPrice);
 
     }
 

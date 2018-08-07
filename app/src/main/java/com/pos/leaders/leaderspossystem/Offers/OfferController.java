@@ -37,13 +37,13 @@ public class OfferController {
         String actionName = action.getString("name");
         int quantity = rules.getInt("quantity");
         if(actionName.equals("Get gift product")){
-
+            //todo edit excute this action
             if (orderDetails.getQuantity() >= quantity) {
                 if (orderDetails.getDiscount()-orderDetails.rowDiscount != 0) {
-                    double currenPrice = orderDetails.getItemTotalPrice();
-                    double origignalPrice = orderDetails.getQuantity() * orderDetails.getUnitPrice();
+                    double currentPrice = orderDetails.getItemTotalPrice();
+                    double origanalPrice = orderDetails.getQuantity() * orderDetails.getUnitPrice();
 
-                    int freeItem = (int) ((origignalPrice - currenPrice) / orderDetails.getUnitPrice());
+                    int freeItem = (int) ((origanalPrice - currentPrice) / orderDetails.getUnitPrice());
                     orderDetails.setCount(orderDetails.getQuantity() - freeItem);
                     orderDetails.setDiscount(0);
                 }
@@ -66,9 +66,10 @@ public class OfferController {
                 int productCountWithOutProductIntoOffer = orderDetails.getQuantity() - (productGroup * quantity);
                 double discount = (1 -
                         (((productGroup * value) + (productCountWithOutProductIntoOffer * orderDetails.getUnitPrice()))
-                                / orderDetails.getItemTotalPrice())) * 100;
+                                / (orderDetails.getUnitPrice() * orderDetails.getQuantity()))) * 100;
 
                 orderDetails.setDiscount(discount);
+                Log.e("Offer Discount", "execute: " + discount);
             }
         }
         orderDetails.offer = offer;

@@ -146,7 +146,7 @@ public class OfferDBAdapter {
 
 	public List<Offer> getAllActiveOffersByResourceIdResourceType(long id,ResourceType resourceType ) {
 		List<Offer> offerList = null;
-		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME +" where "+ OFFER_COLUMN_RESOURCE_TYPE+ " = '"+resourceType.getValue() +"' and "+OFFER_COLUMN_RESOURCE_ID+" = " + id +" and "+OFFER_COLUMN_ACTIVE+"=ACTIVE  order by " + OFFER_COLUMN_ID + " desc", null);
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME +" where "+ OFFER_COLUMN_RESOURCE_TYPE+ " = '"+resourceType.getValue() +"' and "+OFFER_COLUMN_RESOURCE_ID+" = " + id +" and "+OFFER_COLUMN_ACTIVE+"=ACTIVE and "+OFFER_COLUMN_HIDE+"=0  order by " + OFFER_COLUMN_ID + " desc", null);
 		cursor.moveToFirst();
 		if(cursor.getCount()>0) {
 			offerList = new ArrayList<Offer>();

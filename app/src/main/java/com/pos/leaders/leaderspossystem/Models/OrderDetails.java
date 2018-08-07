@@ -1,5 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -140,8 +142,19 @@ public class OrderDetails {
 
 	@JsonIgnore
 	public double getItemTotalPrice() {
+		double tempPrice = (quantity * (unitPrice * (1 - (discount / 100))));
+		Log.e("log orde", "tempPrice: " + tempPrice);
+		Log.e("log orde", "unitPrice: " + unitPrice);
+		Log.e("log orde", "discount: " + discount);
+		Log.e("log orde", "quantity: " + quantity);
 
-		return (quantity * (unitPrice * (1-(discount / 100))));
+		//there is no discount for this row
+		if(rowDiscount==0) return tempPrice;
+		Log.e("log orde", "calculate new price: " + (tempPrice - (tempPrice * (rowDiscount / 100))));
+		Log.e("log orde", "rowDiscount: " + rowDiscount);
+
+		//calculate the price with row discount after the offer discount
+		return (tempPrice - (tempPrice * (rowDiscount / 100)));
 	}
 	@JsonIgnore
 	public double getUnitPrice() {

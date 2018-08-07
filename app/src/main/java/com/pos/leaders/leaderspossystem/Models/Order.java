@@ -24,6 +24,9 @@ public class Order {
 	private double totalPaidAmount;
 	private long customerId;
 
+
+	@JsonIgnore
+	public double cartDiscount = 0;
 	@JsonIgnore
 	private String customer_name = null;
 	@JsonIgnore
