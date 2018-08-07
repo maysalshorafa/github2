@@ -101,10 +101,14 @@ public class CreateOfferActivity extends AppCompatActivity {
             if (extras.containsKey("offerId")) {
                 editableOffer = offerDBAdapter.getOfferById(extras.getLong("offerId"));
                 Log.d("editableOffer",editableOffer.toString());
+                Log.d("editableOffer1",editableOffer.getResourceType().getValue());
+
                 try {
                   if(editableOffer.getResourceType().getValue().equalsIgnoreCase("PRODUCT")) {
-                      product = productDBAdapter.getProductByID(editableOffer.getResourceId());
-                      Log.d("editableOffer",product.getName());
+                      Log.d("editableOffer22",editableOffer.getResourceId()+"");
+                      long a = editableOffer.getResourceId();
+                      product = productDBAdapter.getProductByID(a);
+                      Log.d("editableOffer",product.toString());
                     }
                     spRuleValue_1.setText(product.getName());
                     etStart.setText(editableOffer.getStartDate()+"");

@@ -94,8 +94,12 @@ public class OfferDBAdapter {
 		val.put(OFFER_COLUMN_END_DATE, String.valueOf(offer.getEndDate()));
 		val.put(OFFER_COLUMN_DATA, offer.getOfferData());
 		val.put(OFFER_COLUMN_BY_EMPLOYEE, offer.getByEmployee());
-		val.put(OFFER_COLUMN_CREATED_AT, String.valueOf(offer.getCreatedAt()));
-		val.put(OFFER_COLUMN_UPDATED_AT, String.valueOf(offer.getUpdatedAt()));
+		if(offer.getCreatedAt()!=null) {
+			val.put(OFFER_COLUMN_CREATED_AT, String.valueOf(offer.getCreatedAt()));
+		}
+		if(offer.getUpdatedAt()!=null) {
+			val.put(OFFER_COLUMN_UPDATED_AT, String.valueOf(offer.getUpdatedAt()));
+		}
 
         try {
             return db.insert(OFFER_TABLE_NAME, null, val);
@@ -213,11 +217,10 @@ public class OfferDBAdapter {
 	}
 	public List<Offer> getBetweenTwoDates(long from, long to){
 		List<Offer> offerList = new ArrayList<Offer>();
-		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_CREATED_AT + " between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')"+ " and "+OFFER_COLUMN_ACTIVE + " = " + "'ACTIVE' "+ " and "+OFFER_COLUMN_HIDE + " = " + 0 , null);
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_START_DATE + " > datetime("+from+"/1000, 'unixepoch') and "+  OFFER_COLUMN_END_DATE +" < datetime("+to+"/1000, 'unixepoch')"+ " and "+OFFER_COLUMN_ACTIVE + " = " + "'ACTIVE' "+ " and "+OFFER_COLUMN_HIDE + " = " + 0 , null);
 		cursor.moveToFirst();
-
+		Log.d("offerList","select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_START_DATE + " > datetime("+from+"/1000, 'unixepoch') and "+  OFFER_COLUMN_END_DATE +" < datetime("+to+"/1000, 'unixepoch')"+ " and "+OFFER_COLUMN_ACTIVE + " = " + "'ACTIVE' "+ " and "+OFFER_COLUMN_HIDE + " = " + 0 );
 		while (!cursor.isAfterLast()) {
-			if (cursor.getString(cursor.getColumnIndex(OFFER_COLUMN_ACTIVE)) .equals("ACTIVE"))
 				offerList.add(createOfferObject(cursor));
 			cursor.moveToNext();
 		}
@@ -274,8 +277,13 @@ public class OfferDBAdapter {
 		val.put(OFFER_COLUMN_END_DATE, String.valueOf(offer.getEndDate()));
 		val.put(OFFER_COLUMN_DATA, offer.getOfferData());
 		val.put(OFFER_COLUMN_BY_EMPLOYEE, offer.getByEmployee());
-		val.put(OFFER_COLUMN_CREATED_AT, String.valueOf(offer.getCreatedAt()));
-		val.put(OFFER_COLUMN_UPDATED_AT, String.valueOf(offer.getUpdatedAt()));
+		if(offer.getCreatedAt()!=null) {
+			val.put(OFFER_COLUMN_CREATED_AT, String.valueOf(offer.getCreatedAt()));
+		}
+		if(offer.getUpdatedAt()!=null) {
+			val.put(OFFER_COLUMN_UPDATED_AT, String.valueOf(offer.getUpdatedAt()));
+		}
+
 
 		String where = OFFER_COLUMN_ID + " = ?";
 		db.update(OFFER_TABLE_NAME, val, where, new String[]{offer.getOfferId() + ""});
@@ -299,8 +307,13 @@ public class OfferDBAdapter {
 		val.put(OFFER_COLUMN_END_DATE, String.valueOf(offer.getEndDate()));
 		val.put(OFFER_COLUMN_DATA, offer.getOfferData());
 		val.put(OFFER_COLUMN_BY_EMPLOYEE, offer.getByEmployee());
-		val.put(OFFER_COLUMN_CREATED_AT, String.valueOf(offer.getCreatedAt()));
-		val.put(OFFER_COLUMN_UPDATED_AT, String.valueOf(offer.getUpdatedAt()));
+		if(offer.getCreatedAt()!=null) {
+			val.put(OFFER_COLUMN_CREATED_AT, String.valueOf(offer.getCreatedAt()));
+		}
+		if(offer.getUpdatedAt()!=null) {
+			val.put(OFFER_COLUMN_UPDATED_AT, String.valueOf(offer.getUpdatedAt()));
+		}
+
 
 		try {
 			String where = OFFER_COLUMN_ID + " = ?";
