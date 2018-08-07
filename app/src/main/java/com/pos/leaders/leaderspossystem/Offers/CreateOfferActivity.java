@@ -343,10 +343,10 @@ public class CreateOfferActivity extends AppCompatActivity {
                 } else if (etEnd.getText().toString().equals("")) {
                     etEnd.setBackgroundResource(R.drawable.backtext);
                     Toast.makeText(getApplicationContext(), getString(R.string.determine_end_date), Toast.LENGTH_LONG).show();
-                } else if (spOfferRule.getText().toString().equals("")||spOfferRule1.getText().toString().equals("")||spRuleValue_1.getText().toString().equals("")) {
+                } else if (spOfferRule.getText().toString().equals("")||spOfferRule1.getText().toString().equals("")||spRuleValue_1.getText().toString().equals("")||etRuleValue_1.getText().toString().equals("")) {
                     ruleLayOut.setBackgroundResource(R.drawable.backtext);
                     Toast.makeText(getApplicationContext(), getString(R.string.please_determine_offer_rule), Toast.LENGTH_LONG).show();
-                } else if (spActionValue1.getText().toString().equals("")||etActionValue_1.getText().toString().equals("")) {
+                } else if (spActionValue1.getText().toString().equals("")) {
                     actionLayOut.setBackgroundResource(R.drawable.backtext);
                     Toast.makeText(getApplicationContext(), getString(R.string.please_determine_offer_action), Toast.LENGTH_LONG).show();
                 } else {
@@ -396,7 +396,13 @@ public class CreateOfferActivity extends AppCompatActivity {
                     } else if (etEnd.getText().toString().equals("")) {
                         etEnd.setBackgroundResource(R.drawable.backtext);
                         Toast.makeText(getApplicationContext(), getString(R.string.determine_end_date), Toast.LENGTH_LONG).show();
-                    } else {
+                    }else if (spOfferRule.getText().toString().equals("")||spOfferRule1.getText().toString().equals("")||spRuleValue_1.getText().toString().equals("")||etRuleValue_1.getText().toString().equals("")) {
+                        ruleLayOut.setBackgroundResource(R.drawable.backtext);
+                        Toast.makeText(getApplicationContext(), getString(R.string.please_determine_offer_rule), Toast.LENGTH_LONG).show();
+                    } else if (spActionValue1.getText().toString().equals("")) {
+                        actionLayOut.setBackgroundResource(R.drawable.backtext);
+                        Toast.makeText(getApplicationContext(), getString(R.string.please_determine_offer_action), Toast.LENGTH_LONG).show();
+                    }  else {
                         if(startTime== null){
                             startTime = editableOffer.getStartDate();
                         }
