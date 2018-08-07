@@ -3279,33 +3279,6 @@ public class SalesCartActivity extends AppCompatActivity {
 
 
     private void callPopup() {
-
-       /** LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
-                .getSystemService(LAYOUT_INFLATER_SERVICE);
-
-        View popupView = layoutInflater.inflate(R.layout.pop_up, null);
-
-
-        Window window = getWindow();
-        WindowManager.LayoutParams wlp = window.getAttributes();
-        //wlp.gravity = Gravity.CENTER_VERTICAL;
-        wlp.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-        wlp.dimAmount = (float) 0.6;
-        window.setAttributes(wlp);
-
-
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-        int width = dm.widthPixels;
-        int height = dm.heightPixels;
-
-        popupWindow = new PopupWindow(popupView, (int) (width * 0.8), (int) (height * 0.8), true);
-
-        popupWindow.setTouchable(true);
-        popupWindow.setFocusable(true);
-
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);*/
         final Dialog customerDialog = new Dialog(SalesCartActivity.this);
         customerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         customerDialog.show();
@@ -3429,13 +3402,6 @@ public class SalesCartActivity extends AppCompatActivity {
         userDB.open();
         final CustomerAssetDB customerAssistantDB = new CustomerAssetDB(this);
         customerAssistantDB.open();
-
-        /**LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = layoutInflater.inflate(R.layout.custmer_assest_popup, null);
-        popupWindow = new PopupWindow(popupView, 800, ActionBar.LayoutParams.WRAP_CONTENT, true);
-        popupWindow.setTouchable(true);
-        popupWindow.setFocusable(true);
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);**/
         final Dialog salesManDialog = new Dialog(SalesCartActivity.this);
         salesManDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         salesManDialog.show();
@@ -3447,7 +3413,7 @@ public class SalesCartActivity extends AppCompatActivity {
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popupWindow.dismiss();
+                salesManDialog.dismiss();
             }
         });
 
@@ -3525,15 +3491,6 @@ public class SalesCartActivity extends AppCompatActivity {
         userDB.open();
         final CustomerAssetDB customerAssistantDb = new CustomerAssetDB(this);
         customerAssistantDb.open();
-
-       /** LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
-                .getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.custmer_assest_popup, null);
-        popupWindow = new PopupWindow(popupView, ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT,
-                true);
-       popupWindow.setTouchable(true);
-        popupWindow.setFocusable(true);
-        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);**/
         final Dialog salesManDialog = new Dialog(SalesCartActivity.this);
         salesManDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         salesManDialog.show();

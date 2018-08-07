@@ -119,6 +119,7 @@ public class CreateOfferActivity extends AppCompatActivity {
                     etRuleValue_1.setText(quantity+"");
                     spActionValue1.setText(actionName);
                     if(actionName.equals(Action.Price_for_Product)) {
+                        etActionValue_1.setVisibility(View.VISIBLE);
                         etActionValue_1.setText(action.getDouble("value")+"");
                     }
 
@@ -342,7 +343,7 @@ public class CreateOfferActivity extends AppCompatActivity {
                 } else if (etEnd.getText().toString().equals("")) {
                     etEnd.setBackgroundResource(R.drawable.backtext);
                     Toast.makeText(getApplicationContext(), getString(R.string.determine_end_date), Toast.LENGTH_LONG).show();
-                } else if (spOfferRule.getText().toString().equals("")||spOfferRule1.getText().toString().equals("")||spRuleValue_1.getText().toString().equals("")||etRuleValue_1.getText().toString().equals("")) {
+                } else if (spOfferRule.getText().toString().equals("")||spOfferRule1.getText().toString().equals("")||spRuleValue_1.getText().toString().equals("")) {
                     ruleLayOut.setBackgroundResource(R.drawable.backtext);
                     Toast.makeText(getApplicationContext(), getString(R.string.please_determine_offer_rule), Toast.LENGTH_LONG).show();
                 } else if (spActionValue1.getText().toString().equals("")||etActionValue_1.getText().toString().equals("")) {

@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -73,6 +74,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         setContentView(R.layout.activity_products);
 
         TitleBar.setTitleBar(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Get Refferences of Views
         lvDepartment =(ListView)findViewById(R.id.LVDepartment);
@@ -418,5 +420,14 @@ public class ProductsActivity  extends AppCompatActivity  {
             previouslySelectedItem.setBackgroundColor(getResources().getColor(R.color.transparent));
         previouslySelectedItem = v;
         v.setBackgroundColor(getResources().getColor(R.color.pressed_color));
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) // Press Back Icon
+        {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
