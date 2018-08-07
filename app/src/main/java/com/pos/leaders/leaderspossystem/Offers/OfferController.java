@@ -39,22 +39,28 @@ public class OfferController {
         if(actionName.equals("Get gift product")){
 
             if (orderDetails.getQuantity() >= quantity) {
-                if (orderDetails.getDiscount() == 0) {
-                    int productGroup = orderDetails.getQuantity() / quantity;
-                    double totalPrice = orderDetails.getItemTotalPrice();
+                if (orderDetails.getDiscount()-orderDetails.rowDiscount != 0) {
+                    double currenPrice = orderDetails.getItemTotalPrice();
+                    double origignalPrice = orderDetails.getQuantity() * orderDetails.getUnitPrice();
 
-                    orderDetails.setCount(orderDetails.getQuantity() + productGroup);
-                    double newTotalPrice = orderDetails.getItemTotalPrice();
-                    double discount = (1 - (totalPrice / newTotalPrice)) * 100;
-
-                    orderDetails.setDiscount(discount);
+                    int freeItem = (int) ((origignalPrice - currenPrice) / orderDetails.getUnitPrice());
+                    orderDetails.setCount(orderDetails.getQuantity() - freeItem);
+                    orderDetails.setDiscount(0);
                 }
-            }
 
+                int productGroup = orderDetails.getQuantity() / quantity;
+                double totalPrice = orderDetails.getItemTotalPrice();
+
+                orderDetails.setCount(orderDetails.getQuantity() + productGroup);
+                double newTotalPrice = orderDetails.getItemTotalPrice();
+                double discount = (1 - (totalPrice / newTotalPrice)) * 100;
+
+                orderDetails.setDiscount(discount);
+            }
         } else if (actionName.equals("Price for Product")) {
             double value = action.getDouble("value");
+            orderDetails.setDiscount(0);
             if (orderDetails.getQuantity() >= quantity) {
-                orderDetails.setDiscount(0);
 
                 int productGroup = orderDetails.getQuantity() / quantity;
                 int productCountWithOutProductIntoOffer = orderDetails.getQuantity() - (productGroup * quantity);

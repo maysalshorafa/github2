@@ -1183,7 +1183,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                 double discount = (1 - (d / (SESSION._ORDER_DETAILES.get(indexOfItem).getUnitPrice() * count)));
 
                                                 if (discount <= (X / 100)) {
-                                                    SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(discount * 100);
+                                                    SESSION._ORDER_DETAILES.get(indexOfItem).rowDiscount = (discount * 100);
                                                     try {
                                                         calculateTotalPrice();
                                                     } catch (JSONException e) {
@@ -1202,7 +1202,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                 float val = Float.parseFloat(str);
                                                 if (val <= X) {
                                                     int count = SESSION._ORDER_DETAILES.get(indexOfItem).getQuantity();
-                                                    SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(val);
+                                                    SESSION._ORDER_DETAILES.get(indexOfItem).rowDiscount = (val);
                                                     //SESSION._ORDER_DETAILES.get(indexOfItem).setPaidAmount(((SESSION._ORDER_DETAILES.get(indexOfItem).getUnitPrice()*count) * ((1 - (val / 100))) / count));
 
                                                     try {
@@ -1950,6 +1950,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 if (o.getOffer() != null) {
                     Log.d("hasOffer", o.getOffer() + "");
                 }
+                o.setDiscount(o.getDiscount() + o.rowDiscount);
                 saleTotalPrice += o.getItemTotalPrice();
                 SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
             }
@@ -2001,7 +2002,7 @@ public class SalesCartActivity extends AppCompatActivity {
             OrderDetails o = SESSION._ORDER_DETAILES.get(i);
             Log.d("ORDER_DETAILS", o.toString());
             Log.d("Product", p.toString());
-            if (o.getProduct().equals(p) && o.getDiscount() == 0 && o.getProduct().getProductId() != -1) {
+            if (o.getProduct().equals(p) && o.getProduct().getProductId() != -1) {
                 SESSION._ORDER_DETAILES.get(i).setCount(SESSION._ORDER_DETAILES.get(i).getQuantity() + 1);
                 isMatch = true;
                 break;

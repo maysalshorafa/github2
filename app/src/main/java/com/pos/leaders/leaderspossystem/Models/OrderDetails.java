@@ -23,6 +23,9 @@ public class OrderDetails {
 	private double discount;
 
 	@JsonIgnore
+	public double rowDiscount = 0;
+
+	@JsonIgnore
 	private Product product;
 
 	@JsonIgnore

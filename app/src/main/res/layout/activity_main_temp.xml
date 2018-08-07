@@ -153,6 +153,16 @@
                             android:src="@drawable/delete_button"
                             android:text="@string/delete_check" />
 
+                        <TextView
+                            android:id="@+id/mainActivity_tvTotalPrice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="TextView"
+                            android:textColor="@color/black"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -176,16 +186,6 @@
                                 android:textStyle="bold"
                                 android:layout_marginStart="5dp"/>
                         </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/mainActivity_tvTotalPrice"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="TextView"
-                            android:textColor="@color/black"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/salesSaleMan"

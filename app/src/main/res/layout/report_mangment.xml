@@ -106,12 +106,13 @@
 
             android:layout_margin="16dp"
 
+            android:layout_marginRight="15dp"
             android:padding="16dp"
             android:text="@string/extracting_files"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="normal|bold"
-            android:layout_marginRight="15dp"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 
