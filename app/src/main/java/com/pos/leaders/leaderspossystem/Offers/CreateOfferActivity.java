@@ -97,16 +97,19 @@ public class CreateOfferActivity extends AppCompatActivity {
         offerDBAdapter.open();
         Bundle extras = getIntent().getExtras();
         if(extras!=null) {
+            Product product=null;
             if (extras.containsKey("offerId")) {
+                editableOffer = offerDBAdapter.getOfferById(extras.getLong("offerId"));
+                Log.d("editableOffer",editableOffer.toString());
                 try {
-                    editableOffer = offerDBAdapter.getOfferById(extras.getLong("offerId"));
-                    if(editableOffer.getResourceType().equals(ResourceType.PRODUCT)) {
-                        Product product = productDBAdapter.getProductByID(editableOffer.getResourceId());
-                        spRuleValue_1.setText(product.getName());
+                  if(editableOffer.getResourceType().getValue().equalsIgnoreCase("PRODUCT")) {
+                      product = productDBAdapter.getProductByID(editableOffer.getResourceId());
+                      Log.d("editableOffer",product.getName());
                     }
+                    spRuleValue_1.setText(product.getName());
                     etStart.setText(editableOffer.getStartDate()+"");
-                etEnd.setText(editableOffer.getEndDate()+"");
-                etOfferName.setText(editableOffer.getName());
+                    etEnd.setText(editableOffer.getEndDate()+"");
+                    etOfferName.setText(editableOffer.getName());
                     saveOffers.setText(getString(R.string.update_offer));
                     spOfferRule.setText(editableOffer.getResourceType().getValue());
                     spOfferRule1.setText("Quantity");
@@ -118,17 +121,19 @@ public class CreateOfferActivity extends AppCompatActivity {
                     int quantity = rules.getInt("quantity");
                     etRuleValue_1.setText(quantity+"");
                     spActionValue1.setText(actionName);
-                    if(actionName.equals(Action.Price_for_Product)) {
-                        etActionValue_1.setVisibility(View.VISIBLE);
+                    if(actionName.equals(Action.Price_for_Product.getV())) {
+                        llActionValue.setVisibility(View.VISIBLE);
                         etActionValue_1.setText(action.getDouble("value")+"");
                     }
 
                 }
                 catch (Exception ex) {
-                    ex.printStackTrace();
+                  Log.d("editableOffer",ex.toString());
                 }
             }
-        }
+
+            }
+
         //start date
         final Calendar myCalendar = Calendar.getInstance();
 
