@@ -125,7 +125,7 @@ public class CreateOfferActivity extends AppCompatActivity {
                     int quantity = rules.getInt("quantity");
                     etRuleValue_1.setText(quantity+"");
                     spActionValue1.setText(actionName);
-                    if(actionName.equals(Action.Price_for_Product.getV())) {
+                    if(actionName.equals(Action.PRICE_FOR_PRODUCT.getValue())) {
                         llActionValue.setVisibility(View.VISIBLE);
                         etActionValue_1.setText(action.getDouble("value")+"");
                     }
@@ -207,8 +207,8 @@ public class CreateOfferActivity extends AppCompatActivity {
         offerRuleList1.add("Price");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, offerRuleList1);
         actionList = new ArrayList<String>();
-        actionList.add(Action.Price_for_Product.getV());
-        actionList.add(Action.Get_gift_product.getV());
+        actionList.add(Action.PRICE_FOR_PRODUCT.getValue());
+        actionList.add(Action.GET_GIFT_PRODUCT.getValue());
         // Creating adapter for spinner
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, offerRuleList);
 
@@ -307,15 +307,15 @@ public class CreateOfferActivity extends AppCompatActivity {
                 Log.d("rule",ac);
                 if(ac.equals("Price for Product")){
                     llActionValue.setVisibility(View.VISIBLE);
-                }else if(ac.equals(Action.Get_gift_product.getV())){
+                }else if(ac.equals(Action.GET_GIFT_PRODUCT.getValue())){
                     llActionValue.setVisibility(View.GONE);
                 }
 
-                if(ac.equals(Action.Price_for_Product.getV())){
-                    action_name =Action.Price_for_Product.getV();
-                }else if(ac.equals(Action.Get_gift_product.getV())){
+                if(ac.equals(Action.PRICE_FOR_PRODUCT.getValue())){
+                    action_name =Action.PRICE_FOR_PRODUCT.getValue();
+                }else if(ac.equals(Action.GET_GIFT_PRODUCT.getValue())){
 
-                    action_name =Action.Get_gift_product.getV();
+                    action_name =Action.GET_GIFT_PRODUCT.getValue();
                 }
             }
         });
@@ -327,7 +327,7 @@ public class CreateOfferActivity extends AppCompatActivity {
                 offerDBAdapter.open();
                 JSONObject data=new JSONObject();
                 if(editableOffer==null){
-                if(action_name.equalsIgnoreCase(Action.Price_for_Product.getV())){
+                if(action_name.equalsIgnoreCase(Action.PRICE_FOR_PRODUCT.getValue())){
                     try {
                         data=  makeDataForPriceAndQuantityOffer();
                     } catch (JSONException e) {
@@ -381,14 +381,14 @@ public class CreateOfferActivity extends AppCompatActivity {
                 }
                 }else {
                     data=new JSONObject();
-                    if(action_name.equalsIgnoreCase(Action.Price_for_Product.getV())){
+                    if(action_name.equalsIgnoreCase(Action.PRICE_FOR_PRODUCT.getValue())){
                         try {
                             data=  makeDataForPriceAndQuantityOffer();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                    }else if(action_name.equalsIgnoreCase(Action.Get_gift_product.getV())){
+                    }else if(action_name.equalsIgnoreCase(Action.GET_GIFT_PRODUCT.getValue())){
                         try {
                            data=makeDataForGiftOffer();
                         } catch (JSONException e) {
@@ -504,8 +504,8 @@ public class CreateOfferActivity extends AppCompatActivity {
         rules.put(Rules.product_sku.getValue(),product_sku);
         rules.put(Rules.quantity.getValue(),quantity);
         JSONObject action = new JSONObject();
-        action.put(Action.name.getV(),action_name);
-        action.put(Action.value.getV(),priceForProduct);
+        action.put(Action.NAME.getValue(),action_name);
+        action.put(Action.VALUE.getValue(),priceForProduct);
         JSONObject data = new JSONObject();
         data.put("rules",rules);
         data.put("action",action);
@@ -516,7 +516,7 @@ public class CreateOfferActivity extends AppCompatActivity {
         rules.put(Rules.product_sku.getValue(),product_sku);
         rules.put(Rules.quantity.getValue(),quantity);
         JSONObject action = new JSONObject();
-        action.put(Action.name.getV(),action_name);
+        action.put(Action.NAME.getValue(),action_name);
         JSONObject data = new JSONObject();
         data.put("rules",rules);
         data.put("action",action);

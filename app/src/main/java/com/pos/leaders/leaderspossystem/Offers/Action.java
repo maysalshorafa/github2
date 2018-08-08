@@ -8,16 +8,17 @@ import java.util.Map;
  */
 
 public enum Action {
-    Price_for_Product("Price for Product"),
-    Get_gift_product("Get gift product"),
-    name("name"),
-    value("value");
+    ACTION("action"),
+    PRICE_FOR_PRODUCT("Price for Product"),
+    GET_GIFT_PRODUCT("Get gift product"),
+    NAME("name"),
+    VALUE("value");
 
     Action(final String v) {
         this.v = v;
     }
     private String v;
-    public String getV() {
+    public String getValue() {
         return v;
     }
     private static final Map<String, Action> map = new HashMap<>();
@@ -25,9 +26,5 @@ public enum Action {
         for (Action en : values()) {
             map.put(en.v, en);
         }
-    }
-
-    public static Action valueFor(String name) {
-        return map.get(name);
     }
 }

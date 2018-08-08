@@ -5,6 +5,7 @@ package com.pos.leaders.leaderspossystem.Offers;
  */
 
 public enum Rules {
+    RULES("rules"),
     product_sku("productSku"),
     quantity("quantity");
 

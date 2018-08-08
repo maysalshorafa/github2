@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-       android:paddingBottom="10dp" >
+       android:paddingBottom="4dp" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -100,6 +100,8 @@
         </LinearLayout>
 
     </LinearLayout>
+
+
 
     <LinearLayout
         android:id="@+id/offerLayout"
@@ -227,7 +229,34 @@
             />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/cartRow_llRowDiscount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/rowSaleDetails_LLMethods"
+        android:layout_toStartOf="@+id/rowSaleDetails_LLMethods"
+        android:orientation="horizontal"
+        >
 
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:paddingLeft="5dp"
+            android:text="@string/row_discount"
+            android:textColor="@color/Black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/cartRow_tvRowDiscountValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:paddingLeft="5dp"
+            android:textColor="@color/Black"
+            android:textSize="14sp" />
+    </LinearLayout>
     <RelativeLayout
         android:id="@+id/rowSaleDetails_LLMethods"
         android:layout_width="match_parent"

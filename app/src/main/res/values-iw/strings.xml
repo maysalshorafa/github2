@@ -556,4 +556,5 @@
     <string name="insert_product_sku">נא להכניס זהות המוצר</string>
     <string name="please_insert_another_phone_no">נא להכניס מספר טלפון נוסף</string>
     <string name="cart_discount">הנחה על הסל : </string>
+    <string name="row_discount">הנחת שורה : </string>
 </resources>

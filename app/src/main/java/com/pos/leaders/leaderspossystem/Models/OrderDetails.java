@@ -162,7 +162,10 @@ public class OrderDetails {
 	}
 
 	public double getPaidAmount() {
-		return (unitPrice * (1-(discount / 100)));
+		double temp = (unitPrice * (1 - (discount / 100)));
+		if (rowDiscount == 0)
+		return temp;
+		return temp - (temp * (rowDiscount / 100));
 	}
 
 	public double getDiscount() {

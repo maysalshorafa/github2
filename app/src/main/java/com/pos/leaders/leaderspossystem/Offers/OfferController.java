@@ -1,7 +1,6 @@
 package com.pos.leaders.leaderspossystem.Offers;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Offer;
@@ -25,40 +24,32 @@ public class OfferController {
     }
 
     public static boolean check(Offer offer, OrderDetails orderDetails) throws JSONException {
-        JSONObject rules = offer.getDataAsJsonObject().getJSONObject("rules");
+        JSONObject rules = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue());
 
-        return orderDetails.getQuantity() % rules.getInt("quantity") >= 0;
+        return (orderDetails.getQuantity() / rules.getInt(Rules.quantity.getValue())) > 0;
     }
 
     public static OrderDetails execute(Offer offer, OrderDetails orderDetails) throws JSONException {
 
-        JSONObject action = offer.getDataAsJsonObject().getJSONObject("action");
-        JSONObject rules = offer.getDataAsJsonObject().getJSONObject("rules");
-        String actionName = action.getString("name");
-        int quantity = rules.getInt("quantity");
-        if(actionName.equals("Get gift product")){
-            //todo edit excute this action
-            if (orderDetails.getQuantity() >= quantity) {
-                if (orderDetails.getDiscount()-orderDetails.rowDiscount != 0) {
-                    double currentPrice = orderDetails.getItemTotalPrice();
-                    double origanalPrice = orderDetails.getQuantity() * orderDetails.getUnitPrice();
+        JSONObject action = offer.getDataAsJsonObject().getJSONObject(Action.ACTION.getValue());
+        JSONObject rules = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue());
+        String actionName = action.getString(Action.NAME.getValue());
+        int quantity = rules.getInt(Rules.quantity.getValue());
+        orderDetails.offer = offer;
+        if(actionName.equals(Action.GET_GIFT_PRODUCT.getValue())){
+            if (orderDetails.getQuantity()  >= quantity+ 1) {
+                int productGroup = orderDetails.getQuantity() / (quantity + 1);
 
-                    int freeItem = (int) ((origanalPrice - currentPrice) / orderDetails.getUnitPrice());
-                    orderDetails.setCount(orderDetails.getQuantity() - freeItem);
-                    orderDetails.setDiscount(0);
-                }
-
-                int productGroup = orderDetails.getQuantity() / quantity;
-                double totalPrice = orderDetails.getItemTotalPrice();
-
-                orderDetails.setCount(orderDetails.getQuantity() + productGroup);
-                double newTotalPrice = orderDetails.getItemTotalPrice();
-                double discount = (1 - (totalPrice / newTotalPrice)) * 100;
+                double totalPriceBeforeDiscount = orderDetails.getQuantity() * orderDetails.getUnitPrice();
+                double discount = (1 - (((orderDetails.getQuantity() - productGroup) * orderDetails.getUnitPrice()) / totalPriceBeforeDiscount)) * 100;
 
                 orderDetails.setDiscount(discount);
+            } else {
+                orderDetails.setDiscount(0);
+                orderDetails.offer = null;
             }
-        } else if (actionName.equals("Price for Product")) {
-            double value = action.getDouble("value");
+        } else if (actionName.equals(Action.PRICE_FOR_PRODUCT.getValue())) {
+            double value = action.getDouble(Action.VALUE.getValue());
             orderDetails.setDiscount(0);
             if (orderDetails.getQuantity() >= quantity) {
 
@@ -69,10 +60,12 @@ public class OfferController {
                                 / (orderDetails.getUnitPrice() * orderDetails.getQuantity()))) * 100;
 
                 orderDetails.setDiscount(discount);
-                Log.e("Offer Discount", "execute: " + discount);
+            } else {
+                orderDetails.setDiscount(0);
+                orderDetails.offer = null;
             }
         }
-        orderDetails.offer = offer;
+
         return orderDetails;
     }
 }
