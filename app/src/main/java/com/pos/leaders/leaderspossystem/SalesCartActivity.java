@@ -3579,14 +3579,10 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     public OrderDetails calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
-        List<Offer> offerList = new ArrayList<Offer>();
-        offerList = OfferController.getOffersForResourceId(ResourceType.PRODUCT, orderDetails.getProductId(), getApplicationContext());
-        Log.e("offerlist", offerList.toString());
+        List<Offer> offerList = OfferController.getOffersForResourceId(ResourceType.PRODUCT, orderDetails.getProductId(), getApplicationContext());
         if (offerList != null) {
-            for (int i =1; i<offerList.size()  ; i++) {
-                Log.e("offerlist", offerList.get(i).toString());
+            for (int i =0; i<offerList.size(); i++) {
                 if (OfferController.check(offerList.get(i), orderDetails)) {
-
                     return OfferController.execute(offerList.get(i), orderDetails);
                 }
             }

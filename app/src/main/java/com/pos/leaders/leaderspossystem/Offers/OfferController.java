@@ -25,7 +25,6 @@ public class OfferController {
 
     public static boolean check(Offer offer, OrderDetails orderDetails) throws JSONException {
         JSONObject rules = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue());
-
         return (orderDetails.getQuantity() / rules.getInt(Rules.quantity.getValue())) > 0;
     }
 
