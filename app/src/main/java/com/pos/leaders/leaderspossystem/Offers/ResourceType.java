@@ -6,7 +6,8 @@ import java.util.Map;
 public enum ResourceType {
     OFFER("offer"),
     PRODUCT("product"),
-    CATEGORY("category");
+    CATEGORY("category"),
+    GROUP("group");
 
     ResourceType(final String value) {
         this.value = value;
