@@ -10,6 +10,7 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.*;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.*;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.*;
+import com.pos.leaders.leaderspossystem.Models.GroupsProducts;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,7 +29,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 2;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -97,6 +98,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.execSQL(ScheduleWorkersDBAdapter.DATABASE_CREATE);
         db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
+
+        db.execSQL(GroupDbAdapter.DATABASE_CREATE);
+        db.execSQL(GroupsProductsDbAdapter.DATABASE_CREATE);
 
         db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
         db.execSQL(EmployeeDBAdapter.DATABASE_CREATE);
@@ -221,6 +225,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(GroupDbAdapter.DATABASE_CREATE);
                     db.execSQL(IdsCounterDBAdapter.addColumn(GroupDbAdapter.GROUP_TABLE_NAME));
 
+                    db.execSQL(GroupsProductsDbAdapter.DATABASE_CREATE);
+                    db.execSQL(IdsCounterDBAdapter.addColumn(GroupsProductsDbAdapter.GROUPS_PRODUCTS_TABLE_NAME));
             }
         } catch (SQLException e) {
             Log.i("onUpgrade", e.getMessage(), e);

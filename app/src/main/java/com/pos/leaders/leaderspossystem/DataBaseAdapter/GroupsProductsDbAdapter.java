@@ -26,7 +26,7 @@ public class GroupsProductsDbAdapter {
     private static final String GROUPS_PRODUCTS_COLUMN_PRODUCT_SKU ="productSku";
     private static final String GROUPS_PRODUCTS_COLUMN_GROUP_ID ="groupId";
 
-    public static final String DATABASE_CREATE ="CREATE TABLE OfferGroup"+ "( `"+GROUPS_PRODUCTS_COLUMN_ID+"` INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    public static final String DATABASE_CREATE ="CREATE TABLE "+GROUPS_PRODUCTS_TABLE_NAME+ " ( `"+GROUPS_PRODUCTS_COLUMN_ID+"` INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "`"+ GROUPS_PRODUCTS_COLUMN_PRODUCT_SKU +"` INTEGER NOT NULL, " +
             "`"+ GROUPS_PRODUCTS_COLUMN_GROUP_ID +"` INTEGER NOT NULL);";
     // Variable to hold the database instance
@@ -106,7 +106,7 @@ public class GroupsProductsDbAdapter {
     public List<Long> getGroupsIdByProductSku(long productSku){
         List<Long> groups = null;
 
-        Cursor cursor = db.rawQuery("select * from " + GROUPS_PRODUCTS_TABLE_NAME + " where " + GROUPS_PRODUCTS_COLUMN_PRODUCT_SKU + "='" + productSku + "' order by desc;", null);
+        Cursor cursor = db.rawQuery("select * from " + GROUPS_PRODUCTS_TABLE_NAME + " where " + GROUPS_PRODUCTS_COLUMN_PRODUCT_SKU + "='" + productSku + "';", null);
 
         if (cursor.getCount() > 0 ) {
             cursor.moveToFirst();
