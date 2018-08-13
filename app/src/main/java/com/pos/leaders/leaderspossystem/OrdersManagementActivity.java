@@ -2,9 +2,11 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -53,15 +56,16 @@ import java.util.List;
  */
 public class OrdersManagementActivity extends AppCompatActivity {
 
+    int loadItemOffset = 0;
+    int countLoad = 20;
+    boolean userScrolled = false;
+    String searchWord = "";
+
     TextView customer;
     ListView lvOrders;
-    EditText etFrom, etTo;
     OrderDBAdapter orderDBAdapter;
     EmployeeDBAdapter userDBAdapter;
     PaymentDBAdapter paymentDBAdapter;
-    private static final int DIALOG_FROM_DATE = 825;
-    private static final int DIALOG_TO_DATE = 324;
-    Date from, to;
     EditText etSearch;
     SaleManagementListViewAdapter adapter;
     View previousView = null;
@@ -83,52 +87,23 @@ public class OrdersManagementActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sales_management);
         TitleBar.setTitleBar(this);
         lvOrders = (ListView) findViewById(R.id.saleManagement_LVSales);
-        etFrom = (EditText) findViewById(R.id.saleManagement_ETFrom);
-        etTo = (EditText) findViewById(R.id.saleManagement_ETTo);
 
-        etFrom.setFocusable(false);
-        etFrom.setText(DateConverter.getBeforeMonth().split(" ")[0]);
         etSearch = (EditText) findViewById(R.id.etSearch);
         etSearch.setText("");
         etSearch.setHint("Search..");
         etSearch.setFocusable(true);
         etSearch.requestFocus();
-        from = DateConverter.stringToDate(DateConverter.getBeforeMonth());
 
-        etTo.setFocusable(false);
-        etTo.setText(DateConverter.currentDateTime().split(" ")[0]);
-        to = DateConverter.stringToDate(DateConverter.currentDateTime());
-
-        etFrom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog(DIALOG_FROM_DATE);
-            }
-        });
-
-        etTo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog(DIALOG_TO_DATE);
-            }
-        });
 
         orderDBAdapter = new OrderDBAdapter(this);
 
         userDBAdapter = new EmployeeDBAdapter(this);
         paymentDBAdapter = new PaymentDBAdapter(this);
-        paymentDBAdapter.open();
-        setDate();
 
-    }
-
-    private void setDate() {
-        //List<ORDER> _saleList=new ArrayList<ORDER>();
         orderDBAdapter.open();
-        _saleList = orderDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime()+ DAY_MINUS_ONE_SECOND);
-       // Collections.sort(_saleList, new OutcomeDescComparator());
 
-        All_orders = _saleList;
+        _saleList = orderDBAdapter.lazyLoad(loadItemOffset, countLoad);
+
         orderDBAdapter.close();
         for (Order s : _saleList) {
             userDBAdapter.open();
@@ -155,6 +130,24 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
         lvOrders.setAdapter(adapter);
 
+        lvOrders.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    userScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (userScrolled && firstVisibleItem + visibleItemCount == totalItemCount) {
+                    userScrolled = false;
+                    loadItemOffset+=countLoad;
+                    LoadMore();
+                    Log.i("loadmore", "load");
+                }
+            }
+        });
 
         lvOrders.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -294,20 +287,21 @@ public class OrdersManagementActivity extends AppCompatActivity {
                 });
                 //endregion Cancellation ORDER Button
 
-
                 previousView.setBackgroundColor(getResources().getColor(R.color.list_background_color));
             }
         });
+
         etSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 etSearch.setFocusable(true);
             }
         });
+
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                lvOrders.setTextFilterEnabled(true);
+                //lvOrders.setTextFilterEnabled(true);
 
             }
 
@@ -318,67 +312,55 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                _saleList = new ArrayList<Order>();
                 String word = etSearch.getText().toString();
-
-                if (!word.equals("")) {
-                    for (Order c : All_orders) {
-
-                        if (c.getUser().getEmployeeName().toLowerCase().contains(word.toLowerCase()) ||(c.getOrderId() + "").contains(word.toLowerCase())
-                                || (c.getTotalPrice() + "").contains(word.toLowerCase())|| (c.getTotalPaidAmount() + "").contains(word.toLowerCase())) {
-                            _saleList.add(c);
-
-                        }
-                    }
-                } else {
-                    _saleList = All_orders;
-                }
-                adapter = new SaleManagementListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_sales_management, _saleList);
-
-                lvOrders.setAdapter(adapter);
+                loadItemOffset = 0;
+                searchWord = word;
+                _saleList.clear();
+                LoadMore();
             }
         });
 
     }
 
+    private void LoadMore(){
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        if (id == DIALOG_FROM_DATE) {
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this, onFromDateSetListener, Integer.parseInt(from.toString().split(" ")[5]), from.getMonth(), Integer.parseInt(from.toString().split(" ")[2]));
-            //datePickerDialog.getDatePicker().setMaxDate(to.getTime());
-            datePickerDialog.getDatePicker().setCalendarViewShown(false);
-            return datePickerDialog;
-        } else if (id == DIALOG_TO_DATE) {
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this, onToDateSetListener, Integer.parseInt(to.toString().split(" ")[5]), to.getMonth(), Integer.parseInt(to.toString().split(" ")[2]));
-            //datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
-            //datePickerDialog.getDatePicker().setMinDate(from.getTime());
-            datePickerDialog.getDatePicker().setCalendarViewShown(false);
-            return datePickerDialog;
-        }
-        return null;
+        final ProgressDialog dialog=new ProgressDialog(this);
+        dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish));
+
+
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected void onPreExecute() {
+
+                dialog.show();
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                adapter.notifyDataSetChanged();
+                dialog.cancel();
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                orderDBAdapter.open();
+                if (!searchWord.equals("")) {
+                    _saleList.addAll(orderDBAdapter.search(searchWord, loadItemOffset, countLoad));
+                } else {
+                    searchWord = "";
+                    _saleList.addAll(orderDBAdapter.lazyLoad(loadItemOffset, countLoad));
+                }
+                orderDBAdapter.close();
+                return null;
+            }
+        }.execute();
+
+        adapter.notifyDataSetChanged();
     }
 
-    private DatePickerDialog.OnDateSetListener onFromDateSetListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            etFrom.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
-            from = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
-            view.setMaxDate(to.getTime());
-            setDate();
-        }
-    };
 
-    private DatePickerDialog.OnDateSetListener onToDateSetListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-            etTo.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
-            to = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
-            view.setMinDate(from.getTime());
-            setDate();
-        }
-    };
 
     private void print(Bitmap bitmap) {
         PrintTools printTools = new PrintTools(this);

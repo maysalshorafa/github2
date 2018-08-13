@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -197,6 +198,43 @@ public class OrderDBAdapter {
 		while (!cursor.isAfterLast()) {
 			if (cursor.getInt(cursor.getColumnIndex(ORDER_COLUMN_STATUS)) < 1)
 				orderList.add(makeSale(cursor));
+			cursor.moveToNext();
+		}
+		return orderList;
+	}
+
+	public List<Order> search(String str,int offset,int count){
+		List<Order> orderList = new ArrayList<Order>();
+		String price = "";
+		try{
+			price = " or " + ORDER_COLUMN_TOTALPRICE + "=" + Integer.parseInt(str);
+		} catch (Exception e){}
+
+
+		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_CUSTOMER_NAME + " like '%" + str + "%'" +
+				price +
+						" or " + ORDER_COLUMN_ORDERDATE + " like '%" + str + "%'"+
+				" and " + ORDER_COLUMN_STATUS + " < 1" +
+				" order by id desc limit " + offset + "," + count, null);
+		cursor.moveToFirst();
+
+		while (!cursor.isAfterLast()) {
+			orderList.add(makeSale(cursor));
+			cursor.moveToNext();
+		}
+		return orderList;
+	}
+
+	public List<Order> lazyLoad(int offset,int count){
+		List<Order> orderList = new ArrayList<Order>();
+
+		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " +
+				ORDER_COLUMN_STATUS + " < 1" +
+				" order by id desc limit " + offset + "," + count, null);
+		cursor.moveToFirst();
+
+		while (!cursor.isAfterLast()) {
+			orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
 		return orderList;

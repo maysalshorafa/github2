@@ -36,7 +36,7 @@ public class Order {
 	@JsonIgnore
 	private Payment payment;
 	@JsonIgnore
-	private Customer customer;
+	private Customer customer=null;
 
 	@JsonIgnore
 	private Locale locale = new Locale("en");
@@ -101,6 +101,15 @@ public class Order {
 		return new Order(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name());
 	}
 
+	@JsonIgnore
+	public int getNumberOfItems(){
+		if(orders==null) return 0;
+		int count=0;
+		for (OrderDetails od : orders) {
+			count += od.getQuantity();
+		}
+		return count;
+	}
 	//endregion
 
 	//region Getter

@@ -33,8 +33,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:gravity="bottom"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:weightSum="2">
 
             <LinearLayout
@@ -45,11 +48,12 @@
                 android:weightSum="2">
 
                 <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:gravity="center_vertical"
                     android:text="@string/from"
                     android:textColor="@color/black"
                     android:textSize="20dp"
@@ -59,12 +63,13 @@
                     android:id="@+id/saleManagement_ETFrom"
                     android:layout_width="fill_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+
+
                     android:background="@drawable/bubble"
-                    android:paddingLeft="5dp"
-
-
-                    />
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -75,10 +80,12 @@
                 android:weightSum="1">
 
                 <TextView
-                    android:layout_width="120dp"
-                    android:layout_height="62dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:gravity="center_vertical"
                     android:text="@string/to"
                     android:textColor="@color/black"
                     android:textSize="20dp"
@@ -88,9 +95,11 @@
                     android:id="@+id/saleManagement_ETTo"
                     android:layout_width="fill_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:background="@drawable/bubble"
-                    android:paddingLeft="5dp" />
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp" />
 
             </LinearLayout>
 
@@ -101,6 +110,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal"
             android:weightSum="1">
 

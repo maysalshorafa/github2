@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.Models.Order;
@@ -49,11 +50,12 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			holder = new ViewHolder();
 			convertView = inflater.inflate(resource, null);
 			holder.tvID = (TextView) convertView.findViewById(R.id.listSaleManagement_TVSaleID);
-			holder.tvPrice = (TextView) convertView.findViewById(R.id.listSaleManagement_TVPrice);
-			holder.tvPaid = (TextView) convertView.findViewById(R.id.listSaleManagement_TVPaid);
+			holder.tvNumberOfItems = (TextView) convertView.findViewById(R.id.listSaleManagement_TVNumberOfItems);
+			holder.tvCustomerName = (TextView) convertView.findViewById(R.id.listSaleManagement_TVCustomerName);
 			holder.tvDate = (TextView) convertView.findViewById(R.id.listSaleManagement_TVDate);
-			holder.tvUseName = (TextView) convertView.findViewById(R.id.listSaleManagement_TVUser);
-			holder.FL = (FrameLayout) convertView.findViewById(R.id.listSaleManagement_FLMore);
+			holder.tvPrice = (TextView) convertView.findViewById(R.id.listSaleManagement_TVPrice);
+			holder.tvStatus = (TextView) convertView.findViewById(R.id.listSaleManagement_TVStatus);
+			holder.FL = (LinearLayout) convertView.findViewById(R.id.listSaleManagement_FLMore);
 			holder.btCancel = (Button) convertView.findViewById(R.id.listSaleManagement_BTCancel);
 			holder.btReturn = (Button) convertView.findViewById(R.id.listSaleManagement_BTReturn);
 			holder.btView = (Button) convertView.findViewById(R.id.listSaleManagement_BTView);
@@ -62,13 +64,24 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		double price;
-		price = salesList.get(position).getTotalPrice();
-		holder.tvID.setText(salesList.get(position).getOrderId() + "");
-		holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
-		holder.tvPaid.setText(Util.makePrice(salesList.get(position).getTotalPaidAmount()) + " " + context.getString(R.string.ins));
+		Order o = salesList.get(position);
+		price = o.getTotalPrice();
+		holder.tvID.setText(o.getOrderId() + "");
+		holder.tvNumberOfItems.setText(o.getNumberOfItems()+"");
+
+		if (o.getCustomer_name() != null && !o.getCustomer_name().equals("")) {
+			holder.tvCustomerName.setText(o.getCustomer_name());
+		} else{
+			holder.tvCustomerName.setText(context.getString(R.string.general_customer));
+		}
+
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 		holder.tvDate.setText(String.format(new Locale("en"),format.format(salesList.get(position).getCreatedAt())));
-		holder.tvUseName.setText(salesList.get(position).getUser().getFullName());
+
+		holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
+
+		holder.tvStatus.setText(R.string.invoice_with_tax);
+
 		holder.FL.setVisibility(View.GONE);
 
 		try {
@@ -80,7 +93,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 				convertView.setBackground(context.getResources().getDrawable(R.color.sale_bg));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			convertView.setBackground(context.getResources().getDrawable(R.color.sale_bg));
 		}
 
@@ -88,11 +101,12 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 	}
 	class ViewHolder {
 		private TextView tvID;
+		private TextView tvNumberOfItems;
+		private TextView tvCustomerName;
 		private TextView tvDate;
 		private TextView tvPrice;
-		private TextView tvUseName;
-		private TextView tvPaid;
-		private FrameLayout FL;
+		private TextView tvStatus;
+		private LinearLayout FL;
 		private Button btCancel;
 		private Button btReturn;
 		private Button btView;
