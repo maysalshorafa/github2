@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem.Offers;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsProductsDbAdapter;
@@ -35,20 +36,25 @@ public class OfferController {
         List<Long> groupsIdsForProduct = groupsProductsDbAdapter.getGroupsIdByProductSku(productId);
         groupsProductsDbAdapter.close();
 
-        for (long l : groupsIdsForProduct) {
-            offersResourceAndId.put(l, ResourceType.GROUP);
+        if (groupsIdsForProduct!=null) {
+            for (long l : groupsIdsForProduct) {
+                offersResourceAndId.put(l, ResourceType.GROUP);
+            }
         }
 
         //search on database for offer for this resource id
         OfferDBAdapter offerDBAdapter = new OfferDBAdapter(context);
         List<Offer> offers = null;
 
-        if(offersResourceAndId.size()>0) {
+        if(!offersResourceAndId.isEmpty()) {
             offers = new ArrayList<>();
 
             offerDBAdapter.open();
             for (Map.Entry<Long, ResourceType> entry : offersResourceAndId.entrySet()) {
-                offers.addAll(offerDBAdapter.getAllActiveOffersByResourceIdResourceType(entry.getKey(), entry.getValue()));
+                List<Offer> allActiveOffersByResourceIdResourceType = offerDBAdapter.getAllActiveOffersByResourceIdResourceType(entry.getKey(), entry.getValue());
+
+                if(allActiveOffersByResourceIdResourceType!=null)
+                    offers.addAll(allActiveOffersByResourceIdResourceType);
             }
             offerDBAdapter.close();
         }
