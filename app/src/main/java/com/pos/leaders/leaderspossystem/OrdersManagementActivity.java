@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -192,7 +193,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             break;
                     }
                 }
-                FrameLayout fr = (FrameLayout) view.findViewById(R.id.listSaleManagement_FLMore);
+                LinearLayout fr = (LinearLayout) view.findViewById(R.id.listSaleManagement_FLMore);
                 if (previousView == null) {
                     fr.setVisibility(View.VISIBLE);
                     previousView = view;
