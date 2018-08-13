@@ -28,7 +28,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 2;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -220,7 +220,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
                     db.execSQL(GroupDbAdapter.DATABASE_CREATE);
                     db.execSQL(IdsCounterDBAdapter.addColumn(GroupDbAdapter.GROUP_TABLE_NAME));
-
             }
         } catch (SQLException e) {
             Log.i("onUpgrade", e.getMessage(), e);
