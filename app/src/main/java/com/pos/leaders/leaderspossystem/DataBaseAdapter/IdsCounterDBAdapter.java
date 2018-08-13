@@ -34,6 +34,13 @@ public class IdsCounterDBAdapter {
 
         return dbc;
     }
+
+    public static String addColumn(String columnName) {
+        String dbc = "ALTER TABLE " + IDS_COUNTER_TABLE_NAME
+                + " add column " + columnName + " INTEGER default 0;";
+        return dbc;
+    }
+
     public static String INIT(List<String> tables){
         String values = "",dbc="";
         for(int i=0;i<tables.size();i++){

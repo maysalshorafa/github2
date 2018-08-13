@@ -40,6 +40,9 @@ public class Product {
     @JsonIgnore
     private List<Integer> offersIDs = new ArrayList<Integer>();
 
+    @JsonIgnore
+    private List<Long> groupsId = null;
+
     public Product(int i, String string) {
 
     }
@@ -264,6 +267,11 @@ public class Product {
         return offersIDs;
     }
 
+    public List<Long> getGroupsId() {
+        return groupsId;
+    }
+
+
     //endregion
 
     //region Setters
@@ -340,6 +348,9 @@ public class Product {
         this.inStock = inStock;
     }
 
+    public void setGroupsId(List<Long> groupsId) {
+        this.groupsId = groupsId;
+    }
     //endregion
 
 

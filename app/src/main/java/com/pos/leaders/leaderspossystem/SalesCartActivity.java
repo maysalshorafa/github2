@@ -2515,7 +2515,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
-                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+                    //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // ORDER_DETAILS Sales man Region
                 for (int i = 0; i < orderIdList.size(); i++) {
@@ -2655,7 +2655,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
-                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                    //   orderDBAdapter.insertEntry(o.getProductSku(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
                 }
                 // ORDER_DETAILS Sales man Region
                 for (int i = 0; i < orderIdList.size(); i++) {
@@ -2765,7 +2765,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
-                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+                    //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // ORDER_DETAILS Sales man Region
                 for (int i = 0; i < orderIdList.size(); i++) {
@@ -2871,7 +2871,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
-                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+                    //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // ORDER_DETAILS Sales man Region
                 for (int i = 0; i < orderIdList.size(); i++) {
@@ -2982,7 +2982,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
-                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+                    //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // ORDER_DETAILS Sales man Region
                 for (int i = 0; i < orderIdList.size(); i++) {
@@ -3091,7 +3091,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
                         long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                         orderId.add(orderid);
-                        //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+                        //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                     }
                     // ORDER_DETAILS Sales man Region
                     for (int i = 0; i < orderIdList.size(); i++) {
@@ -3579,7 +3579,7 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     public OrderDetails calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
-        List<Offer> offerList = OfferController.getOffersForResourceId(ResourceType.PRODUCT, orderDetails.getProductId(), getApplicationContext());
+        List<Offer> offerList = OfferController.getOffersForResourceId(orderDetails.getProductId(), getApplicationContext());
         if (offerList != null) {
             for (int i =0; i<offerList.size(); i++) {
                 if (OfferController.check(offerList.get(i), orderDetails)) {

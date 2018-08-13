@@ -7,46 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferRuleDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule11DBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule1DBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule5DBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.*;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.*;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -251,8 +214,13 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[2]);
                     db.execSQL(CategoryDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
                     db.execSQL(PermissionsDBAdapter.FIX_DEPARTMENT_CATEGORY_V2);
+
                     db.execSQL("drop table offers;");
                     db.execSQL(OfferDBAdapter.DATABASE_CREATE);
+
+                    db.execSQL(GroupDbAdapter.DATABASE_CREATE);
+                    db.execSQL(IdsCounterDBAdapter.addColumn(GroupDbAdapter.GROUP_TABLE_NAME));
+
             }
         } catch (SQLException e) {
             Log.i("onUpgrade", e.getMessage(), e);

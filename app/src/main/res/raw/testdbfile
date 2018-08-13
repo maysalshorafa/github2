@@ -4,10 +4,10 @@ CREATE TABLE CurrencyType ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `type` TEXT 
 CREATE TABLE Currencys ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT,`currencyCode` TEXT,`country`TEXT,`rate` INTEGER ,'lastUpdate' TEXT DEFAULT current_timestamp);
 CREATE TABLE "Rule11" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `amount` INTEGER, `discountAmount` INTEGER, `contain` INTEGER, `club_contain` INTEGER );
 CREATE TABLE "Rule3" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `percent` REAL, `contain` INTEGER );
-CREATE TABLE "Rule5" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `giftID` INTEGER ,'productId' INTEGER,'price'INTEGER);
-CREATE TABLE "Rule7" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `price` REAL, `productId` INTEGER, `contain_club` INTEGER );
-CREATE TABLE "Rule8" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `percent` REAL, `productId` INTEGER, `contain_club` INTEGER );
-CREATE TABLE "_order" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL, `productId` INTEGER, `counter` INTEGER, `orderId` TEXT, `price` REAL, `original_price` REAL, `discount` REAL, `customerAssistantID` INTEGER, FOREIGN KEY(`productId`) REFERENCES `products.id`, FOREIGN KEY(`orderId`) REFERENCES `sales.id` );
+CREATE TABLE "Rule5" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `giftID` INTEGER ,'productSku' INTEGER,'price'INTEGER);
+CREATE TABLE "Rule7" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `price` REAL, `productSku` INTEGER, `contain_club` INTEGER );
+CREATE TABLE "Rule8" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `percent` REAL, `productSku` INTEGER, `contain_club` INTEGER );
+CREATE TABLE "_order" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL, `productSku` INTEGER, `counter` INTEGER, `orderId` TEXT, `price` REAL, `original_price` REAL, `discount` REAL, `customerAssistantID` INTEGER, FOREIGN KEY(`productSku`) REFERENCES `products.id`, FOREIGN KEY(`orderId`) REFERENCES `sales.id` );
 CREATE TABLE a_report ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `lastUpdate` TEXT DEFAULT current_timestamp, `byEmployee` INTEGER, `amount` REAL, `lastSaleID` INTEGER , `lastZReportID` INTEGER , FOREIGN KEY(`byEmployee`) REFERENCES `users.id` );
 CREATE TABLE `checks` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `checkNum` INTEGER, `bankNum` INTEGER, `branchNum` INTEGER , `accountNum` INTEGER, `amount` REAL, `_date` TEXT DEFAULT current_timestamp, `deleted` INTEGER DEFAULT 0 , `orderId` INTEGER, FOREIGN KEY(`orderId`) REFERENCES `sales.id`);
 CREATE TABLE City( id INTEGER PRIMARY KEY, name TEXT );
@@ -20,7 +20,7 @@ CREATE TABLE "idsCounter" ( `android_metadata` INTEGER, `sqlite_sequence` INTEGE
 CREATE TABLE "offers" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `startDate` TEXT DEFAULT current_timestamp, `endDate` TEXT DEFAULT current_timestamp, `createdAt` TEXT DEFAULT current_timestamp, `status` INTEGER DEFAULT 0, `byEmployee` INTEGER, `ruleName` INTEGER NOT NULL, `ruleID` INTEGER NOT NULL );
 CREATE TABLE "payment" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `paymentWay` TEXT NOT NULL, `orderId` INTEGER, `amount` REAL, FOREIGN KEY(`orderId`) REFERENCES `sales.id` );
 CREATE TABLE `permissions` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL);
-CREATE TABLE "productOffer" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `productId` INTEGER, `offerId` INTEGER, FOREIGN KEY(`offerId`) REFERENCES `offers.id` , FOREIGN KEY(`productId`) REFERENCES `products.id`);
+CREATE TABLE "productOffer" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `productSku` INTEGER, `offerId` INTEGER, FOREIGN KEY(`offerId`) REFERENCES `offers.id` , FOREIGN KEY(`productSku`) REFERENCES `products.id`);
 CREATE TABLE "products" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `barcode` INTEGER NOT NULL, `description` TEXT, `price` REAL NOT NULL, `costPrice` REAL, `withTax` INTEGER NOT NULL DEFAULT 1, `weighable` INTEGER NOT NULL DEFAULT 0, `createdAt` TEXT NOT NULL DEFAULT current_timestamp, `hide` INTEGER DEFAULT 0, `depId` INTEGER NOT NULL, `byEmployee` INTEGER NOT NULL, `status` INTEGER, with_pos INTEGER DEFAULT '1', with_point_system INTEGER DEFAULT '1', FOREIGN KEY(`depId`) REFERENCES `departments.id`, FOREIGN KEY(`byEmployee`) REFERENCES `users.id` );
 CREATE TABLE "sales" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byEmployee` INTEGER, `saleDate` TEXT DEFAULT current_timestamp, `replacementNote` INTEGER DEFAULT 0, `canceled` INTEGER DEFAULT 0, `totalPrice` REAL, `totalPaid` REAL, `custmer_id` INTEGER, `custmer_name` TEXT, FOREIGN KEY(`byEmployee`) REFERENCES `users.id` );
 CREATE TABLE "scheduleWorkers" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `employeeId` INTEGER, `date` TEXT DEFAULT current_timestamp, `startTime` TEXT DEFAULT current_timestamp, `exitTime` TEXT );
