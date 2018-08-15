@@ -118,8 +118,20 @@ public class ProductDBAdapter {
 
     public long insertEntry(Product p) {
         Product product = getProductByBarCode(p.getSku());
+            if (p.getStockQuantity() > 0) {
+                p.setStatus(ProductStatus.ACTIVE);
+            } else if (p.getStockQuantity() == 0) {
+                p.setStatus(ProductStatus.OUT_OF_STOCKS);
+            }
+
+
         if (product != null) {
             Log.i("Inserting product", "barcode is exist");
+            if (product.getStatus() == ProductStatus.DELETED) {
+                p.setProductId(product.getProductId());
+                updateEntry(p);
+                return p.getProductId();
+            }
             return product.getProductId();
         }
         Product productCheckName = null;
@@ -219,10 +231,13 @@ public class ProductDBAdapter {
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
         updatedValues.put(PRODUCTS_COLUMN_DISENABLED, 1);
+        updatedValues.put(PRODUCTS_COLUMN_STATUS, ProductStatus.DELETED.getValue());
 
         String where = PRODUCTS_COLUMN_ID + " = ?";
         try {
             db.update(PRODUCTS_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+            //delete all offers for this product
+            new OfferDBAdapter(context).deleteEntryByResourceId(id);
             Product product=productDBAdapter.getProductByID(id);
             sendToBroker(MessageType.DELETE_PRODUCT, product, this.context);
             return 1;
@@ -240,6 +255,8 @@ public class ProductDBAdapter {
         String where = PRODUCTS_COLUMN_ID + " = ?";
         try {
             db.update(PRODUCTS_TABLE_NAME, updatedValues, where, new String[]{product.getProductId() + ""});
+            //delete all offers for this product
+            new OfferDBAdapter(context).deleteEntryByResourceId(product.getProductId());
             return 1;
         } catch (SQLException ex) {
             Log.e("Product deleteEntry", "enable hide Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
