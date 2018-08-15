@@ -1,9 +1,7 @@
 package com.pos.leaders.leaderspossystem.Offers;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsProductsDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Offer;
@@ -12,9 +10,7 @@ import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -72,6 +68,8 @@ public class OfferController {
 
     public static boolean check(Offer offer, OrderDetails orderDetails) throws JSONException {
         JSONObject rules = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue());
+        if(rules.getInt(Rules.quantity.getValue())<1)
+            return false;
         return (orderDetails.getQuantity() / rules.getInt(Rules.quantity.getValue())) > 0;
     }
 
