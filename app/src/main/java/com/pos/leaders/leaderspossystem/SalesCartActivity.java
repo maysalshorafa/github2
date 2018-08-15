@@ -265,7 +265,7 @@ public class SalesCartActivity extends AppCompatActivity {
     List<Long> orderId;
     long custmerSaleAssetstId;
     TextView orderSalesMan, orderCount, orderTotalPrice, orderOfferName;
-    ImageView deleteOrderSalesMan;
+    ImageView deleteOrderSalesMan,mainActivity_btnRemoveCustomer;
     String fromEditText = "";
     static List<String> printedRows;
     double valueOfDiscount = 0;
@@ -383,6 +383,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
         llDepartments = (LinearLayout) findViewById(R.id.mainActivity_LLDepartment);
         linearLayoutCustomerBalance = (LinearLayout) findViewById(R.id.linearLayoutCustomerBalance);
+        mainActivity_btnRemoveCustomer= (ImageView) findViewById(R.id.mainActivity_btnRemoveCustomer);
         departmentDBAdapter = new CategoryDBAdapter(this);
         productDBAdapter = new ProductDBAdapter(this);
         customerDBAdapter = new CustomerDBAdapter(this);
@@ -825,6 +826,14 @@ public class SalesCartActivity extends AppCompatActivity {
 
             }
         });
+        mainActivity_btnRemoveCustomer.
+                setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        removeCustomer();
+                    }
+                });
         /**  etSearch.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
         etSearch.setFocusable(true);
@@ -899,7 +908,6 @@ public class SalesCartActivity extends AppCompatActivity {
                 orderCount = (TextView) view.findViewById(R.id.rowSaleDetails_TVCount);
                 orderTotalPrice = (TextView) view.findViewById(R.id.rowSaleDetails_TVTotalPrice);
                 deleteOrderSalesMan = (ImageView) view.findViewById(R.id.deleteOrderSalesMan);
-
 
                 orderSalesMan.
                         setOnClickListener(new View.OnClickListener() {
@@ -1610,7 +1618,8 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     public void clearCart() {
-        linearLayoutCustomerBalance.setVisibility(View.INVISIBLE);
+        mainActivity_btnRemoveCustomer.setVisibility(View.GONE);
+        linearLayoutCustomerBalance.setVisibility(View.GONE);
         valueOfDiscount = 0.0;
         clubDiscount = 0;
         clubPoint = 0;
@@ -3549,6 +3558,8 @@ public class SalesCartActivity extends AppCompatActivity {
         calculateTotalPrice();
         linearLayoutCustomerBalance.setVisibility(View.VISIBLE);
         customerBalance.setText(Util.makePrice(Math.abs(customer.getBalance())));
+        mainActivity_btnRemoveCustomer.setVisibility(View.VISIBLE);
+
     }
 
     public double getCurrencyRate(String currencyType) {
@@ -3570,5 +3581,14 @@ public class SalesCartActivity extends AppCompatActivity {
             }
         }
         return orderDetails;
+    }
+    private void removeCustomer() {
+        Customer customer = null;
+        SESSION._ORDERS.setCustomer(customer);
+        customerName_EditText.setText("");
+        calculateTotalPrice();
+        linearLayoutCustomerBalance.setVisibility(View.GONE);
+        mainActivity_btnRemoveCustomer.setVisibility(View.GONE);
+        customerBalance.setText("");
     }
 }
