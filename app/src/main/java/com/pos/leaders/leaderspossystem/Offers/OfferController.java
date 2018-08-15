@@ -22,22 +22,22 @@ import java.util.List;
 import java.util.Map;
 
 public class OfferController {
-    public static List<Offer> getOffersForResourceId(long productId, Context context) {
+    public static List<Offer> getOffersForResource(Long resourceId, String sku, Context context) {
         //store the group and product ids with his type
         Map<Long, ResourceType> offersResourceAndId = new HashMap<>();
 
         //collect all offers to this product
         //PRODUCT
-        offersResourceAndId.put(productId, ResourceType.PRODUCT);
+        offersResourceAndId.put(resourceId, ResourceType.PRODUCT);
         //GROUP
         GroupsProductsDbAdapter groupsProductsDbAdapter = new GroupsProductsDbAdapter(context);
 
         groupsProductsDbAdapter.open();
-        List<Long> groupsIdsForProduct = groupsProductsDbAdapter.getGroupsIdByProductSku(productId);
+        List<Long> groupsIdsForProduct = groupsProductsDbAdapter.getGroupsIdByProductSku(sku);
         groupsProductsDbAdapter.close();
 
         if (groupsIdsForProduct!=null) {
-            for (long l : groupsIdsForProduct) {
+            for (Long l : groupsIdsForProduct) {
                 offersResourceAndId.put(l, ResourceType.MULTIPRODUCT);
             }
         }
@@ -72,6 +72,9 @@ public class OfferController {
 
     public static boolean check(Offer offer, OrderDetails orderDetails) throws JSONException {
         JSONObject rules = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue());
+        if (rules.getInt(Rules.quantity.getValue())<1) {
+            return false;
+        }
         return (orderDetails.getQuantity() / rules.getInt(Rules.quantity.getValue())) > 0;
     }
 

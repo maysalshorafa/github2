@@ -103,14 +103,14 @@ public class GroupsProductsDbAdapter {
         return products;
     }
 
-    public List<Long> getGroupsIdByProductSku(long productSku){
+    public List<Long> getGroupsIdByProductSku(String productSku){
         List<Long> groups = null;
 
         Cursor cursor = db.rawQuery("select * from " + GROUPS_PRODUCTS_TABLE_NAME + " where " + GROUPS_PRODUCTS_COLUMN_PRODUCT_SKU + "='" + productSku + "';", null);
 
         if (cursor.getCount() > 0 ) {
             cursor.moveToFirst();
-
+            groups = new ArrayList<>();
             while (!cursor.isAfterLast()) {
                 groups.add(cursor.getLong(cursor.getColumnIndex(GROUPS_PRODUCTS_COLUMN_GROUP_ID)));
                 cursor.moveToNext();

@@ -8,22 +8,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.tv.TvInputService;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,11 +64,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule11DBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule5DBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
@@ -86,19 +76,11 @@ import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Offer;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule11;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule5;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule8;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Offers.Action;
 import com.pos.leaders.leaderspossystem.Offers.OfferController;
-import com.pos.leaders.leaderspossystem.Offers.ResourceType;
 import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
 import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
@@ -3579,7 +3561,7 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     public OrderDetails calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
-        List<Offer> offerList = OfferController.getOffersForResourceId(orderDetails.getProductId(), getApplicationContext());
+        List<Offer> offerList = OfferController.getOffersForResource(orderDetails.getProductId(),orderDetails.getProduct().getSku(), getApplicationContext());
         if (offerList != null) {
             for (int i =0; i<offerList.size(); i++) {
                 if (OfferController.check(offerList.get(i), orderDetails)) {
