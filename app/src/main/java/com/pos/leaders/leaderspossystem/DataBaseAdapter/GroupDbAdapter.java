@@ -23,7 +23,7 @@ public class GroupDbAdapter {
     private static final String GROUP_COLUMN_ID ="id";
     private static final String GROUP_COLUMN_NAME ="name";
 
-    public static final String DATABASE_CREATE = "CREATE TABLE groups" + "( `" + GROUP_COLUMN_ID + "` INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    public static final String DATABASE_CREATE = "CREATE TABLE " + GROUP_TABLE_NAME + " ( `" + GROUP_COLUMN_ID + "` INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "`" + GROUP_COLUMN_NAME + "` TEXT NOT NULL)";
     // Variable to hold the database instance
     public SQLiteDatabase db;
@@ -48,6 +48,12 @@ public class GroupDbAdapter {
 
     public long insertEntry(String name) {
         Group group = new Group(Util.idHealth(this.db, GROUP_TABLE_NAME, GROUP_COLUMN_ID),name);
+
+        return insertEntry(group);
+    }
+
+    public long insertEntry(long Id,String name) {
+        Group group = new Group(Id, name);
 
         return insertEntry(group);
     }

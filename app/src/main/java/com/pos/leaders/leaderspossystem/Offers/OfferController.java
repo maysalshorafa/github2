@@ -38,7 +38,7 @@ public class OfferController {
 
         if (groupsIdsForProduct!=null) {
             for (long l : groupsIdsForProduct) {
-                offersResourceAndId.put(l, ResourceType.GROUP);
+                offersResourceAndId.put(l, ResourceType.MULTIPRODUCT);
             }
         }
 
