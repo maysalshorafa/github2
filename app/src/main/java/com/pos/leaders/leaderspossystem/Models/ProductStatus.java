@@ -8,7 +8,7 @@ public enum ProductStatus {
     DRAFT("DRAFT"),
     ACTIVE("ACTIVE"),
     DELETED("DELETED"),
-    OUT_OF_STOCKS("OUT_OF_STOCK"),
+    OUT_OF_STOCKS("OUT_OF_STOCKS"),
     PENDING("PENDING"),
     PRIVATE("PRIVATE"),
     PUBLISHED("PUBLISHED");

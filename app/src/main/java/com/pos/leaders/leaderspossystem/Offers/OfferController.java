@@ -85,7 +85,7 @@ public class OfferController {
         String actionName = action.getString(Action.NAME.getValue());
         int quantity = rules.getInt(Rules.quantity.getValue());
         orderDetails.offer = offer;
-        if(actionName.equals(Action.GET_GIFT_PRODUCT.getValue())){
+        if(actionName.equalsIgnoreCase(Action.GET_GIFT_PRODUCT.getValue())){
             if (orderDetails.getQuantity()  >= quantity+ 1) {
                 int productGroup = orderDetails.getQuantity() / (quantity + 1);
 
@@ -97,7 +97,7 @@ public class OfferController {
                 orderDetails.setDiscount(0);
                 orderDetails.offer = null;
             }
-        } else if (actionName.equals(Action.PRICE_FOR_PRODUCT.getValue())) {
+        } else if (actionName.equalsIgnoreCase(Action.PRICE_FOR_PRODUCT.getValue())) {
             double value = action.getDouble(Action.VALUE.getValue());
             orderDetails.setDiscount(0);
             if (orderDetails.getQuantity() >= quantity) {
