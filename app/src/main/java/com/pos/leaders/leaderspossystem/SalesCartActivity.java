@@ -2720,25 +2720,25 @@ public class SalesCartActivity extends AppCompatActivity {
                 // Club with point and amount
                 if (clubType == 2) {
                     pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
-                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
+                    sum_pointDbAdapter.insertEntry(saleID, pointFromSale, customerId);
                 }
 
                 if (equalUsedPoint) {
                     saleTotalPrice = 0.0;
                     SESSION._ORDERS.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
                     SESSION._ORDERS.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
                     SESSION._ORDERS.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
                 }
                 saleDBAdapter.close();
 
@@ -2754,7 +2754,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
