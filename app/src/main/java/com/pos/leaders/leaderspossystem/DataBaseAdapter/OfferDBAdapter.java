@@ -247,6 +247,24 @@ public class OfferDBAdapter {
 			return 0;
 		}
 	}
+
+	public int deleteEntryByResourceId(long productSku) {
+		OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
+		offerDBAdapter.open();
+		// Define the updated row content.
+
+		String where = OFFER_COLUMN_RESOURCE_ID + " = ?";
+		try {
+			db.delete(OFFER_TABLE_NAME, where, new String[]{productSku + ""});
+			Offer offer=offerDBAdapter.getOfferById(productSku);
+			sendToBroker(MessageType.DELETE_OFFER, offer, this.context);
+			return 1;
+		} catch (SQLException ex) {
+			Log.e("Offer deleteEntry", " delete Entry at " + OFFER_TABLE_NAME + ": " + ex.getMessage());
+			return 0;
+		}
+	}
+
 	public long deleteEntryBo(Offer offer) {
 		// Define the updated row content.
 		ContentValues updatedValues = new ContentValues();
