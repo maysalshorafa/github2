@@ -80,6 +80,7 @@ import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -1077,14 +1078,23 @@ public class SyncMessage extends Service {
                 String paymentWay = newJsonObject.getString("paymentWay");
                 long orderId = newJsonObject.getLong("orderId");
                 List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
+                List<Payment> paymentList = new ArrayList<Payment>();
                 List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
                 List<Check> checkList = new ArrayList<Check>();
-                if(paymentWay.equalsIgnoreCase(CONSTANT.CASH)){
+                if(paymentWay.equalsIgnoreCase(CONSTANT.CASH)&& SETTINGS.enableCurrencies==true){
                     //get cash payment detail by order id
                     CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(getApplicationContext());
                     cashPaymentDBAdapter.open();
                     cashPaymentList = cashPaymentDBAdapter.getPaymentBySaleID(orderId);
                     JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
+                    newJsonObject.put("paymentDetails",jsonArray);
+                }
+                if(paymentWay.equalsIgnoreCase(CONSTANT.CASH)&& SETTINGS.enableCurrencies==false){
+                    //get cash payment detail by order id
+                    PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(getApplicationContext());
+                    paymentDBAdapter.open();
+                    paymentList = paymentDBAdapter.getPaymentBySaleID(orderId);
+                    JSONArray jsonArray = new JSONArray(paymentList.toString());
                     newJsonObject.put("paymentDetails",jsonArray);
                 }
                 if(paymentWay.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
