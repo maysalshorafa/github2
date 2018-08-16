@@ -7,7 +7,7 @@ public enum ResourceType {
     OFFER("offer"),
     PRODUCT("product"),
     CATEGORY("category"),
-    GROUP("group");
+    MULTIPRODUCT("multiProduct");
 
     ResourceType(final String value) {
         this.value = value;

@@ -55,8 +55,8 @@ public class GroupsProductsDbAdapter {
         return db;
     }
 
-    public long insertEntry(long productId,long offer_group_id) {
-        GroupsProducts groupsProducts = new GroupsProducts(Util.idHealth(this.db, GROUPS_PRODUCTS_TABLE_NAME, GROUPS_PRODUCTS_COLUMN_ID),productId, offer_group_id);
+    public long insertEntry(long productSku,long offerGroupId) {
+        GroupsProducts groupsProducts = new GroupsProducts(Util.idHealth(this.db, GROUPS_PRODUCTS_TABLE_NAME, GROUPS_PRODUCTS_COLUMN_ID),productSku, offerGroupId);
         try {
             return insertEntry(groupsProducts);
         } catch (SQLException ex) {
@@ -103,14 +103,14 @@ public class GroupsProductsDbAdapter {
         return products;
     }
 
-    public List<Long> getGroupsIdByProductSku(long productSku){
+    public List<Long> getGroupsIdByProductSku(String productSku){
         List<Long> groups = null;
 
         Cursor cursor = db.rawQuery("select * from " + GROUPS_PRODUCTS_TABLE_NAME + " where " + GROUPS_PRODUCTS_COLUMN_PRODUCT_SKU + "='" + productSku + "';", null);
 
         if (cursor.getCount() > 0 ) {
             cursor.moveToFirst();
-
+            groups = new ArrayList<>();
             while (!cursor.isAfterLast()) {
                 groups.add(cursor.getLong(cursor.getColumnIndex(GROUPS_PRODUCTS_COLUMN_GROUP_ID)));
                 cursor.moveToNext();

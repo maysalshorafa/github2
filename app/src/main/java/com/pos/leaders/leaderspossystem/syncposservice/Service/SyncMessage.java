@@ -36,6 +36,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsProductsDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
@@ -83,6 +85,8 @@ import com.pos.leaders.leaderspossystem.Models.SumPoint;
 import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Offers.ResourceType;
+import com.pos.leaders.leaderspossystem.Offers.Rules;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -497,6 +501,26 @@ public class SyncMessage extends Service {
                     offerDBAdapter.open();
                     rID = offerDBAdapter.insertEntry(offer);
                     offerDBAdapter.close();
+                    if (offer.getResourceType() == ResourceType.MULTIPRODUCT) {
+                        JSONArray skus = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue()).getJSONArray(Rules.product_sku.getValue());
+                        if (skus.length() > 0) {
+                            //creating new group
+                            GroupDbAdapter groupDbAdapter = new GroupDbAdapter(this);
+                            groupDbAdapter.open();
+                            long groupId = groupDbAdapter.insertEntry(offer.getResourceId(), offer.getName());
+                            groupDbAdapter.close();
+
+                            //insert product to group
+                            GroupsProductsDbAdapter groupsProductsDbAdapter = new GroupsProductsDbAdapter(this);
+                            groupsProductsDbAdapter.open();
+                            for(int i=0;i<skus.length();i++) {
+                                groupsProductsDbAdapter.insertEntry(skus.getLong(i), groupId);
+                            }
+                            groupsProductsDbAdapter.close();
+
+                        }
+                    }
+
                     break;
                 case MessageType.UPDATE_OFFER:
                     Offer updateOffer = null;
@@ -521,72 +545,6 @@ public class SyncMessage extends Service {
                     deleteOfferDBAdapter.close();
                     break;
                 //endregion OFFER
-
-                //region Rules3
-                case MessageType.ADD_RULE_3:
-                    Rule3 rule3 = null;
-                    rule3 = objectMapper.readValue(msgData, Rule3.class);
-
-                    Rule3DbAdapter rule3DbAdapter = new Rule3DbAdapter(this);
-                    rule3DbAdapter.open();
-                    rID = rule3DbAdapter.insertEntry(rule3);
-                    rule3DbAdapter.close();
-                    break;
-                case MessageType.UPDATE_RULE_3:
-                    break;
-                case MessageType.DELETE_RULE_3:
-                    break;
-                //endregion Rule3
-
-                //region Rule7
-                case MessageType.ADD_RULE_7:
-                    Rule7 rule7 = null;
-                    rule7 = objectMapper.readValue(msgData, Rule7.class);
-
-                    Rule7DbAdapter rule7DbAdapter = new Rule7DbAdapter(this);
-                    rule7DbAdapter.open();
-                    rID = rule7DbAdapter.insertEntry(rule7);
-                    rule7DbAdapter.close();
-                    break;
-                case MessageType.UPDATE_RULE_7:
-                    break;
-                case MessageType.DELETE_RULE_7:
-                    break;
-                //endregion Rule7
-
-                //region Rule8
-                case MessageType.ADD_RULE_8:
-                    Rule8 rule8 = null;
-                    rule8 = objectMapper.readValue(msgData, Rule8.class);
-
-                    Rule8DBAdapter rule8DbAdapter = new Rule8DBAdapter(this);
-                    rule8DbAdapter.open();
-                    rID = rule8DbAdapter.insertEntry(rule8);
-                    rule8DbAdapter.close();
-                    break;
-                case MessageType.UPDATE_RULE_8:
-                    break;
-                case MessageType.DELETE_RULE_8:
-                    break;
-                //endregion Rule8
-
-                //region Rule11
-                case MessageType.ADD_RULE_11:
-                    Rule11 rule11 = null;
-                    rule11 = objectMapper.readValue(msgData, Rule11.class);
-
-                    Rule11DBAdapter rule11DbAdapter = new Rule11DBAdapter(this);
-                    rule11DbAdapter.open();
-                    rID = rule11DbAdapter.insertEntry(rule11);
-                    rule11DbAdapter.close();
-                    break;
-                case MessageType.UPDATE_RULE_11:
-                    break;
-                case MessageType.DELETE_RULE_11:
-                    break;
-                //endregion Rule11
-
-                //endregion Rules
 
                 //region PAYMENT
                 case MessageType.ADD_PAYMENT:
