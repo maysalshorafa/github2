@@ -464,6 +464,7 @@
     <string name="delete_product_message"> Are you want to delete this product?</string>
     <string name="create_z_report_message"> Are you want to Create Z Report?</string>
     <string name="create_z_report">Create Z Report</string>
+    <string name="please_insert_customer_credit">Please insert customer credit.</string>
 
     <!--club string-->
     <string name="_description">description</string>
@@ -637,6 +638,8 @@
     <string name="please_determine_offer_action">please determine offer action</string>
     <string name="cart_discount">Cart discount : </string>
     <string name="row_discount">Row discount : </string>
+    <string name="payment_by_credit">Credit Payment</string>
+    <string name="remainingCredit">Remain Credit</string>
 
 
 
