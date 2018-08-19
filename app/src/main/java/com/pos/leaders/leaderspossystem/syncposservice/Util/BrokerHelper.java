@@ -2,7 +2,6 @@ package com.pos.leaders.leaderspossystem.syncposservice.Util;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +30,6 @@ public class BrokerHelper {
             objectMapper.setDateFormat(dateFormat);
             String jsonInString = objectMapper.writeValueAsString(obj);
             JSONObject data = new JSONObject(jsonInString);
-            Log.d("offerBOBefore",data.toString());
             jsonObject.put(MessageKey.Data, data);
 
         } catch (JSONException e) {

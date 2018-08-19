@@ -76,6 +76,7 @@ import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.SumPoint;
 import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
+import com.pos.leaders.leaderspossystem.Models.Wallet;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Offers.ResourceType;
 import com.pos.leaders.leaderspossystem.Offers.Rules;
@@ -1426,6 +1427,19 @@ public class SyncMessage extends Service {
                 break;
             case MessageType.DELETE_SCHEDULE_WORKERS:
                 res = messageTransmit.authDelete(ApiURL.ScheduleWorker, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //End
+            //Wallet
+            case MessageType.ADD_WALLET:
+                res = messageTransmit.authPost(ApiURL.Wallet, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_WALLET:
+                Wallet wallet=null;
+                wallet=objectMapper.readValue(msgData, Wallet.class);
+                res = messageTransmit.authPut(ApiURL.Wallet,jsonObject.getString(MessageKey.Data), token,wallet.getCustomerId());
+                break;
+            case MessageType.DELETE_WALLET:
+                res = messageTransmit.authDelete(ApiURL.Wallet, jsonObject.getString(MessageKey.Data), token);
                 break;
             //End
 
