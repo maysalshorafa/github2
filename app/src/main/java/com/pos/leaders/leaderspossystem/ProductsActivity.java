@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductStatus;
+import com.pos.leaders.leaderspossystem.Models.ProductUnit;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCategoryGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -41,7 +43,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     ArrayAdapter<String> LAdapter;
     List<Category> listDepartment;
     List<String> departmentsName;
-
+    Spinner productUnitSp;
     Button btSave,btnCancel;
     EditText etName,etBarcode,etDescription,etPrice,etCostPrice,etDisplayName,etSku,etStockQuantity;
     Switch swWithTax,swWeighable,swManageStock;
@@ -62,6 +64,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     long check;
     long depID;
     boolean withTax , withWeighable=false, manageStock = true;
+    ProductUnit unit ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,10 +97,22 @@ public class ProductsActivity  extends AppCompatActivity  {
 
         swWithTax=(Switch)findViewById(R.id.SWWithTax);
         swWeighable=(Switch)findViewById(R.id.SWWeighable);
-
+        productUnitSp = (Spinner)findViewById(R.id.SpProductUnit);
         productDBAdapter = new ProductDBAdapter(this);
         productDBAdapter.open();
-
+        final List<ProductUnit>productUnit = new ArrayList<ProductUnit>();
+        productUnit.add(ProductUnit.WEIGHT);
+        productUnit.add(ProductUnit.LENGTH);
+        productUnit.add(ProductUnit.QUANTITY);
+        final List<String>productUnitString = new ArrayList<String>();
+        productUnitString.add(ProductUnit.WEIGHT.getValue());
+        productUnitString.add(ProductUnit.LENGTH.getValue());
+        productUnitString.add(ProductUnit.QUANTITY.getValue());
+        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, productUnitString);
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // attaching data adapter to spinner
+        productUnitSp.setAdapter(dataAdapter);
         //region Add product button
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,7 +204,17 @@ public class ProductsActivity  extends AppCompatActivity  {
             }
         });
 
+        productUnitSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                unit = productUnit.get(position);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         Bundle extras = getIntent().getExtras();
 
         if(extras!=null) {
@@ -216,6 +241,13 @@ public class ProductsActivity  extends AppCompatActivity  {
                     swWeighable.setChecked(editableProduct.isWeighable());
                     Category d = departmentDBAdapter.getDepartmentByID(editableProduct.getCategoryId());
                     swManageStock.setChecked(editableProduct.isManageStock());
+                    for (int i = 0; i < productUnit.size(); i++) {
+                        ProductUnit productUnit1 = productUnit.get(i);
+                        if (productUnit1 == editableProduct.getUnit()) {
+                            productUnitSp.setSelection(i);
+
+                        }
+                    }
                     selectedDepartment = d.getName();
                     for (Category dep : listDepartment) {
                         if (dep.getCategoryId() == (editableProduct.getCategoryId())) {
@@ -311,10 +343,11 @@ public class ProductsActivity  extends AppCompatActivity  {
                 if(!etCostPrice.getText().toString().equals("")){
                     costPrice=Double.parseDouble(etCostPrice.getText().toString());
                 }
+
                 check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
                         etDescription.getText().toString(), price, costPrice, withTax,
                         withWeighable, depID, SESSION._EMPLOYEE.getEmployeeId(), with_pos, with_point_system,
-                        etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0));
+                        etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit);
                 if (check > 0) {
                     Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_product), Toast.LENGTH_LONG).show();
                     return true;
@@ -375,6 +408,7 @@ public class ProductsActivity  extends AppCompatActivity  {
             editableProduct.setCategoryId(depID);
             editableProduct.setManageStock(manageStock);
             editableProduct.setInStock(stockQuantity>0);
+            editableProduct.setUnit(unit);
 
             try {
                 productDBAdapter.updateEntry(editableProduct);

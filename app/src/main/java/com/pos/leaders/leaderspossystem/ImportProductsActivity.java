@@ -188,7 +188,7 @@ public class ImportProductsActivity extends Activity {
                         if(availableProductName&&availableBarCode) {
                             productDBAdapter.insertEntry(p.getName(), p.getBarCode(),
                                     "", p.getPrice(), p.getCostPrice(), true, false, depID, p.getByEmployee(), 1, 1,
-                                    p.getSku(), p.getStatus(), p.getDisplayName(), p.getRegularPrice(), p.getStockQuantity(), p.isManageStock(), p.isInStock());
+                                    p.getSku(), p.getStatus(), p.getDisplayName(), p.getRegularPrice(), p.getStockQuantity(), p.isManageStock(), p.isInStock(),p.getUnit());
                         }
                     }
                     productDBAdapter.close();

@@ -35,6 +35,7 @@ public class Product {
     private int stockQuantity;
     private boolean manageStock;
     private boolean inStock;
+    private ProductUnit unit;
 
 
     @JsonIgnore
@@ -76,7 +77,7 @@ public class Product {
 
 
 
-    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax, boolean weighable, Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock) {
+    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax, boolean weighable, Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit) {
 
         this.productId = productId;
         this.name = name;
@@ -99,10 +100,11 @@ public class Product {
         this.stockQuantity = stockQuantity;
         this.manageStock = manageStock;
         this.inStock = inStock;
+        this.unit=unit;
     }
 
 
-    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax, boolean weighable, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock) {
+    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax, boolean weighable, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit) {
 
         this.productId = productId;
         this.name = name;
@@ -124,6 +126,7 @@ public class Product {
         this.stockQuantity = stockQuantity;
         this.manageStock = manageStock;
         this.inStock = inStock;
+        this.unit=unit;
     }
 
     public Product(long productId, String name,String displayName, double price, long byEmployee) {
@@ -174,7 +177,7 @@ public class Product {
                 product.getPrice(), product.getCostPrice(), product.isWithTax(), product.isWeighable(),
                 product.getCreatedAt(), product.isHide(), product.getCategoryId(), product.getByEmployee(),
                 product.getWithPos(), product.getWithPointSystem(), product.getSku(), product.getStatus(), product.getDisplayName(),
-                product.getRegularPrice(), product.getStockQuantity(), product.isManageStock(), product.isInStock());
+                product.getRegularPrice(), product.getStockQuantity(), product.isManageStock(), product.isInStock(),product.getUnit());
     }
 
     public Product() {
@@ -354,6 +357,14 @@ public class Product {
     //endregion
 
 
+    public ProductUnit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(ProductUnit unit) {
+        this.unit = unit;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -369,7 +380,6 @@ public class Product {
                 ", hide=" + hide +
                 ", categoryId=" + categoryId +
                 ", byEmployee=" + byEmployee +
-
                 ", withPos=" + withPos +
                 ", withPointSystem=" + withPointSystem +
                 ", sku='" + sku + '\'' +
@@ -379,6 +389,7 @@ public class Product {
                 ", stockQuantity=" + stockQuantity +
                 ", manageStock=" + manageStock +
                 ", inStock=" + inStock +
+                ", unit=" + unit +
                 ", offersIDs=" + offersIDs +
                 '}';
     }
