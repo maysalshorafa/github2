@@ -234,10 +234,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                         } else if (etPhoneNo.getText().toString().equals("")) {
                             etCustomerLastName.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
-                        }  else if (!customerDBAdapter.availableCustomerPhoneNo(etPhoneNo.getText().toString())) {
-                            etPhoneNo.setBackgroundResource(R.drawable.backtext);
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
-                        } else if (etCustomerCredit.getText().toString().equals("")) {
+                        }  else if (etCustomerCredit.getText().toString().equals("")) {
                             etCustomerCredit.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_customer_credit), Toast.LENGTH_LONG).show();
                         }else {
