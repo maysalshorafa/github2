@@ -134,6 +134,7 @@ public class SalesCartActivity extends AppCompatActivity {
     private static final int REQUEST_CREDIT_CARD_ACTIVITY_CODE = 801;
     private static final int REQUEST_PIN_PAD_ACTIVITY_CODE = 907;
     private static final int REQUEST_MULTI_CURRENCY_ACTIVITY_CODE = 444;
+    private static final int REQUEST_CREDIT_ACTIVITY_CODE = 500;
     public static final String COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE = "com_pos_leaders_cart_total_price";
     String transID = "";
 
@@ -840,14 +841,10 @@ public class SalesCartActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (SESSION._ORDER_DETAILES.size() > 0&& SESSION._ORDERS.getCustomer().getCredit()>=saleTotalPrice) {
-
-                        Intent intent = new Intent(SalesCartActivity.this, MultiCurrenciesPaymentActivity.class);
-                        intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, saleTotalPrice);
-                        startActivityForResult(intent, REQUEST_MULTI_CURRENCY_ACTIVITY_CODE);
                     final Dialog customerCreditDialog = new Dialog(SalesCartActivity.this);
                     customerCreditDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     customerCreditDialog.show();
-                    customerCreditDialog.setContentView(R.layout.pop_up);
+                    customerCreditDialog.setContentView(R.layout.activity_customer_credit);
                     TextView customerName = (TextView) customerCreditDialog.findViewById(R.id.customerCreditCustomerName);
                     customerName.setText(SESSION._ORDERS.getCustomer_name());
                     TextView totalPrice = (TextView) customerCreditDialog.findViewById(R.id.TvPrice);
@@ -924,9 +921,10 @@ public class SalesCartActivity extends AppCompatActivity {
                             Payment payment = new Payment(paymentID, CREDIT, saleTotalPrice, saleID);
                             SESSION._ORDERS.setPayment(payment);
 
-                            printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
+                            printAndOpenCashBox("", "", "", REQUEST_CREDIT_ACTIVITY_CODE);
                             saleDBAdapter.close();
                             clearCart();
+                            customerCreditDialog.dismiss();
                             return;
 
 

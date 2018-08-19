@@ -44,10 +44,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule11DBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.LogInActivity;
@@ -70,10 +66,6 @@ import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDy
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Offer;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule11;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule8;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
@@ -661,10 +653,9 @@ public class SyncMessage extends Service {
                 case MessageType.ADD_CUSTOMER:
                     Customer customer = null;
                     customer = objectMapper.readValue(msgData, Customer.class);
-
                     CustomerDBAdapter customerDBAdapter = new CustomerDBAdapter(this);
                     customerDBAdapter.open();
-                    rID = customerDBAdapter.insertEntry(customer);
+                    rID = customerDBAdapter.insertEntryFromBo(customer);
                     customerDBAdapter.close();
 
                     break;

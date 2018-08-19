@@ -148,6 +148,35 @@ public class CustomerDBAdapter {
         val.put(CUSTOMER_COLUMN_CREDIT,customer.getCredit());
 
 
+
+
+        try {
+            return db.insert(CUSTOMER_TABLE_NAME, null, val);
+        } catch (SQLException ex) {
+            Log.e("CustomerDB insertEntry", "inserting Entry at " + CUSTOMER_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+    }
+    public long insertEntryFromBo(Customer customer) {
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(CUSTOMER_COLUMN_ID, customer.getCustomerId());
+        val.put(CUSTOMER_COLUMN_FIRST_NAME, customer.getFirstName());
+        val.put(CUSTOMER_COLUMN_LAST_NAME, customer.getLastName());
+        val.put(CUSTOMER_COLUMN_GENDER, customer.getGender());
+        val.put(CUSTOMER_COLUMN_EMAIL, customer.getEmail());
+        val.put(CUSTOMER_COLUMN_JOB, customer.getJob());
+        val.put(CUSTOMER_COLUMN_DISENABLED, customer.isHide() ? 1 : 0);
+        val.put(CUSTOMER_COLUMN_PHONE_NUMBER, customer.getPhoneNumber());
+        val.put(CUSTOMER_COLUMN_STREET, customer.getStreet());
+        val.put(CUSTOMER_COLUMN_CITY, customer.getCity());
+        val.put(CUSTOMER_COLUMN_CLUB, customer.getClub());
+        val.put(CUSTOMER_COLUMN_HOUSE_NUMBER, customer.getHouseNumber());
+        val.put(CUSTOMER_COLUMN_POSTAL_CODE, customer.getPostalCode());
+        val.put(CUSTOMER_COLUMN_COUNTRY, customer.getCountry());
+        val.put(CUSTOMER_COLUMN_COUNTRY_CODE, customer.getCountryCode());
+        val.put(CUSTOMER_COLUMN_BALANCE,customer.getBalance());
+
         try {
             return db.insert(CUSTOMER_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -280,6 +309,9 @@ public class CustomerDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_CREDIT))));
         if (c.getFirstName() == null) {
             c.setFirstName("");
+        }
+        if (c.getCredit() == null) {
+            c.setCredit(0.0);
         }
 
         return c;
