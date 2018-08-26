@@ -44,10 +44,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule11DBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule7DbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule8DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.LogInActivity;
@@ -70,10 +66,6 @@ import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDy
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Offer;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule11;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule3;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule7;
-import com.pos.leaders.leaderspossystem.Models.Offers.Rule8;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
@@ -515,6 +507,25 @@ public class SyncMessage extends Service {
                             groupsProductsDbAdapter.open();
                             for(int i=0;i<skus.length();i++) {
                                 groupsProductsDbAdapter.insertEntry(skus.getLong(i), groupId);
+                            }
+                            groupsProductsDbAdapter.close();
+
+                        }
+                    }
+                    if (offer.getResourceType() == ResourceType.CATEGORY) {
+                        JSONArray categoryList = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue()).getJSONArray(Rules.categoryList.getValue());
+                        if (categoryList.length() > 0) {
+                            //creating new group
+                            GroupDbAdapter groupDbAdapter = new GroupDbAdapter(this);
+                            groupDbAdapter.open();
+                            long groupId = groupDbAdapter.insertEntry(offer.getResourceId(), offer.getName());
+                            groupDbAdapter.close();
+
+                            //insert product to group
+                            GroupsProductsDbAdapter groupsProductsDbAdapter = new GroupsProductsDbAdapter(this);
+                            groupsProductsDbAdapter.open();
+                            for(int i=0;i<categoryList.length();i++) {
+                                groupsProductsDbAdapter.insertEntry(Long.parseLong(categoryList.getString(i)), groupId);
                             }
                             groupsProductsDbAdapter.close();
 

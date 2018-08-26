@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.Models.GroupsProducts;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -120,7 +119,23 @@ public class GroupsProductsDbAdapter {
 
         return groups;
     }
+    public List<Long> getGroupsIdByProductCategory(long productCategory){
+        List<Long> groups = null;
 
+        Cursor cursor = db.rawQuery("select * from " + GROUPS_PRODUCTS_TABLE_NAME + " where " + GROUPS_PRODUCTS_COLUMN_PRODUCT_SKU + "='" + productCategory + "';", null);
+
+        if (cursor.getCount() > 0 ) {
+            cursor.moveToFirst();
+            groups = new ArrayList<>();
+            while (!cursor.isAfterLast()) {
+                groups.add(cursor.getLong(cursor.getColumnIndex(GROUPS_PRODUCTS_COLUMN_GROUP_ID)));
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+
+        return groups;
+    }
 
     public boolean deleteOfferGroup(long offerGroup) {
         return db.delete(GROUPS_PRODUCTS_TABLE_NAME, GROUPS_PRODUCTS_COLUMN_GROUP_ID + "=" + offerGroup, null) > 0;
