@@ -25,16 +25,11 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.Customer;
-import com.pos.leaders.leaderspossystem.Models.Wallet;
-import com.pos.leaders.leaderspossystem.Models.WalletStatus;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     String street="" , job="" , email="" , houseNo="" , postalCode="" , country="" , countryCode="";
@@ -193,8 +188,6 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                         etCustomerLastName.getText().toString(), gender, email, job, etPhoneNo.getText().toString(), street, cityId, clubID, houseNo, etPostalCode.getText().toString(),
                                        country, countryCode,0,Double.parseDouble(etCustomerCredit.getText().toString()));
                                 if (i > 0) {
-                                    Wallet wallet = new Wallet(WalletStatus.ACTIVE,Double.parseDouble(etCustomerCredit.getText().toString()),i);
-                                    sendToBroker(MessageType.ADD_WALLET, wallet, getApplicationContext());
                                     Toast.makeText(getApplicationContext(), getString(R.string.success_adding_new_customer), Toast.LENGTH_LONG).show();
                                     try {
                                         Thread.sleep(500);
@@ -263,8 +256,6 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                 customerDBAdapter.updateEntry(customer);
                                 customerDBAdapter.updateEntry(customer);
                                 Toast.makeText(getApplicationContext(), getString(R.string.success_edit_customer), Toast.LENGTH_SHORT).show();
-                                Wallet wallet = new Wallet(WalletStatus.ACTIVE,Double.parseDouble(etCustomerCredit.getText().toString()),customer.getCustomerId());
-                                sendToBroker(MessageType.UPDATE_WALLET, wallet, getApplicationContext());
 
                                 Log.i("success Edit", customer.toString());
                                 onBackPressed();

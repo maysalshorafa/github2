@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.Wallet;
+import com.pos.leaders.leaderspossystem.Models.WalletStatus;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -117,6 +119,9 @@ public class CustomerDBAdapter {
         boCustomer.setCountry(Util.getString(boCustomer.getCountry()));
         boCustomer.setCountryCode(Util.getString(boCustomer.getCountryCode()));
         sendToBroker(MessageType.ADD_CUSTOMER, boCustomer, this.context);
+        Wallet wallet = new Wallet(WalletStatus.ACTIVE,customer_m.getCredit(),customer_m.getCustomerId());
+        sendToBroker(MessageType.ADD_WALLET, wallet, context);
+
         try {
             long insertResult = insertEntry(customer_m);
             return insertResult;
@@ -241,6 +246,8 @@ public class CustomerDBAdapter {
         Customer c=customerDBAdapter.getCustomerByID(customer.getCustomerId());
         Log.d("Update Object",c.toString());
         sendToBroker(MessageType.UPDATE_CUSTOMER, c, this.context);
+        Wallet wallet = new Wallet(WalletStatus.ACTIVE,c.getCredit(),c.getCustomerId());
+        sendToBroker(MessageType.UPDATE_WALLET, wallet, context);
         customerDBAdapter.close();
 
     }
