@@ -1,7 +1,5 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import android.util.Log;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -134,6 +132,15 @@ public class OrderDetails {
 
 	public long getOrderId() {
 		return orderId;
+	}
+
+	public void setOrderId(long orderId) {
+
+		this.orderId = orderId;
+	}
+
+	public void setOrderDetailsId(long orderDetailsId) {
+		this.orderDetailsId = orderDetailsId;
 	}
 
 	public Product getProduct() {

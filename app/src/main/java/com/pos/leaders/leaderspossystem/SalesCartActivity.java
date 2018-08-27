@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -16,6 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -45,9 +47,11 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
@@ -56,7 +60,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
@@ -67,13 +70,13 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Customer;
-import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Order;
@@ -99,6 +102,7 @@ import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
 import org.json.JSONArray;
@@ -107,6 +111,7 @@ import org.json.JSONObject;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -144,7 +149,7 @@ public class SalesCartActivity extends AppCompatActivity {
     //ImageButton    btnLastSales;
     Button btnPercentProduct, btnPauseSale, btnResumeSale;
     ImageButton search_person;
-    Button btnCash, btnCreditCard, btnOtherWays;
+    Button btnCash, btnCreditCard, btnOtherWays , createInvoice;
     TextView tvTotalPrice, tvTotalSaved, salesSaleMan, customerBalance;
     EditText etSearch;
     ImageButton btnDone;
@@ -339,6 +344,7 @@ public class SalesCartActivity extends AppCompatActivity {
         btnList = (ImageButton) findViewById(R.id.mainActivity_btnList);
         salesSaleMan = (TextView) findViewById(R.id.salesSaleMan);
         customerBalance = (TextView) findViewById(R.id.customerBalance);
+        createInvoice = (Button)findViewById(R.id.mainActivity_BTNInvoice);
         custmerAssetstIdList = new ArrayList<Long>();
         orderIdList = new ArrayList<OrderDetails>();
         orderId = new ArrayList<Long>();
@@ -1247,6 +1253,103 @@ public class SalesCartActivity extends AppCompatActivity {
 
                     clearCart();
                     Toast.makeText(SalesCartActivity.this, getString(R.string.deal_number) + " " + SESSION.TEMP_NUMBER, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        //invoice Button region
+        createInvoice.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("StaticFieldLeak")
+            @Override
+            public void onClick(View view) {
+                List<Long> ordersIds = new ArrayList<>();
+                if (SESSION._ORDER_DETAILES.size() > 0) {
+                    if (Long.valueOf(SESSION._ORDERS.getCustomerId()) == 0) {
+                        if (SESSION._ORDERS.getCustomer_name() == null) {
+                            if (customerName_EditText.getText().toString().equals("")) {
+                                SESSION._ORDERS.setCustomer_name("");
+                            } else {
+                                SESSION._ORDERS.setCustomer_name(customerName_EditText.getText().toString());
+                            }
+                        }
+                    }
+                    saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
+                    orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
+                    saleDBAdapter.open();
+                    orderDBAdapter.open();
+                    saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
+                    SESSION._ORDERS.setOrderId(saleIDforCash);
+                    for (OrderDetails o : SESSION._ORDER_DETAILES) {
+                        o.setOrderId(saleIDforCash);
+                        long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                        o.setOrderDetailsId(orderid);
+                    }
+                    //update customer balance
+                    if(SESSION._ORDERS.getTotalPrice()<0&&customer!=null){
+                        Customer upDateCustomer=customer;
+                        upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice()+customer.getBalance());
+                        customerDBAdapter.updateEntry(upDateCustomer);
+                    }
+                    ordersIds.add(3000002L);
+                    saleDBAdapter.close();
+                    final JSONObject jsonObject = new JSONObject();
+                    JSONObject documentData = new JSONObject();
+                    JSONObject customerData = new JSONObject();
+                    try {
+                        customerData.put("customerId", SESSION._ORDERS.getCustomer().getCustomerId());
+                        documentData.put("@type", "Invoice");
+                        DateFormat df = new DateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+                        documentData.put("date",df.format(new Date()));
+                        documentData.put("fulfillmentDate", df.format(new Date()));
+                        documentData.put("dueDate", df.format(new Date()));
+                        JSONArray jsonArray = new JSONArray();
+                        jsonArray.put(saleIDforCash);
+                        documentData.put("listOfOrders", jsonArray);
+                        documentData.put("customer", customerData);
+                        documentData.put("invoiceStatus", "UNPAID");
+                        documentData.put("publicNote", "public note");
+                        documentData.put("privateNote", "private note");
+                        documentData.put("currency", "ILS");
+                        jsonObject.put("type", "INVOICE");
+                        jsonObject.put("documentsData", documentData);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    new AsyncTask<Void, Void, Void>(){
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                        }
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            clearCart();
+                        }
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                            try {
+                                ObjectMapper mapper = new ObjectMapper();
+                                String ordRes=transmit.authPost(ApiURL.ORDER, mapper.writeValueAsString(SESSION._ORDERS), SESSION.token);
+                                Log.i("Order log", ordRes);
+                                for (OrderDetails o : SESSION._ORDER_DETAILES) {
+                                    try {
+                                        Thread.sleep(100);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Log.i("Order Details", transmit.authPost(ApiURL.ORDER_DETAILS, mapper.writeValueAsString(o), SESSION.token));
+                                    //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+                                }
+                                Log.w("Document vale", jsonObject.toString());
+                                String res=transmit.authPost(ApiURL.documents, jsonObject.toString(), SESSION.token);
+                                Log.i("Invoice log", res);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+                    }.execute();
+                } else{
+                    Toast.makeText(SalesCartActivity.this, "There is no items into on cart.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
