@@ -1,10 +1,14 @@
 package com.pos.leaders.leaderspossystem.DataBaseAdapter;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
@@ -13,7 +17,14 @@ import com.pos.leaders.leaderspossystem.Models.Wallet;
 import com.pos.leaders.leaderspossystem.Models.WalletStatus;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
+import com.sun.pdfview.PDFFile;
+import com.sun.pdfview.PDFPage;
 
+import net.sf.andpdf.nio.ByteBuffer;
+
+import org.json.JSONException;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +35,9 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
  */
 
 public class CustomerDBAdapter {
+    Bitmap page=null ;
+    public static final String SAMPLE_FILE = "randompdf.pdf";
+    ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
     //Table name
     public static final String CUSTOMER_TABLE_NAME = "customer";
     //column names
@@ -104,7 +118,7 @@ public class CustomerDBAdapter {
         return customer_m;
     }
 
-    public long insertEntry(String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, int cityId, long clubId, String houseNumber, String postalCode, String country, String countryCode,double balance,double credit) {
+    public long insertEntry(String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, int cityId, long clubId, String houseNumber, String postalCode, String country, String countryCode,double balance,double credit) throws JSONException {
         Customer customer_m = new Customer(Util.idHealth(this.db, CUSTOMER_TABLE_NAME, CUSTOMER_COLUMN_ID), firstName, lastName, gender, email, job, phoneNumber, street, false, cityId, clubId, houseNumber, postalCode, country, countryCode,balance,credit);
         Customer boCustomer = customer_m;
         boCustomer.setFirstName(Util.getString(boCustomer.getFirstName()));
@@ -118,9 +132,6 @@ public class CustomerDBAdapter {
         boCustomer.setPostalCode(Util.getString(boCustomer.getPostalCode()));
         boCustomer.setCountry(Util.getString(boCustomer.getCountry()));
         boCustomer.setCountryCode(Util.getString(boCustomer.getCountryCode()));
-        sendToBroker(MessageType.ADD_CUSTOMER, boCustomer, this.context);
-        Wallet wallet = new Wallet(WalletStatus.ACTIVE,customer_m.getCredit(),customer_m.getCustomerId());
-        sendToBroker(MessageType.ADD_WALLET, wallet, context);
 
         try {
             long insertResult = insertEntry(customer_m);
@@ -447,4 +458,70 @@ public class CustomerDBAdapter {
         return true;
     }
 
+    private void pdfLoadImages(final byte[] data) {
+        bitmapList=new ArrayList<Bitmap>();
+        try {
+            // run async
+            new AsyncTask<Void, Void, String>() {
+                // create and show a progress dialog
+                ProgressDialog progressDialog = ProgressDialog.show(context, "", "Opening...");
+
+                @Override
+                protected void onPostExecute(String html) {
+                    //after async close progress dialog
+                    progressDialog.dismiss();
+                    //load the html in the webview
+                    //	wv1.loadDataWithBaseURL("", html, "randompdf/html", "UTF-8", "");
+                }
+
+                @Override
+                protected String doInBackground(Void... params) {
+                    try {
+                        //create pdf document object from bytes
+                        ByteBuffer bb = ByteBuffer.NEW(data);
+                        PDFFile pdf = new PDFFile(bb);
+                        //Get the first page from the pdf doc
+                        PDFPage PDFpage = pdf.getPage(1, true);
+                        //create a scaling value according to the WebView Width
+                        final float scale = 800 / PDFpage.getWidth() * 0.80f;
+                        //convert the page into a bitmap with a scaling value
+                        page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
+                        //save the bitmap to a byte array
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        stream.reset();
+                        //convert the byte array to a base64 string
+                        String base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                        //create the html + add the first image to the html
+                        String html = "<!DOCTYPE html><html><body bgcolor=\"#ffffff\"><img src=\"data:image/png;base64," + base64 + "\" hspace=328 vspace=4><br>";
+                        //loop though the rest of the pages and repeat the above
+                        for (int i = 0; i <= pdf.getNumPages(); i++) {
+                            PDFpage = pdf.getPage(i, true);
+                            page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
+                            page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            bitmapList.add(page);
+                            byteArray = stream.toByteArray();
+                            stream.reset();
+                            base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                            html += "<img src=\"data:image/png;base64," + base64 + "\" hspace=10 vspace=10><br>";
+
+                        }
+                        Log.d("bit",bitmapList.size()+"");
+                        stream.close();
+                        html += "</body></html>";
+                        return html;
+                    } catch (Exception e) {
+                        Log.d("error", e.toString());
+                    }
+                    return null;
+                }
+            }.execute();
+            System.gc();// run GC
+        } catch (Exception e) {
+            Log.d("error", e.toString());
+        }
+    }
 }
+
+

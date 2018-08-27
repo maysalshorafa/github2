@@ -1,8 +1,14 @@
 package com.pos.leaders.leaderspossystem.CustomerAndClub;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -19,15 +25,37 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.Wallet;
+import com.pos.leaders.leaderspossystem.Models.WalletStatus;
+import com.pos.leaders.leaderspossystem.PdfUA;
+import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
+import com.sun.pdfview.PDFFile;
+import com.sun.pdfview.PDFPage;
 
+import net.sf.andpdf.nio.ByteBuffer;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +80,8 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     ImageView advanceFeature;
     TextView advance ,tvCustomerBalance;
     LinearLayout CustomerBalance ;
+    public static Context context = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +90,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         setContentView(R.layout.activity_add_new_coustmer);
         TitleBar.setTitleBar(this);
         init();
+        context=this;
         customer = null;
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -184,10 +215,19 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                 etCustomerCredit.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_customer_credit), Toast.LENGTH_LONG).show();
                         }else {
-                                long i = customerDBAdapter.insertEntry(etCustomerFirstName.getText().toString(),
-                                        etCustomerLastName.getText().toString(), gender, email, job, etPhoneNo.getText().toString(), street, cityId, clubID, houseNo, etPostalCode.getText().toString(),
-                                       country, countryCode,0,Double.parseDouble(etCustomerCredit.getText().toString()));
+                                long i = 0;
+                                try {
+                                    i = customerDBAdapter.insertEntry(etCustomerFirstName.getText().toString(),
+                                            etCustomerLastName.getText().toString(), gender, email, job, etPhoneNo.getText().toString(), street, cityId, clubID, houseNo, etPostalCode.getText().toString(),
+                                           country, countryCode,0,Double.parseDouble(etCustomerCredit.getText().toString()));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                                 if (i > 0) {
+                                    Customer customer = customerDBAdapter.getCustomerByID(i);
+                                    Wallet wallet = new Wallet(WalletStatus.ACTIVE,Double.parseDouble(etCustomerCredit.getText().toString()),i);
+                                    StartConnection startConnection = new StartConnection();
+                                    startConnection.execute(customer.toString(),wallet.toString());
                                     Toast.makeText(getApplicationContext(), getString(R.string.success_adding_new_customer), Toast.LENGTH_LONG).show();
                                     try {
                                         Thread.sleep(500);
@@ -363,3 +403,195 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     }
 
 }
+class StartConnection extends AsyncTask<String,Void,String> {
+    Bitmap page=null ;
+    public static final String SAMPLE_FILE = "customerwallet.pdf";
+    ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
+    private MessageTransmit messageTransmit;
+
+    StartConnection() {
+        messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+    }
+
+    final ProgressDialog progressDialog = new ProgressDialog(AddNewCustomer.context);
+    final ProgressDialog progressDialog2 =new ProgressDialog(AddNewCustomer.context);
+
+    @Override
+    protected void onPreExecute() {
+        progressDialog.setTitle("Please Wait");
+        progressDialog2.setTitle("Please Wait");
+        progressDialog.show();
+    }
+
+    @Override
+    protected String doInBackground(String... args) {//args{key,uuid}
+        String customer = args[0];
+        String wallet = args[1];
+
+        String initRes = "";
+        String customerRes = "";
+
+        try {
+            customerRes = messageTransmit.authPost(ApiURL.Customer, customer, SESSION.token);
+            JSONObject customerJson = new JSONObject(customerRes);
+            if (customerJson.getInt(MessageKey.status) == 200) {
+                initRes = messageTransmit.authPost(ApiURL.Wallet, wallet,SESSION.token);
+                Log.e("messageResult", initRes);
+                JSONObject jsonObject = new JSONObject(initRes);
+                if (jsonObject.getInt(MessageKey.status) == 200) {
+                    JSONObject responseBody = jsonObject.getJSONObject(MessageKey.responseBody);
+                    Log.d("CustomerReciptResult",responseBody.toString());
+                    try {
+                        PdfUA pdfUA = new PdfUA();
+
+                        pdfUA.printCustomerWalletReport(AddNewCustomer.context,responseBody.toString());
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (DocumentException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try
+                    {
+                        File path = new File( Environment.getExternalStorageDirectory(), AddNewCustomer.context.getPackageName() );
+                        File file = new File(path,SAMPLE_FILE);
+                        RandomAccessFile f = new RandomAccessFile(file, "r");
+                        byte[] data = new byte[(int)f.length()];
+                        f.readFully(data);
+                        pdfLoadImages(data);
+                        PrintTools pt=new PrintTools(AddNewCustomer.context);
+
+                        for (int i= 1;i<bitmapList.size(); i++) {
+                            Log.d("bitmapsize",bitmapList.size()+"");
+                            pt.PrintReport(bitmapList.get(i));
+
+                        }
+                        //pdfLoadImages1(data);
+                    }
+                    catch(Exception ignored)
+                    {
+                    }
+                }
+            }
+
+
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+
+        //region rr
+        //the async task is finished
+        if (s != null) {
+            //success
+
+            final String token = SESSION.token;
+
+            //null response
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    progressDialog2.setTitle("Success.");
+                    progressDialog2.show();
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    progressDialog2.cancel();
+                    /**  SetupNewPOSOnlineActivity.restart = true;
+                     final Intent i = new Intent(SetupNewPOSOnlineActivity.context, SplashScreenActivity.class);
+                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                     SetupNewPOSOnlineActivity.context.startActivity(i);
+                     **/
+                    super.onPostExecute(aVoid);
+                }
+            }.execute();
+        } else {
+            //fail
+            Toast.makeText(AddNewCustomer.context, "Try Again.", Toast.LENGTH_SHORT).show();
+        }
+        progressDialog.cancel();
+        super.onPostExecute(s);
+
+        //endregion
+    }
+    private void pdfLoadImages(final byte[] data) {
+        bitmapList=new ArrayList<Bitmap>();
+        try {
+            // run async
+            new AsyncTask<Void, Void, String>() {
+                // create and show a progress dialog
+                ProgressDialog progressDialog = ProgressDialog.show(AddNewCustomer.context, "", "Opening...");
+
+                @Override
+                protected void onPostExecute(String html) {
+                    //after async close progress dialog
+                    progressDialog.dismiss();
+                    //load the html in the webview
+                    //	wv1.loadDataWithBaseURL("", html, "randompdf/html", "UTF-8", "");
+                }
+
+                @Override
+                protected String doInBackground(Void... params) {
+                    try {
+                        //create pdf document object from bytes
+                        ByteBuffer bb = ByteBuffer.NEW(data);
+                        PDFFile pdf = new PDFFile(bb);
+                        //Get the first page from the pdf doc
+                        PDFPage PDFpage = pdf.getPage(1, true);
+                        //create a scaling value according to the WebView Width
+                        final float scale = 800 / PDFpage.getWidth() * 0.80f;
+                        //convert the page into a bitmap with a scaling value
+                        page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
+                        //save the bitmap to a byte array
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        stream.reset();
+                        //convert the byte array to a base64 string
+                        String base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                        //create the html + add the first image to the html
+                        String html = "<!DOCTYPE html><html><body bgcolor=\"#ffffff\"><img src=\"data:image/png;base64," + base64 + "\" hspace=328 vspace=4><br>";
+                        //loop though the rest of the pages and repeat the above
+                        for (int i = 0; i <= pdf.getNumPages(); i++) {
+                            PDFpage = pdf.getPage(i, true);
+                            page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
+                            page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            bitmapList.add(page);
+                            byteArray = stream.toByteArray();
+                            stream.reset();
+                            base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                            html += "<img src=\"data:image/png;base64," + base64 + "\" hspace=10 vspace=10><br>";
+
+                        }
+                        Log.d("bit",bitmapList.size()+"");
+                        stream.close();
+                        html += "</body></html>";
+                        return html;
+                    } catch (Exception e) {
+                        Log.d("error", e.toString());
+                    }
+                    return null;
+                }
+            }.execute();
+            System.gc();// run GC
+        } catch (Exception e) {
+            Log.d("error", e.toString());
+        }
+    }
+
+}
+

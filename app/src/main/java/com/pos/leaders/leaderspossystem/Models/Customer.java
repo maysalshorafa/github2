@@ -214,24 +214,25 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{" +
-                "customerId=" + customerId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", gender='" + gender + '\'' +
-                ", email='" + email + '\'' +
-                ", job='" + job + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", street='" + street + '\'' +
-                ", hide=" + hide +
-                ", city=" + city +
-                ", club=" + club +
-                ", houseNumber='" + houseNumber + '\'' +
-                ", postalCode='" + postalCode + '\'' +
-                ", country='" + country + '\'' +
-                ", countryCode='" + countryCode + '\'' +
-                ", balance=" + balance +
-                ", credit=" + credit +
+        return "{" +
+                "\""+"customerId"+ "\""+":" + "\""+customerId+"\"" +
+                ","+"\""+"firstName"+ "\""+":" + "\""+ firstName+"\""  +
+                ","+"\""+"lastName"+ "\""+":" + "\""+ lastName +"\"" +
+                ","+"\""+"gender"+ "\""+":" + "\""+  gender +"\"" +
+                ","+"\""+"email"+ "\""+":" + "\""+  email +"\"" +
+                ","+"\""+"job"+ "\""+":" + "\""+ job +"\"" +
+                ","+"\""+"phoneNumber"+ "\""+":" + "\""+  phoneNumber +"\"" +
+                ","+"\""+"street"+ "\""+":" + "\""+ street +"\"" +
+                ","+"\""+"hide"+ "\""+":" + "\""+  hide +"\"" +
+                ","+"\""+"city"+ "\""+":" + "\""+  city +"\"" +
+                ","+"\""+"club"+ "\""+":" + "\""+ club +"\"" +
+                ","+"\""+"houseNumber"+ "\""+":" + "\""+ houseNumber +"\"" +
+                ","+"\""+"postalCode"+ "\""+":" + "\""+  postalCode +"\"" +
+                ","+"\""+"country"+ "\""+":" + "\""+  country +"\"" +
+                ","+"\""+"countryCode"+ "\""+":" + "\""+  countryCode +"\"" +
+                ","+"\""+"balance"+ "\""+":" + "\""+ balance +"\"" +
+                ","+"\""+"credit"+ "\""+":" + "\""+  credit +"\"" +
                 '}';
     }
+
 }

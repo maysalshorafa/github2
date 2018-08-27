@@ -43,10 +43,10 @@ public class Wallet {
 
     @Override
     public String toString() {
-        return "Wallet{" +
-                "status=" + status +
-                ", creditAmount=" + creditAmount +
-                ", customerId=" + customerId +
+        return "{" +
+                 "\""+"status"+ "\""+":" + "\""+status+"\"" +
+                ","+"\""+"creditAmount"+ "\""+":" + "\""+ creditAmount+"\""  +
+                ","+"\""+"customerId"+ "\""+":" + "\""+ + customerId +"\"" +
                 '}';
     }
 }
