@@ -37,7 +37,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsProductsDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
@@ -76,6 +76,7 @@ import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.SumPoint;
 import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
+import com.pos.leaders.leaderspossystem.Models.Wallet;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Offers.ResourceType;
 import com.pos.leaders.leaderspossystem.Offers.Rules;
@@ -503,7 +504,7 @@ public class SyncMessage extends Service {
                             groupDbAdapter.close();
 
                             //insert product to group
-                            GroupsProductsDbAdapter groupsProductsDbAdapter = new GroupsProductsDbAdapter(this);
+                            GroupsResourceDbAdapter groupsProductsDbAdapter = new GroupsResourceDbAdapter(this);
                             groupsProductsDbAdapter.open();
                             for(int i=0;i<skus.length();i++) {
                                 groupsProductsDbAdapter.insertEntry(skus.getLong(i), groupId);
@@ -522,12 +523,21 @@ public class SyncMessage extends Service {
                             groupDbAdapter.close();
 
                             //insert product to group
+<<<<<<< HEAD
                             GroupsProductsDbAdapter groupsProductsDbAdapter = new GroupsProductsDbAdapter(this);
                             groupsProductsDbAdapter.open();
                             for(int i=0;i<categoryList.length();i++) {
                                 groupsProductsDbAdapter.insertEntry(Long.parseLong(categoryList.getString(i)), groupId);
                             }
                             groupsProductsDbAdapter.close();
+=======
+                            GroupsResourceDbAdapter groupsCategoryDbAdapter = new GroupsResourceDbAdapter(this);
+                            groupsCategoryDbAdapter.open();
+                            for(int i=0;i<categoryList.length();i++) {
+                                groupsCategoryDbAdapter.insertEntry(Long.parseLong(categoryList.getString(i)), groupId);
+                            }
+                            groupsCategoryDbAdapter.close();
+>>>>>>> LEAD-37
 
                         }
                     }
@@ -672,10 +682,9 @@ public class SyncMessage extends Service {
                 case MessageType.ADD_CUSTOMER:
                     Customer customer = null;
                     customer = objectMapper.readValue(msgData, Customer.class);
-
                     CustomerDBAdapter customerDBAdapter = new CustomerDBAdapter(this);
                     customerDBAdapter.open();
-                    rID = customerDBAdapter.insertEntry(customer);
+                    rID = customerDBAdapter.insertEntryFromBo(customer);
                     customerDBAdapter.close();
 
                     break;
@@ -1446,6 +1455,19 @@ public class SyncMessage extends Service {
                 break;
             case MessageType.DELETE_SCHEDULE_WORKERS:
                 res = messageTransmit.authDelete(ApiURL.ScheduleWorker, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //End
+            //Wallet
+            case MessageType.ADD_WALLET:
+                res = messageTransmit.authPost(ApiURL.Wallet, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_WALLET:
+                Wallet wallet=null;
+                wallet=objectMapper.readValue(msgData, Wallet.class);
+                res = messageTransmit.authPut(ApiURL.Wallet,jsonObject.getString(MessageKey.Data), token,wallet.getCustomerId());
+                break;
+            case MessageType.DELETE_WALLET:
+                res = messageTransmit.authDelete(ApiURL.Wallet, jsonObject.getString(MessageKey.Data), token);
                 break;
             //End
 

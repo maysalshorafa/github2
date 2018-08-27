@@ -2,7 +2,8 @@ package com.pos.leaders.leaderspossystem.Offers;
 
 import android.content.Context;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsProductsDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
+
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
@@ -28,13 +29,14 @@ public class OfferController {
         //PRODUCT
         offersResourceAndId.put(resourceId, ResourceType.PRODUCT);
         //GROUP
-        GroupsProductsDbAdapter groupsProductsDbAdapter = new GroupsProductsDbAdapter(context);
+        GroupsResourceDbAdapter groupsResourceDbAdapter = new GroupsResourceDbAdapter(context);
 
-        groupsProductsDbAdapter.open();
-        List<Long> groupsIdsForProduct = groupsProductsDbAdapter.getGroupsIdByProductSku(sku);
-        List<Long> groupsIdsForProductCategory = groupsProductsDbAdapter.getGroupsIdByProductCategory(productCategoryId);
+        groupsResourceDbAdapter.open();
+        List<Long> groupsIdsForProduct = groupsResourceDbAdapter.getGroupsIdByProductSku(sku);
+        List<Long> groupsIdsForProductCategory = groupsResourceDbAdapter.getGroupsIdByProductCategory(productCategoryId);
 
-        groupsProductsDbAdapter.close();
+        groupsResourceDbAdapter.close();
+
 
         if (groupsIdsForProduct!=null) {
             for (Long l : groupsIdsForProduct) {

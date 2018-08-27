@@ -8,7 +8,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
+<<<<<<< HEAD:app/src/main/java/com/pos/leaders/leaderspossystem/DataBaseAdapter/GroupsProductsDbAdapter.java
 import com.pos.leaders.leaderspossystem.Models.GroupsProducts;
+=======
+import com.pos.leaders.leaderspossystem.Models.GroupsResources;
+>>>>>>> LEAD-37:app/src/main/java/com/pos/leaders/leaderspossystem/DataBaseAdapter/GroupsResourceDbAdapter.java
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
@@ -18,16 +22,16 @@ import java.util.List;
  * Created by Karam on 8/12/2018.
  */
 
-public class GroupsProductsDbAdapter {
-    public static final String GROUPS_PRODUCTS_TABLE_NAME ="groupsProducts";
+public class GroupsResourceDbAdapter {
+    public static final String GROUPS_RESOURCES_TABLE_NAME ="groupsResources";
 
-    private static final String GROUPS_PRODUCTS_COLUMN_ID ="id";
-    private static final String GROUPS_PRODUCTS_COLUMN_PRODUCT_SKU ="productSku";
-    private static final String GROUPS_PRODUCTS_COLUMN_GROUP_ID ="groupId";
+    private static final String GROUPS_RESOURCES_COLUMN_ID ="id";
+    private static final String GROUPS_RESOURCES_COLUMN_RESOURCE_ID ="resourceId";
+    private static final String GROUPS_RESOURCE_COLUMN_GROUP_ID ="groupId";
 
-    public static final String DATABASE_CREATE ="CREATE TABLE "+GROUPS_PRODUCTS_TABLE_NAME+ " ( `"+GROUPS_PRODUCTS_COLUMN_ID+"` INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "`"+ GROUPS_PRODUCTS_COLUMN_PRODUCT_SKU +"` INTEGER NOT NULL, " +
-            "`"+ GROUPS_PRODUCTS_COLUMN_GROUP_ID +"` INTEGER NOT NULL);";
+    public static final String DATABASE_CREATE ="CREATE TABLE "+ GROUPS_RESOURCES_TABLE_NAME + " ( `"+ GROUPS_RESOURCES_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "`"+ GROUPS_RESOURCES_COLUMN_RESOURCE_ID +"` INTEGER NOT NULL, " +
+            "`"+ GROUPS_RESOURCE_COLUMN_GROUP_ID +"` INTEGER NOT NULL);";
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
@@ -35,12 +39,12 @@ public class GroupsProductsDbAdapter {
     // Database open/upgrade helper
     private DbHelper dbHelper;
 
-    public GroupsProductsDbAdapter(Context context) {
+    public GroupsResourceDbAdapter(Context context) {
         this.context = context;
         this.dbHelper=new DbHelper(context);
     }
 
-    public GroupsProductsDbAdapter open() throws SQLException {
+    public GroupsResourceDbAdapter open() throws SQLException {
         this.db=dbHelper.getWritableDatabase();
         return this;
     }
@@ -55,27 +59,27 @@ public class GroupsProductsDbAdapter {
     }
 
     public long insertEntry(long productSku,long offerGroupId) {
-        GroupsProducts groupsProducts = new GroupsProducts(Util.idHealth(this.db, GROUPS_PRODUCTS_TABLE_NAME, GROUPS_PRODUCTS_COLUMN_ID),productSku, offerGroupId);
+        GroupsResources groupsProducts = new GroupsResources(Util.idHealth(this.db, GROUPS_RESOURCES_TABLE_NAME, GROUPS_RESOURCES_COLUMN_ID),productSku, offerGroupId);
         try {
             return insertEntry(groupsProducts);
         } catch (SQLException ex) {
-            Log.e("GroupsProducts insert", "inserting Entry at " + GROUPS_PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("groupsResources insert", "inserting Entry at " + GROUPS_RESOURCES_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
     }
 
-    public long insertEntry(GroupsProducts groupsProducts) {
+    public long insertEntry(GroupsResources groupsProducts) {
         ContentValues val = new ContentValues();
 
-        val.put(GROUPS_PRODUCTS_COLUMN_ID, groupsProducts.getId());
-        val.put(GROUPS_PRODUCTS_COLUMN_PRODUCT_SKU, groupsProducts.getProductSku());
-        val.put(GROUPS_PRODUCTS_COLUMN_GROUP_ID, groupsProducts.getGroupId());
+        val.put(GROUPS_RESOURCES_COLUMN_ID, groupsProducts.getId());
+        val.put(GROUPS_RESOURCES_COLUMN_RESOURCE_ID, groupsProducts.getResourceId());
+        val.put(GROUPS_RESOURCE_COLUMN_GROUP_ID, groupsProducts.getGroupId());
 
         try {
 
-            return db.insert(GROUPS_PRODUCTS_TABLE_NAME, null, val);
+            return db.insert(GROUPS_RESOURCES_TABLE_NAME, null, val);
         } catch (SQLException ex) {
-            Log.e("GroupsProducts insert", "inserting Entry at " + GROUPS_PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("GroupsResources insert", "inserting Entry at " + GROUPS_RESOURCES_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
 
@@ -84,7 +88,7 @@ public class GroupsProductsDbAdapter {
     public List<Long> getProductsSkusByGroupId(long groupId) {
         List<Long> products = null;
 
-        Cursor cursor = db.rawQuery("select * from " + GROUPS_PRODUCTS_TABLE_NAME + " where " + GROUPS_PRODUCTS_COLUMN_GROUP_ID + "='" + groupId + "' order by desc;", null);
+        Cursor cursor = db.rawQuery("select * from " + GROUPS_RESOURCES_TABLE_NAME + " where " + GROUPS_RESOURCE_COLUMN_GROUP_ID + "='" + groupId + "' order by desc;", null);
 
         products = new ArrayList<>();
 
@@ -92,7 +96,7 @@ public class GroupsProductsDbAdapter {
             cursor.moveToFirst();
 
             while (!cursor.isAfterLast()) {
-                products.add(cursor.getLong(cursor.getColumnIndex(GROUPS_PRODUCTS_COLUMN_PRODUCT_SKU)));
+                products.add(cursor.getLong(cursor.getColumnIndex(GROUPS_RESOURCES_COLUMN_RESOURCE_ID)));
                 cursor.moveToNext();
             }
         }
@@ -105,13 +109,13 @@ public class GroupsProductsDbAdapter {
     public List<Long> getGroupsIdByProductSku(String productSku){
         List<Long> groups = null;
 
-        Cursor cursor = db.rawQuery("select * from " + GROUPS_PRODUCTS_TABLE_NAME + " where " + GROUPS_PRODUCTS_COLUMN_PRODUCT_SKU + "='" + productSku + "';", null);
+        Cursor cursor = db.rawQuery("select * from " + GROUPS_RESOURCES_TABLE_NAME + " where " + GROUPS_RESOURCES_COLUMN_RESOURCE_ID + "='" + productSku + "';", null);
 
         if (cursor.getCount() > 0 ) {
             cursor.moveToFirst();
             groups = new ArrayList<>();
             while (!cursor.isAfterLast()) {
-                groups.add(cursor.getLong(cursor.getColumnIndex(GROUPS_PRODUCTS_COLUMN_GROUP_ID)));
+                groups.add(cursor.getLong(cursor.getColumnIndex(GROUPS_RESOURCE_COLUMN_GROUP_ID)));
                 cursor.moveToNext();
             }
         }
@@ -138,12 +142,12 @@ public class GroupsProductsDbAdapter {
     }
 
     public boolean deleteOfferGroup(long offerGroup) {
-        return db.delete(GROUPS_PRODUCTS_TABLE_NAME, GROUPS_PRODUCTS_COLUMN_GROUP_ID + "=" + offerGroup, null) > 0;
+        return db.delete(GROUPS_RESOURCES_TABLE_NAME, GROUPS_RESOURCE_COLUMN_GROUP_ID + "=" + offerGroup, null) > 0;
     }
 
-    private GroupsProducts makeOfferGroup(Cursor cursor) {
+    private GroupsResources makeOfferGroup(Cursor cursor) {
         try {
-            return new GroupsProducts(Long.parseLong(cursor.getString(cursor.getColumnIndex(GROUPS_PRODUCTS_COLUMN_ID))), Long.parseLong(cursor.getString(cursor.getColumnIndex(GROUPS_PRODUCTS_COLUMN_PRODUCT_SKU))),Long.parseLong(cursor.getString(cursor.getColumnIndex(GROUPS_PRODUCTS_COLUMN_GROUP_ID))));
+            return new GroupsResources(Long.parseLong(cursor.getString(cursor.getColumnIndex(GROUPS_RESOURCES_COLUMN_ID))), Long.parseLong(cursor.getString(cursor.getColumnIndex(GROUPS_RESOURCES_COLUMN_RESOURCE_ID))),Long.parseLong(cursor.getString(cursor.getColumnIndex(GROUPS_RESOURCE_COLUMN_GROUP_ID))));
         } catch (Exception ex) {
             return null;
 
