@@ -7,7 +7,9 @@ package com.pos.leaders.leaderspossystem.Offers;
 public enum Rules {
     RULES("rules"),
     product_sku("productSku"),
-    quantity("quantity");
+    quantity("quantity"),
+    category("category"),
+    categoryList("categoryList");
 
     Rules(final String value) {
         this.value = value;

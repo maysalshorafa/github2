@@ -37,7 +37,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsProductsDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
@@ -504,12 +504,31 @@ public class SyncMessage extends Service {
                             groupDbAdapter.close();
 
                             //insert product to group
-                            GroupsProductsDbAdapter groupsProductsDbAdapter = new GroupsProductsDbAdapter(this);
+                            GroupsResourceDbAdapter groupsProductsDbAdapter = new GroupsResourceDbAdapter(this);
                             groupsProductsDbAdapter.open();
                             for(int i=0;i<skus.length();i++) {
                                 groupsProductsDbAdapter.insertEntry(skus.getLong(i), groupId);
                             }
                             groupsProductsDbAdapter.close();
+
+                        }
+                    }
+                    if (offer.getResourceType() == ResourceType.CATEGORY) {
+                        JSONArray categoryList = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue()).getJSONArray(Rules.categoryList.getValue());
+                        if (categoryList.length() > 0) {
+                            //creating new group
+                            GroupDbAdapter groupDbAdapter = new GroupDbAdapter(this);
+                            groupDbAdapter.open();
+                            long groupId = groupDbAdapter.insertEntry(offer.getResourceId(), offer.getName());
+                            groupDbAdapter.close();
+
+                            //insert product to group
+                            GroupsResourceDbAdapter groupsCategoryDbAdapter = new GroupsResourceDbAdapter(this);
+                            groupsCategoryDbAdapter.open();
+                            for(int i=0;i<categoryList.length();i++) {
+                                groupsCategoryDbAdapter.insertEntry(Long.parseLong(categoryList.getString(i)), groupId);
+                            }
+                            groupsCategoryDbAdapter.close();
 
                         }
                     }

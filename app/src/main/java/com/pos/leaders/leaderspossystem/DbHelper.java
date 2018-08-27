@@ -27,7 +27,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsProductsDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferRuleDBAdapter;
@@ -138,7 +138,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
 
         db.execSQL(GroupDbAdapter.DATABASE_CREATE);
-        db.execSQL(GroupsProductsDbAdapter.DATABASE_CREATE);
+        db.execSQL(GroupsResourceDbAdapter.DATABASE_CREATE);
 
         db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
         db.execSQL(EmployeeDBAdapter.DATABASE_CREATE);
@@ -263,8 +263,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(GroupDbAdapter.DATABASE_CREATE);
                     db.execSQL(IdsCounterDBAdapter.addColumn(GroupDbAdapter.GROUP_TABLE_NAME));
 
-                    db.execSQL(GroupsProductsDbAdapter.DATABASE_CREATE);
-                    db.execSQL(IdsCounterDBAdapter.addColumn(GroupsProductsDbAdapter.GROUPS_PRODUCTS_TABLE_NAME));
+                    db.execSQL(GroupsResourceDbAdapter.DATABASE_CREATE);
+                    db.execSQL(IdsCounterDBAdapter.addColumn(GroupsResourceDbAdapter.GROUPS_RESOURCES_TABLE_NAME));
             }
         } catch (SQLException e) {
             Log.i("onUpgrade", e.getMessage(), e);

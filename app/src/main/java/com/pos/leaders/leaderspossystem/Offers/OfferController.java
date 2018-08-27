@@ -1,10 +1,8 @@
 package com.pos.leaders.leaderspossystem.Offers;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsProductsDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
@@ -12,9 +10,7 @@ import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -30,11 +26,11 @@ public class OfferController {
         //PRODUCT
         offersResourceAndId.put(resourceId, ResourceType.PRODUCT);
         //GROUP
-        GroupsProductsDbAdapter groupsProductsDbAdapter = new GroupsProductsDbAdapter(context);
+        GroupsResourceDbAdapter groupsResourceDbAdapter = new GroupsResourceDbAdapter(context);
 
-        groupsProductsDbAdapter.open();
-        List<Long> groupsIdsForProduct = groupsProductsDbAdapter.getGroupsIdByProductSku(sku);
-        groupsProductsDbAdapter.close();
+        groupsResourceDbAdapter.open();
+        List<Long> groupsIdsForProduct = groupsResourceDbAdapter.getGroupsIdByProductSku(sku);
+        groupsResourceDbAdapter.close();
 
         if (groupsIdsForProduct!=null) {
             for (Long l : groupsIdsForProduct) {
