@@ -20,7 +20,6 @@ public class Product {
     private double price;
     private double costPrice;
     private boolean withTax;
-    private boolean weighable;
     private Timestamp createdAt;
     private boolean hide;
     private long categoryId;
@@ -77,7 +76,7 @@ public class Product {
 
 
 
-    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax, boolean weighable, Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit) {
+    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax,Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit) {
 
         this.productId = productId;
         this.name = name;
@@ -86,7 +85,6 @@ public class Product {
         this.price = price;
         this.costPrice = costPrice;
         this.withTax = withTax;
-        this.weighable = weighable;
         this.createdAt = createdAt;
         this.hide = hide;
         this.categoryId = categoryId;
@@ -104,7 +102,7 @@ public class Product {
     }
 
 
-    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax, boolean weighable, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit) {
+    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit) {
 
         this.productId = productId;
         this.name = name;
@@ -113,7 +111,6 @@ public class Product {
         this.price = price;
         this.costPrice = costPrice;
         this.withTax = withTax;
-        this.weighable = weighable;
         this.createdAt = createdAt;
         this.categoryId = categoryId;
         this.byEmployee = byEmployee;
@@ -174,7 +171,7 @@ public class Product {
 
     public Product(Product product) {
         this(product.getProductId(), product.getName(), product.getBarCode(), product.getDescription(),
-                product.getPrice(), product.getCostPrice(), product.isWithTax(), product.isWeighable(),
+                product.getPrice(), product.getCostPrice(), product.isWithTax(),
                 product.getCreatedAt(), product.isHide(), product.getCategoryId(), product.getByEmployee(),
                 product.getWithPos(), product.getWithPointSystem(), product.getSku(), product.getStatus(), product.getDisplayName(),
                 product.getRegularPrice(), product.getStockQuantity(), product.isManageStock(), product.isInStock(),product.getUnit());
@@ -221,11 +218,6 @@ public class Product {
     public boolean isWithTax() {
         return withTax;
     }
-
-    public boolean isWeighable() {
-        return weighable;
-    }
-
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -306,11 +298,6 @@ public class Product {
     public void setWithTax(boolean withTax) {
         this.withTax = withTax;
     }
-
-    public void setWeighable(boolean weighable) {
-        this.weighable = weighable;
-    }
-
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
@@ -375,7 +362,6 @@ public class Product {
                 ", price=" + price +
                 ", costPrice=" + costPrice +
                 ", withTax=" + withTax +
-                ", weighable=" + weighable +
                 ", createdAt=" + createdAt +
                 ", hide=" + hide +
                 ", categoryId=" + categoryId +

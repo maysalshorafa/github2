@@ -46,7 +46,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     Spinner productUnitSp;
     Button btSave,btnCancel;
     EditText etName,etBarcode,etDescription,etPrice,etCostPrice,etDisplayName,etSku,etStockQuantity;
-    Switch swWithTax,swWeighable,swManageStock;
+    Switch swWithTax,swManageStock;
 	static ListView lvDepartment;
     Map<String,Long> departmentMap=new HashMap<String,Long>();
 
@@ -63,7 +63,7 @@ public class ProductsActivity  extends AppCompatActivity  {
 	private Product editableProduct;
     long check;
     long depID;
-    boolean withTax , withWeighable=false, manageStock = true;
+    boolean withTax , manageStock = true;
     ProductUnit unit ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +96,6 @@ public class ProductsActivity  extends AppCompatActivity  {
         swManageStock = (Switch) findViewById(R.id.SWManageStock);
 
         swWithTax=(Switch)findViewById(R.id.SWWithTax);
-        swWeighable=(Switch)findViewById(R.id.SWWeighable);
         productUnitSp = (Spinner)findViewById(R.id.SpProductUnit);
         productDBAdapter = new ProductDBAdapter(this);
         productDBAdapter.open();
@@ -184,18 +183,6 @@ public class ProductsActivity  extends AppCompatActivity  {
 
             }
         });
-        swWeighable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-
-                if(isChecked){
-                    withWeighable=true; //edit here
-                }else{
-                    withWeighable=false; //edit here
-                }
-
-            }
-        });
 
         swManageStock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -238,7 +225,6 @@ public class ProductsActivity  extends AppCompatActivity  {
                     etPrice.setText(editableProduct.getPrice() + "");
                     etStockQuantity.setText(editableProduct.getStockQuantity() + "");
                     swWithTax.setChecked(editableProduct.isWithTax());
-                    swWeighable.setChecked(editableProduct.isWeighable());
                     Category d = departmentDBAdapter.getDepartmentByID(editableProduct.getCategoryId());
                     swManageStock.setChecked(editableProduct.isManageStock());
                     for (int i = 0; i < productUnit.size(); i++) {
@@ -345,8 +331,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                 }
 
                 check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
-                        etDescription.getText().toString(), price, costPrice, withTax,
-                        withWeighable, depID, SESSION._EMPLOYEE.getEmployeeId(), with_pos, with_point_system,
+                        etDescription.getText().toString(), price, costPrice, withTax, depID, SESSION._EMPLOYEE.getEmployeeId(), with_pos, with_point_system,
                         etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit);
                 if (check > 0) {
                     Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_product), Toast.LENGTH_LONG).show();
@@ -404,7 +389,6 @@ public class ProductsActivity  extends AppCompatActivity  {
             editableProduct.setPrice(price);
             editableProduct.setCostPrice(costPrice);
             editableProduct.setWithTax(withTax);
-            editableProduct.setWeighable(withWeighable);
             editableProduct.setCategoryId(depID);
             editableProduct.setManageStock(manageStock);
             editableProduct.setInStock(stockQuantity>0);
@@ -444,7 +428,6 @@ public class ProductsActivity  extends AppCompatActivity  {
         etStockQuantity.setText("");
         etCostPrice.setText("");
         swWithTax.setChecked(false);
-        swWeighable.setChecked(false);
         swManageStock.setChecked(false);
         editableProduct = null;
     }
