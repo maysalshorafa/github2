@@ -6,18 +6,18 @@ package com.pos.leaders.leaderspossystem.Models;
 
 public class GroupsResources {
     private long id;
-    private long resourceId;
+    private String resourceId;
     private long groupId;
 
     public GroupsResources() {
     }
 
-    public GroupsResources(long resourceId, long groupId) {
+    public GroupsResources(String resourceId, long groupId) {
         this.resourceId = resourceId;
         this.groupId = groupId;
     }
 
-    public GroupsResources(long id, long resourceId, long groupId) {
+    public GroupsResources(long id, String resourceId, long groupId) {
         this.id = id;
         this.resourceId = resourceId;
         this.groupId = groupId;
@@ -39,11 +39,11 @@ public class GroupsResources {
         this.id = id;
     }
 
-    public long getResourceId() {
+    public String getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(long resourceId) {
+    public void setResourceId(String resourceId) {
         this.resourceId = resourceId;
     }
 

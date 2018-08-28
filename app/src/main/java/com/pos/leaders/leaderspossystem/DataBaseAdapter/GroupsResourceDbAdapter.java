@@ -26,7 +26,7 @@ public class GroupsResourceDbAdapter {
     private static final String GROUPS_RESOURCE_COLUMN_GROUP_ID ="groupId";
 
     public static final String DATABASE_CREATE ="CREATE TABLE "+ GROUPS_RESOURCES_TABLE_NAME + " ( `"+ GROUPS_RESOURCES_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "`"+ GROUPS_RESOURCES_COLUMN_RESOURCE_ID +"` INTEGER NOT NULL, " +
+            "`"+ GROUPS_RESOURCES_COLUMN_RESOURCE_ID +"` TEXT NOT NULL, " +
             "`"+ GROUPS_RESOURCE_COLUMN_GROUP_ID +"` INTEGER NOT NULL);";
     // Variable to hold the database instance
     public SQLiteDatabase db;
@@ -54,7 +54,7 @@ public class GroupsResourceDbAdapter {
         return db;
     }
 
-    public long insertEntry(long productSku,long offerGroupId) {
+    public long insertEntry(String productSku,long offerGroupId) {
         GroupsResources groupsProducts = new GroupsResources(Util.idHealth(this.db, GROUPS_RESOURCES_TABLE_NAME, GROUPS_RESOURCES_COLUMN_ID),productSku, offerGroupId);
         try {
             return insertEntry(groupsProducts);
@@ -143,7 +143,7 @@ public class GroupsResourceDbAdapter {
 
     private GroupsResources makeOfferGroup(Cursor cursor) {
         try {
-            return new GroupsResources(Long.parseLong(cursor.getString(cursor.getColumnIndex(GROUPS_RESOURCES_COLUMN_ID))), Long.parseLong(cursor.getString(cursor.getColumnIndex(GROUPS_RESOURCES_COLUMN_RESOURCE_ID))),Long.parseLong(cursor.getString(cursor.getColumnIndex(GROUPS_RESOURCE_COLUMN_GROUP_ID))));
+            return new GroupsResources(Long.parseLong(cursor.getString(cursor.getColumnIndex(GROUPS_RESOURCES_COLUMN_ID))), cursor.getString(cursor.getColumnIndex(GROUPS_RESOURCES_COLUMN_RESOURCE_ID)),Long.parseLong(cursor.getString(cursor.getColumnIndex(GROUPS_RESOURCE_COLUMN_GROUP_ID))));
         } catch (Exception ex) {
             return null;
 
