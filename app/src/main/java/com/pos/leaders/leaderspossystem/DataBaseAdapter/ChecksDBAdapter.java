@@ -10,13 +10,10 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Tools.Util;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 02/11/2016.
@@ -70,7 +67,7 @@ public class ChecksDBAdapter {
 
 	public long insertEntry(int checkNum, int bankNum, int branchNum, int accountNum, double amount, Timestamp date, long saleId) {
         Check check = new Check(Util.idHealth(this.db, CHECKS_TABLE_NAME, CHECKS_COLUMN_ID), checkNum, bankNum, branchNum, accountNum, amount, date, false, saleId);
-        sendToBroker(MessageType.ADD_CHECK, check, this.context);
+        //sendToBroker(MessageType.ADD_CHECK, check, this.context);
 
         try {
             return insertEntry(check);

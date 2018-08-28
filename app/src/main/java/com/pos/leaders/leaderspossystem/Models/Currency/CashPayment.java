@@ -66,13 +66,14 @@ public class CashPayment {
 
     @Override
     public String toString() {
-        return "Payment{" +
-                "cashPaymentId=" + cashPaymentId +
-                ",currency_type ='" + currency_type + '\'' +
-                ", amount='" + amount + '\'' +
-                ", orderId=" + orderId +
-                '}';
+        return "{" +"\"@type\":" + "\"CashPayment\""+
+                ",\"cashPaymentId\":" +cashPaymentId +
+                ",\"currency_type\":" + currency_type  +
+                ",\"amount\":" + amount +
+                ",\"orderId\":" + orderId +
+                "}";
     }
+
 
 
 }
