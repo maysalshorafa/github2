@@ -553,6 +553,7 @@
     <string name="management_offer_activity">ادارة الحملات</string>
     <string name="cart_discount">تخفيض على كامل سلة المشتريات : </string>
     <string name="row_discount">تخفيض للسطر : </string>
+    <string name="product_unit">وحدة المنتوج</string>
 
 </resources>
 
