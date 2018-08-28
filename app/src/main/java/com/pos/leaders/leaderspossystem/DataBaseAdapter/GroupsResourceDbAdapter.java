@@ -119,6 +119,23 @@ public class GroupsResourceDbAdapter {
 
         return groups;
     }
+    public List<Long> getGroupsIdByProductCategory(long productCategory){
+        List<Long> groups = null;
+
+        Cursor cursor = db.rawQuery("select * from " + GROUPS_RESOURCES_TABLE_NAME + " where " + GROUPS_RESOURCES_COLUMN_RESOURCE_ID + "='" + productCategory + "';", null);
+
+        if (cursor.getCount() > 0 ) {
+            cursor.moveToFirst();
+            groups = new ArrayList<>();
+            while (!cursor.isAfterLast()) {
+                groups.add(cursor.getLong(cursor.getColumnIndex(GROUPS_RESOURCE_COLUMN_GROUP_ID)));
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+
+        return groups;
+    }
 
 
     public boolean deleteOfferGroup(long offerGroup) {
