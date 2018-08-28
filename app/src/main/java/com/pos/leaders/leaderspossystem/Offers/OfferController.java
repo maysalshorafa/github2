@@ -1,10 +1,9 @@
 package com.pos.leaders.leaderspossystem.Offers;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsProductsDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
+
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
@@ -12,9 +11,7 @@ import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -22,35 +19,54 @@ import java.util.List;
 import java.util.Map;
 
 public class OfferController {
-    public static List<Offer> getOffersForResource(Long resourceId, String sku, Context context) {
+    public static List<Offer> getOffersForResource(Long resourceId, String sku,long productCategoryId, Context context) {
         //store the group and product ids with his type
         Map<Long, ResourceType> offersResourceAndId = new HashMap<>();
+        Map<Long, ResourceType> offersResourceAndIdForCategory = new HashMap<>();
+
 
         //collect all offers to this product
         //PRODUCT
         offersResourceAndId.put(resourceId, ResourceType.PRODUCT);
         //GROUP
-        GroupsProductsDbAdapter groupsProductsDbAdapter = new GroupsProductsDbAdapter(context);
+        GroupsResourceDbAdapter groupsResourceDbAdapter = new GroupsResourceDbAdapter(context);
 
-        groupsProductsDbAdapter.open();
-        List<Long> groupsIdsForProduct = groupsProductsDbAdapter.getGroupsIdByProductSku(sku);
-        groupsProductsDbAdapter.close();
+        groupsResourceDbAdapter.open();
+        List<Long> groupsIdsForProduct = groupsResourceDbAdapter.getGroupsIdByProductSku(sku);
+        List<Long> groupsIdsForProductCategory = groupsResourceDbAdapter.getGroupsIdByProductCategory(productCategoryId);
+
+        groupsResourceDbAdapter.close();
+
 
         if (groupsIdsForProduct!=null) {
             for (Long l : groupsIdsForProduct) {
                 offersResourceAndId.put(l, ResourceType.MULTIPRODUCT);
             }
         }
+        if (groupsIdsForProductCategory!=null) {
+            for (Long l : groupsIdsForProductCategory) {
+                offersResourceAndIdForCategory.put(l, ResourceType.CATEGORY);
+            }
+        }
 
         //search on database for offer for this resource id
         OfferDBAdapter offerDBAdapter = new OfferDBAdapter(context);
         List<Offer> offers = null;
+        offers = new ArrayList<>();
 
         if(!offersResourceAndId.isEmpty()) {
-            offers = new ArrayList<>();
-
             offerDBAdapter.open();
             for (Map.Entry<Long, ResourceType> entry : offersResourceAndId.entrySet()) {
+                List<Offer> allActiveOffersByResourceIdResourceType = offerDBAdapter.getAllActiveOffersByResourceIdResourceType(entry.getKey(), entry.getValue());
+
+                if(allActiveOffersByResourceIdResourceType!=null)
+                    offers.addAll(allActiveOffersByResourceIdResourceType);
+            }
+            offerDBAdapter.close();
+        }
+        if(!offersResourceAndIdForCategory.isEmpty()) {
+            offerDBAdapter.open();
+            for (Map.Entry<Long, ResourceType> entry : offersResourceAndIdForCategory.entrySet()) {
                 List<Offer> allActiveOffersByResourceIdResourceType = offerDBAdapter.getAllActiveOffersByResourceIdResourceType(entry.getKey(), entry.getValue());
 
                 if(allActiveOffersByResourceIdResourceType!=null)
@@ -68,9 +84,7 @@ public class OfferController {
         });
 
         return offers;
-    }
-
-    public static boolean check(Offer offer, OrderDetails orderDetails) throws JSONException {
+    }    public static boolean check(Offer offer, OrderDetails orderDetails) throws JSONException {
         JSONObject rules = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue());
         if (rules.getInt(Rules.quantity.getValue())<1) {
             return false;
