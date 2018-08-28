@@ -472,6 +472,10 @@ public class PdfUA {
     }
     public static void  printCustomerWalletReport(Context context, String res) throws IOException, DocumentException, JSONException {
         JSONObject jsonObject = new JSONObject(res);
+        String documentsData = jsonObject.getString("documentsData");
+        JSONObject customerJson = new JSONObject(documentsData);
+        JSONObject customerInfo = new JSONObject(customerJson.getJSONObject("customer").toString());
+
         // create file , document region
         Document document = new Document();
         String fileName = "customerwallet.pdf";
@@ -487,6 +491,7 @@ public class PdfUA {
 
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
         document.open();        //end region
+        //end region
 
         BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 30);
@@ -498,18 +503,18 @@ public class PdfUA {
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, context.getString(R.string.date) + jsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
+//        insertCell(headingTable, context.getString(R.string.date) + jsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
 
         //end
 
         //date table from , to
-        PdfPTable dateTable = new PdfPTable(4);
+        PdfPTable dateTable = new PdfPTable(2);
         dateTable.setRunDirection(0);
         dateTable.setWidthPercentage(108f);
 
-        insertCell(dateTable, context.getString(R.string.customer_name)+":"+jsonObject.getString("firstName")+jsonObject.getString("lastName"), Element.ALIGN_LEFT, 2, dateFont);
-        insertCell(dateTable, context.getString(R.string.credit_invoice)+":"+jsonObject.getLong("invoicesNumbers"), Element.ALIGN_LEFT, 2, dateFont);
-        insertCell(dateTable, context.getString(R.string.total_paid)+":"+jsonObject.getDouble("paidAmount"), Element.ALIGN_LEFT, 2, dateFont);
+        insertCell(dateTable, context.getString(R.string.customer_name)+":"+customerInfo.getString("firstName")+customerInfo.getString("lastName"), Element.ALIGN_LEFT, 2, dateFont);
+        insertCell(dateTable, "Invoices Numbers"+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 2, dateFont);
+        insertCell(dateTable, context.getString(R.string.total_paid)+":"+customerJson.getDouble("paidAmount"), Element.ALIGN_LEFT, 2, dateFont);
 
         insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
         //end

@@ -81,7 +81,9 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     TextView advance ,tvCustomerBalance;
     LinearLayout CustomerBalance ;
     public static Context context = null;
-
+    Bitmap page=null ;
+    public static final String SAMPLE_FILE = "customerwallet.pdf";
+    ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -229,6 +231,21 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                     StartConnection startConnection = new StartConnection();
                                     startConnection.execute(customer.toString(),wallet.toString());
                                     Toast.makeText(getApplicationContext(), getString(R.string.success_adding_new_customer), Toast.LENGTH_LONG).show();
+                                    try
+                                    {
+                                        File path = new File( Environment.getExternalStorageDirectory(), getPackageName() );
+                                        File file = new File(path,SAMPLE_FILE);
+                                        RandomAccessFile f = new RandomAccessFile(file, "r");
+                                        byte[] data = new byte[(int)f.length()];
+                                        f.readFully(data);
+                                        pdfLoadImages(data);
+
+
+                                        //pdfLoadImages1(data);
+                                    }
+                                    catch(Exception ignored)
+                                    {
+                                    }
                                     try {
                                         Thread.sleep(500);
                                     } catch (InterruptedException e) {
@@ -401,12 +418,77 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+    private void pdfLoadImages(final byte[] data) {
+        bitmapList=new ArrayList<Bitmap>();
+        try {
+            // run async
+            new AsyncTask<Void, Void, String>() {
+                // create and show a progress dialog
+                ProgressDialog progressDialog = ProgressDialog.show(AddNewCustomer.this, "", "Opening...");
+
+                @Override
+                protected void onPostExecute(String html) {
+                    //after async close progress dialog
+                    progressDialog.dismiss();
+                    //load the html in the webview
+                    //	wv1.loadDataWithBaseURL("", html, "randompdf/html", "UTF-8", "");
+                }
+
+                @Override
+                protected String doInBackground(Void... params) {
+                    try {
+                        //create pdf document object from bytes
+                        ByteBuffer bb = ByteBuffer.NEW(data);
+                        PDFFile pdf = new PDFFile(bb);
+                        //Get the first page from the pdf doc
+                        PDFPage PDFpage = pdf.getPage(1, true);
+                        //create a scaling value according to the WebView Width
+                        final float scale = 800 / PDFpage.getWidth() * 0.80f;
+                        //convert the page into a bitmap with a scaling value
+                        page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
+                        //save the bitmap to a byte array
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        stream.reset();
+                        //convert the byte array to a base64 string
+                        String base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                        //create the html + add the first image to the html
+                        String html = "<!DOCTYPE html><html><body bgcolor=\"#ffffff\"><img src=\"data:image/png;base64," + base64 + "\" hspace=328 vspace=4><br>";
+                        //loop though the rest of the pages and repeat the above
+                        for (int i = 0; i <= pdf.getNumPages(); i++) {
+                            PDFpage = pdf.getPage(i, true);
+                            page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
+                            page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            bitmapList.add(page);
+                            byteArray = stream.toByteArray();
+                            stream.reset();
+                            base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                            html += "<img src=\"data:image/png;base64," + base64 + "\" hspace=10 vspace=10><br>";
+
+                        }
+                        Log.d("bit",bitmapList.size()+"");
+                        PrintTools pt=new PrintTools(AddNewCustomer.this);
+                        Log.d("bitmapsize",bitmapList.size()+"");
+                        pt.PrintReport(page);
+                        stream.close();
+                        html += "</body></html>";
+                        return html;
+                    } catch (Exception e) {
+                        Log.d("error", e.toString());
+                    }
+                    return null;
+                }
+            }.execute();
+            System.gc();// run GC
+        } catch (Exception e) {
+            Log.d("error", e.toString());
+        }
+    }
+
 
 }
 class StartConnection extends AsyncTask<String,Void,String> {
-    Bitmap page=null ;
-    public static final String SAMPLE_FILE = "customerwallet.pdf";
-    ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
     private MessageTransmit messageTransmit;
 
     StartConnection() {
@@ -453,26 +535,6 @@ class StartConnection extends AsyncTask<String,Void,String> {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    try
-                    {
-                        File path = new File( Environment.getExternalStorageDirectory(), AddNewCustomer.context.getPackageName() );
-                        File file = new File(path,SAMPLE_FILE);
-                        RandomAccessFile f = new RandomAccessFile(file, "r");
-                        byte[] data = new byte[(int)f.length()];
-                        f.readFully(data);
-                        pdfLoadImages(data);
-                        PrintTools pt=new PrintTools(AddNewCustomer.context);
-
-                        for (int i= 1;i<bitmapList.size(); i++) {
-                            Log.d("bitmapsize",bitmapList.size()+"");
-                            pt.PrintReport(bitmapList.get(i));
-
-                        }
-                        //pdfLoadImages1(data);
-                    }
-                    catch(Exception ignored)
-                    {
-                    }
                 }
             }
 
@@ -500,7 +562,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
                 protected void onPreExecute() {
                     super.onPreExecute();
                     progressDialog2.setTitle("Success.");
-                    progressDialog2.show();
+                   progressDialog2.show();
                 }
 
                 @Override
@@ -523,74 +585,10 @@ class StartConnection extends AsyncTask<String,Void,String> {
             //fail
             Toast.makeText(AddNewCustomer.context, "Try Again.", Toast.LENGTH_SHORT).show();
         }
-        progressDialog.cancel();
+       progressDialog.cancel();
         super.onPostExecute(s);
 
         //endregion
-    }
-    private void pdfLoadImages(final byte[] data) {
-        bitmapList=new ArrayList<Bitmap>();
-        try {
-            // run async
-            new AsyncTask<Void, Void, String>() {
-                // create and show a progress dialog
-                ProgressDialog progressDialog = ProgressDialog.show(AddNewCustomer.context, "", "Opening...");
-
-                @Override
-                protected void onPostExecute(String html) {
-                    //after async close progress dialog
-                    progressDialog.dismiss();
-                    //load the html in the webview
-                    //	wv1.loadDataWithBaseURL("", html, "randompdf/html", "UTF-8", "");
-                }
-
-                @Override
-                protected String doInBackground(Void... params) {
-                    try {
-                        //create pdf document object from bytes
-                        ByteBuffer bb = ByteBuffer.NEW(data);
-                        PDFFile pdf = new PDFFile(bb);
-                        //Get the first page from the pdf doc
-                        PDFPage PDFpage = pdf.getPage(1, true);
-                        //create a scaling value according to the WebView Width
-                        final float scale = 800 / PDFpage.getWidth() * 0.80f;
-                        //convert the page into a bitmap with a scaling value
-                        page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
-                        //save the bitmap to a byte array
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        page.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        byte[] byteArray = stream.toByteArray();
-                        stream.reset();
-                        //convert the byte array to a base64 string
-                        String base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
-                        //create the html + add the first image to the html
-                        String html = "<!DOCTYPE html><html><body bgcolor=\"#ffffff\"><img src=\"data:image/png;base64," + base64 + "\" hspace=328 vspace=4><br>";
-                        //loop though the rest of the pages and repeat the above
-                        for (int i = 0; i <= pdf.getNumPages(); i++) {
-                            PDFpage = pdf.getPage(i, true);
-                            page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
-                            page.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                            bitmapList.add(page);
-                            byteArray = stream.toByteArray();
-                            stream.reset();
-                            base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
-                            html += "<img src=\"data:image/png;base64," + base64 + "\" hspace=10 vspace=10><br>";
-
-                        }
-                        Log.d("bit",bitmapList.size()+"");
-                        stream.close();
-                        html += "</body></html>";
-                        return html;
-                    } catch (Exception e) {
-                        Log.d("error", e.toString());
-                    }
-                    return null;
-                }
-            }.execute();
-            System.gc();// run GC
-        } catch (Exception e) {
-            Log.d("error", e.toString());
-        }
     }
 
 }
