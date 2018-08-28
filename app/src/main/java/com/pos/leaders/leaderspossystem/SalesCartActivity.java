@@ -1857,7 +1857,7 @@ public class SalesCartActivity extends AppCompatActivity {
             SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
         }
 
-        if (SESSION._ORDERS.cartDiscount != 0) {
+        if (SESSION._ORDERS.cartDiscount != 0&& SESSION._ORDER_DETAILES.size()>0) {
             //show the discount view
             llCartDiscount.setVisibility(View.VISIBLE);
             tvTotalPriceBeforeCartDiscount.setVisibility(View.VISIBLE);
