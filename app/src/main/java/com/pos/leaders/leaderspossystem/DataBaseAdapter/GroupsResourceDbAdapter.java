@@ -8,11 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-<<<<<<< HEAD:app/src/main/java/com/pos/leaders/leaderspossystem/DataBaseAdapter/GroupsProductsDbAdapter.java
-import com.pos.leaders.leaderspossystem.Models.GroupsProducts;
-=======
 import com.pos.leaders.leaderspossystem.Models.GroupsResources;
->>>>>>> LEAD-37:app/src/main/java/com/pos/leaders/leaderspossystem/DataBaseAdapter/GroupsResourceDbAdapter.java
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
@@ -126,13 +122,13 @@ public class GroupsResourceDbAdapter {
     public List<Long> getGroupsIdByProductCategory(long productCategory){
         List<Long> groups = null;
 
-        Cursor cursor = db.rawQuery("select * from " + GROUPS_PRODUCTS_TABLE_NAME + " where " + GROUPS_PRODUCTS_COLUMN_PRODUCT_SKU + "='" + productCategory + "';", null);
+        Cursor cursor = db.rawQuery("select * from " + GROUPS_RESOURCES_TABLE_NAME + " where " + GROUPS_RESOURCES_COLUMN_RESOURCE_ID + "='" + productCategory + "';", null);
 
         if (cursor.getCount() > 0 ) {
             cursor.moveToFirst();
             groups = new ArrayList<>();
             while (!cursor.isAfterLast()) {
-                groups.add(cursor.getLong(cursor.getColumnIndex(GROUPS_PRODUCTS_COLUMN_GROUP_ID)));
+                groups.add(cursor.getLong(cursor.getColumnIndex(GROUPS_RESOURCE_COLUMN_GROUP_ID)));
                 cursor.moveToNext();
             }
         }
