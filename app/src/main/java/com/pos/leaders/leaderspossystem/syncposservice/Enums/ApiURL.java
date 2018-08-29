@@ -47,5 +47,6 @@ public interface ApiURL {
     String Version="Version";
     String ScheduleWorker="ScheduleWorker";
     String Documents = "Documents";
+    String Wallet = "Wallet";
 
 }

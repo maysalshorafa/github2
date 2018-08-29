@@ -27,7 +27,11 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
+<<<<<<< HEAD
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsProductsDbAdapter;
+=======
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
+>>>>>>> LEAD-37
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferRuleDBAdapter;
@@ -138,7 +142,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(SettingsDBAdapter.DATABASE_CREATE);
 
         db.execSQL(GroupDbAdapter.DATABASE_CREATE);
-        db.execSQL(GroupsProductsDbAdapter.DATABASE_CREATE);
+        db.execSQL(GroupsResourceDbAdapter.DATABASE_CREATE);
 
         db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
         db.execSQL(EmployeeDBAdapter.DATABASE_CREATE);
@@ -190,8 +194,13 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (3 , 'EUR');");
 
         db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Timestamp(System.currentTimeMillis())+"');");
+<<<<<<< HEAD
        // db.execSQL("insert into "+ CategoryDBAdapter.CATEGORY_TABLE_NAME +" values(1, 'כללי','"+ new Timestamp(System.currentTimeMillis()) +"',1,0);");
         db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'test1','test1','female','11/8/1994','example@gmail.com','coder','123',0,'1',1,1,'1',1,'1',0.0);");
+=======
+        db.execSQL("insert into "+ CategoryDBAdapter.CATEGORY_TABLE_NAME +" values(1, 'כללי','"+ new Timestamp(System.currentTimeMillis()) +"',1,0);");
+        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'test1','test1','female','11/8/1994','example@gmail.com','coder','123',0,'1',1,1,'1',1,'1',0.0,0.0);");
+>>>>>>> LEAD-37
 
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (0,'Hifa');");
 
@@ -263,8 +272,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(GroupDbAdapter.DATABASE_CREATE);
                     db.execSQL(IdsCounterDBAdapter.addColumn(GroupDbAdapter.GROUP_TABLE_NAME));
 
-                    db.execSQL(GroupsProductsDbAdapter.DATABASE_CREATE);
-                    db.execSQL(IdsCounterDBAdapter.addColumn(GroupsProductsDbAdapter.GROUPS_PRODUCTS_TABLE_NAME));
+                    db.execSQL(GroupsResourceDbAdapter.DATABASE_CREATE);
+                    db.execSQL(IdsCounterDBAdapter.addColumn(GroupsResourceDbAdapter.GROUPS_RESOURCES_TABLE_NAME));
             }
         } catch (SQLException e) {
             Log.i("onUpgrade", e.getMessage(), e);

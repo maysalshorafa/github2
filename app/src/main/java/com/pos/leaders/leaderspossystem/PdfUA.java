@@ -38,6 +38,9 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -467,5 +470,64 @@ public class PdfUA {
         table.addCell(cell);
 
     }
+    public static void  printCustomerWalletReport(Context context, String res) throws IOException, DocumentException, JSONException {
+        JSONObject jsonObject = new JSONObject(res);
+        String documentsData = jsonObject.getString("documentsData");
+        JSONObject customerJson = new JSONObject(documentsData);
+        JSONObject customerInfo = new JSONObject(customerJson.getJSONObject("customer").toString());
+
+        // create file , document region
+        Document document = new Document();
+        String fileName = "customerwallet.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+        if(file.exists()){
+            PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
+            writer.print("");
+            writer.close();
+        }
+
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();        //end region
+        //end region
+
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 30);
+        Font dateFont = new Font(urName, 24);
+        //heading table
+        PdfPTable headingTable = new PdfPTable(1);
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
+//        insertCell(headingTable, context.getString(R.string.date) + jsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
+
+        //end
+
+        //date table from , to
+        PdfPTable dateTable = new PdfPTable(2);
+        dateTable.setRunDirection(0);
+        dateTable.setWidthPercentage(108f);
+
+        insertCell(dateTable, context.getString(R.string.customer_name)+":"+customerInfo.getString("firstName")+customerInfo.getString("lastName"), Element.ALIGN_LEFT, 2, dateFont);
+        insertCell(dateTable, "Invoices Numbers"+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 2, dateFont);
+        insertCell(dateTable, context.getString(R.string.total_paid)+":"+customerJson.getDouble("paidAmount"), Element.ALIGN_LEFT, 2, dateFont);
+
+        insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+        //end
+
+        // schedule worker table
+        //end
+
+        //add table to document
+        document.add(headingTable);
+        document.add(dateTable);
+        document.close();
+        //end :)
+    }
+
 
 }

@@ -242,6 +242,22 @@
                         android:orientation="vertical"
                         android:weightSum="2"
                         android:gravity="bottom|end">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="1">
+                            <TextView
+                                android:id="@+id/mainActivity_payment_by_customer_credit"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/payment_by_credit"
+                                android:textColor="@color/black"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                android:textAlignment="textEnd"
+                                android:visibility="gone"/>
                         <ImageView
                             android:id="@+id/mainActivity_btnRemoveCustomer"
                             android:layout_width="wrap_content"
@@ -249,6 +265,7 @@
                             android:src="@drawable/close"
                             android:layout_gravity="left"
                             android:visibility="gone"/>
+                            </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"

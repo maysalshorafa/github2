@@ -4,22 +4,22 @@ package com.pos.leaders.leaderspossystem.Models;
  * Created by Karam on 8/12/2018.
  */
 
-public class GroupsProducts {
+public class GroupsResources {
     private long id;
-    private long productSku;
+    private long resourceId;
     private long groupId;
 
-    public GroupsProducts() {
+    public GroupsResources() {
     }
 
-    public GroupsProducts(long productSku, long groupId) {
-        this.productSku = productSku;
+    public GroupsResources(long resourceId, long groupId) {
+        this.resourceId = resourceId;
         this.groupId = groupId;
     }
 
-    public GroupsProducts(long id, long productSku, long groupId) {
+    public GroupsResources(long id, long resourceId, long groupId) {
         this.id = id;
-        this.productSku = productSku;
+        this.resourceId = resourceId;
         this.groupId = groupId;
     }
 
@@ -39,20 +39,20 @@ public class GroupsProducts {
         this.id = id;
     }
 
-    public long getProductSku() {
-        return productSku;
+    public long getResourceId() {
+        return resourceId;
     }
 
-    public void setProductSku(long productSku) {
-        this.productSku = productSku;
+    public void setResourceId(long resourceId) {
+        this.resourceId = resourceId;
     }
 
 
     @Override
     public String toString() {
-        return "GroupsProducts{" +
+        return "GroupsResources{" +
                 "id=" + id +
-                ", productSku=" + productSku +
+                ", resourceId=" + resourceId +
                 ", groupId=" + groupId +
                 '}';
     }

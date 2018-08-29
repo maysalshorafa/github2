@@ -118,6 +118,7 @@ import POSSDK.POSSDK;
 
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CASH;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CHECKS;
+import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CREDIT;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CREDIT_CARD;
 
 
@@ -132,6 +133,7 @@ public class SalesCartActivity extends AppCompatActivity {
     private static final int REQUEST_CREDIT_CARD_ACTIVITY_CODE = 801;
     private static final int REQUEST_PIN_PAD_ACTIVITY_CODE = 907;
     private static final int REQUEST_MULTI_CURRENCY_ACTIVITY_CODE = 444;
+    private static final int REQUEST_CREDIT_ACTIVITY_CODE = 500;
     public static final String COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE = "com_pos_leaders_cart_total_price";
     String transID = "";
 
@@ -263,8 +265,8 @@ public class SalesCartActivity extends AppCompatActivity {
     List<OrderDetails> orderIdList;
     List<Long> orderId;
     long custmerSaleAssetstId;
-    TextView orderSalesMan, orderCount, orderTotalPrice, orderOfferName;
-    ImageView deleteOrderSalesMan,mainActivity_btnRemoveCustomer;
+    TextView orderSalesMan, orderCount, orderTotalPrice, orderOfferName , payment_by_customer_credit;
+    ImageView deleteOrderSalesMan, btnRemoveCustomer;
     String fromEditText = "";
     static List<String> printedRows;
     double valueOfDiscount = 0;
@@ -383,7 +385,8 @@ public class SalesCartActivity extends AppCompatActivity {
 
         llDepartments = (LinearLayout) findViewById(R.id.mainActivity_LLDepartment);
         linearLayoutCustomerBalance = (LinearLayout) findViewById(R.id.linearLayoutCustomerBalance);
-        mainActivity_btnRemoveCustomer= (ImageView) findViewById(R.id.mainActivity_btnRemoveCustomer);
+        btnRemoveCustomer = (ImageView) findViewById(R.id.mainActivity_btnRemoveCustomer);
+        payment_by_customer_credit = (TextView)findViewById(R.id.mainActivity_payment_by_customer_credit);
         departmentDBAdapter = new CategoryDBAdapter(this);
         productDBAdapter = new ProductDBAdapter(this);
         customerDBAdapter = new CustomerDBAdapter(this);
@@ -826,14 +829,110 @@ public class SalesCartActivity extends AppCompatActivity {
 
             }
         });
-        mainActivity_btnRemoveCustomer.
-                setOnClickListener(new View.OnClickListener() {
+        btnRemoveCustomer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                         removeCustomer();
                     }
                 });
+        payment_by_customer_credit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (SESSION._ORDER_DETAILES.size() > 0&& SESSION._ORDERS.getCustomer().getCredit()>=saleTotalPrice) {
+                    final Dialog customerCreditDialog = new Dialog(SalesCartActivity.this);
+                    customerCreditDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    customerCreditDialog.show();
+                    customerCreditDialog.setContentView(R.layout.activity_customer_credit);
+                    TextView customerName = (TextView) customerCreditDialog.findViewById(R.id.customerCreditCustomerName);
+                    customerName.setText(SESSION._ORDERS.getCustomer_name());
+                    TextView totalPrice = (TextView) customerCreditDialog.findViewById(R.id.TvPrice);
+                    totalPrice.setText(Util.makePrice(saleTotalPrice)+getString(R.string.ins));
+                    TextView reamainCredit =(TextView)  customerCreditDialog.findViewById(R.id.TvRemainingCredit);
+                    reamainCredit.setText(Util.makePrice(customer.getCredit()-saleTotalPrice)+getString(R.string.ins));
+                    Button btnOk = (Button) customerCreditDialog.findViewById(R.id.customerCreditDialog_BTOk);
+                    ImageView close = (ImageView) customerCreditDialog.findViewById(R.id.closeDialog);
+                    TextView customerCredit = (TextView) customerCreditDialog.findViewById(R.id.TvTotalCustomerCredit);
+                    customerCredit.setText(Util.makePrice(SESSION._ORDERS.getCustomer().getCredit())+getString(R.string.ins));
+                    close.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                           customerCreditDialog.dismiss();
+                        }
+                    });
+                    btnOk.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            SESSION._ORDERS.setTotalPaidAmount(SESSION._ORDERS.getTotalPrice());
+                            saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
+                            saleDBAdapter.open();
+                            long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, SESSION._ORDERS.getCustomer_name());
+                            orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
+                            custmerAssetDB = new CustomerAssetDB(SalesCartActivity.this);
+                            orderDBAdapter.open();
+                            custmerAssetDB.open();
+                            SESSION._ORDERS.setOrderId(saleID);
+                            if (forSaleMan) {
+                                custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._ORDERS.getTotalPrice(), 0, "ORDER", SESSION._ORDERS.getCreatedAt());
+                            }
+                            // insert order region
+                            for (OrderDetails o : SESSION._ORDER_DETAILES) {
+                                long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                                orderId.add(orderid);
+                            }
+                            // ORDER_DETAILS Sales man Region
+                            for (int i = 0; i < orderIdList.size(); i++) {
+                                OrderDetails order = orderIdList.get(i);
+                                long customerAssestId = custmerAssetstIdList.get(i);
+                                for (int j = 0; j < SESSION._ORDER_DETAILES.size(); j++) {
+                                    OrderDetails o = SESSION._ORDER_DETAILES.get(j);
+                                    long tempOrderId = orderId.get(i);
+                                    if (o == order) {
+                                        if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
+                                            o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
+                                            custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPaidAmount(), 0, "ORDER_DETAILS", SESSION._ORDERS.getCreatedAt());
+                                        }
+                                    }
+                                }
+                            }
+                            //update customer balance
+                            Customer upDateCustomer = SESSION._ORDERS.getCustomer();
+
+                            if (SESSION._ORDERS.getTotalPrice() < 0 && customer != null) {
+                                upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice() + customer.getBalance());
+                            }
+                            // upDate CustomerCredit
+                                upDateCustomer.setCredit(SESSION._ORDERS.getCustomer().getCredit() - saleTotalPrice);
+                                customerDBAdapter.updateEntry(upDateCustomer);
+                            ///end
+                            orderDBAdapter.close();
+                            custmerAssetDB.close();
+                            SESSION._ORDERS.setOrders(SESSION._ORDER_DETAILES);
+                            SESSION._ORDERS.setUser(SESSION._EMPLOYEE);
+
+                            PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(SalesCartActivity.this);
+                            paymentDBAdapter.open();
+
+                            long paymentID = paymentDBAdapter.insertEntry(CREDIT, saleTotalPrice, saleID);
+                            paymentDBAdapter.close();
+
+                            Payment payment = new Payment(paymentID, CREDIT, saleTotalPrice, saleID);
+                            SESSION._ORDERS.setPayment(payment);
+
+                            printAndOpenCashBox("", "", "", REQUEST_CREDIT_ACTIVITY_CODE);
+                            saleDBAdapter.close();
+                            clearCart();
+                            customerCreditDialog.dismiss();
+                            return;
+
+
+                        }
+                    });
+                }
+            }
+        });
         /**  etSearch.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
         etSearch.setFocusable(true);
@@ -1713,7 +1812,8 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     public void clearCart() {
-        mainActivity_btnRemoveCustomer.setVisibility(View.GONE);
+        payment_by_customer_credit.setVisibility(View.GONE);
+        btnRemoveCustomer.setVisibility(View.GONE);
         linearLayoutCustomerBalance.setVisibility(View.GONE);
         valueOfDiscount = 0.0;
         clubDiscount = 0;
@@ -2558,25 +2658,25 @@ public class SalesCartActivity extends AppCompatActivity {
                 // Club with point and amount
                 if (clubType == 2) {
                     pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
-                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
+                    sum_pointDbAdapter.insertEntry(saleID, pointFromSale, customerId);
                 }
 
                 if (equalUsedPoint) {
                     saleTotalPrice = 0.0;
                     SESSION._ORDERS.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
                     SESSION._ORDERS.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
                     SESSION._ORDERS.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
                 }
                 saleDBAdapter.close();
                 CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
@@ -2599,7 +2699,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
@@ -3653,7 +3753,8 @@ public class SalesCartActivity extends AppCompatActivity {
         calculateTotalPrice();
         linearLayoutCustomerBalance.setVisibility(View.VISIBLE);
         customerBalance.setText(Util.makePrice(Math.abs(customer.getBalance())));
-        mainActivity_btnRemoveCustomer.setVisibility(View.VISIBLE);
+        btnRemoveCustomer.setVisibility(View.VISIBLE);
+        payment_by_customer_credit.setVisibility(View.VISIBLE);
 
     }
 
@@ -3667,13 +3768,15 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     public OrderDetails calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
-        List<Offer> offerList = OfferController.getOffersForResource(orderDetails.getProductId(),orderDetails.getProduct().getSku(), getApplicationContext());
+        List<Offer> offerList = OfferController.getOffersForResource(orderDetails.getProductId(),orderDetails.getProduct().getSku(),orderDetails.getProduct().getCategoryId(), getApplicationContext());
         if (offerList != null) {
+            OrderDetails o=orderDetails;
             for (int i =0; i<offerList.size(); i++) {
-                if (OfferController.check(offerList.get(i), orderDetails)) {
-                    return OfferController.execute(offerList.get(i), orderDetails);
+                if (OfferController.check(offerList.get(i), o)) {
+                    o= OfferController.execute(offerList.get(i), o);
                 }
             }
+            return o;
         }
         return orderDetails;
     }
@@ -3683,7 +3786,8 @@ public class SalesCartActivity extends AppCompatActivity {
         customerName_EditText.setText("");
         calculateTotalPrice();
         linearLayoutCustomerBalance.setVisibility(View.GONE);
-        mainActivity_btnRemoveCustomer.setVisibility(View.GONE);
+        btnRemoveCustomer.setVisibility(View.GONE);
         customerBalance.setText("");
+        payment_by_customer_credit.setVisibility(View.GONE);
     }
 }

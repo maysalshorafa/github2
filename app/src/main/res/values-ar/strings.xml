@@ -208,7 +208,7 @@
     <string name="currency">العملات</string>
     <string name="choose_no_of_float_point">اختر عدد المنازل العشرية</string>
     <string name="choose_printer_type">اختر نوع الطابعة</string>
-
+    <string name="please_insert_customer_credit">الرجاء ادخال قيمة الائتمان .</string>
     <string name="schedule_workers">نظام الحضور</string>
     <string name="enter_user_password">ادخل كلمة المرور الخاصة بك.</string>
     <string name="check_number">رقم الشيك</string>
@@ -553,6 +553,8 @@
     <string name="management_offer_activity">ادارة الحملات</string>
     <string name="cart_discount">تخفيض على كامل سلة المشتريات : </string>
     <string name="row_discount">تخفيض للسطر : </string>
+    <string name="payment_by_credit">لدفع بالائتمان</string>
+    <string name="remainingCredit">بلغ الائتمان المتبقي</string>
 
 </resources>
 
