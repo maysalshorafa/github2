@@ -1,10 +1,10 @@
 package com.pos.leaders.leaderspossystem;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum DocumentType {
-    INVOICE_RECIPE("INVOICE_RECIPE");
+    INVOICE ("invoice "),
+    RECEIPT("receipt"),
+    CREDIT_INVOICE("creditInvoice"),
+    INVOICE_RECEIPT("invoiceReceipt");
 
     DocumentType(final String value) {
         this.value = value;

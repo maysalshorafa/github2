@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Order;
-import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -71,7 +70,7 @@ public class OrderDBAdapter {
 	public long insertEntry(long byUser, Timestamp saleDate, int replacementNote, boolean canceled, double totalPrice, double totalPaid, long custmer_id, String custmer_name) {
         Order order = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name);
 
-        sendToBroker(MessageType.ADD_ORDER, order, this.context);
+    //    sendToBroker(MessageType.ADD_ORDER, order, this.context);
 
         try {
             return insertEntry(order);

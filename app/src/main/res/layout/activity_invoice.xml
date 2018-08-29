@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_invoice"
     android:layout_height="wrap_content"
-    tools:context="com.pos.leaders.leaderspossystem.Invoice"
+    tools:context="com.pos.leaders.leaderspossystem.InvoiceActivity"
     android:orientation="vertical"
     android:layout_width="match_parent">
 

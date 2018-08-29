@@ -47,6 +47,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
@@ -70,19 +71,10 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
-import com.pos.leaders.leaderspossystem.Models.Category;
-import com.pos.leaders.leaderspossystem.Models.Check;
-import com.pos.leaders.leaderspossystem.Models.Club;
-import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
+import com.pos.leaders.leaderspossystem.Models.*;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
-import com.pos.leaders.leaderspossystem.Models.Customer;
-import com.pos.leaders.leaderspossystem.Models.Employee;
-import com.pos.leaders.leaderspossystem.Models.Offer;
-import com.pos.leaders.leaderspossystem.Models.Order;
-import com.pos.leaders.leaderspossystem.Models.OrderDetails;
-import com.pos.leaders.leaderspossystem.Models.Payment;
-import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Models.Invoice;
 import com.pos.leaders.leaderspossystem.Offers.OfferController;
 import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
 import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
@@ -102,6 +94,7 @@ import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
@@ -109,6 +102,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1261,7 +1255,9 @@ public class SalesCartActivity extends AppCompatActivity {
             @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View view) {
-                List<Long> ordersIds = new ArrayList<>();
+                if(SESSION._ORDERS.getCustomer()!=null){
+                    ObjectMapper mapper = new ObjectMapper();
+                final ArrayList<Long> ordersIds = new ArrayList<>();
                 if (SESSION._ORDER_DETAILES.size() > 0) {
                     if (Long.valueOf(SESSION._ORDERS.getCustomerId()) == 0) {
                         if (SESSION._ORDERS.getCustomer_name() == null) {
@@ -1289,31 +1285,8 @@ public class SalesCartActivity extends AppCompatActivity {
                         upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice()+customer.getBalance());
                         customerDBAdapter.updateEntry(upDateCustomer);
                     }
-                    ordersIds.add(3000002L);
+                    ordersIds.add(saleIDforCash);
                     saleDBAdapter.close();
-                    final JSONObject jsonObject = new JSONObject();
-                    JSONObject documentData = new JSONObject();
-                    JSONObject customerData = new JSONObject();
-                    try {
-                        customerData.put("customerId", SESSION._ORDERS.getCustomer().getCustomerId());
-                        documentData.put("@type", "Invoice");
-                        DateFormat df = new DateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-                        documentData.put("date",df.format(new Date()));
-                        documentData.put("fulfillmentDate", df.format(new Date()));
-                        documentData.put("dueDate", df.format(new Date()));
-                        JSONArray jsonArray = new JSONArray();
-                        jsonArray.put(saleIDforCash);
-                        documentData.put("listOfOrders", jsonArray);
-                        documentData.put("customer", customerData);
-                        documentData.put("invoiceStatus", "UNPAID");
-                        documentData.put("publicNote", "public note");
-                        documentData.put("privateNote", "private note");
-                        documentData.put("currency", "ILS");
-                        jsonObject.put("type", "INVOICE");
-                        jsonObject.put("documentsData", documentData);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
                     new AsyncTask<Void, Void, Void>(){
                         @Override
                         protected void onPreExecute() {
@@ -1326,6 +1299,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         @Override
                         protected Void doInBackground(Void... voids) {
                             MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                            JSONObject customerData = new JSONObject();
                             try {
                                 ObjectMapper mapper = new ObjectMapper();
                                 String ordRes=transmit.authPost(ApiURL.ORDER, mapper.writeValueAsString(SESSION._ORDERS), SESSION.token);
@@ -1339,10 +1313,24 @@ public class SalesCartActivity extends AppCompatActivity {
                                     Log.i("Order Details", transmit.authPost(ApiURL.ORDER_DETAILS, mapper.writeValueAsString(o), SESSION.token));
                                     //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                                 }
-                                Log.w("Document vale", jsonObject.toString());
-                                String res=transmit.authPost(ApiURL.documents, jsonObject.toString(), SESSION.token);
-                                Log.i("Invoice log", res);
+                                customerData.put("customerId", SESSION._ORDERS.getCustomer().getCustomerId());
+                                Log.d("customer",customerData.toString());
+                                Documents documents = new Documents("Invoice",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),ordersIds,SESSION._ORDERS.getTotalPrice(),0,SESSION._ORDERS.getTotalPrice(), InvoiceStatus.UNPAID,"test","test","ILS");
+                                String doc = mapper.writeValueAsString(documents);
+                                JSONObject docJson= new JSONObject(doc);
+                                String type = docJson.getString("type");
+                                docJson.remove("type");
+                                docJson.put("@type",type);
+                                docJson.put("customer",customerData);
+                                Log.d("Document vale", docJson.toString());
+                                com.pos.leaders.leaderspossystem.Models.Invoice invoice = new Invoice(DocumentType.INVOICE,docJson);
+                                Log.d("Invoice log",invoice.toString());
+                                String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
+                                Log.d("Invoice log res", res);
+
                             } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                             return null;
@@ -1350,6 +1338,10 @@ public class SalesCartActivity extends AppCompatActivity {
                     }.execute();
                 } else{
                     Toast.makeText(SalesCartActivity.this, "There is no items into on cart.", Toast.LENGTH_SHORT).show();
+                }}
+                else {
+                    Toast.makeText(SalesCartActivity.this, "Choose Customer Please.", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });

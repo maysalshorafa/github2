@@ -110,7 +110,7 @@
             android:label="@string/title_backup_activity" />
         <activity android:name=".InitActivity" />
         <activity android:name=".SetupNewPOSActivity" />
-        <activity android:name=".Invoice" />
+        <activity android:name=".InvoiceActivity" />
         <activity
             android:name=".CreditCard.CreditCardByPhone"
             android:label="@string/title_credit_card_by_phone_activity" />

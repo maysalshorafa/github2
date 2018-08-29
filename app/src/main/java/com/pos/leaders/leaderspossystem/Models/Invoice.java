@@ -1,5 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.pos.leaders.leaderspossystem.DocumentType;
+
 import org.json.JSONObject;
 
 /**
@@ -7,30 +9,34 @@ import org.json.JSONObject;
  */
 
 public class Invoice {
-    private String type;
+    private DocumentType type;
     private JSONObject documentsData;
 
-    public Invoice() {
-    }
-
-    public Invoice(String type, JSONObject documentsData) {
+    public Invoice(DocumentType type, JSONObject documentsData) {
         this.type = type;
         this.documentsData = documentsData;
+
     }
 
-    public String getType() {
+    public DocumentType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(DocumentType type) {
         this.type = type;
     }
-
     public JSONObject getDocumentsData() {
         return documentsData;
     }
-
     public void setDocumentsData(JSONObject documentsData) {
         this.documentsData = documentsData;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\""+"type\":" +"\""+type +"\""+
+                "," +"\""+"documentsData\":" +documentsData  +
+                '}';
     }
 }

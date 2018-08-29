@@ -10,12 +10,9 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Tools.Util;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 19/10/2016.
@@ -88,7 +85,7 @@ public class OrderDetailsDBAdapter {
 
     public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID) {
         OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID);
-        sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
+       // sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
 
         try {
             long insertResult = insertEntry(o);

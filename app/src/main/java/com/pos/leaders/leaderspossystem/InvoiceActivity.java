@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Invoice extends Activity {
+public class InvoiceActivity extends Activity {
 
     private TextView tvTitle,tvID,tvCopy, tvInvoiceNumber;
     private TextView tvProductsNames,tvProductsIDs,tvQty, tvProductsPrices;
