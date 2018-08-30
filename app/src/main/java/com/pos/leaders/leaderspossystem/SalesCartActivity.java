@@ -80,6 +80,7 @@ import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
 import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
+import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
@@ -95,6 +96,7 @@ import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
@@ -134,9 +136,11 @@ public class SalesCartActivity extends AppCompatActivity {
     private static final int REQUEST_PIN_PAD_ACTIVITY_CODE = 907;
     private static final int REQUEST_MULTI_CURRENCY_ACTIVITY_CODE = 444;
     private static final int REQUEST_CREDIT_ACTIVITY_CODE = 500;
+    private static final int REQUEST_INVOICE = 900;
+
     public static final String COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE = "com_pos_leaders_cart_total_price";
     String transID = "";
-
+    final InvoiceImg invoiceImg = new InvoiceImg(SalesCartActivity.this);
     TextView salesMan;
     private DrawerLayout drawerLayout;
     //private ActionBarDrawerToggle actionBarDrawerToggle;//
@@ -276,7 +280,7 @@ public class SalesCartActivity extends AppCompatActivity {
     //Cart Discount View
     private LinearLayout llCartDiscount;
     private TextView tvCartDiscountValue,tvTotalPriceBeforeCartDiscount;
-
+    String invoiceNum;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1425,7 +1429,13 @@ public class SalesCartActivity extends AppCompatActivity {
                                 com.pos.leaders.leaderspossystem.Models.Invoice invoice = new Invoice(DocumentType.INVOICE,docJson);
                                 Log.d("Invoice log",invoice.toString());
                                 String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
+                                JSONObject jsonObject = new JSONObject(res);
+                                String msgData = jsonObject.getString(MessageKey.responseBody);
+                                JSONObject msgDataJson = new JSONObject(msgData);
+                                 invoiceNum = msgDataJson.getString("docNum");
                                 Log.d("Invoice log res", res);
+                                Log.d("Invoice Num", invoiceNum);
+                            print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
 
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -2314,8 +2324,8 @@ public class SalesCartActivity extends AppCompatActivity {
                     pos.imageStandardModeRasterPrint(invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainCli), CONSTANT.PRINTER_PAGE_WIDTH);
                 } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
                     pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER), CONSTANT.PRINTER_PAGE_WIDTH);
-                } else {
-                    pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null), CONSTANT.PRINTER_PAGE_WIDTH);
+                }   else  {
+                pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null), CONSTANT.PRINTER_PAGE_WIDTH);
                 }
                 return null;
             }
@@ -2422,7 +2432,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
                             Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER);
                             HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
-                        } else {
+                        }  else {
                             Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null);
                             HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
                         }
@@ -2511,7 +2521,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
                     Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER);
                     AidlUtil.getInstance().printBitmap(bitmap);
-                } else {
+                } else  {
                     Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null);
                     AidlUtil.getInstance().printBitmap(bitmap);
                 }
@@ -3789,5 +3799,9 @@ public class SalesCartActivity extends AppCompatActivity {
         btnRemoveCustomer.setVisibility(View.GONE);
         customerBalance.setText("");
         payment_by_customer_credit.setVisibility(View.GONE);
+    }
+    private void print(Bitmap bitmap) {
+        PrintTools printTools = new PrintTools(this);
+        printTools.PrintReport(bitmap);
     }
 }
