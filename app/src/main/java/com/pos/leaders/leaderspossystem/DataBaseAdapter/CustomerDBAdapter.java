@@ -44,7 +44,7 @@ public class CustomerDBAdapter {
     // TODO: Create public field for each column in your table.
     // SQL Statement to create a new database.
     public static final String DATABASE_CREATE = "CREATE TABLE customer ( `id` INTEGER PRIMARY KEY AUTOINCREMENT , " + "`firstName` TEXT NOT NULL," + " `lastName` TEXT NOT NULL," + " `gender` TEXT," + "`email` TEXT," + " `job` TEXT , " +
-            "`phoneNumber` TEXT," + " `street` TEXT ," + "`hide` INTEGER DEFAULT 0 ,`cityId` INTEGER," + " `clubId` INTEGER,`houseNumber` TEXT," + "`postalCode` TEXT," + " 'country' TEXT," + " 'countryCode' TEXT,"+ " 'balance' Double DEFAULT 0)";
+            "`phoneNumber` TEXT," + " `street` TEXT ," + "`hide` INTEGER DEFAULT 0 ,`cityId` INTEGER," + " `clubId` INTEGER DEFAULT 0,`houseNumber` TEXT," + "`postalCode` TEXT," + " 'country' TEXT," + " 'countryCode' TEXT,"+ " 'balance' Double DEFAULT 0)";
 
     public SQLiteDatabase db;
     // Context of the application using the database.
