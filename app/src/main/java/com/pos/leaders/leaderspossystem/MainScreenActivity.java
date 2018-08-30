@@ -332,7 +332,7 @@ public class MainScreenActivity extends Activity {
 											if(pid>=tot){
 												SESSION._ORDERS.setTotalPaidAmount(pid);
 												Toast.makeText(MainScreenActivity.this, "return :"+(pid-tot), Toast.LENGTH_LONG).show();
-												long saleId=saleDBAdapter.insertEntry(SESSION._ORDERS,1,"dd");
+												long saleId=saleDBAdapter.insertEntry(SESSION._ORDERS,1,"dd",false);
                                                 SESSION._ORDERS.setOrderId(saleId);
 												for(OrderDetails o:SESSION._ORDER_DETAILES){
 												//	orderDBAdapter.insertEntry(o.getProductId(),o.getQuantity(),o.getUserOffer(),saleId);

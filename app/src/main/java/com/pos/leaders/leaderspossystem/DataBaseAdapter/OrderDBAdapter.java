@@ -68,20 +68,36 @@ public class OrderDBAdapter {
 
 
 	public long insertEntry(long byUser, Timestamp saleDate, int replacementNote, boolean canceled, double totalPrice, double totalPaid, long custmer_id, String custmer_name) {
-        Order order = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name);
+		Order order = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name);
 
-    //    sendToBroker(MessageType.ADD_ORDER, order, this.context);
+	    sendToBroker(MessageType.ADD_ORDER, order, this.context);
 
-        try {
-            return insertEntry(order);
-        } catch (SQLException ex) {
-            Log.e("Sales DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
-            return 0;
-        }
+		try {
+			return insertEntry(order);
+		} catch (SQLException ex) {
+			Log.e("Sales DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
+			return 0;
+		}
+	}
+	public long invoiceInsertEntry(long byUser, Timestamp saleDate, int replacementNote, boolean canceled, double totalPrice, double totalPaid, long custmer_id, String custmer_name) {
+		Order order = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name);
+
+		//    sendToBroker(MessageType.ADD_ORDER, order, this.context);
+
+		try {
+			return insertEntry(order);
+		} catch (SQLException ex) {
+			Log.e("Sales DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
+			return 0;
+		}
 	}
 
-	public long insertEntry(Order order , long _custmer_id, String custmer_name) {
+	public long insertEntry(Order order , long _custmer_id, String custmer_name,boolean invoiceStatus) {
+		if(!invoiceStatus){
 		return insertEntry(order.getByUser(), order.getCreatedAt(), order.getReplacementNote(), order.isStatus(), order.getTotalPrice(),order.getTotalPaidAmount(),_custmer_id,custmer_name);
+	}
+	return invoiceInsertEntry(order.getByUser(), order.getCreatedAt(), order.getReplacementNote(), order.isStatus(), order.getTotalPrice(),order.getTotalPaidAmount(),_custmer_id,custmer_name);
+
 	}
 	public long insertEntry(Order order){
         ContentValues val = new ContentValues();

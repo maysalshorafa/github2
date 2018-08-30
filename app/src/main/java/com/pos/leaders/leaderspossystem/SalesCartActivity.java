@@ -872,7 +872,7 @@ public class SalesCartActivity extends AppCompatActivity {
                             SESSION._ORDERS.setTotalPaidAmount(SESSION._ORDERS.getTotalPrice());
                             saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                             saleDBAdapter.open();
-                            long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, SESSION._ORDERS.getCustomer_name());
+                            long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, SESSION._ORDERS.getCustomer_name(),false);
                             orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
                             custmerAssetDB = new CustomerAssetDB(SalesCartActivity.this);
                             orderDBAdapter.open();
@@ -1375,7 +1375,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
                     saleDBAdapter.open();
                     orderDBAdapter.open();
-                    saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
+                    saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,true);
                     SESSION._ORDERS.setOrderId(saleIDforCash);
                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
                         o.setOrderId(saleIDforCash);
@@ -1397,7 +1397,10 @@ public class SalesCartActivity extends AppCompatActivity {
                         }
                         @Override
                         protected void onPostExecute(Void aVoid) {
+                            print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
+
                             clearCart();
+
                         }
                         @Override
                         protected Void doInBackground(Void... voids) {
@@ -1435,7 +1438,11 @@ public class SalesCartActivity extends AppCompatActivity {
                                  invoiceNum = msgDataJson.getString("docNum");
                                 Log.d("Invoice log res", res);
                                 Log.d("Invoice Num", invoiceNum);
-                            print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
 
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -2663,7 +2670,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
-                long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
+                long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
                 long tempSaleId = 0;
                 // Club with point and amount
                 if (clubType == 2) {
@@ -2826,7 +2833,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
-                long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
+                long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
                 long tempSaleId;
                 saleDBAdapter.close();
 
@@ -2920,7 +2927,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
-                long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
+                long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
                 long tempSaleId = 0;
                 // Club with point and amount
                 if (clubType == 2) {
@@ -3030,7 +3037,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 SESSION._ORDERS.setTotalPaidAmount(totalPaidWithOutCurrency);
 
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
-                saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
+                saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
                 SESSION._ORDERS.setOrderId(saleIDforCash);
 
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess, new Order(SESSION._ORDERS));
@@ -3134,7 +3141,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 long secondCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_ID, 0);
                 long firstCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID, 0);
 
-                saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
+                saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
                 SESSION._ORDERS.setOrderId(saleIDforCash);
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess, new Order(SESSION._ORDERS));
 
@@ -3247,7 +3254,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         change = Math.abs(jsonObject.getDouble("change")) * getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
                     }
                     SESSION._ORDERS.setTotalPaidAmount(TotalPaidAmount);
-                    saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
+                    saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
                     SESSION._ORDERS.setOrderId(saleIDforCash);
                     currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, new Order(SESSION._ORDERS));
                     for (int i = 0; i < jsonArray.length() - 1; i++) {

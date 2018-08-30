@@ -239,8 +239,6 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                         byte[] data = new byte[(int)f.length()];
                                         f.readFully(data);
                                         pdfLoadImages(data);
-
-
                                         //pdfLoadImages1(data);
                                     }
                                     catch(Exception ignored)
@@ -248,10 +246,11 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                     }
                                     try {
                                         Thread.sleep(500);
+                                      //  print(page);
+
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
-                                    onBackPressed();
                                 } else {
                                     Toast.makeText(getApplicationContext(), getString(R.string.can_not_add_customer_please_try_again), Toast.LENGTH_SHORT).show();
                                 }
@@ -311,13 +310,36 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                 customer.setCity(cityId);
                                 customer.setCredit(Double.parseDouble(etCustomerCredit.getText().toString()));
                                 customerDBAdapter.updateEntry(customer);
-                                customerDBAdapter.updateEntry(customer);
                                 Toast.makeText(getApplicationContext(), getString(R.string.success_edit_customer), Toast.LENGTH_SHORT).show();
 
                                 Log.i("success Edit", customer.toString());
-                                onBackPressed();
-                            } catch (Exception ex) {
-                                Log.e("error can`t edit customer", ex.getMessage().toString());
+                                Customer customer = customerDBAdapter.getCustomerByID(customerId);
+                                Wallet wallet = new Wallet(WalletStatus.ACTIVE,Double.parseDouble(etCustomerCredit.getText().toString()),customerId);
+                                UpdateCustomerAndWalletStartConnection startConnection = new UpdateCustomerAndWalletStartConnection();
+                                startConnection.execute(customer.toString(),wallet.toString(),String.valueOf(customerId));
+                                try
+                                {
+                                    File path = new File( Environment.getExternalStorageDirectory(), getPackageName() );
+                                    File file = new File(path,SAMPLE_FILE);
+                                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                                    byte[] data = new byte[(int)f.length()];
+                                    f.readFully(data);
+                                    pdfLoadImages(data);
+
+
+                                    //pdfLoadImages1(data);
+                                }
+                                catch(Exception ignored)
+                                {
+                                }
+                                try {
+                                    Thread.sleep(500);
+                                    //print(page);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }                            }
+                            catch (Exception ex) {
+                                Log.d("exset",ex.toString());
                                 Toast.makeText(getApplicationContext(), getString(R.string.can_not_edit_customer_please_try_again), Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -428,6 +450,8 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
 
                 @Override
                 protected void onPostExecute(String html) {
+                    print();
+                    onBackPressed();
                     //after async close progress dialog
                     progressDialog.dismiss();
                     //load the html in the webview
@@ -467,10 +491,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                             html += "<img src=\"data:image/png;base64," + base64 + "\" hspace=10 vspace=10><br>";
 
                         }
-                        Log.d("bit",bitmapList.size()+"");
-                        PrintTools pt=new PrintTools(AddNewCustomer.this);
-                        Log.d("bitmapsize",bitmapList.size()+"");
-                        pt.PrintReport(page);
+
                         stream.close();
                         html += "</body></html>";
                         return html;
@@ -485,7 +506,15 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             Log.d("error", e.toString());
         }
     }
+public  void print(){
+            PrintTools pt=new PrintTools(AddNewCustomer.this);
+            for (int i= 1;i<bitmapList.size(); i++) {
+                Log.d("bitmapsize",bitmapList.size()+"");
+                pt.PrintReport(bitmapList.get(i));
 
+            }
+
+}
 
 }
 class StartConnection extends AsyncTask<String,Void,String> {
@@ -586,6 +615,112 @@ class StartConnection extends AsyncTask<String,Void,String> {
             Toast.makeText(AddNewCustomer.context, "Try Again.", Toast.LENGTH_SHORT).show();
         }
        progressDialog.cancel();
+        super.onPostExecute(s);
+
+        //endregion
+    }
+
+}
+class UpdateCustomerAndWalletStartConnection extends AsyncTask<String,Void,String> {
+    private MessageTransmit messageTransmit;
+
+    UpdateCustomerAndWalletStartConnection() {
+        messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+    }
+
+    final ProgressDialog progressDialog = new ProgressDialog(AddNewCustomer.context);
+    final ProgressDialog progressDialog2 =new ProgressDialog(AddNewCustomer.context);
+
+    @Override
+    protected void onPreExecute() {
+        progressDialog.setTitle("Please Wait");
+        progressDialog2.setTitle("Please Wait");
+        progressDialog.show();
+    }
+
+    @Override
+    protected String doInBackground(String... args) {//args{key,uuid}
+        String customer = args[0];
+        String wallet = args[1];
+        String customerId = args[2];
+
+
+        String initRes = "";
+        String customerRes = "";
+
+        try {
+            customerRes = messageTransmit.authPut(ApiURL.Customer, customer, SESSION.token,Long.parseLong(customerId));
+            JSONObject customerJson = new JSONObject(customerRes);
+            if (customerJson.getInt(MessageKey.status) == 200) {
+                initRes = messageTransmit.authPut(ApiURL.Wallet, wallet,SESSION.token,Long.parseLong(customerId));
+                Log.e("messageResult", initRes);
+                JSONObject jsonObject = new JSONObject(initRes);
+                if (jsonObject.getInt(MessageKey.status) == 200) {
+                    JSONObject responseBody = jsonObject.getJSONObject(MessageKey.responseBody);
+                    Log.d("CustomerReciptResult",responseBody.toString());
+                    try {
+                        PdfUA pdfUA = new PdfUA();
+
+                        pdfUA.printCustomerWalletReport(AddNewCustomer.context,responseBody.toString());
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (DocumentException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+
+        //region rr
+        //the async task is finished
+        if (s != null) {
+            //success
+
+            final String token = SESSION.token;
+
+            //null response
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    progressDialog2.setTitle("Success.");
+                    progressDialog2.show();
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    progressDialog2.cancel();
+                    /**  SetupNewPOSOnlineActivity.restart = true;
+                     final Intent i = new Intent(SetupNewPOSOnlineActivity.context, SplashScreenActivity.class);
+                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                     SetupNewPOSOnlineActivity.context.startActivity(i);
+                     **/
+                    super.onPostExecute(aVoid);
+                }
+            }.execute();
+        } else {
+            //fail
+            Toast.makeText(AddNewCustomer.context, "Try Again.", Toast.LENGTH_SHORT).show();
+        }
+        progressDialog.cancel();
         super.onPostExecute(s);
 
         //endregion
