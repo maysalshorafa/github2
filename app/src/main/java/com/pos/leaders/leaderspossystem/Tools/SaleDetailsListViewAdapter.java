@@ -1,11 +1,14 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,6 +19,7 @@ import com.pos.leaders.leaderspossystem.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,7 +56,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
+        final ArrayList<String>offerNames= new ArrayList<>();
 
         if (convertView == null) {
             holder = new ViewHolder();
@@ -61,7 +65,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
             holder.tvPrice = (TextView) convertView.findViewById(R.id.rowSaleDetails_TVPrice);
             holder.tvCount = (TextView) convertView.findViewById(R.id.rowSaleDetails_TVCount);
             holder.tvTotal = (TextView) convertView.findViewById(R.id.rowSaleDetails_TVTotalPrice);
-            holder.tvOfferName = (TextView) convertView.findViewById(R.id.tvOfferName);
+            holder.OfferName = (ImageView) convertView.findViewById(R.id.imOfferName);
             holder.tvOriginalPrice = (TextView) convertView.findViewById(R.id.tvOrderListOriginalPriceValue);
 
             holder.llMethods = (RelativeLayout) convertView.findViewById(R.id.rowSaleDetails_LLMethods);
@@ -114,8 +118,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
                 try {
                     JSONObject jsonObject = orderList.get(position).getOffer().getDataAsJsonObject();
                     JSONObject action = new JSONObject(jsonObject.get("action").toString());
-                    holder.tvOfferName.setText(orderList.get(position).getOffer().getName() + " _ " + action.getString("name"));
-
+                    offerNames.add(orderList.get(position).getOffer().getName() + " _ " + action.getString("name"));
                     holder.tvOriginalPrice.setText(Util.makePrice(orderList.get(position).getUnitPrice() * orderList.get(position).getQuantity()));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -128,6 +131,27 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
             holder.llRowDiscount.setVisibility(View.VISIBLE);
             holder.tvRowDiscountValue.setText(Util.makePrice(orderList.get(position).rowDiscount) + " %");
         }
+        holder.OfferName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new AlertDialog.Builder(getContext())
+                        .setTitle(getContext().getString(R.string.offer_name))
+                        .setMessage( "\n" + offerNames.toString())
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
 
         return convertView;
     }
@@ -153,7 +177,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
         private TextView tvCount;
         private TextView tvPrice;
         private TextView tvTotal;
-        private TextView tvOfferName;
+        private ImageView OfferName;
         private TextView tvOriginalPrice;
         private RelativeLayout llMethods;
         private LinearLayout llSalesMan;
