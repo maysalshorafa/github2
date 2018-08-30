@@ -215,6 +215,18 @@ public class OfferDBAdapter {
 		}
 		return offer;
 	}
+	public  List<Offer> getListOfValidOffers() {
+		List<Offer> offerList = new ArrayList<Offer>();
+
+		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_ACTIVE +"="+ "ACTIVE"+ " and "+OFFER_COLUMN_HIDE + " = " + 0, null);
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			offerList.add(createOfferObject(cursor));
+			cursor.moveToNext();
+		}
+		Log.d("offerList",offerList.toString());
+		return offerList;
+	}
 	public List<Offer> getBetweenTwoDates(long from, long to){
 		List<Offer> offerList = new ArrayList<Offer>();
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_START_DATE + " > datetime("+from+"/1000, 'unixepoch') and "+  OFFER_COLUMN_END_DATE +" < datetime("+to+"/1000, 'unixepoch')"+ " and "+OFFER_COLUMN_ACTIVE + " = " + "'ACTIVE' "+ " and "+OFFER_COLUMN_HIDE + " = " + 0 , null);

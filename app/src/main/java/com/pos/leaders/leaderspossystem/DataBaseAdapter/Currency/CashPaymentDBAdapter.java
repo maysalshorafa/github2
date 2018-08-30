@@ -10,13 +10,10 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Tools.Util;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by Win8.1 on 9/27/2017.
@@ -60,7 +57,7 @@ public class CashPaymentDBAdapter {
 
     public long insertEntry(long saleId, double amount, long currency_type, Timestamp createDate) {
         CashPayment payment = new CashPayment(Util.idHealth(this.db, CashPAYMENT_TABLE_NAME, CashPAYMENT_COLUMN_ID), saleId, amount, currency_type,createDate);
-        sendToBroker(MessageType.ADD_CASH_PAYMENT, payment, this.context);
+    //    sendToBroker(MessageType.ADD_CASH_PAYMENT, payment, this.context);
 
         try {
             return insertEntry(payment);

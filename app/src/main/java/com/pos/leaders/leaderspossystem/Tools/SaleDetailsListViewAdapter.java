@@ -1,6 +1,9 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
+<<<<<<< HEAD
 import android.app.AlertDialog;
+=======
+>>>>>>> 28/8/2018
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
@@ -10,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
@@ -68,7 +70,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
             holder.OfferName = (ImageView) convertView.findViewById(R.id.imOfferName);
             holder.tvOriginalPrice = (TextView) convertView.findViewById(R.id.tvOrderListOriginalPriceValue);
 
-            holder.llMethods = (RelativeLayout) convertView.findViewById(R.id.rowSaleDetails_LLMethods);
+            holder.llMethods = (LinearLayout) convertView.findViewById(R.id.rowSaleDetails_LLMethods);
             holder.llSalesMan = (LinearLayout) convertView.findViewById(R.id.saleManLayout);
             holder.llOfferName = (LinearLayout) convertView.findViewById(R.id.offerLayout);
             holder.discountLayout = (LinearLayout) convertView.findViewById(R.id.discountLayout);
@@ -179,7 +181,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
         private TextView tvTotal;
         private ImageView OfferName;
         private TextView tvOriginalPrice;
-        private RelativeLayout llMethods;
+        private LinearLayout llMethods;
         private LinearLayout llSalesMan;
         private LinearLayout discountLayout;
         private TextView tvPercentage;

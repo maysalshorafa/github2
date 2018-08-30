@@ -137,17 +137,18 @@ public class Check {
 
 	@Override
 	public String toString() {
-		return "Check{" +
-				"accountNum=" + accountNum +
-				", accountingId=" + checkId +
-				", checkNum=" + checkNum +
-				", bankNum=" + bankNum +
-				", branchNum=" + branchNum +
-				", amount=" + amount +
-				", date=" + createdAt +
-				", orderId=" + orderId +
-				'}';
+		return "{"+"\"@type\":" + "\"Check\""+
+				",\"accountNum\":" + accountNum +
+				", \"accountingId\":" + checkId +
+				",\"checkNum\":" + checkNum +
+				",\"bankNum\":" + bankNum +
+				",\" branchNum\":" + branchNum +
+				",\"amount\":" + amount +
+				",\"date\":"+"\""+ createdAt+"\"" +
+				",\"orderId\":" + orderId +
+				"}";
 	}
+
 
     public String BKMVDATA(int rowNumber, String companyID, Date date,long parentNumber) {
 
