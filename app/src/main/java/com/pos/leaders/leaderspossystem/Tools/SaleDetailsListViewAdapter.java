@@ -1,9 +1,6 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
-<<<<<<< HEAD
 import android.app.AlertDialog;
-=======
->>>>>>> 28/8/2018
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
@@ -39,6 +36,10 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
     private Context context;
     private int selected = -1;
     ViewHolder holder = null;
+    final ArrayList<String>offerNames= new ArrayList<>();
+    final ArrayList<Double>offerDiscount= new ArrayList<>();
+
+    int a=1;
 
     /**
      * Constructor
@@ -57,8 +58,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final ArrayList<String>offerNames= new ArrayList<>();
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
             holder = new ViewHolder();
@@ -120,7 +120,16 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
                 try {
                     JSONObject jsonObject = orderList.get(position).getOffer().getDataAsJsonObject();
                     JSONObject action = new JSONObject(jsonObject.get("action").toString());
+                    boolean status = true;
+                    for (int i = 0; i < offerNames.size(); i++) {
+                        if (offerNames.get(i).equals(orderList.get(position).getOffer().getName() + " _ " + action.getString("name"))) {
+                            status=false;
+                        }
+                    }
+                    if(status){
                     offerNames.add(orderList.get(position).getOffer().getName() + " _ " + action.getString("name"));
+                        offerDiscount.add(orderList.get(position).getDiscount());
+                    }
                     holder.tvOriginalPrice.setText(Util.makePrice(orderList.get(position).getUnitPrice() * orderList.get(position).getQuantity()));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -133,25 +142,38 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
             holder.llRowDiscount.setVisibility(View.VISIBLE);
             holder.tvRowDiscountValue.setText(Util.makePrice(orderList.get(position).rowDiscount) + " %");
         }
+        final View finalConvertView = convertView;
         holder.OfferName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                a=1;
+                String offersName = "";
+                for (int i=0; i<offerNames.size();i++){
+                    offersName+=a+" ) "+(offerNames.get(i) +"  "+Util.makePrice(offerDiscount.get(i)) + " %" + "\n");
+                    a=a+1;
+                }
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(finalConvertView.getRootView().getContext());
+                alertDialogBuilder .setTitle(getContext().getString(R.string.offer_name));
+                alertDialogBuilder.setMessage(offersName);
+                alertDialogBuilder.setPositiveButton("Ok",
+                        new DialogInterface.OnClickListener() {
 
-                new AlertDialog.Builder(getContext())
-                        .setTitle(getContext().getString(R.string.offer_name))
-                        .setMessage( "\n" + offerNames.toString())
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                //finish();
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
                             }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
+                        });
+
+                alertDialogBuilder.setNegativeButton("cancel",
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+
                             }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
             }
         });
 

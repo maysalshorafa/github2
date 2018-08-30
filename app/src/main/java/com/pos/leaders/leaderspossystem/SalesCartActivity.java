@@ -2718,7 +2718,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName);
                 long tempSaleId = 0;
                 // Club with point and amount
-                if (clubType == 2) {
+                if (clubType == 2 && clubAmount!=0) {
                     pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
                     sum_pointDbAdapter.insertEntry(saleID, pointFromSale, customerId);
                 }
