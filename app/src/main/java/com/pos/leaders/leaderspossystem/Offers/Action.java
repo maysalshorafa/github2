@@ -11,6 +11,7 @@ public enum Action {
     ACTION("action"),
     PRICE_FOR_PRODUCT("Price for Product"),
     GET_GIFT_PRODUCT("Get gift product"),
+    GET_DISCOUNT("Getdiscount"),
     NAME("name"),
     VALUE("value");
 

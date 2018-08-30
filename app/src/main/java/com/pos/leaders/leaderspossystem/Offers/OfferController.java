@@ -113,6 +113,40 @@ public class OfferController {
                 orderDetails.setDiscount(0);
                 orderDetails.offer = null;
             }
+        } else if (actionName.equalsIgnoreCase(Action.GET_DISCOUNT.getValue())) {
+            String value = action.getString(Action.VALUE.getValue());
+            if (value.contains("%")) {
+                //percent value
+                //remove the percent char
+                value = value.replace("%", "");
+
+                double val = 0;
+                //convert the string value to double
+                val = Double.parseDouble(value);
+                if (orderDetails.getQuantity() >= quantity) {
+                    int productCollection = orderDetails.getQuantity() / quantity;
+                    int productOutTheCollection = orderDetails.getQuantity() - (productCollection * quantity);
+                    double discount = (1 - (((productCollection * orderDetails.getUnitPrice() * (1 - (val / 100))) +
+                            (productOutTheCollection * orderDetails.getUnitPrice())) /
+                            (orderDetails.getQuantity() * orderDetails.getUnitPrice()))) * 100;
+                    orderDetails.setDiscount(discount);
+                }
+
+            } else {
+                double val = 0;
+                //convert string value to double
+                val = Double.parseDouble(value);
+                if (orderDetails.getQuantity() >= quantity) {
+                    int productCollection = orderDetails.getQuantity() / quantity;
+                    int productOutTheCollection = orderDetails.getQuantity() - (productCollection * quantity);
+                    double discount = (1 - (((productCollection * orderDetails.getUnitPrice() - (val * productCollection)) +
+                            (productOutTheCollection * orderDetails.getUnitPrice())) /
+                            (orderDetails.getQuantity() * orderDetails.getUnitPrice()))) * 100;
+                    orderDetails.setDiscount(discount);
+                }
+
+            }
+
         }
 
         return orderDetails;
