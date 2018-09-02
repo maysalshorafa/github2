@@ -38,9 +38,6 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -470,6 +467,7 @@ public class PdfUA {
         table.addCell(cell);
 
     }
+<<<<<<< HEAD
     public static void  printCustomerWalletReport(Context context, String res) throws IOException, DocumentException, JSONException {
         JSONObject jsonObject = new JSONObject(res);
         String documentsData = jsonObject.getString("documentsData");
@@ -529,5 +527,7 @@ public class PdfUA {
         //end :)
     }
 
+=======
+>>>>>>> LEAD-57
 
 }

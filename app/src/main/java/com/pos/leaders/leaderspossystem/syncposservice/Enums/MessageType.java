@@ -143,7 +143,5 @@ public interface MessageType{
     String ADD_SCHEDULE_WORKERS = "AddScheduleWorker";
     String UPDATE_SCHEDULE_WORKERS = "UpdateScheduleWorker";
     String DELETE_SCHEDULE_WORKERS = "DeleteScheduleWorker";
-    String ADD_WALLET = "AddWallet";
-    String UPDATE_WALLET = "UpdateWallet";
-    String DELETE_WALLET = "DeleteWallet";
+
 }

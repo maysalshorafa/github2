@@ -76,7 +76,6 @@ import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.SumPoint;
 import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
-import com.pos.leaders.leaderspossystem.Models.Wallet;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 <<<<<<< HEAD
 import com.pos.leaders.leaderspossystem.Offers.ResourceType;
@@ -572,7 +571,6 @@ public class SyncMessage extends Service {
                             groupDbAdapter.open();
                             long groupId = groupDbAdapter.insertEntry(offer.getResourceId(), offer.getName());
                             groupDbAdapter.close();
-
                             //insert product to group
                             GroupsResourceDbAdapter groupsCategoryDbAdapter = new GroupsResourceDbAdapter(this);
                             groupsCategoryDbAdapter.open();
@@ -724,9 +722,10 @@ public class SyncMessage extends Service {
                 case MessageType.ADD_CUSTOMER:
                     Customer customer = null;
                     customer = objectMapper.readValue(msgData, Customer.class);
+
                     CustomerDBAdapter customerDBAdapter = new CustomerDBAdapter(this);
                     customerDBAdapter.open();
-                    rID = customerDBAdapter.insertEntryFromBo(customer);
+                    rID = customerDBAdapter.insertEntry(customer);
                     customerDBAdapter.close();
 
                     break;
@@ -1539,20 +1538,6 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.ScheduleWorker, jsonObject.getString(MessageKey.Data), token);
                 break;
             //End
-            //Wallet
-            case MessageType.ADD_WALLET:
-                res = messageTransmit.authPost(ApiURL.Wallet, jsonObject.getString(MessageKey.Data), token);
-                break;
-            case MessageType.UPDATE_WALLET:
-                Wallet wallet=null;
-                wallet=objectMapper.readValue(msgData, Wallet.class);
-                res = messageTransmit.authPut(ApiURL.Wallet,jsonObject.getString(MessageKey.Data), token,wallet.getCustomerId());
-                break;
-            case MessageType.DELETE_WALLET:
-                res = messageTransmit.authDelete(ApiURL.Wallet, jsonObject.getString(MessageKey.Data), token);
-                break;
-            //End
-
 
         }
         Log.e("response message", res);

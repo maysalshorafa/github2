@@ -202,13 +202,10 @@
         <activity
             android:name=".Payment.MultiCurrenciesPaymentActivity"
             android:label="@string/multi_currencies_payment_activity" />
-        <activity
-            android:name=".Offers.CreateOfferActivity"
-            android:label="@string/create_offer_activity" />
-        <activity
-            android:name=".OfferManagementActivity"
-            android:label="@string/management_offer_activity" />
-        <activity android:name=".CustomerCreditActivity"></activity>
+        <activity android:name=".Offers.CreateOfferActivity"
+        android:label="@string/create_offer_activity"/>
+        <activity android:name=".OfferManagementActivity"
+            android:label="@string/management_offer_activity"></activity>
     </application>
 
 </manifest>

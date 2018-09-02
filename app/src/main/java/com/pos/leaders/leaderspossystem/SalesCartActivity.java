@@ -120,7 +120,6 @@ import POSSDK.POSSDK;
 
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CASH;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CHECKS;
-import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CREDIT;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CREDIT_CARD;
 
 
@@ -135,9 +134,12 @@ public class SalesCartActivity extends AppCompatActivity {
     private static final int REQUEST_CREDIT_CARD_ACTIVITY_CODE = 801;
     private static final int REQUEST_PIN_PAD_ACTIVITY_CODE = 907;
     private static final int REQUEST_MULTI_CURRENCY_ACTIVITY_CODE = 444;
+<<<<<<< HEAD
     private static final int REQUEST_CREDIT_ACTIVITY_CODE = 500;
     private static final int REQUEST_INVOICE = 900;
 
+=======
+>>>>>>> LEAD-57
     public static final String COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE = "com_pos_leaders_cart_total_price";
     String transID = "";
     final InvoiceImg invoiceImg = new InvoiceImg(SalesCartActivity.this);
@@ -269,8 +271,8 @@ public class SalesCartActivity extends AppCompatActivity {
     List<OrderDetails> orderIdList;
     List<Long> orderId;
     long custmerSaleAssetstId;
-    TextView orderSalesMan, orderCount, orderTotalPrice, orderOfferName , payment_by_customer_credit;
-    ImageView deleteOrderSalesMan, btnRemoveCustomer;
+    TextView orderSalesMan, orderCount, orderTotalPrice, orderOfferName;
+    ImageView deleteOrderSalesMan,mainActivity_btnRemoveCustomer;
     String fromEditText = "";
     static List<String> printedRows;
     double valueOfDiscount = 0;
@@ -389,8 +391,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
         llDepartments = (LinearLayout) findViewById(R.id.mainActivity_LLDepartment);
         linearLayoutCustomerBalance = (LinearLayout) findViewById(R.id.linearLayoutCustomerBalance);
-        btnRemoveCustomer = (ImageView) findViewById(R.id.mainActivity_btnRemoveCustomer);
-        payment_by_customer_credit = (TextView)findViewById(R.id.mainActivity_payment_by_customer_credit);
+        mainActivity_btnRemoveCustomer= (ImageView) findViewById(R.id.mainActivity_btnRemoveCustomer);
         departmentDBAdapter = new CategoryDBAdapter(this);
         productDBAdapter = new ProductDBAdapter(this);
         customerDBAdapter = new CustomerDBAdapter(this);
@@ -833,13 +834,15 @@ public class SalesCartActivity extends AppCompatActivity {
 
             }
         });
-        btnRemoveCustomer.setOnClickListener(new View.OnClickListener() {
+        mainActivity_btnRemoveCustomer.
+                setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                         removeCustomer();
                     }
                 });
+<<<<<<< HEAD
         payment_by_customer_credit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -937,6 +940,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
             }
         });
+=======
+>>>>>>> LEAD-57
         /**  etSearch.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
         etSearch.setFocusable(true);
@@ -1829,8 +1834,7 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     public void clearCart() {
-        payment_by_customer_credit.setVisibility(View.GONE);
-        btnRemoveCustomer.setVisibility(View.GONE);
+        mainActivity_btnRemoveCustomer.setVisibility(View.GONE);
         linearLayoutCustomerBalance.setVisibility(View.GONE);
         valueOfDiscount = 0.0;
         clubDiscount = 0;
@@ -2675,25 +2679,25 @@ public class SalesCartActivity extends AppCompatActivity {
                 // Club with point and amount
                 if (clubType == 2) {
                     pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
-                    sum_pointDbAdapter.insertEntry(saleID, pointFromSale, customerId);
+                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
                 }
 
                 if (equalUsedPoint) {
                     saleTotalPrice = 0.0;
                     SESSION._ORDERS.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
                     SESSION._ORDERS.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
                     SESSION._ORDERS.setTotalPrice(saleTotalPrice);
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 saleDBAdapter.close();
                 CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
@@ -2716,7 +2720,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
@@ -3770,8 +3774,7 @@ public class SalesCartActivity extends AppCompatActivity {
         calculateTotalPrice();
         linearLayoutCustomerBalance.setVisibility(View.VISIBLE);
         customerBalance.setText(Util.makePrice(Math.abs(customer.getBalance())));
-        btnRemoveCustomer.setVisibility(View.VISIBLE);
-        payment_by_customer_credit.setVisibility(View.VISIBLE);
+        mainActivity_btnRemoveCustomer.setVisibility(View.VISIBLE);
 
     }
 
@@ -3803,9 +3806,8 @@ public class SalesCartActivity extends AppCompatActivity {
         customerName_EditText.setText("");
         calculateTotalPrice();
         linearLayoutCustomerBalance.setVisibility(View.GONE);
-        btnRemoveCustomer.setVisibility(View.GONE);
+        mainActivity_btnRemoveCustomer.setVisibility(View.GONE);
         customerBalance.setText("");
-        payment_by_customer_credit.setVisibility(View.GONE);
     }
     private void print(Bitmap bitmap) {
         PrintTools printTools = new PrintTools(this);

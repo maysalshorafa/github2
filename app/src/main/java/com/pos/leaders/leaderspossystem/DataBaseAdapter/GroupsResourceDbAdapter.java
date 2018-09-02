@@ -133,10 +133,15 @@ public class GroupsResourceDbAdapter {
             }
         }
         cursor.close();
+<<<<<<< HEAD
 
         return groups;
     }
+=======
+>>>>>>> LEAD-57
 
+        return groups;
+    }
 
     public boolean deleteOfferGroup(long offerGroup) {
         return db.delete(GROUPS_RESOURCES_TABLE_NAME, GROUPS_RESOURCE_COLUMN_GROUP_ID + "=" + offerGroup, null) > 0;
