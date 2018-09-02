@@ -153,8 +153,9 @@ public class CustomerDBAdapter {
         val.put(CUSTOMER_COLUMN_COUNTRY, customer.getCountry());
         val.put(CUSTOMER_COLUMN_COUNTRY_CODE, customer.getCountryCode());
         val.put(CUSTOMER_COLUMN_BALANCE,customer.getBalance());
-        val.put(CUSTOMER_COLUMN_CREDIT,customer.getCredit());
-
+        if(customer.getCredit()!=null) {
+            val.put(CUSTOMER_COLUMN_CREDIT, customer.getCredit());
+        }
 
 
 
