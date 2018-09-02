@@ -77,13 +77,10 @@ import com.pos.leaders.leaderspossystem.Models.SumPoint;
 import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
-<<<<<<< HEAD
 import com.pos.leaders.leaderspossystem.Offers.ResourceType;
 import com.pos.leaders.leaderspossystem.Offers.Rules;
 import com.pos.leaders.leaderspossystem.R;
-=======
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
->>>>>>> #155integrate-the-payment-activity-with-the-new-payment-in-the-back-office-
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -508,34 +505,6 @@ public class SyncMessage extends Service {
                  //endregion CHECK
                  **/
                 //region DEPARTMENT
-                case MessageType.ADD_DEPARTMENT:
-                    Department department = null;
-                    department = objectMapper.readValue(msgData, Department.class);
-
-                    DepartmentDBAdapter departmentDBAdapter = new DepartmentDBAdapter(this);
-                    departmentDBAdapter.open();
-                    rID = departmentDBAdapter.insertEntry(department);
-                    departmentDBAdapter.close();
-                    break;
-                case MessageType.UPDATE_DEPARTMENT:
-                    Department updateDepartment = null;
-                    updateDepartment = objectMapper.readValue(msgData, Department.class);
-                    DepartmentDBAdapter updateDepartmentDBAdapter = new DepartmentDBAdapter(this);
-                    updateDepartmentDBAdapter.open();
-                    rID = updateDepartmentDBAdapter.updateEntryBo(updateDepartment);
-                    updateDepartmentDBAdapter.close();
-                    break;
-                case MessageType.DELETE_DEPARTMENT:
-                    Department deleteDepartment = null;
-                    deleteDepartment = objectMapper.readValue(msgData, Department.class);
-                    DepartmentDBAdapter deleteDepartmentDBAdapter = new DepartmentDBAdapter(this);
-                    deleteDepartmentDBAdapter.open();
-                    rID = deleteDepartmentDBAdapter.deleteEntryBo(deleteDepartment);
-                    deleteDepartmentDBAdapter.close();
-                    break;
-                //endregion DEPARTMENT
->>>>>>> #155integrate-the-payment-activity-with-the-new-payment-in-the-back-office-
-
                 //region OFFER
                 case MessageType.ADD_OFFER:
                     Offer offer = null;

@@ -133,13 +133,6 @@ public class GroupsResourceDbAdapter {
             }
         }
         cursor.close();
-<<<<<<< HEAD
-
-        return groups;
-    }
-=======
->>>>>>> LEAD-57
-
         return groups;
     }
 

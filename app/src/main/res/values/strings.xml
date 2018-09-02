@@ -638,15 +638,9 @@
     <string name="please_determine_offer_action">please determine offer action</string>
     <string name="cart_discount">Cart discount : </string>
     <string name="row_discount">Row discount : </string>
-<<<<<<< HEAD
     <string name="payment_by_credit">Credit Payment</string>
     <string name="remainingCredit">Remain Credit</string>
     <string name="product_unit">Product Unit</string>
-=======
-
->>>>>>> LEAD-57
-
-
 </resources>
 
 

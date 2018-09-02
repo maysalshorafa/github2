@@ -1,8 +1,14 @@
 package com.pos.leaders.leaderspossystem.CustomerAndClub;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -19,15 +25,35 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.PdfUA;
+import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
+import com.sun.pdfview.PDFFile;
+import com.sun.pdfview.PDFPage;
 
+import net.sf.andpdf.nio.ByteBuffer;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,13 +78,11 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     ImageView advanceFeature;
     TextView advance ,tvCustomerBalance;
     LinearLayout CustomerBalance ;
-<<<<<<< HEAD
     public static Context context = null;
     Bitmap page=null ;
     public static final String SAMPLE_FILE = "customerwallet.pdf";
     ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
-=======
->>>>>>> LEAD-57
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -465,7 +489,6 @@ public  void print(){
 }
 
 }
-<<<<<<< HEAD
 class StartConnection extends AsyncTask<String,Void,String> {
     private MessageTransmit messageTransmit;
 
@@ -677,5 +700,4 @@ class UpdateCustomerAndWalletStartConnection extends AsyncTask<String,Void,Strin
 
 }
 
-=======
->>>>>>> LEAD-57
+

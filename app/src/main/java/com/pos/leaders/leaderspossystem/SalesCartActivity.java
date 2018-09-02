@@ -134,12 +134,9 @@ public class SalesCartActivity extends AppCompatActivity {
     private static final int REQUEST_CREDIT_CARD_ACTIVITY_CODE = 801;
     private static final int REQUEST_PIN_PAD_ACTIVITY_CODE = 907;
     private static final int REQUEST_MULTI_CURRENCY_ACTIVITY_CODE = 444;
-<<<<<<< HEAD
     private static final int REQUEST_CREDIT_ACTIVITY_CODE = 500;
     private static final int REQUEST_INVOICE = 900;
 
-=======
->>>>>>> LEAD-57
     public static final String COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE = "com_pos_leaders_cart_total_price";
     String transID = "";
     final InvoiceImg invoiceImg = new InvoiceImg(SalesCartActivity.this);
@@ -842,7 +839,6 @@ public class SalesCartActivity extends AppCompatActivity {
                         removeCustomer();
                     }
                 });
-<<<<<<< HEAD
         payment_by_customer_credit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -939,9 +935,8 @@ public class SalesCartActivity extends AppCompatActivity {
                     });
                 }
             }
-        });
-=======
->>>>>>> LEAD-57
+});
+
         /**  etSearch.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
         etSearch.setFocusable(true);

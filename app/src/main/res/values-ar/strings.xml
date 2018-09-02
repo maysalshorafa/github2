@@ -553,12 +553,8 @@
     <string name="management_offer_activity">ادارة الحملات</string>
     <string name="cart_discount">تخفيض على كامل سلة المشتريات : </string>
     <string name="row_discount">تخفيض للسطر : </string>
-<<<<<<< HEAD
     <string name="payment_by_credit">لدفع بالائتمان</string>
     <string name="remainingCredit">بلغ الائتمان المتبقي</string>
     <string name="product_unit">وحدة المنتوج</string>
-=======
->>>>>>> LEAD-57
-
 </resources>
 
