@@ -191,7 +191,7 @@
     <string name="cost_price">Cost Price</string>
     <string name="with_tax">With Tax</string>
     <string name="without_tax">Without Tax</string>
-    <string name="weighable">Weighable</string>
+    <string name="weight">Weight</string>
     <string name="category_name">Category Name</string>
     <string name="success_to_update_product">Product has been updated!</string>
 
@@ -601,6 +601,7 @@
     <string name="insert_product_name">Please insert Product Name.</string>
     <string name="insert_product_barcode">Please insert Product Barcode.</string>
     <string name="insert_product_price">Please insert Product Price.</string>
+    <string name="insert_product_weight">Please insert Product Weight.</string>
     <string name="paid_by">Paid By</string>
     <string name="product_quantity">Product quantity</string>
     <string name="payment_list">Payment list</string>
@@ -640,7 +641,7 @@
     <string name="row_discount">Row discount : </string>
     <string name="payment_by_credit">Credit Payment</string>
     <string name="remainingCredit">Remain Credit</string>
-
+    <string name="product_unit">Product Unit</string>
 
 
 </resources>

@@ -82,7 +82,7 @@
     <string name="name">الاسم</string>
     <string name="barcode">الباركود</string>
     <string name="cost_price">سعر التكلفة</string>
-    <string name="weighable">الوزن</string>
+    <string name="weight">الوزن</string>
     <string name="print">طباعة</string>
     <string name="x_report_view">X عرض تقرير</string>
     <string name="sales_history">سجل الطلبيات</string>
@@ -175,7 +175,7 @@
     <string name="insert_product_name">يرجى اضافة اسم المنتوج.</string>
     <string name="insert_product_barcode">يرجى اضافة اسم رقم المنتوج.</string>
     <string name="insert_product_price">يرجى اضافة سعر المنتوج.</string>
-
+    <string name="insert_product_weight">رجى اضافة وزن المنتوج.</string>
     <!-- OldCustomer Message -->
     <string name="please_insert_first_name">الرجاء ادخال الاسم الاول.</string>
     <string name="please_insert_last_name">الرجاء ادخال الاسم الاخير.</string>
@@ -555,6 +555,7 @@
     <string name="row_discount">تخفيض للسطر : </string>
     <string name="payment_by_credit">لدفع بالائتمان</string>
     <string name="remainingCredit">بلغ الائتمان المتبقي</string>
+    <string name="product_unit">وحدة المنتوج</string>
 
 </resources>
 

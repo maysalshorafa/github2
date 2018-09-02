@@ -192,7 +192,7 @@
     <string name="name">שם</string>
     <string name="description">תיאור</string>
     <string name="cost_price">מחיר עלות</string>
-    <string name="weighable">מוצר שקיל</string>
+    <string name="weight">מוצר שקיל</string>
     <string name="category_name">שם המחלקה</string>
     <string name="success_to_update_product">המוצר עודכן!</string>
     <string name="error_to_update_product">עדכון המוצר נכשל.</string>
