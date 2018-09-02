@@ -78,11 +78,16 @@ import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.Models.Wallet;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+<<<<<<< HEAD
 import com.pos.leaders.leaderspossystem.Offers.ResourceType;
 import com.pos.leaders.leaderspossystem.Offers.Rules;
 import com.pos.leaders.leaderspossystem.R;
+=======
+import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
+>>>>>>> #155integrate-the-payment-activity-with-the-new-payment-in-the-back-office-
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -442,6 +447,7 @@ public class SyncMessage extends Service {
                     break;
                 //endregion A REPORT Details
 
+<<<<<<< HEAD
                 //region CHECK
                 case MessageType.ADD_CHECK:
                     Check check = null;
@@ -485,6 +491,51 @@ public class SyncMessage extends Service {
                     deleteCategoryDBAdapter.close();
                     break;
                 //endregion Category
+=======
+                /**region CHECK
+                 case MessageType.ADD_CHECK:
+                 Check check = null;
+                 check = objectMapper.readValue(msgData, Check.class);
+
+                 ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(this);
+                 checksDBAdapter.open();
+                 rID = checksDBAdapter.insertEntry(check);
+                 checksDBAdapter.close();
+                 break;
+                 case MessageType.UPDATE_CHECK:
+                 break;
+                 case MessageType.DELETE_CHECK:
+                 break;
+                 //endregion CHECK
+                 **/
+                //region DEPARTMENT
+                case MessageType.ADD_DEPARTMENT:
+                    Department department = null;
+                    department = objectMapper.readValue(msgData, Department.class);
+
+                    DepartmentDBAdapter departmentDBAdapter = new DepartmentDBAdapter(this);
+                    departmentDBAdapter.open();
+                    rID = departmentDBAdapter.insertEntry(department);
+                    departmentDBAdapter.close();
+                    break;
+                case MessageType.UPDATE_DEPARTMENT:
+                    Department updateDepartment = null;
+                    updateDepartment = objectMapper.readValue(msgData, Department.class);
+                    DepartmentDBAdapter updateDepartmentDBAdapter = new DepartmentDBAdapter(this);
+                    updateDepartmentDBAdapter.open();
+                    rID = updateDepartmentDBAdapter.updateEntryBo(updateDepartment);
+                    updateDepartmentDBAdapter.close();
+                    break;
+                case MessageType.DELETE_DEPARTMENT:
+                    Department deleteDepartment = null;
+                    deleteDepartment = objectMapper.readValue(msgData, Department.class);
+                    DepartmentDBAdapter deleteDepartmentDBAdapter = new DepartmentDBAdapter(this);
+                    deleteDepartmentDBAdapter.open();
+                    rID = deleteDepartmentDBAdapter.deleteEntryBo(deleteDepartment);
+                    deleteDepartmentDBAdapter.close();
+                    break;
+                //endregion DEPARTMENT
+>>>>>>> #155integrate-the-payment-activity-with-the-new-payment-in-the-back-office-
 
                 //region OFFER
                 case MessageType.ADD_OFFER:
@@ -1100,7 +1151,47 @@ public class SyncMessage extends Service {
 
             //region PAYMENT
             case MessageType.ADD_PAYMENT:
-                res = messageTransmit.authPost(ApiURL.Payment, jsonObject.getString(MessageKey.Data), token);
+                JSONObject newJsonObject = new JSONObject(jsonObject.getString(MessageKey.Data));
+                String paymentWay = newJsonObject.getString("paymentWay");
+                long orderId = newJsonObject.getLong("orderId");
+                List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
+                List<Payment> paymentList = new ArrayList<Payment>();
+                List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
+                List<Check> checkList = new ArrayList<Check>();
+                if(paymentWay.equalsIgnoreCase(CONSTANT.CASH)&& SETTINGS.enableCurrencies==true){
+                    //get cash payment detail by order id
+                    CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(getApplicationContext());
+                    cashPaymentDBAdapter.open();
+                    cashPaymentList = cashPaymentDBAdapter.getPaymentBySaleID(orderId);
+                    JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
+                    newJsonObject.put("paymentDetails",jsonArray);
+                }
+                if(paymentWay.equalsIgnoreCase(CONSTANT.CASH)&& SETTINGS.enableCurrencies==false){
+                    //get cash payment detail by order id
+                    PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(getApplicationContext());
+                    paymentDBAdapter.open();
+                    paymentList = paymentDBAdapter.getPaymentBySaleID(orderId);
+                    JSONArray jsonArray = new JSONArray(paymentList.toString());
+                    newJsonObject.put("paymentDetails",jsonArray);
+                }
+                if(paymentWay.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
+                    //get credit payment detail by order id
+                    CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(getApplicationContext());
+                    creditCardPaymentDBAdapter.open();
+                    creditCardPaymentList = creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
+                    JSONArray jsonArray = new JSONArray(creditCardPaymentList.toString());
+                    newJsonObject.put("paymentDetails",jsonArray);
+                }
+                if(paymentWay.equalsIgnoreCase(CONSTANT.CHECKS)){
+                    //get check payment detail by order id
+                    ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(getApplicationContext());
+                    checksDBAdapter.open();
+                    checkList = checksDBAdapter.getPaymentBySaleID(orderId);
+                    JSONArray jsonArray = new JSONArray(checkList.toString());
+                    newJsonObject.put("paymentDetails",jsonArray);
+                }
+                res = messageTransmit.authPost(ApiURL.Payment, newJsonObject.toString(), token);
+
                 break;
             case MessageType.UPDATE_PAYMENT:
                 Payment payment=null;
@@ -1347,34 +1438,34 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
 
                 break;
-            //region CashPayment
-            case MessageType.ADD_CASH_PAYMENT:
-                res = messageTransmit.authPost(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
-                break;
-            case MessageType.UPDATE_CASH_PAYMENT:
-                CashPayment cashPayment=null;
-                cashPayment=objectMapper.readValue(msgData, CashPayment.class);
-                res = messageTransmit.authPut(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token,cashPayment.getCashPaymentId());
-                break;
-            case MessageType.DELETE_CASH_PAYMENT:
-                res = messageTransmit.authDelete(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
-                break;
-            //endregion CashPayment
+            /**region CashPayment
+             case MessageType.ADD_CASH_PAYMENT:
+             res = messageTransmit.authPost(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
+             break;
+             case MessageType.UPDATE_CASH_PAYMENT:
+             CashPayment cashPayment=null;
+             cashPayment=objectMapper.readValue(msgData, CashPayment.class);
+             res = messageTransmit.authPut(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token,cashPayment.getCashPaymentId());
+             break;
+             case MessageType.DELETE_CASH_PAYMENT:
+             res = messageTransmit.authDelete(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
+             break;
+             //endregion CashPayment
+             **/
 
-
-            //region Credit Card Payment
-            case MessageType.ADD_CREDIT_CARD_PAYMENT:
-                res = messageTransmit.authPost(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
-                break;
-            case MessageType.UPDATE_CREDIT_CARD_PAYMENT:
-                CreditCardPayment creditCardPayment=null;
-                creditCardPayment=objectMapper.readValue(msgData, CreditCardPayment.class);
-                res = messageTransmit.authPut(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token,creditCardPayment.getCreditCardPaymentId());
-                break;
-            case MessageType.DELETE_CREDIT_CARD_PAYMENT:
-                res = messageTransmit.authDelete(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
-                break;
-            //endregion Credit Card Payment
+            /**region Credit Card Payment
+             case MessageType.ADD_CREDIT_CARD_PAYMENT:
+             res = messageTransmit.authPost(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
+             break;
+             case MessageType.UPDATE_CREDIT_CARD_PAYMENT:
+             CreditCardPayment creditCardPayment=null;
+             creditCardPayment=objectMapper.readValue(msgData, CreditCardPayment.class);
+             res = messageTransmit.authPut(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token,creditCardPayment.getCreditCardPaymentId());
+             break;
+             case MessageType.DELETE_CREDIT_CARD_PAYMENT:
+             res = messageTransmit.authDelete(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
+             break;
+             //endregion Credit Card Payment**/
 
             //CUSTOMER_ASSISTANT
             case MessageType.ADD_CUSTOMER_ASSISTANT:
@@ -1511,7 +1602,7 @@ public class SyncMessage extends Service {
         currencyTypeDBAdapter.close();
         CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(this);
         currencyDBAdapter.open();
-     Currency lastCurrency =currencyDBAdapter.getLastCurrency();
+        Currency lastCurrency =currencyDBAdapter.getLastCurrency();
         Timestamp timestamp =new Timestamp(System.currentTimeMillis());
         if (DateConverter.toDate(lastCurrency.getLastUpdate().getTime()).equals(DateConverter.toDate(timestamp.getTime()))) {
             //do nothing
@@ -1552,3 +1643,4 @@ public class SyncMessage extends Service {
         }
     }
 }
+

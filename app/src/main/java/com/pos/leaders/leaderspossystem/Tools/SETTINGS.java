@@ -37,6 +37,8 @@ public class SETTINGS {
 
 	//public static String BO_SERVER_URL = "http://18.220.245.144:8080/webapi";
 
+//	public static String BO_SERVER_URL = "http://192.168.1.26:8080/";
+
 	//public static String BO_SERVER_URL = "http://192.168.1.26:8080/";
 	//public static String BO_SERVER_URL = "https://api.leadpos.io/webapi/";
 
