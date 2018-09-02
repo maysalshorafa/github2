@@ -10,6 +10,7 @@ public class CONSTANT {
     public static final String CASH = "cash";
     public static final String CREDIT_CARD = "credit_card";
     public static final String CHECKS = "checks";
+    public static final String CREDIT = "credit";
     public static final String[] PAYMENTS_TYPE = {CASH, CREDIT_CARD, CHECKS};
     public static final int PRINTER_PAGE_WIDTH = 570;
     public static final int Shekel = 0;

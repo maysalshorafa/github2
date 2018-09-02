@@ -120,6 +120,7 @@ import POSSDK.POSSDK;
 
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CASH;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CHECKS;
+import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CREDIT;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CREDIT_CARD;
 
 
@@ -149,7 +150,7 @@ public class SalesCartActivity extends AppCompatActivity {
     Button btnPercentProduct, btnPauseSale, btnResumeSale;
     ImageButton search_person;
     Button btnCash, btnCreditCard, btnOtherWays , createInvoice;
-    TextView tvTotalPrice, tvTotalSaved, salesSaleMan, customerBalance;
+    TextView tvTotalPrice, tvTotalSaved, salesSaleMan, customerBalance, payment_by_customer_credit;
     EditText etSearch;
     ImageButton btnDone;
     ImageButton btnGrid, btnList;
@@ -344,6 +345,7 @@ public class SalesCartActivity extends AppCompatActivity {
         salesSaleMan = (TextView) findViewById(R.id.salesSaleMan);
         customerBalance = (TextView) findViewById(R.id.customerBalance);
         createInvoice = (Button)findViewById(R.id.mainActivity_BTNInvoice);
+        payment_by_customer_credit = (TextView)findViewById(R.id.mainActivity_payment_by_customer_credit);
         custmerAssetstIdList = new ArrayList<Long>();
         orderIdList = new ArrayList<OrderDetails>();
         orderId = new ArrayList<Long>();

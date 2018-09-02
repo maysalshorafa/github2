@@ -242,34 +242,51 @@
                         android:orientation="vertical"
                         android:weightSum="2"
                         android:gravity="bottom|end">
-                        <ImageView
-                            android:id="@+id/mainActivity_btnRemoveCustomer"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/close"
-                            android:layout_gravity="left"
-                            android:visibility="gone"/>
+                            android:orientation="horizontal"
+                            android:layout_weight="1">
+                            <TextView
+                                android:id="@+id/mainActivity_payment_by_customer_credit"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/payment_by_credit"
+                                android:textColor="@color/black"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                android:textAlignment="textEnd"
+                                android:visibility="gone"/>
+                            <ImageView
+                                android:id="@+id/mainActivity_btnRemoveCustomer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/close"
+                                android:layout_gravity="left"
+                                android:visibility="gone"/>
+                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-                        <EditText
-                            android:id="@+id/customer_textView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:layout_weight="1"
-                            android:textAlignment="textEnd"
-                            android:textColor="@color/black" />
+                            <EditText
+                                android:id="@+id/customer_textView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
+                                android:layout_weight="1"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black" />
 
-                        <ImageButton
-                            android:id="@+id/searchPerson"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@color/transparent"
-                            app:srcCompat="@drawable/ic_customer_plus" />
-                            </LinearLayout>
+                            <ImageButton
+                                android:id="@+id/searchPerson"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@color/transparent"
+                                app:srcCompat="@drawable/ic_customer_plus" />
+                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -278,7 +295,7 @@
                             android:id="@+id/linearLayoutCustomerBalance"
                             android:paddingRight="4dp"
                             android:visibility="gone"
-                           >
+                            >
 
                             <TextView
                                 android:id="@+id/customerBalance"
@@ -289,7 +306,7 @@
                                 android:textAlignment="textEnd"
                                 android:textColor="@color/black"
                                 android:textSize="18sp"
-                                 />
+                                />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -298,7 +315,7 @@
                                 android:textColor="@color/black"
                                 android:textSize="18sp"
                                 />
-                            </LinearLayout>
+                        </LinearLayout>
 
                     </LinearLayout>
 

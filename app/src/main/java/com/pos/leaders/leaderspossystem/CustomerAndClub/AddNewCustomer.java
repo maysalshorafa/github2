@@ -32,6 +32,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.Wallet;
+import com.pos.leaders.leaderspossystem.Models.WalletStatus;
 import com.pos.leaders.leaderspossystem.PdfUA;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.R;
@@ -60,7 +62,7 @@ import java.util.List;
 public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     String street="" , job="" , email="" , houseNo="" , postalCode="" , country="" , countryCode="";
     int cityId=0;
-    EditText etCustomerFirstName, etCustomerLastName, etStreet, etJob, etEmail, etPhoneNo, etHouseNumber, etPostalCode, etCountry, etCountryCode ;
+    EditText etCustomerFirstName, etCustomerLastName, etStreet, etJob, etEmail, etPhoneNo, etHouseNumber, etPostalCode, etCountry, etCountryCode ,etCustomerCredit;
     Button btAddCustomer, btCancel;
     Spinner selectCitySpinner, selectClubSpinner;
     CustomerDBAdapter customerDBAdapter;
@@ -82,7 +84,6 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     Bitmap page=null ;
     public static final String SAMPLE_FILE = "customerwallet.pdf";
     ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +92,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         setContentView(R.layout.activity_add_new_coustmer);
         TitleBar.setTitleBar(this);
         init();
+        context=this;
         customer = null;
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -112,15 +114,16 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             etHouseNumber.setEnabled(false);
             etPostalCode.setEnabled(false);
             etCountryCode.setEnabled(false);
+            etCustomerCredit.setEnabled(false);
             CustomerBalance.setVisibility(View.VISIBLE);
             CustmerManagementActivity.Customer_Management_View=0;
         }
         if (bundle != null) {
-             customerId = (long) bundle.get("id");
+            customerId = (long) bundle.get("id");
             customer = customerDBAdapter.getCustomerByID(customerId);
             etCustomerFirstName.setText(customer.getFirstName());
             etCustomerLastName.setText(customer.getLastName());
-           etJob.setText(customer.getJob());
+            etJob.setText(customer.getJob());
             etEmail.setText(customer.getEmail());
             etPhoneNo.setText(customer.getPhoneNumber());
             etStreet.setText(customer.getStreet());
@@ -128,6 +131,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             etPostalCode.setText(customer.getPostalCode());
             etCountry.setText(customer.getCountry());
             etCountryCode.setText(customer.getCountryCode());
+            etCustomerCredit.setText(customer.getCredit()+"");
             btAddCustomer.setText(getResources().getText(R.string.edit));
             tvCustomerBalance.setText(customer.getBalance()+"");
 
@@ -168,7 +172,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 secondCustomerInformation.setVisibility(View.VISIBLE);
                 advanceFeature.setVisibility(View.INVISIBLE);
                 advance.setVisibility(View.INVISIBLE);
-                  }
+            }
         });
 
         btAddCustomer.setOnClickListener(new View.OnClickListener() {
@@ -179,13 +183,13 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 if (customer == null) {
                     if (!_customerName.equals("")) {
                         if(secondCustomerInformation.getVisibility()== View.VISIBLE){
-                        street=etStreet.getText().toString();
-                        job=etJob.getText().toString();
-                        email=etEmail.getText().toString();
-                        houseNo=etHouseNumber.getText().toString();
-                        postalCode=etPostalCode.getText().toString();
-                        country=etCountry.getText().toString();
-                        countryCode=etCountryCode.getText().toString();
+                            street=etStreet.getText().toString();
+                            job=etJob.getText().toString();
+                            email=etEmail.getText().toString();
+                            houseNo=etHouseNumber.getText().toString();
+                            postalCode=etPostalCode.getText().toString();
+                            country=etCountry.getText().toString();
+                            countryCode=etCountryCode.getText().toString();
                             cityId=  (int) selectCitySpinner.getSelectedItemId();
 
                         }
@@ -197,44 +201,60 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
 
 
                         }
-                            if (etCustomerFirstName.getText().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_first_name), Toast.LENGTH_LONG).show();
-                            } else if (etCustomerLastName.getText().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_last_name), Toast.LENGTH_LONG).show();
-                            } else if (etPhoneNo.getText().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
-                            }  else if (!customerDBAdapter.availableCustomerPhoneNo(etPhoneNo.getText().toString())) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
-                            }else {
-                                long i = customerDBAdapter.insertEntry(etCustomerFirstName.getText().toString(),
+                        if (etCustomerFirstName.getText().toString().equals("")) {
+                            etCustomerFirstName.setBackgroundResource(R.drawable.backtext);
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_first_name), Toast.LENGTH_LONG).show();
+                        } else if (etCustomerLastName.getText().toString().equals("")) {
+                            etCustomerLastName.setBackgroundResource(R.drawable.backtext);
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_last_name), Toast.LENGTH_LONG).show();
+                        } else if (etPhoneNo.getText().toString().equals("")) {
+                            etPhoneNo.setBackgroundResource(R.drawable.backtext);
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
+                        }  else if (!customerDBAdapter.availableCustomerPhoneNo(etPhoneNo.getText().toString())) {
+                            etPhoneNo.setBackgroundResource(R.drawable.backtext);
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
+                        } else if (etCustomerCredit.getText().toString().equals("")) {
+                            etCustomerCredit.setBackgroundResource(R.drawable.backtext);
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_customer_credit), Toast.LENGTH_LONG).show();
+                        }else {
+                            long i = 0;
+                            try {
+                                i = customerDBAdapter.insertEntry(etCustomerFirstName.getText().toString(),
                                         etCustomerLastName.getText().toString(), gender, email, job, etPhoneNo.getText().toString(), street, cityId, clubID, houseNo, etPostalCode.getText().toString(),
-                                       country, countryCode,0);
-                                if (i > 0) {
-                                    Toast.makeText(getApplicationContext(), getString(R.string.success_adding_new_customer), Toast.LENGTH_LONG).show();
-                                    try
-                                    {
-                                        File path = new File( Environment.getExternalStorageDirectory(), getPackageName() );
-                                        File file = new File(path,SAMPLE_FILE);
-                                        RandomAccessFile f = new RandomAccessFile(file, "r");
-                                        byte[] data = new byte[(int)f.length()];
-                                        f.readFully(data);
-                                        pdfLoadImages(data);
-                                        //pdfLoadImages1(data);
-                                    }
-                                    catch(Exception ignored)
-                                    {
-                                    }
-                                    try {
-                                        Thread.sleep(500);
-                                      //  print(page);
-
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else {
-                                    Toast.makeText(getApplicationContext(), getString(R.string.can_not_add_customer_please_try_again), Toast.LENGTH_SHORT).show();
-                                }
+                                        country, countryCode,0,Double.parseDouble(etCustomerCredit.getText().toString()));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
+                            if (i > 0) {
+                                Customer customer = customerDBAdapter.getCustomerByID(i);
+                                Wallet wallet = new Wallet(WalletStatus.ACTIVE,Double.parseDouble(etCustomerCredit.getText().toString()),i);
+                                StartConnection startConnection = new StartConnection();
+                                startConnection.execute(customer.toString(),wallet.toString());
+                                Toast.makeText(getApplicationContext(), getString(R.string.success_adding_new_customer), Toast.LENGTH_LONG).show();
+                                try
+                                {
+                                    File path = new File( Environment.getExternalStorageDirectory(), getPackageName() );
+                                    File file = new File(path,SAMPLE_FILE);
+                                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                                    byte[] data = new byte[(int)f.length()];
+                                    f.readFully(data);
+                                    pdfLoadImages(data);
+                                    //pdfLoadImages1(data);
+                                }
+                                catch(Exception ignored)
+                                {
+                                }
+                                try {
+                                    Thread.sleep(500);
+                                    //  print(page);
+
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                Toast.makeText(getApplicationContext(), getString(R.string.can_not_add_customer_please_try_again), Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 } else {
                     // Edit mode
@@ -262,12 +282,18 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                             }
                         }
                         if (etCustomerFirstName.getText().toString().equals("")) {
+                            etCustomerFirstName.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_first_name), Toast.LENGTH_LONG).show();
                         } else if (etCustomerLastName.getText().toString().equals("")) {
+                            etCustomerLastName.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_last_name), Toast.LENGTH_LONG).show();
                         } else if (etPhoneNo.getText().toString().equals("")) {
+                            etCustomerLastName.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
-                        } else {
+                        }  else if (etCustomerCredit.getText().toString().equals("")) {
+                            etCustomerCredit.setBackgroundResource(R.drawable.backtext);
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_customer_credit), Toast.LENGTH_LONG).show();
+                        }else {
                             try {
                                 customer.setFirstName(etCustomerFirstName.getText().toString());
                                 customer.setLastName(etCustomerLastName.getText().toString());
@@ -282,6 +308,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                 customer.setGender(gender);
                                 customer.setClub(clubID);
                                 customer.setCity(cityId);
+                                customer.setCredit(Double.parseDouble(etCustomerCredit.getText().toString()));
                                 customerDBAdapter.updateEntry(customer);
                                 Toast.makeText(getApplicationContext(), getString(R.string.success_edit_customer), Toast.LENGTH_SHORT).show();
 
@@ -342,8 +369,9 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         etPhoneNo = (EditText) findViewById(R.id.etCustomerPhoneNumber);
         etCountry = (EditText) findViewById(R.id.etCustomerCountry);
         etCountryCode = (EditText) findViewById(R.id.etCustomerCountryCode);
-       etHouseNumber = (EditText) findViewById(R.id.etHouseNumber);
+        etHouseNumber = (EditText) findViewById(R.id.etHouseNumber);
         etPostalCode = (EditText) findViewById(R.id.etCustomerPostalCode);
+        etCustomerCredit = (EditText)findViewById(R.id.etCustomerCredit);
         btAddCustomer = (Button) findViewById(R.id.add_Custmer);
         btCancel = (Button) findViewById(R.id.addCustmer_BTCancel);
         advanceFeature=(ImageView)findViewById(R.id.advanceFeature);
@@ -478,15 +506,15 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             Log.d("error", e.toString());
         }
     }
-public  void print(){
-            PrintTools pt=new PrintTools(AddNewCustomer.this);
-            for (int i= 1;i<bitmapList.size(); i++) {
-                Log.d("bitmapsize",bitmapList.size()+"");
-                pt.PrintReport(bitmapList.get(i));
+    public  void print(){
+        PrintTools pt=new PrintTools(AddNewCustomer.this);
+        for (int i= 1;i<bitmapList.size(); i++) {
+            Log.d("bitmapsize",bitmapList.size()+"");
+            pt.PrintReport(bitmapList.get(i));
 
-            }
+        }
 
-}
+    }
 
 }
 class StartConnection extends AsyncTask<String,Void,String> {
@@ -563,7 +591,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
                 protected void onPreExecute() {
                     super.onPreExecute();
                     progressDialog2.setTitle("Success.");
-                   progressDialog2.show();
+                    progressDialog2.show();
                 }
 
                 @Override
@@ -586,7 +614,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
             //fail
             Toast.makeText(AddNewCustomer.context, "Try Again.", Toast.LENGTH_SHORT).show();
         }
-       progressDialog.cancel();
+        progressDialog.cancel();
         super.onPostExecute(s);
 
         //endregion
@@ -699,5 +727,4 @@ class UpdateCustomerAndWalletStartConnection extends AsyncTask<String,Void,Strin
     }
 
 }
-
 

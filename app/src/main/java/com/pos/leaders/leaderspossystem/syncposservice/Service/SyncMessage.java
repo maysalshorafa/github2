@@ -443,7 +443,7 @@ public class SyncMessage extends Service {
                     break;
                 //endregion A REPORT Details
 
-<<<<<<< HEAD
+/**
                 //region CHECK
                 case MessageType.ADD_CHECK:
                     Check check = null;
@@ -459,7 +459,7 @@ public class SyncMessage extends Service {
                 case MessageType.DELETE_CHECK:
                     break;
                 //endregion CHECK
-
+**/
                 //region Category
                 case MessageType.ADD_CATEGORY:
                     Category category = null;
@@ -487,7 +487,7 @@ public class SyncMessage extends Service {
                     deleteCategoryDBAdapter.close();
                     break;
                 //endregion Category
-=======
+
                 /**region CHECK
                  case MessageType.ADD_CHECK:
                  Check check = null;

@@ -46,10 +46,8 @@ public interface ApiURL {
     String MeasurementDynamicVariable="MeasurementDynamicVariable";
     String Version="Version";
     String ScheduleWorker="ScheduleWorker";
-<<<<<<< HEAD
     String Documents = "Documents";
     String Wallet = "Wallet";
-=======
->>>>>>> LEAD-57
+
 
 }
