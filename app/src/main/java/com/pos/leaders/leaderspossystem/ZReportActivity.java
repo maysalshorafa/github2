@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,10 +133,10 @@ public class ZReportActivity extends AppCompatActivity {
                 Intent i=new Intent(ZReportActivity.this,ReportZDetailsActivity.class);
                 i.putExtra("permissions_name",str);
 
-                i.putExtra(COM_LEADPOS_ZREPORT_ID,zReportList.get(position).getzReportId());
-                i.putExtra(COM_LEADPOS_ZREPORT_FORM,zReportList.get(position).getStartOrderId());
-                i.putExtra(COM_LEADPOS_ZREPORT_TO,zReportList.get(position).getEndOrderId());
-                i.putExtra(COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReportList.get(position).getTotalAmount());
+                i.putExtra(COM_LEADPOS_ZREPORT_ID,zReportList.get(position-1).getzReportId());
+                i.putExtra(COM_LEADPOS_ZREPORT_FORM,zReportList.get(position-1).getStartOrderId());
+                i.putExtra(COM_LEADPOS_ZREPORT_TO,zReportList.get(position-1).getEndOrderId());
+                i.putExtra(COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReportList.get(position-1).getTotalAmount());
 
                 i.putExtra(COM_LEADPOS_ZREPORT_HISTORY, true);
                 startActivity(i);
