@@ -444,6 +444,9 @@ public class SyncMessage extends Service {
                 //endregion A REPORT Details
 
 /**
+=======
+
+>>>>>>> LEAD-70
                 //region CHECK
                 case MessageType.ADD_CHECK:
                     Check check = null;
@@ -505,6 +508,25 @@ public class SyncMessage extends Service {
                  //endregion CHECK
                  **/
                 //region DEPARTMENT
+
+
+                /**region CHECK
+                 case MessageType.ADD_CHECK:
+                 Check check = null;
+                 check = objectMapper.readValue(msgData, Check.class);
+
+                 ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(this);
+                 checksDBAdapter.open();
+                 rID = checksDBAdapter.insertEntry(check);
+                 checksDBAdapter.close();
+                 break;
+                 case MessageType.UPDATE_CHECK:
+                 break;
+                 case MessageType.DELETE_CHECK:
+                 break;
+                 //endregion CHECK
+                 **/
+                //region DEPARTMENT
                 //region OFFER
                 case MessageType.ADD_OFFER:
                     Offer offer = null;
@@ -526,7 +548,7 @@ public class SyncMessage extends Service {
                             GroupsResourceDbAdapter groupsProductsDbAdapter = new GroupsResourceDbAdapter(this);
                             groupsProductsDbAdapter.open();
                             for(int i=0;i<skus.length();i++) {
-                                groupsProductsDbAdapter.insertEntry(skus.getLong(i), groupId);
+                                groupsProductsDbAdapter.insertEntry(skus.getString(i), groupId);
                             }
                             groupsProductsDbAdapter.close();
 
@@ -544,7 +566,7 @@ public class SyncMessage extends Service {
                             GroupsResourceDbAdapter groupsCategoryDbAdapter = new GroupsResourceDbAdapter(this);
                             groupsCategoryDbAdapter.open();
                             for(int i=0;i<categoryList.length();i++) {
-                                groupsCategoryDbAdapter.insertEntry(Long.parseLong(categoryList.getString(i)), groupId);
+                                groupsCategoryDbAdapter.insertEntry(categoryList.getString(i), groupId);
                             }
                             groupsCategoryDbAdapter.close();
 

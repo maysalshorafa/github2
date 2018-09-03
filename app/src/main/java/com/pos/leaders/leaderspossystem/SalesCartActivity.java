@@ -2070,7 +2070,7 @@ public class SalesCartActivity extends AppCompatActivity {
             SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
         }
 
-        if (SESSION._ORDERS.cartDiscount != 0) {
+        if (SESSION._ORDERS.cartDiscount != 0&& SESSION._ORDER_DETAILES.size()>0) {
             //show the discount view
             llCartDiscount.setVisibility(View.VISIBLE);
             tvTotalPriceBeforeCartDiscount.setVisibility(View.VISIBLE);
@@ -2931,7 +2931,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
                 long tempSaleId = 0;
                 // Club with point and amount
-                if (clubType == 2) {
+                if (clubType == 2 && clubAmount!=0) {
                     pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
                     sum_pointDbAdapter.insertEntry(saleID, pointFromSale, customerId);
                 }

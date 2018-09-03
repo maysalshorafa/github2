@@ -1,13 +1,15 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
@@ -16,6 +18,7 @@ import com.pos.leaders.leaderspossystem.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,6 +36,10 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
     private Context context;
     private int selected = -1;
     ViewHolder holder = null;
+    final ArrayList<String>offerNames= new ArrayList<>();
+    final ArrayList<Double>offerDiscount= new ArrayList<>();
+
+    int a=1;
 
     /**
      * Constructor
@@ -51,8 +58,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
             holder = new ViewHolder();
@@ -61,10 +67,10 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
             holder.tvPrice = (TextView) convertView.findViewById(R.id.rowSaleDetails_TVPrice);
             holder.tvCount = (TextView) convertView.findViewById(R.id.rowSaleDetails_TVCount);
             holder.tvTotal = (TextView) convertView.findViewById(R.id.rowSaleDetails_TVTotalPrice);
-            holder.tvOfferName = (TextView) convertView.findViewById(R.id.tvOfferName);
+            holder.OfferName = (ImageView) convertView.findViewById(R.id.imOfferName);
             holder.tvOriginalPrice = (TextView) convertView.findViewById(R.id.tvOrderListOriginalPriceValue);
 
-            holder.llMethods = (RelativeLayout) convertView.findViewById(R.id.rowSaleDetails_LLMethods);
+            holder.llMethods = (LinearLayout) convertView.findViewById(R.id.rowSaleDetails_LLMethods);
             holder.llSalesMan = (LinearLayout) convertView.findViewById(R.id.saleManLayout);
             holder.llOfferName = (LinearLayout) convertView.findViewById(R.id.offerLayout);
             holder.discountLayout = (LinearLayout) convertView.findViewById(R.id.discountLayout);
@@ -114,8 +120,16 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
                 try {
                     JSONObject jsonObject = orderList.get(position).getOffer().getDataAsJsonObject();
                     JSONObject action = new JSONObject(jsonObject.get("action").toString());
-                    holder.tvOfferName.setText(orderList.get(position).getOffer().getName() + " _ " + action.getString("name"));
-
+                    boolean status = true;
+                    for (int i = 0; i < offerNames.size(); i++) {
+                        if (offerNames.get(i).equals(orderList.get(position).getOffer().getName() + " _ " + action.getString("name"))) {
+                            status=false;
+                        }
+                    }
+                    if(status){
+                    offerNames.add(orderList.get(position).getOffer().getName() + " _ " + action.getString("name"));
+                        offerDiscount.add(orderList.get(position).getDiscount());
+                    }
                     holder.tvOriginalPrice.setText(Util.makePrice(orderList.get(position).getUnitPrice() * orderList.get(position).getQuantity()));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -128,6 +142,40 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
             holder.llRowDiscount.setVisibility(View.VISIBLE);
             holder.tvRowDiscountValue.setText(Util.makePrice(orderList.get(position).rowDiscount) + " %");
         }
+        final View finalConvertView = convertView;
+        holder.OfferName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                a=1;
+                String offersName = "";
+                for (int i=0; i<offerNames.size();i++){
+                    offersName+=a+" ) "+(offerNames.get(i) +"  "+Util.makePrice(offerDiscount.get(i)) + " %" + "\n");
+                    a=a+1;
+                }
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(finalConvertView.getRootView().getContext());
+                alertDialogBuilder .setTitle(getContext().getString(R.string.offer_name));
+                alertDialogBuilder.setMessage(offersName);
+                alertDialogBuilder.setPositiveButton("Ok",
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                            }
+                        });
+
+                alertDialogBuilder.setNegativeButton("cancel",
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+        });
 
         return convertView;
     }
@@ -153,9 +201,9 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
         private TextView tvCount;
         private TextView tvPrice;
         private TextView tvTotal;
-        private TextView tvOfferName;
+        private ImageView OfferName;
         private TextView tvOriginalPrice;
-        private RelativeLayout llMethods;
+        private LinearLayout llMethods;
         private LinearLayout llSalesMan;
         private LinearLayout discountLayout;
         private TextView tvPercentage;

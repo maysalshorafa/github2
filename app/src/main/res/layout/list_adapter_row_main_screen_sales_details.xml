@@ -112,26 +112,16 @@
         android:orientation="horizontal"
         android:visibility="visible">
 
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:paddingLeft="5dp"
-            android:paddingTop="5dp"
-            android:text="@string/offer_name"
-            android:textColor="@color/Black"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tvOfferName"
+        <ImageView
+            android:id="@+id/imOfferName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:paddingLeft="5dp"
             android:paddingTop="5dp"
             android:textColor="@color/Black"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:src="@drawable/discount"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -257,71 +247,71 @@
             android:textColor="@color/Black"
             android:textSize="14sp" />
     </LinearLayout>
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/rowSaleDetails_LLMethods"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:layoutDirection="ltr"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
+
 
         <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:paddingLeft="5dp"
+            android:text="@string/delete"
+            android:textSize="14sp"
             android:id="@+id/rowSaleDetails_MethodsDelete"
             style="@style/AppTheme.bt_dangers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/delete"
-            android:textAppearance="@android:style/TextAppearance" />
+
+            />
 
         <Button
-            android:id="@+id/rowSaleDetails_Dicount"
-            style="@style/AppTheme.bt_green"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_weight="1"
-            android:text="%" />
-
-        <Button
-            android:id="@+id/rowSaleDetails_MethodsEdit"
-            style="@style/AppTheme.bt_yellow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/rowSaleDetails_MethodsDelete"
-            android:layout_alignBottom="@+id/rowSaleDetails_MethodsDelete"
-            android:layout_centerHorizontal="true"
-            android:text="@string/edit" />
-
-        <Button
-            android:id="@+id/rowSaleDetails_MethodsPlusOne"
-            style="@style/AppTheme.bt_green"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="2dp"
-            android:layout_toEndOf="@+id/rowSaleDetails_MethodsEdit"
-            android:layout_toRightOf="@+id/rowSaleDetails_MethodsEdit"
-            android:layout_weight="1"
-            android:text="+1" />
-
-        <Button
+            android:layout_margin="4dp"
+            android:paddingLeft="5dp"
+            android:text="-1"
+            android:textSize="14sp"
             android:id="@+id/rowSaleDetails_MethodsMOne"
             style="@style/AppTheme.bt_dangers"
+            android:layout_weight="1"
+            />
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginRight="2dp"
-            android:layout_toLeftOf="@+id/rowSaleDetails_MethodsEdit"
-            android:layout_toStartOf="@+id/rowSaleDetails_MethodsEdit"
+            android:layout_margin="4dp"
+            android:paddingLeft="5dp"
+            android:text="@string/edit"
+            android:textSize="14sp"
+            android:id="@+id/rowSaleDetails_MethodsEdit"
+            style="@style/AppTheme.bt_yellow"
             android:layout_weight="1"
-            android:text="-1" />
-
-    </RelativeLayout>
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:paddingLeft="5dp"
+            android:text="+1"
+            android:textSize="14sp"
+            android:id="@+id/rowSaleDetails_MethodsPlusOne"
+            style="@style/AppTheme.bt_green"
+            android:layout_weight="1"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:paddingLeft="5dp"
+            android:text="%"
+            android:textSize="14sp"
+            android:id="@+id/rowSaleDetails_Dicount"
+            style="@style/AppTheme.bt_green"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
 
 </LinearLayout>
