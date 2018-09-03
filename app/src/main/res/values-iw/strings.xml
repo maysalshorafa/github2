@@ -557,4 +557,25 @@
     <string name="please_insert_another_phone_no">נא להכניס מספר טלפון נוסף</string>
     <string name="cart_discount">הנחה על הסל : </string>
     <string name="row_discount">הנחת שורה : </string>
+    <string name="create_offer_activity">CreateOfferActivity</string>
+    <string name="management_offer_activity">ניהול מבצעים</string>
+    <string name="insert_product_weight">נא להכניס משקל.</string>
+    <string name="action">תנועה</string>
+    <string name="equal">שווה</string>
+    <string name="insert_offer_name">נא להכניס שם מבצע</string>
+    <string name="determine_start_date">נא לכניס תאריך תחילת המבצע</string>
+    <string name="determine_end_date">נא לכניס תאריך סיום המבצע</string>
+    <string name="success_adding_new_offers">הוספת מבצע> הסתיימה בהצלחה</string>
+    <string name="can_not_add_offers_please_try_again">נסה שוב> כשלון בהוספת מבצע</string>
+    <string name="edit_offer">שינוי מבצע</string>
+    <string name="delete_offer">ברצונך למחק את המבצע?</string>
+    <string name="success_to_update_offer">עודכן בהצלחה</string>
+    <string name="error_to_update_offer">כשלון בעדכון</string>
+    <string name="update_offer">עדכון מבצע</string>
+    <string name="please_determine_offer_rule">נא לבחור חוקויות המבצע</string>
+    <string name="please_determine_offer_action">נא לבחור תנועת המבצע</string>
+    <string name="payment_by_credit">תשלום ב קרידיט</string>
+    <string name="remainingCredit">נשאר קרידיט</string>
+    <string name="product_unit">יחידת מוצר</string>
+    <string name="please_insert_customer_credit">נא להכניס קרידט ללקוח</string>
 </resources>

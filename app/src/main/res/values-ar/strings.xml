@@ -557,6 +557,7 @@
     <string name="remainingCredit">بلغ الائتمان المتبقي</string>
     <string name="product_unit">وحدة المنتوج</string>
     <string name="please_insert_customer_credit">الرجاء ادخال قيمة الائتمان .</string>
-
+    <string name="action">action</string>
+    <string name="equal">equal</string>
 </resources>
 
