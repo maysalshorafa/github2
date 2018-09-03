@@ -1381,7 +1381,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     SESSION._ORDERS.setOrderId(saleIDforCash);
                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
                         o.setOrderId(saleIDforCash);
-                        long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                        long orderid = orderDBAdapter.insertEntryFromInvoice(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                         o.setOrderDetailsId(orderid);
                     }
                     //update customer balance
