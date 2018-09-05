@@ -289,7 +289,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         int stockQuantity = 0;
         String tempBarcode = etBarcode.getText().toString();
         String newBarCode="";
-        if(etProductWeight.getText()!=null){
+        if(llWeight.getVisibility()==View.VISIBLE&&etProductWeight.getText()!=null){
             weight=Double.parseDouble(etProductWeight.getText().toString());
         }
         if (tempBarcode.contains("\r\n")) {
