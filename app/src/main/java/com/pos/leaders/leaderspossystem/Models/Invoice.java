@@ -12,6 +12,9 @@ public class Invoice {
     private DocumentType type;
     private JSONObject documentsData;
 
+    public Invoice() {
+    }
+
     public Invoice(DocumentType type, JSONObject documentsData) {
         this.type = type;
         this.documentsData = documentsData;

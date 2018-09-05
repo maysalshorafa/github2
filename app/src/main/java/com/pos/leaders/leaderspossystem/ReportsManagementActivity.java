@@ -24,7 +24,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class ReportsManagementActivity  extends AppCompatActivity {
-    Button btnZ, btnZView,btnX, btnOrder,btnExFiles ,btnSalesMan;
+    Button btnZ, btnZView,btnX, btnOrder,btnExFiles ,btnSalesMan , btnInvoice;
 
     ZReportDBAdapter zReportDBAdapter;
     OrderDBAdapter saleDBAdapter;
@@ -55,7 +55,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
 
         btnOrder =(Button)findViewById(R.id.reportManagementActivity_btnSaleManagement);
         btnExFiles = (Button) findViewById(R.id.reportManagementActivity_btnExtractingFiles);
-
+        btnInvoice = (Button) findViewById(R.id.reportManagementActivity_btnInvoice);
         zReportDBAdapter = new ZReportDBAdapter(this);
         saleDBAdapter = new OrderDBAdapter(this);
 
@@ -187,6 +187,13 @@ public class ReportsManagementActivity  extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ReportsManagementActivity.this, SalesManManagementActivity.class);
+                startActivity(intent);
+            }
+        });
+        btnInvoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ReportsManagementActivity.this, InvoiceManagementActivity.class);
                 startActivity(intent);
             }
         });
