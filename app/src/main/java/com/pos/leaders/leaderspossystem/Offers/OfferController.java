@@ -85,67 +85,72 @@ public class OfferController {
         String actionName = action.getString(Action.NAME.getValue());
         int quantity = rules.getInt(Rules.quantity.getValue());
         orderDetails.offer = offer;
-        if(actionName.equalsIgnoreCase(Action.GET_GIFT_PRODUCT.getValue())){
-            if (orderDetails.getQuantity()  >= quantity+ 1) {
-                int productGroup = orderDetails.getQuantity() / (quantity + 1);
+        if(action.getBoolean(Action.SAME_RESOURCE.getValue())) {
+            if (actionName.equalsIgnoreCase(Action.GET_GIFT_PRODUCT.getValue())) {
+                if (orderDetails.getQuantity() >= quantity + 1) {
+                    int productGroup = orderDetails.getQuantity() / (quantity + 1);
 
-                double totalPriceBeforeDiscount = orderDetails.getQuantity() * orderDetails.getUnitPrice();
-                double discount = (1 - (((orderDetails.getQuantity() - productGroup) * orderDetails.getUnitPrice()) / totalPriceBeforeDiscount)) * 100;
+                    double totalPriceBeforeDiscount = orderDetails.getQuantity() * orderDetails.getUnitPrice();
+                    double discount = (1 - (((orderDetails.getQuantity() - productGroup) * orderDetails.getUnitPrice()) / totalPriceBeforeDiscount)) * 100;
 
-                orderDetails.setDiscount(discount);
-            } else {
-                orderDetails.setDiscount(0);
-                orderDetails.offer = null;
-            }
-        } else if (actionName.equalsIgnoreCase(Action.PRICE_FOR_PRODUCT.getValue())) {
-            double value = action.getDouble(Action.VALUE.getValue());
-            orderDetails.setDiscount(0);
-            if (orderDetails.getQuantity() >= quantity) {
-
-                int productGroup = orderDetails.getQuantity() / quantity;
-                int productCountWithOutProductIntoOffer = orderDetails.getQuantity() - (productGroup * quantity);
-                double discount = (1 -
-                        (((productGroup * value) + (productCountWithOutProductIntoOffer * orderDetails.getUnitPrice()))
-                                / (orderDetails.getUnitPrice() * orderDetails.getQuantity()))) * 100;
-
-                orderDetails.setDiscount(discount);
-            } else {
-                orderDetails.setDiscount(0);
-                orderDetails.offer = null;
-            }
-        } else if (actionName.equalsIgnoreCase(Action.GET_DISCOUNT.getValue())) {
-            String value = action.getString(Action.VALUE.getValue());
-            if (value.contains("%")) {
-                //percent value
-                //remove the percent char
-                value = value.replace("%", "");
-
-                double val = 0;
-                //convert the string value to double
-                val = Double.parseDouble(value);
-                if (orderDetails.getQuantity() >= quantity) {
-                    int productCollection = orderDetails.getQuantity() / quantity;
-                    int productOutTheCollection = orderDetails.getQuantity() - (productCollection * quantity);
-                    double discount = (1 - (((productCollection * orderDetails.getUnitPrice() * (1 - (val / 100))) +
-                            (productOutTheCollection * orderDetails.getUnitPrice())) /
-                            (orderDetails.getQuantity() * orderDetails.getUnitPrice()))) * 100;
                     orderDetails.setDiscount(discount);
+                } else {
+                    orderDetails.setDiscount(0);
+                    orderDetails.offer = null;
+                }
+            } else if (actionName.equalsIgnoreCase(Action.PRICE_FOR_PRODUCT.getValue())) {
+                double value = action.getDouble(Action.VALUE.getValue());
+                orderDetails.setDiscount(0);
+                if (orderDetails.getQuantity() >= quantity) {
+
+                    int productGroup = orderDetails.getQuantity() / quantity;
+                    int productCountWithOutProductIntoOffer = orderDetails.getQuantity() - (productGroup * quantity);
+                    double discount = (1 -
+                            (((productGroup * value) + (productCountWithOutProductIntoOffer * orderDetails.getUnitPrice()))
+                                    / (orderDetails.getUnitPrice() * orderDetails.getQuantity()))) * 100;
+
+                    orderDetails.setDiscount(discount);
+                } else {
+                    orderDetails.setDiscount(0);
+                    orderDetails.offer = null;
+                }
+            } else if (actionName.equalsIgnoreCase(Action.GET_DISCOUNT.getValue())) {
+                String value = action.getString(Action.VALUE.getValue());
+                if (value.contains("%")) {
+                    //percent value
+                    //remove the percent char
+                    value = value.replace("%", "");
+
+                    double val = 0;
+                    //convert the string value to double
+                    val = Double.parseDouble(value);
+                    if (orderDetails.getQuantity() >= quantity) {
+                        int productCollection = orderDetails.getQuantity() / quantity;
+                        int productOutTheCollection = orderDetails.getQuantity() - (productCollection * quantity);
+                        double discount = (1 - (((productCollection * orderDetails.getUnitPrice() * (1 - (val / 100))) +
+                                (productOutTheCollection * orderDetails.getUnitPrice())) /
+                                (orderDetails.getQuantity() * orderDetails.getUnitPrice()))) * 100;
+                        orderDetails.setDiscount(discount);
+                    }
+
+                } else {
+                    double val = 0;
+                    //convert string value to double
+                    val = Double.parseDouble(value);
+                    if (orderDetails.getQuantity() >= quantity) {
+                        int productCollection = orderDetails.getQuantity() / quantity;
+                        int productOutTheCollection = orderDetails.getQuantity() - (productCollection * quantity);
+                        double discount = (1 - (((productCollection * orderDetails.getUnitPrice() - (val * productCollection)) +
+                                (productOutTheCollection * orderDetails.getUnitPrice())) /
+                                (orderDetails.getQuantity() * orderDetails.getUnitPrice()))) * 100;
+                        orderDetails.setDiscount(discount);
+                    }
+
                 }
 
-            } else {
-                double val = 0;
-                //convert string value to double
-                val = Double.parseDouble(value);
-                if (orderDetails.getQuantity() >= quantity) {
-                    int productCollection = orderDetails.getQuantity() / quantity;
-                    int productOutTheCollection = orderDetails.getQuantity() - (productCollection * quantity);
-                    double discount = (1 - (((productCollection * orderDetails.getUnitPrice() - (val * productCollection)) +
-                            (productOutTheCollection * orderDetails.getUnitPrice())) /
-                            (orderDetails.getQuantity() * orderDetails.getUnitPrice()))) * 100;
-                    orderDetails.setDiscount(discount);
-                }
-
             }
+        } else {
+            //not the same resource
 
         }
 

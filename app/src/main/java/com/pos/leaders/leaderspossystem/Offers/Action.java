@@ -13,7 +13,8 @@ public enum Action {
     GET_GIFT_PRODUCT("Get gift product"),
     GET_DISCOUNT("Getdiscount"),
     NAME("name"),
-    VALUE("value");
+    VALUE("value"),
+    SAME_RESOURCE("sameResource");
 
     Action(final String v) {
         this.v = v;
