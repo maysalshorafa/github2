@@ -121,12 +121,12 @@ public class Payment {
 
 	@Override
 	public String toString() {
-		return "Payment{" +
-				"accountingId=" + paymentId +
-				", paymentWay='" + paymentWay + '\'' +
-				", amount='" + amount + '\'' +
-				", orderId=" + orderId +
-				'}';
+		return "{" +"\"@type\":" + "\"CashPayment\""+
+				",\"paymentId\":" +paymentId +
+				",\"paymentWay\":" + paymentWay  +
+				",\"amount\":" + amount +
+				",\"orderId\":" + orderId +
+				"}";
 	}
 
     public String BKMVDATA(int rowNumber, String companyID, Date date,Order sale){

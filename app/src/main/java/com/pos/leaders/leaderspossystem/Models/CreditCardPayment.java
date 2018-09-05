@@ -169,23 +169,23 @@ public class CreditCardPayment {
 
 
     //endregion Setters
-
     @Override
     public String toString() {
-        return "CreditCardPayment{" +
-                "accountingId=" + creditCardPaymentId +
-                ", orderId=" + orderId +
-                ", amount=" + amount +
-                ", creditCardCompanyName='" + creditCardCompanyName + '\'' +
-                ", transactionType=" + transactionType +
-                ", last4Digits='" + last4Digits + '\'' +
-                ", transactionId='" + transactionId + '\'' +
-                ", answer='" + answer + '\'' +
-                ", paymentsNumber=" + paymentsNumber +
-                ", firstPaymentAmount=" + firstPaymentAmount +
-                ", otherPaymentAmount=" + otherPaymentAmount +
-                ", cardholder='" + cardholder + '\'' +
-                ", createdAt=" + createdAt +
-                '}';
+        return "{" + "\"@type\":" + "\"CreditCardPayment\"" +
+                ",\"accountingId\":" + creditCardPaymentId +
+                ",\"orderId\":" + orderId +
+                ", \"amount\":" + amount +
+                ", \"creditCardCompanyName\":" + "\"" + creditCardCompanyName + "\"" +
+                ", \"transactionType\":" + transactionType +
+                ", \"last4Digits\":" + "\"" + last4Digits + "\"" +
+                ", \"transactionId\":" + "\"" + transactionId + "\"" +
+                ", \"answer\":" + "\"" + answer + "\"" +
+                ", \"paymentsNumber\":" + paymentsNumber +
+                ", \"firstPaymentAmount\":" + firstPaymentAmount +
+                ", \"otherPaymentAmount\":" + otherPaymentAmount +
+                ", \"cardholder\":" + "\"" + cardholder + "\"" +
+                ", \"createdAt\":" + "\"" + createdAt + "\"" +
+                "}";
     }
+
 }

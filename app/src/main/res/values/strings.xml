@@ -637,7 +637,7 @@
     <string name="please_determine_offer_action">please determine offer action</string>
     <string name="cart_discount">Cart discount : </string>
     <string name="row_discount">Row discount : </string>
-
+    <string name="product_unit">Product Unit</string>
 
 
 </resources>
