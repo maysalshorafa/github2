@@ -19,6 +19,7 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
@@ -46,6 +47,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.LogInActivity;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.AReportDetails;
@@ -409,14 +411,14 @@ public class SyncMessage extends Service {
 
                 //region A REPORT
                 case MessageType.ADD_A_REPORT:
-                    /*
+
                     AReport aReport = null;
                     aReport = objectMapper.readValue(msgData, AReport.class);
 
                     AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(this);
                     aReportDBAdapter.open();
                     rID = aReportDBAdapter.insertEntry(aReport);
-                    aReportDBAdapter.close();*/
+                    aReportDBAdapter.close();
                     rID = 1;
                     break;
                 case MessageType.UPDATE_A_REPORT:
@@ -837,14 +839,14 @@ public class SyncMessage extends Service {
 
                 //region Z REPORT
                 case MessageType.ADD_Z_REPORT:
-                    /*
+
                     ZReport zReport = null;
                     zReport = objectMapper.readValue(msgData, ZReport.class);
 
                     ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(this);
                     zReportDBAdapter.open();
                     rID = zReportDBAdapter.insertEntry(zReport);
-                    zReportDBAdapter.close();*/
+                    zReportDBAdapter.close();
                     rID = 1;
 
                     break;

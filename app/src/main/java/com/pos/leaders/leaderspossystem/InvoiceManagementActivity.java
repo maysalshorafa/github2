@@ -1,12 +1,9 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -21,19 +18,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Invoice;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.InvoiceManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
@@ -47,20 +46,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InvoiceManagementActivity extends AppCompatActivity {
-    ListView invoiceListView;
+    public static ListView invoiceListView;
     EditText etSearch;
     ImageView chooseCustomer;
     TextView customerName;
    boolean userScrolled =false;
-    Customer customer;
+    public static  Customer customer;
     List<Customer> customerList = new ArrayList<>();
     List<Customer> AllCustmerList = new ArrayList<>();
     public static Context context = null;
+    public static List<Invoice>invoiceList=new ArrayList<>();
+    public static List<String>invoiceNumberList=new ArrayList<>();
+    View previousView = null;
+    public static  List<String>orderIds=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+
+        // Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_invoice_management);
+        TitleBar.setTitleBar(this);
         context=this;
         invoiceListView = (ListView)findViewById(R.id.invoiceManagement_LVInvoice);
         etSearch = (EditText)findViewById(R.id.etSearch);
@@ -69,13 +78,30 @@ public class InvoiceManagementActivity extends AppCompatActivity {
         chooseCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                invoiceList=new ArrayList<>();
+                invoiceNumberList=new ArrayList<>();
               callCustomerDialog();
-                if(customer!=null) {
-                    StartInvoiceConnection startInvoiceConnection = new StartInvoiceConnection();
-                    startInvoiceConnection.execute(String.valueOf(customer.getCustomerId()));
-                }
+
+
             }
         });
+        invoiceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                LinearLayout fr = (LinearLayout) view.findViewById(R.id.listInvoiceManagement_FLMore);
+                if (previousView == null) {
+                    fr.setVisibility(View.VISIBLE);
+                    previousView = view;
+                } else {
+                    fr.setVisibility(View.VISIBLE);
+                    previousView.findViewById(R.id.listInvoiceManagement_FLMore).setVisibility(View.GONE);
+                    previousView.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    previousView = view;
+                }
+                previousView.setBackgroundColor(getResources().getColor(R.color.list_background_color));
+
+            }});
+
 
 
 
@@ -101,7 +127,7 @@ public class InvoiceManagementActivity extends AppCompatActivity {
             }
         });
 
-        ((Button) customerDialog.findViewById(R.id.btn_add))
+      /**  ((Button) customerDialog.findViewById(R.id.btn_add))
                 .setOnClickListener(new View.OnClickListener() {
 
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -113,7 +139,7 @@ public class InvoiceManagementActivity extends AppCompatActivity {
 
 
                     }
-                });
+                });**/
 
 
         customer_id.setText("");
@@ -156,6 +182,10 @@ public class InvoiceManagementActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                customer= customerList.get(position);
                 customerName.setText(customer.getFullName());
+                if(customer!=null) {
+                    StartInvoiceConnection startInvoiceConnection = new StartInvoiceConnection();
+                    startInvoiceConnection.execute(String.valueOf(customer.getCustomerId()));
+                }
                 customerDialog.dismiss();
             }
         });
@@ -238,10 +268,19 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
                     for (int i = 0; i < jsonArray.length() - 1; i++) {
                         msgData = jsonArray.getJSONObject(i).toString();
                         JSONObject msgDataJson =new JSONObject(msgData);
+                        InvoiceManagementActivity.invoiceNumberList.add(msgDataJson.getString("docNum"));
                         msgDataJson.remove("docNum");
                         invoice = new Invoice(DocumentType.INVOICE,msgDataJson.getJSONObject("documentsData"));
-                        Log.d("invoices",invoice.toString());
+                        InvoiceManagementActivity.invoiceList.add(invoice);
+                            JSONArray orderJson = msgDataJson.getJSONObject("documentsData").getJSONArray("listOfOrders");
+                            for (int a=0;a<orderJson.length();a++){
+                                InvoiceManagementActivity.orderIds.add(String.valueOf(orderJson.get(a)));
+                            }
+
                     }
+                    Log.d("invoices",InvoiceManagementActivity.invoiceList.toString());
+                    Log.d("invoicesOrderId",InvoiceManagementActivity.orderIds.toString());
+
                 } catch (Exception e) {
                     Log.d("exception1",e.toString());
                 }
@@ -266,6 +305,9 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
                     super.onPreExecute();
                     progressDialog2.setTitle("Success.");
                     progressDialog2.show();
+                    Log.d("testInvoiceList",InvoiceManagementActivity.invoiceList.toString());
+                    InvoiceManagementListViewAdapter invoiceManagementListViewAdapter = new InvoiceManagementListViewAdapter(InvoiceManagementActivity.context,R.layout.list_adapter_row_invoices_management,InvoiceManagementActivity.invoiceList,InvoiceManagementActivity.invoiceNumberList,InvoiceManagementActivity.orderIds,InvoiceManagementActivity.customer.getCustomerId());
+                    InvoiceManagementActivity.invoiceListView.setAdapter(invoiceManagementListViewAdapter);
                 }
 
                 @Override

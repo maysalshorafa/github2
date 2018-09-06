@@ -208,7 +208,8 @@
         <activity
             android:name=".OfferManagementActivity"
             android:label="@string/management_offer_activity" />
-        <activity android:name=".InvoiceManagementActivity"></activity>
+        <activity android:name=".InvoiceManagementActivity" />
+        <activity android:name=".ReceiptTab.ReceiptTab"></activity>
     </application>
 
 </manifest>

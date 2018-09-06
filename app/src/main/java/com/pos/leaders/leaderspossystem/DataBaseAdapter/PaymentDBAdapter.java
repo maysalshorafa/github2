@@ -66,6 +66,17 @@ public class PaymentDBAdapter {
 			return -1;
 		}
 	}
+	public long receiptInsertEntry(String paymentWay,double amount, long saleId) {
+		Payment payment = new Payment(Util.idHealth(this.db, PAYMENT_TABLE_NAME, PAYMENT_COLUMN_ID), paymentWay, amount, saleId);
+
+		try {
+			return insertEntry(payment);
+		} catch (SQLException ex) {
+			Log.e("Payment DB insert", "inserting Entry at " + PAYMENT_TABLE_NAME + ": " + ex.getMessage());
+			return -1;
+		}
+	}
+
 
 	public long insertEntry(Payment payment){
 		ContentValues val = new ContentValues();
@@ -111,6 +122,14 @@ public class PaymentDBAdapter {
 		}
 
 		return salePaymentList;
+	}
+	public Payment getPaymentByID(long saleID) {
+	Payment payment = null;
+
+		Cursor cursor = db.rawQuery("select * from " + PAYMENT_TABLE_NAME +" where "+PAYMENT_COLUMN_ORDERID+"="+saleID, null);
+		cursor.moveToFirst();
+		payment = make(cursor);
+		return payment;
 	}
 
     private Payment make(Cursor cursor){
