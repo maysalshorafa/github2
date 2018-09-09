@@ -1422,12 +1422,14 @@ public class SalesCartActivity extends AppCompatActivity {
                                 String ordRes=transmit.authPost(ApiURL.ORDER, mapper.writeValueAsString(SESSION._ORDERS), SESSION.token);
                                 Log.i("Order log", ordRes);
                                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
+                                  String orderDetailsRes = transmit.authPost(ApiURL.ORDER_DETAILS, mapper.writeValueAsString(o), SESSION.token);
                                     try {
+
                                         Thread.sleep(100);
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
-                                    Log.i("Order Details", transmit.authPost(ApiURL.ORDER_DETAILS, mapper.writeValueAsString(o), SESSION.token));
+                                    Log.i("Order Details", orderDetailsRes);
                                     //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                                 }
                                 customerData.put("customerId", SESSION._ORDERS.getCustomer().getCustomerId());
@@ -1440,7 +1442,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                 docJson.put("@type",type);
                                 docJson.put("customer",customerData);
                                 Log.d("Document vale", docJson.toString());
-                                com.pos.leaders.leaderspossystem.Models.Invoice invoice = new Invoice(DocumentType.INVOICE,docJson);
+                                Invoice invoice = new Invoice(DocumentType.INVOICE,docJson);
                                 Log.d("Invoice log",invoice.toString());
                                 String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
                                 JSONObject jsonObject = new JSONObject(res);

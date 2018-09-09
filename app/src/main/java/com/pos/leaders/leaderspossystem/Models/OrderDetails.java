@@ -156,7 +156,7 @@ public class OrderDetails {
 		//calculate the price with row discount after the offer discount
 		return (tempPrice - (tempPrice * (rowDiscount / 100)));
 	}
-	@JsonIgnore
+
 	public double getUnitPrice() {
 		return unitPrice;
 	}

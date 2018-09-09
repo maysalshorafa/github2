@@ -25,6 +25,7 @@ import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Invoice;
+import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.ReceiptDocuments;
 import com.pos.leaders.leaderspossystem.R;
@@ -128,6 +129,7 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
                                     //get cash payment detail by order id
                                     CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(getContext());
                                     cashPaymentDBAdapter.open();
+                                    cashPaymentDBAdapter.insertEntry(Long.parseLong(invoiceOrderIds.get(position)), Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total"))), 0, new Timestamp(System.currentTimeMillis()));
                                     cashPaymentList = cashPaymentDBAdapter.getPaymentBySaleID(orderId);
                                     JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
                                     newJsonObject.put("paymentDetails",jsonArray);
@@ -156,6 +158,7 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
                                     }
                                     @Override
                                     protected void onPostExecute(Void aVoid) {
+                                        cashReceiptDialog.dismiss();
                                    //     print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
 
                                         //clearCart();
@@ -185,6 +188,15 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
                                                 JSONObject jsonObject = new JSONObject(res);
                                                String msgData = jsonObject.getString(MessageKey.responseBody);
                                                 Log.d("receiptResult",res);
+                                            Invoice invoice1 = invoicesList.get(position);
+                                           JSONObject updataInvoice =invoice1.getDocumentsData();
+                                            updataInvoice.remove("invoiceStatus");
+                                            updataInvoice.put("invoiceStatus", InvoiceStatus.PAID);
+                                            updataInvoice.put("type",DocumentType.INVOICE);
+                                            Log.d("invoiceRes123",updataInvoice.toString());
+
+                                            String upDataInvoiceRes=transmit.authPutInvoice(ApiURL.Documents,updataInvoice.toString(), SESSION.token,invoiceNumbers.get(position));
+                                            Log.d("invoiceRes",upDataInvoiceRes);
                                             try {
                                                 Thread.sleep(100);
                                             } catch (InterruptedException e) {
