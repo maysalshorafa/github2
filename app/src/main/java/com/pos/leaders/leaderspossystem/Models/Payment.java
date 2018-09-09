@@ -121,7 +121,7 @@ public class Payment {
 
 	@Override
 	public String toString() {
-		return "{" +"\"@type\":" + "\"CashPayment\""+
+		return "{" +"\"@type\":" + "\"Payment\""+
 				",\"paymentId\":" +paymentId +
 				",\"paymentWay\":" + paymentWay  +
 				",\"amount\":" + amount +

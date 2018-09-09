@@ -70,6 +70,7 @@ public class InvoiceManagementActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_invoice_management);
         TitleBar.setTitleBar(this);
+        Log.d("token",SESSION.token+"");
         context=this;
         invoiceListView = (ListView)findViewById(R.id.invoiceManagement_LVInvoice);
         etSearch = (EditText)findViewById(R.id.etSearch);
@@ -108,6 +109,7 @@ public class InvoiceManagementActivity extends AppCompatActivity {
     }
     //choose customer invoice
     private void callCustomerDialog() {
+        orderIds=new ArrayList<>();
         CustomerDBAdapter customerDBAdapter =new CustomerDBAdapter(this);
         customerDBAdapter.open();
         final Dialog customerDialog = new Dialog(InvoiceManagementActivity.this);
@@ -265,7 +267,7 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
                 try {
                     JSONArray jsonArray = new JSONArray(msgData);
 
-                    for (int i = 0; i < jsonArray.length() - 1; i++) {
+                    for (int i = 0; i <= jsonArray.length() ; i++) {
                         msgData = jsonArray.getJSONObject(i).toString();
                         JSONObject msgDataJson =new JSONObject(msgData);
                         InvoiceManagementActivity.invoiceNumberList.add(msgDataJson.getString("docNum"));
@@ -278,7 +280,7 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
                             }
 
                     }
-                    Log.d("invoices",InvoiceManagementActivity.invoiceList.toString());
+                    Log.d("invoices",InvoiceManagementActivity.invoiceList.toString()+"");
                     Log.d("invoicesOrderId",InvoiceManagementActivity.orderIds.toString());
 
                 } catch (Exception e) {
@@ -305,7 +307,6 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
                     super.onPreExecute();
                     progressDialog2.setTitle("Success.");
                     progressDialog2.show();
-                    Log.d("testInvoiceList",InvoiceManagementActivity.invoiceList.toString());
                     InvoiceManagementListViewAdapter invoiceManagementListViewAdapter = new InvoiceManagementListViewAdapter(InvoiceManagementActivity.context,R.layout.list_adapter_row_invoices_management,InvoiceManagementActivity.invoiceList,InvoiceManagementActivity.invoiceNumberList,InvoiceManagementActivity.orderIds,InvoiceManagementActivity.customer.getCustomerId());
                     InvoiceManagementActivity.invoiceListView.setAdapter(invoiceManagementListViewAdapter);
                 }

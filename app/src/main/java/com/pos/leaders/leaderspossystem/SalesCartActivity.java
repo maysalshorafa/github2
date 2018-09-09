@@ -17,7 +17,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -47,7 +46,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
@@ -71,10 +69,22 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
-import com.pos.leaders.leaderspossystem.Models.*;
+import com.pos.leaders.leaderspossystem.Models.Category;
+import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.Club;
+import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
+import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.Documents;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Invoice;
+import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
+import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+import com.pos.leaders.leaderspossystem.Models.Payment;
+import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Offers.OfferController;
 import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
 import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
@@ -107,7 +117,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -1362,7 +1371,7 @@ public class SalesCartActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(SESSION._ORDERS.getCustomer()!=null){
                     ObjectMapper mapper = new ObjectMapper();
-                final ArrayList<Long> ordersIds = new ArrayList<>();
+                final ArrayList<String> ordersIds = new ArrayList<>();
                 if (SESSION._ORDER_DETAILES.size() > 0) {
                     if (Long.valueOf(SESSION._ORDERS.getCustomerId()) == 0) {
                         if (SESSION._ORDERS.getCustomer_name() == null) {
@@ -1390,7 +1399,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice()+customer.getBalance());
                         customerDBAdapter.updateEntry(upDateCustomer);
                     }
-                    ordersIds.add(saleIDforCash);
+                    ordersIds.add(String.valueOf(saleIDforCash));
                     saleDBAdapter.close();
                     new AsyncTask<Void, Void, Void>(){
                         @Override
@@ -3021,6 +3030,8 @@ public class SalesCartActivity extends AppCompatActivity {
         //region Cash Activity WithOut Currency Region
         if (requestCode == REQUEST_CASH_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
+                CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
+                cashPaymentDBAdapter.open();
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
@@ -3108,6 +3119,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
                 SESSION._ORDERS.setPayment(payment);
                 SESSION._ORDERS.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+                cashPaymentDBAdapter.insertEntry(saleIDforCash, saleTotalPrice, 0, new Timestamp(System.currentTimeMillis()));
+
                 paymentDBAdapter.close();
                 printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
                 saleDBAdapter.close();

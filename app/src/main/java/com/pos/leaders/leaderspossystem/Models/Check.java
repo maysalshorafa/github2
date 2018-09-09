@@ -139,7 +139,7 @@ public class Check {
 	public String toString() {
 		return "{"+"\"@type\":" + "\"Check\""+
 				",\"accountNum\":" + accountNum +
-				", \"accountingId\":" + checkId +
+				", \"checkId\":" + checkId +
 				",\"checkNum\":" + checkNum +
 				",\"bankNum\":" + bankNum +
 				",\" branchNum\":" + branchNum +

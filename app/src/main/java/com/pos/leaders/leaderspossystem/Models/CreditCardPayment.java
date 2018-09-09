@@ -172,7 +172,7 @@ public class CreditCardPayment {
     @Override
     public String toString() {
         return "{" + "\"@type\":" + "\"CreditCardPayment\"" +
-                ",\"accountingId\":" + creditCardPaymentId +
+                ",\"creditCardPaymentId\":" + creditCardPaymentId +
                 ",\"orderId\":" + orderId +
                 ", \"amount\":" + amount +
                 ", \"creditCardCompanyName\":" + "\"" + creditCardCompanyName + "\"" +

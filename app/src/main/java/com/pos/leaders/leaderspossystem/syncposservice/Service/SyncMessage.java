@@ -85,7 +85,6 @@ import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
-import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -445,10 +444,7 @@ public class SyncMessage extends Service {
                     break;
                 //endregion A REPORT Details
 
-/**
-=======
 
->>>>>>> LEAD-70
                 //region CHECK
                 case MessageType.ADD_CHECK:
                     Check check = null;
@@ -464,7 +460,7 @@ public class SyncMessage extends Service {
                 case MessageType.DELETE_CHECK:
                     break;
                 //endregion CHECK
-**/
+
                 //region Category
                 case MessageType.ADD_CATEGORY:
                     Category category = null;
@@ -1150,20 +1146,12 @@ public class SyncMessage extends Service {
                 List<Payment> paymentList = new ArrayList<Payment>();
                 List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
                 List<Check> checkList = new ArrayList<Check>();
-                if(paymentWay.equalsIgnoreCase(CONSTANT.CASH)&& SETTINGS.enableCurrencies==true){
+                if(paymentWay.equalsIgnoreCase(CONSTANT.CASH)){
                     //get cash payment detail by order id
                     CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(getApplicationContext());
                     cashPaymentDBAdapter.open();
                     cashPaymentList = cashPaymentDBAdapter.getPaymentBySaleID(orderId);
                     JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
-                    newJsonObject.put("paymentDetails",jsonArray);
-                }
-                if(paymentWay.equalsIgnoreCase(CONSTANT.CASH)&& SETTINGS.enableCurrencies==false){
-                    //get cash payment detail by order id
-                    PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(getApplicationContext());
-                    paymentDBAdapter.open();
-                    paymentList = paymentDBAdapter.getPaymentBySaleID(orderId);
-                    JSONArray jsonArray = new JSONArray(paymentList.toString());
                     newJsonObject.put("paymentDetails",jsonArray);
                 }
                 if(paymentWay.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
@@ -1430,7 +1418,7 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.CurrencyOperation, jsonObject.getString(MessageKey.Data), token);
 
                 break;
-            /**region CashPayment
+            //region CashPayment
              case MessageType.ADD_CASH_PAYMENT:
              res = messageTransmit.authPost(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
              break;
@@ -1443,9 +1431,9 @@ public class SyncMessage extends Service {
              res = messageTransmit.authDelete(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
              break;
              //endregion CashPayment
-             **/
 
-            /**region Credit Card Payment
+
+            //region Credit Card Payment
              case MessageType.ADD_CREDIT_CARD_PAYMENT:
              res = messageTransmit.authPost(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
              break;

@@ -16,16 +16,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DocumentType;
+import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
-import com.pos.leaders.leaderspossystem.Models.Documents;
 import com.pos.leaders.leaderspossystem.Models.Invoice;
-import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.Payment;
+import com.pos.leaders.leaderspossystem.Models.ReceiptDocuments;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 
 import org.json.JSONArray;
@@ -94,7 +98,7 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
         holder.cashReceipt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ArrayList<Long> ordersIds = new ArrayList<>();
+                final ArrayList<String> ordersIds = new ArrayList<>();
                 final Dialog cashReceiptDialog = new Dialog(getContext());
                 cashReceiptDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 cashReceiptDialog.show();
@@ -109,7 +113,7 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
                             amount=Double.parseDouble(etAmount.getText().toString());
                             PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(getContext());
                             paymentDBAdapter.open();
-                            ordersIds.add(Long.parseLong(invoiceNumbers.get(position)));
+                            ordersIds.add(invoiceNumbers.get(position));
                             try {
                                 long paymentID = paymentDBAdapter.receiptInsertEntry(CASH,Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total"))), Long.parseLong(invoiceOrderIds.get(position)));
                                 final Payment payment = paymentDBAdapter.getPaymentByID( Long.parseLong(invoiceOrderIds.get(position)));
@@ -117,12 +121,32 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
                                 String paymentWay = newJsonObject.getString("paymentWay");
                                 long orderId = newJsonObject.getLong("orderId");
                                 List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
+                                List<Payment> paymentList = new ArrayList<Payment>();
+                                List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
+                                List<Check> checkList = new ArrayList<Check>();
                                 if(paymentWay.equalsIgnoreCase(CONSTANT.CASH)){
                                     //get cash payment detail by order id
                                     CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(getContext());
                                     cashPaymentDBAdapter.open();
                                     cashPaymentList = cashPaymentDBAdapter.getPaymentBySaleID(orderId);
                                     JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
+                                    newJsonObject.put("paymentDetails",jsonArray);
+                                }
+
+                                if(paymentWay.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
+                                    //get credit payment detail by order id
+                                    CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(getContext());
+                                    creditCardPaymentDBAdapter.open();
+                                    creditCardPaymentList = creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
+                                    JSONArray jsonArray = new JSONArray(creditCardPaymentList.toString());
+                                    newJsonObject.put("paymentDetails",jsonArray);
+                                }
+                                if(paymentWay.equalsIgnoreCase(CONSTANT.CHECKS)){
+                                    //get check payment detail by order id
+                                    ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(getContext());
+                                    checksDBAdapter.open();
+                                    checkList = checksDBAdapter.getPaymentBySaleID(orderId);
+                                    JSONArray jsonArray = new JSONArray(checkList.toString());
                                     newJsonObject.put("paymentDetails",jsonArray);
                                 }
                                 new AsyncTask<Void, Void, Void>(){
@@ -145,34 +169,22 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
                                             Log.i("Payment", newJsonObject.toString());
                                             String payRes=transmit.authPost(ApiURL.Payment, newJsonObject.toString(), SESSION.token);
                                             Log.i("Payment log", payRes);
-                                            if(amount>=Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total")))){
-                                                Documents documents = new Documents("Receipt",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),
-                                                        ordersIds,Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total"))),amount,0, InvoiceStatus.PAID,"test","test","ILS");
+                                            JSONObject customerData = new JSONObject();
+                                            customerData.put("customerId",customerId);
+                                                ReceiptDocuments documents = new ReceiptDocuments("Receipt",new Timestamp(System.currentTimeMillis()), ordersIds,amount,"ILS");
                                                 String doc = mapper.writeValueAsString(documents);
                                                 JSONObject docJson= new JSONObject(doc);
                                                 String type = docJson.getString("type");
                                                 docJson.remove("type");
                                                 docJson.put("@type",type);
-                                                docJson.put("customer",customerId);
+                                                docJson.put("customer",customerData);
                                                 Log.d("Document vale", docJson.toString());
                                                 com.pos.leaders.leaderspossystem.Models.Invoice invoice = new Invoice(DocumentType.RECEIPT,docJson);
                                                 Log.d("Receipt log",invoice.toString());
-                                            }else {
-                                                Documents documents = new Documents("Receipt",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),
-                                                        ordersIds,Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total")))
-                                                        ,amount,Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total")))-amount, InvoiceStatus.PARTIALLY_PAID,"test","test","ILS");
-                                                String doc = mapper.writeValueAsString(documents);
-                                                JSONObject docJson= new JSONObject(doc);
-                                                String type = docJson.getString("type");
-                                                docJson.remove("type");
-                                                docJson.put("@type",type);
-                                                docJson.put("customer",customerId);
-                                                Log.d("Document vale", docJson.toString());
-                                                com.pos.leaders.leaderspossystem.Models.Invoice invoice = new Invoice(DocumentType.RECEIPT,docJson);
-                                                Log.d("Receipt log",invoice.toString());
-                                            }
-
-
+                                                String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
+                                                JSONObject jsonObject = new JSONObject(res);
+                                               String msgData = jsonObject.getString(MessageKey.responseBody);
+                                                Log.d("receiptResult",res);
                                             try {
                                                 Thread.sleep(100);
                                             } catch (InterruptedException e) {
