@@ -80,6 +80,7 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Offers.Action;
 import com.pos.leaders.leaderspossystem.Offers.OfferController;
 import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
 import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
@@ -111,6 +112,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import HPRTAndroidSDK.HPRTPrinterHelper;
 import POSAPI.POSInterfaceAPI;
@@ -3572,18 +3574,20 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     public OrderDetails calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
+
         List<Offer> offerList = OfferController.getOffersForResource(orderDetails.getProductId(),orderDetails.getProduct().getSku(),orderDetails.getProduct().getCategoryId(), getApplicationContext());
         if (offerList != null) {
             OrderDetails o=orderDetails;
             for (int i =0; i<offerList.size(); i++) {
                 if (OfferController.check(offerList.get(i), o)) {
-                    o= OfferController.execute(offerList.get(i), o);
+                    o= OfferController.execute(offerList.get(i), o,this);
                 }
             }
             return o;
         }
         return orderDetails;
     }
+
     private void removeCustomer() {
         Customer customer = null;
         SESSION._ORDERS.setCustomer(customer);

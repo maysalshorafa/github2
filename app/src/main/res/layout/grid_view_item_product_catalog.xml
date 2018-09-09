@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemProductCatalog_llBackground"
     android:layout_width="150dp"
     android:layout_height="130dp"
     android:layout_margin="4dp"
     android:background="@drawable/catalogproduct_item_bg"
     android:focusable="false"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/itemProductCatalog_TVName"
@@ -16,43 +16,43 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:focusable="false"
+        android:maxLength="14"
+        android:minLines="1"
         android:text="TextView"
         android:textAlignment="center"
         android:textColor="@color/text"
         android:textDirection="anyRtl"
-        android:textSize="18sp"
+        android:textSize="18sp" />
+
+
+    <TextView
+        android:id="@+id/itemProductCatalog_TVPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:focusable="false"
+        android:maxLength="14"
         android:minLines="1"
-        android:maxLength="14"/>
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="@color/text"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
-
-        <TextView
-            android:id="@+id/itemProductCatalog_TVPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:focusable="false"
-            android:text="TextView"
-            android:textAlignment="center"
-            android:textColor="@color/text"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:minLines="1"
-            android:maxLength="14"/>
-
-        <TextView
-            android:id="@+id/itemProductCatalog_TVBarCode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="3dp"
-            android:focusable="false"
-            android:text="TextView"
-            android:textAlignment="center"
-            android:textColor="@color/text"
-            android:textDirection="anyRtl"
-            android:textSize="12sp"
-            android:minLines="1"
-            android:maxLength="10"/>
+    <TextView
+        android:id="@+id/itemProductCatalog_TVBarCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="3dp"
+        android:focusable="false"
+        android:maxLength="10"
+        android:minLines="1"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="@color/text"
+        android:textDirection="anyRtl"
+        android:textSize="12sp" />
 
 
 </LinearLayout>

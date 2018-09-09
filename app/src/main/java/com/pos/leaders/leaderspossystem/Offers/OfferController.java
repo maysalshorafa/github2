@@ -1,10 +1,12 @@
 package com.pos.leaders.leaderspossystem.Offers;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
+import com.pos.leaders.leaderspossystem.GiftProductActivity;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 
@@ -17,6 +19,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
 
 public class OfferController {
     public static List<Offer> getOffersForResource(Long resourceId, String sku,long productCategoryId, Context context) {
@@ -92,7 +96,7 @@ public class OfferController {
         return (orderDetails.getQuantity() / rules.getInt(Rules.quantity.getValue())) > 0;
     }
 
-    public static OrderDetails execute(Offer offer, OrderDetails orderDetails) throws JSONException {
+    public static OrderDetails execute(Offer offer, OrderDetails orderDetails,Context context) throws JSONException {
 
         JSONObject action = offer.getDataAsJsonObject().getJSONObject(Action.ACTION.getValue());
         JSONObject rules = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue());
@@ -164,7 +168,20 @@ public class OfferController {
 
             }
         } else {
-            //not the same resource
+            if (actionName.equalsIgnoreCase(Action.GET_GIFT_PRODUCT.getValue())) {
+                if (orderDetails.getQuantity() >= quantity) {
+                    String resourceList = action.getString(Action.RESOURCES_LIST.getValue());
+                    int giftQuantity = action.getInt(Action.QUANTITY.getValue());
+                    String type = action.getString(Action.RESOURCE_TYPE.getValue());
+
+                    Intent intent = new Intent(context, GiftProductActivity.class);
+                    intent.putExtra(Action.RESOURCES_LIST.getValue(), resourceList);
+                    intent.putExtra(Action.QUANTITY.getValue(), giftQuantity);
+                    intent.putExtra(Action.RESOURCE_TYPE.getValue(), type);
+
+                    context.startActivity(intent);
+                }
+            }
 
         }
 

@@ -3,19 +3,22 @@ package com.pos.leaders.leaderspossystem.Models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pos.leaders.leaderspossystem.Offers.Action;
 import com.pos.leaders.leaderspossystem.Offers.ResourceType;
+import com.pos.leaders.leaderspossystem.Offers.Rules;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Created by KARAM on 30/07/2018.
  */
 
-public class Offer extends JSONObject {
+public class Offer {
 	//region Attribute
 	private long offerId;
 	private String name;
@@ -30,6 +33,7 @@ public class Offer extends JSONObject {
 	private Timestamp updatedAt;
 
 	//endregion
+
 
 	//region Constructors
 
@@ -66,6 +70,30 @@ public class Offer extends JSONObject {
 	public JSONObject getDataAsJsonObject() {
 		try {
 			return new JSONObject(this.offerData);
+		} catch (JSONException e) {
+			return null;
+		}
+	}
+	@JsonIgnore
+	public JSONObject getAction(){
+		try {
+			return getDataAsJsonObject().getJSONObject(Action.ACTION.getValue());
+		} catch (JSONException e) {
+			return null;
+		}
+	}
+	@JsonIgnore
+	public String getActionName(){
+		try {
+			return getAction().getString(Action.NAME.getValue());
+		} catch (JSONException e) {
+			return "";
+		}
+	}
+	@JsonIgnore
+	public JSONObject getRules(){
+		try {
+			return getDataAsJsonObject().getJSONObject(Rules.RULES.getValue());
 		} catch (JSONException e) {
 			return null;
 		}
@@ -186,4 +214,5 @@ public class Offer extends JSONObject {
 				", updatedAt=" + updatedAt +
 				'}';
 	}
+
 }

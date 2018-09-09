@@ -14,6 +14,9 @@ public enum Action {
     GET_DISCOUNT("Getdiscount"),
     NAME("name"),
     VALUE("value"),
+    RESOURCE_TYPE("resourceType"),
+    RESOURCES_LIST("resourcesList"),
+    QUANTITY("quantity"),
     SAME_RESOURCE("sameResource");
 
     Action(final String v) {
