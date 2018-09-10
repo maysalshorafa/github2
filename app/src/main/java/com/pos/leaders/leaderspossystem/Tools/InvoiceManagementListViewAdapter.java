@@ -231,9 +231,14 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getContext(),ChecksActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("_Price", 55.3);
-                intent.putExtra("_custmer", "");
-                v.getContext().startActivity(intent);
+                try {
+                    intent.putExtra("_Price", Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total"))));
+                    intent.putExtra("_custmer", "");
+                    v.getContext().startActivity(intent);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
 /**
                 final ArrayList<String> ordersIds = new ArrayList<>();
                 final Dialog cashReceiptDialog = new Dialog(getContext());
