@@ -1,13 +1,13 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import android.util.Log;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by KARAM on 19/10/2016.
@@ -31,7 +31,46 @@ public class OrderDetails {
 	private Product product;
 
 	@JsonIgnore
-	public Offer offer;
+	public List<Offer> offerList = new ArrayList<>();
+
+	@JsonIgnore
+	public boolean giftProduct = false;
+
+	@JsonIgnore
+	public boolean scannable = true;
+
+    @JsonIgnore
+    public boolean offerRule = false;
+
+    @JsonIgnore
+    public Offer offer = null;
+
+    @JsonIgnore
+    private int objectID = 0;
+
+    @JsonIgnore
+    private void initObjectID(){
+        int hash=7;
+        int prime=31;
+        hash = prime * hash + ((int) (productId % 10000));
+        hash = hash * prime + quantity;
+        hash = hash * prime + (int) discount;
+        hash = hash * prime + (giftProduct ? 37 : 17);
+        hash = hash * prime + (offerRule ? 7 : 3);
+        hash = hash * prime + (offer == null ? 0 : offer.hashCode());
+        hash = hash * prime + (product == null ? 0 : product.hashCode());
+        hash = hash * prime + (product == null ? 0 : product.getName().hashCode());
+        hash = hash * prime + (int) rowDiscount;
+        hash = hash * prime + (int) (new Date().getTime() % 10000);
+        hash = hash * prime + hashCode();
+
+        objectID = hash;
+    }
+
+    @JsonIgnore
+    public int getObjectID(){
+        return objectID;
+    }
 
 	public long getCustomer_assistance_id() {
 		return customer_assistance_id;
@@ -41,7 +80,7 @@ public class OrderDetails {
 		this.customer_assistance_id = customer_assistance_id;
 	}
 
-	private  long customer_assistance_id;
+	private long customer_assistance_id;
 
 	//region Constructors
 	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, long customer_assistance_id) {
@@ -51,6 +90,7 @@ public class OrderDetails {
 		this.userOffer = userOffer;
 		this.orderId = orderId;
 		this.customer_assistance_id = customer_assistance_id;
+        initObjectID();
 	}
 
     public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id) {
@@ -63,6 +103,7 @@ public class OrderDetails {
         this.unitPrice = original_price;
         this.discount = discount;
     	this.customer_assistance_id = customer_assistance_id;
+        initObjectID();
     }
 
 	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, Product product, long customer_assistance_id) {
@@ -73,6 +114,7 @@ public class OrderDetails {
 		this.orderId = orderId;
 		this.product = product;
 		this.customer_assistance_id = customer_assistance_id;
+        initObjectID();
 	}
 	public OrderDetails(long productId, int quantity, double userOffer, long orderId, Product product) {
 		this.productId = productId;
@@ -80,6 +122,7 @@ public class OrderDetails {
 		this.userOffer = userOffer;
 		this.orderId = orderId;
 		this.product = product;
+        initObjectID();
 
 	}
 	public OrderDetails(int quantity, double userOffer, Product product) {
@@ -90,6 +133,7 @@ public class OrderDetails {
         this.paidAmount = product.getPrice();
         this.unitPrice = product.getPrice();
         this.discount = 0;
+        initObjectID();
     }
 
     public OrderDetails(int quantity, double userOffer, Product product, double paidAmount, double original_price, double discount) {
@@ -100,6 +144,7 @@ public class OrderDetails {
         this.paidAmount = paidAmount;
         this.unitPrice = original_price;
         this.discount = discount;
+        initObjectID();
     }
 
 	public OrderDetails(OrderDetails o) {
@@ -111,6 +156,7 @@ public class OrderDetails {
 	}
 
 	public OrderDetails() {
+        initObjectID();
 	}
 	//endregion Constructors
 
@@ -247,4 +293,5 @@ public class OrderDetails {
 	public void setOffer(Offer offer) {
 		this.offer = offer;
 	}
+
 }

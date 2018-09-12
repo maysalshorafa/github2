@@ -12,6 +12,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,6 +33,68 @@ public class Offer {
 	private long byEmployee;
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
+
+
+	@JsonIgnore
+	public List<Long> resourceList = null;
+
+
+	@JsonIgnore
+	private int conditionItemQuantity = 0;
+	@JsonIgnore
+	private int resultItemQuantity = 0;
+	@JsonIgnore
+	public List<OrderDetails> conditionList = new ArrayList<>();
+
+	public void addToConditionsList(OrderDetails orderDetails) {
+		for (OrderDetails orderDetails1 : conditionList) {
+			if (orderDetails1.getObjectID() == orderDetails.getObjectID()) {
+				conditionItemQuantity -= orderDetails1.getQuantity();
+				conditionList.remove(orderDetails1);
+				break;
+			}
+		}
+		conditionList.add(orderDetails);
+		conditionItemQuantity += orderDetails.getQuantity();
+	}
+
+	public int getConditionQuantity() {
+		return this.conditionItemQuantity;
+	}
+
+	public void removeFromConditionsList(OrderDetails orderDetails) {
+		conditionList.remove(orderDetails);
+		conditionItemQuantity -= orderDetails.getQuantity();
+	}
+
+	@JsonIgnore
+	public List<OrderDetails> suggestedList = new ArrayList<>();
+
+
+	@JsonIgnore
+	public List<OrderDetails> resultList = new ArrayList<>();
+
+
+	public void addToResultList(OrderDetails orderDetails) {
+		for (OrderDetails orderDetails1 : conditionList) {
+			if (orderDetails1.getObjectID() == orderDetails.getObjectID()) {
+				resultItemQuantity -= orderDetails1.getQuantity();
+				resultList.remove(orderDetails1);
+				break;
+			}
+		}
+		resultList.add(orderDetails);
+		resultItemQuantity += orderDetails.getQuantity();
+	}
+
+	public int getResultQuantity() {
+		return this.resultItemQuantity;
+	}
+
+
+	@JsonIgnore
+	public boolean isImplemented = false;
+
 
 	//endregion
 
@@ -53,6 +117,10 @@ public class Offer {
 		this.byEmployee = byEmployee;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+
+		if (getActionResourceList() != null) {
+			resourceList = Arrays.asList(getActionResourceList());
+		}
 	}
 	//endregion
 
@@ -66,6 +134,7 @@ public class Offer {
 			return null;
 		}
 	}
+
 	@JsonIgnore
 	public JSONObject getDataAsJsonObject() {
 		try {
@@ -74,28 +143,72 @@ public class Offer {
 			return null;
 		}
 	}
+
 	@JsonIgnore
-	public JSONObject getAction(){
+	public JSONObject getAction() {
 		try {
 			return getDataAsJsonObject().getJSONObject(Action.ACTION.getValue());
 		} catch (JSONException e) {
 			return null;
 		}
 	}
+
 	@JsonIgnore
-	public String getActionName(){
+	public int getActionQuantity() {
+		try {
+			return getAction().getInt(Action.QUANTITY.getValue());
+		} catch (JSONException e) {
+			return -1;
+		}
+	}
+
+	@JsonIgnore
+	public boolean isActionSameResource() {
+		try {
+			return getAction().getBoolean(Action.SAME_RESOURCE.getValue());
+		} catch (JSONException e) {
+			return true;
+		}
+	}
+
+	@JsonIgnore
+	public Long[] getActionResourceList() {
+		if (getAction().has(Action.RESOURCES_LIST.getValue())) {
+			try {
+				return new ObjectMapper().readValue(getAction().getString(Action.RESOURCES_LIST.getValue()), Long[].class);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	@JsonIgnore
+	public String getActionName() {
 		try {
 			return getAction().getString(Action.NAME.getValue());
 		} catch (JSONException e) {
 			return "";
 		}
 	}
+
 	@JsonIgnore
-	public JSONObject getRules(){
+	public JSONObject getRules() {
 		try {
 			return getDataAsJsonObject().getJSONObject(Rules.RULES.getValue());
 		} catch (JSONException e) {
 			return null;
+		}
+	}
+
+	@JsonIgnore
+	public int getRuleQuantity() {
+		try {
+			return getRules().getInt(Rules.quantity.getValue());
+		} catch (JSONException e) {
+			return -1;
 		}
 	}
 

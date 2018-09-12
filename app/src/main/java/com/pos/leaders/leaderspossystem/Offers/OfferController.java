@@ -1,19 +1,21 @@
 package com.pos.leaders.leaderspossystem.Offers;
 
 import android.content.Context;
-import android.content.Intent;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
-import com.pos.leaders.leaderspossystem.GiftProductActivity;
 import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -23,6 +25,279 @@ import java.util.Map;
 
 
 public class OfferController {
+
+    public static List<Offer> activeOffers = new ArrayList<>();
+
+
+    public static void executeCategoryOffers(Order order,List<Offer> offers) throws JSONException, IOException {
+
+        for(Offer offer:offers) {
+
+
+            if (!offer.isActionSameResource()) {
+                JSONObject rules = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue());
+                int quantity = offer.getRuleQuantity();
+
+                int productCount = 0;
+
+                offer.conditionList = new ArrayList<>();
+
+                List<Long> ids = new ArrayList<>();
+                if (offer.getResourceType() == ResourceType.CATEGORY) {
+                    ids = Arrays.asList(new ObjectMapper().readValue(rules.getString(Rules.categoryList.getValue()), Long[].class));
+                }
+
+                //COLLECT ALL PRODUCT ON IMPLEMENT OFFER
+                for (OrderDetails orderDetails : order.getOrders()) {
+                    if(orderDetails.giftProduct) continue;
+                    if(!orderDetails.scannable) continue;
+
+                    if (offer.getResourceType() == ResourceType.CATEGORY) {
+                        if (ids.contains(orderDetails.getProduct().getCategoryId())) {
+                            productCount += orderDetails.getQuantity();
+                            offer.conditionList.add(orderDetails);
+                        }
+                    }
+                }
+
+                if (productCount >= quantity) {
+
+                    //save the highest quantity price
+
+                    //sort offer condition list
+
+                    List<OrderDetails> tempCondition = offer.conditionList;
+
+                    Collections.sort(tempCondition, new Comparator<OrderDetails>() {
+                        @Override
+                        public int compare(OrderDetails t1, OrderDetails t2) {
+                            return Double.compare(t1.getUnitPrice(), t2.getUnitPrice());
+                        }
+                    });
+
+                    //reset offer condition list
+
+                    offer.conditionList = new ArrayList<>();
+                    // select first highest quantity
+                    int targetQuantity = 0;
+                    while (targetQuantity < quantity) {
+                        OrderDetails od = tempCondition.remove(0);
+
+                        if (targetQuantity + od.getQuantity() > quantity) {
+                            //must split this order details
+                            List<OrderDetails> spitedOrderDetails = splitOrderDetails(od, quantity - targetQuantity);
+                            //rejoin the two item to the first of the tem list
+                            tempCondition.add(0, spitedOrderDetails.get(1));
+                            tempCondition.add(0, spitedOrderDetails.get(0));
+                            continue;
+                        }
+
+                        targetQuantity += od.getQuantity();
+                        offer.conditionList.add(0, od);
+                    }
+
+
+
+
+                    //search the gift product
+                    List<Long> giftProductsIds = new ArrayList<>();
+                    giftProductsIds = Arrays.asList(new ObjectMapper().readValue(rules.getString(Action.RESOURCES_LIST.getValue()), Long[].class));
+
+                    int giftQuantity = offer.getActionQuantity();
+                    int targetResourceCount = 0;
+
+                    String resourceType = offer.getAction().getString(Action.RESOURCE_TYPE.getValue());
+
+                    for (OrderDetails od : order.getOrders()) {
+                        if(od.giftProduct) continue;
+                        if (resourceType.equalsIgnoreCase(ResourceType.CATEGORY.getValue())) {
+                            if (giftProductsIds.contains(od.getProduct().getCategoryId())) {
+                                targetResourceCount += od.getQuantity();
+                            }
+                        } else if (resourceType.equalsIgnoreCase(ResourceType.PRODUCT.getValue())||resourceType.equalsIgnoreCase(ResourceType.MULTIPRODUCT.getValue())) {
+                            if (giftProductsIds.contains(od.getProductId())) {
+                                targetResourceCount += od.getQuantity();
+                            }
+                        }
+                    }
+
+                    if (targetResourceCount >= giftQuantity) {
+                        //search the first X product and implement the offer
+
+                        boolean spitedList = false;
+                        for (OrderDetails orderDetails : order.getOrders()) {
+                            if (giftQuantity > 0) {
+                                if(orderDetails.giftProduct) continue;
+                                boolean isValid = false;
+                                if (resourceType.equalsIgnoreCase(ResourceType.CATEGORY.getValue())) {
+                                    if (giftProductsIds.contains(orderDetails.getProduct().getCategoryId())) {
+                                        isValid = true;
+                                    }
+                                } else if (resourceType.equalsIgnoreCase(ResourceType.PRODUCT.getValue()) || resourceType.equalsIgnoreCase(ResourceType.MULTIPRODUCT.getValue())) {
+                                    if (giftProductsIds.contains(orderDetails.getProductId())) {
+                                        isValid = true;
+                                    }
+                                }
+
+                                if (isValid) {
+                                    if (giftQuantity - orderDetails.getQuantity() >= 0) {
+                                        giftQuantity -= orderDetails.getQuantity();
+                                        orderDetails.setDiscount(100);
+                                        orderDetails.giftProduct = true;
+                                    } else {
+                                        //split this order details
+                                        OrderDetails od=order.getOrders().remove(order.getOrders().indexOf(orderDetails));
+                                        order.addOrdersDetails(splitOrderDetails(od, giftQuantity));
+                                        spitedList = true;
+                                        break;
+                                    }
+                                }
+                            } else break;
+                        }
+
+
+                        if (spitedList) {
+                            for (OrderDetails orderDetails : order.getOrders()) {
+                                if (giftQuantity > 0) {
+                                    if(orderDetails.giftProduct) continue;
+
+                                    if (resourceType.equalsIgnoreCase(ResourceType.CATEGORY.getValue())) {
+                                        if (giftProductsIds.contains(orderDetails.getProduct().getCategoryId())) {
+                                            if (giftQuantity - orderDetails.getQuantity() >= 0) {
+                                                orderDetails.setDiscount(100);
+                                                orderDetails.giftProduct = true;
+                                            }
+                                        }
+                                    }
+                                } else break;
+                            }
+                        }
+                    } else {
+                        //not reach the rule cquintiture
+                    }
+                }
+            }
+        }
+    }
+
+    /*
+        first item on th returned list is equal to slice size
+     */
+    private static List<OrderDetails> splitOrderDetails(OrderDetails orderDetails,int sliceSize) {
+        if (orderDetails.getQuantity() > sliceSize) {
+
+            OrderDetails orderDetails1 = orderDetails;
+            orderDetails1.setCount(sliceSize);
+
+            OrderDetails orderDetails2 = orderDetails;
+            orderDetails2.setCount(orderDetails.getQuantity() - sliceSize);
+
+            List<OrderDetails> odList = new ArrayList<>();
+            odList.add(orderDetails1);
+            odList.add(orderDetails2);
+
+            return odList;
+        }
+        return null;
+    }
+
+
+    public static Map<Long, Offer> catOfferMap = new HashMap<Long, Offer>();
+
+    public static void addOfferCat(Long catID, Offer offer,OrderDetails orderDetails) throws IOException, JSONException {
+        if (catOfferMap.containsKey(catID)) {
+            if (catOfferMap.get(catID).getOfferId() == offer.getOfferId()) {
+                //offer category found add to conditionList
+                catOfferMap.get(catID).addToConditionsList(orderDetails);
+            }
+        }
+        // offer or category id not found add to map
+        catOfferMap.put(catID, offer);
+        recheckOffers();
+    }
+
+    public static void recheckOffers(){
+        for (Map.Entry<Long, Offer> entry : catOfferMap.entrySet()) {
+            if (entry.getValue().getRuleQuantity() == entry.getValue().getConditionQuantity()) {
+                //search if have result item on other category
+                if(entry.getValue().resourceList!=null) {
+                    long catID = entry.getValue().resourceList.get(0);
+                    if (entry.getKey() != catID) {
+                        //this offer not the same category
+
+                        if (catOfferMap.containsKey(catID)) {
+                            //have this category
+
+                            int pickItems = catOfferMap.get(catID).getActionQuantity();
+                            if (catOfferMap.get(catID).getConditionQuantity() >= pickItems) {
+
+                                //sort the Condition list by lowest price
+                                Collections.sort(catOfferMap.get(catID).conditionList, new Comparator<OrderDetails>() {
+                                    @Override
+                                    public int compare(OrderDetails o1, OrderDetails o2) {
+                                        return Double.compare(o1.getUnitPrice(), o2.getUnitPrice());
+                                    }
+                                });
+                                Collections.reverse(catOfferMap.get(catID).conditionList);
+
+                                while (pickItems > 0) {
+                                    //pop first item and adding to result list on the offer object
+                                    OrderDetails temp = catOfferMap.get(catID).conditionList.remove(0);
+                                    entry.getValue().addToResultList(temp);
+                                    //todo split this order details on quantity large this the pickItems
+                                    pickItems -= temp.getQuantity();
+                                }
+
+                                //offer ready to apply
+                                //call apply method
+                            }
+
+                        }
+
+                    } else {
+                        //the action and rule the same category
+                    }
+
+
+                }
+            }
+        }
+    }
+
+
+    public static void removeOfferCat(Long catID,Offer offer,OrderDetails orderDetails) {
+        if (catOfferMap.containsKey(catID)) {
+            if (catOfferMap.get(catID).getOfferId() == offer.getOfferId()) {
+                //offer category found add to conditionList
+                catOfferMap.get(catID).removeFromConditionsList(orderDetails);
+            }
+        }
+    }
+
+    public static boolean checkOnResultList(OrderDetails orderDetails) throws JSONException, IOException {
+        for (Map.Entry<Long, Offer> entry : catOfferMap.entrySet()) {
+            if (entry.getValue().resourceList.contains(orderDetails.getProduct().getCategoryId())) {
+                entry.getValue().addToResultList(orderDetails);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public static List<Offer> getOffersForResource(Long resourceId, String sku,long productCategoryId, Context context) {
         //store the group and product ids with his type
         Map<Long, ResourceType> offersResourceAndId = new HashMap<>();
@@ -167,24 +442,7 @@ public class OfferController {
                 }
 
             }
-        } else {
-            if (actionName.equalsIgnoreCase(Action.GET_GIFT_PRODUCT.getValue())) {
-                if (orderDetails.getQuantity() >= quantity) {
-                    String resourceList = action.getString(Action.RESOURCES_LIST.getValue());
-                    int giftQuantity = action.getInt(Action.QUANTITY.getValue());
-                    String type = action.getString(Action.RESOURCE_TYPE.getValue());
-
-                    Intent intent = new Intent(context, GiftProductActivity.class);
-                    intent.putExtra(Action.RESOURCES_LIST.getValue(), resourceList);
-                    intent.putExtra(Action.QUANTITY.getValue(), giftQuantity);
-                    intent.putExtra(Action.RESOURCE_TYPE.getValue(), type);
-
-                    context.startActivity(intent);
-                }
-            }
-
         }
-
         return orderDetails;
     }
 }

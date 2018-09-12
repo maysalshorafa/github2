@@ -204,6 +204,10 @@ public class Order {
 	public void setOrders(List<OrderDetails> orders) {
 		this.orders = orders;
 	}
+	@JsonIgnore
+	public void addOrdersDetails(List<OrderDetails> orders) {
+		this.orders.addAll(orders);
+	}
 
 	public void setUser(Employee user) {
 		this.user = user;

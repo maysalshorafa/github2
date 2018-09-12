@@ -3576,6 +3576,7 @@ public class SalesCartActivity extends AppCompatActivity {
     public OrderDetails calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
 
         List<Offer> offerList = OfferController.getOffersForResource(orderDetails.getProductId(),orderDetails.getProduct().getSku(),orderDetails.getProduct().getCategoryId(), getApplicationContext());
+        orderDetails.offerList = offerList;
         if (offerList != null) {
             OrderDetails o=orderDetails;
             for (int i =0; i<offerList.size(); i++) {
