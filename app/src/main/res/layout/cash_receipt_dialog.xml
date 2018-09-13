@@ -22,25 +22,12 @@
         <EditText
             android:id="@+id/cashReceiptDialog_TECash"
             android:layout_width="match_parent"
-
             android:layout_height="50dp"
             android:layout_margin="5dp"
             android:layout_weight=".5"
             android:background="@drawable/catalogproduct_item_bg"
             android:inputType="numberDecimal"
             android:textAlignment="center" />
-        <Spinner
-            android:id="@+id/spinnerCurrencyTypeForTotalPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_weight="1.5"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="40dp"
-            android:textStyle="bold"
-           ></Spinner>
-
 
     </LinearLayout>
 

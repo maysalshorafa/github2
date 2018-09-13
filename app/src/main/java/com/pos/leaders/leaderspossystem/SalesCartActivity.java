@@ -1442,7 +1442,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                 docJson.put("@type",type);
                                 docJson.put("customer",customerData);
                                 Log.d("Document vale", docJson.toString());
-                                Invoice invoice = new Invoice(DocumentType.INVOICE,docJson);
+                                Invoice invoice = new Invoice(DocumentType.INVOICE,docJson,"");
                                 Log.d("Invoice log",invoice.toString());
                                 String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
                                 JSONObject jsonObject = new JSONObject(res);

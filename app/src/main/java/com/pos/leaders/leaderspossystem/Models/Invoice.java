@@ -11,13 +11,15 @@ import org.json.JSONObject;
 public class Invoice {
     private DocumentType type;
     private JSONObject documentsData;
+    private String docNum;
 
     public Invoice() {
     }
 
-    public Invoice(DocumentType type, JSONObject documentsData) {
+    public Invoice(DocumentType type, JSONObject documentsData,String docNum) {
         this.type = type;
         this.documentsData = documentsData;
+        this.docNum=docNum;
 
     }
 
@@ -35,11 +37,20 @@ public class Invoice {
         this.documentsData = documentsData;
     }
 
+    public String getDocNum() {
+        return docNum;
+    }
+
+    public void setDocNum(String docNum) {
+        this.docNum = docNum;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "\""+"type\":" +"\""+type +"\""+
                 "," +"\""+"documentsData\":" +documentsData  +
+                "," +"\""+"docNum\":" +"\""+docNum +"\""  +
                 '}';
     }
 }
