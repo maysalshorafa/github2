@@ -271,20 +271,28 @@ public class OrderDetails {
 	//endregion Methods
 
 
-    @Override
-    public String toString() {
-        return "OrderDetails{" +
-                "orderDetailsId=" + orderDetailsId +
-                ", productId=" + productId +
-                ", quantity=" + quantity +
-                ", userOffer=" + userOffer +
-                ", orderId=" + orderId +
-                ", unitPrice=" + unitPrice +
-                ", paidAmount=" + paidAmount +
-                ", discount=" + discount +
-                ", product=" + product +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "OrderDetails{" +
+				"orderDetailsId=" + orderDetailsId +
+				", productId=" + productId +
+				", quantity=" + quantity +
+				", userOffer=" + userOffer +
+				", orderId=" + orderId +
+				", unitPrice=" + unitPrice +
+				", paidAmount=" + paidAmount +
+				", discount=" + discount +
+				", rowDiscount=" + rowDiscount +
+				", product=" + product +
+				", offerList=" + offerList +
+				", giftProduct=" + giftProduct +
+				", scannable=" + scannable +
+				", offerRule=" + offerRule +
+				", offer=" + offer +
+				", objectID=" + objectID +
+				", customer_assistance_id=" + customer_assistance_id +
+				'}';
+	}
 
 	public Offer getOffer() {
 		return offer;

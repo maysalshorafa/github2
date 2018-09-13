@@ -1030,7 +1030,6 @@ public class SyncMessage extends Service {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
         objectMapper.setDateFormat(dateFormat);
 
-
         Log.w("DO_SYNC", bm.getCommand());
 
         switch (msgType) {

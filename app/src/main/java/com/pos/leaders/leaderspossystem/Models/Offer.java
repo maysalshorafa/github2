@@ -11,6 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -103,6 +105,11 @@ public class Offer {
 
 	public Offer() {
 	}
+
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
 
 
 	public Offer(long offerId, String name, String status, long resourceId, ResourceType resourceType, Timestamp startDate, Timestamp endDate, String offerData, long byEmployee, Timestamp createdAt, Timestamp updatedAt) {

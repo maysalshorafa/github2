@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem.Offers;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
@@ -9,6 +10,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,31 +31,36 @@ public class OfferController {
     public static List<Offer> activeOffers = new ArrayList<>();
 
 
-    public static void executeCategoryOffers(Order order,List<Offer> offers) throws JSONException, IOException {
+    public static void executeCategoryOffers(List<OrderDetails> ods,List<Offer> offers) throws JSONException, IOException {
 
         for(Offer offer:offers) {
-
-
             if (!offer.isActionSameResource()) {
-                JSONObject rules = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue());
+                JSONObject rules = offer.getRules();
                 int quantity = offer.getRuleQuantity();
 
                 int productCount = 0;
 
                 offer.conditionList = new ArrayList<>();
 
-                List<Long> ids = new ArrayList<>();
+                List<Long> categoryIds = new ArrayList<>();
                 if (offer.getResourceType() == ResourceType.CATEGORY) {
-                    ids = Arrays.asList(new ObjectMapper().readValue(rules.getString(Rules.categoryList.getValue()), Long[].class));
+                    categoryIds = Arrays.asList(new ObjectMapper().readValue(rules.getString(Rules.categoryList.getValue()), Long[].class));
                 }
 
                 //COLLECT ALL PRODUCT ON IMPLEMENT OFFER
-                for (OrderDetails orderDetails : order.getOrders()) {
-                    if(orderDetails.giftProduct) continue;
-                    if(!orderDetails.scannable) continue;
+                for (OrderDetails orderDetails : ods) {
+                    if(orderDetails.giftProduct) {
+                        continue;
+                    }
 
+                    if(!orderDetails.scannable) {
+                        continue;
+                    }
+
+
+                    Log.i("orderDetails", orderDetails.toString());
                     if (offer.getResourceType() == ResourceType.CATEGORY) {
-                        if (ids.contains(orderDetails.getProduct().getCategoryId())) {
+                        if (categoryIds.contains(orderDetails.getProduct().getCategoryId())) {
                             productCount += orderDetails.getQuantity();
                             offer.conditionList.add(orderDetails);
                         }
@@ -74,9 +81,9 @@ public class OfferController {
                             return Double.compare(t1.getUnitPrice(), t2.getUnitPrice());
                         }
                     });
+                    Collections.reverse(tempCondition);
 
                     //reset offer condition list
-
                     offer.conditionList = new ArrayList<>();
                     // select first highest quantity
                     int targetQuantity = 0;
@@ -86,36 +93,45 @@ public class OfferController {
                         if (targetQuantity + od.getQuantity() > quantity) {
                             //must split this order details
                             List<OrderDetails> spitedOrderDetails = splitOrderDetails(od, quantity - targetQuantity);
+
+                            //reset on the main orders list
+                            ods.remove(od);
+
+
+                            OrderDetails cond = spitedOrderDetails.get(0);
+                            cond.scannable = false;
+                            ods.add(cond);
+                            ods.add(spitedOrderDetails.get(1));
+
                             //rejoin the two item to the first of the tem list
                             tempCondition.add(0, spitedOrderDetails.get(1));
-                            tempCondition.add(0, spitedOrderDetails.get(0));
+
+                            tempCondition.add(0, cond);
+
                             continue;
                         }
 
                         targetQuantity += od.getQuantity();
+                        ods.remove(od);
+                        od.scannable = false;
+                        ods.add(od);
                         offer.conditionList.add(0, od);
                     }
 
-
-
-
                     //search the gift product
                     List<Long> giftProductsIds = new ArrayList<>();
-                    giftProductsIds = Arrays.asList(new ObjectMapper().readValue(rules.getString(Action.RESOURCES_LIST.getValue()), Long[].class));
+                    giftProductsIds = Arrays.asList(offer.getActionResourceList());
 
                     int giftQuantity = offer.getActionQuantity();
                     int targetResourceCount = 0;
 
                     String resourceType = offer.getAction().getString(Action.RESOURCE_TYPE.getValue());
 
-                    for (OrderDetails od : order.getOrders()) {
+                    for (OrderDetails od : ods) {
                         if(od.giftProduct) continue;
+                        if(!od.scannable) continue;
                         if (resourceType.equalsIgnoreCase(ResourceType.CATEGORY.getValue())) {
-                            if (giftProductsIds.contains(od.getProduct().getCategoryId())) {
-                                targetResourceCount += od.getQuantity();
-                            }
-                        } else if (resourceType.equalsIgnoreCase(ResourceType.PRODUCT.getValue())||resourceType.equalsIgnoreCase(ResourceType.MULTIPRODUCT.getValue())) {
-                            if (giftProductsIds.contains(od.getProductId())) {
+                            if (giftProductsIds.contains(od.getProduct().getCategoryId())&&!(offer.conditionList.contains(od))) {
                                 targetResourceCount += od.getQuantity();
                             }
                         }
@@ -123,57 +139,42 @@ public class OfferController {
 
                     if (targetResourceCount >= giftQuantity) {
                         //search the first X product and implement the offer
-
-                        boolean spitedList = false;
-                        for (OrderDetails orderDetails : order.getOrders()) {
+                        for (OrderDetails orderDetails : ods) {
                             if (giftQuantity > 0) {
                                 if(orderDetails.giftProduct) continue;
-                                boolean isValid = false;
+                                if(!orderDetails.scannable) continue;
+
                                 if (resourceType.equalsIgnoreCase(ResourceType.CATEGORY.getValue())) {
                                     if (giftProductsIds.contains(orderDetails.getProduct().getCategoryId())) {
-                                        isValid = true;
-                                    }
-                                } else if (resourceType.equalsIgnoreCase(ResourceType.PRODUCT.getValue()) || resourceType.equalsIgnoreCase(ResourceType.MULTIPRODUCT.getValue())) {
-                                    if (giftProductsIds.contains(orderDetails.getProductId())) {
-                                        isValid = true;
-                                    }
-                                }
+                                        if (giftQuantity - orderDetails.getQuantity() > 0) {
+                                            giftQuantity -= orderDetails.getQuantity();
+                                            orderDetails.setDiscount(100);
+                                            orderDetails.giftProduct = true;
+                                            orderDetails.scannable = false;
+                                        } else if(giftQuantity - orderDetails.getQuantity() == 0){
+                                            giftQuantity -= orderDetails.getQuantity();
+                                            orderDetails.setDiscount(100);
+                                            orderDetails.giftProduct = true;
+                                            orderDetails.scannable = false;
+                                            break;
+                                        } else {
+                                            //split this order details
+                                            OrderDetails od = ods.remove(ods.indexOf(orderDetails));
 
-                                if (isValid) {
-                                    if (giftQuantity - orderDetails.getQuantity() >= 0) {
-                                        giftQuantity -= orderDetails.getQuantity();
-                                        orderDetails.setDiscount(100);
-                                        orderDetails.giftProduct = true;
-                                    } else {
-                                        //split this order details
-                                        OrderDetails od=order.getOrders().remove(order.getOrders().indexOf(orderDetails));
-                                        order.addOrdersDetails(splitOrderDetails(od, giftQuantity));
-                                        spitedList = true;
-                                        break;
+                                            List<OrderDetails> orderDetails1 = splitOrderDetails(od, giftQuantity);
+                                            orderDetails1.get(0).setDiscount(100);
+                                            orderDetails1.get(0).giftProduct = true;
+                                            orderDetails1.get(0).scannable = false;
+                                            ods.addAll(orderDetails1);
+
+                                            break;
+                                        }
                                     }
                                 }
                             } else break;
                         }
-
-
-                        if (spitedList) {
-                            for (OrderDetails orderDetails : order.getOrders()) {
-                                if (giftQuantity > 0) {
-                                    if(orderDetails.giftProduct) continue;
-
-                                    if (resourceType.equalsIgnoreCase(ResourceType.CATEGORY.getValue())) {
-                                        if (giftProductsIds.contains(orderDetails.getProduct().getCategoryId())) {
-                                            if (giftQuantity - orderDetails.getQuantity() >= 0) {
-                                                orderDetails.setDiscount(100);
-                                                orderDetails.giftProduct = true;
-                                            }
-                                        }
-                                    }
-                                } else break;
-                            }
-                        }
                     } else {
-                        //not reach the rule cquintiture
+                        //not reach the rule condition
                     }
                 }
             }
@@ -190,6 +191,7 @@ public class OfferController {
             orderDetails1.setCount(sliceSize);
 
             OrderDetails orderDetails2 = orderDetails;
+            orderDetails2.setDiscount(0);
             orderDetails2.setCount(orderDetails.getQuantity() - sliceSize);
 
             List<OrderDetails> odList = new ArrayList<>();
