@@ -563,7 +563,7 @@ public class PdfUA {
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, "Date"+":"+customerJson.getString("date"), Element.ALIGN_LEFT, 2, dateFont);
+        insertCell(headingTable, "Date"+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 2, dateFont);
 
 //        insertCell(headingTable, context.getString(R.string.date) + jsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
 
@@ -575,29 +575,28 @@ public class PdfUA {
         dateTable.setWidthPercentage(108f);
 
         insertCell(dateTable, context.getString(R.string.customer_name)+":"+customerInfo.getString("firstName")+customerInfo.getString("lastName"), Element.ALIGN_LEFT, 2, dateFont);
-        insertCell(dateTable, "Invoices Numbers"+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 2, dateFont);
         insertCell(dateTable, context.getString(R.string.total_paid)+":"+customerJson.getDouble("total"), Element.ALIGN_LEFT, 2, dateFont);
 
         //end
         insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
 
-        PdfPTable orderDetailsTable = new PdfPTable(5);
+        PdfPTable orderDetailsTable = new PdfPTable(3);
         orderDetailsTable.setRunDirection(0);
         orderDetailsTable.setWidthPercentage(108f);
         JSONArray itemJson = customerJson.getJSONArray("item");
-        insertCell(orderDetailsTable, "ID", Element.ALIGN_LEFT, 2, dateFont);
         insertCell(orderDetailsTable, context.getString(R.string.name), Element.ALIGN_LEFT, 1, dateFont);
         insertCell(orderDetailsTable,context.getString(R.string.qty), Element.ALIGN_LEFT, 1, dateFont);
         insertCell(orderDetailsTable, context.getString(R.string.price), Element.ALIGN_LEFT, 1, dateFont);
 
         for (int i=0;i<itemJson.length();i++){
             JSONObject jsonObject1=itemJson.getJSONObject(i);
-            insertCell(orderDetailsTable, jsonObject1 .getLong("orderId")+"", Element.ALIGN_LEFT, 2, dateFont);
             insertCell(orderDetailsTable, jsonObject1.getString("name"), Element.ALIGN_LEFT, 1, dateFont);
             insertCell(orderDetailsTable, jsonObject1.getString("quantity"), Element.ALIGN_LEFT, 1, dateFont);
             insertCell(orderDetailsTable,jsonObject1.getString("unitPrice"), Element.ALIGN_LEFT, 1, dateFont);
         }
-        insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 5, font);
+        insertCell(orderDetailsTable, "Receipt Numbers"+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 3, dateFont);
+
+        insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 3, font);
 
         //end
 
