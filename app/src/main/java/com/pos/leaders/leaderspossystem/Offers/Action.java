@@ -11,8 +11,13 @@ public enum Action {
     ACTION("action"),
     PRICE_FOR_PRODUCT("Price for Product"),
     GET_GIFT_PRODUCT("Get gift product"),
+    GET_DISCOUNT("Getdiscount"),
     NAME("name"),
-    VALUE("value");
+    VALUE("value"),
+    RESOURCE_TYPE("resourceType"),
+    RESOURCES_LIST("resourcesList"),
+    QUANTITY("quantity"),
+    SAME_RESOURCE("sameResource");
 
     Action(final String v) {
         this.v = v;

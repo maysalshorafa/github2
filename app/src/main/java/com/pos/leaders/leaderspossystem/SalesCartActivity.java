@@ -121,6 +121,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import HPRTAndroidSDK.HPRTPrinterHelper;
 import POSAPI.POSInterfaceAPI;
@@ -2050,7 +2051,6 @@ public class SalesCartActivity extends AppCompatActivity {
         tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
         SESSION._ORDERS.setTotalPrice(saleTotalPrice);
 
-
         offerDBAdapter.close();
     }
 
@@ -2059,7 +2059,7 @@ public class SalesCartActivity extends AppCompatActivity {
     public int OfferQanGiftPerUnitForProduct = 0;
     public int prevCount = 0;
     public int currCount = 0;
-
+    static Map<Long, Offer> offers = new HashMap<Long, Offer>();
     protected void calculateTotalPrice()  {
         tempSaleTotalPrice = 0;
         String a = tvTotalPrice.getText().toString();
@@ -2069,6 +2069,9 @@ public class SalesCartActivity extends AppCompatActivity {
 
         saleTotalPrice = 0;
         for (OrderDetails o : SESSION._ORDER_DETAILES) {
+            if(o.giftProduct) continue;
+            if(!o.scannable) continue;
+
             try {
                 calculateOfferForOrderDetails(o);
             } catch (JSONException e) {
@@ -2077,6 +2080,24 @@ public class SalesCartActivity extends AppCompatActivity {
             if (o.getOffer() != null) {
                 Log.d("hasOffer", o.getOffer() + "");
             }
+
+            for (Offer offer : o.offerList) {
+                if(!offers.containsKey(offer.getOfferId())){
+                    offers.put(offer.getOfferId(), offer);
+                }
+            }
+        }
+        try {
+            if (OfferController.executeCategoryOffers(SESSION._ORDER_DETAILES, new ArrayList<Offer>(offers.values()))) {
+                //refreshCart();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for (OrderDetails o : SESSION._ORDER_DETAILES) {
             saleTotalPrice += o.getItemTotalPrice();
             SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
         }
@@ -2114,9 +2135,23 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     private void removeFromCart(int index) {
+        OrderDetails orderDetails = SESSION._ORDER_DETAILES.get(index);
+
+        if(!orderDetails.scannable||orderDetails.giftProduct)
+            restCategoryOffers();
         SESSION._ORDER_DETAILES.remove(index);
         saleDetailsListViewAdapter.setSelected(-1);
+        //restCategoryOffers();
         refreshCart();
+    }
+
+    void restCategoryOffers(){
+        for (OrderDetails od : SESSION._ORDER_DETAILES) {
+            od.setDiscount(0);
+
+            od.scannable = true;
+            od.giftProduct = false;
+        }
     }
 
     private void addToCart(Product p) throws JSONException {
@@ -2125,9 +2160,9 @@ public class SalesCartActivity extends AppCompatActivity {
         //test if cart have this order before insert to cart and order have'nt discount
         for (int i = 0; i < SESSION._ORDER_DETAILES.size(); i++) {
             OrderDetails o = SESSION._ORDER_DETAILES.get(i);
-            Log.d("ORDER_DETAILS", o.toString());
-            Log.d("Product", p.toString());
-            if (o.getProduct().equals(p) && o.getProduct().getProductId() != -1) {
+            //Log.d("ORDER_DETAILS", o.toString());
+            //Log.d("Product", p.toString());
+            if (o.getProduct().equals(p) && o.getProduct().getProductId() != -1&&!o.giftProduct&&o.scannable) {
                 SESSION._ORDER_DETAILES.get(i).setCount(SESSION._ORDER_DETAILES.get(i).getQuantity() + 1);
                 isMatch = true;
                 break;
@@ -2136,18 +2171,28 @@ public class SalesCartActivity extends AppCompatActivity {
         if (!isMatch) {
             SESSION._ORDER_DETAILES.add(new OrderDetails(1, 0, p, p.getPrice(), p.getPrice(), 0));
         }
-
+        //restCategoryOffers();
         removeOrderItemSelection();
         refreshCart();
     }
 
     private void increaseItemOnCart(int index) {
+        OrderDetails orderDetails = SESSION._ORDER_DETAILES.get(index);
         SESSION._ORDER_DETAILES.get(index).increaseCount();
+
+        if(!orderDetails.scannable||orderDetails.giftProduct)
+            restCategoryOffers();
+        restCategoryOffers();
         calculateTotalPrice();
     }
 
     private void decreaseItemOnCart(int index) {
+        OrderDetails orderDetails = SESSION._ORDER_DETAILES.get(index);
         SESSION._ORDER_DETAILES.get(index).decreaseCount();
+
+        if(!orderDetails.scannable||orderDetails.giftProduct)
+            restCategoryOffers();
+        restCategoryOffers();
         calculateTotalPrice();
     }
 
@@ -3800,18 +3845,21 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     public OrderDetails calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
+
         List<Offer> offerList = OfferController.getOffersForResource(orderDetails.getProductId(),orderDetails.getProduct().getSku(),orderDetails.getProduct().getCategoryId(), getApplicationContext());
+        orderDetails.offerList = offerList;
         if (offerList != null) {
             OrderDetails o=orderDetails;
             for (int i =0; i<offerList.size(); i++) {
                 if (OfferController.check(offerList.get(i), o)) {
-                    o= OfferController.execute(offerList.get(i), o);
+                    o= OfferController.execute(offerList.get(i), o,this);
                 }
             }
             return o;
         }
         return orderDetails;
     }
+
     private void removeCustomer() {
         Customer customer = null;
         SESSION._ORDERS.setCustomer(customer);
