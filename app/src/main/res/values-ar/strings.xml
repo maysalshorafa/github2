@@ -559,5 +559,7 @@
     <string name="please_insert_customer_credit">الرجاء ادخال قيمة الائتمان .</string>
     <string name="action">action</string>
     <string name="equal">equal</string>
+    <string name="invoice">الفواتير</string>
+
 </resources>
 

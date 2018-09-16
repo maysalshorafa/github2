@@ -642,6 +642,8 @@
     <string name="remainingCredit">Remain Credit</string>
     <string name="product_unit">Product Unit</string>
     <string name="please_insert_customer_credit">Please insert customer credit.</string>
+    <string name="invoice">Invoice</string>
+
 
 </resources>
 

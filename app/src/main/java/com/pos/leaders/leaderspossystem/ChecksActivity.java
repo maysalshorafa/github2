@@ -25,10 +25,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.Invoice;
+import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.ChecksListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,6 +60,9 @@ public class ChecksActivity extends AppCompatActivity {
 	LinearLayout LlCustomer;
 	enum Direction {LEFT, RIGHT;}
 	double requiredAmount=0;
+    Bundle extras;
+	JSONObject invoiceJson=new JSONObject();
+	Invoice invoice ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,12 +93,26 @@ public class ChecksActivity extends AppCompatActivity {
 
 		LlCustomer = (LinearLayout) findViewById(R.id.checkActivity_llCustomer);
 
-		Bundle extras = getIntent().getExtras();
+		 extras = getIntent().getExtras();
         if (extras != null) {
             totalPrice = (double) extras.get("_Price");
 			customer_name =(String)extras.get("_custmer");
             tv.setText(totalPrice + " " + getResources().getText(R.string.ins));
 			tvCheckCustomer.setText(customer_name);
+			if(extras.containsKey("checksReceipt")){
+				try {
+					invoiceJson=new JSONObject(extras.getString("invoice"));
+					JSONObject docJson = invoiceJson.getJSONObject("documentsData");
+					docJson.remove("@type");
+					docJson.put("type","Invoice");
+					invoiceJson.remove("documentsData");
+					invoiceJson.put("documentsData",docJson);
+					invoice=new Invoice(DocumentType.INVOICE,docJson,invoiceJson.getString("docNum"));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				//sendReceipt();
+			}
         } else {
             finish();
         }
@@ -185,6 +207,9 @@ public class ChecksActivity extends AppCompatActivity {
                         i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
                         setResult(RESULT_OK, i);
                         finish();
+						if(extras.containsKey("checksReceipt")){
+							Util.sendDoc(getApplicationContext(),invoice, CONSTANT.CHECKS);
+						}
                     }
                     else{
                         Toast.makeText(ChecksActivity.this, getString(R.string.not_inserted_checks), Toast.LENGTH_SHORT).show();

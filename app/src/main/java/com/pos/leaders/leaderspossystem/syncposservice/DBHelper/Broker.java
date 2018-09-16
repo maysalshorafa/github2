@@ -88,7 +88,7 @@ public class Broker {
     public synchronized List<BrokerMessage> getAllNotSyncedCommand() {
         List<BrokerMessage> bMessages = new ArrayList<BrokerMessage>();
 
-        Cursor cursor = db.rawQuery("select * from " + BROKER_TABLE_NAME + " where "+BROKER_COLUMN_IS_SYNCED+"=0 order by " + BROKER_COLUMN_ID + " desc ", null);
+        Cursor cursor = db.rawQuery("select * from " + BROKER_TABLE_NAME + " where "+BROKER_COLUMN_IS_SYNCED+"=0 order by " + BROKER_COLUMN_ID + " asc ", null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {

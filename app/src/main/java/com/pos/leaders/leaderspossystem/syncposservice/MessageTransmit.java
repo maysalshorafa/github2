@@ -105,6 +105,22 @@ public class MessageTransmit {
 
         return response.body().string();
     }
+    public String authPutInvoice(String url, String json,String token, String id) throws IOException {
+        RequestBody body = RequestBody.create(JSON, json);
+        JSONObject jsonObject;
+        Request request;
+
+        try {
+            jsonObject = new JSONObject(json);
+            request = new Request.Builder().url(domainURL + url+"/"+id).put(body).addHeader(AUTHORIZATION, token).build();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Error";
+        }
+        Response response = client.newCall(request).execute();
+
+        return response.body().string();
+    }
 
 }
 

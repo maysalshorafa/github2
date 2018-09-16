@@ -1371,7 +1371,7 @@ public class SalesCartActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(SESSION._ORDERS.getCustomer()!=null){
                     ObjectMapper mapper = new ObjectMapper();
-                final ArrayList<Long> ordersIds = new ArrayList<>();
+                final ArrayList<String> ordersIds = new ArrayList<>();
                 if (SESSION._ORDER_DETAILES.size() > 0) {
                     if (Long.valueOf(SESSION._ORDERS.getCustomerId()) == 0) {
                         if (SESSION._ORDERS.getCustomer_name() == null) {
@@ -1399,7 +1399,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice()+customer.getBalance());
                         customerDBAdapter.updateEntry(upDateCustomer);
                     }
-                    ordersIds.add(saleIDforCash);
+                    ordersIds.add(String.valueOf(saleIDforCash));
                     saleDBAdapter.close();
                     new AsyncTask<Void, Void, Void>(){
                         @Override
@@ -1422,12 +1422,14 @@ public class SalesCartActivity extends AppCompatActivity {
                                 String ordRes=transmit.authPost(ApiURL.ORDER, mapper.writeValueAsString(SESSION._ORDERS), SESSION.token);
                                 Log.i("Order log", ordRes);
                                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
+                                  String orderDetailsRes = transmit.authPost(ApiURL.ORDER_DETAILS, mapper.writeValueAsString(o), SESSION.token);
                                     try {
+
                                         Thread.sleep(100);
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
-                                    Log.i("Order Details", transmit.authPost(ApiURL.ORDER_DETAILS, mapper.writeValueAsString(o), SESSION.token));
+                                    Log.i("Order Details", orderDetailsRes);
                                     //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                                 }
                                 customerData.put("customerId", SESSION._ORDERS.getCustomer().getCustomerId());
@@ -1440,7 +1442,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                 docJson.put("@type",type);
                                 docJson.put("customer",customerData);
                                 Log.d("Document vale", docJson.toString());
-                                com.pos.leaders.leaderspossystem.Models.Invoice invoice = new Invoice(DocumentType.INVOICE,docJson);
+                                Invoice invoice = new Invoice(DocumentType.INVOICE,docJson,"");
                                 Log.d("Invoice log",invoice.toString());
                                 String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
                                 JSONObject jsonObject = new JSONObject(res);
@@ -3030,6 +3032,8 @@ public class SalesCartActivity extends AppCompatActivity {
         //region Cash Activity WithOut Currency Region
         if (requestCode == REQUEST_CASH_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
+                CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
+                cashPaymentDBAdapter.open();
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
@@ -3117,6 +3121,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
                 SESSION._ORDERS.setPayment(payment);
                 SESSION._ORDERS.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+                cashPaymentDBAdapter.insertEntry(saleIDforCash, saleTotalPrice, 0, new Timestamp(System.currentTimeMillis()));
+
                 paymentDBAdapter.close();
                 printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
                 saleDBAdapter.close();

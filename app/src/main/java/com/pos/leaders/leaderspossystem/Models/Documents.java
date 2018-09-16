@@ -13,7 +13,7 @@ public class Documents {
     private Timestamp date;
     private Timestamp fulfillmentDate;
     private Timestamp dueDate;
-    private ArrayList<Long>listOfOrders;
+    private ArrayList<String>listOfOrders;
     private JSONObject customer;
     private double total;
     private double totalPaid;
@@ -57,11 +57,11 @@ public class Documents {
         this.dueDate = dueDate;
     }
 
-    public ArrayList<Long> getListOfOrders() {
+    public ArrayList<String> getListOfOrders() {
         return listOfOrders;
     }
 
-    public void setListOfOrders(ArrayList<Long> listOfOrders) {
+    public void setListOfOrders(ArrayList<String> listOfOrders) {
         this.listOfOrders = listOfOrders;
     }
 
@@ -129,7 +129,7 @@ public class Documents {
         this.customer = customer;
     }
 
-    public Documents(String type, Timestamp date, Timestamp fulfillmentDate, Timestamp dueDate, ArrayList<Long> listOfOrders, double total, double totalPaid, double balanceDue, InvoiceStatus invoiceStatus, String publicNote, String privateNote, String currency) {
+    public Documents(String type, Timestamp date, Timestamp fulfillmentDate, Timestamp dueDate, ArrayList<String> listOfOrders, double total, double totalPaid, double balanceDue, InvoiceStatus invoiceStatus, String publicNote, String privateNote, String currency) {
         this.type = type;
         this.date = date;
         this.fulfillmentDate = fulfillmentDate;
