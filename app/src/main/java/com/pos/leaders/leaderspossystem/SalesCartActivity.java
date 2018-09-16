@@ -1866,7 +1866,9 @@ public class SalesCartActivity extends AppCompatActivity {
             }
         }
         try {
-            OfferController.executeCategoryOffers(SESSION._ORDER_DETAILES, new ArrayList<Offer>(offers.values()));
+            if (OfferController.executeCategoryOffers(SESSION._ORDER_DETAILES, new ArrayList<Offer>(offers.values()))) {
+                //refreshCart();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -1917,7 +1919,7 @@ public class SalesCartActivity extends AppCompatActivity {
             restCategoryOffers();
         SESSION._ORDER_DETAILES.remove(index);
         saleDetailsListViewAdapter.setSelected(-1);
-        restCategoryOffers();
+        //restCategoryOffers();
         refreshCart();
     }
 
@@ -1947,7 +1949,7 @@ public class SalesCartActivity extends AppCompatActivity {
         if (!isMatch) {
             SESSION._ORDER_DETAILES.add(new OrderDetails(1, 0, p, p.getPrice(), p.getPrice(), 0));
         }
-        restCategoryOffers();
+        //restCategoryOffers();
         removeOrderItemSelection();
         refreshCart();
     }

@@ -31,8 +31,9 @@ public class OfferController {
     public static List<Offer> activeOffers = new ArrayList<>();
 
 
-    public static void executeCategoryOffers(List<OrderDetails> ods,List<Offer> offers) throws JSONException, IOException {
+    public static boolean executeCategoryOffers(List<OrderDetails> ods,List<Offer> offers) throws JSONException, IOException {
 
+        boolean changes = false;
         for(Offer offer:offers) {
             if (!offer.isActionSameResource()) {
                 JSONObject rules = offer.getRules();
@@ -146,6 +147,7 @@ public class OfferController {
 
                                 if (resourceType.equalsIgnoreCase(ResourceType.CATEGORY.getValue())) {
                                     if (giftProductsIds.contains(orderDetails.getProduct().getCategoryId())) {
+                                        changes = true;
                                         if (giftQuantity - orderDetails.getQuantity() > 0) {
                                             giftQuantity -= orderDetails.getQuantity();
                                             orderDetails.setDiscount(100);
@@ -174,11 +176,15 @@ public class OfferController {
                             } else break;
                         }
                     } else {
+                        for (OrderDetails od : offer.conditionList) {
+                            od.scannable = true;
+                        }
                         //not reach the rule condition
                     }
                 }
             }
         }
+        return changes;
     }
 
     /*
@@ -187,11 +193,13 @@ public class OfferController {
     private static List<OrderDetails> splitOrderDetails(OrderDetails orderDetails,int sliceSize) {
         if (orderDetails.getQuantity() > sliceSize) {
 
-            OrderDetails orderDetails1 = orderDetails;
+            OrderDetails orderDetails1 = new OrderDetails(orderDetails);
             orderDetails1.setCount(sliceSize);
 
-            OrderDetails orderDetails2 = orderDetails;
+            OrderDetails orderDetails2 =new OrderDetails(orderDetails);
             orderDetails2.setDiscount(0);
+            orderDetails2.giftProduct = false;
+            orderDetails2.scannable = true;
             orderDetails2.setCount(orderDetails.getQuantity() - sliceSize);
 
             List<OrderDetails> odList = new ArrayList<>();

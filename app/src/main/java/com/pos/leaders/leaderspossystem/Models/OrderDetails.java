@@ -149,6 +149,7 @@ public class OrderDetails {
 
 	public OrderDetails(OrderDetails o) {
         this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+		this.product = o.getProduct();
     }
 
 	public OrderDetails newInstance(OrderDetails o) {
