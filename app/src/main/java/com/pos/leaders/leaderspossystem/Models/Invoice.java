@@ -49,7 +49,7 @@ public class Invoice {
     public String toString() {
         return "{" +
                 "\""+"type\":" +"\""+type +"\""+
-                "," +"documentsData:" +documentsData  +
+                "," +"\""+"documentsData\":" +documentsData  +
                 "," +"\""+"docNum\":" +"\""+docNum +"\""  +
                 '}';
     }
