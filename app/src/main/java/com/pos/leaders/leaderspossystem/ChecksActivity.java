@@ -202,18 +202,23 @@ public class ChecksActivity extends AppCompatActivity {
                 }
                 if (getTotalPid() >= totalPrice) {
                     if (checkList != null && checkList.size() > 0) {
-                        SESSION._CHECKS_HOLDER = checkList;
-                        Intent i = new Intent();
-                        i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
-                        setResult(RESULT_OK, i);
-                        finish();
+
 						if(extras.containsKey("checksReceipt")){
-							Util.sendDoc(getApplicationContext(),invoice, CONSTANT.CHECKS);
+							SESSION._CHECKS_HOLDER = checkList;
+							Util.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS);
+
+						}else {
+							SESSION._CHECKS_HOLDER = checkList;
+							Intent i = new Intent();
+							i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
+							setResult(RESULT_OK, i);
+							finish();
 						}
                     }
                     else{
                         Toast.makeText(ChecksActivity.this, getString(R.string.not_inserted_checks), Toast.LENGTH_SHORT).show();
                     }
+
                 } else {
                     Toast.makeText(ChecksActivity.this, getString(R.string.check_pid_error), Toast.LENGTH_SHORT).show();
                 }

@@ -560,6 +560,7 @@
     <string name="action">action</string>
     <string name="equal">equal</string>
     <string name="invoice">الفواتير</string>
+    <string name="invoice_management_activity">دارة الفواتير</string>
 
 </resources>
 

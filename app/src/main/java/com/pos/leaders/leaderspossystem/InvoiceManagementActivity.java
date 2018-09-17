@@ -244,7 +244,7 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
     protected String doInBackground(String... args) {//args{key,uuid}
         String customerId=args[0];
         try {
-            String url = ApiURL.Documents+"/invoicesForCustomer/"+customerId;
+            String url = ApiURL.Documents+"/unpaidInvoicesForCustomer/"+customerId;
          //   Log.d("invoiceUrl",url);
            String invoiceRes = messageTransmit.authGet(url,SESSION.token);
         // Log.d("invoiceRes",invoiceRes);

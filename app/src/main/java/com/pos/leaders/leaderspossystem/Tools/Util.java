@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -50,9 +51,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
-import java.sql.Timestamp;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -390,14 +391,18 @@ public class Util {
             // run async
             new AsyncTask<Void, Void, String>() {
                 Bitmap page;
+                Context a =context;
+
                 // create and show a progress dialog
-                ProgressDialog progressDialog = ProgressDialog.show(context, "", "Opening...");
+
+                ProgressDialog progressDialog = ProgressDialog.show(a, "", "Opening...");
 
                 @Override
                 protected void onPostExecute(String html) {
                     print(context,bitmapList);
                     //after async close progress dialog
                     progressDialog.dismiss();
+                    ((Activity)context).finish();
                     //load the html in the webview
                     //	wv1.loadDataWithBaseURL("", html, "randompdf/html", "UTF-8", "");
                 }
@@ -447,7 +452,7 @@ public class Util {
             }.execute();
             System.gc();// run GC
         } catch (Exception e) {
-            Log.d("error", e.toString());
+e.printStackTrace();
         }
     }
     public static void print(Context context, ArrayList<Bitmap> bitmapList){
@@ -462,7 +467,6 @@ public class Util {
     public static void sendDoc(final Context context, final Invoice invoice,String paymentWays){
         final String SAMPLE_FILE = "receipt.pdf";
         final Invoice newInvoice;
-
         try {
             JSONObject jsonObject = new JSONObject(invoice.toString());
             JSONObject docDataJson = jsonObject.getJSONObject("documentsData");
@@ -530,6 +534,7 @@ public class Util {
                 for (Check check : SESSION._CHECKS_HOLDER) {
                     checksDBAdapter.insertEntry(check.getCheckNum(), check.getBankNum(), check.getBranchNum(), check.getAccountNum(), check.getAmount(), check.getCreatedAt(), Long.parseLong(invoiceOrderIdsList.get(0)));
                 }
+                SESSION._CHECKS_HOLDER = null;
                 checkList = checksDBAdapter.getPaymentBySaleID(orderId);
                 JSONArray jsonArray = new JSONArray(checkList.toString());
                 newJsonObject.put("paymentDetails",jsonArray);
@@ -545,7 +550,7 @@ public class Util {
 
                     try
                     {
-                        File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName() );
+                        File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
                         File file = new File(path,SAMPLE_FILE);
                         RandomAccessFile f = new RandomAccessFile(file, "r");
                         byte[] data = new byte[(int)f.length()];
@@ -555,6 +560,7 @@ public class Util {
                     }
                     catch(Exception ignored)
                     {
+
                     }
                     //     print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
 
