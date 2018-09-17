@@ -2442,21 +2442,14 @@ public class SalesCartActivity extends AppCompatActivity {
             if (SESSION._ORDERS.getCustomer_name() == null) {
 
                 if (customerName_EditText.getText().toString().equals("")) {
-                    SESSION._ORDERS.setCustomer_name("guest");
                     Customer customer = customerDBAdapter.getCustomerByName("guest");
-                    customer.setFirstName(customerName_EditText.getText().toString());
-                    customerDBAdapter.updateEntry(customer);
                     SESSION._ORDERS.setCustomer(customer);
                     setCustomer(SESSION._ORDERS.getCustomer());
                 } else {
                     Customer customer = customerDBAdapter.getCustomerByName("guest");
                     customer.setFirstName(customerName_EditText.getText().toString());
-                    customerDBAdapter.updateEntry(customer);
                     SESSION._ORDERS.setCustomer(customer);
                     setCustomer(SESSION._ORDERS.getCustomer());
-                    Customer customer1 = customerDBAdapter.getCustomerByName(customer.getFirstName());
-                    customer1.setFirstName("guest");
-                    customerDBAdapter.updateEntry(customer1);
                 }
             }
         }
