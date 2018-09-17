@@ -2709,10 +2709,16 @@ public class SalesCartActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (Long.valueOf(SESSION._ORDERS.getCustomerId()) == 0) {
             if (SESSION._ORDERS.getCustomer_name() == null) {
+
                 if (customerName_EditText.getText().toString().equals("")) {
-                    SESSION._ORDERS.setCustomer_name("");
+                    Customer customer = customerDBAdapter.getCustomerByName("guest");
+                    SESSION._ORDERS.setCustomer(customer);
+                    setCustomer(SESSION._ORDERS.getCustomer());
                 } else {
-                    SESSION._ORDERS.setCustomer_name(customerName_EditText.getText().toString());
+                    Customer customer = customerDBAdapter.getCustomerByName("guest");
+                    customer.setFirstName(customerName_EditText.getText().toString());
+                    SESSION._ORDERS.setCustomer(customer);
+                    setCustomer(SESSION._ORDERS.getCustomer());
                 }
             }
         }
