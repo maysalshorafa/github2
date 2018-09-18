@@ -193,8 +193,28 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         btnInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ReportsManagementActivity.this, InvoiceManagementActivity.class);
-                startActivity(intent);
+                final String[] items = {
+                        getString(R.string.invoice),
+                        getString(R.string.receipt)
+                };
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ReportsManagementActivity.this);
+                builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        switch (item) {
+                            case 0:
+                                Intent intent = new Intent(ReportsManagementActivity.this, SalesCartActivity.class);
+                                startActivity(intent);
+                                break;
+                            case 1:
+                                Intent intent1 = new Intent(ReportsManagementActivity.this, InvoiceManagementActivity.class);
+                                startActivity(intent1);
+                                break;
+                        }
+                    }
+                });
+                android.app.AlertDialog alert = builder.create();
+                alert.show();
             }
         });
     }

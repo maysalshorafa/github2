@@ -98,6 +98,10 @@
     <string name="credit">ائتمان</string>
     <string name="save">حفظ</string>
     <string name="_continue">استمر</string>
+    <string name="document">المستندات</string>
+    <string name="receipt">وصل</string>
+
+
     <!--DashBord String-->
     <string name="main_screen">شاشة المبيعات</string>
     <string name="back_up">النسخ الاحتياطي</string>

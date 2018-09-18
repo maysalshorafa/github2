@@ -107,7 +107,7 @@
             android:layout_margin="16dp"
 
             android:padding="16dp"
-            android:text="@string/invoice"
+            android:text="@string/document"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="normal|bold" />

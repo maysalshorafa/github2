@@ -591,6 +591,8 @@ e.printStackTrace();
                         Log.d("receiptResult",res);
                         Invoice invoice1 = newInvoice;
                         JSONObject updataInvoice =invoice1.getDocumentsData();
+                        updataInvoice.remove("totalPaid");
+                        updataInvoice.put("totalPaid",Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))));
                         updataInvoice.remove("invoiceStatus");
                         updataInvoice.put("invoiceStatus", InvoiceStatus.PAID);
                         invoice1.setDocumentsData(updataInvoice);
