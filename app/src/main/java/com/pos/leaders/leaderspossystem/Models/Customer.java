@@ -23,14 +23,11 @@ public class Customer {
     String country;
     String countryCode;
     Double balance;
-    @JsonIgnore
-    Double credit;
-
 
     public Customer() {
     }
 
-    public Customer(long customerId, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode,double balance,double credit) {
+    public Customer(long customerId, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode,double balance) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -47,14 +44,13 @@ public class Customer {
         this.country = country;
         this.countryCode = countryCode;
         this.balance=balance;
-        this.credit=credit;
     }
 
     public Customer(Customer customer){
         this(customer.getCustomerId(),customer.getFirstName(),customer.getLastName(),customer.getGender(),
                 customer.getEmail(),customer.getJob(),customer.getPhoneNumber(),customer.getStreet(),
                 customer.getHide(),customer.getCity(),customer.getClub(),customer.getHouseNumber()
-                ,customer.getPostalCode(),customer.getCountry(),customer.getCountryCode(),customer.getBalance(),customer.getCredit());
+                ,customer.getPostalCode(),customer.getCountry(),customer.getCountryCode(),customer.getBalance());
     }
     @JsonIgnore
     public String getFullName() {
@@ -63,14 +59,6 @@ public class Customer {
         if (lastName == null)
             lastName = "";
         return firstName + " " + lastName;
-    }
-    @JsonIgnore
-    public Double getCredit() {
-        return credit;
-    }
-    @JsonIgnore
-    public void setCredit(Double credit) {
-        this.credit = credit;
     }
 
     public String getLastName() {
@@ -231,7 +219,6 @@ public class Customer {
                 ","+"\""+"country"+ "\""+":" + "\""+  country +"\"" +
                 ","+"\""+"countryCode"+ "\""+":" + "\""+  countryCode +"\"" +
                 ","+"\""+"balance"+ "\""+":" + "\""+ balance +"\"" +
-                ","+"\""+"credit"+ "\""+":" + "\""+  credit +"\"" +
                 '}';
     }
 
