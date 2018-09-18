@@ -155,15 +155,16 @@ public class AddEmployeeActivity extends AppCompatActivity {
         btAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String _userName = etUserName.getText().toString();
-                Intent intent;
                 userDBAdapter.open();
+                String _userName = etUserName.getText().toString();
+                String pass = etPassword.getText().toString();
+                boolean availablePass =  userDBAdapter.availablePassWord(pass);
+                boolean availableUserName =userDBAdapter.availableEmployeeName(_userName);
+                Intent intent;
                 if (user == null) {
-                    if (!_userName.equals("")) {
-                        if (userDBAdapter.availableEmployeeName(_userName)) {
-                            if (etPassword.getText().toString().equals("")) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_set_password), Toast.LENGTH_LONG).show();
-                            } else if (!(etPassword.getText().toString().equals(etREPassword.getText().toString()))) {
+                    if (!_userName.equals("")&& !(etPassword.getText().toString().equals(""))) {
+                        if (availablePass&& availableUserName) {
+                             if (!(etPassword.getText().toString().equals(etREPassword.getText().toString()))) {
                                 Toast.makeText(getApplicationContext(), getString(R.string.password_does_not_match), Toast.LENGTH_LONG).show();
                             } else if (etFirstName.getText().toString().equals("")) {
                                 Toast.makeText(getApplicationContext(), getString(R.string.please_insert_first_name), Toast.LENGTH_LONG).show();
@@ -199,10 +200,31 @@ public class AddEmployeeActivity extends AppCompatActivity {
                                 }
                             }
                         } else {
-                            Toast.makeText(getApplicationContext(), getString(R.string.user_name_is_not_available_try_to_use_another_user_name), Toast.LENGTH_LONG).show();
+                            if(!availableUserName){
+                                etUserName.setText("");
+                                etUserName.setBackgroundResource(R.drawable.backtext);
+                                Toast.makeText(getApplicationContext(), getString(R.string.user_name_is_not_available_try_to_use_another_user_name), Toast.LENGTH_LONG).show();
+
+                            }
+                          if(!availablePass) {
+                              etPassword.setText("");
+                              etREPassword.setText("");
+                            Toast.makeText(getApplicationContext(), getString(R.string.user_password_is_not_available_try_to_use_another_user_password), Toast.LENGTH_LONG).show();
+                              etPassword.setBackgroundResource(R.drawable.backtext);
+                              etREPassword.setBackgroundResource(R.drawable.backtext);
+
+                          }
                         }
                     } else {
+                        if (etPassword.getText().toString().equals("")) {
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_set_password), Toast.LENGTH_LONG).show();
+                            etPassword.setBackgroundResource(R.drawable.backtext);
+
+                        }else if(_userName.equals("")){
                         Toast.makeText(getApplicationContext(), getString(R.string.user_name_is_empty), Toast.LENGTH_LONG).show();
+                            etUserName.setBackgroundResource(R.drawable.backtext);
+
+                        }
                     }
                 } else {
                     // Edit mode

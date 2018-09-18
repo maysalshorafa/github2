@@ -176,6 +176,8 @@
     <string name="insert_product_barcode">يرجى اضافة اسم رقم المنتوج.</string>
     <string name="insert_product_price">يرجى اضافة سعر المنتوج.</string>
     <string name="insert_product_weight">رجى اضافة وزن المنتوج.</string>
+    <string name="user_password_is_not_available_try_to_use_another_user_password">كلمة السر غير متوفرة يرجى اضافة كلمة جديدة.</string>
+
     <!-- OldCustomer Message -->
     <string name="please_insert_first_name">الرجاء ادخال الاسم الاول.</string>
     <string name="please_insert_last_name">الرجاء ادخال الاسم الاخير.</string>

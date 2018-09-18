@@ -431,6 +431,8 @@
     <string name="fail_to_add_product">Fail to add product.</string>
     <string name="product_name_not_available">Product Name Not Available.</string>
     <string name="product_barcode_not_available">Product Barcode Not Available.</string>
+    <string name="user_password_is_not_available_try_to_use_another_user_password">User Password is not available, try to use another user Password.</string>
+
 
 
     <!-- OldCustomer Message -->
