@@ -169,6 +169,9 @@ public class ProductsActivity  extends AppCompatActivity  {
         lvDepartment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
+                for (Category category:listDepartment){
+                    category.setChecked(false);
+                }
                 Category department = listDepartment.get(position);
                 department.setChecked(!department.isChecked());
                 listDepartment.set(position, department);
