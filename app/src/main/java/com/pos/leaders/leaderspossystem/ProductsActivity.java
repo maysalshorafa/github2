@@ -104,13 +104,13 @@ public class ProductsActivity  extends AppCompatActivity  {
         productDBAdapter = new ProductDBAdapter(this);
         productDBAdapter.open();
         final List<ProductUnit>productUnit = new ArrayList<ProductUnit>();
-        productUnit.add(ProductUnit.WEIGHT);
         productUnit.add(ProductUnit.LENGTH);
         productUnit.add(ProductUnit.QUANTITY);
+        productUnit.add(ProductUnit.WEIGHT);
         final List<String>productUnitString = new ArrayList<String>();
-        productUnitString.add(ProductUnit.WEIGHT.getValue());
         productUnitString.add(ProductUnit.LENGTH.getValue());
         productUnitString.add(ProductUnit.QUANTITY.getValue());
+        productUnitString.add(ProductUnit.WEIGHT.getValue());
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, productUnitString);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -289,9 +289,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         int stockQuantity = 0;
         String tempBarcode = etBarcode.getText().toString();
         String newBarCode="";
-        if(llWeight.getVisibility()==View.VISIBLE&&etProductWeight.getText()!=null){
-            weight=Double.parseDouble(etProductWeight.getText().toString());
-        }
+
         if (tempBarcode.contains("\r\n")) {
             newBarCode =tempBarcode.replace("\r\n", "");
         } else if (tempBarcode.contains("\r")) {
@@ -353,7 +351,9 @@ public class ProductsActivity  extends AppCompatActivity  {
                 if(!etCostPrice.getText().toString().equals("")){
                     costPrice=Double.parseDouble(etCostPrice.getText().toString());
                 }
-
+                if(llWeight.getVisibility()==View.VISIBLE&&etProductWeight.getText()!=null){
+                    weight=Double.parseDouble(etProductWeight.getText().toString());
+                }
 
                 check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
                         etDescription.getText().toString(), price, costPrice, withTax, depID, SESSION._EMPLOYEE.getEmployeeId(), with_pos, with_point_system,
@@ -403,6 +403,9 @@ public class ProductsActivity  extends AppCompatActivity  {
            
                 if (d.isChecked()) {
                 depID = d.getCategoryId();               }
+            }
+            if(llWeight.getVisibility()==View.VISIBLE&&etProductWeight.getText()!=null){
+                weight=Double.parseDouble(etProductWeight.getText().toString());
             }
             //// TODO: 27/10/2016 edit product
             editableProduct.setName(etName.getText().toString());
