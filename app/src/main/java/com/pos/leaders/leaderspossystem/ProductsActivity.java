@@ -302,8 +302,9 @@ public class ProductsActivity  extends AppCompatActivity  {
         }else {
             newBarCode=tempBarcode;
         }
+        if(!etBarcode.getText().toString().equals("")) {
             etBarcode.setText(newBarCode);
-
+        }
         ///to save on sqlite
         if (etName.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), getString(R.string.insert_product_name), Toast.LENGTH_LONG).show();
