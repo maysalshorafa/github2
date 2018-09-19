@@ -156,6 +156,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     tvTotalPriceWithMultiCurrency.setText("");
 
                 }
+                mcf.currencySpinner.setSelection(position);
                 updateLastRow();
             }
 
