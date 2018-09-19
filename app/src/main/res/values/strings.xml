@@ -130,8 +130,7 @@
     <string name="price_before_discount">Price before discount</string>
     <string name="document">Document</string>
     <string name="receipt">Receipt</string>
-
-
+    <string name="CustomerLedger">CustomerLedger</string>
     <string name="total_discount">Total Discount</string>
 
     <string name="clearCartAlertTitle">Clear Cart</string>

@@ -808,7 +808,7 @@ public class InvoiceImg {
 
         return make(blocks);
     }
-    public Bitmap Invoice( List<OrderDetails> orders, Order sale, boolean isCopy, Employee user , String invoiceNum) {
+    public Bitmap Invoice( List<OrderDetails> orders, Order sale, boolean isCopy, Employee user , String invoiceNum,double customerGeneralLedger) {
         int count =0;
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(sale));
@@ -818,10 +818,12 @@ public class InvoiceImg {
         if(isCopy)
             status=context.getString(R.string.copy_invoice);
         Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        Block inum = new Block("\u200E"+ context.getString(R.string.invoice_with_tax)+": " +invoiceNum + "\n"
-                + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block inum = new Block("\u200E"+ context.getString(R.string.invoice_with_tax)+": " +invoiceNum
+                , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(bStatus);
+        Block customerGeneralLedgerView = new Block("\u200E" + "CustomerLedger"+ ":"+Util.makePrice(customerGeneralLedger)+""+ "\n"+ line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(inum);
+        blocks.add(customerGeneralLedgerView);
         Block name = new Block("\u200E" + context.getString(R.string.product) + newLineL, 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
         Block counter = new Block("\u200E" + context.getString(R.string.qty) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
         Block unitPrice = new Block("\u200E" + context.getString(R.string.price) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.2));
@@ -884,7 +886,6 @@ public class InvoiceImg {
         blocks.add(lineR.Left());
         Block cashier = new Block("\u200e" + context.getString(R.string.cashier)+ " " , 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
         Block cashierName = new Block("\u200E" +  user.getFullName(), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
-
         cashier.Left();
         cashierName.Left();
         blocks.add(cashierName);

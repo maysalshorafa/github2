@@ -575,7 +575,7 @@ public class PdfUA {
         dateTable.setWidthPercentage(108f);
 
         insertCell(dateTable, context.getString(R.string.customer_name)+":"+customerInfo.getString("firstName")+customerInfo.getString("lastName"), Element.ALIGN_LEFT, 2, dateFont);
-        insertCell(dateTable, context.getString(R.string.total_paid)+":"+customerJson.getDouble("total"), Element.ALIGN_LEFT, 2, dateFont);
+        insertCell(dateTable, context.getString(R.string.total_paid)+":"+customerJson.getDouble("paidAmount"), Element.ALIGN_LEFT, 2, dateFont);
 
         //end
         insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
@@ -583,22 +583,23 @@ public class PdfUA {
         PdfPTable orderDetailsTable = new PdfPTable(3);
         orderDetailsTable.setRunDirection(0);
         orderDetailsTable.setWidthPercentage(108f);
+        Log.d("customerJson",customerJson.toString());
         JSONArray itemJson = customerJson.getJSONArray("payments");
 
-        insertCell(orderDetailsTable, context.getString(R.string.payment), Element.ALIGN_LEFT, 4, dateFont);
+        insertCell(orderDetailsTable, context.getString(R.string.payment)+":", Element.ALIGN_LEFT, 4, dateFont);
         for (int a = 0 ; a<itemJson.length();a++){
             JSONArray jsonArray =itemJson.getJSONArray(a);
             for (int i=0;i<jsonArray.length();i++){
-                JSONObject jsonObject1=itemJson.getJSONObject(i);
+                JSONObject jsonObject1=jsonArray.getJSONObject(i);
                 String paymentWay = jsonObject1.getString("paymentWay");
                 if(paymentWay.equals(CONSTANT.CASH)){
-                    insertCell(orderDetailsTable, context.getString(R.string.payment), Element.ALIGN_LEFT, 1, dateFont);
+                    insertCell(orderDetailsTable, "PaymentWay", Element.ALIGN_LEFT, 1, dateFont);
                     insertCell(orderDetailsTable, jsonObject1.getString("paymentWay"), Element.ALIGN_LEFT, 2, dateFont);
                     insertCell(orderDetailsTable, context.getString(R.string.amount), Element.ALIGN_LEFT, 1, dateFont);
                     insertCell(orderDetailsTable, jsonObject1.getString("amount"), Element.ALIGN_LEFT, 2, dateFont);
                 }
                 if(paymentWay.equals(CONSTANT.CHECKS)){
-                    insertCell(orderDetailsTable, context.getString(R.string.payment), Element.ALIGN_LEFT, 1, dateFont);
+                    insertCell(orderDetailsTable, "PaymentWay", Element.ALIGN_LEFT, 1, dateFont);
                     insertCell(orderDetailsTable, jsonObject1.getString("paymentWay"), Element.ALIGN_LEFT, 2, dateFont);
                     insertCell(orderDetailsTable, context.getString(R.string.amount), Element.ALIGN_LEFT, 1, dateFont);
                     insertCell(orderDetailsTable, jsonObject1.getString("amount"), Element.ALIGN_LEFT, 2, dateFont);
@@ -610,6 +611,7 @@ public class PdfUA {
 
             }
         }
+        insertCell(orderDetailsTable, "customerGeneralLedger"+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 3, dateFont);
 
         insertCell(orderDetailsTable, "Receipt Numbers"+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 3, dateFont);
 

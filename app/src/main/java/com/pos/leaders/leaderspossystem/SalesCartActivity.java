@@ -290,6 +290,8 @@ public class SalesCartActivity extends AppCompatActivity {
     private LinearLayout llCartDiscount;
     private TextView tvCartDiscountValue,tvTotalPriceBeforeCartDiscount;
     String invoiceNum;
+    double  customerGeneralLedger=0.0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1419,7 +1421,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                             }
                                             @Override
                                             protected void onPostExecute(Void aVoid) {
-                                                print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
+                                                print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum,customerGeneralLedger));
 
                                                 clearCart();
 
@@ -1459,9 +1461,13 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     JSONObject jsonObject = new JSONObject(res);
                                                     String msgData = jsonObject.getString(MessageKey.responseBody);
                                                     JSONObject msgDataJson = new JSONObject(msgData);
+                                                    JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
                                                     invoiceNum = msgDataJson.getString("docNum");
-                                                    Log.d("Invoice log res", res);
+                                                    Log.d("Invoice log res", res+"");
+                                                    customerGeneralLedger=jsonObject1.getDouble("customerGeneralLedger");
+                                                    Log.d("Invoice log res", customerGeneralLedger+"");
                                                     Log.d("Invoice Num", invoiceNum);
+
                                                     try {
                                                         Thread.sleep(100);
                                                     } catch (InterruptedException e) {

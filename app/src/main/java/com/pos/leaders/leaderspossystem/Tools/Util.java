@@ -607,7 +607,7 @@ e.printStackTrace();
                         PdfUA pdfUA = new PdfUA();
 
                         try {
-                            pdfUA.printReceiptReport(context,response);
+                            pdfUA.printReceiptReport(context,msgData);
                         } catch (DocumentException e) {
                             e.printStackTrace();
                         }

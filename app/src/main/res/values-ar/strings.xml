@@ -100,6 +100,7 @@
     <string name="_continue">استمر</string>
     <string name="document">المستندات</string>
     <string name="receipt">وصل</string>
+    <string name="CustomerLedger">حساب الزبون</string>
 
 
     <!--DashBord String-->
