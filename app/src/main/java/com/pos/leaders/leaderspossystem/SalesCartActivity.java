@@ -3399,7 +3399,7 @@ public class SalesCartActivity extends AppCompatActivity {
                             if (o == order) {
                                 if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
                                     o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
-                                    custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPaidAmount(), 0, "ORDER_DETAILS", SESSION._ORDERS.getCreatedAt());
+                                    custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getItemTotalPrice(), 0, "ORDER_DETAILS", SESSION._ORDERS.getCreatedAt());
                                 }
                             }
                         }

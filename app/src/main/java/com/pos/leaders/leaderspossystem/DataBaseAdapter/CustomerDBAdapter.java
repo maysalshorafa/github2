@@ -121,6 +121,7 @@ public class CustomerDBAdapter {
         boCustomer.setPostalCode(Util.getString(boCustomer.getPostalCode()));
         boCustomer.setCountry(Util.getString(boCustomer.getCountry()));
         boCustomer.setCountryCode(Util.getString(boCustomer.getCountryCode()));
+        sendToBroker(MessageType.ADD_CUSTOMER,boCustomer,context);
 
         try {
             long insertResult = insertEntry(customer_m);
