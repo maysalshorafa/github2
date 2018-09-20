@@ -408,7 +408,7 @@ public class Product {
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
+        int result=(name!=null)?name.hashCode():0;
         result = 31 * result + barCode.hashCode();
         return result;
     }

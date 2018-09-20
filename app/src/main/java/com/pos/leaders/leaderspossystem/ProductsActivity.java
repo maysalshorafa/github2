@@ -302,91 +302,119 @@ public class ProductsActivity  extends AppCompatActivity  {
         }else {
             newBarCode=tempBarcode;
         }
-        if(!etBarcode.getText().toString().equals("")) {
-            etBarcode.setText(newBarCode);
-        }
-        ///to save on sqlite
-        if (etName.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), getString(R.string.insert_product_name), Toast.LENGTH_LONG).show();
-            etName.setBackgroundResource(R.drawable.backtext);
-        } else if (etDisplayName.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), getString(R.string.insert_product_dispaly_name), Toast.LENGTH_LONG).show();
-            etDisplayName.setBackgroundResource(R.drawable.backtext);
-        } else if (etBarcode.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), getString(R.string.insert_product_barcode), Toast.LENGTH_LONG).show();
-            etBarcode.setBackgroundResource(R.drawable.backtext);
-        } else if (etSku.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), getString(R.string.insert_product_sku), Toast.LENGTH_LONG).show();
-            etSku.setBackgroundResource(R.drawable.backtext);
-        } else if (etPrice.getText().toString().equals("") ) {
-            Toast.makeText(getApplicationContext(), getString(R.string.insert_product_price), Toast.LENGTH_LONG).show();
-            etPrice.setBackgroundResource(R.drawable.backtext);
-        }
-        else if(llWeight.getVisibility()==View.VISIBLE&&etProductWeight.getText().toString().equals("")){
-            Toast.makeText(getApplicationContext(), getString(R.string.insert_product_weight), Toast.LENGTH_LONG).show();
-            etProductWeight.setBackgroundResource(R.drawable.backtext);
-        }
-        for (Category d : listDepartment) {
-            if (d.isChecked()) {
-                depID = d.getCategoryId();
-            }
-        }
 
         if (editableProduct == null) {
-            boolean availableBarCode= productDBAdapter.isValidSku(etSku.getText().toString());
-            boolean availableProductName= productDBAdapter.availableProductName(etName.getText().toString());
+            if(!etBarcode.getText().toString().equals("")) {
+                etBarcode.setText(newBarCode);
+            }
+            ///to save on sqlite
+            if (etName.getText().toString().equals("")) {
+                Toast.makeText(getApplicationContext(), getString(R.string.insert_product_name), Toast.LENGTH_LONG).show();
+                etName.setBackgroundResource(R.drawable.backtext);
+            } else if (etDisplayName.getText().toString().equals("")) {
+                Toast.makeText(getApplicationContext(), getString(R.string.insert_product_dispaly_name), Toast.LENGTH_LONG).show();
+                etDisplayName.setBackgroundResource(R.drawable.backtext);
+            } else if (etBarcode.getText().toString().equals("")) {
+                Toast.makeText(getApplicationContext(), getString(R.string.insert_product_barcode), Toast.LENGTH_LONG).show();
+                etBarcode.setBackgroundResource(R.drawable.backtext);
+            } else if (etSku.getText().toString().equals("")) {
+                Toast.makeText(getApplicationContext(), getString(R.string.insert_product_sku), Toast.LENGTH_LONG).show();
+                etSku.setBackgroundResource(R.drawable.backtext);
+            } else if (etPrice.getText().toString().equals("") ) {
+                Toast.makeText(getApplicationContext(), getString(R.string.insert_product_price), Toast.LENGTH_LONG).show();
+                etPrice.setBackgroundResource(R.drawable.backtext);
+            }
+            else if(llWeight.getVisibility()==View.VISIBLE&&etProductWeight.getText().toString().equals("")){
+                Toast.makeText(getApplicationContext(), getString(R.string.insert_product_weight), Toast.LENGTH_LONG).show();
+                etProductWeight.setBackgroundResource(R.drawable.backtext);
+            }
 
-            if(availableProductName&&availableBarCode&& !etPrice.getText().toString().equals("")){
-                if(!etPrice.getText().toString().equals("")){
-                    price=Double.parseDouble(etPrice.getText().toString());
+            else{
+                boolean availableBarCode= productDBAdapter.isValidSku(etSku.getText().toString());
+                boolean availableProductName= productDBAdapter.availableProductName(etName.getText().toString());
+                for (Category d : listDepartment) {
+                    if (d.isChecked()) {
+                        depID = d.getCategoryId();
+                    }
                 }
-                if (etSku.getText().toString().equals("")) {
-                    etSku.setText(etBarcode.getText().toString());
-                }
+                if(availableProductName&&availableBarCode&& !etPrice.getText().toString().equals("")){
+                    if(depID==0){
+                        Toast.makeText(ProductsActivity.this,R.string.please_insert_category_name,Toast.LENGTH_LONG).show();
 
-                if (etStockQuantity.getText().toString().equals("")) {
-                    stockQuantity = 0;
-                }else{
-                    stockQuantity = Integer.parseInt(etStockQuantity.getText().toString());
-                }
+                    }else {
+                        if(!etPrice.getText().toString().equals("")){
+                            price=Double.parseDouble(etPrice.getText().toString());
+                        }
+                        if (etSku.getText().toString().equals("")) {
+                            etSku.setText(etBarcode.getText().toString());
+                        }
 
-                if(!etCostPrice.getText().toString().equals("")){
-                    costPrice=Double.parseDouble(etCostPrice.getText().toString());
-                }
-                if(!etProductWeight.getText().toString().equals("")){
-                    weight=Double.parseDouble(etProductWeight.getText().toString());
-                }
-                if(depID==0){
-                    Toast.makeText(ProductsActivity.this,R.string.please_insert_category_name,Toast.LENGTH_LONG).show();
+                        if (Integer.parseInt(etStockQuantity.getText().toString())>0) {
+                            stockQuantity = Integer.parseInt(etStockQuantity.getText().toString());
+                        }
+                        if(!etCostPrice.getText().toString().equals("")){
+                            costPrice=Double.parseDouble(etCostPrice.getText().toString());
+                        }
+                        if(!etProductWeight.getText().toString().equals("")){
+                            weight=Double.parseDouble(etProductWeight.getText().toString());
+                        }
+                        check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
+                                etDescription.getText().toString(), price, costPrice, withTax, depID, SESSION._EMPLOYEE.getEmployeeId(), with_pos, with_point_system,
+                                etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit,weight);
 
-                }else {
-                    check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
-                            etDescription.getText().toString(), price, costPrice, withTax, depID, SESSION._EMPLOYEE.getEmployeeId(), with_pos, with_point_system,
-                            etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit,weight);
-
-                if (check > 0) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_product), Toast.LENGTH_LONG).show();
-                    return true;
-                } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.fail_to_add_product), Toast.LENGTH_LONG).show();
-                }
-                }
+                        if (check > 0) {
+                            Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_product), Toast.LENGTH_LONG).show();
+                            return true;
+                        } else {
+                            Toast.makeText(getApplicationContext(), getString(R.string.fail_to_add_product), Toast.LENGTH_LONG).show();
+                        }
+                    }
                 }
                 else {
-                if(!availableProductName) {
-                    etName.setBackgroundResource(R.drawable.backtext);
-                    Toast.makeText(getApplicationContext(), getString(R.string.product_name_not_available), Toast.LENGTH_LONG).show();
-                    return false;
-                }
-                if(!availableBarCode) {
-                    etSku.setBackgroundResource(R.drawable.backtext);
-                    Toast.makeText(getApplicationContext(), getString(R.string.product_barcode_not_available), Toast.LENGTH_LONG).show();
-                    return false;
-                }
+                    if(!availableProductName) {
+                        etName.setBackgroundResource(R.drawable.backtext);
+                        Toast.makeText(getApplicationContext(), getString(R.string.product_name_not_available), Toast.LENGTH_LONG).show();
+                        return false;
+                    }
+                    if(!availableBarCode) {
+                        etSku.setBackgroundResource(R.drawable.backtext);
+                        Toast.makeText(getApplicationContext(), getString(R.string.product_barcode_not_available), Toast.LENGTH_LONG).show();
+                        return false;
+                    }
 
-                }
+                }}
+
 
         } else {
+            for (Category d : listDepartment) {
+                if (d.isChecked()) {
+                    depID = d.getCategoryId();
+                }
+            }
+            if(!etBarcode.getText().toString().equals("")) {
+                etBarcode.setText(newBarCode);
+            }
+            ///to save on sqlite
+            if (etName.getText().toString().equals("")) {
+                Toast.makeText(getApplicationContext(), getString(R.string.insert_product_name), Toast.LENGTH_LONG).show();
+                etName.setBackgroundResource(R.drawable.backtext);
+            } else if (etDisplayName.getText().toString().equals("")) {
+                Toast.makeText(getApplicationContext(), getString(R.string.insert_product_dispaly_name), Toast.LENGTH_LONG).show();
+                etDisplayName.setBackgroundResource(R.drawable.backtext);
+            } else if (etBarcode.getText().toString().equals("")) {
+                Toast.makeText(getApplicationContext(), getString(R.string.insert_product_barcode), Toast.LENGTH_LONG).show();
+                etBarcode.setBackgroundResource(R.drawable.backtext);
+            } else if (etSku.getText().toString().equals("")) {
+                Toast.makeText(getApplicationContext(), getString(R.string.insert_product_sku), Toast.LENGTH_LONG).show();
+                etSku.setBackgroundResource(R.drawable.backtext);
+            } else if (etPrice.getText().toString().equals("") ) {
+                Toast.makeText(getApplicationContext(), getString(R.string.insert_product_price), Toast.LENGTH_LONG).show();
+                etPrice.setBackgroundResource(R.drawable.backtext);
+            }
+            else if(llWeight.getVisibility()==View.VISIBLE&&etProductWeight.getText().toString().equals("")){
+                Toast.makeText(getApplicationContext(), getString(R.string.insert_product_weight), Toast.LENGTH_LONG).show();
+                etProductWeight.setBackgroundResource(R.drawable.backtext);
+            }else {
             if (etSku.getText().toString().equals("")) {
                 etSku.setText(etBarcode.getText().toString());
             }
@@ -410,35 +438,38 @@ public class ProductsActivity  extends AppCompatActivity  {
                 weight=Double.parseDouble(etProductWeight.getText().toString());
             }
             //// TODO: 27/10/2016 edit product
-            editableProduct.setName(etName.getText().toString());
-            editableProduct.setDisplayName(etDisplayName.getText().toString());
-            editableProduct.setBarCode(etBarcode.getText().toString());
-            editableProduct.setSku(etSku.getText().toString());
-            editableProduct.setDescription(etDescription.getText().toString());
-            editableProduct.setStockQuantity(stockQuantity);
-            editableProduct.setPrice(price);
-            editableProduct.setCostPrice(costPrice);
-            editableProduct.setWithTax(withTax);
+
             if(depID==0){
                 Toast.makeText(ProductsActivity.this,R.string.please_insert_category_name,Toast.LENGTH_LONG).show();
             }else {
                 editableProduct.setCategoryId(depID);
+                editableProduct.setName(etName.getText().toString());
+                editableProduct.setDisplayName(etDisplayName.getText().toString());
+                editableProduct.setBarCode(etBarcode.getText().toString());
+                editableProduct.setSku(etSku.getText().toString());
+                editableProduct.setDescription(etDescription.getText().toString());
+                editableProduct.setStockQuantity(stockQuantity);
+                editableProduct.setPrice(price);
+                editableProduct.setCostPrice(costPrice);
+                editableProduct.setWithTax(withTax);
+                editableProduct.setManageStock(manageStock);
+                editableProduct.setInStock(stockQuantity>0);
+                editableProduct.setUnit(unit);
+                if(llWeight.getVisibility()==View.VISIBLE) {
+                    editableProduct.setWeight(weight);
+                }
+                try {
+                    productDBAdapter.updateEntry(editableProduct);
+                    Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.success_to_update_product), Toast.LENGTH_SHORT);
+                    onBackPressed();
+                    return true;
+                } catch (Exception ex) {
+                    Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.error_to_update_product), Toast.LENGTH_SHORT);
+                }
             }
-            editableProduct.setManageStock(manageStock);
-            editableProduct.setInStock(stockQuantity>0);
-            editableProduct.setUnit(unit);
-            if(llWeight.getVisibility()==View.VISIBLE) {
-                editableProduct.setWeight(weight);
-            }
-            try {
-                productDBAdapter.updateEntry(editableProduct);
-                Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.success_to_update_product), Toast.LENGTH_SHORT);
-                onBackPressed();
-                return true;
-            } catch (Exception ex) {
-                Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.error_to_update_product), Toast.LENGTH_SHORT);
-            }
+
             //setNewProduct();
+        }
         }
         return false;
     }

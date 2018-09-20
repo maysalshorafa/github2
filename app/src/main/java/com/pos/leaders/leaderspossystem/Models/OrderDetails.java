@@ -59,7 +59,7 @@ public class OrderDetails {
         hash = hash * prime + (offerRule ? 7 : 3);
         hash = hash * prime + (offer == null ? 0 : offer.hashCode());
         hash = hash * prime + (product == null ? 0 : product.hashCode());
-        hash = hash * prime + (product == null ? 0 : product.getName().hashCode());
+        hash = hash * prime + (product == null ? 0 : (product.getName()==null?0:product.getName().hashCode()));
         hash = hash * prime + (int) rowDiscount;
         hash = hash * prime + (int) (new Date().getTime() % 10000);
         hash = hash * prime + hashCode();

@@ -419,7 +419,7 @@ public class ProductDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_REGULAR_PRICE))),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_STOCK_QUANTITY))),
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_MANAGE_STOCK))),
-                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_IN_STOCK))), ProductUnit.valueOf(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_UNIT))),Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHT)))
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_IN_STOCK))), ProductUnit.valueOf(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_UNIT)).toUpperCase()),Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHT)))
         );
         if(p.getDescription()==null){
             p.setDescription("");
