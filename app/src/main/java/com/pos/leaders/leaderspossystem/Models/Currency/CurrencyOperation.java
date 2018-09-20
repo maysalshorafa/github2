@@ -13,12 +13,12 @@ public class CurrencyOperation {
     private long operation_id;
     private String operation_type;
     private double amount;
-    private long currency_type;
+    private String currency_type;
 
     public CurrencyOperation() {
     }
 
-    public CurrencyOperation(long currencyOperationId, Timestamp createdAt, long operation_id, String operation_type, double amount, long currency_type) {
+    public CurrencyOperation(long currencyOperationId, Timestamp createdAt, long operation_id, String operation_type, double amount, String currency_type) {
         this.currencyOperationId = currencyOperationId;
         this.createdAt = createdAt;
         this.operation_id = operation_id;
@@ -68,11 +68,11 @@ public class CurrencyOperation {
         this.amount = amount;
     }
 
-    public long getCurrency_type() {
+    public String getCurrency_type() {
         return currency_type;
     }
 
-    public void setCurrency_type(long currency_type) {
+    public void setCurrency_type(String currency_type) {
         this.currency_type = currency_type;
     }
 }

@@ -9,6 +9,7 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
@@ -16,6 +17,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Order;
@@ -329,6 +331,7 @@ public class PrintTools {
         List<Payment> payments = paymentList(sales);
         List<CashPayment> cashPaymentList = cashPaymentList(sales);
         List<CurrencyReturns> currencyReturnList = returnPaymentList(sales);
+        List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(sales);
         if (SETTINGS.enableCurrencies) {
         AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
         aReportDetailsDBAdapter.open();
@@ -372,23 +375,23 @@ public class PrintTools {
 
         if (SETTINGS.enableCurrencies) {
 
-            for (CashPayment cp : cashPaymentList) {
-                switch ((int) cp.getCurrency_type()) {
+            for (CurrencyOperation cp : currencyOperationList) {
+                switch (cp.getCurrency_type()) {
 
-                    case CONSTANT.Shekel:
+                    case "ILS":
                         if (cp.getAmount() > 0)
                             sheqle_plus += cp.getAmount();
                         break;
-                    case CONSTANT.USD:
+                    case "USD":
                         if (cp.getAmount() > 0)
                             usd_plus += cp.getAmount();
                         break;
-                    case CONSTANT.EUR:
+                    case "EUR":
                         if (cp.getAmount() > 0)
                             eur_plus += cp.getAmount();
 
                         break;
-                    case CONSTANT.GBP:
+                    case "GBP":
                         if (cp.getAmount() > 0)
                             gbp_plus += cp.getAmount();
                         break;
@@ -472,6 +475,17 @@ public class PrintTools {
             pl.addAll(payments);
         }
         currencyDBAdapter.close();
+        return pl;
+    }
+    public static List<CurrencyOperation> currencyOperationPaymentList(List<Order> sales) {
+        List<CurrencyOperation> pl = new ArrayList<CurrencyOperation>();
+        CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(context);
+        currencyOperationDBAdapter.open();
+        for (Order s : sales) {
+            List<CurrencyOperation> payments = currencyOperationDBAdapter.getCurrencyOperationByOrderID(s.getOrderId());
+            pl.addAll(payments);
+        }
+        currencyOperationDBAdapter.close();
         return pl;
     }
 

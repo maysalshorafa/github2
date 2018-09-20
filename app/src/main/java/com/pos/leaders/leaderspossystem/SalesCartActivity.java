@@ -56,6 +56,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
@@ -87,6 +88,7 @@ import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Offers.OfferController;
 import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
+import com.pos.leaders.leaderspossystem.Payment.PaymentTable;
 import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
@@ -3324,6 +3326,9 @@ public class SalesCartActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 JSONArray jsonArray = null;
                 try {
+                    CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(this);
+                    currencyOperationDBAdapter.open();
+                    ArrayList<PaymentTable>paymentTableArrayList=new ArrayList<>();
                     CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
                     PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
                     saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
@@ -3341,14 +3346,20 @@ public class SalesCartActivity extends AppCompatActivity {
                     String MultiCurrencyResult = data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE);
                     jsonArray = new JSONArray(MultiCurrencyResult);
                     Log.d("MultiCurrencyResult", MultiCurrencyResult);
+                    ObjectMapper objectMapper = new ObjectMapper();
                     for (int i = 0; i < jsonArray.length() - 1; i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        PaymentTable paymentTable= objectMapper.readValue(jsonObject.toString(), PaymentTable.class);
+                        paymentTableArrayList.add(paymentTable);
                         TotalPaidAmount += jsonObject.getDouble("tendered") * getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
                         change = Math.abs(jsonObject.getDouble("change")) * getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
                     }
                     SESSION._ORDERS.setTotalPaidAmount(TotalPaidAmount);
                     saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
                     SESSION._ORDERS.setOrderId(saleIDforCash);
+                    for (int i = 0 ;i<paymentTableArrayList.size();i++){
+                        currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,paymentTableArrayList.get(i).getTendered(),paymentTableArrayList.get(i).getCurrency().getType());
+                    }
                     currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, new Order(SESSION._ORDERS));
                     for (int i = 0; i < jsonArray.length() - 1; i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
