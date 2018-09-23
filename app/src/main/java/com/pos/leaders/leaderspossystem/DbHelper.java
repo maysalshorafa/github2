@@ -266,6 +266,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
                     db.execSQL(GroupsResourceDbAdapter.DATABASE_CREATE);
                     db.execSQL(IdsCounterDBAdapter.addColumn(GroupsResourceDbAdapter.GROUPS_RESOURCES_TABLE_NAME));
+                    db.execSQL(CurrencyOperationDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[0]);
             }
         } catch (SQLException e) {
             Log.i("onUpgrade", e.getMessage(), e);
