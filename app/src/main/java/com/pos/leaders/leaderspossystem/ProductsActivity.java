@@ -105,12 +105,12 @@ public class ProductsActivity  extends AppCompatActivity  {
         productDBAdapter.open();
         final List<ProductUnit>productUnit = new ArrayList<ProductUnit>();
         productUnit.add(ProductUnit.QUANTITY);
-        productUnit.add(ProductUnit.LENGTH);
-        productUnit.add(ProductUnit.WEIGHT);
+      //  productUnit.add(ProductUnit.LENGTH);
+      //  productUnit.add(ProductUnit.WEIGHT);
         final List<String>productUnitString = new ArrayList<String>();
         productUnitString.add(ProductUnit.QUANTITY.getValue());
-        productUnitString.add(ProductUnit.LENGTH.getValue());
-        productUnitString.add(ProductUnit.WEIGHT.getValue());
+      //  productUnitString.add(ProductUnit.LENGTH.getValue());
+       // productUnitString.add(ProductUnit.WEIGHT.getValue());
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, productUnitString);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
