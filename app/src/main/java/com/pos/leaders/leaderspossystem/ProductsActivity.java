@@ -348,8 +348,9 @@ public class ProductsActivity  extends AppCompatActivity  {
                         if (etSku.getText().toString().equals("")) {
                             etSku.setText(etBarcode.getText().toString());
                         }
-
-                        if (Integer.parseInt(etStockQuantity.getText().toString())>0) {
+                        if (etStockQuantity.getText().toString().equals("")) {
+                            stockQuantity = 0;
+                        }else{
                             stockQuantity = Integer.parseInt(etStockQuantity.getText().toString());
                         }
                         if(!etCostPrice.getText().toString().equals("")){
