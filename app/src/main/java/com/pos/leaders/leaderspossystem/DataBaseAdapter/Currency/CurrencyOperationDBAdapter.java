@@ -26,7 +26,7 @@ public class CurrencyOperationDBAdapter {
     protected static final String CurrencyOperation_COLUMN_ID = "id";
     protected static final String CurrencyOperation_COLUMN_CREATEDATE = "createDate";
 
-    protected static final String CurrencyOperation_COLUMN_Operation_ID = "order_id";
+    protected static final String CurrencyOperation_COLUMN_Operation_ID = "operation_id";
     protected static final String CurrencyOperation_COLUMN_Operation_Type = "operation_type";
     protected static final String CurrencyOperationCOLUMN_AMOUNT = "amount";
     protected static final String CurrencyOperation_COLUMN_Currency_Type = "currency_type";
@@ -38,9 +38,9 @@ public class CurrencyOperationDBAdapter {
             + CurrencyOperation_COLUMN_Operation_ID +"` INTEGER, `" + CurrencyOperation_COLUMN_Operation_Type +"` TEXT, " +
             " `"+ CurrencyOperationCOLUMN_AMOUNT +"` REAL,  `"+ CurrencyOperation_COLUMN_Currency_Type +"` INTEGER )";
 
-    public static final String DATABASE_UPDATE_FROM_V1_TO_V2[] = {"alter table currency_operation rename to currency_operation_v1;", DATABASE_CREATE + "; ",
+    /**public static final String DATABASE_UPDATE_FROM_V1_TO_V2[] = {"alter table currency_operation rename to currency_operation_v1;", DATABASE_CREATE + "; ",
             "insert into currency_operation (id,createDate,order_id,operation_type,amount,currency_type) " +
-                    "select id,createDate,operation_id,operation_type,amount,currency_type from currency_operation_v1;"};
+                    "select id,createDate,operation_id,operation_type,amount,currency_type from currency_operation_v1;"};**/
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
