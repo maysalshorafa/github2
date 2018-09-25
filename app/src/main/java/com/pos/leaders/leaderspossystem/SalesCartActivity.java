@@ -2743,8 +2743,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     SESSION._ORDERS.setCustomer(customer);
                     setCustomer(SESSION._ORDERS.getCustomer());
                 } else {
-                    Customer customer = customerDBAdapter.getCustomerByName("guest");
-                    customer.setFirstName(customerName_EditText.getText().toString());
+                    Customer customer = customerDBAdapter.getCustomerByID(SESSION._ORDERS.getCustomerId());
                     SESSION._ORDERS.setCustomer(customer);
                     setCustomer(SESSION._ORDERS.getCustomer());
                 }
@@ -3853,6 +3852,7 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     private void setCustomer(Customer customer) {
+        if(customer==null) return;
         this.customer = customer;
         this.customerName = customer.getFullName();
         this.customerClubId = customer.getClub();
