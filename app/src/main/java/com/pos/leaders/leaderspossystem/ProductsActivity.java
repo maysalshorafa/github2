@@ -317,9 +317,6 @@ public class ProductsActivity  extends AppCompatActivity  {
             } else if (etBarcode.getText().toString().equals("")) {
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_barcode), Toast.LENGTH_LONG).show();
                 etBarcode.setBackgroundResource(R.drawable.backtext);
-            } else if (etSku.getText().toString().equals("")) {
-                Toast.makeText(getApplicationContext(), getString(R.string.insert_product_sku), Toast.LENGTH_LONG).show();
-                etSku.setBackgroundResource(R.drawable.backtext);
             } else if (etPrice.getText().toString().equals("") ) {
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_price), Toast.LENGTH_LONG).show();
                 etPrice.setBackgroundResource(R.drawable.backtext);
