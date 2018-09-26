@@ -1,10 +1,12 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
@@ -49,6 +51,18 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.Feedback.ClearSync;
+import com.pos.leaders.leaderspossystem.Feedback.ClearSyncTable;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
+import com.pos.leaders.leaderspossystem.syncposservice.Model.BrokerMessage;
+import com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,6 +72,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
+import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
 
 
 /**
@@ -247,6 +264,7 @@ public class DbHelper extends SQLiteOpenHelper {
         // returning number of inserted rows
         return result;
     }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         try {
@@ -266,10 +284,17 @@ public class DbHelper extends SQLiteOpenHelper {
 
                     db.execSQL(GroupsResourceDbAdapter.DATABASE_CREATE);
                     db.execSQL(IdsCounterDBAdapter.addColumn(GroupsResourceDbAdapter.GROUPS_RESOURCES_TABLE_NAME));
-                 //   db.execSQL(CurrencyOperationDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[0]);
+
+
+                    ClearSync clearSync = new ClearSync(context);
+                    clearSync.execute(context);
+
+                    //   db.execSQL(CurrencyOperationDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[0]);
             }
         } catch (SQLException e) {
             Log.i("onUpgrade", e.getMessage(), e);
         }
     }
+
+
 }

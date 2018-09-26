@@ -32,6 +32,8 @@ public class SETTINGS {
 	public static boolean pinpadEnable;
 	public static boolean timerState = false;
 	public static String BO_SERVER_URL = "http://ec2-18-220-97-11.us-east-2.compute.amazonaws.com:8080/webapi-0.0.2";
+	public static String BO_SERVER_URL_V1 = "http://api_v1.leadpos.net/webapi";
+	public static String FEEDBACK_SERVER = "http://report.leadpos.net/api";
 
 	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
 
