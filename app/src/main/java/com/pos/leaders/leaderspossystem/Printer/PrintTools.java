@@ -520,7 +520,7 @@ public class PrintTools {
 
         // get payment , cashPayment , returnList
         List<Payment> payments = paymentList(sales);
-        List<CashPayment> cashPaymentList = cashPaymentList(sales);
+        List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(sales);
         List<CurrencyReturns> currencyReturnList = returnPaymentList(sales);
         if (SETTINGS.enableCurrencies) {
             AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
@@ -562,26 +562,25 @@ public class PrintTools {
 
 
 //with Currency
-
         if (SETTINGS.enableCurrencies) {
 
-            for (CashPayment cp : cashPaymentList) {
-                switch ((int) cp.getCurrency_type()) {
+            for (CurrencyOperation cp : currencyOperationList) {
+                switch (cp.getCurrency_type()) {
 
-                    case CONSTANT.Shekel:
+                    case "ILS":
                         if (cp.getAmount() > 0)
                             sheqle_plus += cp.getAmount();
                         break;
-                    case CONSTANT.USD:
+                    case "USD":
                         if (cp.getAmount() > 0)
                             usd_plus += cp.getAmount();
                         break;
-                    case CONSTANT.EUR:
+                    case "EUR":
                         if (cp.getAmount() > 0)
                             eur_plus += cp.getAmount();
 
                         break;
-                    case CONSTANT.GBP:
+                    case "GBP":
                         if (cp.getAmount() > 0)
                             gbp_plus += cp.getAmount();
                         break;
