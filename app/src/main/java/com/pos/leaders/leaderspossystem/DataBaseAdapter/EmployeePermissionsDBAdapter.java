@@ -58,7 +58,7 @@ public class EmployeePermissionsDBAdapter {
 				long insertResult = insertEntry(userPermissions);
 				return insertResult;
 			} catch (SQLException ex) {
-				Log.e("UserPermissions insertEntry", "inserting Entry at " + USERPERMISSIONS_TABLE_NAME + ": " + ex.getMessage());
+				Log.e("UserPermissions insert", "inserting Entry at " + USERPERMISSIONS_TABLE_NAME + ": " + ex.getMessage());
 				return 0;
 			}
 		}
@@ -72,7 +72,7 @@ public class EmployeePermissionsDBAdapter {
 		try {
 			return db.insert(USERPERMISSIONS_TABLE_NAME, null, val);
 		} catch (SQLException ex) {
-			Log.e("employeePermission DB insert", "inserting Entry at " + USERPERMISSIONS_TABLE_NAME + ": " + ex.getMessage());
+			Log.e("employeePer insert", "inserting Entry at " + USERPERMISSIONS_TABLE_NAME + ": " + ex.getMessage());
 			return 0;
 		}
 	}

@@ -52,9 +52,11 @@ import com.pos.leaders.leaderspossystem.Offers.CreateOfferActivity;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
+import com.pos.leaders.leaderspossystem.Reports.UserAttendanceReport;
 import com.pos.leaders.leaderspossystem.Settings.SettingsActivity;
 import com.pos.leaders.leaderspossystem.SettingsTab.SettingsTab;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
+import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -184,7 +186,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         report = (IButton) findViewById(R.id.report);
         product = (IButton) findViewById(R.id.product);
         category = (IButton) findViewById(R.id.department);
-        //offers = (Button) findViewById(R.id.offers);
+        offers = (IButton) findViewById(R.id.dashboard_btOffer);
         users = (IButton) findViewById(R.id.users);
         schedule_workers = (IButton) findViewById(R.id.schedule_workers);
         backUp = (IButton) findViewById(R.id.backUp);
@@ -399,6 +401,13 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         schedule_workers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                i = new Intent(getApplicationContext(), ScheduleWorkersActivity.class);
+                startActivity(i);
+            }
+        });
+        offers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 i = new Intent(getApplicationContext(), OfferManagementActivity.class);
                 startActivity(i);
             }
@@ -432,6 +441,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         report.setEnabled(false);
         product.setEnabled(false);
         schedule_workers.setEnabled(false);
+        offers.setEnabled(false);
         users.setEnabled(false);
         backUp.setEnabled(false);
         category.setEnabled(false);
@@ -476,6 +486,9 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 case Permissions.PERMISSIONS_SCHEDULE_WORKERS:
                     schedule_workers.setEnabled(true);
                     break;
+                case Permissions.PERMISSIONS_OFFERS:
+                    offers.setEnabled(true);
+                    break;
                 case Permissions.PERMISSIONS_BACK_UP:
                     backUp.setEnabled(true);
                     break;
@@ -509,8 +522,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
 
         if (SETTINGS.printer == null) {
-            finish();
-            return;
+            SETTINGS.printer = PrinterType.HPRT_TP805;
         }
         switch (SETTINGS.printer) {
             case HPRT_TP805:

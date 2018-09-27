@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:layout_weight="1"
-        android:weightSum="4"
+        android:weightSum="5"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"  >
@@ -51,6 +51,13 @@
             ibutton:button_icon="@drawable/product"
             ibutton:button_text="@string/products"/>
 
+        <com.pos.leaders.leaderspossystem.Elements.IButton
+            android:id="@+id/department"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            ibutton:button_icon="@drawable/department"
+            ibutton:button_text="@string/categorys" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -60,15 +67,9 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:layout_weight="1"
-        android:weightSum="4">
+        android:weightSum="5">
 
-        <com.pos.leaders.leaderspossystem.Elements.IButton
-            android:id="@+id/department"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            ibutton:button_icon="@drawable/department"
-            ibutton:button_text="@string/categorys" />
+
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/users"
@@ -96,8 +97,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            ibutton:button_icon="@drawable/offer"
-            ibutton:button_text="@string/offers" />
+            ibutton:button_icon="@drawable/dash_user"
+            ibutton:button_text="@string/schedule_workers" />
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/backUp"
@@ -106,17 +107,6 @@
             android:layout_weight="1"
             ibutton:button_icon="@drawable/back_up"
             ibutton:button_text="@string/back_up"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:weightSum="4">
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/coustmerClub"
@@ -131,8 +121,29 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-           ibutton:button_icon="@drawable/dash_report"
-           ibutton:button_text="@string/reports" />
+            ibutton:button_icon="@drawable/dash_report"
+            ibutton:button_text="@string/reports" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <com.pos.leaders.leaderspossystem.Elements.IButton
+            android:id="@+id/dashboard_btOffer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            ibutton:button_icon="@drawable/offer"
+            ibutton:button_text="@string/offers" />
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/settings"
