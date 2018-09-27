@@ -19,17 +19,24 @@ import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
+import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.Documents;
 import com.pos.leaders.leaderspossystem.Models.Invoice;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.ReceiptDocuments;
 import com.pos.leaders.leaderspossystem.PdfUA;
+import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -77,6 +84,11 @@ public class Util {
     private static final String LOG_TAG = "Tools_Util";
     public static String newline = System.getProperty("line.separator");
     public static Locale locale = new Locale("en");
+    static String invoiceNum;
+    static double  customerGeneralLedger=0.0;
+    static  InvoiceImg invoiceImg;
+    static boolean success=false;
+
 
     public synchronized static boolean isFirstLaunch(Context context, boolean CreateFile) {
         String sID = null;
@@ -658,5 +670,105 @@ e.printStackTrace();
         }catch(Exception e){
             return null;
         }
+    }
+
+
+    public static boolean sendInvoice(final Context context){
+        invoiceImg = new InvoiceImg(context);
+       OrderDBAdapter saleDBAdapter = new OrderDBAdapter(context);
+       OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(context);
+        CustomerDBAdapter customerDBAdapter = new CustomerDBAdapter(context);
+        ObjectMapper mapper = new ObjectMapper();
+        final ArrayList<String> ordersIds = new ArrayList<>();
+        saleDBAdapter.open();
+        orderDBAdapter.open();
+      long saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, SESSION._ORDERS.getCustomerId(), SESSION._ORDERS.getCustomer_name(),true);
+        SESSION._ORDERS.setOrderId(saleIDforCash);
+        for (OrderDetails o : SESSION._ORDER_DETAILES) {
+            o.setOrderId(saleIDforCash);
+            long orderid = orderDBAdapter.insertEntryFromInvoice(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+            o.setOrderDetailsId(orderid);
+        }
+        //update customer balance
+        if(SESSION._ORDERS.getTotalPrice()<0&&SESSION._ORDERS.getCustomer()!=null){
+            Customer upDateCustomer=SESSION._ORDERS.getCustomer();
+            upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice()+SESSION._ORDERS.getCustomer().getBalance());
+            customerDBAdapter.updateEntry(upDateCustomer);
+        }
+        ordersIds.add(String.valueOf(saleIDforCash));
+        saleDBAdapter.close();
+        new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum,customerGeneralLedger),context);
+                success= true;
+                // SalesCartActivity.clearCart();
+
+            }
+            @Override
+            protected Void doInBackground(Void... voids) {
+                MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                JSONObject customerData = new JSONObject();
+                try {
+                    ObjectMapper mapper = new ObjectMapper();
+                    String ordRes=transmit.authPost(ApiURL.ORDER, mapper.writeValueAsString(SESSION._ORDERS), SESSION.token);
+                    Log.i("Order log", ordRes);
+                    for (OrderDetails o : SESSION._ORDER_DETAILES) {
+                        String orderDetailsRes = transmit.authPost(ApiURL.ORDER_DETAILS, mapper.writeValueAsString(o), SESSION.token);
+                        try {
+
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        Log.i("Order Details", orderDetailsRes);
+                        //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+                    }
+                    customerData.put("customerId", SESSION._ORDERS.getCustomer().getCustomerId());
+                    Log.d("customer",customerData.toString());
+                    Documents documents = new Documents("Invoice",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),ordersIds,SESSION._ORDERS.getTotalPrice(),0,SESSION._ORDERS.getTotalPrice(), InvoiceStatus.UNPAID,"test","test","ILS");
+                    String doc = mapper.writeValueAsString(documents);
+                    JSONObject docJson= new JSONObject(doc);
+                    String type = docJson.getString("type");
+                    docJson.remove("type");
+                    docJson.put("@type",type);
+                    docJson.put("customer",customerData);
+                    Log.d("Document vale", docJson.toString());
+                    Invoice invoice = new Invoice(DocumentType.INVOICE,docJson,"");
+                    Log.d("Invoice log",invoice.toString());
+                    String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
+                    JSONObject jsonObject = new JSONObject(res);
+                    String msgData = jsonObject.getString(MessageKey.responseBody);
+                    JSONObject msgDataJson = new JSONObject(msgData);
+                    JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
+                    invoiceNum = msgDataJson.getString("docNum");
+                    Log.d("Invoice log res", res+"");
+                    customerGeneralLedger=jsonObject1.getDouble("customerGeneralLedger");
+                    Log.d("Invoice log res", customerGeneralLedger+"");
+                    Log.d("Invoice Num", invoiceNum);
+
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
+        return success;
+    }
+    private static void print(Bitmap bitmap, Context context) {
+        PrintTools printTools = new PrintTools(context);
+        printTools.PrintReport(bitmap);
     }
 }
