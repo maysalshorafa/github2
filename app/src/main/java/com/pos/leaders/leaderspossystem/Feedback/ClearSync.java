@@ -41,7 +41,7 @@ public class ClearSync extends AsyncTask<Context, Void, String> {
 
     @Override
     protected String doInBackground(Context... contexts) {
-        Context context = contexts[0];
+
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("companyName", SETTINGS.companyName);
@@ -50,6 +50,7 @@ public class ClearSync extends AsyncTask<Context, Void, String> {
 
 
             Broker broker = new Broker(context);
+            broker.open();
 
             List<BrokerMessage> brokerMessages = broker.getAllNotSyncedCommand();
 
@@ -105,9 +106,12 @@ public class ClearSync extends AsyncTask<Context, Void, String> {
                     }
                 }
             }
+            broker.close();
+
         } catch (JSONException e) {
 
         }
+
         return "";
     }
 
@@ -117,29 +121,27 @@ public class ClearSync extends AsyncTask<Context, Void, String> {
         progressDialog.setTitle("Processing before update.");
         progressDialog.show();
 
-
         if(SETTINGS.companyName==null) {
             SplashScreenActivity.readSettings(context);
         }
 
-        if(!SESSION.token.equals("")) {
+        AccessToken accessToken = new AccessToken(context);
+        accessToken.setMessageTransmit(new MessageTransmit(SETTINGS.BO_SERVER_URL_V1));
+        accessToken.execute(context);
 
-            AccessToken accessToken = new AccessToken(context);
-            accessToken.execute(context);
-
-            //load pos id from shared file
-            SharedPreferences sharedpreferences = context.getSharedPreferences(BO_CORE_ACCESS_AUTH, Context.MODE_PRIVATE);
-            if (sharedpreferences.contains(MessageKey.PosId)) {
-                int posID = sharedpreferences.getInt(MessageKey.syncNumber, 1);
-                SESSION.POS_ID_NUMBER = posID;
-            }
-            //load token from shared file
-            sharedpreferences = context.getSharedPreferences(BO_CORE_ACCESS_TOKEN, Context.MODE_PRIVATE);
-            if (sharedpreferences.contains(MessageKey.Token)) {
-                String token = sharedpreferences.getString(MessageKey.Token, null);
-                SESSION.token = token;
-            }
+        //load pos id from shared file
+        SharedPreferences sharedpreferences = context.getSharedPreferences(BO_CORE_ACCESS_AUTH, Context.MODE_PRIVATE);
+        if (sharedpreferences.contains(MessageKey.PosId)) {
+            int posID = sharedpreferences.getInt(MessageKey.syncNumber, 1);
+            SESSION.POS_ID_NUMBER = posID;
         }
+        //load token from shared file
+        sharedpreferences = context.getSharedPreferences(BO_CORE_ACCESS_TOKEN, Context.MODE_PRIVATE);
+        if (sharedpreferences.contains(MessageKey.Token)) {
+            String token = sharedpreferences.getString(MessageKey.Token, null);
+            SESSION.token = token;
+        }
+
     }
 
     @Override
