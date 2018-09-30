@@ -16,6 +16,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -48,11 +49,9 @@ import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
-import com.pos.leaders.leaderspossystem.Offers.CreateOfferActivity;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
-import com.pos.leaders.leaderspossystem.Reports.UserAttendanceReport;
 import com.pos.leaders.leaderspossystem.Settings.SettingsActivity;
 import com.pos.leaders.leaderspossystem.SettingsTab.SettingsTab;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
@@ -190,18 +189,19 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         users = (IButton) findViewById(R.id.users);
         schedule_workers = (IButton) findViewById(R.id.schedule_workers);
         backUp = (IButton) findViewById(R.id.backUp);
-        logOut = (IButton) findViewById(R.id.logOut);
+       // logOut = (IButton) findViewById(R.id.logOut);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         customerClub = (IButton) findViewById(R.id.coustmerClub);
         settings = (IButton) findViewById(R.id.settings);
 
         EnableButtons();
-        logOut.setOnClickListener(new View.OnClickListener() {
+      /**  logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 /*scheduleWorkersDBAdapter=new ScheduleWorkersDBAdapter(getApplicationContext());
                 scheduleWorkersDBAdapter.open();
                 ScheduleWorkers scheduleWorkers = scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(SESSION._EMPLOYEE.getCashPaymentId());
-                scheduleWorkersDBAdapter.updateEntry(SESSION._EMPLOYEE.getCashPaymentId(),new Date());*/
+                scheduleWorkersDBAdapter.updateEntry(SESSION._EMPLOYEE.getCashPaymentId(),new Date());
                 Intent intent = new Intent(DashBord.this, LogInActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 /**
@@ -210,11 +210,11 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     SESSION._SCHEDULEWORKERS.setExitTime(new Date().getTime());
                     Log.i("Worker get out", SESSION._SCHEDULEWORKERS.toString());
                 } catch (Exception ex) {
-                }**/
+                }
                 SESSION._LogOut();
                 startActivity(intent);
             }
-        });
+        });**/
 
 
         //region customerName report button
@@ -944,5 +944,18 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) // Press Back Icon
+        {
+            finish();
+            Intent intent = new Intent(DashBord.this, LogInActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            SESSION._LogOut();
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

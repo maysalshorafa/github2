@@ -398,7 +398,8 @@ public class Product {
             return false;
 
         Product product = (Product) o;
-
+        if(name==null||product.name==null)
+            return false;
         if (!name.equals(product.name))
             return false;
 

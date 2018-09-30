@@ -59,12 +59,13 @@ public class ClearSync extends AsyncTask<Context, Void, String> {
                 JSONObject json = new JSONObject(jsonObject.toString());
                 try {
                     if (ClearSyncTable.doSyncV1(bm, messageTransmitV1, SESSION.token)) {
+                        broker.Synced(bm.getId());
                     } else {
+                        broker.Synced(bm.getId());
                         //send bug
                         json.put("method", "SYNC_ERROR");
                         json.put("content", bm.toString());
                         messageTransmitFeedback.post("bugs", json.toString());
-                        broker.Synced(bm.getId());
                         bugsCounter++;
                     }
                 } catch (Exception e) {
