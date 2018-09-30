@@ -78,26 +78,26 @@
             ibutton:button_text="@string/users"
             ibutton:button_icon="@drawable/dash_user"/>
 
-      <!--  <Button
-            android:id="@+id/users"
-            style="@style/AppTheme.dashboard_bt"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/dash_user"
-            android:gravity="center_horizontal"
-            android:text="@string/users"
+        <!--  <Button
+              android:id="@+id/users"
+              style="@style/AppTheme.dashboard_bt"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="center"
+              android:layout_weight="1"
+              android:drawableTop="@drawable/dash_user"
+              android:gravity="center_horizontal"
+              android:text="@string/users"
 
-            android:visibility="gone"/>-->
+              android:visibility="gone"/>-->
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/schedule_workers"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            ibutton:button_icon="@drawable/offer"
-            ibutton:button_text="@string/offers" />
+            ibutton:button_icon="@drawable/dash_user"
+            ibutton:button_text="@string/schedule_workers" />
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/backUp"
@@ -131,8 +131,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-           ibutton:button_icon="@drawable/dash_report"
-           ibutton:button_text="@string/reports" />
+            ibutton:button_icon="@drawable/dash_report"
+            ibutton:button_text="@string/reports" />
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/settings"
@@ -143,12 +143,12 @@
             ibutton:button_text="@string/settings" />
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
-            android:id="@+id/logOut"
+            android:id="@+id/dashboard_btOffer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            ibutton:button_icon="@drawable/log_out"
-            ibutton:button_text="@string/log_out"/>
+            ibutton:button_icon="@drawable/offer"
+            ibutton:button_text="@string/offers"/>
 
 
 

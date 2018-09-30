@@ -14,6 +14,7 @@ public class Permissions {
 	public static final String PERMISSIONS_ROLE_DEPARTMENT_MANAGEMENT = "Category_Management";
 	public static final String PERMISSIONS_ROLE_USER = "Users";
 	public static final String PERMISSIONS_ROLE_OFFERS = "Offers";
+
 	public static final String PERMISSIONS_ROLE_PERMISSIONS = "Permissions";
 	public static final String PERMISSIONS_ROLE_CANCELING_SALE = "CancelingSale";
 	public static final String PERMISSIONS_ROLE_GENERAL_ITEM = "GeneralItem";
@@ -25,7 +26,8 @@ public class Permissions {
 	public static final String PERMISSIONS_PRODUCT = "product";
 	public static final String PERMISSIONS_CATEGORY = "category";
 	public static final String PERMISSIONS_USER = "employee";
-	public static final String PERMISSIONS_SCHEDULE_WORKERS = "Offers";
+	public static final String PERMISSIONS_SCHEDULE_WORKERS = "Schedule Workers";
+	public static final String PERMISSIONS_OFFERS = "offers";
 	public static final String PERMISSIONS_BACK_UP = "back up";
 	public static final String PERMISSIONS_SETTINGS = "settings";
 	public static final String PERMISSIONS_USER_CLUB = "user club";

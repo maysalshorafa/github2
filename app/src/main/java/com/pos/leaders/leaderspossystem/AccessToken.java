@@ -29,6 +29,9 @@ public class AccessToken extends AsyncTask<Context,Void,String> {
         this.progressDialog = new ProgressDialog(context);
     }
 
+    public void setMessageTransmit(MessageTransmit messageTransmit) {
+        this.messageTransmit = messageTransmit;
+    }
 
     @Override
     protected String doInBackground(Context... contexts) {
