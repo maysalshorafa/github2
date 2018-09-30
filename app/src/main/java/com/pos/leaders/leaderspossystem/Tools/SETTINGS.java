@@ -31,8 +31,8 @@ public class SETTINGS {
 	public static boolean creditCardEnable;
 	public static boolean pinpadEnable;
 	public static boolean timerState = false;
-	public static String BO_SERVER_URL = "http://192.168.1.20:8000";
-	public static String BO_SERVER_URL_V1 = "http://192.168.1.20:8070/webapi";
+	public static String BO_SERVER_URL = "http://192.168.1.26:8000";
+	public static String BO_SERVER_URL_V1 = "http://192.168.1.26:8070/webapi";
 	public static String FEEDBACK_SERVER = "http://report.leadpos.net/api";
 
 	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
