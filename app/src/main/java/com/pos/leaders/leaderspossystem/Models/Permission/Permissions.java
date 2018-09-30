@@ -27,7 +27,7 @@ public class Permissions {
 	public static final String PERMISSIONS_CATEGORY = "category";
 	public static final String PERMISSIONS_USER = "employee";
 	public static final String PERMISSIONS_SCHEDULE_WORKERS = "Schedule Workers";
-	public static final String PERMISSIONS_OFFERS = "Offers";
+	public static final String PERMISSIONS_OFFERS = "offers";
 	public static final String PERMISSIONS_BACK_UP = "back up";
 	public static final String PERMISSIONS_SETTINGS = "settings";
 	public static final String PERMISSIONS_USER_CLUB = "user club";
