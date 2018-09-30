@@ -1,5 +1,8 @@
 package com.pos.leaders.leaderspossystem.syncposservice.Model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.Date;
 
 /**
@@ -58,5 +61,21 @@ public class BrokerMessage {
 
     public int getByUser() {
         return byUser;
+    }
+
+    @Override
+    public String toString() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            return "BrokerMessage:{" +
+                    "id:" + id +
+                    ", command:'" + command + '\'' +
+                    ", isSynced:" + isSynced +
+                    ", createdDate:" + createdDate +
+                    ", byUser:" + byUser +
+                    '}';
+        }
     }
 }

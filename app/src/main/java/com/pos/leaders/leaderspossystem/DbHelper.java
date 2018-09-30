@@ -273,14 +273,17 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL("insert into " + PermissionsDBAdapter.PERMISSIONS_TABLE_NAME + "  values (11 , 'offers');");
                     db.execSQL("insert into " + EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME + " values(12,2,11);");
 
-                    ClearSync clearSync = new ClearSync(context);
-                    clearSync.execute(context);
+
                     db.execSQL(CurrencyOperationDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[0]);
                     db.execSQL(CurrencyOperationDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[1]);
                     db.execSQL(CurrencyOperationDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[2]);
                     db.execSQL("drop table currency_operation;");
                     db.execSQL(CurrencyOperationDBAdapter.DATABASE_CREATE);
                     //update user permissions
+
+
+                    ClearSync clearSync = new ClearSync(context);
+                    clearSync.execute(context);
 
             }
         } catch (SQLException e) {
