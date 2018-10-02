@@ -270,6 +270,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
                     db.execSQL(GroupsResourceDbAdapter.DATABASE_CREATE);
                     db.execSQL(IdsCounterDBAdapter.addColumn(GroupsResourceDbAdapter.GROUPS_RESOURCES_TABLE_NAME));
+                    db.execSQL(IdsCounterDBAdapter.addColumn(CategoryDBAdapter.CATEGORY_TABLE_NAME));
+                    db.execSQL("update " + IdsCounterDBAdapter.IDS_COUNTER_TABLE_NAME + " set " + CategoryDBAdapter.CATEGORY_TABLE_NAME + "=departments;");
                     db.execSQL("insert into " + PermissionsDBAdapter.PERMISSIONS_TABLE_NAME + "  values (11 , 'offers');");
                     db.execSQL("insert into " + EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME + " values(12,2,11);");
 
