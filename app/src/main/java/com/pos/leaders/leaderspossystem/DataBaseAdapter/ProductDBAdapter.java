@@ -446,7 +446,12 @@ public class ProductDBAdapter {
         return true;
     }
     public Product getByProductName(String productName) {
-        Cursor cursor = db.query(PRODUCTS_TABLE_NAME, null, PRODUCTS_COLUMN_NAME + "=?", new String[]{productName}, null, null, null);
+        Cursor cursor;
+        try {
+            cursor = db.query(PRODUCTS_TABLE_NAME, null, PRODUCTS_COLUMN_NAME + "=?", new String[]{productName}, null, null, null);
+        } catch (Exception e){
+            return null;
+        }
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             //Product Name not available
