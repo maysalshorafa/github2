@@ -26,7 +26,7 @@ public class CurrencyOperationDBAdapter {
     protected static final String CurrencyOperation_COLUMN_ID = "id";
     protected static final String CurrencyOperation_COLUMN_CREATEDATE = "createDate";
 
-    protected static final String CurrencyOperation_COLUMN_Operation_ID = "operation_id";
+    protected static final String CurrencyOperation_COLUMN_Operation_ID = "order_id";
     protected static final String CurrencyOperation_COLUMN_Operation_Type = "operation_type";
     protected static final String CurrencyOperationCOLUMN_AMOUNT = "amount";
     protected static final String CurrencyOperation_COLUMN_Currency_Type = "currency_type";
