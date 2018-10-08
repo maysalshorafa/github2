@@ -29,6 +29,7 @@ import com.pos.leaders.leaderspossystem.Models.Invoice;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.ChecksListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -205,7 +206,7 @@ public class ChecksActivity extends AppCompatActivity {
 
 						if(extras.containsKey("checksReceipt")){
 							SESSION._CHECKS_HOLDER = checkList;
-							Util.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS);
+							DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS);
 
 						}else {
 							SESSION._CHECKS_HOLDER = checkList;

@@ -100,6 +100,7 @@ import com.pos.leaders.leaderspossystem.Tools.CashActivity;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -1375,7 +1376,8 @@ public class SalesCartActivity extends AppCompatActivity {
             public void onClick(View view) {
                 final String[] items = {
                         getString(R.string.invoice),
-                        getString(R.string.receipt)
+                        getString(R.string.receipt),
+                        getString(R.string.order_document)
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(SalesCartActivity.this);
                 builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
@@ -1397,8 +1399,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                 }
                                             }
                                         }
-                                        if(Util.sendInvoice(SalesCartActivity.this))
-                                        clearCart();
+                                        DocumentControl.sendInvoice(SalesCartActivity.this);
                                     } else{
                                         Toast.makeText(SalesCartActivity.this, "There is no items into on cart.", Toast.LENGTH_SHORT).show();
                                     }}
@@ -1406,10 +1407,36 @@ public class SalesCartActivity extends AppCompatActivity {
                                     Toast.makeText(SalesCartActivity.this, "Choose Customer Please.", Toast.LENGTH_SHORT).show();
 
                                 }
+
+
                                 break;
                             case 1:
                                 intent = new Intent(SalesCartActivity.this, InvoiceManagementActivity.class);
                                 startActivity(intent);
+                                break;
+                            case 2:
+                                if(SESSION._ORDERS.getCustomer()!=null){
+                                    ObjectMapper mapper = new ObjectMapper();
+                                    final ArrayList<String> ordersIds = new ArrayList<>();
+                                    if (SESSION._ORDER_DETAILES.size() > 0) {
+                                        if (Long.valueOf(SESSION._ORDERS.getCustomerId()) == 0) {
+                                            if (SESSION._ORDERS.getCustomer_name() == null) {
+                                                if (customerName_EditText.getText().toString().equals("")) {
+                                                    SESSION._ORDERS.setCustomer_name("");
+                                                } else {
+                                                    SESSION._ORDERS.setCustomer_name(customerName_EditText.getText().toString());
+                                                }
+                                            }
+                                        }
+                                        DocumentControl.sendOrderDocument(SalesCartActivity.this);
+                                    } else{
+                                        Toast.makeText(SalesCartActivity.this, "There is no items into on cart.", Toast.LENGTH_SHORT).show();
+                                    }}
+                                else {
+                                    Toast.makeText(SalesCartActivity.this, "Choose Customer Please.", Toast.LENGTH_SHORT).show();
+
+                                }
+
                                 break;
                         }
                     }
