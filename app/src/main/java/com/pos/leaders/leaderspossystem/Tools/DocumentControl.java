@@ -189,11 +189,11 @@ public class DocumentControl {
                     String docOrderDetails = mapper.writeValueAsString(SESSION._ORDER_DETAILES);
                     JSONArray orderDetailsJson = new JSONArray(docOrderDetails);
                     Log.d("OrderDetailsJson",orderDetailsJson.toString());
-                    orderJson.put("OrderDetails",orderDetailsJson);
+                    orderJson.put("orderDetails",orderDetailsJson);
                     Log.d("orderJson",orderJson.toString());
                     OrderDocuments documents = new OrderDocuments("OrderDocument",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),SESSION._ORDERS.getTotalPrice(),"test","ILS");
                     String doc = mapper.writeValueAsString(documents);
-                    Log.d("docccc",doc.toString());
+                    Log.d("doc",doc.toString());
 
                     JSONObject docJson= new JSONObject(doc);
                     String type = docJson.getString("type");
