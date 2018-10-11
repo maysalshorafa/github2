@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -47,6 +48,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
@@ -84,8 +86,10 @@ import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+import com.pos.leaders.leaderspossystem.Models.OrderDocumentStatus;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Models.ReceiptDocuments;
 import com.pos.leaders.leaderspossystem.Offers.OfferController;
 import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
 import com.pos.leaders.leaderspossystem.Payment.PaymentTable;
@@ -117,7 +121,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1680,9 +1686,70 @@ public class SalesCartActivity extends AppCompatActivity {
         super.onResume();
 
         Bundle extras = getIntent().getExtras();
-        /** if (extras != null) {
-         str = extras.getString("permissions_name");
-         }*/
+     if (extras != null) {
+         if(!extras.getString("orderJson").equals("")){
+             try {
+                 MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                 clearCart();
+                 Log.d("orderJson",extras.getString("orderJson"));
+                 final JSONObject orderDocJsonObj =new JSONObject(extras.getString("orderJson"));
+                 final JSONObject jsonObject = new JSONObject(String.valueOf(orderDocJsonObj.getJSONObject("documentsData")));
+                 JSONArray items = jsonObject.getJSONArray("item");
+                 final JSONObject customerJson = jsonObject.getJSONObject("customer");
+                 Order order = new Order(SESSION._EMPLOYEE.getEmployeeId(),new Timestamp(Long.parseLong(jsonObject.getString("date"))),0,false,jsonObject.getDouble("total"),0);
+                 Customer customer = customerDBAdapter.getCustomerByID(customerJson.getLong("customerId"));
+                 order.setCustomer(customer);
+                 SESSION._ORDERS=order;
+                 for (int i=0;i<items.length();i++){
+                     JSONObject orderDetailsJson =items.getJSONObject(i);
+                     Product p =productDBAdapter.getProductByBarCode(orderDetailsJson.getString("sku"));
+                     OrderDetails orderDetails= new OrderDetails(orderDetailsJson.getInt("quantity"),orderDetailsJson.getDouble("userOffer"),p,orderDetailsJson.getDouble("amount"),orderDetailsJson.getDouble("unitPrice"),orderDetailsJson.getDouble("discount"));
+                        SESSION._ORDER_DETAILES.add(orderDetails);
+                 }
+                 saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
+                 lvOrder.setAdapter(saleDetailsListViewAdapter);
+                 if (SESSION._ORDERS.getCustomer() != null)
+                     setCustomer(SESSION._ORDERS.getCustomer());
+                 refreshCart();
+                 new AsyncTask<Void, Void, Void>(){
+                     @Override
+                     protected void onPreExecute() {
+                         super.onPreExecute();
+                     }
+                     @Override
+                     protected void onPostExecute(Void aVoid) {
+
+                         //     print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
+
+                         //clearCart();
+
+                     }
+                     @Override
+                     protected Void doInBackground(Void... voids) {
+                         MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                         try {
+                             jsonObject.remove("orderDocumentStatus");
+                             jsonObject.put("orderDocumentStatus", OrderDocumentStatus.CLOSED);
+                             orderDocJsonObj.remove("documentsData");
+                             orderDocJsonObj.put("documentsData",jsonObject);
+
+                             String upDataOrderDocumentStatus=transmit.authPutInvoice(ApiURL.Documents,orderDocJsonObj.toString(), SESSION.token,orderDocJsonObj.getString("docNum"));
+                             Log.d("invoiceRes",orderDocJsonObj.toString());
+                         } catch (IOException e) {
+                             e.printStackTrace();
+                         }catch (JSONException e) {
+                             e.printStackTrace();
+                         }
+                         return null;
+                     }
+                 }.execute();
+
+             } catch (JSONException e) {
+                 e.printStackTrace();
+             }
+         }
+         //str = extras.getString("orderJson");
+         }
 
     }
 

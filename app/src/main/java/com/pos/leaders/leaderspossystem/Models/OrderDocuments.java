@@ -18,7 +18,16 @@ public class OrderDocuments {
     private double total;
     private String comment;
     private String currency;
+    private OrderDocumentStatus orderDocumentStatus;
     public OrderDocuments() {
+    }
+
+    public OrderDocumentStatus getOrderDocumentStatus() {
+        return orderDocumentStatus;
+    }
+
+    public void setOrderDocumentStatus(OrderDocumentStatus orderDocumentStatus) {
+        this.orderDocumentStatus = orderDocumentStatus;
     }
 
     public String getType() {
@@ -95,7 +104,7 @@ public class OrderDocuments {
         Order = order;
     }
 
-    public OrderDocuments(String type, Timestamp date, Timestamp fulfillmentDate, Timestamp dueDate,  double total, String comment, String currency) {
+    public OrderDocuments(String type, Timestamp date, Timestamp fulfillmentDate, Timestamp dueDate,  double total, String comment, String currency,OrderDocumentStatus orderDocumentStatus) {
         this.type = type;
         this.date = date;
         this.fulfillmentDate = fulfillmentDate;
@@ -103,6 +112,7 @@ public class OrderDocuments {
         this.total = total;
         this.comment = comment;
         this.currency = currency;
+        this.orderDocumentStatus=orderDocumentStatus;
     }
 
     @Override
@@ -117,9 +127,7 @@ public class OrderDocuments {
                 ", total=" + total +
                 ", comment='" + comment + '\'' +
                 ", currency='" + currency + '\'' +
+                ", orderDocumentStatus=" + orderDocumentStatus +
                 '}';
     }
-
-
-
 }
