@@ -2,6 +2,8 @@ package com.pos.leaders.leaderspossystem.Tools;
 
 import android.graphics.Bitmap;
 
+import org.json.JSONObject;
+
 /**
  * Created by KARAM on 30/10/2016.
  */
@@ -57,6 +59,7 @@ public class SETTINGS {
 	//public static final String UPDATER_SERVER_URL = "http://192.168.1.109:8090";
 
 	public static Bitmap copyInvoiceBitMap ; // add here to avoid recycle bitmap exception when used reference between two different activity
+	public static JSONObject orderDocument;
 
 
 
