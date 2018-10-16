@@ -390,6 +390,7 @@
     <string name="country_code">Country Code</string>
     <string name="postal_code">Postal Code</string>
     <string name="house_number">House Number</string>
+    <string name="customer_type">Customer Type</string>
     <string name="job">Job</string>
     <string name="email">Email</string>
     <string name="phone">Phone</string>

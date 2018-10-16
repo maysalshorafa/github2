@@ -31,6 +31,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.City;
 import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.PdfUA;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.R;
@@ -59,12 +60,13 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     int cityId=0;
     EditText etCustomerFirstName, etCustomerLastName, etStreet, etJob, etEmail, etPhoneNo, etHouseNumber, etPostalCode, etCountry, etCountryCode;
     Button btAddCustomer, btCancel;
-    Spinner selectCitySpinner, selectClubSpinner;
+    Spinner selectCitySpinner, selectClubSpinner , customerTypeSpinner;
     CustomerDBAdapter customerDBAdapter;
     Customer customer;
     LinearLayout secondCustomerInformation ;
     private List<City> cityList = null;
     private List<Club> groupList = null;
+    private List<CustomerType> customerTypeList = null;
     ArrayList<Integer> permissions_name;
     RadioButton maleRadioButton, femaleRadioButton;
     RadioGroup radioGender;
@@ -77,6 +79,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
     LinearLayout CustomerBalance ;
     public static Context context = null;
     Bitmap page=null ;
+    CustomerType customerType=CustomerType.NORMAL;
     public static final String SAMPLE_FILE = "customerwallet.pdf";
     ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
     @Override
@@ -150,6 +153,11 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
 
                 }
             }
+            if(customer.getCustomerType().getValue().equals(CustomerType.CREDIT.getValue())){
+             customerTypeSpinner.setSelection(1);
+            }else {
+                customerTypeSpinner.setSelection(0);
+            }
         }
 
         btCancel.setOnClickListener(new View.OnClickListener() {
@@ -173,6 +181,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
             public void onClick(View v) {
                 String _customerName = etCustomerFirstName.getText().toString();
                 Intent intent;
+                String customerTypeText="";
                 if (customer == null) {
                     if (!_customerName.equals("")) {
                         if(secondCustomerInformation.getVisibility()== View.VISIBLE){
@@ -194,6 +203,12 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
 
 
                         }
+                        customerTypeText=customerTypeSpinner.getSelectedItem().toString();
+                        if(customerTypeText.equals(CustomerType.CREDIT.getValue())){
+                            customerType=CustomerType.CREDIT;
+                        }else {
+                            customerType=CustomerType.NORMAL;
+                        }
                         if (etCustomerFirstName.getText().toString().equals("")) {
                             etCustomerFirstName.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_first_name), Toast.LENGTH_LONG).show();
@@ -211,7 +226,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                             try {
                                 i = customerDBAdapter.insertEntry(etCustomerFirstName.getText().toString(),
                                         etCustomerLastName.getText().toString(), gender, email, job, etPhoneNo.getText().toString(), street, cityId, clubID, houseNo, etPostalCode.getText().toString(),
-                                        country, countryCode,0);
+                                        country, countryCode,0,customerType);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -240,6 +255,12 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                     cityId = (int) city.getCityId();
                                 }
                             }
+                            customerTypeText=customerTypeSpinner.getSelectedItem().toString();
+                            if(customerTypeText.equals(CustomerType.CREDIT.getValue())){
+                                customerType=CustomerType.CREDIT;
+                            }else {
+                                customerType=CustomerType.NORMAL;
+                            }
                         }
                         for (int i = 0; i < groupList.size(); i++) {
                             Club group = groupList.get(i);
@@ -257,31 +278,34 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                         } else if (etPhoneNo.getText().toString().equals("")) {
                             etCustomerLastName.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
-                        } }else {
+                        } else {
                             try {
                                 customer.setFirstName(etCustomerFirstName.getText().toString());
                                 customer.setLastName(etCustomerLastName.getText().toString());
+                                customer.setClub(clubID);
+                                customer.setPhoneNumber(etPhoneNo.getText().toString());
+                                if(secondCustomerInformation.getVisibility()==View.VISIBLE){
                                 customer.setJob(job);
                                 customer.setEmail(email);
-                                customer.setPhoneNumber(etPhoneNo.getText().toString());
                                 customer.setStreet(street);
                                 customer.setHouseNumber(houseNo);
                                 customer.setPostalCode(postalCode);
                                 customer.setCountry(country);
                                 customer.setCountryCode(countryCode);
                                 customer.setGender(gender);
-                                customer.setClub(clubID);
                                 customer.setCity(cityId);
+                                customer.setCustomerType(customerType);
+                                }
                                 customerDBAdapter.updateEntry(customer);
                                 Toast.makeText(getApplicationContext(), getString(R.string.success_edit_customer), Toast.LENGTH_SHORT).show();
 
                                 Log.i("success Edit", customer.toString());
-                                                        }
-                            catch (Exception ex) {
-                                Log.d("exset",ex.toString());
+                                finish();
+                            } catch (Exception ex) {
+                                Log.d("exset", ex.toString());
                                 Toast.makeText(getApplicationContext(), getString(R.string.can_not_edit_customer_please_try_again), Toast.LENGTH_SHORT).show();
                             }
-                        }
+                        }}
 
                     }
                 }
@@ -318,14 +342,16 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
         customerDBAdapter.open();
         selectCitySpinner = (Spinner) findViewById(R.id.customerCitySpinner);
         selectClubSpinner = (Spinner) findViewById(R.id.customerClubSpinner);
+        customerTypeSpinner = (Spinner)findViewById(R.id.customerType);
         CustomerBalance = (LinearLayout)findViewById(R.id.CustomerBalance);
         tvCustomerBalance = (TextView)findViewById(R.id.addNewCustomerBalanceValue);
         selectCitySpinner.setOnItemSelectedListener(this);
         selectClubSpinner.setOnItemSelectedListener(this);
+        customerTypeSpinner.setOnItemSelectedListener(this);
         final List<String> city = new ArrayList<String>();
-        cityList = cityDbAdapter.getAllCity();
-        for (int i = 0; i < cityList.size(); i++) {
-            city.add(cityList.get(i).getName());
+            cityList = cityDbAdapter.getAllCity();
+            for (int i = 0; i < cityList.size(); i++) {
+                city.add(cityList.get(i).getName());
         }
 
         // Creating adapter for spinner
@@ -352,6 +378,19 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
 
         // attaching data adapter to spinner
         selectClubSpinner.setAdapter(dataAdapter1);
+        final List<String> customerType = new ArrayList<String>();
+        customerType.add(CustomerType.NORMAL.getValue());
+        customerType.add(CustomerType.CREDIT.getValue());
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, customerType);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        customerTypeSpinner.setAdapter(dataAdapter2);
+
         radioGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
