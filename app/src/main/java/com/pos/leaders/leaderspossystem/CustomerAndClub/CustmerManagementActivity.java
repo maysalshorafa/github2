@@ -1,24 +1,37 @@
 package com.pos.leaders.leaderspossystem.CustomerAndClub;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.List;
 
 public class CustmerManagementActivity extends AppCompatActivity {
@@ -28,6 +41,7 @@ public class CustmerManagementActivity extends AppCompatActivity {
     Button btAddCustmer, btCancel;
     public static int Customer_Management_View=0 ;
     public  static int  Customer_Management_Edit=0;
+    String upDateCustomerMxaCredit="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +87,7 @@ public class CustmerManagementActivity extends AppCompatActivity {
                 final String[] items = {
                         getString(R.string.view),
                         getString(R.string.edit),
-                        getString(R.string.delete),
+                        getString(R.string.delete),getString(R.string.edit_max_customer_credit)
                 };
                 //List With CustomerMeasurement
                 final String[] itemsWithCustomerMeasurement = {
@@ -121,6 +135,58 @@ public class CustmerManagementActivity extends AppCompatActivity {
                                         })
                                         .setIcon(android.R.drawable.ic_dialog_alert)
                                         .show();
+                                break;
+                            case 3:
+                                final Dialog cashCreditDialog = new Dialog(CustmerManagementActivity.this);
+                                cashCreditDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                cashCreditDialog.show();
+                                cashCreditDialog.setContentView(R.layout.activity_customer_credit);
+                                final EditText etAmount = (EditText) cashCreditDialog.findViewById(R.id.maxCashCreditDialog);
+                                Button btnOk = (Button)cashCreditDialog.findViewById(R.id.maxCashCreditDialog_BTOk);
+                                btnOk.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if(etAmount.getText().toString()!=null){
+                                            new AsyncTask<Void, Void, Void>(){
+                                                @Override
+                                                protected void onPreExecute() {
+                                                    super.onPreExecute();
+                                                }
+                                                @Override
+                                                protected void onPostExecute(Void aVoid) {
+                                                    JSONObject res = null;
+                                                    try {
+                                                        res = new JSONObject(upDateCustomerMxaCredit);
+                                                        if(res.getString(MessageKey.status).equals("200")) {
+                                                            Toast.makeText(CustmerManagementActivity.this, "Success Update max customer credit", Toast.LENGTH_LONG).show();
+                                                        }else {
+                                                            Toast.makeText(CustmerManagementActivity.this, "Failed Update max customer credit", Toast.LENGTH_LONG).show();
+
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+
+                                                    cashCreditDialog.dismiss();
+                                                }
+                                                @Override
+                                                protected Void doInBackground(Void... voids) {
+                                                    MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                                                    try {
+                                                         upDateCustomerMxaCredit=transmit.authUpdateGeneralLedger(ApiURL.GeneralLedger, String.valueOf(customers.get(position).getCustomerId()), SESSION.token,Double.parseDouble(etAmount.getText().toString()));
+                                                        Log.i("log", upDateCustomerMxaCredit);
+
+
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    return null;
+                                                }
+                                            }.execute();
+                                        }
+
+                                    }
+                                });
                                 break;
 
                             }
