@@ -13,7 +13,6 @@ public class Documents {
     private Timestamp date;
     private Timestamp fulfillmentDate;
     private Timestamp dueDate;
-    private ArrayList<String>listOfOrders;
     private JSONObject customer;
     private double total;
     private double totalPaid;
@@ -22,9 +21,11 @@ public class Documents {
     private String publicNote;
     private String privateNote;
     private String currency;
+    private JSONObject user;
+    private ArrayList<JSONObject>cartDetailsList;
+    private double cartDiscount;
     public Documents() {
     }
-
     public String getType() {
         return type;
     }
@@ -56,15 +57,6 @@ public class Documents {
     public void setDueDate(Timestamp dueDate) {
         this.dueDate = dueDate;
     }
-
-    public ArrayList<String> getListOfOrders() {
-        return listOfOrders;
-    }
-
-    public void setListOfOrders(ArrayList<String> listOfOrders) {
-        this.listOfOrders = listOfOrders;
-    }
-
     public JSONObject getCustomer() {
         return customer;
     }
@@ -129,12 +121,27 @@ public class Documents {
         this.customer = customer;
     }
 
-    public Documents(String type, Timestamp date, Timestamp fulfillmentDate, Timestamp dueDate, ArrayList<String> listOfOrders, double total, double totalPaid, double balanceDue, InvoiceStatus invoiceStatus, String publicNote, String privateNote, String currency) {
+    public JSONObject getUser() {
+        return user;
+    }
+
+    public void setUser(JSONObject user) {
+        this.user = user;
+    }
+
+    public ArrayList<JSONObject> getCartDetailsList() {
+        return cartDetailsList;
+    }
+
+    public void setCartDetailsList(ArrayList<JSONObject> cartDetailsList) {
+        this.cartDetailsList = cartDetailsList;
+    }
+
+    public Documents(String type, Timestamp date, Timestamp fulfillmentDate, Timestamp dueDate, double total, double totalPaid, double balanceDue, InvoiceStatus invoiceStatus, String publicNote, String privateNote, String currency,double cartDiscount) {
         this.type = type;
         this.date = date;
         this.fulfillmentDate = fulfillmentDate;
         this.dueDate = dueDate;
-        this.listOfOrders = listOfOrders;
         this.total = total;
         this.totalPaid = totalPaid;
         this.balanceDue = balanceDue;
@@ -142,6 +149,7 @@ public class Documents {
         this.publicNote = publicNote;
         this.privateNote = privateNote;
         this.currency = currency;
+        this.cartDiscount=cartDiscount;
     }
 
     @Override
@@ -150,8 +158,7 @@ public class Documents {
                 "type='" + type + '\'' +
                 ", date=" + date +
                 ", fulfillmentDate=" + fulfillmentDate +
-                ", dueDate=" + dueDate +
-                ", listOfOrders=" + listOfOrders +
+                ", dueDate=" + dueDate  +
                 ", customer=" + customer +
                 ", total=" + total +
                 ", totalPaid=" + totalPaid +
@@ -160,6 +167,9 @@ public class Documents {
                 ", publicNote='" + publicNote + '\'' +
                 ", privateNote='" + privateNote + '\'' +
                 ", currency='" + currency + '\'' +
+                ", user=" + user +
+                ", cartDetailsList=" + cartDetailsList +
+                ", cartDiscount=" + cartDiscount +
                 '}';
     }
 }
