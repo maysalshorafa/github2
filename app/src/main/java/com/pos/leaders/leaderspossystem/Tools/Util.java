@@ -25,7 +25,7 @@ import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
-import com.pos.leaders.leaderspossystem.Models.Invoice;
+import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.ReceiptDocuments;
@@ -464,9 +464,9 @@ e.printStackTrace();
         }
 
     }
-    public static void sendDoc(final Context context, final Invoice invoice,String paymentWays){
+    public static void sendDoc(final Context context, final BoInvoice invoice, String paymentWays){
         final String SAMPLE_FILE = "receipt.pdf";
-        final Invoice newInvoice;
+        final BoInvoice newInvoice;
         try {
             JSONObject jsonObject = new JSONObject(invoice.toString());
             JSONObject docDataJson = jsonObject.getJSONObject("documentsData");
@@ -488,7 +488,7 @@ e.printStackTrace();
             DocData.remove("type");
             DocData.put("@type","Invoice");
             }
-            newInvoice=new Invoice(DocumentType.INVOICE,DocData,invoice.getDocNum());
+            newInvoice=new BoInvoice(DocumentType.INVOICE,DocData,invoice.getDocNum());
             if(paymentWays.equalsIgnoreCase(CONSTANT.CASH)){
                 long paymentID = paymentDBAdapter.receiptInsertEntry(CASH,Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), Long.parseLong(invoiceOrderIdsList.get(0).toString()));
 
@@ -583,13 +583,13 @@ e.printStackTrace();
                         docJson.put("@type",type);
                         docJson.put("customer",customerJson);
                         Log.d("Document vale", docJson.toString());
-                        com.pos.leaders.leaderspossystem.Models.Invoice invoiceA = new Invoice(DocumentType.RECEIPT,docJson,docNum);
+                        BoInvoice invoiceA = new BoInvoice(DocumentType.RECEIPT,docJson,docNum);
                         Log.d("Receipt log",invoiceA.toString());
                         String res=transmit.authPost(ApiURL.Documents,invoiceA.toString(), SESSION.token);
                         JSONObject jsonObject = new JSONObject(res);
                         String msgData = jsonObject.getString(MessageKey.responseBody);
                         Log.d("receiptResult",res);
-                        Invoice invoice1 = newInvoice;
+                        BoInvoice invoice1 = newInvoice;
                         JSONObject updataInvoice =invoice1.getDocumentsData();
                         double total= updataInvoice.getDouble("total");
                         Log.d("totalPaid",total+"");

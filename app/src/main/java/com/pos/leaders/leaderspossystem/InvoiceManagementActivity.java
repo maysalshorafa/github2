@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Customer;
-import com.pos.leaders.leaderspossystem.Models.Invoice;
+import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.InvoiceManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -55,7 +55,7 @@ public class InvoiceManagementActivity extends AppCompatActivity {
     List<Customer> customerList = new ArrayList<>();
     List<Customer> AllCustmerList = new ArrayList<>();
     public static Context context = null;
-    public static List<Invoice>invoiceList=new ArrayList<>();
+    public static List<BoInvoice>invoiceList=new ArrayList<>();
     public static ArrayList<String>invoiceNumberList=new ArrayList<>();
     View previousView = null;
     public static  List<String>orderIds=new ArrayList<>();
@@ -225,7 +225,7 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
     private MessageTransmit messageTransmit;
     ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-    Invoice invoice;
+    BoInvoice invoice;
     StartInvoiceConnection() {
         messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
     }
@@ -258,7 +258,7 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
                         msgData = jsonArray.getJSONObject(i).toString();
                         JSONObject msgDataJson =new JSONObject(msgData);
                         InvoiceManagementActivity.invoiceNumberList.add(msgDataJson.getString("docNum"));
-                        invoice = new Invoice(DocumentType.INVOICE,msgDataJson.getJSONObject("documentsData"),msgDataJson.getString("docNum"));
+                        invoice = new BoInvoice(DocumentType.INVOICE,msgDataJson.getJSONObject("documentsData"),msgDataJson.getString("docNum"));
                         InvoiceManagementActivity.invoiceList.add(invoice);
                             JSONArray orderJson = msgDataJson.getJSONObject("documentsData").getJSONArray("listOfOrders");
                             for (int a=0;a<orderJson.length();a++){

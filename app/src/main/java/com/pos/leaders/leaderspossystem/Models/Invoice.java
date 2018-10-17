@@ -1,56 +1,55 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import com.pos.leaders.leaderspossystem.DocumentType;
-
-import org.json.JSONObject;
-
 /**
- * Created by Win8.1 on 8/27/2018.
+ * Created by Win8.1 on 10/17/2018.
  */
 
 public class Invoice {
-    private DocumentType type;
-    private JSONObject documentsData;
-    private String docNum;
+    private long id;
+   private String invoiceId;
+
+
+
+    private long customerID;
 
     public Invoice() {
     }
 
-    public Invoice(DocumentType type, JSONObject documentsData,String docNum) {
-        this.type = type;
-        this.documentsData = documentsData;
-        this.docNum=docNum;
-
+    public Invoice(long id, String invoiceId,long customerID) {
+        this.id = id;
+        this.invoiceId = invoiceId;
+        this.customerID=customerID;
     }
 
-    public DocumentType getType() {
-        return type;
+    public long getId() {
+        return id;
     }
 
-    public void setType(DocumentType type) {
-        this.type = type;
-    }
-    public JSONObject getDocumentsData() {
-        return documentsData;
-    }
-    public void setDocumentsData(JSONObject documentsData) {
-        this.documentsData = documentsData;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public String getDocNum() {
-        return docNum;
+    public String getInvoiceId() {
+        return invoiceId;
+    }
+    public long getCustomerID() {
+        return customerID;
     }
 
-    public void setDocNum(String docNum) {
-        this.docNum = docNum;
+    public void setCustomerID(long customerID) {
+        this.customerID = customerID;
+    }
+
+    public void setInvoiceId(String invoiceId) {
+        this.invoiceId = invoiceId;
     }
 
     @Override
     public String toString() {
-        return "{" +
-                "\""+"type\":" +"\""+type +"\""+
-                "," +"\""+"documentsData\":" +documentsData  +
-                "," +"\""+"docNum\":" +"\""+docNum +"\""  +
+        return "Invoice{" +
+                "id=" + id +
+                ", invoiceId='" + invoiceId + '\'' +
+                ", customerID=" + customerID +
                 '}';
     }
 }
