@@ -137,7 +137,7 @@ public class ProductDBAdapter {
             return product.getProductId();
         }
         Product productCheckName = null;
-        productCheckName = getByProductName(p.getDisplayName());
+        productCheckName = getByProductName(p.getName());
         if (productCheckName != null) {
             Log.i("Inserting product", "name is busy");
             return productCheckName.getProductId();
