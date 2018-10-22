@@ -260,11 +260,6 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
                         InvoiceManagementActivity.invoiceNumberList.add(msgDataJson.getString("docNum"));
                         invoice = new BoInvoice(DocumentType.INVOICE,msgDataJson.getJSONObject("documentsData"),msgDataJson.getString("docNum"));
                         InvoiceManagementActivity.invoiceList.add(invoice);
-                            JSONArray orderJson = msgDataJson.getJSONObject("documentsData").getJSONArray("listOfOrders");
-                            for (int a=0;a<orderJson.length();a++){
-                                InvoiceManagementActivity.orderIds.add(String.valueOf(orderJson.get(a)));
-                            }
-
                     }
                     Log.d("invoices",InvoiceManagementActivity.invoiceList.toString()+"");
                     Log.d("invoicesOrderId",InvoiceManagementActivity.orderIds.toString());
