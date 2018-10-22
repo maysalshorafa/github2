@@ -240,10 +240,12 @@ public class InvoiceImg {
         Block productCountText = new Block("\u200E" + context.getString(R.string.product_quantity), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block productCount = new Block("\u200E" + String.valueOf(count), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         Block toPidText = new Block("\u200E" + context.getString(R.string.total_price),40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
-        Block discountText = new Block("\u200E" + context.getString(R.string.discount),40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block discountText = new Block("\u200E" + context.getString(R.string.discount), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+
         Block toPidTextBeforeDiscount = new Block("\u200E" + context.getString(R.string.price_before_discount),40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block toPid = new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
-        Block discountAmount= new Block(String.format(new Locale("en"), "%.2f",sale.cartDiscount/100), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block discountAmount = new Block("\u200E" + String.valueOf(sale.cartDiscount/100), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+
         Block toPidBeforeDiscount= new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()+(sale.cartDiscount/100)*sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         productCount.Left();
         productCountText.Left();
@@ -260,12 +262,13 @@ public class InvoiceImg {
         blocks.add(productCount);
         blocks.add(productCountText);
         blocks.add(clear.Left());
-        blocks.add(clear.Left());
         if(sale.cartDiscount>0) {
             blocks.add(discountAmount);
             blocks.add(discountText);
+            blocks.add(clear.Left());
             blocks.add(toPidBeforeDiscount);
             blocks.add(toPidTextBeforeDiscount);
+            blocks.add(clear.Left());
         }
         blocks.add(toPid);
         blocks.add(toPidText);
