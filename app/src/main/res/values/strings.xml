@@ -227,6 +227,8 @@
     <string name="replacement_invoice">Replacement Invoice</string>
     <string name="copyinvoice">Duplicate Invoice</string>
     <string name="cancel_invoice">Cancel Invoice</string>
+    <string name="credit_invoice_doc">Credit Invoice</string>
+
 
     <!--Credit Card-->
     <string name="credit_card_number">Credit Card Number</string>
@@ -435,7 +437,6 @@
     <string name="product_name_not_available">Product Name Not Available.</string>
     <string name="product_barcode_not_available">Product Barcode Not Available.</string>
     <string name="user_password_is_not_available_try_to_use_another_user_password">User Password is not available, try to use another user Password.</string>
-
 
 
     <!-- OldCustomer Message -->
