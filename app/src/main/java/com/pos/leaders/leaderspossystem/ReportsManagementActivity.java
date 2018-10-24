@@ -195,7 +195,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
             public void onClick(View v) {
                 final String[] items = {
                         getString(R.string.invoice),
-                        getString(R.string.receipt)
+                        getString(R.string.receipt),getString(R.string.credit_invoice_doc)
                 };
                 android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ReportsManagementActivity.this);
                 builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
@@ -210,6 +210,11 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                 Intent intent1 = new Intent(ReportsManagementActivity.this, InvoiceManagementActivity.class);
                                 startActivity(intent1);
                                 break;
+                            case 2:
+                                Intent intent2 = new Intent(ReportsManagementActivity.this, CreditInvoiceManagementActivity.class);
+                                startActivity(intent2);
+                                break;
+
                         }
                     }
                 });
