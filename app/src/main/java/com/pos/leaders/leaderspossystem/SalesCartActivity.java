@@ -61,6 +61,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBA
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.InvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
@@ -79,7 +80,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Documents;
 import com.pos.leaders.leaderspossystem.Models.Employee;
-import com.pos.leaders.leaderspossystem.Models.Invoice;
+import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Order;
@@ -1397,25 +1398,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                 }
                                             }
                                         }
-                                        saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
-                                        orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
-                                        saleDBAdapter.open();
-                                        orderDBAdapter.open();
-                                        saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,true);
-                                        SESSION._ORDERS.setOrderId(saleIDforCash);
-                                        for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                                            o.setOrderId(saleIDforCash);
-                                            long orderid = orderDBAdapter.insertEntryFromInvoice(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
-                                            o.setOrderDetailsId(orderid);
-                                        }
-                                        //update customer balance
-                                        if(SESSION._ORDERS.getTotalPrice()<0&&customer!=null){
-                                            Customer upDateCustomer=customer;
-                                            upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice()+customer.getBalance());
-                                            customerDBAdapter.updateEntry(upDateCustomer);
-                                        }
-                                        ordersIds.add(String.valueOf(saleIDforCash));
-                                        saleDBAdapter.close();
+
                                         new AsyncTask<Void, Void, Void>(){
                                             @Override
                                             protected void onPreExecute() {
@@ -1432,32 +1415,28 @@ public class SalesCartActivity extends AppCompatActivity {
                                             protected Void doInBackground(Void... voids) {
                                                 MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
                                                 JSONObject customerData = new JSONObject();
+                                                JSONObject userData = new JSONObject();
                                                 try {
-                                                    ObjectMapper mapper = new ObjectMapper();
-                                                    String ordRes=transmit.authPost(ApiURL.ORDER, mapper.writeValueAsString(SESSION._ORDERS), SESSION.token);
-                                                    Log.i("Order log", ordRes);
-                                                    for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                                                        String orderDetailsRes = transmit.authPost(ApiURL.ORDER_DETAILS, mapper.writeValueAsString(o), SESSION.token);
-                                                        try {
-
-                                                            Thread.sleep(100);
-                                                        } catch (InterruptedException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        Log.i("Order Details", orderDetailsRes);
-                                                        //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+                                                    for(OrderDetails orderDetails:SESSION._ORDER_DETAILES){
+                                                        orderDetails.setPaidAmount(0.0);
                                                     }
+                                                    ObjectMapper mapper = new ObjectMapper();
                                                     customerData.put("customerId", SESSION._ORDERS.getCustomer().getCustomerId());
+                                                    userData.put("employeeId",SESSION._EMPLOYEE.getEmployeeId());
+                                                    userData.put("name",SESSION._EMPLOYEE.getEmployeeName());
                                                     Log.d("customer",customerData.toString());
-                                                    Documents documents = new Documents("Invoice",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),ordersIds,SESSION._ORDERS.getTotalPrice(),0,SESSION._ORDERS.getTotalPrice(), InvoiceStatus.UNPAID,"test","test","ILS");
+                                                    Documents documents = new Documents("Invoice",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),SESSION._ORDERS.getTotalPrice(),0,SESSION._ORDERS.getTotalPrice(), InvoiceStatus.UNPAID,"test","test","ILS",SESSION._ORDERS.cartDiscount);
                                                     String doc = mapper.writeValueAsString(documents);
                                                     JSONObject docJson= new JSONObject(doc);
                                                     String type = docJson.getString("type");
                                                     docJson.remove("type");
                                                     docJson.put("@type",type);
                                                     docJson.put("customer",customerData);
+                                                    docJson.put("user",userData);
+                                                    JSONArray cart = new JSONArray(SESSION._ORDER_DETAILES.toString());
+                                                    docJson.put("cartDetailsList",cart);
                                                     Log.d("Document vale", docJson.toString());
-                                                    Invoice invoice = new Invoice(DocumentType.INVOICE,docJson,"");
+                                                    BoInvoice invoice = new BoInvoice(DocumentType.INVOICE,docJson,"");
                                                     Log.d("Invoice log",invoice.toString());
                                                     String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
                                                     JSONObject jsonObject = new JSONObject(res);
@@ -1469,7 +1448,9 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     customerGeneralLedger=jsonObject1.getDouble("customerGeneralLedger");
                                                     Log.d("Invoice log res", customerGeneralLedger+"");
                                                     Log.d("Invoice Num", invoiceNum);
-
+                                                    InvoiceDBAdapter invoiceDBAdapter = new InvoiceDBAdapter(SalesCartActivity.this);
+                                                    invoiceDBAdapter.open();
+                                                    invoiceDBAdapter.insertEntry(invoiceNum,SESSION._ORDERS.getCustomerId());
                                                     try {
                                                         Thread.sleep(100);
                                                     } catch (InterruptedException e) {

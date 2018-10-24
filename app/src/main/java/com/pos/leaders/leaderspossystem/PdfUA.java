@@ -38,7 +38,6 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -584,6 +583,7 @@ public class PdfUA {
         orderDetailsTable.setRunDirection(0);
         orderDetailsTable.setWidthPercentage(108f);
         Log.d("customerJson",customerJson.toString());
+        /**
         JSONArray itemJson = customerJson.getJSONArray("payments");
 
         insertCell(orderDetailsTable, context.getString(R.string.payment)+":", Element.ALIGN_LEFT, 4, dateFont);
@@ -610,7 +610,7 @@ public class PdfUA {
                 }
 
             }
-        }
+        }**/
         insertCell(orderDetailsTable, "customerGeneralLedger"+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 3, dateFont);
 
         insertCell(orderDetailsTable, "Receipt Numbers"+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 3, dateFont);
