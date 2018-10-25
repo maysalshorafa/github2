@@ -1,5 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import com.pos.leaders.leaderspossystem.Tools.CreditInvoiceStatus;
+
 import org.json.JSONObject;
 
 import java.sql.Timestamp;
@@ -14,7 +16,7 @@ public class CreditInvoiceDocument {
         private Timestamp date;
         private JSONObject customer;
         private double total;
-        private InvoiceStatus status;
+        private CreditInvoiceStatus status;
         private String currency;
         private JSONObject user;
         private ArrayList<JSONObject> cartDetailsList;
@@ -59,11 +61,11 @@ public class CreditInvoiceDocument {
             this.total = total;
         }
 
-        public InvoiceStatus getStatus() {
+        public CreditInvoiceStatus getStatus() {
             return status;
         }
 
-        public void setStatus(InvoiceStatus status) {
+        public void setStatus(CreditInvoiceStatus status) {
             this.status = status;
         }
 
@@ -103,7 +105,7 @@ public class CreditInvoiceDocument {
         this.reference = reference;
     }
 
-    public CreditInvoiceDocument(String type, Timestamp date, double total, InvoiceStatus status, String currency, double cartDiscount, String reference) {
+    public CreditInvoiceDocument(String type, Timestamp date, double total, CreditInvoiceStatus status, String currency, double cartDiscount, String reference) {
         this.type = type;
         this.date = date;
         this.total = total;
@@ -111,5 +113,6 @@ public class CreditInvoiceDocument {
         this.currency = currency;
         this.cartDiscount = cartDiscount;
         this.reference = reference;
+
     }
 }

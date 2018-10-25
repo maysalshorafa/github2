@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,11 +26,14 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
+import com.pos.leaders.leaderspossystem.Models.CreditInvoiceDocument;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Tools.CreditInvoiceStatus;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.InvoiceManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
@@ -45,9 +49,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImages;
 
 public class CreditInvoiceManagementActivity extends AppCompatActivity {
 
@@ -66,6 +75,8 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
     public static  List<String>orderIds=new ArrayList<>();
      Product product;
     double creditAmount=0;
+    final String SAMPLE_FILE = "creditinvoice.pdf";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,9 +116,11 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
                     final List<Integer>productCount = new ArrayList<Integer>();
                     ProductDBAdapter productDBAdapter = new ProductDBAdapter(getApplicationContext());
                     productDBAdapter.open();
-                    BoInvoice invoice = CreditInvoiceManagementActivity.invoiceList.get(position);
-                    JSONObject docDocument = invoice.getDocumentsData();
+                    final BoInvoice invoice = CreditInvoiceManagementActivity.invoiceList.get(position);
+                    final JSONObject docDocument = invoice.getDocumentsData();
                     JSONArray cartDetailsList = docDocument.getJSONArray("cartDetailsList");
+                    final JSONArray newCartDetails = new JSONArray();
+                    newCartDetails.put(cartDetailsList.get(position));
                     for (int i=0;i<cartDetailsList.length();i++){
                         JSONObject cartDetailsObject =cartDetailsList.getJSONObject(i);
                         productSkuList.add(cartDetailsObject.getString("sku"));
@@ -131,7 +144,6 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
                     gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            productCatalogGridViewAdapter.notifyDataSetChanged();
                             for (int i = 0; i < gvProduct.getChildCount(); i++) {
                                 if(position == i ){
                                     gvProduct.getChildAt(i).setBackgroundColor(Color.RED);
@@ -139,6 +151,10 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
                                     gvProduct.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
                                 }
                                 product=productList.get(position);
+                                productList.remove(position);
+                                final ProductCatalogGridViewAdapter productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(),productList);
+                                gvProduct.setAdapter(productCatalogGridViewAdapter);
+                                productCatalogGridViewAdapter.notifyDataSetChanged();
 
                             }
                             creditAmount+=product.getPrice()*productCount.get(position);
@@ -155,7 +171,72 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
                     done.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            new AsyncTask<Void, Void, Void>(){
+                                @Override
+                                protected void onPreExecute() {
+                                    super.onPreExecute();
+                                }
+                                @Override
+                                protected void onPostExecute(Void aVoid) {
+                                    try
+                                    {
+                                        File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                                        File file = new File(path,SAMPLE_FILE);
+                                        RandomAccessFile f = new RandomAccessFile(file, "r");
+                                        byte[] data = new byte[(int)f.length()];
+                                        f.readFully(data);
+                                        pdfLoadImages(data,context);
+                                    }
+                                    catch(Exception ignored)
+                                    {
 
+                                    }
+                                }
+                                @Override
+                                protected Void doInBackground(Void... voids) {
+                                    MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                                    JSONObject customerData = new JSONObject();
+                                    JSONObject userData = new JSONObject();
+                                    try {
+                                        ObjectMapper mapper = new ObjectMapper();
+                                        customerData=docDocument.getJSONObject("customer");
+                                        userData = docDocument.getJSONObject("user");
+                                        CreditInvoiceDocument creditInvoiceDocument =new CreditInvoiceDocument("CreditInvoice",new Timestamp(System.currentTimeMillis()),creditAmount, CreditInvoiceStatus.OPEN,"ILS", docDocument.getDouble("cartDiscount"),invoice.getDocNum());
+                                        String doc = mapper.writeValueAsString(creditInvoiceDocument);
+                                        JSONObject docJson= new JSONObject(doc);
+                                        String type = docJson.getString("type");
+                                        docJson.remove("type");
+                                        docJson.put("@type",type);
+                                        docJson.put("customer",customerData);
+                                        docJson.put("user",userData);
+                                        docJson.put("cartDetailsList",newCartDetails);
+                                        Log.d("Document vale", docJson.toString());
+                                        BoInvoice invoice = new BoInvoice(DocumentType.CREDIT_INVOICE,docJson,"");
+                                        Log.d("Invoice log",invoice.toString());
+                                        String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
+                                        JSONObject jsonObject = new JSONObject(res);
+                                        String msgData = jsonObject.getString(MessageKey.responseBody);
+                                        Log.d("result",msgData.toString());
+                                        PdfUA pdfUA = new PdfUA();
+
+                                        try {
+                                            pdfUA.printCreditInvoiceReport(context,msgData);
+                                        } catch (DocumentException e) {
+                                            e.printStackTrace();
+                                        }
+                                        try {
+                                            Thread.sleep(100);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return null;
+                                }
+                            }.execute();
                         }
                     });
 
