@@ -25,10 +25,13 @@ import android.widget.Toast;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.InvoiceManagementListViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -91,7 +94,40 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
         invoiceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-            Log.d("Invoice",CreditInvoiceManagementActivity.invoiceList.get(position).toString());
+                try {
+                    Log.d("Invoice",CreditInvoiceManagementActivity.invoiceList.get(position).toString());
+                    List<String>productSkuList = new ArrayList<String>();
+                    List<Product>productList=new ArrayList<Product>();
+                    ProductDBAdapter productDBAdapter = new ProductDBAdapter(getApplicationContext());
+                    productDBAdapter.open();
+                    BoInvoice invoice = CreditInvoiceManagementActivity.invoiceList.get(position);
+                    JSONObject docDocument = invoice.getDocumentsData();
+                    JSONArray cartDetailsList = docDocument.getJSONArray("cartDetailsList");
+                    for (int i=0;i<cartDetailsList.length();i++){
+                        JSONObject cartDetailsObject =cartDetailsList.getJSONObject(i);
+                        productSkuList.add(cartDetailsObject.getString("sku"));
+                        String sku = cartDetailsObject.getString("sku");
+                        productList.add(productDBAdapter.getProductByBarCode(sku));
+                    }
+                    final Dialog productDialog = new Dialog(CreditInvoiceManagementActivity.this);
+                    productDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    productDialog.show();
+                    productDialog.setContentView(R.layout.credit_invoice_dialog);
+                    final GridView gvProduct = (GridView) productDialog.findViewById(R.id.criditInvoice_LVProductInvoice);
+                    gvProduct.setNumColumns(1);
+                    TextView totalPrice = (TextView)productDialog.findViewById(R.id.creditInvoiceDialog_TVPrice);
+                    TextView req = (TextView)productDialog.findViewById(R.id.AC_tvReq);
+                    ProductCatalogGridViewAdapter productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(),productList);
+                    gvProduct.setAdapter(productCatalogGridViewAdapter);
+                    gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                           
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }});
 
 
