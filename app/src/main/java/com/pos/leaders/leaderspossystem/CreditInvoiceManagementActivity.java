@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +36,7 @@ import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
@@ -62,7 +64,8 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
     public static ArrayList<String>invoiceNumberList=new ArrayList<>();
     View previousView = null;
     public static  List<String>orderIds=new ArrayList<>();
-
+     Product product;
+    double creditAmount=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,9 +98,11 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 try {
+                    creditAmount=0;
                     Log.d("Invoice",CreditInvoiceManagementActivity.invoiceList.get(position).toString());
                     List<String>productSkuList = new ArrayList<String>();
-                    List<Product>productList=new ArrayList<Product>();
+                    final List<Product>productList=new ArrayList<Product>();
+                    final List<Integer>productCount = new ArrayList<Integer>();
                     ProductDBAdapter productDBAdapter = new ProductDBAdapter(getApplicationContext());
                     productDBAdapter.open();
                     BoInvoice invoice = CreditInvoiceManagementActivity.invoiceList.get(position);
@@ -106,6 +111,7 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
                     for (int i=0;i<cartDetailsList.length();i++){
                         JSONObject cartDetailsObject =cartDetailsList.getJSONObject(i);
                         productSkuList.add(cartDetailsObject.getString("sku"));
+                        productCount.add(cartDetailsObject.getInt("quantity"));
                         String sku = cartDetailsObject.getString("sku");
                         productList.add(productDBAdapter.getProductByBarCode(sku));
                     }
@@ -113,18 +119,46 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
                     productDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     productDialog.show();
                     productDialog.setContentView(R.layout.credit_invoice_dialog);
-                    final GridView gvProduct = (GridView) productDialog.findViewById(R.id.criditInvoice_LVProductInvoice);
-                    gvProduct.setNumColumns(1);
+                    final ListView gvProduct = (ListView) productDialog.findViewById(R.id.criditInvoice_LVProductInvoice);
                     TextView totalPrice = (TextView)productDialog.findViewById(R.id.creditInvoiceDialog_TVPrice);
-                    TextView req = (TextView)productDialog.findViewById(R.id.AC_tvReq);
-                    ProductCatalogGridViewAdapter productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(),productList);
+                    totalPrice.setText(Util.makePrice(docDocument.getDouble("total")));
+                   final TextView credit = (TextView)productDialog.findViewById(R.id.AC_tvReq);
+                    Button done =(Button)productDialog.findViewById(R.id.btn_done);
+                    Button cancel =(Button)productDialog.findViewById(R.id.btn_cancel);
+                    credit.setText(Util.makePrice(0));
+                    final ProductCatalogGridViewAdapter productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(),productList);
                     gvProduct.setAdapter(productCatalogGridViewAdapter);
                     gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                           
+                            productCatalogGridViewAdapter.notifyDataSetChanged();
+                            for (int i = 0; i < gvProduct.getChildCount(); i++) {
+                                if(position == i ){
+                                    gvProduct.getChildAt(i).setBackgroundColor(Color.RED);
+                                }else{
+                                    gvProduct.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                                }
+                                product=productList.get(position);
+
+                            }
+                            creditAmount+=product.getPrice()*productCount.get(position);
+                            credit.setText(Util.makePrice(creditAmount));
+
                         }
                     });
+                    cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            productDialog.dismiss();
+                        }
+                    });
+                    done.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
