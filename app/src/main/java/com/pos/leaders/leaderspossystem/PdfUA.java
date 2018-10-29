@@ -687,26 +687,27 @@ public class PdfUA {
         Log.d("customerJson",customerJson.toString());
 
          JSONArray itemJson = customerJson.getJSONArray("cartDetailsList");
-        insertCell(orderDetailsTable, context.getString(R.string.product), Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(orderDetailsTable,context.getString(R.string.name), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(orderDetailsTable, context.getString(R.string.name), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(orderDetailsTable,context.getString(R.string.qty), Element.ALIGN_LEFT, 1, dateFont);
         insertCell(orderDetailsTable, context.getString(R.string.sku), Element.ALIGN_LEFT, 1, dateFont);
         insertCell(orderDetailsTable, context.getString(R.string.price), Element.ALIGN_LEFT, 1, dateFont);
          for (int a = 0 ; a<itemJson.length();a++) {
                  JSONObject jsonObject1 = itemJson.getJSONObject(a);
                  String sku = jsonObject1.getString("sku");
                Product product= productDBAdapter.getProductByBarCode(sku);
-                 insertCell(orderDetailsTable, context.getString(R.string.product)+":"+product.getName(), Element.ALIGN_LEFT, 1, dateFont);
-                 insertCell(orderDetailsTable,product.getSku(), Element.ALIGN_LEFT, 1, dateFont);
-                 insertCell(orderDetailsTable, Util.makePrice(product.getPrice()), Element.ALIGN_LEFT, 1, dateFont);
+                 insertCell(orderDetailsTable, product.getName(), Element.ALIGN_LEFT, 1, dateFont);
                  insertCell(orderDetailsTable, ""+jsonObject1.getInt("quantity"), Element.ALIGN_LEFT, 1, dateFont);
+             insertCell(orderDetailsTable,product.getSku(), Element.ALIGN_LEFT, 1, dateFont);
+
+             insertCell(orderDetailsTable, Util.makePrice(product.getPrice()), Element.ALIGN_LEFT, 1, dateFont);
 
 
          }
-        insertCell(orderDetailsTable, "customerGeneralLedger"+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 3, dateFont);
+        insertCell(orderDetailsTable, "customerGeneralLedger"+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 4, dateFont);
 
-        insertCell(orderDetailsTable, "CreditInvoice Numbers"+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 3, dateFont);
+        insertCell(orderDetailsTable, "CreditInvoice Numbers"+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 4, dateFont);
 
-        insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 3, font);
+        insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
 
         //end
 
