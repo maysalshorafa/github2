@@ -33,10 +33,10 @@ import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.CreditInvoiceDocument;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Tools.CreditInvoiceProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CreditInvoiceStatus;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.InvoiceManagementListViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -76,6 +76,7 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
      Product product;
     double creditAmount=0;
     final String SAMPLE_FILE = "creditinvoice.pdf";
+    final JSONArray newCartDetails = new JSONArray();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,9 +119,7 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
                     productDBAdapter.open();
                     final BoInvoice invoice = CreditInvoiceManagementActivity.invoiceList.get(position);
                     final JSONObject docDocument = invoice.getDocumentsData();
-                    JSONArray cartDetailsList = docDocument.getJSONArray("cartDetailsList");
-                    final JSONArray newCartDetails = new JSONArray();
-                    newCartDetails.put(cartDetailsList.get(position));
+                    final JSONArray cartDetailsList = docDocument.getJSONArray("cartDetailsList");
                     for (int i=0;i<cartDetailsList.length();i++){
                         JSONObject cartDetailsObject =cartDetailsList.getJSONObject(i);
                         productSkuList.add(cartDetailsObject.getString("sku"));
@@ -139,7 +138,7 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
                     Button done =(Button)productDialog.findViewById(R.id.btn_done);
                     Button cancel =(Button)productDialog.findViewById(R.id.btn_cancel);
                     credit.setText(Util.makePrice(0));
-                    final ProductCatalogGridViewAdapter productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(),productList);
+                    final CreditInvoiceProductCatalogGridViewAdapter productCatalogGridViewAdapter = new CreditInvoiceProductCatalogGridViewAdapter(getApplicationContext(),productList,productCount);
                     gvProduct.setAdapter(productCatalogGridViewAdapter);
                     gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -150,15 +149,38 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
                                 }else{
                                     gvProduct.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
                                 }
-                                product=productList.get(position);
+                            }
+                            product=productList.get(position);
+                            int count = productCount.get(position);
+                            if(count<=1){
                                 productList.remove(position);
-                                final ProductCatalogGridViewAdapter productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(),productList);
+                                final CreditInvoiceProductCatalogGridViewAdapter productCatalogGridViewAdapter = new CreditInvoiceProductCatalogGridViewAdapter(getApplicationContext(),productList,productCount);
                                 gvProduct.setAdapter(productCatalogGridViewAdapter);
                                 productCatalogGridViewAdapter.notifyDataSetChanged();
-
+                            }else {
+                                productCount.set(position,count-1);
+                                final CreditInvoiceProductCatalogGridViewAdapter productCatalogGridViewAdapter = new CreditInvoiceProductCatalogGridViewAdapter(getApplicationContext(),productList,productCount);
+                                gvProduct.setAdapter(productCatalogGridViewAdapter);
+                                productCatalogGridViewAdapter.notifyDataSetChanged();
                             }
-                            creditAmount+=product.getPrice()*productCount.get(position);
+
+
+                            creditAmount+=product.getPrice();
                             credit.setText(Util.makePrice(creditAmount));
+                            try {
+                                JSONObject tempJson = cartDetailsList.getJSONObject(position);
+                                tempJson.remove("quantity");
+                                if(count==0){
+                                    tempJson.put("quantity",0);
+                                }
+                                else {
+                                    tempJson.put("quantity",count-1);
+                                }
+                                newCartDetails.put(tempJson);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
                         }
                     });

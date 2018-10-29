@@ -137,7 +137,15 @@ public class Documents {
         this.cartDetailsList = cartDetailsList;
     }
 
-    public Documents(String type, Timestamp date, Timestamp fulfillmentDate, Timestamp dueDate, double total, double totalPaid, double balanceDue, InvoiceStatus invoiceStatus, String publicNote, String privateNote, String currency,double cartDiscount) {
+    public double getCartDiscount() {
+        return cartDiscount;
+    }
+
+    public void setCartDiscount(double cartDiscount) {
+        this.cartDiscount = cartDiscount;
+    }
+
+    public Documents(String type, Timestamp date, Timestamp fulfillmentDate, Timestamp dueDate, double total, double totalPaid, double balanceDue, InvoiceStatus invoiceStatus, String publicNote, String privateNote, String currency, double cartDiscount) {
         this.type = type;
         this.date = date;
         this.fulfillmentDate = fulfillmentDate;
