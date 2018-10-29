@@ -213,9 +213,11 @@
             android:label="@string/invoice_management_activity" />
         <activity android:name=".GiftProductActivity" />
 
-        <activity android:name=".OrderDocumentManagementActivity"></activity>
+        <activity android:name=".OrderDocumentManagementActivity"
+            android:label="@string/order_document_management_activity" ></activity>
 
-        <activity android:name=".CreditInvoiceManagementActivity"></activity>
+        <activity android:name=".CreditInvoiceManagementActivity"
+            android:label="@string/credit_invoice_management_activity"></activity>
 
     </application>
 
