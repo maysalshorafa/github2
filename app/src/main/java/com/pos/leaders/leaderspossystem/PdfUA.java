@@ -661,6 +661,8 @@ public class PdfUA {
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
         headingTable.setRunDirection(0);
+        insertCell(headingTable,  context.getString(R.string.credit_invoice_doc) , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, jsonObject.getString("docNum") , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
@@ -704,9 +706,6 @@ public class PdfUA {
 
          }
         insertCell(orderDetailsTable, "customerGeneralLedger"+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 4, dateFont);
-
-        insertCell(orderDetailsTable, "CreditInvoice Numbers"+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 4, dateFont);
-
         insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
 
         //end
