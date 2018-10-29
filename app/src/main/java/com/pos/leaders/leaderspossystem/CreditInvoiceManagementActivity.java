@@ -72,6 +72,8 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
     public static List<BoInvoice>invoiceList=new ArrayList<>();
     public static ArrayList<String>invoiceNumberList=new ArrayList<>();
     View previousView = null;
+    boolean haveCart=false;
+
     public static  List<String>orderIds=new ArrayList<>();
      Product product;
     double creditAmount=0;
@@ -143,6 +145,7 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
                     gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            haveCart=false;
                             for (int i = 0; i < gvProduct.getChildCount(); i++) {
                                 if(position == i ){
                                     gvProduct.getChildAt(i).setBackgroundColor(Color.RED);
@@ -169,15 +172,23 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
                             credit.setText(Util.makePrice(creditAmount));
                             try {
                                 JSONObject tempJson = cartDetailsList.getJSONObject(position);
-                                tempJson.remove("quantity");
-                                if(count==0){
-                                    tempJson.put("quantity",0);
+                                long productId = tempJson.getLong("productId");
+                                for(int i=0;i<newCartDetails.length();i++) {
+                                    JSONObject currentCartObject = newCartDetails.getJSONObject(i);
+                                    if(productId==currentCartObject.getLong("productId")){
+                                        int c = currentCartObject.getInt("quantity");
+                                        currentCartObject.remove("quantity");
+                                        currentCartObject.put("quantity",c+1);
+                                        newCartDetails.remove(i);
+                                        newCartDetails.put(currentCartObject);
+                                        haveCart=true;
+                                    }
                                 }
-                                else {
-                                    tempJson.put("quantity",count-1);
+                                if(!haveCart){
+                                        tempJson.remove("quantity");
+                                            tempJson.put("quantity", 1);
+                                            newCartDetails.put(tempJson);
                                 }
-                                newCartDetails.put(tempJson);
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -232,6 +243,7 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
                                         docJson.put("customer",customerData);
                                         docJson.put("user",userData);
                                         docJson.put("cartDetailsList",newCartDetails);
+                                        Log.d("NewCartDetailes",newCartDetails.toString());
                                         Log.d("Document vale", docJson.toString());
                                         BoInvoice invoice = new BoInvoice(DocumentType.CREDIT_INVOICE,docJson,"");
                                         Log.d("Invoice log",invoice.toString());
