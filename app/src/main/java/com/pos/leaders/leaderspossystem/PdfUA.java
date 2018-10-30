@@ -629,7 +629,7 @@ public class PdfUA {
         document.close();
         //end :)
     }
-    public static void  printCreditInvoiceReport(Context context, String res) throws IOException, DocumentException, JSONException {
+    public static void  printCreditInvoiceReport(Context context, String res,String source) throws IOException, DocumentException, JSONException {
         ProductDBAdapter productDBAdapter =new ProductDBAdapter(context);
         productDBAdapter.open();
         JSONObject jsonObject = new JSONObject(res);
@@ -661,6 +661,13 @@ public class PdfUA {
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
         headingTable.setRunDirection(0);
+        if(source=="source"){
+            insertCell(headingTable,  context.getString(R.string.source_invoice) , Element.ALIGN_CENTER, 1, font);
+
+        }else {
+            insertCell(headingTable,  context.getString(R.string.copy_invoice) , Element.ALIGN_CENTER, 1, font);
+
+        }
         insertCell(headingTable,  context.getString(R.string.credit_invoice_doc) , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, jsonObject.getString("docNum") , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);

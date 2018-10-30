@@ -58,7 +58,7 @@ import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImages;
 
-public class CreditInvoiceManagementActivity extends AppCompatActivity {
+public class CreateCreditInvoiceActivity extends AppCompatActivity {
 
     public static ListView invoiceListView;
     EditText etSearch;
@@ -113,13 +113,13 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 try {
                     creditAmount=0;
-                    Log.d("Invoice",CreditInvoiceManagementActivity.invoiceList.get(position).toString());
+                    Log.d("Invoice", CreateCreditInvoiceActivity.invoiceList.get(position).toString());
                     List<String>productSkuList = new ArrayList<String>();
                     final List<Product>productList=new ArrayList<Product>();
                     final List<Integer>productCount = new ArrayList<Integer>();
                     ProductDBAdapter productDBAdapter = new ProductDBAdapter(getApplicationContext());
                     productDBAdapter.open();
-                    final BoInvoice invoice = CreditInvoiceManagementActivity.invoiceList.get(position);
+                    final BoInvoice invoice = CreateCreditInvoiceActivity.invoiceList.get(position);
                     final JSONObject docDocument = invoice.getDocumentsData();
                     final JSONArray cartDetailsList = docDocument.getJSONArray("cartDetailsList");
                     for (int i=0;i<cartDetailsList.length();i++){
@@ -129,7 +129,7 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
                         String sku = cartDetailsObject.getString("sku");
                         productList.add(productDBAdapter.getProductByBarCode(sku));
                     }
-                    final Dialog productDialog = new Dialog(CreditInvoiceManagementActivity.this);
+                    final Dialog productDialog = new Dialog(CreateCreditInvoiceActivity.this);
                     productDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     productDialog.show();
                     productDialog.setContentView(R.layout.credit_invoice_dialog);
@@ -254,7 +254,7 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
                                         PdfUA pdfUA = new PdfUA();
 
                                         try {
-                                            pdfUA.printCreditInvoiceReport(context,msgData);
+                                            pdfUA.printCreditInvoiceReport(context,msgData,"source");
                                         } catch (DocumentException e) {
                                             e.printStackTrace();
                                         }
@@ -288,7 +288,7 @@ public class CreditInvoiceManagementActivity extends AppCompatActivity {
         orderIds=new ArrayList<>();
         CustomerDBAdapter customerDBAdapter =new CustomerDBAdapter(this);
         customerDBAdapter.open();
-        final Dialog customerDialog = new Dialog(CreditInvoiceManagementActivity.this);
+        final Dialog customerDialog = new Dialog(CreateCreditInvoiceActivity.this);
         customerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         customerDialog.show();
         customerDialog.setContentView(R.layout.pop_up);
@@ -404,8 +404,8 @@ class StartCreditInvoiceConnection extends AsyncTask<String,Void,String> {
         messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
     }
 
-    final ProgressDialog progressDialog = new ProgressDialog(CreditInvoiceManagementActivity.context);
-    final ProgressDialog progressDialog2 =new ProgressDialog(CreditInvoiceManagementActivity.context);
+    final ProgressDialog progressDialog = new ProgressDialog(CreateCreditInvoiceActivity.context);
+    final ProgressDialog progressDialog2 =new ProgressDialog(CreateCreditInvoiceActivity.context);
 
     @Override
     protected void onPreExecute() {
@@ -429,9 +429,9 @@ class StartCreditInvoiceConnection extends AsyncTask<String,Void,String> {
                     for (int i = 0; i <= jsonArray.length() ; i++) {
                         msgData = jsonArray.getJSONObject(i).toString();
                         JSONObject msgDataJson =new JSONObject(msgData);
-                        CreditInvoiceManagementActivity.invoiceNumberList.add(msgDataJson.getString("docNum"));
+                        CreateCreditInvoiceActivity.invoiceNumberList.add(msgDataJson.getString("docNum"));
                        invoice = new BoInvoice(DocumentType.INVOICE,msgDataJson.getJSONObject("documentsData"),msgDataJson.getString("docNum"));
-                        CreditInvoiceManagementActivity.invoiceList.add(invoice);
+                        CreateCreditInvoiceActivity.invoiceList.add(invoice);
                     }
 
                 } catch (Exception e) {
@@ -458,8 +458,8 @@ class StartCreditInvoiceConnection extends AsyncTask<String,Void,String> {
                     super.onPreExecute();
                     progressDialog2.setTitle("Success.");
                     progressDialog2.show();
-                    InvoiceManagementListViewAdapter invoiceManagementListViewAdapter = new InvoiceManagementListViewAdapter(CreditInvoiceManagementActivity.context,R.layout.list_adapter_row_invoices_management,CreditInvoiceManagementActivity.invoiceList,CreditInvoiceManagementActivity.invoiceNumberList);
-                    CreditInvoiceManagementActivity.invoiceListView.setAdapter(invoiceManagementListViewAdapter);
+                    InvoiceManagementListViewAdapter invoiceManagementListViewAdapter = new InvoiceManagementListViewAdapter(CreateCreditInvoiceActivity.context,R.layout.list_adapter_row_invoices_management, CreateCreditInvoiceActivity.invoiceList, CreateCreditInvoiceActivity.invoiceNumberList);
+                    CreateCreditInvoiceActivity.invoiceListView.setAdapter(invoiceManagementListViewAdapter);
                 }
 
                 @Override
@@ -475,7 +475,7 @@ class StartCreditInvoiceConnection extends AsyncTask<String,Void,String> {
             }.execute();
         } else {
             //fail
-            Toast.makeText(CreditInvoiceManagementActivity.context, "Try Again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CreateCreditInvoiceActivity.context, "Try Again.", Toast.LENGTH_SHORT).show();
         }
         progressDialog.cancel();
         super.onPostExecute(s);

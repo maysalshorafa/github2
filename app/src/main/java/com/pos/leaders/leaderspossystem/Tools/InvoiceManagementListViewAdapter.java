@@ -124,8 +124,8 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
         });
         try {
             holder.tvTotalAmount.setText(invoicesList.get(position).getDocumentsData().getDouble("total")+getContext().getString(R.string.ins));
-            holder.tvTotalPaid.setText(invoicesList.get(position).getDocumentsData().getDouble("totalPaid")+getContext().getString(R.string.ins));
             holder.tvID.setText(invoiceNumbers.get(position)+"");
+            holder.tvTotalPaid.setText(invoicesList.get(position).getDocumentsData().getDouble("totalPaid")+getContext().getString(R.string.ins));
         } catch (JSONException e) {
             e.printStackTrace();
         }
