@@ -12,22 +12,13 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
-import com.pos.leaders.leaderspossystem.Models.Customer;
-import com.pos.leaders.leaderspossystem.Models.Documents;
-import com.pos.leaders.leaderspossystem.Models.Invoice;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
-import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.OrderDocumentStatus;
 import com.pos.leaders.leaderspossystem.Models.OrderDocuments;
 import com.pos.leaders.leaderspossystem.Models.Payment;
@@ -57,8 +48,6 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CASH;
-import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CHECKS;
-import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CREDIT_CARD;
 
 /**
  * Created by Win8.1 on 10/8/2018.
@@ -224,19 +213,16 @@ public class DocumentControl {
 
     }
     public static void sendDoc(final Context context, final BoInvoice invoice, String paymentWays){
+        List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
+        List<Payment> paymentList = new ArrayList<Payment>();
+        List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
+        List<Check> checkList = new ArrayList<Check>();
         final String SAMPLE_FILE = "receipt.pdf";
         final BoInvoice newInvoice;
         try {
             JSONObject jsonObject = new JSONObject(invoice.toString());
             JSONObject docDataJson = jsonObject.getJSONObject("documentsData");
-            final JSONArray invoiceOrderIds=docDataJson.getJSONArray("listOfOrders");
-            final ArrayList<String> invoiceOrderIdsList = new ArrayList<String>();
             final ArrayList<String> invoiceIdsList = new ArrayList<String>();
-            if (invoiceOrderIds != null) {
-                for (int i=0;i<invoiceOrderIds.length();i++){
-                    invoiceOrderIdsList.add(invoiceOrderIds.getString(i));
-                }
-            }
             final JSONObject customerJson =docDataJson.getJSONObject("customer");
             final String docNum = invoice.getDocNum();
             invoiceIdsList.add(docNum);
@@ -248,53 +234,32 @@ public class DocumentControl {
                 DocData.put("@type","Invoice");
             }
             newInvoice=new BoInvoice(DocumentType.INVOICE,DocData,invoice.getDocNum());
-            if(paymentWays.equalsIgnoreCase(CONSTANT.CASH)){
-                long paymentID = paymentDBAdapter.receiptInsertEntry(CASH,Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), Long.parseLong(invoiceOrderIdsList.get(0).toString()));
-
-            }else if(paymentWays.equalsIgnoreCase(CONSTANT.CHECKS)){
-                long paymentID = paymentDBAdapter.receiptInsertEntry(CHECKS,Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), Long.parseLong(invoiceOrderIdsList.get(0).toString()));
-
-            }else if(paymentWays.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
-                long paymentID = paymentDBAdapter.receiptInsertEntry(CREDIT_CARD,Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), Long.parseLong(invoiceOrderIdsList.get(0).toString()));
-
-            }
-
-            final Payment payment = paymentDBAdapter.getPaymentByID( Long.parseLong(invoiceOrderIds.get(0).toString()));
+            Payment payment =new Payment(0,CASH,Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))),0);
             final JSONObject newJsonObject = new JSONObject(payment.toString());
-            String paymentWay = newJsonObject.getString("paymentWay");
-            long orderId = newJsonObject.getLong("orderId");
-            List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
-            List<Payment> paymentList = new ArrayList<Payment>();
-            List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
-            List<Check> checkList = new ArrayList<Check>();
-            if(paymentWay.equalsIgnoreCase(CONSTANT.CASH)){
-                //get cash payment detail by order id
-                CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
-                cashPaymentDBAdapter.open();
-                cashPaymentDBAdapter.insertEntry(Long.parseLong(invoiceOrderIds.get(0).toString()), Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), 0, new Timestamp(System.currentTimeMillis()));
-                cashPaymentList = cashPaymentDBAdapter.getPaymentBySaleID(orderId);
+            if(paymentWays.equalsIgnoreCase(CONSTANT.CASH)){
+                CashPayment cashPayment = new CashPayment(0,0, Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), 0, new Timestamp(System.currentTimeMillis()));
+                cashPaymentList.add(cashPayment);
                 JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
                 newJsonObject.put("paymentDetails",jsonArray);
             }
-            if(paymentWay.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
+          /*  if(paymentWay.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
+                CreditCardPayment creditCardPayment
                 //get credit payment detail by order id
                 CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(context);
                 creditCardPaymentDBAdapter.open();
-
                 creditCardPaymentList = creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
                 JSONArray jsonArray = new JSONArray(creditCardPaymentList.toString());
                 newJsonObject.put("paymentDetails",jsonArray);
-            }
-            if(paymentWay.equalsIgnoreCase(CONSTANT.CHECKS)){
+            }**/
+            if(paymentWays.equalsIgnoreCase(CONSTANT.CHECKS)){
 
                 //get check payment detail by order id
                 ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(context);
                 checksDBAdapter.open();
                 for (Check check : SESSION._CHECKS_HOLDER) {
-                    checksDBAdapter.insertEntry(check.getCheckNum(), check.getBankNum(), check.getBranchNum(), check.getAccountNum(), check.getAmount(), check.getCreatedAt(), Long.parseLong(invoiceOrderIdsList.get(0)));
+                    checkList.add(check);
                 }
                 SESSION._CHECKS_HOLDER = null;
-                checkList = checksDBAdapter.getPaymentBySaleID(orderId);
                 JSONArray jsonArray = new JSONArray(checkList.toString());
                 newJsonObject.put("paymentDetails",jsonArray);
             }
@@ -331,18 +296,18 @@ public class DocumentControl {
                     MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
                     try {
                         ObjectMapper mapper = new ObjectMapper();
-                        Log.i("Payment", newJsonObject.toString());
-                        String payRes=transmit.authPost(ApiURL.Payment, newJsonObject.toString(), SESSION.token);
-                        Log.i("Payment log", payRes);
                         ReceiptDocuments documents = new ReceiptDocuments("Receipt",new Timestamp(System.currentTimeMillis()), invoiceIdsList,Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))),"ILS");
                         String doc = mapper.writeValueAsString(documents);
                         JSONObject docJson= new JSONObject(doc);
+                        JSONArray paymentJsonArray = new JSONArray();
+                        paymentJsonArray.put(newJsonObject);
                         String type = docJson.getString("type");
                         docJson.remove("type");
                         docJson.put("@type",type);
                         docJson.put("customer",customerJson);
+                        docJson.put("payments",paymentJsonArray);
                         Log.d("Document vale", docJson.toString());
-                       BoInvoice invoiceA = new BoInvoice(DocumentType.RECEIPT,docJson,docNum);
+                        BoInvoice invoiceA = new BoInvoice(DocumentType.RECEIPT,docJson,docNum);
                         Log.d("Receipt log",invoiceA.toString());
                         String res=transmit.authPost(ApiURL.Documents,invoiceA.toString(), SESSION.token);
                         JSONObject jsonObject = new JSONObject(res);
@@ -353,11 +318,13 @@ public class DocumentControl {
                         double total= updataInvoice.getDouble("total");
                         Log.d("totalPaid",total+"");
                         updataInvoice.remove("totalPaid");
+                        updataInvoice.remove("balanceDue");
                         updataInvoice.put("totalPaid",total);
+                        updataInvoice.put("balanceDue",0);
                         updataInvoice.remove("invoiceStatus");
                         updataInvoice.put("invoiceStatus", InvoiceStatus.PAID);
                         invoice1.setDocumentsData(updataInvoice);
-                        Log.d("invoiceRes1232",invoice1.toString());
+                        Log.d("invoiceRes",invoice1.toString());
 
                         String upDataInvoiceRes=transmit.authPutInvoice(ApiURL.Documents,invoice1.toString(), SESSION.token,docNum);
                         Log.d("invoiceRes",upDataInvoiceRes);
@@ -390,5 +357,4 @@ public class DocumentControl {
 
 
 
-    }
-}
+    }}
