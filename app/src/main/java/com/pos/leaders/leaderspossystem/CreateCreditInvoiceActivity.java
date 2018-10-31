@@ -251,10 +251,12 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         JSONObject jsonObject = new JSONObject(res);
                                         String msgData = jsonObject.getString(MessageKey.responseBody);
                                         Log.d("result",msgData.toString());
+                                        JSONObject finalRes = new JSONObject(msgData);
+                                        JSONObject response = finalRes.getJSONObject("documents");
                                         PdfUA pdfUA = new PdfUA();
 
                                         try {
-                                            pdfUA.printCreditInvoiceReport(context,msgData,"source");
+                                            pdfUA.printCreditInvoiceReport(context,response.toString(),"source");
                                         } catch (DocumentException e) {
                                             e.printStackTrace();
                                         }

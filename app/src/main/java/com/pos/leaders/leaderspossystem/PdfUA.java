@@ -633,8 +633,7 @@ public class PdfUA {
         ProductDBAdapter productDBAdapter =new ProductDBAdapter(context);
         productDBAdapter.open();
         JSONObject jsonObject = new JSONObject(res);
-        String documentsData = jsonObject.getString("documentsData");
-        JSONObject customerJson = new JSONObject(documentsData);
+        JSONObject customerJson = jsonObject.getJSONObject("documentsData");;
         JSONObject customerInfo = new JSONObject(customerJson.getJSONObject("customer").toString());
 
         // create file , document region
