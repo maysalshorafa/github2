@@ -79,6 +79,7 @@ import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Models.Documents;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
@@ -1387,7 +1388,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         Intent intent;
                         switch (item) {
                             case 0:
-                                if(SESSION._ORDERS.getCustomer()!=null){
+                                if(SESSION._ORDERS.getCustomer()!=null&&SESSION._ORDERS.getCustomer().getCustomerType().getValue().equals(CustomerType.CREDIT.getValue())){
                                     ObjectMapper mapper = new ObjectMapper();
                                     final ArrayList<String> ordersIds = new ArrayList<>();
                                     if (SESSION._ORDER_DETAILES.size() > 0) {
@@ -1473,8 +1474,12 @@ public class SalesCartActivity extends AppCompatActivity {
                                         Toast.makeText(SalesCartActivity.this, "There is no items into on cart.", Toast.LENGTH_SHORT).show();
                                     }}
                                 else {
-                                    Toast.makeText(SalesCartActivity.this, "Choose Customer Please.", Toast.LENGTH_SHORT).show();
+                                    if(SESSION._ORDERS.getCustomer()!=null){
+                                        Toast.makeText(SalesCartActivity.this, "Customer Type is normal not credit!!.", Toast.LENGTH_SHORT).show();
 
+                                    }else {
+                                        Toast.makeText(SalesCartActivity.this, "Choose Customer Please.", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
 
 
