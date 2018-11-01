@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -247,7 +246,7 @@ public class ChecksActivity extends AppCompatActivity {
 					if(lvChecks.getChildCount()>1) {
 						ChecksListViewAdapter.ViewHolder lastItem = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(lsttchildID).getTag();
 
-						Log.i("LOOOGT", checkList.toString());
+//						Log.i("LOOOGT", checkList.toString());
 						checkList.get(lsttchildID-1);
 						Date utilDate=DateConverter.stringToDate(lastItem.getEtDate());
 						Calendar cal = Calendar.getInstance();
