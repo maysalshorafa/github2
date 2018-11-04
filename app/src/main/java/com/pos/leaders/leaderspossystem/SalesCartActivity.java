@@ -3155,6 +3155,15 @@ public class SalesCartActivity extends AppCompatActivity {
         //region Cash Activity WithOut Currency Region
         if (requestCode == REQUEST_CASH_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
+                if(orderDocumentFlag){
+                    try {
+                        updateOrderDocumentStatus();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
                 cashPaymentDBAdapter.open();
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
@@ -3490,20 +3499,36 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     private void updateOrderDocumentStatus() throws JSONException, IOException {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                }
 
-        try {
-            MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
-            JSONObject jsonObject = SETTINGS.orderDocument;
-            JSONObject orderDocJsonObj = jsonObject.getJSONObject("documentsData");
-            orderDocJsonObj.remove("orderDocumentStatus");
-            orderDocJsonObj.put("orderDocumentStatus", OrderDocumentStatus.CLOSED);
-            String upDataOrderDocumentStatus=transmit.authPutInvoice(ApiURL.Documents,jsonObject.toString(), SESSION.token,jsonObject.getString("docNum"));
-            Log.d("invoiceRes",upDataOrderDocumentStatus.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+
+                    try {
+                        MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                        JSONObject jsonObject = SETTINGS.orderDocument;
+                        JSONObject orderDocJsonObj = jsonObject.getJSONObject("documentsData");
+                        orderDocJsonObj.remove("orderDocumentStatus");
+
+                        orderDocJsonObj.put("orderDocumentStatus", OrderDocumentStatus.CLOSED);
+                        String upDataOrderDocumentStatus=transmit.authPutInvoice(ApiURL.Documents,jsonObject.toString(), SESSION.token,jsonObject.getString("docNum"));
+                        Log.d("invoiceRes",upDataOrderDocumentStatus.toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    return null;
+                }
+            }.execute();
     }
 
     private long getCurrencyIdByType(String type) {
