@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AlertDialog;
@@ -50,7 +49,6 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
-import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Settings.SettingsActivity;
 import com.pos.leaders.leaderspossystem.SettingsTab.SettingsTab;
@@ -59,6 +57,7 @@ import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 import com.sunmi.aidl.MSCardService;
@@ -270,23 +269,16 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                     ZReport z = new ZReport(0,  new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE, lastZReport.getEndOrderId() + 1, lastSale);
                                                     z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
                                                     double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
-                                                    totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
-                                                    long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
-                                                    z.setzReportId(zID);
-                                                    lastZReport = new ZReport(z);
-                                                    zReportDBAdapter.close();
-                                                    PrintTools pt = new PrintTools(DashBord.this);
-
-                                                    //create and print z report
-                                                    Bitmap bmap = pt.createZReport(lastZReport.getzReportId(), lastZReport.getStartOrderId(), lastZReport.getEndOrderId(), false,totalZReportAmount);
-                                                    if (bmap != null)
-                                                        pt.PrintReport(bmap);
-
+                                                    totalZReportAmount=zReportDBAdapter.zReportTotalAmount()+amount;
+                                                    z.setTotalAmount(amount);
+                                                    z.setTotalPosSales(totalZReportAmount);
+                                                ZReport zReport= Util.insertZReport(z,getApplicationContext());
                                                     Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
-                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, lastZReport.getzReportId());
-                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, lastZReport.getStartOrderId());
-                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, lastZReport.getEndOrderId());
+                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
+                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
+                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
                                                     i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
+                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,amount);
 
                                                     startActivity(i);
                                                     btZReport.setEnabled(false);
@@ -321,23 +313,16 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                 ZReport z = new ZReport(0,  new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE, lastZReport.getEndOrderId() + 1, lastSale);
                                 z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
                                 double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
-                                totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
-                                long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
-                                z.setzReportId(zID);
-                                lastZReport = new ZReport(z);
-                                zReportDBAdapter.close();
-                                PrintTools pt = new PrintTools(DashBord.this);
-
-                                //create and print z report
-                                Bitmap bmap = pt.createZReport(lastZReport.getzReportId(), lastZReport.getStartOrderId(), lastZReport.getEndOrderId(), false,totalZReportAmount);
-                                if (bmap != null)
-                                    pt.PrintReport(bmap);
-
+                                totalZReportAmount=zReportDBAdapter.zReportTotalAmount()+amount;
+                                z.setTotalAmount(amount);
+                                z.setTotalPosSales(totalZReportAmount);
+                                ZReport zReport= Util.insertZReport(z,getApplicationContext());
                                 Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, lastZReport.getzReportId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, lastZReport.getStartOrderId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, lastZReport.getEndOrderId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,amount);
 
                                 startActivity(i);
                                 btZReport.setEnabled(false);

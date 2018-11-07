@@ -11,7 +11,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
@@ -292,7 +291,7 @@ public class PrintTools {
 
 
 
-    public Bitmap createZReport(long id, long from, long to, boolean isCopy , double totalZReportAmount ) {
+    public Bitmap createZReport(ZReport zReport ,long id, long from, long to, boolean isCopy , double totalPosSalesAmount ) {
         /*double aReportAmount = 0;
         long aReportId = 0;*/
         double sheqle_plus = 0, sheqle_minus = 0;
@@ -307,15 +306,9 @@ public class PrintTools {
         saleDBAdapter.close();
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
         zReportDBAdapter.open();
-        ZReport zReport = zReportDBAdapter.getByID(id);
-        zReportDBAdapter.close();
-        EmployeeDBAdapter userDBAdapter = new EmployeeDBAdapter(context);
-        userDBAdapter.open();
-        zReport.setUser(userDBAdapter.getEmployeeByID(zReport.getByUser()));
-        userDBAdapter.close();
         AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
         aReportDBAdapter.open();
-        AReport aReport = aReportDBAdapter.getByLastZReport(id);
+        AReport aReport = aReportDBAdapter.getByLastZReport(id-1);
         /*try {
             aReportAmount = aReportDBAdapter.getLastRow().getAmount();
             aReportId = aReportDBAdapter.getLastRow().getCashPaymentId();
@@ -423,8 +416,7 @@ public class PrintTools {
         }
 
         //endregion Currency summary
-
-        return BitmapInvoice.zPrint(context, zReport, usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, Double.parseDouble(Util.makePrice(aReport.getAmount())),totalZReportAmount);
+        return BitmapInvoice.zPrint(context, zReport, usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, Double.parseDouble(Util.makePrice(aReport.getAmount())),totalPosSalesAmount);
         //return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
 
     }
