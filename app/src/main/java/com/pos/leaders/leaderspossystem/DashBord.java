@@ -233,9 +233,13 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
                     ShowAReportDialog(_aReport);
                 } else {
-                    _aReport.setLastZReportID(zReport.getzReportId());
-                    _aReport.setLastOrderId(zReport.getEndOrderId());
-
+                    if(zReport==null){
+                        _aReport.setLastZReportID(-1);
+                        _aReport.setLastOrderId(-1);
+                    }else {
+                        _aReport.setLastZReportID(zReport.getzReportId());
+                        _aReport.setLastOrderId(zReport.getEndOrderId());
+                    }
                     ShowAReportDialog(_aReport);
                 }
 
