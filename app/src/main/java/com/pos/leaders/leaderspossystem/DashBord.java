@@ -31,8 +31,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
@@ -41,7 +41,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Elements.IButton;
-import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Employee;
@@ -74,7 +74,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     IButton salesCart, report, product, category, backUp, customerClub, logOut, offers, settings , schedule_workers;
     IButton users;
     IButton btZReport, btAReport;
-    AReportDBAdapter aReportDBAdapter;
+    OpiningReportDBAdapter aReportDBAdapter;
     Employee user = new Employee();
     EmployeeDBAdapter userDBAdapter;
     ArrayList<Integer> permissions_name;
@@ -220,11 +220,11 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         btAReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AReport _aReport = new AReport();
+               final OpiningReport _aReport = new OpiningReport();
                 _aReport.setByUserID(SESSION._EMPLOYEE.getEmployeeId());
                 _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
-                AReport aReport = getLastAReport();
+                OpiningReport aReport = getLastAReport();
                 ZReport zReport = getLastZReport();
 
                 if (aReport == null) {
@@ -451,7 +451,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                            // btZReport.setEnabled(false);
                         } else
                             btZReport.setEnabled(true);
-                        btAReport.setEnabled(false);
+                        btAReport.setEnabled(true);
                         salesCart.setEnabled(true);
                     }
                     break;
@@ -536,7 +536,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
     private boolean needAReport() {
         ZReport zReport = getLastZReport();
-        AReport aReport = getLastAReport();
+        OpiningReport aReport = getLastAReport();
 
 
         if (aReport != null && zReport != null) {
@@ -566,10 +566,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         return zReport;
     }
 
-    private AReport getLastAReport() {
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(this);
+    private OpiningReport getLastAReport() {
+        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(this);
         aReportDBAdapter.open();
-        AReport aReport = null;
+        OpiningReport aReport = null;
 
         try {
             aReport = aReportDBAdapter.getLastRow();
@@ -582,7 +582,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         return aReport;
     }
 
-    private void ShowAReportDialog(final AReport aReport) {
+    private void ShowAReportDialog(final OpiningReport aReport) {
 
         //there is no customerName report after z report
         enableBackButton = false;
@@ -634,7 +634,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     String str = et.getText().toString();
                     if (!str.equals("")) {
                         aReport.setAmount(Double.parseDouble(str));
-                        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBord.this);
+                        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
                         aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
                         aReportDBAdapter.close();
@@ -667,7 +667,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 currenciesNames.add(currencyTypesList.get(i).getType());
             }
 
-            final AReportDetailsDBAdapter aReportDetailsDBAdapter = new AReportDetailsDBAdapter(DashBord.this);
+            final OpiningReportDetailsDBAdapter aReportDetailsDBAdapter = new OpiningReportDetailsDBAdapter(DashBord.this);
             aReportDetailsDBAdapter.open();
             // Creating adapter for spinner
             final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currenciesNames);
@@ -885,11 +885,11 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     if (!str.equals("")) {
                         aReportTotalAmount = firstCurrencyInDefaultValue * fCurrency.getRate() + secondCurrencyInDefaultValue * sCurrency.getRate() + thirdCurrencyInDefaultValue * tCurrency.getRate() + forthCurrencyInDefaultValue * forthCurrency.getRate();
                         aReport.setAmount(aReportTotalAmount);
-                        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBord.this);
+                        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
                         aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
                         try {
-                            aReportId = aReportDBAdapter.getLastRow().getaReportId();
+                            aReportId = aReportDBAdapter.getLastRow().getOpiningReportId();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

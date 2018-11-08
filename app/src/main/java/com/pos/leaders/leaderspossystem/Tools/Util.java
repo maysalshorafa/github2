@@ -16,7 +16,7 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.text.DocumentException;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
@@ -26,7 +26,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DocumentType;
-import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
@@ -668,6 +668,7 @@ e.printStackTrace();
     }
     public static  ZReport insertZReport(ZReport zReport,Context context)
     {
+        double aReportAmount = 0;
         ZReport lastZReport = getLastZReport(context);
 
         if (lastZReport == null) {
@@ -675,9 +676,12 @@ e.printStackTrace();
             lastZReport.setEndOrderId(0);
             lastZReport.setzReportId(0);
         }
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
-        aReportDBAdapter.open();
-        AReport aReport = aReportDBAdapter.getByLastZReport(lastZReport.getzReportId());
+        OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(context);
+        opiningReportDBAdapter.open();
+        List<OpiningReport> opiningReportList = opiningReportDBAdapter.getListByLastZReport(lastZReport.getzReportId());
+        for (int i=0;i<opiningReportList.size();i++){
+            aReportAmount+=opiningReportList.get(i).getAmount();
+        }
         double cash_plus = 0, cash_minus = 0;
         double check_plus = 0, check_minus = 0;
         double creditCard_plus = 0, creditCard_minus = 0;
@@ -712,7 +716,7 @@ e.printStackTrace();
             }
         }
         long zID = zReportDBAdapter.insertEntry(zReport.getCreatedAt(), zReport.getByUser(), zReport.getStartOrderId(), zReport.getEndOrderId(),
-                zReport.getTotalAmount(),zReport.getTotalAmount()+aReport.getAmount(),cash_plus,check_plus,creditCard_plus,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax,aReport.getAmount());
+                zReport.getTotalAmount(),zReport.getTotalAmount()+aReportAmount,cash_plus,check_plus,creditCard_plus,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax,aReportAmount);
         zReport.setzReportId(zID);
         return zReport;
     }

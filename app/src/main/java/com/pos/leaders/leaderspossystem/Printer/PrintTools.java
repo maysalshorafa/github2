@@ -6,15 +6,15 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
@@ -306,9 +306,9 @@ public class PrintTools {
         saleDBAdapter.close();
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
         zReportDBAdapter.open();
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
+        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(context);
         aReportDBAdapter.open();
-        AReport aReport = aReportDBAdapter.getByLastZReport(id-1);
+        OpiningReport aReport = aReportDBAdapter.getByLastZReport(id-1);
         /*try {
             aReportAmount = aReportDBAdapter.getLastRow().getAmount();
             aReportId = aReportDBAdapter.getLastRow().getCashPaymentId();
@@ -326,13 +326,13 @@ public class PrintTools {
         List<CurrencyReturns> currencyReturnList = returnPaymentList(sales);
         List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(sales);
         if (SETTINGS.enableCurrencies) {
-        AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
+        OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
         aReportDetailsDBAdapter.open();
 
-            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReport.getaReportId());
-            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReport.getaReportId());
-            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReport.getaReportId());
-            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReport.getaReportId());
+            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReport.getOpiningReportId());
+            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReport.getOpiningReportId());
+            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReport.getOpiningReportId());
+            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReport.getOpiningReportId());
         }
         double cash_plus = 0, cash_minus = 0;
         double check_plus = 0, check_minus = 0;
@@ -496,12 +496,12 @@ public class PrintTools {
 
         saleDBAdapter.close();
 
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
+        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(context);
         aReportDBAdapter.open();
-        AReport aReport = aReportDBAdapter.getByLastZReport((int) id);
+        OpiningReport aReport = aReportDBAdapter.getByLastZReport((int) id);
         try {
             aReportAmount = aReportDBAdapter.getLastRow().getAmount();
-            aReportId = aReportDBAdapter.getLastRow().getaReportId();
+            aReportId = aReportDBAdapter.getLastRow().getOpiningReportId();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -515,7 +515,7 @@ public class PrintTools {
         List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(sales);
         List<CurrencyReturns> currencyReturnList = returnPaymentList(sales);
         if (SETTINGS.enableCurrencies) {
-            AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
+            OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
             aReportDetailsDBAdapter.open();
 
             aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReportId);

@@ -26,13 +26,13 @@ import android.widget.Toast;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.Coustmer_Group;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.CustmerManagementActivity;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Dash_bord_adapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
@@ -56,7 +56,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
     ImageView im;
     GridView grid;
     String permissions_name;
-    AReportDBAdapter aReportDBAdapter;
+    OpiningReportDBAdapter aReportDBAdapter;
     Employee user=new Employee();
     EmployeeDBAdapter userDBAdapter;
     ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
@@ -132,7 +132,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
 
         im = (ImageView) findViewById(R.id.home);
         Dash_bord_adapter adapter = new Dash_bord_adapter(OldDashBoard.this, dashbord_text, imageId);
-        aReportDBAdapter = new AReportDBAdapter(this);
+        aReportDBAdapter = new OpiningReportDBAdapter(this);
         userDBAdapter = new EmployeeDBAdapter(this);
         userDBAdapter.open();
         aReportDBAdapter.open();
@@ -288,7 +288,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
 
     private void createAReport() {
 
-        final AReport _aReport = new AReport();
+        final OpiningReport _aReport = new OpiningReport();
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(this);
 
         zReportDBAdapter.open();
@@ -301,9 +301,9 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
         }
         zReportDBAdapter.close();
 
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(this);
+        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(this);
         aReportDBAdapter.open();
-        AReport aReport = null;
+        OpiningReport aReport = null;
 
         try {
             aReport = aReportDBAdapter.getLastRow();
@@ -340,7 +340,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    private void ShowAReportDialog(final AReport aReport) {
+    private void ShowAReportDialog(final OpiningReport aReport) {
         CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
 
         //there is no customerName report after z report
@@ -378,7 +378,7 @@ public class OldDashBoard extends AppCompatActivity implements AdapterView.OnIte
                 String str = et.getText().toString();
                 if (!str.equals("")) {
                     aReport.setAmount(Double.parseDouble(str));
-                    AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(OldDashBoard.this);
+                    OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(OldDashBoard.this);
                     aReportDBAdapter.open();
                     aReportDBAdapter.insertEntry(aReport.getCreatedAt(),aReport.getByUserID(),aReport.getAmount(),aReport.getLastOrderId(),aReport.getLastZReportID());
                     aReportDBAdapter.close();

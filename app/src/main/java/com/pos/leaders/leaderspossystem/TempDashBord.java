@@ -24,13 +24,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
@@ -56,7 +56,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     private boolean enableBackButton = true;
     Button mainScreen, report, product, department, users, backUp, customerClub, logOut, schedule_workers, settings;
     Button btZReport, btAReport;
-    AReportDBAdapter aReportDBAdapter;
+    OpiningReportDBAdapter aReportDBAdapter;
     Employee user = new Employee();
     EmployeeDBAdapter userDBAdapter;
     ArrayList<Integer> permissions_name;
@@ -203,11 +203,11 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         btAReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AReport _aReport = new AReport();
+                final OpiningReport _aReport = new OpiningReport();
                 _aReport.setByUserID(SESSION._EMPLOYEE.getEmployeeId());
                 _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
-                AReport aReport = getLastAReport();
+                OpiningReport aReport = getLastAReport();
                 ZReport zReport = getLastZReport();
 
                 if (aReport == null) {
@@ -428,7 +428,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         ZReport zReport = getLastZReport();
         Log.e("zreport last", zReport.toString());
 
-        AReport aReport = getLastAReport();
+        OpiningReport aReport = getLastAReport();
         Log.e("areport last", aReport.toString());
 
 
@@ -462,10 +462,10 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         return zReport;
     }
 
-    private AReport getLastAReport(){
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(this);
+    private OpiningReport getLastAReport(){
+        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(this);
         aReportDBAdapter.open();
-        AReport aReport = null;
+        OpiningReport aReport = null;
 
         try {
             aReport = aReportDBAdapter.getLastRow();
@@ -479,7 +479,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         return aReport;
     }
 
-    private void ShowAReportDialog(final AReport aReport) {
+    private void ShowAReportDialog(final OpiningReport aReport) {
         //there is no a report after z report
         enableBackButton = false;
         final Dialog discountDialog = new Dialog(TempDashBord.this);
@@ -521,7 +521,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                 String str = et.getText().toString();
                 if (!str.equals("")) {
                     aReport.setAmount(Double.parseDouble(str));
-                    AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(TempDashBord.this);
+                    OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(TempDashBord.this);
                     aReportDBAdapter.open();
                     aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
                     aReportDBAdapter.close();

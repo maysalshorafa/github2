@@ -3,8 +3,8 @@ package com.pos.leaders.leaderspossystem.Feedback;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pos.leaders.leaderspossystem.Models.AReport;
-import com.pos.leaders.leaderspossystem.Models.AReportDetails;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -56,29 +56,29 @@ public class ClearSyncTable {
         switch (msgType) {
 
             //region A REPORT
-            case MessageType.ADD_A_REPORT:
-                res = messageTransmit.authPost(ApiURL.AReport, msgData, token);
+            case MessageType.ADD_OPINING_REPORT:
+                res = messageTransmit.authPost(ApiURL.OpiningReport, msgData, token);
                 break;
-            case MessageType.UPDATE_A_REPORT:
-                AReport aReport = null;
-                aReport = objectMapper.readValue(msgData, AReport.class);
-                res = messageTransmit.authPut(ApiURL.AReport, msgData, token, aReport.getaReportId());
+            case MessageType.UPDATE_OPINING_REPORT:
+                OpiningReport aReport = null;
+                aReport = objectMapper.readValue(msgData, OpiningReport.class);
+                res = messageTransmit.authPut(ApiURL.OpiningReport, msgData, token, aReport.getOpiningReportId());
                 break;
-            case MessageType.DELETE_A_REPORT:
-                res = messageTransmit.authDelete(ApiURL.AReport, msgData, token);
+            case MessageType.DELETE_OPINING_REPORT:
+                res = messageTransmit.authDelete(ApiURL.OpiningReport, msgData, token);
                 break;
             //endregion A REPORT
             //region A REPORT Details
-            case MessageType.ADD_A_REPORT_DETAILS:
-                res = messageTransmit.authPost(ApiURL.AReportDetails, msgData, token);
+            case MessageType.ADD_OPINING_REPORT_DETAILS:
+                res = messageTransmit.authPost(ApiURL.OpiningReportDetails, msgData, token);
                 break;
-            case MessageType.UPDATE_A_REPORT_DETAILS:
-                AReportDetails aReportDetails = null;
-                aReportDetails = objectMapper.readValue(msgData, AReportDetails.class);
-                res = messageTransmit.authPut(ApiURL.AReportDetails, msgData, token, aReportDetails.getaReportDetailsId());
+            case MessageType.UPDATE_OPINING_REPORT_DETAILS:
+                OpiningReportDetails aReportDetails = null;
+                aReportDetails = objectMapper.readValue(msgData, OpiningReportDetails.class);
+                res = messageTransmit.authPut(ApiURL.OpiningReportDetails, msgData, token, aReportDetails.getOpiningReportDetailsId());
                 break;
-            case MessageType.DELETE_A_REPORT_DETAILS:
-                res = messageTransmit.authDelete(ApiURL.AReportDetails, msgData, token);
+            case MessageType.DELETE_OPINING_REPORT_DETAILS:
+                res = messageTransmit.authDelete(ApiURL.OpiningReportDetails, msgData, token);
                 break;
             //endregion A REPORT Details
 
