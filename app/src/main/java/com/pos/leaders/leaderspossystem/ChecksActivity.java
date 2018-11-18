@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -126,6 +128,8 @@ public class ChecksActivity extends AppCompatActivity {
 		lvChecks = (ListView) findViewById(R.id.checksActivity_LVChecks);
 		lvChecks.setFocusable(true);
 		Check check = new Check();
+		check.setCreatedAt(new Timestamp(System.currentTimeMillis()) );
+		Log.d("check",check.toString());
 		checkList.add(check);
 		getTotal();
 
@@ -432,10 +436,10 @@ public class ChecksActivity extends AppCompatActivity {
 	}
 
 	public void delete(int pos){
-		adapter = new ChecksListViewAdapter(this, R.layout.list_adapter_row_checks, checkList);
-		lvChecks.setAdapter(adapter);
 		checkList.remove(pos);
 		adapter.remove(pos);
+		adapter = new ChecksListViewAdapter(this, R.layout.list_adapter_row_checks, checkList);
+		lvChecks.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		getTotal();
 	}

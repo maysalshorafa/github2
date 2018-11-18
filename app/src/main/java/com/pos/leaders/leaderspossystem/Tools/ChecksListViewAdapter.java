@@ -16,7 +16,6 @@ import com.pos.leaders.leaderspossystem.ChecksActivity;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.R;
 
-import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -71,11 +70,9 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 				holder.etBankNum.setHint(checks.get(position).getBankNum() + "");
 				holder.etBenchNum.setHint(checks.get(position).getBranchNum() + "");
 				holder.etCheckNum.setHint(checks.get(position).getCheckNum() + "");
-				holder.etDate.setText(DateConverter.toDate(new Date(new Timestamp(System.currentTimeMillis()).getTime())));
 				holder.etAccountNum.setHint(checks.get(position).getAccountNum() + "");
+				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getCreatedAt().getTime())));
 				amount=checks.get(position).getAmount() ;
-
-
 			}else {
 				holder.etAccountNum.setText(checks.get(position).getAccountNum() + "");
 				holder.etAmount.setText(checks.get(position).getAmount() + "");
@@ -109,6 +106,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		holder.etDate.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
 				// TODO Auto-generated method stub
 				new DatePickerDialog(context, date, myCalendar
 						.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
