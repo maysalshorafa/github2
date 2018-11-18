@@ -18,12 +18,12 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Employee;
@@ -211,9 +211,9 @@ public class PdfUA {
         user = userDBAdapter.getEmployeeByID(zReport.getByUser());
         zReport.setUser(userDBAdapter.getEmployeeByID(zReport.getByUser()));
         userDBAdapter.close();
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
+        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(context);
         aReportDBAdapter.open();
-        AReport aReport = aReportDBAdapter.getByLastZReport(id);
+        OpiningReport aReport = aReportDBAdapter.getByLastZReport(id);
         /*try {
             aReportAmount = aReportDBAdapter.getLastRow().getAmount();
             aReportId = aReportDBAdapter.getLastRow().getCashPaymentId();
@@ -230,13 +230,13 @@ public class PdfUA {
         List<CashPayment> cashPaymentList = PrintTools.cashPaymentList(sales);
         List<CurrencyReturns> currencyReturnList = PrintTools.returnPaymentList(sales);
         if (SETTINGS.enableCurrencies) {
-            AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
+            OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
             aReportDetailsDBAdapter.open();
 
-            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReport.getaReportId());
-            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReport.getaReportId());
-            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReport.getaReportId());
-            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReport.getaReportId());
+            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReport.getOpiningReportId());
+            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReport.getOpiningReportId());
+            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReport.getOpiningReportId());
+            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReport.getOpiningReportId());
         }
         double cash_plus = 0, cash_minus = 0;
         double check_plus = 0, check_minus = 0;
@@ -349,7 +349,7 @@ public class PdfUA {
         insertCell(table,Util.makePrice(aReport.getAmount())+ "", Element.ALIGN_CENTER, 1, font);
         insertCell(table, "~", Element.ALIGN_CENTER, 1, font);
         insertCell(table,"~", Element.ALIGN_CENTER, 1, font);
-        insertCell(table, "AReport", Element.ALIGN_CENTER, 1, font);
+        insertCell(table, "OpiningReport", Element.ALIGN_CENTER, 1, font);
 
         insertCell(table,Util.makePrice(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus+Double.parseDouble(Util.makePrice(aReport.getAmount()))), Element.ALIGN_CENTER, 1, font);
         insertCell(table,  Util.makePrice(cash_minus + check_minus + creditCard_minus), Element.ALIGN_CENTER, 1, font);

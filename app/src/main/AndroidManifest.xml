@@ -62,8 +62,7 @@
         <activity
             android:name=".AddEmployeeActivity"
             android:label="@string/title_add_user_activity" />
-        <activity android:name=".OfferActivity" />
-        <activity android:name=".OfferRuleActivity" />
+
         <activity
             android:name=".OrdersManagementActivity"
             android:label="@string/title_sales_management_activity" />
@@ -163,9 +162,6 @@
         <activity
             android:name=".SalesAssistantDetailesSalesMangmentActivity"
             android:label="@string/title_sales_man_management_activity" />
-        <activity
-            android:name=".CurrencyReturnsCustomDialogActivity"
-            android:theme="@style/AppTheme.PopUp" />
         <activity android:name=".PrinterStub" />
         <activity
             android:name=".EmployeeManagementActivity"
@@ -211,9 +207,10 @@
         <activity
             android:name=".InvoiceManagementActivity"
             android:label="@string/invoice_management_activity" />
-        <activity android:name=".ReceiptTab.ReceiptTab" />
         <activity android:name=".GiftProductActivity" />
         <activity android:name=".ClosingReportActivity"></activity>
+
+
     </application>
 
 </manifest>

@@ -10,9 +10,11 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
-import com.pos.leaders.leaderspossystem.Models.OrderDetails;
-import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
@@ -277,6 +279,11 @@ public class BitmapInvoice {
     }
 
     public static Bitmap zPrint(Context context, ZReport zReport, double usa_plus, double usa_minus, double eur_plus, double eur_minus, double gbp_plus, double gbp_minus, double sheqle_plus, double sheqle_minus, double cash_plus, double cash_minus, double check_plus, double check_minus, double creditCard_plus, double creditCard_minus, boolean isCopy, double starterAmount,double totalZReportAmount) {
+        ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
+        zReportDBAdapter.open();
+        EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
+        employeeDBAdapter.open();
+        zReport.setUser( employeeDBAdapter.getEmployeeByID(zReport.getByUser()));
         //miriam_libre_bold.ttf
         //miriam_libre_regular.ttf
         //carmelitregular.ttf

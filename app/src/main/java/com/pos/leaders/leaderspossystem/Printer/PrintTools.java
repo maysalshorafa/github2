@@ -6,16 +6,15 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
@@ -292,9 +291,10 @@ public class PrintTools {
 
 
 
-    public Bitmap createZReport(long id, long from, long to, boolean isCopy , double totalZReportAmount ) {
+    public Bitmap createZReport(ZReport zReport ,long id, long from, long to, boolean isCopy , double totalPosSalesAmount ) {
         /*double aReportAmount = 0;
         long aReportId = 0;*/
+        double aReportAmount =0.0;
         double sheqle_plus = 0, sheqle_minus = 0;
         double usd_plus = 0, usd_minus = 0;
         double eur_plus = 0, eur_minus = 0;
@@ -307,15 +307,13 @@ public class PrintTools {
         saleDBAdapter.close();
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
         zReportDBAdapter.open();
-        ZReport zReport = zReportDBAdapter.getByID(id);
-        zReportDBAdapter.close();
-        EmployeeDBAdapter userDBAdapter = new EmployeeDBAdapter(context);
-        userDBAdapter.open();
-        zReport.setUser(userDBAdapter.getEmployeeByID(zReport.getByUser()));
-        userDBAdapter.close();
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
-        aReportDBAdapter.open();
-        AReport aReport = aReportDBAdapter.getByLastZReport(id);
+        OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(context);
+        opiningReportDBAdapter.open();
+        List<OpiningReport> opiningReportList = opiningReportDBAdapter.getListByLastZReport(zReport.getzReportId()-1);
+        for (int i=0;i<opiningReportList.size();i++){
+            aReportAmount+=opiningReportList.get(i).getAmount();
+            Log.d("areport",aReportAmount+"");
+        }
         /*try {
             aReportAmount = aReportDBAdapter.getLastRow().getAmount();
             aReportId = aReportDBAdapter.getLastRow().getCashPaymentId();
@@ -333,18 +331,20 @@ public class PrintTools {
         List<CurrencyReturns> currencyReturnList = returnPaymentList(sales);
         List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(sales);
         if (SETTINGS.enableCurrencies) {
-        AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
+        OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
         aReportDetailsDBAdapter.open();
-
-            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReport.getaReportId());
-            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReport.getaReportId());
-            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReport.getaReportId());
-            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReport.getaReportId());
+            for (int a=0 ;a<opiningReportList.size();a++) {
+                OpiningReport opiningReport = opiningReportList.get(a);
+                aReportDetailsForFirstCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, opiningReport.getOpiningReportId());
+                aReportDetailsForSecondCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, opiningReport.getOpiningReportId());
+                aReportDetailsForThirdCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, opiningReport.getOpiningReportId());
+                aReportDetailsForForthCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, opiningReport.getOpiningReportId());
+            }
         }
         double cash_plus = 0, cash_minus = 0;
         double check_plus = 0, check_minus = 0;
         double creditCard_plus = 0, creditCard_minus = 0;
-        aReportDBAdapter.close();
+        opiningReportDBAdapter.close();
         for (Payment p : payments) {
             int i = 0;
             switch (p.getPaymentWay()) {
@@ -423,8 +423,7 @@ public class PrintTools {
         }
 
         //endregion Currency summary
-
-        return BitmapInvoice.zPrint(context, zReport, usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, Double.parseDouble(Util.makePrice(aReport.getAmount())),totalZReportAmount);
+        return BitmapInvoice.zPrint(context, zReport, usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReportAmount,totalPosSalesAmount);
         //return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
 
     }
@@ -504,12 +503,12 @@ public class PrintTools {
 
         saleDBAdapter.close();
 
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
+        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(context);
         aReportDBAdapter.open();
-        AReport aReport = aReportDBAdapter.getByLastZReport((int) id);
+        OpiningReport aReport = aReportDBAdapter.getByLastZReport((int) id);
         try {
             aReportAmount = aReportDBAdapter.getLastRow().getAmount();
-            aReportId = aReportDBAdapter.getLastRow().getaReportId();
+            aReportId = aReportDBAdapter.getLastRow().getOpiningReportId();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -523,7 +522,7 @@ public class PrintTools {
         List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(sales);
         List<CurrencyReturns> currencyReturnList = returnPaymentList(sales);
         if (SETTINGS.enableCurrencies) {
-            AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
+            OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
             aReportDetailsDBAdapter.open();
 
             aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReportId);

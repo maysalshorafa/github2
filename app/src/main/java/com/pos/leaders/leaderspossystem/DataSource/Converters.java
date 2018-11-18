@@ -5,11 +5,13 @@ package com.pos.leaders.leaderspossystem.DataSource;
  */
 
 import android.arch.persistence.room.TypeConverter;
+
+import java.sql.Timestamp;
 import java.util.Date;
 public class Converters {
     @TypeConverter
-    public static Date fromTimestamp(Long value) {
-        return value == null ? null : new Date(value);
+    public static Timestamp fromTimestamp(Long value) {
+        return value == null ? null : new Timestamp(value);
     }
     @TypeConverter
     public static Long dateToTimestamp(Date date) {

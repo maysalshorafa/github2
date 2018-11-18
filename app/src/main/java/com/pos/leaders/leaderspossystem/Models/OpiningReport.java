@@ -9,8 +9,8 @@ import java.sql.Timestamp;
  * Created by KARAM on 12/04/2017.
  */
 
-public class AReport {
-    private long aReportId;
+public class OpiningReport {
+    private long opiningReportId;
     private Timestamp createdAt;
     private long byUserID;
     @JsonIgnore
@@ -26,9 +26,9 @@ public class AReport {
 
     //region Constructors
 
-    public AReport() {}
+    public OpiningReport() {}
 
-    public AReport(Timestamp createdAt, int byUserID, double amount, long lastOrderId, long lastZReportID) {
+    public OpiningReport(Timestamp createdAt, int byUserID, double amount, long lastOrderId, long lastZReportID) {
         this.createdAt = createdAt;
         this.byUserID = byUserID;
         this.amount = amount;
@@ -36,7 +36,7 @@ public class AReport {
         this.lastZReportID = lastZReportID;
     }
 
-    public AReport(Timestamp createdAt, Employee byUser, Order lastSale, ZReport lastZReport, double amount) {
+    public OpiningReport(Timestamp createdAt, Employee byUser, Order lastSale, ZReport lastZReport, double amount) {
         this.createdAt = createdAt;
         this.byUser = byUser;
         this.lastSale = lastSale;
@@ -44,8 +44,8 @@ public class AReport {
         this.amount = amount;
     }
 
-    public AReport(long aReportId, Timestamp createdAt, long byUserID, double amount, long lastOrderId, long lastZReportID) {
-        this.aReportId = aReportId;
+    public OpiningReport(long opiningReportId, Timestamp createdAt, long byUserID, double amount, long lastOrderId, long lastZReportID) {
+        this.opiningReportId = opiningReportId;
         this.createdAt = createdAt;
         this.byUserID = byUserID;
         this.amount = amount;
@@ -56,8 +56,8 @@ public class AReport {
 
     //region Getter
 
-    public long getaReportId() {
-        return aReportId;
+    public long getOpiningReportId() {
+        return opiningReportId;
     }
 
     public Timestamp getCreatedAt() {
@@ -97,8 +97,8 @@ public class AReport {
 
     //region Setter
 
-    public void setaReportId(long aReportId) {
-        this.aReportId = aReportId;
+    public void setOpiningReportId(long opiningReportId) {
+        this.opiningReportId = opiningReportId;
     }
 
     public void setCreatedAt(Timestamp createdAt) {

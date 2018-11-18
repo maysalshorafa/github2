@@ -16,19 +16,26 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.text.DocumentException;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DocumentType;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Invoice;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.ReceiptDocuments;
+import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.PdfUA;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
@@ -658,5 +665,93 @@ e.printStackTrace();
         }catch(Exception e){
             return null;
         }
+    }
+    public static  ZReport insertZReport(ZReport zReport,Context context)
+    {
+        double aReportAmount = 0;
+        ZReport lastZReport = getLastZReport(context);
+
+        if (lastZReport == null) {
+            lastZReport = new ZReport();
+            lastZReport.setEndOrderId(0);
+            lastZReport.setzReportId(0);
+        }
+        OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(context);
+        opiningReportDBAdapter.open();
+        List<OpiningReport> opiningReportList = opiningReportDBAdapter.getListByLastZReport(lastZReport.getzReportId());
+        for (int i=0;i<opiningReportList.size();i++){
+            aReportAmount+=opiningReportList.get(i).getAmount();
+        }
+        double cash_plus = 0, cash_minus = 0;
+        double check_plus = 0, check_minus = 0;
+        double creditCard_plus = 0, creditCard_minus = 0;
+        ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
+        zReportDBAdapter.open();
+        OrderDBAdapter orderDBAdapter = new OrderDBAdapter(context);
+        orderDBAdapter.open();
+        List<Order> sales = orderDBAdapter.getBetween(zReport.getStartOrderId(),zReport.getEndOrderId());
+        List<Payment> payments = paymentList(sales,context);
+        for (Payment p : payments) {
+            int i = 0;
+            switch (p.getPaymentWay()) {
+
+                case CONSTANT.CASH:
+                    if (p.getAmount() > 0)
+                        cash_plus += p.getAmount();
+                    else
+                        cash_minus += p.getAmount();
+                    break;
+                case CONSTANT.CREDIT_CARD:
+                    if (p.getAmount() > 0)
+                        creditCard_plus += p.getAmount();
+                    else
+                        creditCard_minus += p.getAmount();
+                    break;
+                case CONSTANT.CHECKS:
+                    if (p.getAmount() > 0)
+                        check_plus += p.getAmount();
+                    else
+                        check_minus += p.getAmount();
+                    break;
+            }
+        }
+        long zID = zReportDBAdapter.insertEntry(zReport.getCreatedAt(), zReport.getByUser(), zReport.getStartOrderId(), zReport.getEndOrderId(),
+                zReport.getTotalAmount(),zReport.getTotalAmount()+aReportAmount,cash_plus,check_plus,creditCard_plus,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax,aReportAmount);
+        zReport.setzReportId(zID);
+        return zReport;
+    }
+    public static List<Payment> paymentList(List<Order> sales,Context context) {
+        List<Payment> pl = new ArrayList<Payment>();
+        PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(context);
+        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
+        CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(context);
+        paymentDBAdapter.open();
+        for (Order s : sales) {
+            List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(s.getOrderId());
+            /**
+             if (SETTINGS.enableCurrencies) {
+             for (Payment _p : payments) {
+             _p.setCashPayments(cashPaymentDBAdapter.getPaymentBySaleID(_p.getOrderId()));
+             _p.setCurrencyReturns(currencyReturnsDBAdapter.getCurencyReturnBySaleID(_p.getOrderId()));
+             }
+             }**/
+
+            pl.addAll(payments);
+        }
+        paymentDBAdapter.close();
+        return pl;
+    }
+    public static ZReport getLastZReport(Context c) {
+        ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(c);
+
+        zReportDBAdapter.open();
+        ZReport zReport = null;
+        try {
+            zReport = zReportDBAdapter.getLastRow();
+        } catch (Exception e) {
+            Log.w("Z Report ", e.getMessage());
+        }
+        zReportDBAdapter.close();
+        return zReport;
     }
 }

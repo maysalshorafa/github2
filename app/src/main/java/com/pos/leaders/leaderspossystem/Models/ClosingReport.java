@@ -29,9 +29,6 @@ public class ClosingReport implements Iterable<ClosingReport> {
     private long opiningReportId;
 
 
-    public ClosingReport() {
-    }
-
     public ClosingReport(@NonNull long closingReportId, double actualTotalValue, double expectedTotalValue, double differentTotalValue, Timestamp createdAt,long opiningReportId) {
         this.closingReportId = closingReportId;
         this.actualTotalValue = actualTotalValue;

@@ -19,6 +19,7 @@ import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -95,32 +96,28 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                         .setMessage(getString(R.string.create_z_report_message))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                //(long id, Date creationDate, Employee user, ORDER startSale, ORDER endSale)
-                                if(lastZReport == null) {
+                                ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(ReportsManagementActivity.this);
+                                zReportDBAdapter.open();
+                                ZReport lastZReport = Util.getLastZReport(getApplicationContext());
+
+                                if (lastZReport == null) {
                                     lastZReport = new ZReport();
                                     lastZReport.setEndOrderId(0);
                                 }
-
-                                ZReport z=new ZReport(0, new Timestamp(System.currentTimeMillis()) , SESSION._EMPLOYEE,lastZReport.getEndOrderId()+1,lastSale);
+                                ZReport z = new ZReport(0,  new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE, lastZReport.getEndOrderId() + 1, lastSale);
                                 z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
                                 double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
-                                totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
-                                long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
-                                z.setzReportId(zID);
-                                lastZReport = new ZReport(z);
-
-                                PrintTools pt = new PrintTools(ReportsManagementActivity.this);
-
-                                //create and print z report
-                                Bitmap bmap = pt.createZReport(lastZReport.getzReportId(), lastZReport.getStartOrderId(), lastZReport.getEndOrderId(), false,totalZReportAmount);
-                                if(bmap!=null)
-                                    pt.PrintReport(bmap);
-
-                                Intent i=new Intent(ReportsManagementActivity.this,ReportZDetailsActivity.class);
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID,lastZReport.getzReportId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM,lastZReport.getStartOrderId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO,lastZReport.getEndOrderId());
+                                totalZReportAmount=zReportDBAdapter.zReportTotalAmount()+amount;
+                                z.setTotalAmount(amount);
+                                z.setTotalPosSales(totalZReportAmount);
+                                ZReport zReport= Util.insertZReport(z,getApplicationContext());
+                                Intent i = new Intent(ReportsManagementActivity.this, ReportZDetailsActivity.class);
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,amount);
+
                                 startActivity(i);
                                 btnZ.setEnabled(false);
                             }

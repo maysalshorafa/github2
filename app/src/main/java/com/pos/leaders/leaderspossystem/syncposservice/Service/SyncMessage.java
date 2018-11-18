@@ -19,7 +19,7 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
@@ -49,8 +49,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.LogInActivity;
-import com.pos.leaders.leaderspossystem.Models.AReport;
-import com.pos.leaders.leaderspossystem.Models.AReportDetails;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.City;
@@ -409,27 +409,27 @@ public class SyncMessage extends Service {
             switch (msgType) {
 
                 //region A REPORT
-                case MessageType.ADD_A_REPORT:
+                case MessageType.ADD_OPINING_REPORT:
 
-                    AReport aReport = null;
-                    aReport = objectMapper.readValue(msgData, AReport.class);
+                    OpiningReport aReport = null;
+                    aReport = objectMapper.readValue(msgData, OpiningReport.class);
 
-                    AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(this);
+                    OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(this);
                     aReportDBAdapter.open();
                     rID = aReportDBAdapter.insertEntry(aReport);
                     aReportDBAdapter.close();
                     rID = 1;
                     break;
-                case MessageType.UPDATE_A_REPORT:
+                case MessageType.UPDATE_OPINING_REPORT:
                     break;
-                case MessageType.DELETE_A_REPORT:
+                case MessageType.DELETE_OPINING_REPORT:
                     break;
                 //endregion A REPORT
                 //region A REPORT Details
-                case MessageType.ADD_A_REPORT_DETAILS:
+                case MessageType.ADD_OPINING_REPORT_DETAILS:
                     /*
-                    AReportDetails aReportDetails = null;
-                    aReportDetails = objectMapper.readValue(msgData, AReportDetails.class);
+                    OpiningReportDetails aReportDetails = null;
+                    aReportDetails = objectMapper.readValue(msgData, OpiningReportDetails.class);
 
                     AReportDetailsDBAdapter aReportDetailsDBAdapter = new AReportDetailsDBAdapter(this);
                     aReportDetailsDBAdapter.open();
@@ -438,9 +438,9 @@ public class SyncMessage extends Service {
 */
                     rID = 1;
                     break;
-                case MessageType.UPDATE_A_REPORT_DETAILS:
+                case MessageType.UPDATE_OPINING_REPORT_DETAILS:
                     break;
-                case MessageType.DELETE_A_REPORT_DETAILS:
+                case MessageType.DELETE_OPINING_REPORT_DETAILS:
                     break;
                 //endregion A REPORT Details
 
@@ -1055,29 +1055,29 @@ public class SyncMessage extends Service {
         switch (msgType) {
 
             //region A REPORT
-            case MessageType.ADD_A_REPORT:
-                res = messageTransmit.authPost(ApiURL.AReport, jsonObject.getString(MessageKey.Data), token);
+            case MessageType.ADD_OPINING_REPORT:
+                res = messageTransmit.authPost(ApiURL.OpiningReport, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.UPDATE_A_REPORT:
-                AReport aReport =null;
-                aReport=objectMapper.readValue(msgData, AReport.class);
-                res = messageTransmit.authPut(ApiURL.AReport, jsonObject.getString(MessageKey.Data), token,aReport.getaReportId());
+            case MessageType.UPDATE_OPINING_REPORT:
+                OpiningReport aReport =null;
+                aReport=objectMapper.readValue(msgData, OpiningReport.class);
+                res = messageTransmit.authPut(ApiURL.OpiningReport, jsonObject.getString(MessageKey.Data), token,aReport.getOpiningReportId());
                 break;
-            case MessageType.DELETE_A_REPORT:
-                res = messageTransmit.authDelete(ApiURL.AReport, jsonObject.getString(MessageKey.Data), token);
+            case MessageType.DELETE_OPINING_REPORT:
+                res = messageTransmit.authDelete(ApiURL.OpiningReport, jsonObject.getString(MessageKey.Data), token);
                 break;
             //endregion A REPORT
             //region A REPORT Details
-            case MessageType.ADD_A_REPORT_DETAILS:
-                res = messageTransmit.authPost(ApiURL.AReportDetails, jsonObject.getString(MessageKey.Data), token);
+            case MessageType.ADD_OPINING_REPORT_DETAILS:
+                res = messageTransmit.authPost(ApiURL.OpiningReportDetails, jsonObject.getString(MessageKey.Data), token);
                 break;
-            case MessageType.UPDATE_A_REPORT_DETAILS:
-                AReportDetails aReportDetails =null;
-                aReportDetails=objectMapper.readValue(msgData, AReportDetails.class);
-                res = messageTransmit.authPut(ApiURL.AReportDetails, jsonObject.getString(MessageKey.Data), token,aReportDetails.getaReportDetailsId());
+            case MessageType.UPDATE_OPINING_REPORT_DETAILS:
+                OpiningReportDetails aReportDetails =null;
+                aReportDetails=objectMapper.readValue(msgData, OpiningReportDetails.class);
+                res = messageTransmit.authPut(ApiURL.OpiningReportDetails, jsonObject.getString(MessageKey.Data), token,aReportDetails.getOpiningReportDetailsId());
                 break;
-            case MessageType.DELETE_A_REPORT_DETAILS:
-                res = messageTransmit.authDelete(ApiURL.AReportDetails, jsonObject.getString(MessageKey.Data), token);
+            case MessageType.DELETE_OPINING_REPORT_DETAILS:
+                res = messageTransmit.authDelete(ApiURL.OpiningReportDetails, jsonObject.getString(MessageKey.Data), token);
                 break;
             //endregion A REPORT Details
 

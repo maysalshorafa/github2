@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem.DAO;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  * Created by Win8.1 on 11/13/2018.
  */
-
+@Dao
 public interface ClosingReportDetailsDao {
     @Insert
     void insert(ClosingReportDetails closingReportDetails);
@@ -26,9 +27,9 @@ public interface ClosingReportDetailsDao {
     List<ClosingReportDetails> getAllWords();
 
     @Insert
-    Long create(ClosingReportDetails closingReportDetails);
+ void create(ClosingReportDetails closingReportDetails);
 
-    @Query("SELECT * FROM closing_report WHERE closing_report_detailsId = :id")
+    @Query("SELECT * FROM closing_report_details WHERE closing_report_detailsId = :id")
     ClosingReportDetails getById(Long id);
 
     @Query("SELECT * FROM closing_report_details;")

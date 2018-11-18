@@ -30,7 +30,7 @@ public class ClosingReportDetails implements Iterable<ClosingReportDetails> {
     private String currencyType;
 
     @NonNull
-    public long getClosing_report_details() {
+    public long getClosing_report_detailsId() {
         return closing_report_detailsId;
     }
 
@@ -58,8 +58,7 @@ public class ClosingReportDetails implements Iterable<ClosingReportDetails> {
         return currencyType;
     }
 
-    public ClosingReportDetails() {
-    }
+
 
     public void setClosing_report_detailsId(@NonNull long closing_report_detailsId) {
         this.closing_report_detailsId = closing_report_detailsId;

@@ -56,8 +56,8 @@ public class ZReportListViewAdapter extends ArrayAdapter {
         holder.tvZUserName.setText(SESSION._EMPLOYEE.getEmployeeName());
         if(ZReportList.get(position).getUser()!=null)
             holder.tvZUserName.setText(ZReportList.get(position).getUser().getFullName());
-        holder.tvZAmount.setText(ZReportList.get(position).getAmount()+"");
-        holder.tvZPosSales.setText(ZReportList.get(position).getTotalAmount()+"");
+        holder.tvZAmount.setText(ZReportList.get(position).getTotalAmount()+"");
+        holder.tvZPosSales.setText(ZReportList.get(position).getTotalPosSales()+"");
         if(bgColor%2==0){
             convertView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
         }

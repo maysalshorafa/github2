@@ -7,19 +7,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
-import com.pos.leaders.leaderspossystem.Printer.BitmapInvoice;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
-import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClosingReportActivity extends AppCompatActivity {
@@ -62,7 +65,11 @@ public class ClosingReportActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //calculate Method Amount
-                calculateMethodAmount();
+                try {
+                    calculateMethodAmount();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -72,7 +79,7 @@ public class ClosingReportActivity extends AppCompatActivity {
 
     }
 
-    private void calculateMethodAmount() {
+  private void calculateMethodAmount() throws Exception {
         long aReportId = 0;
         double usd_plus = 0, usd_minus = 0;
         double eur_plus = 0, eur_minus = 0;
@@ -81,43 +88,27 @@ public class ClosingReportActivity extends AppCompatActivity {
         double aReportAmount = 0;
         OrderDBAdapter orderDb = new OrderDBAdapter(getApplicationContext());
         orderDb.open();
+      OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(getApplicationContext());
+      opiningReportDBAdapter.open();
+      OpiningReport opiningReport = opiningReportDBAdapter.getLastRow();
+      Order order =orderDb.getLast();
 
-
-        List<Order> orders = orderDb.getBetween(endSaleId, id);
+        List<Order> orders = orderDb.getBetween(opiningReport.getLastOrderId(), order.getOrderId());
 
         orderDb.close();
 
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
-        aReportDBAdapter.open();
-        AReport aReport = aReportDBAdapter.getByLastZReport((int) id);
-        try {
-            aReportAmount = aReportDBAdapter.getLastRow().getAmount();
-            aReportId = aReportDBAdapter.getLastRow().getaReportId();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         double aReportDetailsForFirstCurrency=0;
         double aReportDetailsForSecondCurrency=0;
         double aReportDetailsForThirdCurrency=0;
         double aReportDetailsForForthCurrency=0;
 
         // get payment , cashPayment , returnList
-        List<Payment> payments = paymentList(sales);
-        List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(sales);
-        List<CurrencyReturns> currencyReturnList = returnPaymentList(sales);
-        if (SETTINGS.enableCurrencies) {
-            AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
-            aReportDetailsDBAdapter.open();
-
-            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReportId);
-            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReportId);
-            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReportId);
-            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReportId);
-        }
+        List<Payment> payments = paymentList(orders);
+        List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(orders);
+        List<CurrencyReturns> currencyReturnList = returnPaymentList(orders);
         double cash_plus = 0, cash_minus = 0;
         double check_plus = 0, check_minus = 0;
         double creditCard_plus = 0, creditCard_minus = 0;
-        aReportDBAdapter.close();
         for (Payment p : payments) {
             int i = 0;
             switch (p.getPaymentWay()) {
@@ -193,10 +184,67 @@ public class ClosingReportActivity extends AppCompatActivity {
             }
 
         }
-        return BitmapInvoice.xPrint(context, user, date.getTime(), usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, Double.parseDouble(Util.makePrice(aReportAmount)));
+        
 
-
-
-
+      //  return BitmapInvoice.xPrint(context, user, date.getTime(), usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, Double.parseDouble(Util.makePrice(aReportAmount)));
 }
+    // get Payment List
+    public List<Payment> paymentList(List<Order> sales) {
+        List<Payment> pl = new ArrayList<Payment>();
+        PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(getApplicationContext());
+        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(getApplicationContext());
+        CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(getApplicationContext());
+        paymentDBAdapter.open();
+        for (Order s : sales) {
+            List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(s.getOrderId());
+            /**
+             if (SETTINGS.enableCurrencies) {
+             for (Payment _p : payments) {
+             _p.setCashPayments(cashPaymentDBAdapter.getPaymentBySaleID(_p.getOrderId()));
+             _p.setCurrencyReturns(currencyReturnsDBAdapter.getCurencyReturnBySaleID(_p.getOrderId()));
+             }
+             }**/
+
+            pl.addAll(payments);
+        }
+        paymentDBAdapter.close();
+        return pl;
+    }
+
+    // get Cash Payment List
+    public  List<CashPayment> cashPaymentList(List<Order> sales) {
+        List<CashPayment> pl = new ArrayList<CashPayment>();
+        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(getApplicationContext());
+        cashPaymentDBAdapter.open();
+        for (Order s : sales) {
+            List<CashPayment> payments = cashPaymentDBAdapter.getPaymentBySaleID(s.getOrderId());
+            pl.addAll(payments);
+        }
+        cashPaymentDBAdapter.close();
+        return pl;
+    }
+
+    // get Currency Return  List
+    public  List<CurrencyReturns> returnPaymentList(List<Order> sales) {
+        List<CurrencyReturns> pl = new ArrayList<CurrencyReturns>();
+        CurrencyReturnsDBAdapter currencyDBAdapter = new CurrencyReturnsDBAdapter(getApplicationContext());
+        currencyDBAdapter.open();
+        for (Order s : sales) {
+            List<CurrencyReturns> payments = currencyDBAdapter.getCurencyReturnBySaleID(s.getOrderId());
+            pl.addAll(payments);
+        }
+        currencyDBAdapter.close();
+        return pl;
+    }
+    public  List<CurrencyOperation> currencyOperationPaymentList(List<Order> sales) {
+        List<CurrencyOperation> pl = new ArrayList<CurrencyOperation>();
+        CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(getApplicationContext());
+        currencyOperationDBAdapter.open();
+        for (Order s : sales) {
+            List<CurrencyOperation> payments = currencyOperationDBAdapter.getCurrencyOperationByOrderID(s.getOrderId());
+            pl.addAll(payments);
+        }
+        currencyOperationDBAdapter.close();
+        return pl;
+    }
 }

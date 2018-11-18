@@ -10,8 +10,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 
 import java.util.ArrayList;
@@ -28,6 +30,8 @@ public class ReportZDetailsActivity extends Activity {
     long from=0,to=0,id=0;
     boolean goBack = false;
     double totalZReportAmount =0.0 ;
+    double amount =0;
+    boolean isCopy=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +43,8 @@ public class ReportZDetailsActivity extends Activity {
 
         setContentView(R.layout.activity_report_zdetails);
 
-
+        ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(getApplicationContext());
+        zReportDBAdapter.open();
         btCancel=(Button)findViewById(R.id.reportZDetails_btCancel);
         btPrint=(Button)findViewById(R.id.reportZDetails_btPrint);
 
@@ -50,13 +55,22 @@ public class ReportZDetailsActivity extends Activity {
             from = (long) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_FORM);
             to = (long) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_TO);
             totalZReportAmount =(double)extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT);
+            amount =(double)extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT);
+
             if (extras.containsKey(ZReportActivity.COM_LEADPOS_ZREPORT_HISTORY)) {
                 goBack = extras.getBoolean(ZReportActivity.COM_LEADPOS_ZREPORT_HISTORY, false);
+                isCopy=true;
 
             }
         }
+        ZReport zReport = zReportDBAdapter.getByID(id);
         pt=new PrintTools(ReportZDetailsActivity.this);
-        p=pt.createZReport(id,from,to,true,totalZReportAmount);
+        if(isCopy){
+            p=pt.createZReport(zReport,id,from,to,true,totalZReportAmount);
+        }else {
+            p=pt.createZReport(zReport,id,from,to,false,totalZReportAmount);
+
+        }
         // p=pt.createXReport(id,from, SESSION._EMPLOYEE,new java.util.Date()); // testing xReport
         ((ImageView)findViewById(R.id.reportZDetails_ivInvoice)).setImageBitmap(p);
 
