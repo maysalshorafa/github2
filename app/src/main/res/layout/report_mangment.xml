@@ -136,7 +136,22 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/reportManagementActivity_btnSalesManReport"
+        android:id="@+id/reportManagementActivity_btnSalesManReport"
+        style="@style/AppTheme.dashboard_bt"
+        android:layout_width="200dp"
+
+
+        android:layout_height="150dp"
+        android:layout_margin="16dp"
+
+        android:padding="16dp"
+        android:text="@string/sales_man"
+        android:textColor="@color/white"
+
+        android:textSize="24sp"
+        android:textStyle="normal|bold" />
+        <Button
+            android:id="@+id/reportManagementActivity_btnClosingReport"
             style="@style/AppTheme.dashboard_bt"
             android:layout_width="200dp"
 
@@ -145,7 +160,7 @@
             android:layout_margin="16dp"
 
             android:padding="16dp"
-            android:text="@string/sales_man"
+            android:text="@string/closing_report"
             android:textColor="@color/white"
 
             android:textSize="24sp"

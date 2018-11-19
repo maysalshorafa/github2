@@ -584,6 +584,7 @@
     <string name="create_offer_activity">CreateOfferActivity</string>
     <string name="management_offer_activity">ManagementOfferActivity</string>
     <string name="invoice_management_activity">Invoice ManagementActivity</string>
+    <string name="closing_report_activity">Closing Report Activity</string>
 
     <string name="currency_is_activated_in_pos">Currency is activated in POS</string>
     <string name="currency_is_not_activated_in_pos">Currency is not activated in POS</string>
@@ -650,6 +651,9 @@
     <string name="invoice">Invoice</string>
     <string name="expected">Expected</string>
     <string name="actual">Actual</string>
+    <string name="closing_report">Closing Report</string>
+    <string name="are_you_want_to_print_and_save_closing_report">Are you want to print and save Closing Report ?</string>
+
 
 
 </resources>

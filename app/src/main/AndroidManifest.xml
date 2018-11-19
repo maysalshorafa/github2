@@ -208,7 +208,8 @@
             android:name=".InvoiceManagementActivity"
             android:label="@string/invoice_management_activity" />
         <activity android:name=".GiftProductActivity" />
-        <activity android:name=".ClosingReportActivity"></activity>
+        <activity android:name=".ClosingReportActivity"
+            android:label="@string/closing_report_activity"></activity>
 
 
     </application>

@@ -1,8 +1,12 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,6 +25,8 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +36,19 @@ public class ClosingReportActivity extends AppCompatActivity {
     TextView cashExpectedValue , checkExpectedValue ,creditExpectedValue ,shekelExpectedValue ,usdExpectedValue , eurAExpectedValue , gbpExpectedValue , totalExpectedValue;
     TextView cashDifferentValue , checkDifferentValue ,creditDifferentValue ,shekelDifferentValue ,usdDifferentValue , eurDifferentValue , gbpDifferentValue , totalDifferentValue;
     Button calculate , print ;
+    double expectedCash=0 , expectedCheck=0 ,expectedCredit=0 , expectedShekel=0 , expectedUsd=0 , expectedEur=0 , expectedGbp=0 , expectedTotal=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Remove title bar
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        // Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_closing_report);
+
+        TitleBar.setTitleBar(this);
         cashActualValue = (EditText) findViewById(R.id.actualCashValue);
         checkActualValue = (EditText) findViewById(R.id.actualCheckValue);
         creditActualValue = (EditText) findViewById(R.id.actualCreditValue);
@@ -60,7 +75,11 @@ public class ClosingReportActivity extends AppCompatActivity {
         totalDifferentValue =(TextView)findViewById(R.id.differentTotalValue);
         calculate = (Button)findViewById(R.id.closingReportBtnCalculate);
         print=(Button)findViewById(R.id.closingReportBtnPrint);
-
+        try {
+            calculateActualAmount();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         calculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,34 +92,61 @@ public class ClosingReportActivity extends AppCompatActivity {
 
             }
         });
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new android.support.v7.app.AlertDialog.Builder(ClosingReportActivity.this, android.app.AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                        .setTitle(getString(R.string.printer))
+                        .setMessage(getString(R.string.are_you_want_to_print_and_save_closing_report))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                new AlertDialog.Builder(ClosingReportActivity.this)
+                                        .setTitle(getString(R.string.create_z_report))
+                                        .setMessage(getString(R.string.create_z_report_message))
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // do nothing
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();                                }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
+
 
 
 
 
     }
 
-  private void calculateMethodAmount() throws Exception {
+    private void calculateActualAmount() throws Exception {
         long aReportId = 0;
         double usd_plus = 0, usd_minus = 0;
         double eur_plus = 0, eur_minus = 0;
         double gbp_plus = 0, gbp_minus = 0;
         double sheqle_plus = 0, sheqle_minus = 0;
         double aReportAmount = 0;
+
         OrderDBAdapter orderDb = new OrderDBAdapter(getApplicationContext());
         orderDb.open();
-      OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(getApplicationContext());
-      opiningReportDBAdapter.open();
-      OpiningReport opiningReport = opiningReportDBAdapter.getLastRow();
-      Order order =orderDb.getLast();
+        OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(getApplicationContext());
+        opiningReportDBAdapter.open();
+        OpiningReport opiningReport = opiningReportDBAdapter.getLastRow();
+        Order order =orderDb.getLast();
 
         List<Order> orders = orderDb.getBetween(opiningReport.getLastOrderId(), order.getOrderId());
 
         orderDb.close();
 
-        double aReportDetailsForFirstCurrency=0;
-        double aReportDetailsForSecondCurrency=0;
-        double aReportDetailsForThirdCurrency=0;
-        double aReportDetailsForForthCurrency=0;
 
         // get payment , cashPayment , returnList
         List<Payment> payments = paymentList(orders);
@@ -132,6 +178,7 @@ public class ClosingReportActivity extends AppCompatActivity {
                         check_minus += p.getAmount();
                     break;
             }
+            expectedTotal+=p.getAmount();
         }
 
 
@@ -184,10 +231,57 @@ public class ClosingReportActivity extends AppCompatActivity {
             }
 
         }
-        
+        expectedCash=cash_plus-cash_minus;
+        expectedCheck=check_plus-check_minus;
+        expectedCredit=creditCard_plus-creditCard_minus;
+        expectedShekel=sheqle_plus-sheqle_minus;
+        expectedUsd=usd_plus-usd_minus;
+        expectedEur=eur_plus-eur_minus;
+        expectedGbp=gbp_plus-gbp_minus;
+        cashExpectedValue.setText(Util.makePrice(expectedCash));
+        checkExpectedValue.setText(Util.makePrice(expectedCheck));
+        creditExpectedValue.setText(Util.makePrice(expectedCredit));
+        shekelExpectedValue.setText(Util.makePrice(expectedShekel));
+        usdExpectedValue.setText(Util.makePrice(expectedUsd));
+        eurAExpectedValue.setText(Util.makePrice(expectedEur));
+        gbpExpectedValue.setText(Util.makePrice(expectedGbp));
+        totalExpectedValue.setText(Util.makePrice(expectedTotal));
 
-      //  return BitmapInvoice.xPrint(context, user, date.getTime(), usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, Double.parseDouble(Util.makePrice(aReportAmount)));
-}
+    }
+  private void calculateMethodAmount() throws Exception {
+      double actualCash=0 , actualCheck=0 , actualCredit=0 , actualShekel=0 , actualUsd=0 , actualEur=0 , actualGbp=0 ,actualTotal=0;
+
+      if(!cashActualValue.getText().toString().equals("")){
+         actualCash= Double.parseDouble(cashActualValue.getText().toString());
+      }
+      if(!checkActualValue.getText().toString().equals("")){
+          actualCheck= Double.parseDouble(checkActualValue.getText().toString());
+      }
+      if(!creditActualValue.getText().toString().equals("")){
+          actualCredit= Double.parseDouble(creditActualValue.getText().toString());
+      }
+      if(!shekelActualValue.getText().toString().equals("")){
+          actualCash= Double.parseDouble(shekelActualValue.getText().toString());
+      }
+      if(!usdActualValue.getText().toString().equals("")){
+          actualUsd= Double.parseDouble(usdActualValue.getText().toString());
+      }
+      if(!eurActualValue.getText().toString().equals("")){
+          actualEur= Double.parseDouble(eurActualValue.getText().toString());
+      }
+      if(!totalActualValue.getText().toString().equals("")){
+          actualTotal= Double.parseDouble(totalActualValue.getText().toString());
+      }
+      cashDifferentValue.setText(Util.makePrice(actualCash-expectedCash));
+      checkDifferentValue.setText(Util.makePrice(actualCheck-expectedCheck));
+      creditDifferentValue.setText(Util.makePrice(actualCredit-expectedCredit));
+      shekelDifferentValue.setText(Util.makePrice(actualShekel-expectedShekel));
+      usdDifferentValue.setText(Util.makePrice(actualUsd-expectedUsd));
+      eurDifferentValue.setText(Util.makePrice(actualEur-expectedEur));
+      gbpDifferentValue.setText(Util.makePrice(actualGbp-expectedGbp));
+      totalDifferentValue.setText(Util.makePrice(actualTotal-expectedTotal));
+
+  }
     // get Payment List
     public List<Payment> paymentList(List<Order> sales) {
         List<Payment> pl = new ArrayList<Payment>();
@@ -197,14 +291,6 @@ public class ClosingReportActivity extends AppCompatActivity {
         paymentDBAdapter.open();
         for (Order s : sales) {
             List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(s.getOrderId());
-            /**
-             if (SETTINGS.enableCurrencies) {
-             for (Payment _p : payments) {
-             _p.setCashPayments(cashPaymentDBAdapter.getPaymentBySaleID(_p.getOrderId()));
-             _p.setCurrencyReturns(currencyReturnsDBAdapter.getCurencyReturnBySaleID(_p.getOrderId()));
-             }
-             }**/
-
             pl.addAll(payments);
         }
         paymentDBAdapter.close();

@@ -109,42 +109,48 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="@string/TouchPad_0"/>
+            android:hint="@string/TouchPad_0"
+            android:inputType="numberSigned"/>
         <EditText
             android:id="@+id/actualCheckValue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="@string/TouchPad_0"/>
+            android:hint="@string/TouchPad_0"
+            android:inputType="numberSigned"/>
         <EditText
             android:id="@+id/actualCreditValue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="@string/TouchPad_0"/>
+            android:hint="@string/TouchPad_0"
+            android:inputType="numberSigned"/>
         <EditText
             android:id="@+id/actualShekelValue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="@string/TouchPad_0"/>
+            android:hint="@string/TouchPad_0"
+            android:inputType="numberSigned"/>
         <EditText
             android:id="@+id/actualUsdValue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="@string/TouchPad_0"/>
+            android:hint="@string/TouchPad_0"
+            android:inputType="numberSigned"/>
         <EditText
             android:id="@+id/actualEurValue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="@string/TouchPad_0"/>
+            android:hint="@string/TouchPad_0"
+            android:inputType="numberSigned"/>
 
         <EditText
             android:id="@+id/actualGbpValue"
@@ -152,7 +158,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="@string/TouchPad_0"/>
+            android:hint="@string/TouchPad_0"
+            android:inputType="numberSigned"/>
 
         <EditText
             android:id="@+id/actualTotalValue"
@@ -160,7 +167,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="@string/TouchPad_0"/>
+            android:hint="@string/TouchPad_0"
+            android:inputType="numberSigned"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
