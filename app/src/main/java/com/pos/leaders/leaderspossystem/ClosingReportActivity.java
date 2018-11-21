@@ -29,6 +29,8 @@ import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import org.json.JSONObject;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,7 +137,25 @@ public class ClosingReportActivity extends AppCompatActivity {
                                                    }
                                                    closingReportDetailsDBAdapter.insertEntry(i,actualCheck,expectedCheck,actualCheck-expectedCheck,CONSTANT.CHECKS,"Shekel");
                                                    closingReportDetailsDBAdapter.insertEntry(i,actualCredit,expectedCredit,actualCredit-expectedCredit,CONSTANT.CREDIT_CARD,"Shekel");
-
+                                                    //print report
+                                                   JSONObject res = new JSONObject();
+                                                   res.put("actualCash",actualCash);
+                                                   res.put("actualCheck",actualCheck);
+                                                   res.put("actualCredit",actualCredit);
+                                                   res.put("actualShekel",actualShekel);
+                                                   res.put("actualUsd",actualUsd);
+                                                   res.put("actualEur",actualEur);
+                                                   res.put("actualGbp",actualGbp);
+                                                   res.put("actualTotal",actualTotal);
+                                                   res.put("expectedCash",expectedCash);
+                                                   res.put("expectedCheck",expectedCheck);
+                                                   res.put("expectedCredit",expectedCredit);
+                                                   res.put("expectedShekel",expectedShekel);
+                                                   res.put("expectedUsd",expectedUsd);
+                                                   res.put("expectedEur",expectedEur);
+                                                   res.put("expectedGbp",expectedGbp);
+                                                   res.put("expectedTotal",expectedTotal);
+                                                  Util.sendClosingReport(ClosingReportActivity.this,res.toString());
                                                }
                                                 } catch (Exception e) {
                                                     e.printStackTrace();

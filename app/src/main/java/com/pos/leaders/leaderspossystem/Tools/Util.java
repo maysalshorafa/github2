@@ -769,4 +769,63 @@ e.printStackTrace();
         aReportDBAdapter.close();
         return aReport;
     }
+
+    public static void sendClosingReport(final Context context, final String res){
+        final String SAMPLE_FILE = "closingreport.pdf";
+
+            new AsyncTask<Void, Void, Void>(){
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                }
+                @Override
+                protected void onPostExecute(Void aVoid) {
+
+                    try
+                    {
+                        File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                        File file = new File(path,SAMPLE_FILE);
+                        RandomAccessFile f = new RandomAccessFile(file, "r");
+                        byte[] data = new byte[(int)f.length()];
+                        f.readFully(data);
+                        pdfLoadImages(data,context);
+                        //pdfLoadImages1(data);
+                    }
+                    catch(Exception ignored)
+                    {
+
+                    }
+                    //     print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
+
+                    //clearCart();
+
+                }
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                    try {
+                        PdfUA pdfUA = new PdfUA();
+
+                        try {
+                            pdfUA.printClosingReport(context,res);
+                        } catch (DocumentException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+
+    }
+
 }
