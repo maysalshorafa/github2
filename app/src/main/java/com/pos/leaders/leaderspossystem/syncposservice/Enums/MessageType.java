@@ -146,4 +146,12 @@ public interface MessageType{
     String ADD_WALLET = "AddWallet";
     String UPDATE_WALLET = "UpdateWallet";
     String DELETE_WALLET = "DeleteWallet";
+
+    String ADD_CLOSING_REPORT = "AddClosingReport";
+    String UPDATE_CLOSING_REPORT = "UpdateClosingReport";
+    String DELETE_CLOSING_REPORT = "DeleteClosingReport";
+
+    String ADD_CLOSING_REPORT_DETAILS = "AddClosingReportDetails";
+    String UPDATE_CLOSING_REPORT_DETAILS = "UpdateClosingReportDetails";
+    String DELETE_CLOSING_REPORT_DETAILS = "DeleteClosingReportDetails";
 }

@@ -1,4 +1,4 @@
-package com.pos.leaders.leaderspossystem.Repositorys;
+/**package com.pos.leaders.leaderspossystem.Repositorys;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Win8.1 on 11/13/2018.
- */
+
 
 public class ClosingReportDetailsRepository implements Repository<ClosingReportDetails,Long> {
     private ClosingReportDetailsDao closingReportDetailsDao;
@@ -112,4 +112,4 @@ public class ClosingReportDetailsRepository implements Repository<ClosingReportD
     }
 }
 
-
+**/

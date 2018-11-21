@@ -754,4 +754,19 @@ e.printStackTrace();
         zReportDBAdapter.close();
         return zReport;
     }
+    public static OpiningReport getLastAReport(Context context) {
+        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(context);
+        aReportDBAdapter.open();
+        OpiningReport aReport = null;
+
+        try {
+            aReport = aReportDBAdapter.getLastRow();
+
+        } catch (Exception e) {
+            Log.w("A Report ", e.getMessage());
+        }
+
+        aReportDBAdapter.close();
+        return aReport;
+    }
 }

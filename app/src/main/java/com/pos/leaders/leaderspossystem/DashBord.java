@@ -31,6 +31,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
@@ -41,6 +42,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Elements.IButton;
+import com.pos.leaders.leaderspossystem.Models.ClosingReport;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
@@ -261,7 +263,12 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                             .setTitle(getString(R.string.create_z_report))
                                             .setMessage(getString(R.string.create_z_report_message))
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
+                                                public void onClick(final DialogInterface dialog, int which) {
+                                                    OpiningReport opiningReport = getLastAReport();
+                                                        ClosingReportDBAdapter closingReportDBAdapter =new ClosingReportDBAdapter(getApplicationContext());
+                                                        closingReportDBAdapter.open();
+                                                        ClosingReport closingReport = closingReportDBAdapter.getClosingReportByOpiningReportId(opiningReport.getOpiningReportId());
+                                                        if(closingReport!=null){
                                                     ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(DashBord.this);
                                                     zReportDBAdapter.open();
                                                     ZReport lastZReport = getLastZReport();
@@ -286,6 +293,24 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
                                                     startActivity(i);
                                                     btZReport.setEnabled(false);
+                                                    }else {
+                                                        new AlertDialog.Builder(DashBord.this)
+                                                                .setTitle(getString(R.string.create_closing_report))
+                                                                .setMessage(getString(R.string.you_must_create_closing_report_before_z_report))
+                                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                        Intent i = new Intent(DashBord.this, ClosingReportActivity.class);
+                                                                        startActivity(i);
+                                                                    }
+                                                                })
+                                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                        // do nothing
+                                                                    }
+                                                                })
+                                                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                                                .show();
+                                                    }
                                                 }
                                             })
                                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -305,7 +330,12 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         .setTitle(getString(R.string.create_z_report))
                         .setMessage(getString(R.string.create_z_report_message))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(final DialogInterface dialog, int which) {
+                                OpiningReport opiningReport = getLastAReport();
+                                ClosingReportDBAdapter closingReportDBAdapter =new ClosingReportDBAdapter(getApplicationContext());
+                                closingReportDBAdapter.open();
+                                ClosingReport closingReport = closingReportDBAdapter.getClosingReportByOpiningReportId(opiningReport.getOpiningReportId());
+                                if(closingReport!=null){
                                 ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(DashBord.this);
                                 zReportDBAdapter.open();
                                 ZReport lastZReport = getLastZReport();
@@ -330,6 +360,25 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
                                 startActivity(i);
                                 btZReport.setEnabled(false);
+                                }else {
+                                    new AlertDialog.Builder(DashBord.this)
+                                            .setTitle(getString(R.string.create_closing_report))
+                                            .setMessage(getString(R.string.you_must_create_closing_report_before_z_report))
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Intent i = new Intent(DashBord.this, ClosingReportActivity.class);
+                                                    startActivity(i);
+                                                }
+                                            })
+                                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // do nothing
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show();
+
+                                }
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -338,7 +387,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                             }
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();}
+                        .show();
+           }
 
             }
         });

@@ -12,8 +12,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.ClosingReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
@@ -97,6 +100,11 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                         .setMessage(getString(R.string.create_z_report_message))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                OpiningReport opiningReport = Util.getLastAReport(getApplicationContext());
+                                ClosingReportDBAdapter closingReportDBAdapter =new ClosingReportDBAdapter(getApplicationContext());
+                                closingReportDBAdapter.open();
+                                ClosingReport closingReport = closingReportDBAdapter.getClosingReportByOpiningReportId(opiningReport.getOpiningReportId());
+                                if(closingReport!=null){
                                 ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(ReportsManagementActivity.this);
                                 zReportDBAdapter.open();
                                 ZReport lastZReport = Util.getLastZReport(getApplicationContext());
@@ -121,6 +129,24 @@ public class ReportsManagementActivity  extends AppCompatActivity {
 
                                 startActivity(i);
                                 btnZ.setEnabled(false);
+                                }else {
+                                    new AlertDialog.Builder(ReportsManagementActivity.this)
+                                            .setTitle(getString(R.string.create_closing_report))
+                                            .setMessage(getString(R.string.you_must_create_closing_report_before_z_report))
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Intent i = new Intent(ReportsManagementActivity.this, ClosingReportActivity.class);
+                                                    startActivity(i);
+                                                }
+                                            })
+                                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // do nothing
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show();
+                                }
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

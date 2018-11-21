@@ -1,4 +1,4 @@
-package com.pos.leaders.leaderspossystem.DAO;
+/**package com.pos.leaders.leaderspossystem.DAO;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Created by Win8.1 on 11/12/2018.
- */
+
 @Dao
 public interface ClosingReportDao {
     @Insert
@@ -44,3 +44,4 @@ public interface ClosingReportDao {
     @Delete
     void remove(ClosingReport closingReport);
 }
+**/

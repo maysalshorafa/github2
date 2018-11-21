@@ -1,8 +1,8 @@
-package com.pos.leaders.leaderspossystem.DataSource;
+/**package com.pos.leaders.leaderspossystem.DataSource;
 
 /**
  * Created by Win8.1 on 11/13/2018.
- */
+
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
@@ -46,3 +46,4 @@ public abstract class RoomDB extends RoomDatabase {
     public abstract ClosingReportDetailsDao closingReportDetailsDao();
 
 }
+**/

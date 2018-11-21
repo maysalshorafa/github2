@@ -2,7 +2,6 @@ package com.pos.leaders.leaderspossystem;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -11,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
@@ -28,6 +29,7 @@ import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,7 @@ public class ClosingReportActivity extends AppCompatActivity {
     TextView cashDifferentValue , checkDifferentValue ,creditDifferentValue ,shekelDifferentValue ,usdDifferentValue , eurDifferentValue , gbpDifferentValue , totalDifferentValue;
     Button calculate , print ;
     double expectedCash=0 , expectedCheck=0 ,expectedCredit=0 , expectedShekel=0 , expectedUsd=0 , expectedEur=0 , expectedGbp=0 , expectedTotal=0;
+    double actualCash=0 , actualCheck=0 , actualCredit=0 , actualShekel=0 , actualUsd=0 , actualEur=0 , actualGbp=0 ,actualTotal=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,12 @@ public class ClosingReportActivity extends AppCompatActivity {
         setContentView(R.layout.activity_closing_report);
 
         TitleBar.setTitleBar(this);
+        final ClosingReportDBAdapter closingReportDBAdapter = new ClosingReportDBAdapter(getApplicationContext());
+        closingReportDBAdapter.open();
+        final ClosingReportDetailsDBAdapter closingReportDetailsDBAdapter = new ClosingReportDetailsDBAdapter(getApplicationContext());
+        closingReportDetailsDBAdapter.open();
+        final OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(getApplicationContext());
+        opiningReportDBAdapter.open();
         cashActualValue = (EditText) findViewById(R.id.actualCashValue);
         checkActualValue = (EditText) findViewById(R.id.actualCheckValue);
         creditActualValue = (EditText) findViewById(R.id.actualCreditValue);
@@ -100,13 +109,37 @@ public class ClosingReportActivity extends AppCompatActivity {
                         .setMessage(getString(R.string.are_you_want_to_print_and_save_closing_report))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                new AlertDialog.Builder(ClosingReportActivity.this)
-                                        .setTitle(getString(R.string.create_z_report))
-                                        .setMessage(getString(R.string.create_z_report_message))
-                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
 
-                                                
+                                                try {
+                                                    OpiningReport opiningReport = opiningReportDBAdapter.getLastRow();
+                                              long i =  closingReportDBAdapter.insertEntry(actualTotal,expectedTotal,expectedTotal,new Timestamp(System.currentTimeMillis()),opiningReport.getOpiningReportId());
+                                               if(i>0){
+                                                        closingReportDetailsDBAdapter.insertEntry(i,actualCash,expectedCash,actualCash-expectedCash,CONSTANT.CASH,"Shekel");
+                                                   if(actualUsd==0&&expectedUsd==0){
+
+                                                   }else {
+                                                       closingReportDetailsDBAdapter.insertEntry(i,actualUsd,expectedUsd,actualTotal-expectedUsd,CONSTANT.CASH,"USD");
+
+                                                   }
+                                                   if(actualEur==0&&expectedEur==0){
+
+                                                   }else {
+                                                       closingReportDetailsDBAdapter.insertEntry(i,actualEur,expectedEur,actualEur-expectedEur,CONSTANT.CASH,"EUR");
+
+                                                   }
+                                                   if(actualGbp==0&&expectedGbp==0){
+
+                                                   }else {
+                                                       closingReportDetailsDBAdapter.insertEntry(i,actualGbp,expectedGbp,actualGbp-expectedGbp,CONSTANT.CASH,"GBP");
+
+                                                   }
+                                                   closingReportDetailsDBAdapter.insertEntry(i,actualCheck,expectedCheck,actualCheck-expectedCheck,CONSTANT.CHECKS,"Shekel");
+                                                   closingReportDetailsDBAdapter.insertEntry(i,actualCredit,expectedCredit,actualCredit-expectedCredit,CONSTANT.CREDIT_CARD,"Shekel");
+
+                                               }
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
                                         })
                                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -115,10 +148,9 @@ public class ClosingReportActivity extends AppCompatActivity {
                                             }
                                         })
                                         .setIcon(android.R.drawable.ic_dialog_alert)
-                                        .show();                                }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                                        .show();
+
+
             }
         });
 
@@ -249,7 +281,6 @@ public class ClosingReportActivity extends AppCompatActivity {
 
     }
   private void calculateMethodAmount() throws Exception {
-      double actualCash=0 , actualCheck=0 , actualCredit=0 , actualShekel=0 , actualUsd=0 , actualEur=0 , actualGbp=0 ,actualTotal=0;
 
       if(!cashActualValue.getText().toString().equals("")){
          actualCash= Double.parseDouble(cashActualValue.getText().toString());

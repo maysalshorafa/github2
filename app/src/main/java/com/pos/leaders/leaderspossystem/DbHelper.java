@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
@@ -140,6 +142,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.execSQL(GroupDbAdapter.DATABASE_CREATE);
         db.execSQL(GroupsResourceDbAdapter.DATABASE_CREATE);
+        db.execSQL(ClosingReportDBAdapter.DATABASE_CREATE);
+        db.execSQL(ClosingReportDetailsDBAdapter.DATABASE_CREATE);
 
         db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
         db.execSQL(EmployeeDBAdapter.DATABASE_CREATE);

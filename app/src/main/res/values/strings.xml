@@ -653,7 +653,8 @@
     <string name="actual">Actual</string>
     <string name="closing_report">Closing Report</string>
     <string name="are_you_want_to_print_and_save_closing_report">Are you want to print and save Closing Report ?</string>
-
+    <string name="you_must_create_closing_report_before_z_report">You must Create Closing Report Before Z Report !!</string>
+    <string name="create_closing_report">Create Closing Report</string>
 
 
 </resources>
