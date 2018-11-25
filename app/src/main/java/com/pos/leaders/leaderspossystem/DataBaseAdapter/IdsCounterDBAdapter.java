@@ -1,18 +1,12 @@
 package com.pos.leaders.leaderspossystem.DataBaseAdapter;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.AReport;
-import com.pos.leaders.leaderspossystem.Tools.Util;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**

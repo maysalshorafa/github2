@@ -4,40 +4,40 @@ package com.pos.leaders.leaderspossystem.Models;
  * Created by Win8.1 on 12/3/2017.
  */
 
-public class AReportDetails {
-    private long aReportDetailsId;
-    private long aReportId;
+public class OpiningReportDetails {
+    private long opiningReportDetailsId;
+    private long opiningReportId;
     private double amount;
     private long type;
     private double amount_in_basic_currency ;
     //{\"amount\":888.0,\"type\":0,\"amount_in_basic_currency\":888.0,\"hide\":false,\"areportDetailsId\":\"40000000000000000\",\"areportId\":40000000000000000}
 
-    public AReportDetails() {
+    public OpiningReportDetails() {
     }
 
-    public AReportDetails(long aReportDetailsId, long aReportId, double amount, long type, double amount_in_basic_currency) {
-        this.aReportDetailsId = aReportDetailsId;
-        this.aReportId = aReportId;
+    public OpiningReportDetails(long aReportDetailsId, long opiningReportId, double amount, long type, double amount_in_basic_currency) {
+        this.opiningReportDetailsId = aReportDetailsId;
+        this.opiningReportId = opiningReportId;
         this.amount = amount;
         this.type = type;
         this.amount_in_basic_currency = amount_in_basic_currency;
     }
 
-    public long getaReportDetailsId() {
-        return aReportDetailsId;
+    public long getOpiningReportDetailsId() {
+        return opiningReportDetailsId;
 
     }
 
-    public void setaReportDetailsId(long aReportDetailsId) {
-        this.aReportDetailsId = aReportDetailsId;
+    public void setOpiningReportDetailsId(long opiningReportDetailsId) {
+        this.opiningReportDetailsId = opiningReportDetailsId;
     }
 
-    public long getaReportId() {
-        return aReportId;
+    public long getOpiningReportId() {
+        return opiningReportId;
     }
 
-    public void setaReportId(long aReportId) {
-        this.aReportId = aReportId;
+    public void setOpiningReportId(long opiningReportId) {
+        this.opiningReportId = opiningReportId;
     }
 
     public double getAmount() {
@@ -63,7 +63,7 @@ public class AReportDetails {
     public void setAmount_in_basic_currency(double amount_in_basic_currency) {
         this.amount_in_basic_currency = amount_in_basic_currency;
     }
-    public AReportDetails(AReportDetails a) {
-        this(a.getaReportDetailsId(),a.getaReportId(),a.getAmount(),a.getType(),a.getAmount_in_basic_currency());
+    public OpiningReportDetails(OpiningReportDetails a) {
+        this(a.getOpiningReportDetailsId(),a.getOpiningReportId(),a.getAmount(),a.getType(),a.getAmount_in_basic_currency());
     }
 }

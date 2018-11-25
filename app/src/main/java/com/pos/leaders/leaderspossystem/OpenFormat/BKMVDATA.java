@@ -3,7 +3,7 @@ package com.pos.leaders.leaderspossystem.OpenFormat;
 import android.content.Context;
 import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
@@ -11,7 +11,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Accounting;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.OldCustomer;
@@ -54,11 +54,11 @@ public class BKMVDATA {
     private EmployeeDBAdapter userDBAdapter;
     private ProductDBAdapter productDBAdapter;
 
-    private AReportDBAdapter aReportDBAdapter;
+    private OpiningReportDBAdapter aReportDBAdapter;
     private ZReportDBAdapter zReportDBAdapter;
 
     private List<Order> sales = new ArrayList<Order>();
-    private List<AReport> aReports = new ArrayList<AReport>();
+    private List<OpiningReport> aReports = new ArrayList<OpiningReport>();
     private List<ZReport> zReports = new ArrayList<ZReport>();
     private List<Product> products = new ArrayList<Product>();
     private List<Accounting> accountings = new ArrayList<Accounting>();
@@ -82,7 +82,7 @@ public class BKMVDATA {
         productDBAdapter = new ProductDBAdapter(context);
 
 
-        aReportDBAdapter = new AReportDBAdapter(context);
+        aReportDBAdapter = new OpiningReportDBAdapter(context);
         zReportDBAdapter = new ZReportDBAdapter(context);
     }
 
@@ -110,7 +110,7 @@ public class BKMVDATA {
         for (ZReport z : zReports) {
             addZ(z);
         }
-        for (AReport a : aReports) {
+        for (OpiningReport a : aReports) {
             addA(a);
         }
         Collections.sort(records, new Comparator<Record>() {
@@ -236,8 +236,8 @@ public class BKMVDATA {
                 strRecords += String.format(Locale.ENGLISH, "%s", zReport.BKMVDATA(++counter, SETTINGS.companyID, zTotal)) + "\r\n";
                 cZ900++;
                 zTotal = 0;
-            } else if (records.get(i).getObj() instanceof AReport) {
-                AReport aReport = (AReport) records.get(i).getObj();
+            } else if (records.get(i).getObj() instanceof OpiningReport) {
+                OpiningReport aReport = (OpiningReport) records.get(i).getObj();
                 strRecords += String.format(Locale.ENGLISH, "%s", aReport.BKMVDATA(counter, SETTINGS.companyID)) + "\r\n";
                 cA100++;
             } else if (records.get(i).getObj() instanceof Product) {
@@ -357,7 +357,7 @@ public class BKMVDATA {
         });
     }
 
-    public void addA(final AReport a) {
+    public void addA(final OpiningReport a) {
         records.add(new Record() {
             @Override
             public Object getObj() {

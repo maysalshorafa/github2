@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -25,19 +24,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
+import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
-import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
-import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -58,7 +56,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
     private boolean enableBackButton = true;
     Button mainScreen, report, product, department, users, backUp, customerClub, logOut, schedule_workers, settings;
     Button btZReport, btAReport;
-    AReportDBAdapter aReportDBAdapter;
+    OpiningReportDBAdapter aReportDBAdapter;
     Employee user = new Employee();
     EmployeeDBAdapter userDBAdapter;
     ArrayList<Integer> permissions_name;
@@ -205,11 +203,11 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         btAReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AReport _aReport = new AReport();
+                final OpiningReport _aReport = new OpiningReport();
                 _aReport.setByUserID(SESSION._EMPLOYEE.getEmployeeId());
                 _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
-                AReport aReport = getLastAReport();
+                OpiningReport aReport = getLastAReport();
                 ZReport zReport = getLastZReport();
 
                 if (aReport == null) {
@@ -246,7 +244,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                 z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
                 double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
                 totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
-                long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
+               /** long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
                 z.setzReportId(zID);
                 lastZReport = new ZReport(z);
                 zReportDBAdapter.close();
@@ -256,7 +254,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                 Bitmap bmap = pt.createZReport(lastZReport.getzReportId(), lastZReport.getStartOrderId(), lastZReport.getEndOrderId(), false,totalZReportAmount);
                 if(bmap!=null)
                     pt.PrintReport(bmap);
-
+**/
                 Intent i=new Intent(TempDashBord.this,ReportZDetailsActivity.class);
                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID,lastZReport.getzReportId());
                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM,lastZReport.getStartOrderId());
@@ -430,7 +428,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         ZReport zReport = getLastZReport();
         Log.e("zreport last", zReport.toString());
 
-        AReport aReport = getLastAReport();
+        OpiningReport aReport = getLastAReport();
         Log.e("areport last", aReport.toString());
 
 
@@ -464,10 +462,10 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         return zReport;
     }
 
-    private AReport getLastAReport(){
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(this);
+    private OpiningReport getLastAReport(){
+        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(this);
         aReportDBAdapter.open();
-        AReport aReport = null;
+        OpiningReport aReport = null;
 
         try {
             aReport = aReportDBAdapter.getLastRow();
@@ -481,7 +479,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         return aReport;
     }
 
-    private void ShowAReportDialog(final AReport aReport) {
+    private void ShowAReportDialog(final OpiningReport aReport) {
         //there is no a report after z report
         enableBackButton = false;
         final Dialog discountDialog = new Dialog(TempDashBord.this);
@@ -523,7 +521,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
                 String str = et.getText().toString();
                 if (!str.equals("")) {
                     aReport.setAmount(Double.parseDouble(str));
-                    AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(TempDashBord.this);
+                    OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(TempDashBord.this);
                     aReportDBAdapter.open();
                     aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
                     aReportDBAdapter.close();

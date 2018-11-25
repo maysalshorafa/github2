@@ -8,13 +8,13 @@ public interface MessageType{
     String Setup = "setup";
     String MessageType = "MessageType";
 
-    String ADD_A_REPORT = "AddAreport";
-    String UPDATE_A_REPORT = "UpdateAreport";
-    String DELETE_A_REPORT = "DeleteAreport";
+    String ADD_OPINING_REPORT = "AddOpiningReport";
+    String UPDATE_OPINING_REPORT = "UpdateOpiningReport";
+    String DELETE_OPINING_REPORT = "DeleteOpiningReport";
 
-    String ADD_A_REPORT_DETAILS = "AddAReportDetails";
-    String UPDATE_A_REPORT_DETAILS = "UpdateAreportDetails";
-    String DELETE_A_REPORT_DETAILS = "DeleteAreportDetails";
+    String ADD_OPINING_REPORT_DETAILS = "AddOpiningReportDetails";
+    String UPDATE_OPINING_REPORT_DETAILS = "UpdateOpiningReportDetails";
+    String DELETE_OPINING_REPORT_DETAILS = "DeleteOpiningReportDetails";
 
     String ADD_CHECK = "AddCheck";
     String UPDATE_CHECK = "UpdateCheck";
@@ -146,4 +146,12 @@ public interface MessageType{
     String ADD_WALLET = "AddWallet";
     String UPDATE_WALLET = "UpdateWallet";
     String DELETE_WALLET = "DeleteWallet";
+
+    String ADD_CLOSING_REPORT = "AddClosingReport";
+    String UPDATE_CLOSING_REPORT = "UpdateClosingReport";
+    String DELETE_CLOSING_REPORT = "DeleteClosingReport";
+
+    String ADD_CLOSING_REPORT_DETAILS = "AddClosingReportDetails";
+    String UPDATE_CLOSING_REPORT_DETAILS = "UpdateClosingReportDetails";
+    String DELETE_CLOSING_REPORT_DETAILS = "DeleteClosingReportDetails";
 }

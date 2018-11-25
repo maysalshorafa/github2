@@ -18,15 +18,15 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.AReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
@@ -211,9 +211,9 @@ public class PdfUA {
         user = userDBAdapter.getEmployeeByID(zReport.getByUser());
         zReport.setUser(userDBAdapter.getEmployeeByID(zReport.getByUser()));
         userDBAdapter.close();
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(context);
+        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(context);
         aReportDBAdapter.open();
-        AReport aReport = aReportDBAdapter.getByLastZReport(id);
+        OpiningReport aReport = aReportDBAdapter.getByLastZReport(id);
         /*try {
             aReportAmount = aReportDBAdapter.getLastRow().getAmount();
             aReportId = aReportDBAdapter.getLastRow().getCashPaymentId();
@@ -230,13 +230,13 @@ public class PdfUA {
         List<CashPayment> cashPaymentList = PrintTools.cashPaymentList(sales);
         List<CurrencyReturns> currencyReturnList = PrintTools.returnPaymentList(sales);
         if (SETTINGS.enableCurrencies) {
-            AReportDetailsDBAdapter aReportDetailsDBAdapter=new AReportDetailsDBAdapter(context);
+            OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
             aReportDetailsDBAdapter.open();
 
-            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReport.getaReportId());
-            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReport.getaReportId());
-            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReport.getaReportId());
-            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReport.getaReportId());
+            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReport.getOpiningReportId());
+            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReport.getOpiningReportId());
+            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReport.getOpiningReportId());
+            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReport.getOpiningReportId());
         }
         double cash_plus = 0, cash_minus = 0;
         double check_plus = 0, check_minus = 0;
@@ -349,7 +349,7 @@ public class PdfUA {
         insertCell(table,Util.makePrice(aReport.getAmount())+ "", Element.ALIGN_CENTER, 1, font);
         insertCell(table, "~", Element.ALIGN_CENTER, 1, font);
         insertCell(table,"~", Element.ALIGN_CENTER, 1, font);
-        insertCell(table, "AReport", Element.ALIGN_CENTER, 1, font);
+        insertCell(table, "OpiningReport", Element.ALIGN_CENTER, 1, font);
 
         insertCell(table,Util.makePrice(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus+Double.parseDouble(Util.makePrice(aReport.getAmount()))), Element.ALIGN_CENTER, 1, font);
         insertCell(table,  Util.makePrice(cash_minus + check_minus + creditCard_minus), Element.ALIGN_CENTER, 1, font);
@@ -624,8 +624,101 @@ public class PdfUA {
         document.add(dateTable);
         document.add(orderDetailsTable);
         document.close();
+
         //end :)
     }
+    public static void  printClosingReport(Context context, String res) throws IOException, DocumentException, JSONException {
+        JSONObject jsonObject = new JSONObject(res);
+        // create file , document region
+        Document document = new Document();
+        String fileName = "closingreport.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+        if(file.exists()){
+            PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
+            writer.print("");
+            writer.close();
+        }
 
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();        //end region
+        //end region
+
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 30);
+        Font dateFont = new Font(urName, 24);
+        //heading table
+        PdfPTable headingTable = new PdfPTable(1);
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
+
+        //end
+
+        //date table from , to
+        PdfPTable dateTable = new PdfPTable(4);
+        dateTable.setRunDirection(0);
+        dateTable.setWidthPercentage(108f);
+        insertCell(dateTable, context.getString(R.string.method), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, context.getString(R.string.actual), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, context.getString(R.string.expected), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, context.getString(R.string.different), Element.ALIGN_LEFT, 1, dateFont);
+
+        insertCell(dateTable, CONSTANT.CASH, Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("actualCash")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("expectedCash")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable,  jsonObject.getDouble("actualCash")-jsonObject.getDouble("expectedCash")+"", Element.ALIGN_LEFT, 1, dateFont);
+
+        insertCell(dateTable, CONSTANT.CHECKS, Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("actualCheck")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("expectedCheck")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable,  jsonObject.getDouble("actualCheck")-jsonObject.getDouble("expectedCheck")+"", Element.ALIGN_LEFT, 1, dateFont);
+
+        insertCell(dateTable, CONSTANT.CREDIT_CARD, Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("actualCredit")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("expectedCredit")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable,  jsonObject.getDouble("actualCredit")-jsonObject.getDouble("expectedCredit")+"", Element.ALIGN_LEFT, 1, dateFont);
+
+        insertCell(dateTable, "Shekel", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("actualShekel")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("expectedShekel")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable,  jsonObject.getDouble("actualShekel")-jsonObject.getDouble("expectedShekel")+"", Element.ALIGN_LEFT, 1, dateFont);
+
+        insertCell(dateTable, "USD", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("actualUsd")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("expectedUsd")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable,  jsonObject.getDouble("actualUsd")-jsonObject.getDouble("expectedUsd")+"", Element.ALIGN_LEFT, 1, dateFont);
+
+        insertCell(dateTable, "EUR", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("actualEur")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("expectedEur")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable,  jsonObject.getDouble("actualEur")-jsonObject.getDouble("expectedEur")+"", Element.ALIGN_LEFT, 1, dateFont);
+
+        insertCell(dateTable, "GBP", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("actualGbp")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("expectedGbp")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable,  jsonObject.getDouble("actualGbp")-jsonObject.getDouble("expectedGbp")+"", Element.ALIGN_LEFT, 1, dateFont);
+
+        insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+
+        insertCell(dateTable, "Total", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("actualTotal")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("expectedTotal")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable,  jsonObject.getDouble("actualTotal")-jsonObject.getDouble("expectedTotal")+"", Element.ALIGN_LEFT, 1, dateFont);
+        //end
+
+        // schedule worker table
+        //end
+
+        //add table to document
+        document.add(headingTable);
+        document.add(dateTable);
+        document.close();
+        //end :)
+    }
 
 }

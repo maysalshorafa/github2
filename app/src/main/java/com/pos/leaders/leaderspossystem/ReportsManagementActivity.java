@@ -12,19 +12,23 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.ClosingReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.sql.Timestamp;
 import java.util.Date;
 
 public class ReportsManagementActivity  extends AppCompatActivity {
-    Button btnZ, btnZView,btnX, btnOrder,btnExFiles ,btnSalesMan , btnInvoice;
+    Button btnZ, btnZView,btnX, btnOrder,btnExFiles ,btnSalesMan , btnInvoice , btnClosingReport;
 
     ZReportDBAdapter zReportDBAdapter;
     OrderDBAdapter saleDBAdapter;
@@ -56,6 +60,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         btnOrder =(Button)findViewById(R.id.reportManagementActivity_btnSaleManagement);
         btnExFiles = (Button) findViewById(R.id.reportManagementActivity_btnExtractingFiles);
         btnInvoice = (Button) findViewById(R.id.reportManagementActivity_btnInvoice);
+        btnClosingReport = (Button) findViewById(R.id.reportManagementActivity_btnClosingReport);
         zReportDBAdapter = new ZReportDBAdapter(this);
         saleDBAdapter = new OrderDBAdapter(this);
 
@@ -95,34 +100,53 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                         .setMessage(getString(R.string.create_z_report_message))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                //(long id, Date creationDate, Employee user, ORDER startSale, ORDER endSale)
-                                if(lastZReport == null) {
+                                OpiningReport opiningReport = Util.getLastAReport(getApplicationContext());
+                                ClosingReportDBAdapter closingReportDBAdapter =new ClosingReportDBAdapter(getApplicationContext());
+                                closingReportDBAdapter.open();
+                                ClosingReport closingReport = closingReportDBAdapter.getClosingReportByOpiningReportId(opiningReport.getOpiningReportId());
+                                if(closingReport!=null){
+                                ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(ReportsManagementActivity.this);
+                                zReportDBAdapter.open();
+                                ZReport lastZReport = Util.getLastZReport(getApplicationContext());
+
+                                if (lastZReport == null) {
                                     lastZReport = new ZReport();
                                     lastZReport.setEndOrderId(0);
                                 }
-
-                                ZReport z=new ZReport(0, new Timestamp(System.currentTimeMillis()) , SESSION._EMPLOYEE,lastZReport.getEndOrderId()+1,lastSale);
+                                ZReport z = new ZReport(0,  new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE, lastZReport.getEndOrderId() + 1, lastSale);
                                 z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
                                 double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
-                                totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
-                                long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
-                                z.setzReportId(zID);
-                                lastZReport = new ZReport(z);
-
-                                PrintTools pt = new PrintTools(ReportsManagementActivity.this);
-
-                                //create and print z report
-                                Bitmap bmap = pt.createZReport(lastZReport.getzReportId(), lastZReport.getStartOrderId(), lastZReport.getEndOrderId(), false,totalZReportAmount);
-                                if(bmap!=null)
-                                    pt.PrintReport(bmap);
-
-                                Intent i=new Intent(ReportsManagementActivity.this,ReportZDetailsActivity.class);
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID,lastZReport.getzReportId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM,lastZReport.getStartOrderId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO,lastZReport.getEndOrderId());
+                                totalZReportAmount=zReportDBAdapter.zReportTotalAmount()+amount;
+                                z.setTotalAmount(amount);
+                                z.setTotalPosSales(totalZReportAmount);
+                                ZReport zReport= Util.insertZReport(z,getApplicationContext());
+                                Intent i = new Intent(ReportsManagementActivity.this, ReportZDetailsActivity.class);
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,amount);
+
                                 startActivity(i);
                                 btnZ.setEnabled(false);
+                                }else {
+                                    new AlertDialog.Builder(ReportsManagementActivity.this)
+                                            .setTitle(getString(R.string.create_closing_report))
+                                            .setMessage(getString(R.string.you_must_create_closing_report_before_z_report))
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Intent i = new Intent(ReportsManagementActivity.this, ClosingReportActivity.class);
+                                                    startActivity(i);
+                                                }
+                                            })
+                                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // do nothing
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show();
+                                }
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -215,6 +239,13 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                 });
                 android.app.AlertDialog alert = builder.create();
                 alert.show();
+            }
+        });
+        btnClosingReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ReportsManagementActivity.this, ClosingReportActivity.class);
+                startActivity(intent);
             }
         });
     }

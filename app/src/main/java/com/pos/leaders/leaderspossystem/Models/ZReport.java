@@ -16,27 +16,39 @@ public class ZReport {
     @JsonIgnore
     private Employee user;
     private long startOrderId;
-    private double amount;
-    @JsonIgnore
-    private double totalAmount;
     @JsonIgnore
     private Order startSale;
     private long endOrderId;
     @JsonIgnore
     private Order endSale;
-
+    private double openingTotal;
+    private double totalSales;
+    private double totalAmount;
+    private double tax;
+    private double cashTotal;
+    private double checkTotal;
+    private  double creditTotal;
+    private double totalPosSales;
     public ZReport() {
+
 
     }
 
-    public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount, double totalAmount) {
+    public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double openingTotal) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
         this.startOrderId = startOrderId;
         this.endOrderId = endOrderId;
-        this.amount=amount;
+        this.totalSales=totalSales;
         this.totalAmount = totalAmount;
+        this.openingTotal=openingTotal;
+        this.tax=tax;
+        this.cashTotal=cashTotal;
+        this.checkTotal=checkTotal;
+        this.creditTotal=creditTotal;
+        this.totalPosSales=totalPosSales;
+
     }
 
     public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount) {
@@ -45,7 +57,7 @@ public class ZReport {
         this.byUser = byUser;
         this.startOrderId = startOrderId;
         this.endOrderId = endOrderId;
-        this.amount=amount;
+        this.totalSales=amount;
         this.totalAmount = totalAmount;
     }
 
@@ -81,7 +93,7 @@ public class ZReport {
         this.byUser = zReport.byUser;
         this.startOrderId = zReport.startOrderId;
         this.endOrderId = zReport.endOrderId;
-        this.amount=zReport.amount;
+        this.totalSales=zReport.totalSales;
         this.totalAmount =zReport.totalAmount;
     }
 
@@ -148,22 +160,71 @@ public class ZReport {
     public void setEndSale(Order endSale) {
         this.endSale = endSale;
     }
-
-    public double getAmount() {
-        return amount;
-    }
-
     public double getTotalAmount() {
         return totalAmount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
 
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
     }
+
+    public double getOpeningTotal() {
+        return openingTotal;
+    }
+
+    public void setOpeningTotal(double openingTotal) {
+        this.openingTotal = openingTotal;
+    }
+
+    public double getTotalSales() {
+        return totalSales;
+    }
+
+    public void setTotalSales(double totalSales) {
+        this.totalSales = totalSales;
+    }
+
+    public double getTax() {
+        return tax;
+    }
+
+    public void setTax(double tax) {
+        this.tax = tax;
+    }
+
+    public double getCashTotal() {
+        return cashTotal;
+    }
+
+    public void setCashTotal(double cashTotal) {
+        this.cashTotal = cashTotal;
+    }
+
+    public double getCheckTotal() {
+        return checkTotal;
+    }
+
+    public void setCheckTotal(double checkTotal) {
+        this.checkTotal = checkTotal;
+    }
+
+    public double getCreditTotal() {
+        return creditTotal;
+    }
+
+    public void setCreditTotal(double creditTotal) {
+        this.creditTotal = creditTotal;
+    }
+
+    public double getTotalPosSales() {
+        return totalPosSales;
+    }
+
+    public void setTotalPosSales(double totalPosSales) {
+        this.totalPosSales = totalPosSales;
+    }
+
     //region OpenFormat
     public String BKMVDATA(int rowNumber,String pc,int totalRows){
 
@@ -172,6 +233,28 @@ public class ZReport {
             spaces += "\u0020";
         }
         return "Z900" + String.format(Util.locale,"%09d", rowNumber) + pc + String.format(Util.locale,"%015d", 1) + "&OF1.31&" + String.format(Util.locale,"%015d", totalRows) + spaces;
+    }
+
+    @Override
+    public String toString() {
+        return "ZReport{" +
+                "zReportId=" + zReportId +
+                ", createdAt=" + createdAt +
+                ", byUser=" + byUser +
+                ", user=" + user +
+                ", startOrderId=" + startOrderId +
+                ", startSale=" + startSale +
+                ", endOrderId=" + endOrderId +
+                ", endSale=" + endSale +
+                ", openingTotal=" + openingTotal +
+                ", totalSales=" + totalSales +
+                ", totalAmount=" + totalAmount +
+                ", tax=" + tax +
+                ", cashTotal=" + cashTotal +
+                ", checkTotal=" + checkTotal +
+                ", creditTotal=" + creditTotal +
+                ", totalPosSales=" + totalPosSales +
+                '}';
     }
     //endregion OpenFormat
 }

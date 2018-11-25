@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +34,7 @@ public class ZReportActivity extends AppCompatActivity {
     public static final String COM_LEADPOS_ZREPORT_ID = "COM_LEADPOS_ZREPORT_ID";
     public static final String COM_LEADPOS_ZREPORT_HISTORY = "COM_LEADPOS_ZREPORT_HISTORY";
     public static final String COM_LEADPOS_ZREPORT_TOTAL_AMOUNT = "COM_LEADPOS_ZREPORT_TOTAL_AMOUNT";
+    public static final String COM_LEADPOS_ZREPORT_AMOUNT = "COM_LEADPOS_ZREPORT_AMOUNT";
 
     private ZReportListViewAdapter adapter;
     private List<ZReport> zReportList;
@@ -136,7 +136,8 @@ public class ZReportActivity extends AppCompatActivity {
                 i.putExtra(COM_LEADPOS_ZREPORT_ID,zReportList.get(position-1).getzReportId());
                 i.putExtra(COM_LEADPOS_ZREPORT_FORM,zReportList.get(position-1).getStartOrderId());
                 i.putExtra(COM_LEADPOS_ZREPORT_TO,zReportList.get(position-1).getEndOrderId());
-                i.putExtra(COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReportList.get(position-1).getTotalAmount());
+                i.putExtra(COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReportList.get(position-1).getTotalPosSales());
+                i.putExtra(COM_LEADPOS_ZREPORT_AMOUNT,zReportList.get(position-1).getTotalAmount());
 
                 i.putExtra(COM_LEADPOS_ZREPORT_HISTORY, true);
                 startActivity(i);

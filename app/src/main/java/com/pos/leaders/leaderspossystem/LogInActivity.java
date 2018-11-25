@@ -239,7 +239,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                     SESSION._SCHEDULEWORKERS = new ScheduleWorkers(scheduleID, user.getCashPaymentId(), new Date().getTime(), new Date().getTime());
                     scheduleWorkersDBAdapter.close();**/
 
-                //// TODO: 12/04/2017 check if AReport is valid
+                //// TODO: 12/04/2017 check if OpiningReport is valid
                 OrderDBAdapter saleDBAdapter = new OrderDBAdapter(LogInActivity.this);
                 saleDBAdapter.open();
                 Order lastSale = saleDBAdapter.getLast();

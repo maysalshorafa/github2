@@ -245,6 +245,7 @@
     <!--Z Report-->
     <string name="z_number">Z Number</string>
     <string name="print">Print</string>
+    <string name="calculate">Calculate</string>
 
     <!--Backup-->
     <string name="backup_products_by_category">Backup Products By Category</string>
@@ -436,7 +437,6 @@
     <string name="user_password_is_not_available_try_to_use_another_user_password">User Password is not available, try to use another user Password.</string>
 
 
-
     <!-- OldCustomer Message -->
     <string name="please_insert_first_name">Please insert a first name.</string>
     <string name="please_insert_last_name">Please insert a last name.</string>
@@ -584,6 +584,7 @@
     <string name="create_offer_activity">CreateOfferActivity</string>
     <string name="management_offer_activity">ManagementOfferActivity</string>
     <string name="invoice_management_activity">Invoice ManagementActivity</string>
+    <string name="closing_report_activity">Closing Report Activity</string>
 
     <string name="currency_is_activated_in_pos">Currency is activated in POS</string>
     <string name="currency_is_not_activated_in_pos">Currency is not activated in POS</string>
@@ -648,6 +649,12 @@
     <string name="product_unit">Product Unit</string>
     <string name="please_insert_customer_credit">Please insert customer credit.</string>
     <string name="invoice">Invoice</string>
+    <string name="expected">Expected</string>
+    <string name="actual">Actual</string>
+    <string name="closing_report">Closing Report</string>
+    <string name="are_you_want_to_print_and_save_closing_report">Are you want to print and save Closing Report ?</string>
+    <string name="you_must_create_closing_report_before_z_report">You must Create Closing Report Before Z Report !!</string>
+    <string name="create_closing_report">Create Closing Report</string>
 
 
 </resources>

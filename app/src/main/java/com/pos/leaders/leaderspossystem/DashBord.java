@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AlertDialog;
@@ -32,8 +31,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.AReportDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
@@ -42,7 +42,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Elements.IButton;
-import com.pos.leaders.leaderspossystem.Models.AReport;
+import com.pos.leaders.leaderspossystem.Models.ClosingReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Employee;
@@ -50,7 +51,6 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
-import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Settings.SettingsActivity;
 import com.pos.leaders.leaderspossystem.SettingsTab.SettingsTab;
@@ -59,6 +59,7 @@ import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 import com.sunmi.aidl.MSCardService;
@@ -75,7 +76,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     IButton salesCart, report, product, category, backUp, customerClub, logOut, offers, settings , schedule_workers;
     IButton users;
     IButton btZReport, btAReport;
-    AReportDBAdapter aReportDBAdapter;
+    OpiningReportDBAdapter aReportDBAdapter;
     Employee user = new Employee();
     EmployeeDBAdapter userDBAdapter;
     ArrayList<Integer> permissions_name;
@@ -221,11 +222,11 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         btAReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AReport _aReport = new AReport();
+               final OpiningReport _aReport = new OpiningReport();
                 _aReport.setByUserID(SESSION._EMPLOYEE.getEmployeeId());
                 _aReport.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
-                AReport aReport = getLastAReport();
+                OpiningReport aReport = getLastAReport();
                 ZReport zReport = getLastZReport();
 
                 if (aReport == null) {
@@ -234,9 +235,13 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
                     ShowAReportDialog(_aReport);
                 } else {
-                    _aReport.setLastZReportID(zReport.getzReportId());
-                    _aReport.setLastOrderId(zReport.getEndOrderId());
-
+                    if(zReport==null){
+                        _aReport.setLastZReportID(-1);
+                        _aReport.setLastOrderId(-1);
+                    }else {
+                        _aReport.setLastZReportID(zReport.getzReportId());
+                        _aReport.setLastOrderId(zReport.getEndOrderId());
+                    }
                     ShowAReportDialog(_aReport);
                 }
 
@@ -258,7 +263,12 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                             .setTitle(getString(R.string.create_z_report))
                                             .setMessage(getString(R.string.create_z_report_message))
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
+                                                public void onClick(final DialogInterface dialog, int which) {
+                                                    OpiningReport opiningReport = getLastAReport();
+                                                        ClosingReportDBAdapter closingReportDBAdapter =new ClosingReportDBAdapter(getApplicationContext());
+                                                        closingReportDBAdapter.open();
+                                                        ClosingReport closingReport = closingReportDBAdapter.getClosingReportByOpiningReportId(opiningReport.getOpiningReportId());
+                                                        if(closingReport!=null){
                                                     ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(DashBord.this);
                                                     zReportDBAdapter.open();
                                                     ZReport lastZReport = getLastZReport();
@@ -270,26 +280,37 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                     ZReport z = new ZReport(0,  new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE, lastZReport.getEndOrderId() + 1, lastSale);
                                                     z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
                                                     double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
-                                                    totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
-                                                    long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
-                                                    z.setzReportId(zID);
-                                                    lastZReport = new ZReport(z);
-                                                    zReportDBAdapter.close();
-                                                    PrintTools pt = new PrintTools(DashBord.this);
-
-                                                    //create and print z report
-                                                    Bitmap bmap = pt.createZReport(lastZReport.getzReportId(), lastZReport.getStartOrderId(), lastZReport.getEndOrderId(), false,totalZReportAmount);
-                                                    if (bmap != null)
-                                                        pt.PrintReport(bmap);
-
+                                                    totalZReportAmount=zReportDBAdapter.zReportTotalAmount()+amount;
+                                                    z.setTotalAmount(amount);
+                                                    z.setTotalPosSales(totalZReportAmount);
+                                                ZReport zReport= Util.insertZReport(z,getApplicationContext());
                                                     Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
-                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, lastZReport.getzReportId());
-                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, lastZReport.getStartOrderId());
-                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, lastZReport.getEndOrderId());
+                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
+                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
+                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
                                                     i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
+                                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,amount);
 
                                                     startActivity(i);
                                                     btZReport.setEnabled(false);
+                                                    }else {
+                                                        new AlertDialog.Builder(DashBord.this)
+                                                                .setTitle(getString(R.string.create_closing_report))
+                                                                .setMessage(getString(R.string.you_must_create_closing_report_before_z_report))
+                                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                        Intent i = new Intent(DashBord.this, ClosingReportActivity.class);
+                                                                        startActivity(i);
+                                                                    }
+                                                                })
+                                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                        // do nothing
+                                                                    }
+                                                                })
+                                                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                                                .show();
+                                                    }
                                                 }
                                             })
                                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -309,7 +330,12 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         .setTitle(getString(R.string.create_z_report))
                         .setMessage(getString(R.string.create_z_report_message))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(final DialogInterface dialog, int which) {
+                                OpiningReport opiningReport = getLastAReport();
+                                ClosingReportDBAdapter closingReportDBAdapter =new ClosingReportDBAdapter(getApplicationContext());
+                                closingReportDBAdapter.open();
+                                ClosingReport closingReport = closingReportDBAdapter.getClosingReportByOpiningReportId(opiningReport.getOpiningReportId());
+                                if(closingReport!=null){
                                 ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(DashBord.this);
                                 zReportDBAdapter.open();
                                 ZReport lastZReport = getLastZReport();
@@ -321,26 +347,38 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                 ZReport z = new ZReport(0,  new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE, lastZReport.getEndOrderId() + 1, lastSale);
                                 z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
                                 double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
-                                totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
-                                long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
-                                z.setzReportId(zID);
-                                lastZReport = new ZReport(z);
-                                zReportDBAdapter.close();
-                                PrintTools pt = new PrintTools(DashBord.this);
-
-                                //create and print z report
-                                Bitmap bmap = pt.createZReport(lastZReport.getzReportId(), lastZReport.getStartOrderId(), lastZReport.getEndOrderId(), false,totalZReportAmount);
-                                if (bmap != null)
-                                    pt.PrintReport(bmap);
-
+                                totalZReportAmount=zReportDBAdapter.zReportTotalAmount()+amount;
+                                z.setTotalAmount(amount);
+                                z.setTotalPosSales(totalZReportAmount);
+                                ZReport zReport= Util.insertZReport(z,getApplicationContext());
                                 Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, lastZReport.getzReportId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, lastZReport.getStartOrderId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, lastZReport.getEndOrderId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
+                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,amount);
 
                                 startActivity(i);
                                 btZReport.setEnabled(false);
+                                }else {
+                                    new AlertDialog.Builder(DashBord.this)
+                                            .setTitle(getString(R.string.create_closing_report))
+                                            .setMessage(getString(R.string.you_must_create_closing_report_before_z_report))
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Intent i = new Intent(DashBord.this, ClosingReportActivity.class);
+                                                    startActivity(i);
+                                                }
+                                            })
+                                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // do nothing
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show();
+
+                                }
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -349,7 +387,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                             }
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();}
+                        .show();
+           }
 
             }
         });
@@ -466,7 +505,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                            // btZReport.setEnabled(false);
                         } else
                             btZReport.setEnabled(true);
-                        btAReport.setEnabled(false);
+                        btAReport.setEnabled(true);
                         salesCart.setEnabled(true);
                     }
                     break;
@@ -551,7 +590,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
     private boolean needAReport() {
         ZReport zReport = getLastZReport();
-        AReport aReport = getLastAReport();
+        OpiningReport aReport = getLastAReport();
 
 
         if (aReport != null && zReport != null) {
@@ -581,10 +620,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         return zReport;
     }
 
-    private AReport getLastAReport() {
-        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(this);
+    private OpiningReport getLastAReport() {
+        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(this);
         aReportDBAdapter.open();
-        AReport aReport = null;
+        OpiningReport aReport = null;
 
         try {
             aReport = aReportDBAdapter.getLastRow();
@@ -597,7 +636,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         return aReport;
     }
 
-    private void ShowAReportDialog(final AReport aReport) {
+    private void ShowAReportDialog(final OpiningReport aReport) {
 
         //there is no customerName report after z report
         enableBackButton = false;
@@ -649,7 +688,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     String str = et.getText().toString();
                     if (!str.equals("")) {
                         aReport.setAmount(Double.parseDouble(str));
-                        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBord.this);
+                        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
                         aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
                         aReportDBAdapter.close();
@@ -682,7 +721,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 currenciesNames.add(currencyTypesList.get(i).getType());
             }
 
-            final AReportDetailsDBAdapter aReportDetailsDBAdapter = new AReportDetailsDBAdapter(DashBord.this);
+            final OpiningReportDetailsDBAdapter aReportDetailsDBAdapter = new OpiningReportDetailsDBAdapter(DashBord.this);
             aReportDetailsDBAdapter.open();
             // Creating adapter for spinner
             final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currenciesNames);
@@ -900,11 +939,11 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     if (!str.equals("")) {
                         aReportTotalAmount = firstCurrencyInDefaultValue * fCurrency.getRate() + secondCurrencyInDefaultValue * sCurrency.getRate() + thirdCurrencyInDefaultValue * tCurrency.getRate() + forthCurrencyInDefaultValue * forthCurrency.getRate();
                         aReport.setAmount(aReportTotalAmount);
-                        AReportDBAdapter aReportDBAdapter = new AReportDBAdapter(DashBord.this);
+                        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
                         aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
                         try {
-                            aReportId = aReportDBAdapter.getLastRow().getaReportId();
+                            aReportId = aReportDBAdapter.getLastRow().getOpiningReportId();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
