@@ -2768,6 +2768,20 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
+                if(saleID<=0){
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(saleID<=0){
+                        try {
+                            Thread.sleep(600);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 long tempSaleId = 0;
                 // Club with point and amount
                 if (clubType == 2) {
@@ -2931,6 +2945,20 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
+                if(saleID<=0){
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(saleID<=0){
+                        try {
+                            Thread.sleep(600);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 long tempSaleId;
                 saleDBAdapter.close();
 
@@ -3025,6 +3053,20 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
+                if(saleID<=0){
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(saleID<=0){
+                        try {
+                            Thread.sleep(600);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 long tempSaleId = 0;
                 // Club with point and amount
                 if (clubType == 2 && clubAmount!=0) {
@@ -3137,6 +3179,20 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
+                if(saleIDforCash<=0){
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(saleIDforCash<=0){
+                        try {
+                            Thread.sleep(600);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 SESSION._ORDERS.setOrderId(saleIDforCash);
 
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess, new Order(SESSION._ORDERS));
@@ -3243,6 +3299,20 @@ public class SalesCartActivity extends AppCompatActivity {
                 long firstCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID, 0);
 
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
+                if(saleIDforCash<=0){
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(saleIDforCash<=0){
+                        try {
+                            Thread.sleep(600);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 SESSION._ORDERS.setOrderId(saleIDforCash);
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess, new Order(SESSION._ORDERS));
 
@@ -3362,6 +3432,20 @@ public class SalesCartActivity extends AppCompatActivity {
                     }
                     SESSION._ORDERS.setTotalPaidAmount(TotalPaidAmount);
                     saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
+                    if(saleIDforCash<=0){
+                        try {
+                            Thread.sleep(300);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if(saleIDforCash<=0){
+                            try {
+                                Thread.sleep(600);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                     SESSION._ORDERS.setOrderId(saleIDforCash);
                     for (int i = 0 ;i<paymentTableArrayList.size();i++){
                         currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,paymentTableArrayList.get(i).getTendered(),paymentTableArrayList.get(i).getCurrency().getType());
