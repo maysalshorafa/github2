@@ -1669,6 +1669,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                     if ((1 - (d / originalTotalPrice) <= (X / 100))) {
                                         double val = (1 - (d / originalTotalPrice)) * 100;
                                         valueOfDiscount = val;
+                                        SESSION._ORDERS.setCartDiscount(val);
                                         SESSION._ORDERS.cartDiscount=val;
                                         refreshCart();
                                         discountDialog.cancel();
@@ -1683,6 +1684,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                     valueOfDiscount = val;
                                     if (val <= X) {
                                         valueOfDiscount = val;
+                                        SESSION._ORDERS.setCartDiscount(val);
                                         SESSION._ORDERS.cartDiscount=val;
                                         refreshCart();
                                         discountDialog.cancel();
@@ -1880,6 +1882,7 @@ public class SalesCartActivity extends AppCompatActivity {
         Ppoint = 0;
         salesSaleMan.setText(getString(R.string.sales_man));
         SESSION._ORDERS.cartDiscount = 0;
+        SESSION._ORDERS.setCartDiscount(0);
         SESSION._Rest();
         customerName_EditText.setText("");
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);

@@ -68,7 +68,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -281,10 +281,13 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(CurrencyOperationDBAdapter.DATABASE_CREATE);
                     //update user permissions
 
-
                     ClearSync clearSync = new ClearSync(context);
                     clearSync.execute(context);
+                    break;
+                case 2:
+                    db.execSQL(OrderDBAdapter.addColumn("cartDiscount"));
 
+                    break;
             }
         } catch (SQLException e) {
             Log.i("onUpgrade", e.getMessage(), e);

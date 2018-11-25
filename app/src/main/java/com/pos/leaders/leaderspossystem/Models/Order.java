@@ -23,9 +23,6 @@ public class Order {
 	private double totalPrice;
 	private double totalPaidAmount;
 	private long customerId;
-
-
-	@JsonIgnore
 	public double cartDiscount = 0;
 	@JsonIgnore
 	private String customer_name = null;
@@ -47,7 +44,7 @@ public class Order {
 	public Order() {
 	}
 
-	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name) {
+	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name,double cartDiscount) {
 		this.orderId = orderId;
 		this.byUser = byUser;
 		this.createdAt = createdAt;
@@ -57,6 +54,7 @@ public class Order {
 		this.totalPaidAmount = totalPaidAmount;
 		this.customerId = customerId;
 		this.customer_name = customer_name;
+		this.cartDiscount=cartDiscount;
 	}
 
 	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name, Customer customer) {
@@ -98,7 +96,7 @@ public class Order {
 	}
 
 	public static Order newInstance(Order s) {
-		return new Order(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name());
+		return new Order(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name(),s.getCartDiscount());
 	}
 
 	@JsonIgnore
@@ -113,6 +111,10 @@ public class Order {
 	//endregion
 
 	//region Getter
+
+	public double getCartDiscount() {
+		return cartDiscount;
+	}
 
 	public long getOrderId() {
 		return orderId;
@@ -175,6 +177,10 @@ public class Order {
 
 	//region Setter
 
+
+	public void setCartDiscount(double cartDiscount) {
+		this.cartDiscount = cartDiscount;
+	}
 
 	public void setStatus(boolean status) {
 		this.status = status;
