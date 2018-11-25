@@ -1167,12 +1167,15 @@ public class SalesCartActivity extends AppCompatActivity {
                                         double itemOriginalPrice = selectedOrderOnCart.getPaidAmount();
                                         if (isChecked) {
                                             sw.setText(getBaseContext().getString(R.string.amount));
+                                             cashETCash.setText("");
+                                            cashETCash.setHint("0");
                                         } else {
                                             sw.setText(getBaseContext().getString(R.string.proportion));
+                                            cashETCash.setText("");
+                                            cashETCash.setHint("0");
                                         }
                                         totalDiscount.setText(Util.makePrice((itemOriginalPrice - selectedOrderOnCart.getPaidAmount())*selectedOrderOnCart.getQuantity()) + getString(R.string.ins));
                                         priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount() * selectedOrderOnCart.getQuantity()) + getString(R.string.ins));
-                                        cashETCash.setText("0");
                                     }
                                 });
                                 cashETCash.setHint(R.string.proportion);
@@ -1566,12 +1569,14 @@ public class SalesCartActivity extends AppCompatActivity {
                                 totalDiscount.setText(Util.makePrice(valueOfDiscount) + getString(R.string.ins));
                                 priceAfterDiscount.setText(tvTotalPrice.getText().toString());
                                 sw.setText(R.string.amount);
-                                et.setText("0");
+                                et.setText("");
+                                et.setHint("0");
                             } else {
                                 totalDiscount.setText(Util.makePrice(valueOfDiscount) + getString(R.string.ins));
                                 priceAfterDiscount.setText(tvTotalPrice.getText().toString());
                                 sw.setText(R.string.proportion);
-                                et.setText("0");
+                                et.setText("");
+                                et.setHint("0");
                             }
                         }
                     });
