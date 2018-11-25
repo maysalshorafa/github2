@@ -17,10 +17,10 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.Log;
@@ -31,7 +31,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.DashBord;
+import com.pos.leaders.leaderspossystem.BackupActivity;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.LogInActivity;
 import com.pos.leaders.leaderspossystem.R;
@@ -298,7 +298,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
                 || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
                 || POSManagmentPreferenceFragment.class.getName().equals(fragmentName)
-                || PinPadPreferenceFragment.class.getName().equals(fragmentName);
+                || PinPadPreferenceFragment.class.getName().equals(fragmentName) || BackUpPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     /**
@@ -438,6 +438,34 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // guidelines.
         }
 
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+    }
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class BackUpPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setHasOptionsMenu(true);
+
+            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
+            // to their values. When their values change, their summaries are
+            // updated to reflect the new value, per the Android Design
+            // guidelines.
+            //bindPreferenceSummaryToValue(findPreference("example_text"));
+            //bindPreferenceSummaryToValue(findPreference("example_list"));
+            startActivity(new Intent(getActivity(), BackupActivity.class));
+
+
+        }
 
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {

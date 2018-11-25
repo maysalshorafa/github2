@@ -21,6 +21,10 @@
     android:fragment="com.pos.leaders.leaderspossystem.Settings.SettingsActivity$PinPadPreferenceFragment"
 
     android:title="@string/pinpad" />
+    <header
+        android:fragment="com.pos.leaders.leaderspossystem.Settings.SettingsActivity$BackUpPreferenceFragment"
+
+        android:title="@string/back_up" />
 
     <!--
     android:icon="@drawable/ic_info_black_24dp"
