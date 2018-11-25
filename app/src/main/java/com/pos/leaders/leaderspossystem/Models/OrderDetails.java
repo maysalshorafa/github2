@@ -24,7 +24,6 @@ public class OrderDetails {
 	private double paidAmount;
 	private double discount;
 
-	@JsonIgnore
 	public double rowDiscount = 0;
 
 	@JsonIgnore
@@ -93,7 +92,7 @@ public class OrderDetails {
         initObjectID();
 	}
 
-    public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id) {
+    public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id,double rowDiscount) {
         this.orderDetailsId = orderDetailsId;
         this.productId = productId;
         this.quantity = quantity;
@@ -103,6 +102,7 @@ public class OrderDetails {
         this.unitPrice = original_price;
         this.discount = discount;
     	this.customer_assistance_id = customer_assistance_id;
+		this.rowDiscount=rowDiscount;
         initObjectID();
     }
 
@@ -148,7 +148,7 @@ public class OrderDetails {
     }
 
 	public OrderDetails(OrderDetails o) {
-        this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+        this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id(),o.getRowDiscount());
 		this.product = o.getProduct();
     }
 
@@ -186,6 +186,14 @@ public class OrderDetails {
 	public void setOrderId(long orderId) {
 
 		this.orderId = orderId;
+	}
+
+	public double getRowDiscount() {
+		return rowDiscount;
+	}
+
+	public void setRowDiscount(double rowDiscount) {
+		this.rowDiscount = rowDiscount;
 	}
 
 	public void setOrderDetailsId(long orderDetailsId) {

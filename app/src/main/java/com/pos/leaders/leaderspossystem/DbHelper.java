@@ -286,7 +286,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     break;
                 case 2:
                     db.execSQL(OrderDBAdapter.addColumn("cartDiscount"));
-
+                    db.execSQL(OrderDetailsDBAdapter.addColumn("rowDiscount"));
                     break;
             }
         } catch (SQLException e) {

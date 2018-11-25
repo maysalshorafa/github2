@@ -1231,6 +1231,8 @@ public class SalesCartActivity extends AppCompatActivity {
 
                                                 if (discount <= (X / 100)) {
                                                     SESSION._ORDER_DETAILES.get(indexOfItem).rowDiscount = (discount * 100);
+                                                    SESSION._ORDER_DETAILES.get(indexOfItem).setRowDiscount(discount * 100);
+
                                                     calculateTotalPrice();
 
                                                     cashDialog.cancel();
@@ -1243,6 +1245,8 @@ public class SalesCartActivity extends AppCompatActivity {
                                                 float val = Float.parseFloat(str);
                                                 if (val <= X) {
                                                     SESSION._ORDER_DETAILES.get(indexOfItem).rowDiscount = (val);
+                                                    SESSION._ORDER_DETAILES.get(indexOfItem).setRowDiscount(val);
+
                                                     calculateTotalPrice();
                                                     cashDialog.cancel();
                                                 } else {
@@ -1405,7 +1409,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                         SESSION._ORDERS.setOrderId(saleIDforCash);
                                         for (OrderDetails o : SESSION._ORDER_DETAILES) {
                                             o.setOrderId(saleIDforCash);
-                                            long orderid = orderDBAdapter.insertEntryFromInvoice(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                                            long orderid = orderDBAdapter.insertEntryFromInvoice(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),o.getRowDiscount());
                                             o.setOrderDetailsId(orderid);
                                         }
                                         //update customer balance
@@ -2809,7 +2813,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),o.getRowDiscount());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
@@ -2949,7 +2953,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),o.getRowDiscount());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
                 }
@@ -3059,7 +3063,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),o.getRowDiscount());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
@@ -3167,7 +3171,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),o.getRowDiscount());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
@@ -3280,7 +3284,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),o.getRowDiscount());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
@@ -3398,7 +3402,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     }
                     // insert order region
                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                        long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                        long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),o.getRowDiscount());
                         orderId.add(orderid);
                         //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                     }
