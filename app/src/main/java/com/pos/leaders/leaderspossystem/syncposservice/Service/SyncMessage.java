@@ -19,7 +19,6 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
@@ -28,7 +27,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
@@ -40,8 +38,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAda
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
@@ -49,8 +46,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.LogInActivity;
-import com.pos.leaders.leaderspossystem.Models.OpiningReport;
-import com.pos.leaders.leaderspossystem.Models.OpiningReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.City;
@@ -68,6 +63,8 @@ import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDy
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
@@ -649,13 +646,15 @@ public class SyncMessage extends Service {
 
                 //region Order
                 case MessageType.ADD_ORDER:
+                    /**
                     Order order = null;
                     order = objectMapper.readValue(msgData, Order.class);
 
                     OrderDBAdapter orderDBAdapter = new OrderDBAdapter(this);
                     orderDBAdapter.open();
                     rID = orderDBAdapter.insertEntry(order);
-                    orderDBAdapter.close();
+                    orderDBAdapter.close();**/
+                    rID=1;
                     break;
                 case MessageType.UPDATE_ORDER:
                     break;
@@ -738,13 +737,14 @@ public class SyncMessage extends Service {
 
                 //region ORDERDetails
                 case MessageType.ADD_ORDER_DETAILS:
-                    OrderDetails o;
+                 /**   OrderDetails o;
                     o = objectMapper.readValue(msgData, OrderDetails.class);
 
                     OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(this);
                     orderDetailsDBAdapter.open();
                     rID = orderDetailsDBAdapter.insertEntry(o);
-                    orderDetailsDBAdapter.close();
+                    orderDetailsDBAdapter.close();**/
+                 rID=1;
                     break;
                 case MessageType.UPDATE_ORDER_DETAILS:
                     break;
@@ -855,13 +855,14 @@ public class SyncMessage extends Service {
 
                 //region CurrencyReturns
                 case MessageType.ADD_CURRENCY_RETURN:
-                    CurrencyReturns c = null;
+                /**    CurrencyReturns c = null;
                     c = objectMapper.readValue(msgData, CurrencyReturns.class);
 
                     CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(this);
                     currencyReturnsDBAdapter.open();
                     rID = currencyReturnsDBAdapter.insertEntry(c);
-                    currencyReturnsDBAdapter.close();
+                    currencyReturnsDBAdapter.close();**/
+                rID=1;
 
                     break;
                 case MessageType.UPDATE_CURRENCY_RETURN:
