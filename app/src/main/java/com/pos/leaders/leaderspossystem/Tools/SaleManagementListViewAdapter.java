@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.R;
 
@@ -58,7 +59,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			holder.btCancel = (Button) convertView.findViewById(R.id.listSaleManagement_BTCancel);
 			holder.btReturn = (Button) convertView.findViewById(R.id.listSaleManagement_BTReturn);
 			holder.btView = (Button) convertView.findViewById(R.id.listSaleManagement_BTView);
-			holder.tvDiscount = (Button) convertView.findViewById(R.id.listSaleManagement_TVDiscount);
+			holder.tvDiscount = (TextView) convertView.findViewById(R.id.listSaleManagement_TVDiscount);
 
 			convertView.setTag(holder);
 		} else {
@@ -69,6 +70,9 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		price = o.getTotalPrice();
 		holder.tvID.setText(o.getOrderId() + "");
 		holder.tvDiscount.setText(o.getCartDiscount()+"");
+		OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(context);
+		orderDetailsDBAdapter.open();
+		o.setOrders(orderDetailsDBAdapter.getOrderBySaleID(o.getOrderId()));
 		holder.tvNumberOfItems.setText(o.getNumberOfItems()+"");
 
 		if (o.getCustomer_name() != null && !o.getCustomer_name().equals("")) {

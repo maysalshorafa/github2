@@ -38,8 +38,8 @@ public class ReportsManagementActivity  extends AppCompatActivity {
     Order lastSale;
     String str;
     double totalZReportAmount =0;
-    OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(getApplicationContext());
-    ClosingReportDBAdapter closingReportDBAdapter = new ClosingReportDBAdapter(getApplicationContext());
+    OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(ReportsManagementActivity.this);
+    ClosingReportDBAdapter closingReportDBAdapter = new ClosingReportDBAdapter(ReportsManagementActivity.this);
     OpiningReport lastOpiningReport =null;
     ClosingReport closingReport=null;
     @Override
@@ -98,16 +98,19 @@ public class ReportsManagementActivity  extends AppCompatActivity {
             }
         }
         try {
+            opiningReportDBAdapter.open();
+            closingReportDBAdapter.open();
             lastOpiningReport = opiningReportDBAdapter.getLastRow();
             closingReport=closingReportDBAdapter.getLastRow();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if(lastOpiningReport.getOpiningReportId()==closingReport.getOpiningReportId()){
-            btnClosingReport.setEnabled(false);
-        }else {
-            btnClosingReport.setEnabled(true);
+        if(closingReport!=null) {
+            if (lastOpiningReport.getOpiningReportId() == closingReport.getOpiningReportId()) {
+                btnClosingReport.setEnabled(false);
+            } else {
+                btnClosingReport.setEnabled(true);
+            }
         }
         btnZ.setOnClickListener(new View.OnClickListener() {
             @Override
