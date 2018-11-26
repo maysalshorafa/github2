@@ -73,7 +73,7 @@ import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE
 
 public class DashBord extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private boolean enableBackButton = true;
-    IButton salesCart, report, product, category, backUp, customerClub, logOut, offers, settings , schedule_workers;
+    IButton salesCart, report, product, category, closingReport, customerClub, logOut, offers, settings , schedule_workers;
     IButton users;
     IButton btZReport, btAReport;
     OpiningReportDBAdapter aReportDBAdapter;
@@ -189,14 +189,16 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         offers = (IButton) findViewById(R.id.dashboard_btOffer);
         users = (IButton) findViewById(R.id.users);
         schedule_workers = (IButton) findViewById(R.id.schedule_workers);
-        backUp = (IButton) findViewById(R.id.backUp);
+        closingReport = (IButton) findViewById(R.id.closingReport);
        // logOut = (IButton) findViewById(R.id.logOut);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         customerClub = (IButton) findViewById(R.id.coustmerClub);
         settings = (IButton) findViewById(R.id.settings);
 
-        EnableButtons();
-      /**  logOut.setOnClickListener(new View.OnClickListener() {
+
+            EnableButtons();
+
+        /**  logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 /*scheduleWorkersDBAdapter=new ScheduleWorkersDBAdapter(getApplicationContext());
@@ -422,10 +424,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 startActivity(i);
             }
         });
-        backUp.setOnClickListener(new View.OnClickListener() {
+        closingReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), BackupActivity.class);
+                i = new Intent(getApplicationContext(), ClosingReportActivity.class);
                 startActivity(i);
             }
         });
@@ -482,7 +484,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         schedule_workers.setEnabled(false);
         offers.setEnabled(false);
         users.setEnabled(false);
-        backUp.setEnabled(false);
+        closingReport.setEnabled(false);
         category.setEnabled(false);
         category.setEnabled(false);
         customerClub.setEnabled(false);
@@ -498,6 +500,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 case Permissions.PERMISSIONS_MAIN_SCREEN:
                     if (needAReport()) {
                         btAReport.setEnabled(true);
+                        closingReport.setEnabled(false);
                         btZReport.setEnabled(false);
                         salesCart.setEnabled(false);
                     } else {
@@ -507,7 +510,9 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                             btZReport.setEnabled(true);
                         btAReport.setEnabled(true);
                         salesCart.setEnabled(true);
+                        closingReport.setEnabled(true);
                     }
+
                     break;
 
                 case Permissions.PERMISSIONS_REPORT:
@@ -527,9 +532,6 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     break;
                 case Permissions.PERMISSIONS_OFFERS:
                     offers.setEnabled(true);
-                    break;
-                case Permissions.PERMISSIONS_BACK_UP:
-                    backUp.setEnabled(true);
                     break;
                 case Permissions.PERMISSIONS_SETTINGS:
                     settings.setEnabled(true);
@@ -557,7 +559,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 extras.clear();
             }
         }
-        EnableButtons();
+
+            EnableButtons();
 
 
         if (SETTINGS.printer == null) {
@@ -693,6 +696,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
                         aReportDBAdapter.close();
                         discountDialog.cancel();
+                        closingReport.setEnabled(true);
                     }
                 }
             });
@@ -963,6 +967,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         aReportDialog.cancel();
                         aReportDBAdapter.close();
                         aReportDetailsDBAdapter.close();
+                        closingReport.setEnabled(true);
 
                     }
                 }

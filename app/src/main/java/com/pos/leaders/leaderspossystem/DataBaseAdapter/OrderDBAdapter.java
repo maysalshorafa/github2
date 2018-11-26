@@ -231,7 +231,7 @@ public class OrderDBAdapter {
 
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_CUSTOMER_NAME + " like '%" + str + "%'" +
 				price +
-						" or " + ORDER_COLUMN_ORDERDATE + " like '%" + str + "%'"+
+						" or " + ORDER_COLUMN_ORDERDATE + " like '%" + str + "%'"+" or " + ORDER_COLUMN_ID + " like '%" + str + "%'"+
 				" and " + ORDER_COLUMN_STATUS + " < 1" +
 				" order by id desc limit " + offset + "," + count, null);
 		cursor.moveToFirst();

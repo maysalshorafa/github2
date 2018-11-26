@@ -32,8 +32,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            ibutton:button_icon="@drawable/a_report"
-            ibutton:button_text="@string/a_report"/>
+            ibutton:button_icon="@drawable/o_report"
+            ibutton:button_text="@string/opening_report"/>
+
+        <com.pos.leaders.leaderspossystem.Elements.IButton
+            android:id="@+id/closingReport"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            ibutton:button_icon="@drawable/c_report"
+            ibutton:button_text="@string/closing_report"/>
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/dashboard_btZreport"
@@ -43,13 +51,7 @@
             ibutton:button_icon="@drawable/z_report"
             ibutton:button_text="@string/z_report" />
 
-        <com.pos.leaders.leaderspossystem.Elements.IButton
-            android:id="@+id/product"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            ibutton:button_icon="@drawable/product"
-            ibutton:button_text="@string/products"/>
+
 
     </LinearLayout>
     <LinearLayout
@@ -100,12 +102,12 @@
             ibutton:button_text="@string/schedule_workers" />
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
-            android:id="@+id/backUp"
+            android:id="@+id/product"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            ibutton:button_icon="@drawable/back_up"
-            ibutton:button_text="@string/back_up"/>
+            ibutton:button_icon="@drawable/product"
+            ibutton:button_text="@string/products"/>
     </LinearLayout>
 
     <LinearLayout

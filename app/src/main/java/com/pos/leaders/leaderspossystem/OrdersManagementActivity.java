@@ -11,7 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
@@ -121,6 +123,9 @@ public class OrdersManagementActivity extends AppCompatActivity {
 				_saleList.add(s);
 			}
 		}*/
+        LayoutInflater inflater = getLayoutInflater();
+        ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvOrders, false);
+        lvOrders.addHeaderView(header, null, false);
         adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, _saleList);
 
         lvOrders.setAdapter(adapter);

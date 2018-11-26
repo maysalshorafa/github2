@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -59,6 +58,8 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			holder.btCancel = (Button) convertView.findViewById(R.id.listSaleManagement_BTCancel);
 			holder.btReturn = (Button) convertView.findViewById(R.id.listSaleManagement_BTReturn);
 			holder.btView = (Button) convertView.findViewById(R.id.listSaleManagement_BTView);
+			holder.tvDiscount = (Button) convertView.findViewById(R.id.listSaleManagement_TVDiscount);
+
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -67,6 +68,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		Order o = salesList.get(position);
 		price = o.getTotalPrice();
 		holder.tvID.setText(o.getOrderId() + "");
+		holder.tvDiscount.setText(o.getCartDiscount()+"");
 		holder.tvNumberOfItems.setText(o.getNumberOfItems()+"");
 
 		if (o.getCustomer_name() != null && !o.getCustomer_name().equals("")) {
@@ -110,5 +112,6 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		private Button btCancel;
 		private Button btReturn;
 		private Button btView;
+		private TextView tvDiscount;
 	}
 }

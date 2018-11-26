@@ -18,6 +18,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturns
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.ClosingReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
@@ -113,8 +114,11 @@ public class ClosingReportActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
 
                                                 try {
+                                                    OrderDBAdapter orderDBAdapter = new OrderDBAdapter(getApplicationContext());
+                                                    orderDBAdapter.open();
+                                                    Order order = orderDBAdapter.getLast();
                                                     OpiningReport opiningReport = opiningReportDBAdapter.getLastRow();
-                                              long i =  closingReportDBAdapter.insertEntry(actualTotal,expectedTotal,expectedTotal,new Timestamp(System.currentTimeMillis()),opiningReport.getOpiningReportId());
+                                              long i =  closingReportDBAdapter.insertEntry(actualTotal,expectedTotal,expectedTotal,new Timestamp(System.currentTimeMillis()),opiningReport.getOpiningReportId(),order.getOrderId());
                                                if(i>0){
                                                         closingReportDetailsDBAdapter.insertEntry(i,actualCash,expectedCash,actualCash-expectedCash,CONSTANT.CASH,"Shekel");
                                                    if(actualUsd==0&&expectedUsd==0){
@@ -190,12 +194,12 @@ public class ClosingReportActivity extends AppCompatActivity {
 
         OrderDBAdapter orderDb = new OrderDBAdapter(getApplicationContext());
         orderDb.open();
-        OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(getApplicationContext());
-        opiningReportDBAdapter.open();
-        OpiningReport opiningReport = opiningReportDBAdapter.getLastRow();
+        ClosingReportDBAdapter closingReportDBAdapter = new ClosingReportDBAdapter(getApplicationContext());
+        closingReportDBAdapter.open();
+        ClosingReport closingReport = closingReportDBAdapter.getLastRow();
         Order order =orderDb.getLast();
 
-        List<Order> orders = orderDb.getBetween(opiningReport.getLastOrderId(), order.getOrderId());
+        List<Order> orders = orderDb.getBetween(closingReport.getLastOrderId(), order.getOrderId());
 
         orderDb.close();
 

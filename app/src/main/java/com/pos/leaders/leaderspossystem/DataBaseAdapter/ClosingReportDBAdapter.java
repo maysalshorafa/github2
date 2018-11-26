@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.ClosingReport;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -29,12 +30,14 @@ public class ClosingReportDBAdapter {
     protected static final String CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE = "differentTotalValue";
     protected static final String CLOSING_REPORT_COLUMN_CREATEDAT = "createdAt";
     protected static final String CLOSING_REPORT_COLUMN_OPINING_REPORT_ID = "opiningReportId";
+    protected static final String CLOSING_REPORT_COLUMN_LAST_ORDER_ID = "lastOrderID";
 
     public static final String DATABASE_CREATE = "CREATE TABLE closing_report ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "`actualTotalValue` REAL,  " +
             "`expectedTotalValue` REAL, " +
             "`differentTotalValue` REAL," +
             "`createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
+            "`lastOrderId` INTEGER , " +
             "`opiningReportId` INTEGER)";
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -63,8 +66,8 @@ public class ClosingReportDBAdapter {
     }
 
 
-    public long insertEntry(double actualTotalValue,double expectedTotalValue ,double differentTotalValue ,Timestamp createdAt , long  opiningReportId ) {
-        ClosingReport closingReport = new ClosingReport(Util.idHealth(this.db, CLOSING_REPORT_TABLE_NAME, CLOSING_REPORT_COLUMN_ID), actualTotalValue,expectedTotalValue,differentTotalValue, createdAt, opiningReportId);
+    public long insertEntry(double actualTotalValue,double expectedTotalValue ,double differentTotalValue ,Timestamp createdAt , long  opiningReportId,long lastOrderId ) {
+        ClosingReport closingReport = new ClosingReport(Util.idHealth(this.db, CLOSING_REPORT_TABLE_NAME, CLOSING_REPORT_COLUMN_ID), actualTotalValue,expectedTotalValue,differentTotalValue, createdAt, opiningReportId,lastOrderId);
         sendToBroker(MessageType.ADD_CLOSING_REPORT, closingReport, this.context);
 
         try {
@@ -85,6 +88,7 @@ public class ClosingReportDBAdapter {
         val.put(CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE, closingReport.getDifferentTotalValue());
         val.put(CLOSING_REPORT_COLUMN_CREATEDAT, String.valueOf(closingReport.getCreatedAt()));
         val.put(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID,closingReport.getOpiningReportId());
+        val.put(CLOSING_REPORT_COLUMN_LAST_ORDER_ID,closingReport.getLastOrderId());
 
         try {
             return db.insert(CLOSING_REPORT_TABLE_NAME, null, val);
@@ -108,7 +112,8 @@ public class ClosingReportDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_EXPECTED_TOTAL_VALUE))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE))),
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_CREATEDAT))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID))));
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))));
         cursor.close();
 
         return closingReport;
@@ -126,9 +131,34 @@ public class ClosingReportDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_EXPECTED_TOTAL_VALUE))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE))),
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_CREATEDAT))),
-                cursor.getLong(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID)));
+                cursor.getLong(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID)),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))));
         cursor.close();
 
         return closingReport;
     }
+    public ClosingReport getLastRow() throws Exception {
+        ClosingReport c = null;
+        Cursor cursor = db.rawQuery("select * from " + CLOSING_REPORT_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
+        if (cursor.getCount() < 1) // zReport Not Exist
+        {
+            cursor.close();
+            throw new Exception("there is no rows on Z Report Table");
+        }
+        cursor.moveToFirst();
+        c = makeAReport(cursor);
+        cursor.close();
+
+        return c;
+    }
+    private ClosingReport makeAReport(Cursor cursor){
+        return  new ClosingReport( Integer.parseInt(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_ID))),
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_ACTUAL_TOTAL_VALUE))),
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_EXPECTED_TOTAL_VALUE))),
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE))),
+                Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_CREATEDAT))),
+                cursor.getLong(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID)),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))));
+    }
+
 }

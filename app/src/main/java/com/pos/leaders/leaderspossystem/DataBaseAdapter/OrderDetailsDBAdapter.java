@@ -39,8 +39,11 @@ public class OrderDetailsDBAdapter {
 
     public static final String DATABASE_CREATE = "CREATE TABLE `OrderDetails` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL , `product_id` INTEGER," +
             " `quantity` INTEGER, `order_id` INTEGER, " +
-            " '" + ORDER_DETAILS_COLUMN_PAID_AMOUNT + "' REAL , '" + ORDER_DETAILS_COLUMN_UNIT_PRICE + "' REAL, '" + ORDER_DETAILES_COLUMN_DISCOUNT + "' REAL , '" + ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID + "' INTEGER , " +
-			ORDER_DETAILS_COLUMN_ROW_DISCOUNT + "' REAL , '" +
+            " '" + ORDER_DETAILS_COLUMN_PAID_AMOUNT + "' REAL , '" +
+			ORDER_DETAILS_COLUMN_UNIT_PRICE + "' REAL, '" +
+			ORDER_DETAILES_COLUMN_DISCOUNT + "' REAL , '" +
+			ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID + "' INTEGER , '" +
+			ORDER_DETAILS_COLUMN_ROW_DISCOUNT + "' REAL , " +
             "FOREIGN KEY(`product_id`) REFERENCES `products.id`, FOREIGN KEY(`order_id`) REFERENCES `_Order.id` )";
 
     // Variable to hold the database instance

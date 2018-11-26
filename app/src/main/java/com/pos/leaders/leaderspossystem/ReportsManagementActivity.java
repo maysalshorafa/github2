@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.ClosingReport;
@@ -37,6 +38,10 @@ public class ReportsManagementActivity  extends AppCompatActivity {
     Order lastSale;
     String str;
     double totalZReportAmount =0;
+    OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(getApplicationContext());
+    ClosingReportDBAdapter closingReportDBAdapter = new ClosingReportDBAdapter(getApplicationContext());
+    OpiningReport lastOpiningReport =null;
+    ClosingReport closingReport=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +96,18 @@ public class ReportsManagementActivity  extends AppCompatActivity {
             } catch (Exception ex) {
                 Log.e(ex.getLocalizedMessage(), ex.getMessage());
             }
+        }
+        try {
+            lastOpiningReport = opiningReportDBAdapter.getLastRow();
+            closingReport=closingReportDBAdapter.getLastRow();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(lastOpiningReport.getOpiningReportId()==closingReport.getOpiningReportId()){
+            btnClosingReport.setEnabled(false);
+        }else {
+            btnClosingReport.setEnabled(true);
         }
         btnZ.setOnClickListener(new View.OnClickListener() {
             @Override

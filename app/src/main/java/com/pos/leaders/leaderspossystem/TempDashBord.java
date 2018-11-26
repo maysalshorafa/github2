@@ -175,7 +175,7 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
         department = (Button) findViewById(R.id.department);
         schedule_workers = (Button) findViewById(R.id.schedule_workers);
         users = (Button) findViewById(R.id.users);
-        backUp = (Button) findViewById(R.id.backUp);
+        backUp = (Button) findViewById(R.id.closingReport);
       //  logOut = (Button) findViewById(R.id.logOut);
         customerClub = (Button) findViewById(R.id.coustmerClub);
         settings = (Button) findViewById(R.id.settings);
