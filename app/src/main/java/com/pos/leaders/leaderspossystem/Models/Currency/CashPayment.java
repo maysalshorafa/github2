@@ -12,7 +12,7 @@ public class CashPayment {
     private double amount;
     private long currency_type;
     private Timestamp createdAt;
-
+    private double currencyRate;
     public CashPayment() {
     }
 
@@ -38,16 +38,17 @@ public class CashPayment {
 
 
     // Constructors
-    public CashPayment(long cashPaymentId, long orderId, double amount, long currency_type, Timestamp createdAt) {
+    public CashPayment(long cashPaymentId, long orderId, double amount, long currency_type, Timestamp createdAt,double currencyRate) {
         this.cashPaymentId = cashPaymentId;
         this.amount = amount;
         this.orderId = orderId;
         this.currency_type=currency_type;
         this.createdAt = createdAt;
+        this.currencyRate=currencyRate;
     }
 
     public CashPayment(CashPayment p) {
-        this(p.getCashPaymentId(),  p.getOrderId(),p.getAmount(),p.getCurrency_type(),p.getCreatedAt());
+        this(p.getCashPaymentId(),  p.getOrderId(),p.getAmount(),p.getCurrency_type(),p.getCreatedAt(),p.getCurrencyRate());
     }
 
     // Getters
@@ -64,6 +65,26 @@ public class CashPayment {
         return amount;
     }
 
+    public void setCashPaymentId(long cashPaymentId) {
+        this.cashPaymentId = cashPaymentId;
+    }
+
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public double getCurrencyRate() {
+        return currencyRate;
+    }
+
+    public void setCurrencyRate(double currencyRate) {
+        this.currencyRate = currencyRate;
+    }
+
     @Override
     public String toString() {
         return "{" +"\"@type\":" + "\"CashPayment\""+
@@ -71,6 +92,7 @@ public class CashPayment {
                 ",\"currency_type\":" + currency_type  +
                 ",\"amount\":" + amount +
                 ",\"orderId\":" + orderId +
+                ",\"currencyRate\":" + currencyRate +
                 "}";
     }
 

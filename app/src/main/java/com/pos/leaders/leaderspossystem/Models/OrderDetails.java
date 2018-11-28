@@ -23,6 +23,7 @@ public class OrderDetails {
 	private double unitPrice;
 	private double paidAmount;
 	private double discount;
+
 	@JsonIgnore
 	public double rowDiscount = 0;
 
@@ -38,38 +39,38 @@ public class OrderDetails {
 	@JsonIgnore
 	public boolean scannable = true;
 
-    @JsonIgnore
-    public boolean offerRule = false;
+	@JsonIgnore
+	public boolean offerRule = false;
 
-    @JsonIgnore
-    public Offer offer = null;
+	@JsonIgnore
+	public Offer offer = null;
 
-    @JsonIgnore
-    private int objectID = 0;
+	@JsonIgnore
+	private int objectID = 0;
 
-    @JsonIgnore
-    private void initObjectID(){
-        int hash=7;
-        int prime=31;
-        hash = prime * hash + ((int) (productId % 10000));
-        hash = hash * prime + quantity;
-        hash = hash * prime + (int) discount;
-        hash = hash * prime + (giftProduct ? 37 : 17);
-        hash = hash * prime + (offerRule ? 7 : 3);
-        hash = hash * prime + (offer == null ? 0 : offer.hashCode());
-        hash = hash * prime + (product == null ? 0 : product.hashCode());
-        hash = hash * prime + (product == null ? 0 : (product.getName()==null?0:product.getName().hashCode()));
-        hash = hash * prime + (int) rowDiscount;
-        hash = hash * prime + (int) (new Date().getTime() % 10000);
-        hash = hash * prime + hashCode();
+	@JsonIgnore
+	private void initObjectID(){
+		int hash=7;
+		int prime=31;
+		hash = prime * hash + ((int) (productId % 10000));
+		hash = hash * prime + quantity;
+		hash = hash * prime + (int) discount;
+		hash = hash * prime + (giftProduct ? 37 : 17);
+		hash = hash * prime + (offerRule ? 7 : 3);
+		hash = hash * prime + (offer == null ? 0 : offer.hashCode());
+		hash = hash * prime + (product == null ? 0 : product.hashCode());
+		hash = hash * prime + (product == null ? 0 : (product.getName()==null?0:product.getName().hashCode()));
+		hash = hash * prime + (int) rowDiscount;
+		hash = hash * prime + (int) (new Date().getTime() % 10000);
+		hash = hash * prime + hashCode();
 
-        objectID = hash;
-    }
+		objectID = hash;
+	}
 
-    @JsonIgnore
-    public int getObjectID(){
-        return objectID;
-    }
+	@JsonIgnore
+	public int getObjectID(){
+		return objectID;
+	}
 
 	public long getCustomer_assistance_id() {
 		return customer_assistance_id;
@@ -89,22 +90,21 @@ public class OrderDetails {
 		this.userOffer = userOffer;
 		this.orderId = orderId;
 		this.customer_assistance_id = customer_assistance_id;
-        initObjectID();
+		initObjectID();
 	}
 
-    public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id) {
-        this.orderDetailsId = orderDetailsId;
-        this.productId = productId;
-        this.quantity = quantity;
-        this.userOffer = userOffer;
-        this.orderId = orderId;
-        this.paidAmount = paidAmount;
-        this.unitPrice = original_price;
-        this.discount = discount;
-    	this.customer_assistance_id = customer_assistance_id;
-		this.rowDiscount=rowDiscount;
-        initObjectID();
-    }
+	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id) {
+		this.orderDetailsId = orderDetailsId;
+		this.productId = productId;
+		this.quantity = quantity;
+		this.userOffer = userOffer;
+		this.orderId = orderId;
+		this.paidAmount = paidAmount;
+		this.unitPrice = original_price;
+		this.discount = discount;
+		this.customer_assistance_id = customer_assistance_id;
+		initObjectID();
+	}
 
 	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, Product product, long customer_assistance_id) {
 		this.orderDetailsId = orderDetailsId;
@@ -114,7 +114,7 @@ public class OrderDetails {
 		this.orderId = orderId;
 		this.product = product;
 		this.customer_assistance_id = customer_assistance_id;
-        initObjectID();
+		initObjectID();
 	}
 	public OrderDetails(long productId, int quantity, double userOffer, long orderId, Product product) {
 		this.productId = productId;
@@ -122,46 +122,46 @@ public class OrderDetails {
 		this.userOffer = userOffer;
 		this.orderId = orderId;
 		this.product = product;
-        initObjectID();
+		initObjectID();
 
 	}
 	public OrderDetails(int quantity, double userOffer, Product product) {
-        this.quantity = quantity;
-        this.userOffer = userOffer;
-        this.product = product;
-        this.productId = product.getProductId();
-        this.paidAmount = product.getPrice();
-        this.unitPrice = product.getPrice();
-        this.discount = 0;
-        initObjectID();
-    }
+		this.quantity = quantity;
+		this.userOffer = userOffer;
+		this.product = product;
+		this.productId = product.getProductId();
+		this.paidAmount = product.getPrice();
+		this.unitPrice = product.getPrice();
+		this.discount = 0;
+		initObjectID();
+	}
 
-    public OrderDetails(int quantity, double userOffer, Product product, double paidAmount, double original_price, double discount) {
-        this.quantity = quantity;
-        this.userOffer = userOffer;
-        this.product = product;
-        this.productId =product.getProductId();
-        this.paidAmount = paidAmount;
-        this.unitPrice = original_price;
-        this.discount = discount;
-        initObjectID();
-    }
+	public OrderDetails(int quantity, double userOffer, Product product, double paidAmount, double original_price, double discount) {
+		this.quantity = quantity;
+		this.userOffer = userOffer;
+		this.product = product;
+		this.productId =product.getProductId();
+		this.paidAmount = paidAmount;
+		this.unitPrice = original_price;
+		this.discount = discount;
+		initObjectID();
+	}
 
 	public OrderDetails(OrderDetails o) {
-        this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+		this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
 		this.product = o.getProduct();
-    }
+	}
 
 	public OrderDetails newInstance(OrderDetails o) {
 		return new OrderDetails(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(),o.getCustomer_assistance_id());
 	}
 
 	public OrderDetails() {
-        initObjectID();
+		initObjectID();
 	}
 	//endregion Constructors
 
-    //region Getters
+	//region Getters
 
 	public long getProductId() {
 		return productId;
@@ -186,14 +186,6 @@ public class OrderDetails {
 	public void setOrderId(long orderId) {
 
 		this.orderId = orderId;
-	}
-
-	public double getRowDiscount() {
-		return rowDiscount;
-	}
-
-	public void setRowDiscount(double rowDiscount) {
-		this.rowDiscount = rowDiscount;
 	}
 
 	public void setOrderDetailsId(long orderDetailsId) {
@@ -221,8 +213,8 @@ public class OrderDetails {
 	public double getPaidAmount() {
 		double temp = (unitPrice * (1 - (discount / 100)));
 		if (rowDiscount == 0)
-		return temp;
-		return temp - (temp * (rowDiscount / 100));
+			return temp*quantity;
+		return (temp - (temp * (rowDiscount / 100)))*this.quantity;
 	}
 
 	public double getDiscount() {
@@ -235,10 +227,10 @@ public class OrderDetails {
 	//region Setters
 
 	public int setCount(int count) {
-        if (count >=1)
-            this.quantity = count;
-        return this.quantity;
-    }
+		if (count >=1)
+			this.quantity = count;
+		return this.quantity;
+	}
 
 	public void setProduct(Product p){
 		this.product=p;
@@ -251,6 +243,7 @@ public class OrderDetails {
 	public void setPaidAmount(double paidAmount){
 		this.paidAmount = (unitPrice * (discount / 100));
 	}
+
 
 
 	//endregion Setters
@@ -270,21 +263,21 @@ public class OrderDetails {
 	}
 
 	public String DKMVDATA(int rowNumber,String companyID,Date date) {
-        String s = "320", OP = "+", mOP = "-";
-        double totalDiscount = (getItemTotalPrice() * discount / 100);
-        double noTax = paidAmount / (1 + (SETTINGS.tax / 100));
-        if(product.getDisplayName().length()>29){
-            product.setName(product.getDisplayName().substring(0,29));
-        }
+		String s = "320", OP = "+", mOP = "-";
+		double totalDiscount = (getItemTotalPrice() * discount / 100);
+		double noTax = paidAmount / (1 + (SETTINGS.tax / 100));
+		if(product.getDisplayName().length()>29){
+			product.setName(product.getDisplayName().substring(0,29));
+		}
 
-        return "D110" + String.format(Util.locale, "%09d", rowNumber) + companyID + s + String.format(Util.locale, "%020d", orderId) + String.format(Util.locale, "%04d", orderDetailsId)
-                + s + String.format(Util.locale, "%020d", orderId) + "3" + String.format(Util.locale, "%20s", productId) + String.format(Util.locale, "%30s", "sale")
-                + Util.spaces(50) + String.format(Util.locale, "%30s", product.getSku()) + Util.spaces(20)
-                + "+" + String.format(Util.locale, "%012d", quantity) + String.format(Util.locale, "%04d", (int) ((quantity - Math.floor(quantity) + 0.00001) * 10000))
-                + OP + Util.x12V99(noTax) + mOP + Util.x12V99(totalDiscount) + OP + Util.x12V99((noTax-totalDiscount)* quantity)
-                + String.format(Util.locale, "%02.0f", SETTINGS.tax) + String.format(Util.locale, "%02d", (int) ((SETTINGS.tax - Math.floor(SETTINGS.tax) + 0.001) * 100))
-                + Util.spaces(7) + DateConverter.getYYYYMMDD(date) + String.format(Util.locale, "%07d", orderId) + Util.spaces(7) + Util.spaces(21);
-    }
+		return "D110" + String.format(Util.locale, "%09d", rowNumber) + companyID + s + String.format(Util.locale, "%020d", orderId) + String.format(Util.locale, "%04d", orderDetailsId)
+				+ s + String.format(Util.locale, "%020d", orderId) + "3" + String.format(Util.locale, "%20s", productId) + String.format(Util.locale, "%30s", "sale")
+				+ Util.spaces(50) + String.format(Util.locale, "%30s", product.getSku()) + Util.spaces(20)
+				+ "+" + String.format(Util.locale, "%012d", quantity) + String.format(Util.locale, "%04d", (int) ((quantity - Math.floor(quantity) + 0.00001) * 10000))
+				+ OP + Util.x12V99(noTax) + mOP + Util.x12V99(totalDiscount) + OP + Util.x12V99((noTax-totalDiscount)* quantity)
+				+ String.format(Util.locale, "%02.0f", SETTINGS.tax) + String.format(Util.locale, "%02d", (int) ((SETTINGS.tax - Math.floor(SETTINGS.tax) + 0.001) * 100))
+				+ Util.spaces(7) + DateConverter.getYYYYMMDD(date) + String.format(Util.locale, "%07d", orderId) + Util.spaces(7) + Util.spaces(21);
+	}
 
 	//endregion Methods
 

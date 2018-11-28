@@ -1155,19 +1155,20 @@ public class SalesCartActivity extends AppCompatActivity {
                                 list.add(selectedOrderOnCart);
                                 final TextView discountType = (TextView) cashDialog.findViewById(R.id.cashPaymentDialog_TVStatus);
                                 discountType.append(":" + selectedOrderOnCart.getProduct().getDisplayName());
-                                double pad = (selectedOrderOnCart.getPaidAmount() * selectedOrderOnCart.getQuantity());
+                                double pad = (selectedOrderOnCart.getPaidAmount());
                                 priceAfterDiscount.setText( Util.makePrice(pad) + getString(R.string.ins));
                                 selectedOrderOnCart.rowDiscount = 0;
+                                selectedOrderOnCart.setDiscount(0);
                                 double itemOriginalPrice = selectedOrderOnCart.getPaidAmount();
-                                totalPrice.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount() * selectedOrderOnCart.getQuantity()) + getString(R.string.ins));
-                                totalDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount() * selectedOrderOnCart.getQuantity()-pad) + getString(R.string.ins));
+                                totalPrice.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount() ) + getString(R.string.ins));
+                                totalDiscount.setText(selectedOrderOnCart.getDiscount()*selectedOrderOnCart.getQuantity() + getString(R.string.ins));
                                 sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                     @Override
                                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                         double itemOriginalPrice = selectedOrderOnCart.getPaidAmount();
                                         if (isChecked) {
                                             sw.setText(getBaseContext().getString(R.string.amount));
-                                             cashETCash.setText("");
+                                            cashETCash.setText("");
                                             cashETCash.setHint("0");
                                         } else {
                                             sw.setText(getBaseContext().getString(R.string.proportion));
@@ -1195,6 +1196,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                         String str = cashETCash.getText().toString();
 
                                         selectedOrderOnCart.rowDiscount = 0;
+                                        selectedOrderOnCart.setDiscount(0);
                                         double itemOriginalPrice = selectedOrderOnCart.getPaidAmount();
 
                                         double X = SESSION._EMPLOYEE.getPresent();
@@ -1209,14 +1211,15 @@ public class SalesCartActivity extends AppCompatActivity {
 
                                         }
                                         if (discount <= X) {
-                                            selectedOrderOnCart.rowDiscount = discount;
+                                            //   selectedOrderOnCart.rowDiscount = discount;
+                                            selectedOrderOnCart.setDiscount(discount);
                                         } else {
                                             Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                             cashETCash.setBackgroundResource(R.drawable.backtext);
                                         }
 
-                                        totalDiscount.setText(Util.makePrice((itemOriginalPrice - selectedOrderOnCart.getPaidAmount())*selectedOrderOnCart.getQuantity()) + getString(R.string.ins));
-                                        priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount()*selectedOrderOnCart.getQuantity()) + getString(R.string.ins));
+                                        totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + getString(R.string.ins));
+                                        priceAfterDiscount.setText(Util.makePrice(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100)) + getString(R.string.ins));
 
                                     }
                                 });
@@ -1233,9 +1236,8 @@ public class SalesCartActivity extends AppCompatActivity {
                                                 double discount = (1 - (d / (SESSION._ORDER_DETAILES.get(indexOfItem).getUnitPrice() * count)));
 
                                                 if (discount <= (X / 100)) {
-                                                    SESSION._ORDER_DETAILES.get(indexOfItem).rowDiscount = (discount * 100);
+                                                    // SESSION._ORDER_DETAILES.get(indexOfItem).rowDiscount = (discount * 100);
                                                     SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(discount * 100);
-
                                                     calculateTotalPrice();
 
                                                     cashDialog.cancel();
@@ -1247,7 +1249,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                             if (!(str.equals(""))) {
                                                 float val = Float.parseFloat(str);
                                                 if (val <= X) {
-                                                    SESSION._ORDER_DETAILES.get(indexOfItem).rowDiscount = (val);
+                                                    //    SESSION._ORDER_DETAILES.get(indexOfItem).rowDiscount = (val);
                                                     SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(val);
 
                                                     calculateTotalPrice();
@@ -1412,7 +1414,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                         SESSION._ORDERS.setOrderId(saleIDforCash);
                                         for (OrderDetails o : SESSION._ORDER_DETAILES) {
                                             o.setOrderId(saleIDforCash);
-                                            long orderid = orderDBAdapter.insertEntryFromInvoice(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),o.getRowDiscount());
+                                            long orderid = orderDBAdapter.insertEntryFromInvoice(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
                                             o.setOrderDetailsId(orderid);
                                         }
                                         //update customer balance
@@ -1557,7 +1559,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     });
                     double originalTotalPrice = 0;
                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity());
+                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
                     }
                     totalPrice.setText(Util.makePrice(originalTotalPrice) + getString(R.string.ins));
                     totalDiscount.setText(Util.makePrice(valueOfDiscount) + getString(R.string.ins));
@@ -1604,7 +1606,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                     double d = Double.parseDouble(str);
                                     double originalTotalPrice = 0;
                                     for (OrderDetails o : orderList) {
-                                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity());
+                                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
                                     }
                                     if ((1 - (d / originalTotalPrice) <= (X / 100))) {
                                         double val = (1 - (d / originalTotalPrice)) * 100;
@@ -1616,10 +1618,10 @@ public class SalesCartActivity extends AppCompatActivity {
                                         for (OrderDetails o : orderList) {
                                             saleTotalPrice += o.getItemTotalPrice();
 
-                                            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
+                                            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
                                         }
-                                        totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice) + getString(R.string.ins));
-                                        priceAfterDiscount.setText(Util.makePrice(saleTotalPrice) + getString(R.string.ins));
+                                        totalDiscount.setText(Util.makePrice(originalTotalPrice*val/100 ) + getString(R.string.ins));
+                                        priceAfterDiscount.setText(Util.makePrice(originalTotalPrice*(1-val/100)) + getString(R.string.ins));
                                     } else {
                                         totalDiscount.setText(Util.makePrice(valueOfDiscount) + getString(R.string.ins));
                                         priceAfterDiscount.setText(tvTotalPrice.getText().toString());
@@ -1643,10 +1645,10 @@ public class SalesCartActivity extends AppCompatActivity {
                                         for (OrderDetails o : orderList) {
                                             saleTotalPrice += o.getItemTotalPrice();
 
-                                            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
+                                            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
                                         }
-                                        totalDiscount.setText(Util.makePrice(SaleOriginalityPrice - saleTotalPrice) + getString(R.string.ins));
-                                        priceAfterDiscount.setText(Util.makePrice(saleTotalPrice) + getString(R.string.ins));
+                                        totalDiscount.setText(Util.makePrice(SaleOriginalityPrice*val/100 ) + getString(R.string.ins));
+                                        priceAfterDiscount.setText(Util.makePrice(SaleOriginalityPrice*(1-val/100)) + getString(R.string.ins));
 
                                     } else {
                                         totalDiscount.setText(Util.makePrice(valueOfDiscount) + getString(R.string.ins));
@@ -1673,12 +1675,11 @@ public class SalesCartActivity extends AppCompatActivity {
                                     double d = Double.parseDouble(str);
                                     double originalTotalPrice = 0;
                                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity());
+                                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
                                     }
                                     if ((1 - (d / originalTotalPrice) <= (X / 100))) {
                                         double val = (1 - (d / originalTotalPrice)) * 100;
                                         valueOfDiscount = val;
-                                        SESSION._ORDERS.setCartDiscount(val);
                                         SESSION._ORDERS.cartDiscount=val;
                                         refreshCart();
                                         discountDialog.cancel();
@@ -1693,7 +1694,6 @@ public class SalesCartActivity extends AppCompatActivity {
                                     valueOfDiscount = val;
                                     if (val <= X) {
                                         valueOfDiscount = val;
-                                        SESSION._ORDERS.setCartDiscount(val);
                                         SESSION._ORDERS.cartDiscount=val;
                                         refreshCart();
                                         discountDialog.cancel();
@@ -3267,7 +3267,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
                 SESSION._ORDERS.setPayment(payment);
                 SESSION._ORDERS.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-                cashPaymentDBAdapter.insertEntry(saleIDforCash, saleTotalPrice, 0, new Timestamp(System.currentTimeMillis()));
+                cashPaymentDBAdapter.insertEntry(saleIDforCash, saleTotalPrice, 0, new Timestamp(System.currentTimeMillis()),1);
 
                 paymentDBAdapter.close();
                 printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
@@ -3322,10 +3322,10 @@ public class SalesCartActivity extends AppCompatActivity {
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess, new Order(SESSION._ORDERS));
 
                 if (firstCurrencyAmount > 0) {
-                    cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Timestamp(System.currentTimeMillis()));
+                //    cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Timestamp(System.currentTimeMillis()));
                 }
                 if (secondCurrencyAmount > 0) {
-                    cashPaymentDBAdapter.insertEntry(saleIDforCash, secondCurrencyAmount, secondCurrencyId, new Timestamp(System.currentTimeMillis()));
+                //    cashPaymentDBAdapter.insertEntry(saleIDforCash, secondCurrencyAmount, secondCurrencyId, new Timestamp(System.currentTimeMillis()));
                 }
                 cashPaymentDBAdapter.close();
 
@@ -3458,7 +3458,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, new Order(SESSION._ORDERS));
                     for (int i = 0; i < jsonArray.length() - 1; i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("due"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()));
+                        cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()),getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")));
 
                     }
                     cashPaymentDBAdapter.close();

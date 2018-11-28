@@ -290,7 +290,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     break;
                 case 2:
                     db.execSQL(OrderDBAdapter.addColumn("cartDiscount"));
-                    db.execSQL(OrderDetailsDBAdapter.addColumn("rowDiscount"));
+                    db.execSQL(CashPaymentDBAdapter.addColumn("currencyRate"));
                     break;
             }
         } catch (SQLException e) {

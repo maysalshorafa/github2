@@ -27,9 +27,9 @@ public class CashPaymentDBAdapter {
     protected static final String CashPAYMENT_COLUMN_AMOUNT = "amount";
     protected static final String CashPAYMENT_COLUMN_CurrencyType = "currency_type";
     protected static final String CashPAYMENT_COLUMN_CREATEDATE = "createDate";
+    protected static final String CashPAYMENT_COLUMN_CurrencyRATE = "currencyRate";
 
-
-    public static final String DATABASE_CREATE = "CREATE TABLE `CashPayment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `orderId` INTEGER, `amount` REAL NOT NULL, `currency_type` INTEGER,'createDate'  TIMESTAMP DEFAULT current_timestamp)";
+    public static final String DATABASE_CREATE = "CREATE TABLE `CashPayment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `orderId` INTEGER, `amount` REAL NOT NULL, `currency_type` INTEGER,'createDate'  TIMESTAMP DEFAULT current_timestamp, `amount` REAL)";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -55,8 +55,8 @@ public class CashPaymentDBAdapter {
         return db;
     }
 
-    public long insertEntry(long saleId, double amount, long currency_type, Timestamp createDate) {
-        CashPayment payment = new CashPayment(Util.idHealth(this.db, CashPAYMENT_TABLE_NAME, CashPAYMENT_COLUMN_ID), saleId, amount, currency_type,createDate);
+    public long insertEntry(long saleId, double amount, long currency_type, Timestamp createDate,double currencyRate) {
+        CashPayment payment = new CashPayment(Util.idHealth(this.db, CashPAYMENT_TABLE_NAME, CashPAYMENT_COLUMN_ID), saleId, amount, currency_type,createDate, currencyRate);
     //    sendToBroker(MessageType.ADD_CASH_PAYMENT, payment, this.context);
 
         try {
@@ -74,6 +74,8 @@ public class CashPaymentDBAdapter {
         val.put(CashPAYMENT_COLUMN_OrderID, payment.getOrderId());
         val.put(CashPAYMENT_COLUMN_AMOUNT,payment.getAmount() );
         val.put(CashPAYMENT_COLUMN_CurrencyType, payment.getCurrency_type());
+        val.put(CashPAYMENT_COLUMN_CurrencyRATE,payment.getCurrencyRate());
+
         try {
             return db.insert(CashPAYMENT_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -117,7 +119,8 @@ public class CashPaymentDBAdapter {
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_OrderID))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_AMOUNT))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CurrencyType))),
-                Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CREATEDATE))));
+                Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CREATEDATE))),
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_AMOUNT))));
     }
     public double getSumOfType(int currencyType, long from, long to) {
         double total=0;
@@ -130,6 +133,10 @@ public class CashPaymentDBAdapter {
 
     }
 
-
+    public static String addColumn(String columnName) {
+        String dbc = "ALTER TABLE " + CashPAYMENT_TABLE_NAME
+                + " add column " + columnName + " REAL default 1.0;";
+        return dbc;
+    }
 
 }

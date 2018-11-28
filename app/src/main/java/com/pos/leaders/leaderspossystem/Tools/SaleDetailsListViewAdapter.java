@@ -89,9 +89,9 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
         price = orderList.get(position).getPaidAmount();
         count = orderList.get(position).getQuantity();
         holder.tvName.setText(_Substring(orderList.get(position).getProduct().getDisplayName()));
-        holder.tvPrice.setText(String.format(new Locale("en"), "%.2f", price) + " " + context.getString(R.string.ins));
+        holder.tvPrice.setText(String.format(new Locale("en"), "%.2f", orderList.get(position).getUnitPrice()) + " " + context.getString(R.string.ins));
         holder.tvCount.setText(count + "");
-        holder.tvTotal.setText(String.format(new Locale("en"), "%.2f", (price * count)) + " " + context.getString(R.string.ins));
+        holder.tvTotal.setText(String.format(new Locale("en"), "%.2f", (price )) + " " + context.getString(R.string.ins));
         holder.tvPercentage.setText(R.string.discount_percentage);
         holder.tvPercentageAmount.setText(String.format(new Locale("en"), "%.2f", (discount)) + " %");
 
@@ -127,7 +127,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
                         }
                     }
                     if(status){
-                    offerNames.add(orderList.get(position).getOffer().getName() + " _ " + action.getString("name"));
+                        offerNames.add(orderList.get(position).getOffer().getName() + " _ " + action.getString("name"));
                         offerDiscount.add(orderList.get(position).getDiscount());
                     }
                     holder.tvOriginalPrice.setText(Util.makePrice(orderList.get(position).getUnitPrice() * orderList.get(position).getQuantity()));
@@ -213,7 +213,3 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
         private TextView tvRowDiscountValue;
     }
 }
-
-
-
-

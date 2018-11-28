@@ -102,7 +102,7 @@ public class OrderDetailsDBAdapter {
             return 0;
         }
     }
-	public long insertEntryFromInvoice(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID,double rowDiscount) {
+	public long insertEntryFromInvoice(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID) {
 		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID);
 		// sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
 

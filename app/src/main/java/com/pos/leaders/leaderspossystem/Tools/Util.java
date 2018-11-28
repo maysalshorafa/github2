@@ -519,7 +519,7 @@ e.printStackTrace();
                 //get cash payment detail by order id
                 CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
                 cashPaymentDBAdapter.open();
-                cashPaymentDBAdapter.insertEntry(Long.parseLong(invoiceOrderIds.get(0).toString()), Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), 0, new Timestamp(System.currentTimeMillis()));
+                cashPaymentDBAdapter.insertEntry(Long.parseLong(invoiceOrderIds.get(0).toString()), Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), 0, new Timestamp(System.currentTimeMillis()),1);
                 cashPaymentList = cashPaymentDBAdapter.getPaymentBySaleID(orderId);
                 JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
                 newJsonObject.put("paymentDetails",jsonArray);
