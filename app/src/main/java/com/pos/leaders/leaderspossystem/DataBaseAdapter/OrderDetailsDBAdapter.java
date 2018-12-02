@@ -36,13 +36,10 @@ public class OrderDetailsDBAdapter {
 	protected static final String ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID = "custmerAssestID";
 
 
-    public static final String DATABASE_CREATE = "CREATE TABLE `OrderDetails` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL , `product_id` INTEGER," +
-            " `quantity` INTEGER, `order_id` INTEGER, " +
-            " '" + ORDER_DETAILS_COLUMN_PAID_AMOUNT + "' REAL , '" +
-			ORDER_DETAILS_COLUMN_UNIT_PRICE + "' REAL, '" +
-			ORDER_DETAILES_COLUMN_DISCOUNT + "' REAL , '" +
-			ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID + "' INTEGER , '" +
-            "FOREIGN KEY(`product_id`) REFERENCES `products.id`, FOREIGN KEY(`order_id`) REFERENCES `_Order.id` )";
+	public static final String DATABASE_CREATE = "CREATE TABLE `OrderDetails` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL , `product_id` INTEGER," +
+			" `quantity` INTEGER, `order_id` INTEGER, " +
+			" '" + ORDER_DETAILS_COLUMN_PAID_AMOUNT + "' REAL , '" + ORDER_DETAILS_COLUMN_UNIT_PRICE + "' REAL, '" + ORDER_DETAILES_COLUMN_DISCOUNT + "' REAL , '" + ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID + "' INTEGER , " +
+			"FOREIGN KEY(`product_id`) REFERENCES `products.id`, FOREIGN KEY(`order_id`) REFERENCES `_Order.id` )";
 
     // Variable to hold the database instance
 	private SQLiteDatabase db;

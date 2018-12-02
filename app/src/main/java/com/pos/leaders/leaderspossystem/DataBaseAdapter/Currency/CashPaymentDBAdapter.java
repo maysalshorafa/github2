@@ -29,8 +29,7 @@ public class CashPaymentDBAdapter {
     protected static final String CashPAYMENT_COLUMN_CREATEDATE = "createDate";
     protected static final String CashPAYMENT_COLUMN_CurrencyRATE = "currencyRate";
 
-    public static final String DATABASE_CREATE = "CREATE TABLE `CashPayment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `orderId` INTEGER, `amount` REAL NOT NULL, `currency_type` INTEGER,'createDate'  TIMESTAMP DEFAULT current_timestamp, `amount` REAL)";
-    // Variable to hold the database instance
+    public static final String DATABASE_CREATE = "CREATE TABLE `CashPayment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `orderId` INTEGER, `amount` REAL NOT NULL, `currency_type` INTEGER,'createDate'  TIMESTAMP DEFAULT current_timestamp, `currencyRate` REAL NOT NULL)";    // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
     private final Context context;
