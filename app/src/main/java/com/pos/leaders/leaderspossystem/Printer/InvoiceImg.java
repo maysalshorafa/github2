@@ -410,11 +410,19 @@ public class InvoiceImg {
         Block productCountText = new Block("\u200E" + context.getString(R.string.product_quantity), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block productCount = new Block("\u200E" + String.valueOf(count), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         Block toPidText = new Block("\u200E" + context.getString(R.string.total_price),40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block discountText = new Block("\u200E" + context.getString(R.string.discount),25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block toPidTextBeforeDiscount = new Block("\u200E" + context.getString(R.string.price_before_discount),25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block toPid = new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block discountAmount= new Block(String.format(new Locale("en"), "%.2f",sale.cartDiscount/100), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block toPidBeforeDiscount= new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()+(sale.cartDiscount/100)*sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         productCount.Left();
         productCountText.Left();
         toPid.Left();
         toPidText.Left();
+        discountText.Left();
+        discountAmount.Left();
+        toPidBeforeDiscount.Left();
+        toPidTextBeforeDiscount.Left();
         toPid.Bold();
         toPidText.Bold();
         blocks.add(lineR);
@@ -424,6 +432,14 @@ public class InvoiceImg {
         blocks.add(toPid);
         blocks.add(toPidText);
         blocks.add(clear.Left());
+        if(sale.cartDiscount>0) {
+            blocks.add(discountAmount);
+            blocks.add(discountText);
+            blocks.add(clear.Left());
+            blocks.add(toPidBeforeDiscount);
+            blocks.add(toPidTextBeforeDiscount);
+            blocks.add(clear.Left());
+        }
         Block addsTax = new Block("\u200E" + context.getString(R.string.tax) + ": "+Util.makePrice(SETTINGS.tax) , 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         double noTax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
         Block addsTaxValue = new Block(Util.makePrice(noTax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
@@ -744,11 +760,19 @@ public class InvoiceImg {
         Block productCountText = new Block("\u200E" + context.getString(R.string.product_quantity), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block productCount = new Block("\u200E" + String.valueOf(count), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         Block toPidText = new Block("\u200E" + context.getString(R.string.total_price),40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block discountText = new Block("\u200E" + context.getString(R.string.discount),25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block toPidTextBeforeDiscount = new Block("\u200E" + context.getString(R.string.price_before_discount),25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block toPid = new Block(String.format(new Locale("en"), "%.2f", order.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block discountAmount= new Block(String.format(new Locale("en"), "%.2f",order.cartDiscount/100), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block toPidBeforeDiscount= new Block(String.format(new Locale("en"), "%.2f", order.getTotalPrice()+(order.cartDiscount/100)*order.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         productCount.Left();
         productCountText.Left();
         toPid.Left();
         toPidText.Left();
+        discountText.Left();
+        discountAmount.Left();
+        toPidBeforeDiscount.Left();
+        toPidTextBeforeDiscount.Left();
         toPid.Bold();
         toPidText.Bold();
         blocks.add(lineR);
@@ -758,7 +782,14 @@ public class InvoiceImg {
         blocks.add(toPid);
         blocks.add(toPidText);
         blocks.add(clear.Left());
-
+        if(order.cartDiscount>0) {
+            blocks.add(discountAmount);
+            blocks.add(discountText);
+            blocks.add(clear.Left());
+            blocks.add(toPidBeforeDiscount);
+            blocks.add(toPidTextBeforeDiscount);
+            blocks.add(clear.Left());
+        }
         Block addsTax = new Block("\u200E" + context.getString(R.string.tax) + ": "+Util.makePrice(SETTINGS.tax) , 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         double noTax = order.getTotalPrice() / (1 + (SETTINGS.tax / 100));
         Block addsTaxValue = new Block(Util.makePrice(noTax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
