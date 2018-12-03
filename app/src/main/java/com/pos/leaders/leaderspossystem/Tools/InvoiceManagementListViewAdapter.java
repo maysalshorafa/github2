@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.ChecksActivity;
-import com.pos.leaders.leaderspossystem.Models.Invoice;
+import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.R;
 
 import org.json.JSONException;
@@ -28,7 +28,7 @@ import java.util.List;
  */
 
 public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
-    private List<Invoice> invoicesList;
+    private List<BoInvoice> invoicesList;
     private int resource;
     private LayoutInflater inflater;
     private Context context;
@@ -41,7 +41,7 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
      * @param resource The resource ID for a layout file containing a layout to use when
      * @param objects  The objects to represent in the ListView.
      */
-    public InvoiceManagementListViewAdapter(Context context, int resource, List<Invoice> objects,ArrayList<String>invoiceNumbers) {
+    public InvoiceManagementListViewAdapter(Context context, int resource, List<BoInvoice> objects, ArrayList<String>invoiceNumbers) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;
@@ -88,7 +88,7 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
                         if(etAmount.getText().toString()!=null){
                             try {
                                 if(Double.parseDouble(etAmount.getText().toString())>=Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total")))) {
-                                    Util.sendDoc(getContext(), invoicesList.get(position), CONSTANT.CASH);
+                                    DocumentControl.sendDoc(getContext(), invoicesList.get(position), CONSTANT.CASH);
                                     cashReceiptDialog.dismiss();
                                 }else {
                                     Toast.makeText(getContext(),"Inserted amount not equal to required amount",Toast.LENGTH_LONG).show();
@@ -124,8 +124,8 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
         });
         try {
             holder.tvTotalAmount.setText(invoicesList.get(position).getDocumentsData().getDouble("total")+getContext().getString(R.string.ins));
-            holder.tvTotalPaid.setText(invoicesList.get(position).getDocumentsData().getDouble("totalPaid")+getContext().getString(R.string.ins));
             holder.tvID.setText(invoiceNumbers.get(position)+"");
+            holder.tvTotalPaid.setText(invoicesList.get(position).getDocumentsData().getDouble("totalPaid")+getContext().getString(R.string.ins));
         } catch (JSONException e) {
             e.printStackTrace();
         }

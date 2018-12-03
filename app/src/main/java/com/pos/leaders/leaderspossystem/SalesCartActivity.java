@@ -61,6 +61,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBA
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.InvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
@@ -70,6 +71,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
+import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Club;
@@ -77,13 +79,14 @@ import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Models.Documents;
 import com.pos.leaders.leaderspossystem.Models.Employee;
-import com.pos.leaders.leaderspossystem.Models.Invoice;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+import com.pos.leaders.leaderspossystem.Models.OrderDocumentStatus;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Offers.OfferController;
@@ -100,6 +103,7 @@ import com.pos.leaders.leaderspossystem.Tools.CashActivity;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -133,8 +137,6 @@ import POSSDK.POSSDK;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CASH;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CHECKS;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CREDIT_CARD;
-
-
 /**
  * Created by Karam on 21/11/2016.
  */
@@ -293,6 +295,7 @@ public class SalesCartActivity extends AppCompatActivity {
     private TextView tvCartDiscountValue,tvTotalPriceBeforeCartDiscount;
     String invoiceNum;
     double  customerGeneralLedger=0.0;
+    boolean orderDocumentFlag=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1384,7 +1387,8 @@ public class SalesCartActivity extends AppCompatActivity {
             public void onClick(View view) {
                 final String[] items = {
                         getString(R.string.invoice),
-                        getString(R.string.receipt)
+                        getString(R.string.receipt),
+                        getString(R.string.order_document)
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(SalesCartActivity.this);
                 builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
@@ -1393,7 +1397,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         Intent intent;
                         switch (item) {
                             case 0:
-                                if(SESSION._ORDERS.getCustomer()!=null){
+                                if(SESSION._ORDERS.getCustomer()!=null&&SESSION._ORDERS.getCustomer().getCustomerType().getValue().equals(CustomerType.CREDIT.getValue())){
                                     ObjectMapper mapper = new ObjectMapper();
                                     final ArrayList<String> ordersIds = new ArrayList<>();
                                     if (SESSION._ORDER_DETAILES.size() > 0) {
@@ -1406,25 +1410,8 @@ public class SalesCartActivity extends AppCompatActivity {
                                                 }
                                             }
                                         }
-                                        saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
-                                        orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
-                                        saleDBAdapter.open();
-                                        orderDBAdapter.open();
-                                        saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,true);
-                                        SESSION._ORDERS.setOrderId(saleIDforCash);
-                                        for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                                            o.setOrderId(saleIDforCash);
-                                            long orderid = orderDBAdapter.insertEntryFromInvoice(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
-                                            o.setOrderDetailsId(orderid);
-                                        }
-                                        //update customer balance
-                                        if(SESSION._ORDERS.getTotalPrice()<0&&customer!=null){
-                                            Customer upDateCustomer=customer;
-                                            upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice()+customer.getBalance());
-                                            customerDBAdapter.updateEntry(upDateCustomer);
-                                        }
-                                        ordersIds.add(String.valueOf(saleIDforCash));
-                                        saleDBAdapter.close();
+
+
                                         new AsyncTask<Void, Void, Void>(){
                                             @Override
                                             protected void onPreExecute() {
@@ -1441,32 +1428,28 @@ public class SalesCartActivity extends AppCompatActivity {
                                             protected Void doInBackground(Void... voids) {
                                                 MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
                                                 JSONObject customerData = new JSONObject();
+                                                JSONObject userData = new JSONObject();
                                                 try {
-                                                    ObjectMapper mapper = new ObjectMapper();
-                                                    String ordRes=transmit.authPost(ApiURL.ORDER, mapper.writeValueAsString(SESSION._ORDERS), SESSION.token);
-                                                    Log.i("Order log", ordRes);
-                                                    for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                                                        String orderDetailsRes = transmit.authPost(ApiURL.ORDER_DETAILS, mapper.writeValueAsString(o), SESSION.token);
-                                                        try {
-
-                                                            Thread.sleep(100);
-                                                        } catch (InterruptedException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        Log.i("Order Details", orderDetailsRes);
-                                                        //   orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+                                                    for(OrderDetails orderDetails:SESSION._ORDER_DETAILES){
+                                                        orderDetails.setPaidAmount(0.0);
                                                     }
+                                                    ObjectMapper mapper = new ObjectMapper();
                                                     customerData.put("customerId", SESSION._ORDERS.getCustomer().getCustomerId());
+                                                    userData.put("employeeId",SESSION._EMPLOYEE.getEmployeeId());
+                                                    userData.put("name",SESSION._EMPLOYEE.getEmployeeName());
                                                     Log.d("customer",customerData.toString());
-                                                    Documents documents = new Documents("Invoice",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),ordersIds,SESSION._ORDERS.getTotalPrice(),0,SESSION._ORDERS.getTotalPrice(), InvoiceStatus.UNPAID,"test","test","ILS");
+                                                    Documents documents = new Documents("Invoice",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),SESSION._ORDERS.getTotalPrice(),0,SESSION._ORDERS.getTotalPrice(), InvoiceStatus.UNPAID,"test","test","ILS",SESSION._ORDERS.cartDiscount);
                                                     String doc = mapper.writeValueAsString(documents);
                                                     JSONObject docJson= new JSONObject(doc);
                                                     String type = docJson.getString("type");
                                                     docJson.remove("type");
                                                     docJson.put("@type",type);
                                                     docJson.put("customer",customerData);
+                                                    docJson.put("user",userData);
+                                                    JSONArray cart = new JSONArray(SESSION._ORDER_DETAILES.toString());
+                                                    docJson.put("cartDetailsList",cart);
                                                     Log.d("Document vale", docJson.toString());
-                                                    Invoice invoice = new Invoice(DocumentType.INVOICE,docJson,"");
+                                                    BoInvoice invoice = new BoInvoice(DocumentType.INVOICE,docJson,"");
                                                     Log.d("Invoice log",invoice.toString());
                                                     String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
                                                     JSONObject jsonObject = new JSONObject(res);
@@ -1478,7 +1461,9 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     customerGeneralLedger=jsonObject1.getDouble("customerGeneralLedger");
                                                     Log.d("Invoice log res", customerGeneralLedger+"");
                                                     Log.d("Invoice Num", invoiceNum);
-
+                                                    InvoiceDBAdapter invoiceDBAdapter = new InvoiceDBAdapter(SalesCartActivity.this);
+                                                    invoiceDBAdapter.open();
+                                                    invoiceDBAdapter.insertEntry(invoiceNum,SESSION._ORDERS.getCustomerId());
                                                     try {
                                                         Thread.sleep(100);
                                                     } catch (InterruptedException e) {
@@ -1493,6 +1478,40 @@ public class SalesCartActivity extends AppCompatActivity {
                                                 return null;
                                             }
                                         }.execute();
+
+                                    } else{
+                                        Toast.makeText(SalesCartActivity.this, "There is no items into on cart.", Toast.LENGTH_SHORT).show();
+                                    }}
+                                else {
+                                    if(SESSION._ORDERS.getCustomer()!=null){
+                                        Toast.makeText(SalesCartActivity.this, "Customer Type is normal not credit!!.", Toast.LENGTH_SHORT).show();
+
+                                    }else {
+                                        Toast.makeText(SalesCartActivity.this, "Choose Customer Please.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+
+                                break;
+                            case 1:
+                                intent = new Intent(SalesCartActivity.this, InvoiceManagementActivity.class);
+                                startActivity(intent);
+                                break;
+                            case 2:
+                                if(SESSION._ORDERS.getCustomer()!=null){
+                                    ObjectMapper mapper = new ObjectMapper();
+                                    final ArrayList<String> ordersIds = new ArrayList<>();
+                                    if (SESSION._ORDER_DETAILES.size() > 0) {
+                                        if (Long.valueOf(SESSION._ORDERS.getCustomerId()) == 0) {
+                                            if (SESSION._ORDERS.getCustomer_name() == null) {
+                                                if (customerName_EditText.getText().toString().equals("")) {
+                                                    SESSION._ORDERS.setCustomer_name("");
+                                                } else {
+                                                    SESSION._ORDERS.setCustomer_name(customerName_EditText.getText().toString());
+                                                }
+                                            }
+                                        }
+                                        DocumentControl.sendOrderDocument(SalesCartActivity.this);
                                     } else{
                                         Toast.makeText(SalesCartActivity.this, "There is no items into on cart.", Toast.LENGTH_SHORT).show();
                                     }}
@@ -1500,10 +1519,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                     Toast.makeText(SalesCartActivity.this, "Choose Customer Please.", Toast.LENGTH_SHORT).show();
 
                                 }
-                                break;
-                            case 1:
-                                intent = new Intent(SalesCartActivity.this, InvoiceManagementActivity.class);
-                                startActivity(intent);
+
                                 break;
                         }
                     }
@@ -1749,9 +1765,38 @@ public class SalesCartActivity extends AppCompatActivity {
         super.onResume();
 
         Bundle extras = getIntent().getExtras();
-        /** if (extras != null) {
-         str = extras.getString("permissions_name");
-         }*/
+     if (extras != null) {
+         if(!extras.getString("orderJson").equals("")){
+             try {
+                 orderDocumentFlag=true;
+                 clearCart();
+                 Log.d("orderJson",extras.getString("orderJson"));
+                 final JSONObject orderDocJsonObj =new JSONObject(extras.getString("orderJson"));
+                 final JSONObject jsonObject = new JSONObject(String.valueOf(orderDocJsonObj.getJSONObject("documentsData")));
+                 SETTINGS.orderDocument=orderDocJsonObj;
+                 JSONArray items = jsonObject.getJSONArray("item");
+                 final JSONObject customerJson = jsonObject.getJSONObject("customer");
+                 Order order = new Order(SESSION._EMPLOYEE.getEmployeeId(),new Timestamp(Long.parseLong(jsonObject.getString("date"))),0,false,jsonObject.getDouble("total"),0);
+                 Customer customer = customerDBAdapter.getCustomerByID(customerJson.getLong("customerId"));
+                 order.setCustomer(customer);
+                 SESSION._ORDERS=order;
+                 for (int i=0;i<items.length();i++){
+                     JSONObject orderDetailsJson =items.getJSONObject(i);
+                     Product p =productDBAdapter.getProductByBarCode(orderDetailsJson.getString("sku"));
+                     OrderDetails orderDetails= new OrderDetails(orderDetailsJson.getInt("quantity"),orderDetailsJson.getDouble("userOffer"),p,orderDetailsJson.getDouble("amount"),orderDetailsJson.getDouble("unitPrice"),orderDetailsJson.getDouble("discount"));
+                        SESSION._ORDER_DETAILES.add(orderDetails);
+                 }
+                 saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
+                 lvOrder.setAdapter(saleDetailsListViewAdapter);
+                 if (SESSION._ORDERS.getCustomer() != null)
+                     setCustomer(SESSION._ORDERS.getCustomer());
+                 refreshCart();
+             } catch (JSONException e) {
+                 e.printStackTrace();
+             }
+         }
+         //str = extras.getString("orderJson");
+         }
 
     }
 
@@ -3164,6 +3209,15 @@ public class SalesCartActivity extends AppCompatActivity {
         //region Cash Activity WithOut Currency Region
         if (requestCode == REQUEST_CASH_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
+                if(orderDocumentFlag){
+                    try {
+                        updateOrderDocumentStatus();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
                 cashPaymentDBAdapter.open();
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
@@ -3538,6 +3592,39 @@ public class SalesCartActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    private void updateOrderDocumentStatus() throws JSONException, IOException {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+
+                    try {
+                        MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                        JSONObject jsonObject = SETTINGS.orderDocument;
+                        JSONObject orderDocJsonObj = jsonObject.getJSONObject("documentsData");
+                        orderDocJsonObj.remove("orderDocumentStatus");
+
+                        orderDocJsonObj.put("orderDocumentStatus", OrderDocumentStatus.CLOSED);
+                        String upDataOrderDocumentStatus=transmit.authPutInvoice(ApiURL.Documents,jsonObject.toString(), SESSION.token,jsonObject.getString("docNum"));
+                        Log.d("invoiceRes",upDataOrderDocumentStatus.toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    return null;
+                }
+            }.execute();
     }
 
     private long getCurrencyIdByType(String type) {

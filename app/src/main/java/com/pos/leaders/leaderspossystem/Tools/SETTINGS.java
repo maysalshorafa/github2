@@ -2,6 +2,8 @@ package com.pos.leaders.leaderspossystem.Tools;
 
 import android.graphics.Bitmap;
 
+import org.json.JSONObject;
+
 /**
  * Created by KARAM on 30/10/2016.
  */
@@ -35,6 +37,7 @@ public class SETTINGS {
 	public static String BO_SERVER_URL_V1 = "http://api.leadpos.net/webapi";
 	public static String FEEDBACK_SERVER = "http://report.leadpos.net/api";
 
+
 	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
 
 	//public static String BO_SERVER_URL = "http://18.220.245.144:8080/webapi";
@@ -48,7 +51,7 @@ public class SETTINGS {
 
 
 	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
-	//public static String BO_SERVER_URL = "http://192.168.1.18:8080/webapi/";
+//	public static String BO_SERVER_URL = "http://192.168.1.19:8000/";
 
 	//public static final String UPDATER_API_URL_PATH = "http://192.168.1.19:8090/updateApk/";
 
@@ -59,6 +62,7 @@ public class SETTINGS {
 	//public static final String UPDATER_SERVER_URL = "http://192.168.1.109:8090";
 
 	public static Bitmap copyInvoiceBitMap ; // add here to avoid recycle bitmap exception when used reference between two different activity
+	public static JSONObject orderDocument;
 
 
 

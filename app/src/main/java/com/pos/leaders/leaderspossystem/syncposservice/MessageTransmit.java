@@ -121,6 +121,14 @@ public class MessageTransmit {
 
         return response.body().string();
     }
+    public String authUpdateGeneralLedger(String url,String id,String token,double amount) throws IOException {
+        RequestBody body = RequestBody.create(JSON, "");
+        Request request = new Request.Builder().url(domainURL + url + "/" + id+"/"+amount).put(body).addHeader(AUTHORIZATION, token).build();
+        Response response = client.newCall(request).execute();
+
+        return response.body().string();
+    }
+
 
 }
 

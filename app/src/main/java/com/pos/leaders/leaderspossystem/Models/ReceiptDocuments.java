@@ -16,6 +16,7 @@ public class ReceiptDocuments {
     private JSONObject customer;
     private double paidAmount;
     private String currency;
+    private JSONObject payments;
     public ReceiptDocuments() {
     }
 
@@ -68,6 +69,14 @@ public class ReceiptDocuments {
         this.customer = customer;
     }
 
+    public JSONObject getPayments() {
+        return payments;
+    }
+
+    public void setPayments(JSONObject payments) {
+        this.payments = payments;
+    }
+
     public ReceiptDocuments(String type, Timestamp date, ArrayList<String> invoicesNumbers, double paidAmount, String currency) {
         this.type = type;
         this.date = date;
@@ -85,6 +94,7 @@ public class ReceiptDocuments {
                 ", customer=" + customer +
                 ", paidAmount=" + paidAmount +
                 ", currency='" + currency + '\'' +
+                ", payments=" + payments +
                 '}';
     }
 }

@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -47,12 +48,14 @@ public class CustomerDBAdapter {
     protected static final String CUSTOMER_COLUMN_COUNTRY = "country";
     protected static final String CUSTOMER_COLUMN_COUNTRY_CODE = "countryCode";
     protected static final String CUSTOMER_COLUMN_BALANCE = "balance";
+    protected static final String CUSTOMER_COLUMN_TYPE = "customerType";
+
 
 
     // TODO: Create public field for each column in your table.
     // SQL Statement to create a new database.
     public static final String DATABASE_CREATE = "CREATE TABLE customer ( `id` INTEGER PRIMARY KEY AUTOINCREMENT , " + "`firstName` TEXT NOT NULL," + " `lastName` TEXT NOT NULL," + " `gender` TEXT," + "`email` TEXT," + " `job` TEXT , " +
-            "`phoneNumber` TEXT," + " `street` TEXT ," + "`hide` INTEGER DEFAULT 0 ,`cityId` INTEGER," + " `clubId` INTEGER DEFAULT 0,`houseNumber` TEXT," + "`postalCode` TEXT," + " 'country' TEXT," + " 'countryCode' TEXT,"+ " 'balance' Double DEFAULT 0)";
+            "`phoneNumber` TEXT," + " `street` TEXT ," + "`hide` INTEGER DEFAULT 0 ,`cityId` INTEGER," + " `clubId` INTEGER DEFAULT 0,`houseNumber` TEXT," + "`postalCode` TEXT," + " 'country' TEXT," + " 'countryCode' TEXT,"+   "`customerType` TEXT DEFAULT normal," +" 'balance' Double DEFAULT 0)";
 
     public SQLiteDatabase db;
     // Context of the application using the database.
@@ -101,14 +104,14 @@ public class CustomerDBAdapter {
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_HOUSE_NUMBER)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_POSTAL_CODE)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY)),
-                cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))));
+                cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))), CustomerType.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_TYPE))));
         cursor.close();
 
         return customer_m;
     }
 
-    public long insertEntry(String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, int cityId, long clubId, String houseNumber, String postalCode, String country, String countryCode,double balance) throws JSONException {
-        Customer customer_m = new Customer(Util.idHealth(this.db, CUSTOMER_TABLE_NAME, CUSTOMER_COLUMN_ID), firstName, lastName, gender, email, job, phoneNumber, street, false, cityId, clubId, houseNumber, postalCode, country, countryCode,balance);
+    public long insertEntry(String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, int cityId, long clubId, String houseNumber, String postalCode, String country, String countryCode,double balance,CustomerType customerType) throws JSONException {
+        Customer customer_m = new Customer(Util.idHealth(this.db, CUSTOMER_TABLE_NAME, CUSTOMER_COLUMN_ID), firstName, lastName, gender, email, job, phoneNumber, street, false, cityId, clubId, houseNumber, postalCode, country, countryCode,balance,customerType);
         Customer boCustomer = customer_m;
         boCustomer.setFirstName(Util.getString(boCustomer.getFirstName()));
         boCustomer.setLastName(Util.getString(boCustomer.getLastName()));
@@ -151,6 +154,7 @@ public class CustomerDBAdapter {
         val.put(CUSTOMER_COLUMN_COUNTRY, customer.getCountry());
         val.put(CUSTOMER_COLUMN_COUNTRY_CODE, customer.getCountryCode());
         val.put(CUSTOMER_COLUMN_BALANCE,customer.getBalance());
+        val.put(CUSTOMER_COLUMN_TYPE,customer.getCustomerType().getValue());
         try {
             return db.insert(CUSTOMER_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -177,6 +181,7 @@ public class CustomerDBAdapter {
         val.put(CUSTOMER_COLUMN_COUNTRY, customer.getCountry());
         val.put(CUSTOMER_COLUMN_COUNTRY_CODE, customer.getCountryCode());
         val.put(CUSTOMER_COLUMN_BALANCE,customer.getBalance());
+        val.put(CUSTOMER_COLUMN_TYPE,customer.getCustomerType().getValue());
 
         try {
             return db.insert(CUSTOMER_TABLE_NAME, null, val);
@@ -235,6 +240,7 @@ public class CustomerDBAdapter {
         val.put(CUSTOMER_COLUMN_COUNTRY, customer.getCountry());
         val.put(CUSTOMER_COLUMN_COUNTRY_CODE, customer.getCountryCode());
         val.put(CUSTOMER_COLUMN_BALANCE,customer.getBalance());
+        val.put(CUSTOMER_COLUMN_TYPE,customer.getCustomerType().getValue());
 
         String where = CUSTOMER_COLUMN_ID + " = ?";
         db.update(CUSTOMER_TABLE_NAME, val, where, new String[]{customer.getCustomerId() + ""});
@@ -264,6 +270,7 @@ public class CustomerDBAdapter {
         val.put(CUSTOMER_COLUMN_COUNTRY, customer.getCountry());
         val.put(CUSTOMER_COLUMN_COUNTRY_CODE, customer.getCountryCode());
         val.put(CUSTOMER_COLUMN_BALANCE,customer.getBalance());
+        val.put(CUSTOMER_COLUMN_TYPE,customer.getCustomerType().getValue());
         try {
             String where = CUSTOMER_COLUMN_ID + " = ?";
             db.update(CUSTOMER_TABLE_NAME, val, where, new String[]{customer.getCustomerId() + ""});
@@ -305,7 +312,7 @@ public class CustomerDBAdapter {
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_POSTAL_CODE)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),
-                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))));
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))),CustomerType.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_TYPE)).toUpperCase()));
         if (c.getFirstName() == null) {
             c.setFirstName("");
         }
@@ -332,7 +339,7 @@ public class CustomerDBAdapter {
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_POSTAL_CODE)),
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY)),
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),
-                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE)))));
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))),CustomerType.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_TYPE)).toUpperCase())));
             cursor.moveToNext();
         }
         return customerMs;
@@ -359,7 +366,7 @@ public class CustomerDBAdapter {
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_POSTAL_CODE)),
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY)),
                     cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),
-                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE)))));
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))),CustomerType.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_TYPE)).toUpperCase())));
             cursor.moveToNext();
         }
         return customerMs;
@@ -421,7 +428,7 @@ public class CustomerDBAdapter {
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_POSTAL_CODE)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),
-                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))));
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))),CustomerType.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_TYPE)).toUpperCase()));
     }
     public boolean availableCustomerPhoneNo(String customerPhone) {
         Cursor cursor = db.query(CUSTOMER_TABLE_NAME, null, CUSTOMER_COLUMN_PHONE_NUMBER + "=?", new String[]{customerPhone}, null, null, null);

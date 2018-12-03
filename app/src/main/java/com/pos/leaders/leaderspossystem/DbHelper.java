@@ -31,6 +31,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAda
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.InvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferRuleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
@@ -144,7 +145,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(GroupsResourceDbAdapter.DATABASE_CREATE);
         db.execSQL(ClosingReportDBAdapter.DATABASE_CREATE);
         db.execSQL(ClosingReportDetailsDBAdapter.DATABASE_CREATE);
-
+        db.execSQL(InvoiceDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
         db.execSQL(EmployeeDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (1,'user1','user','user','"+new Timestamp(System.currentTimeMillis())+"','1234',0,046316969,20,35);");

@@ -283,25 +283,22 @@ public class OrderDetails {
 
 
 	@Override
+
 	public String toString() {
-		return "OrderDetails{" +
-				"orderDetailsId=" + orderDetailsId +
-				", productId=" + productId +
-				", quantity=" + quantity +
-				", userOffer=" + userOffer +
-				", orderId=" + orderId +
-				", unitPrice=" + unitPrice +
-				", paidAmount=" + paidAmount +
-				", discount=" + discount +
-				", rowDiscount=" + rowDiscount +
-				", product=" + product +
-				", offerList=" + offerList +
-				", giftProduct=" + giftProduct +
-				", scannable=" + scannable +
-				", offerRule=" + offerRule +
-				", offer=" + offer +
-				", objectID=" + objectID +
-				", customer_assistance_id=" + customer_assistance_id +
+		return "{"  +
+				"\"productId\":" + productId +
+				", \"quantity\":" + quantity +
+				", \"userOffer\":" + userOffer +
+				", \"unitPrice\":" + unitPrice +
+				", \"paidAmount\":" + paidAmount +
+				", \"discount\":" + discount +
+				", \"rowDiscount\":" + rowDiscount +
+				", \"name\":" + "\""+product.getName() +"\""+
+				", \"offerList\":" + offerList +
+				", \"giftProduct\":" + giftProduct +
+				", \"scannable\":" + scannable +
+				", \"offerRule\":" + offerRule +
+				", \"sku\":"+"\""+product.getSku() +"\""+
 				'}';
 	}
 

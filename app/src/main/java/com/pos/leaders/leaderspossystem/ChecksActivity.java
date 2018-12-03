@@ -25,10 +25,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.Models.Check;
-import com.pos.leaders.leaderspossystem.Models.Invoice;
+import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.ChecksListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -63,7 +64,7 @@ public class ChecksActivity extends AppCompatActivity {
 	double requiredAmount=0;
     Bundle extras;
 	JSONObject invoiceJson=new JSONObject();
-	Invoice invoice ;
+	BoInvoice invoice ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -108,7 +109,7 @@ public class ChecksActivity extends AppCompatActivity {
 					docJson.put("type","Invoice");
 					invoiceJson.remove("documentsData");
 					invoiceJson.put("documentsData",docJson);
-					invoice=new Invoice(DocumentType.INVOICE,docJson,invoiceJson.getString("docNum"));
+					invoice=new BoInvoice(DocumentType.INVOICE,docJson,invoiceJson.getString("docNum"));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -208,7 +209,7 @@ public class ChecksActivity extends AppCompatActivity {
 
 						if(extras.containsKey("checksReceipt")){
 							SESSION._CHECKS_HOLDER = checkList;
-							Util.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS);
+							DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS);
 
 						}else {
 

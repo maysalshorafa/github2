@@ -56,6 +56,7 @@
     <string name="country_code"> رقم الدولة</string>
     <string name="postal_code"> رقم البريد</string>
     <string name="house_number"> رقم المنزل</string>
+    <string name="customer_type">نوع المستخدم</string>
     <string name="job"> المهنة </string>
     <string name="add_customer_club"> اختر نادي الاعضاء </string>
     <string name="add_to_city">اختر مدينة</string>
@@ -100,6 +101,7 @@
     <string name="_continue">استمر</string>
     <string name="document">المستندات</string>
     <string name="receipt">وصل</string>
+    <string name="order_document">طلبية</string>
     <string name="CustomerLedger">حساب الزبون</string>
 
 

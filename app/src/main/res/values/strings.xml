@@ -130,6 +130,7 @@
     <string name="price_before_discount">Price before discount</string>
     <string name="document">Document</string>
     <string name="receipt">Receipt</string>
+    <string name="order_document">Order Document</string>
     <string name="CustomerLedger">CustomerLedger</string>
     <string name="total_discount">Total Discount</string>
 
@@ -228,6 +229,10 @@
     <string name="replacement_invoice">Replacement Invoice</string>
     <string name="copyinvoice">Duplicate Invoice</string>
     <string name="cancel_invoice">Cancel Invoice</string>
+    <string name="credit_invoice_doc">Credit Invoice</string>
+    <string name="create_credit_invoice_doc">Create Credit Invoice</string>
+    <string name="view_credit_invoice_doc">View Credit Invoice</string>
+
 
     <!--Credit Card-->
     <string name="credit_card_number">Credit Card Number</string>
@@ -393,6 +398,8 @@
     <string name="country_code">Country Code</string>
     <string name="postal_code">Postal Code</string>
     <string name="house_number">House Number</string>
+    <string name="customer_type">Customer Type</string>
+    <string name="edit_max_customer_credit">Edit max customer credit</string>
     <string name="job">Job</string>
     <string name="email">Email</string>
     <string name="phone">Phone</string>
@@ -587,7 +594,9 @@
     <string name="management_offer_activity">ManagementOfferActivity</string>
     <string name="invoice_management_activity">Invoice ManagementActivity</string>
     <string name="closing_report_activity">Closing Report Activity</string>
-
+    <string name="order_document_management_activity">Order Document ManagementActivity</string>
+    <string name="create_credit_invoice_management_activity">Create Credit Invoice ManagementActivity</string>
+    <string name="view_credit_invoice_management_activity">View Credit Invoice ManagementActivity</string>
     <string name="currency_is_activated_in_pos">Currency is activated in POS</string>
     <string name="currency_is_not_activated_in_pos">Currency is not activated in POS</string>
     <string name="credit_card_is_activated_in_pos">Credit Card is activated in POS</string>

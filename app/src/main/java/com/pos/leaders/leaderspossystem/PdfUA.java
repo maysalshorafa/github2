@@ -22,6 +22,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
@@ -29,6 +30,7 @@ import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
+import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
@@ -584,6 +586,7 @@ public class PdfUA {
         orderDetailsTable.setRunDirection(0);
         orderDetailsTable.setWidthPercentage(108f);
         Log.d("customerJson",customerJson.toString());
+        /**
         JSONArray itemJson = customerJson.getJSONArray("payments");
 
         insertCell(orderDetailsTable, context.getString(R.string.payment)+":", Element.ALIGN_LEFT, 4, dateFont);
@@ -610,7 +613,7 @@ public class PdfUA {
                 }
 
             }
-        }
+        }**/
         insertCell(orderDetailsTable, "customerGeneralLedger"+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 3, dateFont);
 
         insertCell(orderDetailsTable, "Receipt Numbers"+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 3, dateFont);
@@ -627,6 +630,10 @@ public class PdfUA {
 
         //end :)
     }
+
+
+
+
     public static void  printClosingReport(Context context, String res) throws IOException, DocumentException, JSONException {
         JSONObject jsonObject = new JSONObject(res);
         // create file , document region
@@ -720,5 +727,100 @@ public class PdfUA {
         document.close();
         //end :)
     }
+    public static void  printCreditInvoiceReport(Context context, String res,String source) throws IOException, DocumentException, JSONException {
+        ProductDBAdapter productDBAdapter =new ProductDBAdapter(context);
+        productDBAdapter.open();
+        JSONObject jsonObject = new JSONObject(res);
+        JSONObject customerJson = jsonObject.getJSONObject("documentsData");;
+        JSONObject customerInfo = new JSONObject(customerJson.getJSONObject("customer").toString());
+
+        // create file , document region
+        Document document = new Document();
+        String fileName = "creditinvoice.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+        if(file.exists()){
+            PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
+            writer.print("");
+            writer.close();
+        }
+
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();        //end region
+        //end region
+
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 30);
+        Font dateFont = new Font(urName, 24);
+        //heading table
+        PdfPTable headingTable = new PdfPTable(1);
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+        if(source=="source"){
+            insertCell(headingTable,  context.getString(R.string.source_invoice) , Element.ALIGN_CENTER, 1, font);
+
+        }else {
+            insertCell(headingTable,  context.getString(R.string.copy_invoice) , Element.ALIGN_CENTER, 1, font);
+
+        }
+        insertCell(headingTable,  context.getString(R.string.credit_invoice_doc) , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, jsonObject.getString("docNum") , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "Date"+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 2, dateFont);
+
+//        insertCell(headingTable, context.getString(R.string.date) + jsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
+
+        //end
+
+        //date table from , to
+        PdfPTable dateTable = new PdfPTable(2);
+        dateTable.setRunDirection(0);
+        dateTable.setWidthPercentage(108f);
+
+        insertCell(dateTable, context.getString(R.string.customer_name)+":"+customerInfo.getString("firstName")+customerInfo.getString("lastName"), Element.ALIGN_LEFT, 2, dateFont);
+        insertCell(dateTable, context.getString(R.string.total_paid)+":"+customerJson.getDouble("total"), Element.ALIGN_LEFT, 2, dateFont);
+
+        //end
+        insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+
+        PdfPTable orderDetailsTable = new PdfPTable(4);
+        orderDetailsTable.setRunDirection(0);
+        orderDetailsTable.setWidthPercentage(108f);
+        Log.d("customerJson",customerJson.toString());
+
+        JSONArray itemJson = customerJson.getJSONArray("cartDetailsList");
+        insertCell(orderDetailsTable, context.getString(R.string.name), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(orderDetailsTable,context.getString(R.string.qty), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(orderDetailsTable, context.getString(R.string.sku), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(orderDetailsTable, context.getString(R.string.price), Element.ALIGN_LEFT, 1, dateFont);
+        for (int a = 0 ; a<itemJson.length();a++) {
+            JSONObject jsonObject1 = itemJson.getJSONObject(a);
+            String sku = jsonObject1.getString("sku");
+            Product product= productDBAdapter.getProductByBarCode(sku);
+            insertCell(orderDetailsTable, product.getName(), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(orderDetailsTable, ""+jsonObject1.getInt("quantity"), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(orderDetailsTable,product.getSku(), Element.ALIGN_LEFT, 1, dateFont);
+
+            insertCell(orderDetailsTable, Util.makePrice(product.getPrice()), Element.ALIGN_LEFT, 1, dateFont);
+
+
+        }
+        insertCell(orderDetailsTable, "customerGeneralLedger"+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 4, dateFont);
+        insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+
+        //end
+
+        //add table to document
+        document.add(headingTable);
+        document.add(dateTable);
+        document.add(orderDetailsTable);
+        document.close();
+        //end :)
+    }
+
 
 }
