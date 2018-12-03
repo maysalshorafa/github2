@@ -39,7 +39,6 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     private EmployeeDBAdapter userDBAdapter;
     private ZReport lastZReport;
     public static final String LEADPOS_MAKE_A_REPORT = "LEADPOS_make_a_report";
-    public static double LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT = 0.0;
 
     private static Employee DEFAULT_USER = null;
 
@@ -252,7 +251,6 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                     zReportDBAdapter.test();
                     DbHelper.DATABASE_ENABEL_ALTER_COLUMN=false;
                 }
-                LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT = zReportDBAdapter.zReportTotalAmount();
                 //end
                 try {
                     lastZReport = zReportDBAdapter.getLastRow();

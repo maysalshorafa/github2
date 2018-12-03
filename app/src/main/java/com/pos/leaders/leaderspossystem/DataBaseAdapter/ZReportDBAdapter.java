@@ -50,6 +50,9 @@ public class ZReportDBAdapter {
             " `" + Z_REPORT_COLUMN_TOTAL_AMOUNT + "` REAL,`" + Z_REPORT_COLUMN_OPINING_REPORT_TOTAL_AMOUNT + "` REAL, `" + Z_REPORT_COLUMN_TOTAL_SALES_AMOUNT + "` REAL," +
             " `" + Z_REPORT_COLUMN_TAX + "` REAL,`" + Z_REPORT_COLUMN_CASH_AMOUNT + "` REAL, `" + Z_REPORT_COLUMN_CHECK_AMOUNT + "` REAL," +
             " `" + Z_REPORT_COLUMN_CREDIT_AMOUNT + "` REAL,`" + Z_REPORT_COLUMN_TOTAL_POS_SALES + "` REAL)";
+    public static final String DATABASE_UPDATE_FROM_V2_TO_V3[] = {"alter table z_report rename to z_report_v3;", DATABASE_CREATE + "; ",
+            "insert into z_report (id,createDate,startOrderId,endOrderId,amount) " +
+                    "select id,createDate,startOrderId,endOrderId,amount from z_report_v3;"};
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -212,7 +215,15 @@ public class ZReportDBAdapter {
         return pl;
     }
     public double zReportTotalAmount(){
-        Cursor cursor = db.rawQuery(" select sum(amount) from " + Z_REPORT_TABLE_NAME , null);
+        Cursor cursor = db.rawQuery(" select sum(amount) from " + Z_REPORT_TABLE_NAME + "where id like "+SESSION.POS_ID_NUMBER+" %' ", null);
+
+        if (cursor.moveToFirst()) {
+            return cursor.getDouble(0);
+        }
+        return  0;
+    }
+    public double zReportTotalAmountUpDate(long id){
+        Cursor cursor = db.rawQuery(" select sum(amount) from " + Z_REPORT_TABLE_NAME + "where id like "+SESSION.POS_ID_NUMBER+" %' " + "and id <=" + id +"'", null);
 
         if (cursor.moveToFirst()) {
             return cursor.getDouble(0);
@@ -239,10 +250,10 @@ public class ZReportDBAdapter {
         double totalAmount =0;
         for (int  i= 0 ; i<zl.size();i++){
             ZReport zReport1 = zl.get(i);
-            double amount = zReportDBAdapter.getZReportAmount(zReport1.getStartOrderId(),zReport1.getEndOrderId());
+            double amount = zReportDBAdapter.zReportTotalAmountUpDate(zReport1.getzReportId());
             totalAmount+=amount;
-            ZReport zReport =new ZReport(zl.get(i).getzReportId(),zl.get(i).getCreatedAt(),zl.get(i).getByUser(),zl.get(i).getStartOrderId(),zl.get(i).getEndOrderId(),totalAmount,zl.get(i).getOpeningTotal(),
-                    amount,zl.get(i).getTax(),zl.get(i).getCashTotal(),zl.get(i).getCheckTotal(),zl.get(i).getCreditTotal(),zl.get(i).getTotalPosSales());
+                ZReport zReport =new ZReport(zl.get(i).getzReportId(),zl.get(i).getCreatedAt(),zl.get(i).getByUser(),zl.get(i).getStartOrderId(),zl.get(i).getEndOrderId(),zl.get(i).getTotalAmount(),
+                    amount,zl.get(i).getCashTotal(),zl.get(i).getCheckTotal(),zl.get(i).getCreditTotal(),totalAmount,zl.get(i).getTax(),zl.get(i).getOpeningTotal());
             updateEntry(zReport);
         }
     }
@@ -267,5 +278,6 @@ public class ZReportDBAdapter {
         }
         return zReportList;
     }
+
 
 }

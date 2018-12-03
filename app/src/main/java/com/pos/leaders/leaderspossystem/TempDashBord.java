@@ -242,8 +242,6 @@ public class TempDashBord  extends AppCompatActivity implements AdapterView.OnIt
 
                 ZReport z=new ZReport(0,  new Timestamp(System.currentTimeMillis()) , SESSION._EMPLOYEE,lastZReport.getEndOrderId()+1,lastSale);
                 z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
-                double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
-                totalZReportAmount+=LogInActivity.LEADPOS_MAKE_Z_REPORT_TOTAL_AMOUNT+amount;
                /** long zID = zReportDBAdapter.insertEntry(z.getCreatedAt(), z.getByUser(), z.getStartOrderId(), z.getEndOrderId(),amount,totalZReportAmount);
                 z.setzReportId(zID);
                 lastZReport = new ZReport(z);

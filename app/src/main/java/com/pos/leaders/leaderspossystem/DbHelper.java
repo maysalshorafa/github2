@@ -76,7 +76,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     Context context;
 
-    public static boolean DATABASE_ENABEL_ALTER_COLUMN = false;
+    public static boolean DATABASE_ENABEL_ALTER_COLUMN = true;
     public DbHelper(Context context)
     {
         super(context, DATABASE_NAME ,null,DATABASE_VERSION);

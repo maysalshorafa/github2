@@ -1573,7 +1573,7 @@ public class SyncMessage extends Service {
         if (DateConverter.toDate(lastCurrency.getLastUpdate().getTime()).equals(DateConverter.toDate(timestamp.getTime()))) {
             //do nothing
         }else {
-            String currencyRes = messageTransmit.getCurrency(ApiURL.Currencies);
+            String currencyRes = messageTransmit.getCurrency(ApiURL.Currencies,SESSION.token);
             Log.i("Currency", currencyRes);
             ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);

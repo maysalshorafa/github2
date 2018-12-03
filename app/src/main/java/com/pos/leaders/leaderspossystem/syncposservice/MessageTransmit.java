@@ -99,8 +99,8 @@ public class MessageTransmit {
 
         return response.body().string();
     }
-    public String getCurrency(String url) throws IOException {
-        Request request = new Request.Builder().url(domainURL + url).build();
+    public String getCurrency(String url,String token) throws IOException {
+        Request request = new Request.Builder().url(domainURL + url).addHeader(AUTHORIZATION, token).build();
         Response response = client.newCall(request).execute();
 
         return response.body().string();
