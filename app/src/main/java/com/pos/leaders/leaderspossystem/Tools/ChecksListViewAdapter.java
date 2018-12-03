@@ -163,6 +163,9 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 			}
 			return Double.parseDouble(etAmount.getText().toString());
 		}
+		public void setEtAmount(double amount) {
+			etAmount.setText(Util.makePrice(amount));
+		}
 
 		public int getEtBankNum() {
 			if(etBankNum.getText().toString().equals("")){
@@ -192,12 +195,67 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		}
 
 		public String getEtDate() {
-			if(etDate.equals("")){
+			if(etDate.getText().equals("")){
 				String s= "0";
 				etDate.setText(s);
 				return etDate.getText().toString();
 			}
 			return etDate.getText().toString();
 		}
+        public Double getEtHint() {
+            if(etAmount.getHint().toString().equals("")){
+                String s= "0";
+                etAmount.setHint(s);
+                return Double.parseDouble(etAmount.getHint().toString());
+            }
+            if(amount>0){
+                etAmount.setHint(Util.makePrice(amount));
+                return Double.parseDouble(etAmount.getHint().toString());
+            }
+            return Double.parseDouble(etAmount.getHint().toString());
+        }
+        public int getEtBankNumHint() {
+            if(etBankNum.getHint().toString().equals("")){
+                String s= "0";
+                etBankNum.setHint(s);
+                return Integer.parseInt(etBankNum.getHint().toString());
+            }
+            return Integer.parseInt(etBankNum.getHint().toString());
+        }
+
+        public int getEtBenchNumHint() {
+            if(etBenchNum.getHint().toString().equals("")){
+                String s= "0";
+                etBenchNum.setHint(s);
+                return Integer.parseInt(etBenchNum.getHint().toString());
+            }
+            return Integer.parseInt(etBenchNum.getHint().toString());
+        }
+
+        public int getEtCheckNumHint() {
+            if(etCheckNum == null || etCheckNum.getHint().equals("")){
+                String s= "0";
+                etCheckNum.setHint(s);
+                return Integer.parseInt(etCheckNum.getHint().toString());
+            }
+            return Integer.parseInt(etCheckNum.getHint().toString());
+        }
+
+        public String getEtDateHint() {
+            if(etDate.equals("")){
+                String s= "0";
+                etDate.setHint(s);
+                return etDate.getHint().toString();
+            }
+            return etDate.getHint().toString();
+        }
+        public int getEtAccountNumHint() {
+            if(etAccountNum.getHint().toString().equals("")){
+                String s= "0";
+                etAccountNum.setHint(s);
+                return Integer.parseInt(etAccountNum.getHint().toString());
+            }
+            return Integer.parseInt(etAccountNum.getHint().toString());
+        }
 	}
 }

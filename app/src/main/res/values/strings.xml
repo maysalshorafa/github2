@@ -186,6 +186,8 @@
     <string name="add_check">Add Check</string>
     <string name="check_pid_error">The total checks amount does not get the total price</string>
     <string name="not_inserted_checks">There is no checks inserted</string>
+    <string name="checks_amount_more_than_amount_need">Amount inserted more than amount need</string>
+
     <!--Products -->
     <string name="name">Name</string>
     <string name="barcode">Barcode</string>

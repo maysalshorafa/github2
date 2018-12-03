@@ -203,7 +203,7 @@ public class ChecksActivity extends AppCompatActivity {
                     //lastItem.findViewById(R.id.listChecks_ETAmount);
                     checkList.set(lvChecks.getChildCount()-2,_check);
                 }
-                if (getTotalPid() >= totalPrice) {
+                if (getTotalPid() == totalPrice) {
                     if (checkList != null && checkList.size() > 0) {
 
 						if(extras.containsKey("checksReceipt")){
@@ -211,7 +211,22 @@ public class ChecksActivity extends AppCompatActivity {
 							Util.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS);
 
 						}else {
-							SESSION._CHECKS_HOLDER = checkList;
+
+							 List<Check> finalCheckList = new ArrayList<Check>();
+
+							for(int i=1;i<=lvChecks.getCount()-1;i++) {
+								ChecksListViewAdapter.ViewHolder lastItem = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(i).getTag();
+								if(i==1){
+									_check = new Check(lastItem.getEtCheckNumHint(), lastItem.getEtBankNumHint(), lastItem.getEtBenchNumHint(), lastItem.getEtAccountNumHint(),
+											lastItem.getEtHint(),new Timestamp(System.currentTimeMillis()), false);
+								}else {
+									Date utilDate=DateConverter.stringToDate(lastItem.getEtDate());
+									_check = new Check(lastItem.getEtCheckNum(), lastItem.getEtBankNum(), lastItem.getEtBenchNum(), lastItem.getEtAccountNum(),
+											lastItem.getEtAmount(), new java.sql.Timestamp(utilDate.getTime()), false);
+								}
+								finalCheckList.add(_check);
+							}
+							SESSION._CHECKS_HOLDER = finalCheckList;
 							Intent i = new Intent();
 							i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
 							setResult(RESULT_OK, i);
@@ -222,7 +237,34 @@ public class ChecksActivity extends AppCompatActivity {
                         Toast.makeText(ChecksActivity.this, getString(R.string.not_inserted_checks), Toast.LENGTH_SHORT).show();
                     }
 
-                } else {
+                } else if (getTotalPid() > totalPrice) {
+					double d = getTotalPid()-checkList.get(checkList.size()-1).getAmount();
+					double needAmount = totalPrice-d;
+					ChecksListViewAdapter.ViewHolder lastItem = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(lvChecks.getChildCount() - 1).getTag();
+					checkList.get(checkList.size()-1).setAmount(needAmount);
+					lastItem.setEtAmount(needAmount);
+					Toast.makeText(ChecksActivity.this, getString(R.string.checks_amount_more_than_amount_need), Toast.LENGTH_SHORT).show();
+					List<Check> finalCheckList = new ArrayList<Check>();
+					for(int i=1;i<=lvChecks.getCount()-1;i++) {
+						ChecksListViewAdapter.ViewHolder item = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(i).getTag();
+						if(i==1){
+							_check = new Check(item.getEtCheckNumHint(), item.getEtBankNumHint(), item.getEtBenchNumHint(), item.getEtAccountNumHint(),
+									item.getEtHint(),new Timestamp(System.currentTimeMillis()), false);
+						}else {
+							Date utilDate=DateConverter.stringToDate(item.getEtDate());
+							_check = new Check(item.getEtCheckNum(), item.getEtBankNum(), item.getEtBenchNum(), item.getEtAccountNum(),
+									item.getEtAmount(), new java.sql.Timestamp(utilDate.getTime()), false);
+						}
+						finalCheckList.add(_check);
+					}
+					SESSION._CHECKS_HOLDER = finalCheckList;
+					Intent i = new Intent();
+					i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
+					setResult(RESULT_OK, i);
+					finish();
+
+
+				} else {
                     Toast.makeText(ChecksActivity.this, getString(R.string.check_pid_error), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -267,7 +309,6 @@ public class ChecksActivity extends AppCompatActivity {
 						cal.setTime(date);
 						newCheck.setCreatedAt(new java.sql.Timestamp(date.getTime()));
 						newCheck.setCheckNum(check.getCheckNum()+1);
-
 					}
 					checkList.add(newCheck);
 					lvChecks.setAdapter(adapter);
