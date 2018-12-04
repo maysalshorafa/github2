@@ -215,7 +215,7 @@ public class ZReportDBAdapter {
         return pl;
     }
     public double zReportTotalAmount(){
-        Cursor cursor = db.rawQuery(" select sum(amount) from " + Z_REPORT_TABLE_NAME + "where id like "+SESSION.POS_ID_NUMBER+" %' ", null);
+        Cursor cursor = db.rawQuery(" select sum(amount) from " + Z_REPORT_TABLE_NAME + " where id like '%"+SESSION.POS_ID_NUMBER+"%'", null);
 
         if (cursor.moveToFirst()) {
             return cursor.getDouble(0);
@@ -223,7 +223,7 @@ public class ZReportDBAdapter {
         return  0;
     }
     public double zReportTotalAmountUpDate(long id){
-        Cursor cursor = db.rawQuery(" select sum(amount) from " + Z_REPORT_TABLE_NAME + "where id like "+SESSION.POS_ID_NUMBER+" %' " + "and id <=" + id +"'", null);
+        Cursor cursor = db.rawQuery(" select sum(amount) from " + Z_REPORT_TABLE_NAME + " where id like '%"+SESSION.POS_ID_NUMBER+"%'" + "and id <= " + id , null);
 
         if (cursor.moveToFirst()) {
             return cursor.getDouble(0);

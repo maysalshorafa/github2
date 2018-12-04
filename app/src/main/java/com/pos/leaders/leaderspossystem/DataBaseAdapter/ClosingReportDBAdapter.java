@@ -30,7 +30,7 @@ public class ClosingReportDBAdapter {
     protected static final String CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE = "differentTotalValue";
     protected static final String CLOSING_REPORT_COLUMN_CREATEDAT = "createdAt";
     protected static final String CLOSING_REPORT_COLUMN_OPINING_REPORT_ID = "opiningReportId";
-    protected static final String CLOSING_REPORT_COLUMN_LAST_ORDER_ID = "lastOrderID";
+    protected static final String CLOSING_REPORT_COLUMN_LAST_ORDER_ID = "lastOrderId";
 
     public static final String DATABASE_CREATE = "CREATE TABLE closing_report ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "`actualTotalValue` REAL,  " +
@@ -112,8 +112,8 @@ public class ClosingReportDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_EXPECTED_TOTAL_VALUE))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE))),
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_CREATEDAT))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))));
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID))),
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))));
         cursor.close();
 
         return closingReport;
@@ -131,8 +131,8 @@ public class ClosingReportDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_EXPECTED_TOTAL_VALUE))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE))),
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_CREATEDAT))),
-                cursor.getLong(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID)),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))));
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID))),
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))));
         cursor.close();
 
         return closingReport;
@@ -140,25 +140,37 @@ public class ClosingReportDBAdapter {
     public ClosingReport getLastRow() throws Exception {
         ClosingReport c = null;
         Cursor cursor = db.rawQuery("select * from " + CLOSING_REPORT_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
-        if (cursor.getCount() < 1) // zReport Not Exist
+        if (cursor.getCount() < 1)
         {
             cursor.close();
-            throw new Exception("there is no rows on Z Report Table");
+            return c;
         }
         cursor.moveToFirst();
-        c = makeAReport(cursor);
-        cursor.close();
+        c = makeCReport(cursor);
+       // cursor.close();
 
         return c;
     }
-    private ClosingReport makeAReport(Cursor cursor){
-        return  new ClosingReport( Integer.parseInt(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_ID))),
-                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_ACTUAL_TOTAL_VALUE))),
-                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_EXPECTED_TOTAL_VALUE))),
-                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE))),
-                Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_CREATEDAT))),
-                cursor.getLong(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID)),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))));
-    }
+    private ClosingReport makeCReport(Cursor cursor) {
+        try {
 
+                return new ClosingReport(Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_ID))),
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_ACTUAL_TOTAL_VALUE))),
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_EXPECTED_TOTAL_VALUE))),
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE))),
+                    Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_CREATEDAT))),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID))),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))));
+        } catch (Exception ex) {
+            return new ClosingReport(
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_ID))),
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_ACTUAL_TOTAL_VALUE))),
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_EXPECTED_TOTAL_VALUE))),
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE))),
+                    Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_CREATEDAT))),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID))),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))));
+
+        }
+    }
 }

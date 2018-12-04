@@ -121,6 +121,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             SESSION.internetStatus = InternetStatus.ERROR;
         }
 
+
         TitleBar.setTitleBar(this);
 
         //run MSR Service
@@ -142,7 +143,13 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         } catch (Exception e) {
             Log.e("Sunmi MSC ", e.getMessage());
         }
-
+        ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(DashBord.this);
+        zReportDBAdapter.open();
+        if(DbHelper.DATABASE_ENABEL_ALTER_COLUMN){
+            Log.d("pooos",SESSION.POS_ID_NUMBER+"");
+            zReportDBAdapter.test();
+            DbHelper.DATABASE_ENABEL_ALTER_COLUMN=false;
+        }
         //sendable.run();
 
         AccessToken accessToken = new AccessToken(this);
@@ -500,17 +507,16 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 case Permissions.PERMISSIONS_MAIN_SCREEN:
                     if (needAReport()) {
                         btAReport.setEnabled(true);
-                        closingReport.setEnabled(false);
                         btZReport.setEnabled(false);
                         salesCart.setEnabled(false);
                     } else {
+
                         if (lastSale == null) {
                            // btZReport.setEnabled(false);
                         } else
                             btZReport.setEnabled(true);
                         btAReport.setEnabled(true);
                         salesCart.setEnabled(true);
-                        closingReport.setEnabled(true);
                     }
 
                     break;
@@ -592,10 +598,25 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     }
 
     private boolean needAReport() {
+        ClosingReportDBAdapter closingReportDBAdapter = new ClosingReportDBAdapter(DashBord.this);
+        closingReportDBAdapter.open();
         ZReport zReport = getLastZReport();
         OpiningReport aReport = getLastAReport();
+        ClosingReport closingR = null;
+        try {
+            closingR = closingReportDBAdapter.getLastRow();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (aReport != null && closingR != null) {
+            if (aReport.getOpiningReportId() == closingR.getOpiningReportId()) {
+                closingReport.setEnabled(false);
+            } else {
+                closingReport.setEnabled(true);
 
+            }
 
+        }
         if (aReport != null && zReport != null) {
             if (aReport.getLastZReportID() == zReport.getzReportId()) {
 
@@ -606,6 +627,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         } else if (aReport == null) {
             return true;
         }
+
         return false;
     }
 

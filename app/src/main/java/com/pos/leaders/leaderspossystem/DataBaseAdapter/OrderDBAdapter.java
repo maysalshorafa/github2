@@ -206,6 +206,19 @@ public class OrderDBAdapter {
 
 		return saleList;
 	}
+    public List<Order> getBetweenTwoSalesForClosingReport(long from, long to){
+        List<Order> saleList = new ArrayList<Order>();
+        Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +" <= "+to+" and "+ ORDER_COLUMN_ID +" > "+from,null);
+        //Cursor cursor = db.rawQuery("select * from "+ORDER_DETAILS_TABLE_NAME+" where "+ORDER_COLUMN_ORDERDATE+" <= "+to+" and "+ORDER_COLUMN_ORDERDATE +" >= "+from,null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            saleList.add(makeSale(cursor));
+            cursor.moveToNext();
+        }
+
+        return saleList;
+    }
 
 	public List<Order> getBetweenTwoDates(long from, long to){
 		List<Order> orderList = new ArrayList<Order>();
@@ -272,6 +285,21 @@ public class OrderDBAdapter {
 	public Order getLast(){
 		Order sale = null;
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
+
+		if (cursor.getCount() < 1) // don`t have any sale yet
+		{
+			cursor.close();
+			return sale;
+		}
+		cursor.moveToFirst();
+		sale = new Order(makeSale(cursor));
+		cursor.close();
+
+		return sale;
+	}
+	public Order getFirst(){
+		Order sale = null;
+		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id asc", null);
 
 		if (cursor.getCount() < 1) // don`t have any sale yet
 		{

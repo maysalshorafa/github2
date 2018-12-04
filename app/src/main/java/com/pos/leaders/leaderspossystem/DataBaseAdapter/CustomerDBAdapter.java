@@ -104,7 +104,7 @@ public class CustomerDBAdapter {
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_HOUSE_NUMBER)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_POSTAL_CODE)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY)),
-                cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))), CustomerType.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_TYPE))));
+                cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))), CustomerType.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_TYPE)).toUpperCase()));
         cursor.close();
 
         return customer_m;

@@ -65,7 +65,10 @@ public class ClosingReportDetailsDBAdapter {
 
     public long insertEntry(long closingReportId ,double actualValue, double expectedValue , double differentValue , String type  ,String currencyType  ) {
         ClosingReportDetails closingReportDetails = new ClosingReportDetails(Util.idHealth(this.db, CLOSING_REPORT_DETAILS_TABLE_NAME, CLOSING_REPORT_DETAILS_COLUMN_ID),closingReportId, actualValue,expectedValue,differentValue, type, currencyType);
-        sendToBroker(MessageType.ADD_CLOSING_REPORT_DETAILS, closingReportDetails, this.context);
+        if(Util.idHealth(this.db, CLOSING_REPORT_DETAILS_TABLE_NAME, CLOSING_REPORT_DETAILS_COLUMN_ID)>0){
+            Log.d("ClosingReportDetails",closingReportDetails.toString());
+            sendToBroker(MessageType.ADD_CLOSING_REPORT_DETAILS, closingReportDetails, this.context);
+        }
 
         try {
             return insertEntry(closingReportDetails);

@@ -119,7 +119,7 @@ public class CashPaymentDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_AMOUNT))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CurrencyType))),
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CREATEDATE))),
-                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_AMOUNT))));
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_CurrencyRATE))));
     }
     public double getSumOfType(int currencyType, long from, long to) {
         double total=0;

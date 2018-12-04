@@ -1519,6 +1519,15 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.ScheduleWorker, jsonObject.getString(MessageKey.Data), token);
                 break;
             //End
+            case MessageType.ADD_CLOSING_REPORT:
+                res = messageTransmit.authPost(ApiURL.ClosingReport, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.ADD_CLOSING_REPORT_DETAILS:
+                Log.d("ClosingReportDetails",jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authPost(ApiURL.ClosingReportDetails, jsonObject.getString(MessageKey.Data), token);
+                break;
+
+            //endregion ClosingReport
 
         }
         Log.e("response message", res);

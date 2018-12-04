@@ -49,6 +49,8 @@ public interface ApiURL {
     String Documents = "Documents";
     String Wallet = "Wallet";
     String GeneralLedger="GeneralLedger";
+    String ClosingReport="ClosingReport";
+    String ClosingReportDetails="ClosingReportDetails";
 
 
 }

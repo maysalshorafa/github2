@@ -4,7 +4,7 @@ package com.pos.leaders.leaderspossystem.Models;
  * Created by Win8.1 on 11/12/2018.
  */
 public class ClosingReportDetails{
-    private long closing_report_detailsId;
+    private long closingReportDetailsId;
     private long closingReportId;
     private double actualValue;
     private double expectedValue;
@@ -15,9 +15,6 @@ public class ClosingReportDetails{
     public ClosingReportDetails() {
     }
 
-    public long getClosing_report_detailsId() {
-        return closing_report_detailsId;
-    }
 
     public long getClosingReportId() {
         return closingReportId;
@@ -44,9 +41,7 @@ public class ClosingReportDetails{
     }
 
 
-    public void setClosing_report_detailsId(long closing_report_detailsId) {
-        this.closing_report_detailsId = closing_report_detailsId;
-    }
+
 
     public void setClosingReportId(long closingReportId) {
         this.closingReportId = closingReportId;
@@ -72,8 +67,8 @@ public class ClosingReportDetails{
         this.currencyType = currencyType;
     }
 
-    public ClosingReportDetails(long closing_report_detailsId, long closingReportId, double actualValue, double expectedValue, double differentValue, String type, String currencyType) {
-        this.closing_report_detailsId = closing_report_detailsId;
+    public ClosingReportDetails(long closingReportDetailsId, long closingReportId, double actualValue, double expectedValue, double differentValue, String type, String currencyType) {
+        this.closingReportDetailsId = closingReportDetailsId;
         this.closingReportId = closingReportId;
         this.actualValue = actualValue;
         this.expectedValue = expectedValue;
@@ -82,4 +77,24 @@ public class ClosingReportDetails{
         this.currencyType = currencyType;
     }
 
+    public long getClosingReportDetailsId() {
+        return closingReportDetailsId;
+    }
+
+    public void setClosingReportDetailsId(long closingReportDetailsId) {
+        this.closingReportDetailsId = closingReportDetailsId;
+    }
+
+    @Override
+    public String toString() {
+        return "ClosingReportDetails{" +
+                "closing_report_detailsId=" + closingReportDetailsId +
+                ", closingReportId=" + closingReportId +
+                ", actualValue=" + actualValue +
+                ", expectedValue=" + expectedValue +
+                ", differentValue=" + differentValue +
+                ", type='" + type + '\'' +
+                ", currencyType='" + currencyType + '\'' +
+                '}';
+    }
 }
