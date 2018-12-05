@@ -296,6 +296,7 @@ public class SalesCartActivity extends AppCompatActivity {
     String invoiceNum;
     double  customerGeneralLedger=0.0;
     boolean orderDocumentFlag=false;
+    String orderDocNum ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1387,8 +1388,8 @@ public class SalesCartActivity extends AppCompatActivity {
             public void onClick(View view) {
                 final String[] items = {
                         getString(R.string.invoice),
-                        getString(R.string.receipt),
-                        getString(R.string.order_document)
+                        getString(R.string.receipt),getString(R.string.order_document),getString(R.string.create_credit_invoice_doc),getString(R.string.view_credit_invoice_doc)
+
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(SalesCartActivity.this);
                 builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
@@ -1441,13 +1442,24 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     Documents documents = new Documents("Invoice",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),SESSION._ORDERS.getTotalPrice(),0,SESSION._ORDERS.getTotalPrice(), InvoiceStatus.UNPAID,"test","test","ILS",SESSION._ORDERS.cartDiscount);
                                                     String doc = mapper.writeValueAsString(documents);
                                                     JSONObject docJson= new JSONObject(doc);
+
                                                     String type = docJson.getString("type");
                                                     docJson.remove("type");
                                                     docJson.put("@type",type);
                                                     docJson.put("customer",customerData);
                                                     docJson.put("user",userData);
+
                                                     JSONArray cart = new JSONArray(SESSION._ORDER_DETAILES.toString());
                                                     docJson.put("cartDetailsList",cart);
+                                                    if(orderDocumentFlag){
+                                                        JSONObject jsonObject = new JSONObject();
+                                                        jsonObject.put("type",DocumentType.ORDER_DOCUMENT);
+                                                        jsonObject.put("docId",orderDocNum);
+                                                        List<JSONObject>jsonObjectList = new ArrayList<JSONObject>();
+                                                        jsonObjectList.add(jsonObject);
+                                                        JSONArray jsonArray = new JSONArray(jsonObjectList.toString());
+                                                        docJson.put("referenceDocuments",jsonArray);
+                                                    }
                                                     Log.d("Document vale", docJson.toString());
                                                     BoInvoice invoice = new BoInvoice(DocumentType.INVOICE,docJson,"");
                                                     Log.d("Invoice log",invoice.toString());
@@ -1521,6 +1533,16 @@ public class SalesCartActivity extends AppCompatActivity {
                                 }
 
                                 break;
+                            case 3:
+                                Intent intent3 = new Intent(SalesCartActivity.this, CreateCreditInvoiceActivity.class);
+                                startActivity(intent3);
+                                break;
+                            case 4:
+                                Intent intent4= new Intent(SalesCartActivity.this, ViewCreditInvoiceActivity.class);
+                                startActivity(intent4);
+                                break;
+
+
                         }
                     }
                 });
@@ -1772,6 +1794,7 @@ public class SalesCartActivity extends AppCompatActivity {
                  clearCart();
                  Log.d("orderJson",extras.getString("orderJson"));
                  final JSONObject orderDocJsonObj =new JSONObject(extras.getString("orderJson"));
+                 orderDocNum = orderDocJsonObj.getString("docNum");
                  final JSONObject jsonObject = new JSONObject(String.valueOf(orderDocJsonObj.getJSONObject("documentsData")));
                  SETTINGS.orderDocument=orderDocJsonObj;
                  JSONArray items = jsonObject.getJSONArray("item");
@@ -3764,8 +3787,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     for (Customer c : AllCustmerList) {
 
                         if (c.getFirstName().toLowerCase().contains(word.toLowerCase()) ||
-                                c.getPhoneNumber().toLowerCase().contains(word.toLowerCase()) ||
-                                c.getStreet().toLowerCase().contains(word.toLowerCase())) {
+                                c.getLastName().toLowerCase().contains(word.toLowerCase())) {
                             customerList.add(c);
 
                         }

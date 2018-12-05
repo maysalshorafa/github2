@@ -446,7 +446,7 @@ public class Util {
             }
         }
         long zID = zReportDBAdapter.insertEntry(zReport.getCreatedAt(), zReport.getByUser(), zReport.getStartOrderId(), zReport.getEndOrderId(),
-                zReport.getTotalAmount(),zReport.getTotalAmount()+aReportAmount,cash_plus,check_plus,creditCard_plus,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax,aReportAmount);
+                zReport.getTotalAmount()+aReportAmount+(zReport.getTotalAmount()*SETTINGS.tax/100),zReport.getTotalAmount(),cash_plus,check_plus,creditCard_plus,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax/100,aReportAmount);
         zReport.setzReportId(zID);
         return zReport;
     }
@@ -541,11 +541,7 @@ public class Util {
                         } catch (DocumentException e) {
                             e.printStackTrace();
                         }
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+
 
                     } catch (IOException e) {
                         e.printStackTrace();

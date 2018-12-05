@@ -1,7 +1,5 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import android.util.Log;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -103,7 +101,6 @@ public class Order {
 
 	@JsonIgnore
 	public int getNumberOfItems(){
-		Log.d("orders",orders.toString());
 		if(orders==null)
 			return 0;
 		int count=0;

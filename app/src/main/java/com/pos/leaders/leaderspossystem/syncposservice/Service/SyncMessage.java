@@ -1313,6 +1313,8 @@ public class SyncMessage extends Service {
             case MessageType.UPDATE_CUSTOMER:
                 Customer customer=null;
                 customer=objectMapper.readValue(msgData, Customer.class);
+                Log.d("cccc22",customer.toString());
+                Log.d("cccc",jsonObject.getString(MessageKey.Data));
                 res = messageTransmit.authPut(ApiURL.Customer, jsonObject.getString(MessageKey.Data), token,customer.getCustomerId());
                 break;
             case MessageType.DELETE_CUSTOMER:

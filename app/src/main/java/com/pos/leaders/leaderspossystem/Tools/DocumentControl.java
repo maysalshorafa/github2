@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CASH;
+import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CHECKS;
 
 /**
  * Created by Win8.1 on 10/8/2018.
@@ -234,10 +235,15 @@ public class DocumentControl {
                 DocData.put("@type","Invoice");
             }
             newInvoice=new BoInvoice(DocumentType.INVOICE,DocData,invoice.getDocNum());
-            Payment payment =new Payment(0,CASH,Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))),0);
+            Payment payment=null;
+            if(paymentWays.equals(CASH)) {
+                 payment = new Payment(0, CASH, Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), 0);
+            }else {
+                 payment = new Payment(0, CHECKS, Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), 0);
+            }
             final JSONObject newJsonObject = new JSONObject(payment.toString());
             if(paymentWays.equalsIgnoreCase(CONSTANT.CASH)){
-                CashPayment cashPayment = new CashPayment(0,0, Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), 0, new Timestamp(System.currentTimeMillis()),0);
+                CashPayment cashPayment = new CashPayment(0,0, Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), 0, new Timestamp(System.currentTimeMillis()),1);
                 cashPaymentList.add(cashPayment);
                 JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
                 newJsonObject.put("paymentDetails",jsonArray);

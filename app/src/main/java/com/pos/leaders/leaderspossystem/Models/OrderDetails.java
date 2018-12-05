@@ -1,5 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -214,6 +216,7 @@ public class OrderDetails {
 		double temp = (unitPrice * (1 - (discount / 100)));
 		if (rowDiscount == 0)
 			return temp*quantity;
+		Log.d("rowDiscount11",rowDiscount+"");
 		return (temp - (temp * (rowDiscount / 100)))*this.quantity;
 	}
 
@@ -241,7 +244,11 @@ public class OrderDetails {
 	}
 
 	public void setPaidAmount(double paidAmount){
-		this.paidAmount = (unitPrice * (discount / 100));
+		if(paidAmount==0.0){
+			this.paidAmount=0.0;
+		}else {
+			this.paidAmount = (unitPrice * (discount / 100));
+		}
 	}
 
 
@@ -292,12 +299,8 @@ public class OrderDetails {
 				", \"unitPrice\":" + unitPrice +
 				", \"paidAmount\":" + paidAmount +
 				", \"discount\":" + discount +
-				", \"rowDiscount\":" + rowDiscount +
 				", \"name\":" + "\""+product.getName() +"\""+
-				", \"offerList\":" + offerList +
-				", \"giftProduct\":" + giftProduct +
-				", \"scannable\":" + scannable +
-				", \"offerRule\":" + offerRule +
+				", \"scannable\":" + "\""+scannable +"\""+
 				", \"sku\":"+"\""+product.getSku() +"\""+
 				'}';
 	}

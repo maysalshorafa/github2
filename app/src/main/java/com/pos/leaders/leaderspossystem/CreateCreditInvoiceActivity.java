@@ -376,8 +376,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                     for (Customer c : AllCustmerList) {
 
                         if (c.getFirstName().toLowerCase().contains(word.toLowerCase()) ||
-                                c.getPhoneNumber().toLowerCase().contains(word.toLowerCase()) ||
-                                c.getStreet().toLowerCase().contains(word.toLowerCase())) {
+                                c.getLastName().toLowerCase().contains(word.toLowerCase())) {
                             customerList.add(c);
 
                         }

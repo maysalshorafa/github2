@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Customer;
-import com.pos.leaders.leaderspossystem.Models.Invoice;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.OrderDocumentManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -199,8 +198,7 @@ public class OrderDocumentManagementActivity extends AppCompatActivity {
                     for (Customer c : AllCustmerList) {
 
                         if (c.getFirstName().toLowerCase().contains(word.toLowerCase()) ||
-                                c.getPhoneNumber().toLowerCase().contains(word.toLowerCase()) ||
-                                c.getStreet().toLowerCase().contains(word.toLowerCase())) {
+                                c.getLastName().toLowerCase().contains(word.toLowerCase())) {
                             customerList.add(c);
 
                         }

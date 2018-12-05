@@ -82,7 +82,7 @@ public class ClosingReportDetailsDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(CLOSING_REPORT_DETAILS_COLUMN_ID, closingReportDetails.getClosing_report_detailsId());
+        val.put(CLOSING_REPORT_DETAILS_COLUMN_ID, closingReportDetails.getClosingReportDetailsId());
         val.put(CLOSING_REPORT_DETAILS_COLUMN_ACTUAL_VALUE, closingReportDetails.getActualValue());
         val.put(CLOSING_REPORT_DETAILS_COLUMN_EXPECTED_VALUE, closingReportDetails.getExpectedValue());
         val.put(CLOSING_REPORT_DETAILS_COLUMN_DIFFERENT_VALUE, closingReportDetails.getDifferentValue());

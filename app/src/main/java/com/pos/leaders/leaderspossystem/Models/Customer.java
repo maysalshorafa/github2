@@ -228,6 +228,7 @@ public class Customer {
                 ","+"\""+"country"+ "\""+":" + "\""+  country +"\"" +
                 ","+"\""+"countryCode"+ "\""+":" + "\""+  countryCode +"\"" +
                 ","+"\""+"balance"+ "\""+":" + "\""+ balance +"\"" +
+                ","+"\""+"customerType"+ "\""+":" + "\""+ customerType +"\"" +
                 '}';
     }
 
