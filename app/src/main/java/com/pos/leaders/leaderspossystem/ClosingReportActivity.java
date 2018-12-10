@@ -216,20 +216,16 @@ public class ClosingReportActivity extends AppCompatActivity {
         double cash_plus = 0, cash_minus = 0;
         double check_plus = 0, check_minus = 0;
         double creditCard_plus = 0, creditCard_minus = 0;
-       List<CashPayment>cashPaymentsList =cashPaymentList(orders);
-        for(int i=0 ; i<cashPaymentsList.size();i++){
-            cash_plus += cashPaymentsList.get(i).getAmount()*cashPaymentsList.get(i).getCurrencyRate();
-        }
         for (Payment p : payments) {
             int i = 0;
             switch (p.getPaymentWay()) {
 
-             /**   case CONSTANT.CASH:
+               case CONSTANT.CASH:
                     if (p.getAmount() > 0)
                         cash_plus += p.getAmount();
                     else
                         cash_minus += p.getAmount();
-                    break;**/
+                    break;
                 case CONSTANT.CREDIT_CARD:
                     if (p.getAmount() > 0)
                         creditCard_plus += p.getAmount();

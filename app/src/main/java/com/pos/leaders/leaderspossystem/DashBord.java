@@ -515,7 +515,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                            // btZReport.setEnabled(false);
                         } else
                             btZReport.setEnabled(true);
-                        btAReport.setEnabled(true);
+                        btAReport.setEnabled(false);
                         salesCart.setEnabled(true);
                     }
 
