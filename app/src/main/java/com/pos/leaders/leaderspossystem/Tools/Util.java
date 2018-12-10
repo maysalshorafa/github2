@@ -45,6 +45,10 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import POSAPI.POSInterfaceAPI;
+import POSAPI.POSUSBAPI;
+import POSSDK.POSSDK;
+
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImages;
 
 
@@ -53,7 +57,7 @@ import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImag
  */
 
 public class Util {
-
+    static POSSDK pos;
     private static final String INSTALLATION = "INSTALLATION.rd";
     private static final String LOG_TAG = "Tools_Util";
     public static Locale locale = new Locale("en");
@@ -502,11 +506,14 @@ public class Util {
 
     public static void sendClosingReport(final Context context, final String res){
         final String SAMPLE_FILE = "closingreport.pdf";
-
+        final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
             new AsyncTask<Void, Void, Void>(){
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
+                    int i = posInterfaceAPI.OpenDevice();
+                    pos = new POSSDK(posInterfaceAPI);
+
                 }
                 @Override
                 protected void onPostExecute(Void aVoid) {
@@ -520,6 +527,11 @@ public class Util {
                         f.readFully(data);
                         pdfLoadImages(data,context);
                         //pdfLoadImages1(data);
+                        pos.systemFeedLine(2);
+                        pos.systemCutPaper(66, 0);
+                        pos.cashdrawerOpen(0, 20, 20);
+
+                        posInterfaceAPI.CloseDevice();
                     }
                     catch(Exception ignored)
                     {

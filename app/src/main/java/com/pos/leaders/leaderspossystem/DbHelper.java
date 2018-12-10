@@ -38,6 +38,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule11DBAdapter;
@@ -299,6 +300,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(OrderDetailsDBAdapter.addColumnText("key"));
                     db.execSQL(OrderDBAdapter.addColumnText("key"));
                     db.execSQL(PaymentDBAdapter.addColumn("key"));
+                    db.execSQL(PosInvoiceDBAdapter.DATABASE_CREATE);
                     break;
             }
         } catch (SQLException e) {

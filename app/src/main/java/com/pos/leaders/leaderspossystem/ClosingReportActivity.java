@@ -37,13 +37,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClosingReportActivity extends AppCompatActivity {
-    EditText cashActualValue , checkActualValue ,creditActualValue ,shekelActualValue ,usdActualValue , eurActualValue , gbpActualValue , totalActualValue;
-    TextView cashExpectedValue , checkExpectedValue ,creditExpectedValue ,shekelExpectedValue ,usdExpectedValue , eurAExpectedValue , gbpExpectedValue , totalExpectedValue;
-    TextView cashDifferentValue , checkDifferentValue ,creditDifferentValue ,shekelDifferentValue ,usdDifferentValue , eurDifferentValue , gbpDifferentValue , totalDifferentValue;
+    EditText opiningActualValue,cashActualValue , checkActualValue ,creditActualValue ,shekelActualValue ,usdActualValue , eurActualValue , gbpActualValue , totalActualValue;
+    TextView opiningExpectedValue,cashExpectedValue , checkExpectedValue ,creditExpectedValue ,shekelExpectedValue ,usdExpectedValue , eurAExpectedValue , gbpExpectedValue , totalExpectedValue;
+    TextView opiningDifferentValue,cashDifferentValue , checkDifferentValue ,creditDifferentValue ,shekelDifferentValue ,usdDifferentValue , eurDifferentValue , gbpDifferentValue , totalDifferentValue;
     Button calculate , print ;
-    double expectedCash=0 , expectedCheck=0 ,expectedCredit=0 , expectedShekel=0 , expectedUsd=0 , expectedEur=0 , expectedGbp=0 , expectedTotal=0;
-    double actualCash=0 , actualCheck=0 , actualCredit=0 , actualShekel=0 , actualUsd=0 , actualEur=0 , actualGbp=0 ,actualTotal=0;
-
+    double  expectedOpining=0,expectedCash=0 , expectedCheck=0 ,expectedCredit=0 , expectedShekel=0 , expectedUsd=0 , expectedEur=0 , expectedGbp=0 , expectedTotal=0;
+    double actualOpining=0 ,actualCash=0 , actualCheck=0 , actualCredit=0 , actualShekel=0 , actualUsd=0 , actualEur=0 , actualGbp=0 ,actualTotal=0;
+    OpiningReport opiningReport = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +61,12 @@ public class ClosingReportActivity extends AppCompatActivity {
         closingReportDetailsDBAdapter.open();
         final OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(getApplicationContext());
         opiningReportDBAdapter.open();
+        try {
+            opiningReport = opiningReportDBAdapter.getLastRow();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        opiningActualValue = (EditText) findViewById(R.id.actualOpiningValue);
         cashActualValue = (EditText) findViewById(R.id.actualCashValue);
         checkActualValue = (EditText) findViewById(R.id.actualCheckValue);
         creditActualValue = (EditText) findViewById(R.id.actualCreditValue);
@@ -69,6 +75,7 @@ public class ClosingReportActivity extends AppCompatActivity {
         eurActualValue = (EditText) findViewById(R.id.actualEurValue);
         gbpActualValue = (EditText) findViewById(R.id.actualGbpValue);
         totalActualValue = (EditText) findViewById(R.id.actualTotalValue);
+        opiningExpectedValue =(TextView)findViewById(R.id.expectedOpiningValue);
         cashExpectedValue =(TextView)findViewById(R.id.expectedCashValue);
         checkExpectedValue =(TextView)findViewById(R.id.expectedCheckValue);
         creditExpectedValue =(TextView)findViewById(R.id.expectedCreditValue);
@@ -77,6 +84,7 @@ public class ClosingReportActivity extends AppCompatActivity {
         eurAExpectedValue =(TextView)findViewById(R.id.expectedEurValue);
         gbpExpectedValue =(TextView)findViewById(R.id.expectedGbpValue);
         totalExpectedValue =(TextView)findViewById(R.id.expectedTotalValue);
+        opiningDifferentValue =(TextView)findViewById(R.id.differentOpiningValue);
         cashDifferentValue =(TextView)findViewById(R.id.differentCashValue);
         checkDifferentValue =(TextView)findViewById(R.id.differentCheckValue);
         creditDifferentValue=(TextView)findViewById(R.id.differentCreditValue);
@@ -117,7 +125,6 @@ public class ClosingReportActivity extends AppCompatActivity {
                                                     OrderDBAdapter orderDBAdapter = new OrderDBAdapter(getApplicationContext());
                                                     orderDBAdapter.open();
                                                     Order order = orderDBAdapter.getLast();
-                                                    OpiningReport opiningReport = opiningReportDBAdapter.getLastRow();
                                               long i =  closingReportDBAdapter.insertEntry(actualTotal,expectedTotal,expectedTotal,new Timestamp(System.currentTimeMillis()),opiningReport.getOpiningReportId(),order.getOrderId());
                                                if(i>0){
                                                         closingReportDetailsDBAdapter.insertEntry(i,actualCash,expectedCash,actualCash-expectedCash,CONSTANT.CASH,"Shekel");
@@ -143,6 +150,7 @@ public class ClosingReportActivity extends AppCompatActivity {
                                                    closingReportDetailsDBAdapter.insertEntry(i,actualCredit,expectedCredit,actualCredit-expectedCredit,CONSTANT.CREDIT_CARD,"Shekel");
                                                     //print report
                                                    JSONObject res = new JSONObject();
+                                                   res.put("actualOpining",actualOpining);
                                                    res.put("actualCash",actualCash);
                                                    res.put("actualCheck",actualCheck);
                                                    res.put("actualCredit",actualCredit);
@@ -158,6 +166,7 @@ public class ClosingReportActivity extends AppCompatActivity {
                                                    res.put("expectedUsd",expectedUsd);
                                                    res.put("expectedEur",expectedEur);
                                                    res.put("expectedGbp",expectedGbp);
+                                                   res.put("expectedOpining",expectedOpining);
                                                    res.put("expectedTotal",expectedTotal);
                                                   Util.sendClosingReport(ClosingReportActivity.this,res.toString());
                                                }
@@ -299,6 +308,8 @@ public class ClosingReportActivity extends AppCompatActivity {
         expectedUsd=usd_plus-usd_minus;
         expectedEur=eur_plus-eur_minus;
         expectedGbp=gbp_plus-gbp_minus;
+        expectedOpining=opiningReport.getAmount();
+        opiningExpectedValue.setText(Util.makePrice(expectedOpining));
         cashExpectedValue.setText(Util.makePrice(expectedCash));
         checkExpectedValue.setText(Util.makePrice(expectedCheck));
         creditExpectedValue.setText(Util.makePrice(expectedCredit));
@@ -310,7 +321,9 @@ public class ClosingReportActivity extends AppCompatActivity {
 
     }
   private void calculateMethodAmount() throws Exception {
-
+      if(!opiningActualValue.getText().toString().equals("")){
+          actualOpining= Double.parseDouble(opiningActualValue.getText().toString());
+      }
       if(!cashActualValue.getText().toString().equals("")){
          actualCash= Double.parseDouble(cashActualValue.getText().toString());
       }
@@ -332,6 +345,7 @@ public class ClosingReportActivity extends AppCompatActivity {
       if(!totalActualValue.getText().toString().equals("")){
           actualTotal= Double.parseDouble(totalActualValue.getText().toString());
       }
+      opiningDifferentValue.setText(Util.makePrice(actualOpining-expectedOpining));
       cashDifferentValue.setText(Util.makePrice(actualCash-expectedCash));
       checkDifferentValue.setText(Util.makePrice(actualCheck-expectedCheck));
       creditDifferentValue.setText(Util.makePrice(actualCredit-expectedCredit));

@@ -675,6 +675,12 @@ public class PdfUA {
         insertCell(dateTable, context.getString(R.string.expected), Element.ALIGN_LEFT, 1, dateFont);
         insertCell(dateTable, context.getString(R.string.different), Element.ALIGN_LEFT, 1, dateFont);
 
+        insertCell(dateTable, context.getString(R.string.opening_report), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("actualOpining")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("expectedOpining")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable,  jsonObject.getDouble("actualOpining")-jsonObject.getDouble("expectedOpining")+"", Element.ALIGN_LEFT, 1, dateFont);
+
+
         insertCell(dateTable, CONSTANT.CASH, Element.ALIGN_LEFT, 1, dateFont);
         insertCell(dateTable, jsonObject.getDouble("actualCash")+"", Element.ALIGN_LEFT, 1, dateFont);
         insertCell(dateTable, jsonObject.getDouble("expectedCash")+"", Element.ALIGN_LEFT, 1, dateFont);
