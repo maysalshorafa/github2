@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Tools.Generators;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -344,7 +345,12 @@ public class OrderDBAdapter {
 		}
 
 	}
-	public static String addColumn(String columnName) {
+	public static String addColumnReal(String columnName) {
+		String dbc = "ALTER TABLE " + ORDER_TABLE_NAME
+				+ " add column " + columnName + " REAL default 0.0;";
+		return dbc;
+	}
+	public static String addColumnText(String columnName) {
 		String dbc = "ALTER TABLE " + ORDER_TABLE_NAME
 				+ " add column " + columnName + " TEXT  DEFAULT '' ;";
 		return dbc;

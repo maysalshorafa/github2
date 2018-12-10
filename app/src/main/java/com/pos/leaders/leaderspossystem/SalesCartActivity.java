@@ -2822,6 +2822,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     Customer customer = customerDBAdapter.getCustomerByName("guest");
                     SESSION._ORDERS.setCustomer(customer);
                     setCustomer(SESSION._ORDERS.getCustomer());
+
                 } else {
                     Customer customer = customerDBAdapter.getCustomerByID(SESSION._ORDERS.getCustomerId());
                     SESSION._ORDERS.setCustomer(customer);
@@ -2833,6 +2834,15 @@ public class SalesCartActivity extends AppCompatActivity {
         //region CreditCard
         if (requestCode == REQUEST_CREDIT_CARD_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
+                if(orderDocumentFlag){
+                    try {
+                        updateOrderDocumentStatus();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
 
                 if (data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote).equals("anyType{}"))
                     return;
@@ -2841,20 +2851,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
-                if(saleID<=0){
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if(saleID<=0){
-                        try {
-                            Thread.sleep(600);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+                Order order = saleDBAdapter.getOrderById(saleID);
                 long tempSaleId = 0;
                 // Club with point and amount
                 if (clubType == 2) {
@@ -2900,18 +2897,18 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // ORDER_DETAILS Sales man Region
                 for (int i = 0; i < orderIdList.size(); i++) {
-                    OrderDetails order = orderIdList.get(i);
+                    OrderDetails orderDetails = orderIdList.get(i);
                     long customerAssestId = custmerAssetstIdList.get(i);
                     for (int j = 0; j < SESSION._ORDER_DETAILES.size(); j++) {
                         OrderDetails o = SESSION._ORDER_DETAILES.get(j);
                         long tempOrderId = orderId.get(i);
-                        if (o == order) {
+                        if (o == orderDetails) {
                             if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
                                 o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
                                 custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPaidAmount(), 0, "ORDER_DETAILS", SESSION._ORDERS.getCreatedAt());
@@ -2933,7 +2930,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(SalesCartActivity.this);
                 paymentDBAdapter.open();
 
-                long paymentID = paymentDBAdapter.insertEntry(CREDIT_CARD, saleTotalPrice, saleID);
+                long paymentID = paymentDBAdapter.insertEntry(CREDIT_CARD, saleTotalPrice, saleID,order.getOrderKey());
 
                 paymentDBAdapter.close();
 
@@ -2975,6 +2972,15 @@ public class SalesCartActivity extends AppCompatActivity {
         //region PinPad
         if (requestCode == REQUEST_PIN_PAD_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
+                if(orderDocumentFlag){
+                    try {
+                        updateOrderDocumentStatus();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
 
                 CreditCardPayment ccp = new CreditCardPayment();
 
@@ -3018,21 +3024,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
-                if(saleID<=0){
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if(saleID<=0){
-                        try {
-                            Thread.sleep(600);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                long tempSaleId;
+                Order order = saleDBAdapter.getOrderById(saleID);
                 saleDBAdapter.close();
 
                 CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
@@ -3049,23 +3041,22 @@ public class SalesCartActivity extends AppCompatActivity {
                 custmerAssetDB.open();
                 SESSION._ORDERS.setOrderId(saleID);
                 if (forSaleMan) {
-                    tempSaleId = saleID;
                     custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._ORDERS.getTotalPrice(), 0, "ORDER", SESSION._ORDERS.getCreatedAt());
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
                 }
                 // ORDER_DETAILS Sales man Region
                 for (int i = 0; i < orderIdList.size(); i++) {
-                    OrderDetails order = orderIdList.get(i);
+                    OrderDetails orderDetails = orderIdList.get(i);
                     long customerAssestId = custmerAssetstIdList.get(i);
                     for (int j = 0; j < SESSION._ORDER_DETAILES.size(); j++) {
                         OrderDetails o = SESSION._ORDER_DETAILES.get(j);
                         long tempOrderId = orderId.get(i);
-                        if (o == order) {
+                        if (o == orderDetails) {
                             if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
                                 o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
                                 custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPaidAmount(), 0, "ORDER_DETAILS", SESSION._ORDERS.getCreatedAt());
@@ -3087,7 +3078,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(SalesCartActivity.this);
                 paymentDBAdapter.open();
 
-                long paymentID = paymentDBAdapter.insertEntry(CREDIT_CARD, saleTotalPrice, saleID);
+                long paymentID = paymentDBAdapter.insertEntry(CREDIT_CARD, saleTotalPrice, saleID,order.getOrderKey());
 
                 paymentDBAdapter.close();
 
@@ -3119,28 +3110,22 @@ public class SalesCartActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_CHECKS_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
-
+                if(orderDocumentFlag){
+                    try {
+                        updateOrderDocumentStatus();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 final double result = data.getDoubleExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, 0.0f);
                 SESSION._ORDERS.setTotalPaidAmount(result);
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
-                if(saleID<=0){
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if(saleID<=0){
-                        try {
-                            Thread.sleep(600);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                long tempSaleId = 0;
+                Order order = saleDBAdapter.getOrderById(saleID);
                 // Club with point and amount
                 if (clubType == 2 && clubAmount!=0) {
                     pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
@@ -3172,24 +3157,23 @@ public class SalesCartActivity extends AppCompatActivity {
                 custmerAssetDB.open();
                 SESSION._ORDERS.setOrderId(saleID);
                 if (forSaleMan) {
-                    tempSaleId = saleID;
                     custmerAssetDB.insertEntry(saleID, custmerSaleAssetstId, SESSION._ORDERS.getTotalPrice(), 0, "ORDER", SESSION._ORDERS.getCreatedAt());
                 }
 
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // ORDER_DETAILS Sales man Region
                 for (int i = 0; i < orderIdList.size(); i++) {
-                    OrderDetails order = orderIdList.get(i);
+                    OrderDetails orderDetails = orderIdList.get(i);
                     long customerAssestId = custmerAssetstIdList.get(i);
                     for (int j = 0; j < SESSION._ORDER_DETAILES.size(); j++) {
                         OrderDetails o = SESSION._ORDER_DETAILES.get(j);
                         long tempOrderId = orderId.get(i);
-                        if (o == order) {
+                        if (o == orderDetails) {
                             if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
                                 o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
                                 custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPaidAmount(), 0, "ORDER_DETAILS", SESSION._ORDERS.getCreatedAt());
@@ -3208,7 +3192,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
                 paymentDBAdapter.open();
 
-                long paymentID = paymentDBAdapter.insertEntry(CHECKS, saleTotalPrice, saleID);
+                long paymentID = paymentDBAdapter.insertEntry(CHECKS, saleTotalPrice, saleID, order.getOrderKey());
 
                 paymentDBAdapter.close();
 
@@ -3261,20 +3245,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
-                if(saleIDforCash<=0){
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if(saleIDforCash<=0){
-                        try {
-                            Thread.sleep(600);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+                Order order = saleDBAdapter.getOrderById(saleIDforCash);
                 SESSION._ORDERS.setOrderId(saleIDforCash);
 
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess, new Order(SESSION._ORDERS));
@@ -3309,18 +3280,18 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // ORDER_DETAILS Sales man Region
                 for (int i = 0; i < orderIdList.size(); i++) {
-                    OrderDetails order = orderIdList.get(i);
+                    OrderDetails orderDetails = orderIdList.get(i);
                     long customerAssestId = custmerAssetstIdList.get(i);
                     for (int j = 0; j < SESSION._ORDER_DETAILES.size(); j++) {
                         OrderDetails o = SESSION._ORDER_DETAILES.get(j);
                         long tempOrderId = orderId.get(i);
-                        if (o == order) {
+                        if (o == orderDetails) {
                             if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
                                 o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
                                 custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPaidAmount(), 0, "ORDER_DETAILS", SESSION._ORDERS.getCreatedAt());
@@ -3339,7 +3310,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 custmerAssetDB.close();
                 // End ORDER_DETAILS And CustomerAssistant Region
                 // Payment Region
-                long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash);
+                long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash,order.getOrderKey());
 
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
                 SESSION._ORDERS.setPayment(payment);
@@ -3358,6 +3329,15 @@ public class SalesCartActivity extends AppCompatActivity {
         //region Currency Cash Activity Region
         if (requestCode == REQUEST_CASH_ACTIVITY_WITH_CURRENCY_CODE) {
             if (resultCode == RESULT_OK) {
+                if(orderDocumentFlag){
+                    try {
+                        updateOrderDocumentStatus();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
@@ -3381,28 +3361,15 @@ public class SalesCartActivity extends AppCompatActivity {
                 long firstCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID, 0);
 
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
-                if(saleIDforCash<=0){
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if(saleIDforCash<=0){
-                        try {
-                            Thread.sleep(600);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+                Order order = saleDBAdapter.getOrderById(saleIDforCash);
                 SESSION._ORDERS.setOrderId(saleIDforCash);
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess, new Order(SESSION._ORDERS));
 
                 if (firstCurrencyAmount > 0) {
-                //    cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Timestamp(System.currentTimeMillis()));
+                    //         cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Timestamp(System.currentTimeMillis()));
                 }
                 if (secondCurrencyAmount > 0) {
-                //    cashPaymentDBAdapter.insertEntry(saleIDforCash, secondCurrencyAmount, secondCurrencyId, new Timestamp(System.currentTimeMillis()));
+                    //      cashPaymentDBAdapter.insertEntry(saleIDforCash, secondCurrencyAmount, secondCurrencyId, new Timestamp(System.currentTimeMillis()));
                 }
                 cashPaymentDBAdapter.close();
 
@@ -3436,18 +3403,18 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // ORDER_DETAILS Sales man Region
                 for (int i = 0; i < orderIdList.size(); i++) {
-                    OrderDetails order = orderIdList.get(i);
+                    OrderDetails orderDetails = orderIdList.get(i);
                     long customerAssestId = custmerAssetstIdList.get(i);
                     for (int j = 0; j < SESSION._ORDER_DETAILES.size(); j++) {
                         OrderDetails o = SESSION._ORDER_DETAILES.get(j);
                         long tempOrderId = orderId.get(i);
-                        if (o == order) {
+                        if (o == orderDetails) {
                             if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
                                 o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
                                 custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getPaidAmount(), 0, "ORDER_DETAILS", SESSION._ORDERS.getCreatedAt());
@@ -3466,7 +3433,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 // End ORDER_DETAILS And CustomerAssistant Region
 
                 // Payment Region
-                long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash);
+                long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash,order.getOrderKey());
 
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
 
@@ -3482,6 +3449,15 @@ public class SalesCartActivity extends AppCompatActivity {
         //endregion
         if (requestCode == REQUEST_MULTI_CURRENCY_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
+                if(orderDocumentFlag){
+                    try {
+                        updateOrderDocumentStatus();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 JSONArray jsonArray = null;
                 try {
                     CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(this);
@@ -3497,7 +3473,6 @@ public class SalesCartActivity extends AppCompatActivity {
                     orderDBAdapter.open();
                     custmerAssetDB.open();
                     paymentDBAdapter.open();
-                    long tempSaleId = 0;
                     double TotalPaidAmount = 0;
                     double change = 0;
 
@@ -3514,20 +3489,9 @@ public class SalesCartActivity extends AppCompatActivity {
                     }
                     SESSION._ORDERS.setTotalPaidAmount(TotalPaidAmount);
                     saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
-                    if(saleIDforCash<=0){
-                        try {
-                            Thread.sleep(300);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        if(saleIDforCash<=0){
-                            try {
-                                Thread.sleep(600);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
+                    Order order = saleDBAdapter.getOrderById(saleIDforCash);
+                    Log.d("oooo",order.toString());
+
                     SESSION._ORDERS.setOrderId(saleIDforCash);
                     for (int i = 0 ;i<paymentTableArrayList.size();i++){
                         currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,paymentTableArrayList.get(i).getTendered(),paymentTableArrayList.get(i).getCurrency().getType());
@@ -3563,23 +3527,23 @@ public class SalesCartActivity extends AppCompatActivity {
                         usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                     }
                     if (forSaleMan) {
-                        tempSaleId = saleIDforCash;
                         custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._ORDERS.getTotalPrice(), 0, "ORDER", SESSION._ORDERS.getCreatedAt());
                     }
                     // insert order region
+
                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                        long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id());
+                        long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey());
                         orderId.add(orderid);
                         //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                     }
                     // ORDER_DETAILS Sales man Region
                     for (int i = 0; i < orderIdList.size(); i++) {
-                        OrderDetails order = orderIdList.get(i);
+                        OrderDetails orderDetails = orderIdList.get(i);
                         long customerAssestId = custmerAssetstIdList.get(i);
                         for (int j = 0; j < SESSION._ORDER_DETAILES.size(); j++) {
                             OrderDetails o = SESSION._ORDER_DETAILES.get(j);
                             long tempOrderId = orderId.get(i);
-                            if (o == order) {
+                            if (o == orderDetails) {
                                 if (custmerAssetstIdList.get(i) != custmerSaleAssetstId) {
                                     o.setCustomer_assistance_id(custmerAssetstIdList.get(i));
                                     custmerAssetDB.insertEntry(tempOrderId, customerAssestId, o.getItemTotalPrice(), 0, "ORDER_DETAILS", SESSION._ORDERS.getCreatedAt());
@@ -3598,7 +3562,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     // End ORDER_DETAILS And CustomerAssistant Region
 
                     // Payment Region
-                    long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash);
+                    long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash,order.getOrderKey());
 
                     Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
 
@@ -3616,7 +3580,6 @@ public class SalesCartActivity extends AppCompatActivity {
         }
 
     }
-
     private void updateOrderDocumentStatus() throws JSONException, IOException {
             new AsyncTask<Void, Void, Void>() {
                 @Override

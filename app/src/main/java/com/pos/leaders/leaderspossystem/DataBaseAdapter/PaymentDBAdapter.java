@@ -28,8 +28,9 @@ public class PaymentDBAdapter {
 	protected static final String PAYMENT_COLUMN_PAYMENTWAY = "paymentWay";
 	protected static final String PAYMENT_COLUMN_ORDERID = "orderId";
 	protected static final String PAYMENT_COLUMN_AMOUNT = "amount";
+	protected static final String PAYMENT_COLUMN_KEY = "key";
 
-	public static final String DATABASE_CREATE = "CREATE TABLE `payment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `paymentWay` TEXT NOT NULL, `amount` REAL NOT NULL,`orderId` INTEGER, FOREIGN KEY(`orderId`) REFERENCES `_Order.id`)";
+	public static final String DATABASE_CREATE = "CREATE TABLE `payment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `paymentWay` TEXT NOT NULL, `amount` REAL NOT NULL,`orderId` INTEGER ,`key` TEXT, FOREIGN KEY(`orderId`) REFERENCES `_Order.id`)";
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
 	// Context of the application using the database.
@@ -55,8 +56,8 @@ public class PaymentDBAdapter {
 		return db;
 	}
 
-	public long insertEntry(String paymentWay,double amount, long saleId) {
-		Payment payment = new Payment(Util.idHealth(this.db, PAYMENT_TABLE_NAME, PAYMENT_COLUMN_ID), paymentWay, amount, saleId);
+	public long insertEntry(String paymentWay,double amount, long saleId, String orderDetailsKey) {
+		Payment payment = new Payment(Util.idHealth(this.db, PAYMENT_TABLE_NAME, PAYMENT_COLUMN_ID), paymentWay, amount, saleId,orderDetailsKey);
 		sendToBroker(MessageType.ADD_PAYMENT, payment, this.context);
 
 		try {
@@ -88,6 +89,8 @@ public class PaymentDBAdapter {
 		val.put(PAYMENT_COLUMN_PAYMENTWAY, payment.getPaymentWay());
 		val.put(PAYMENT_COLUMN_AMOUNT,payment.getAmount() );
 		val.put(PAYMENT_COLUMN_ORDERID, payment.getOrderId());
+		val.put(PAYMENT_COLUMN_KEY,payment.getOrderKey());
+
 		try {
 			return db.insert(PAYMENT_TABLE_NAME, null, val);
 		} catch (SQLException ex) {
@@ -136,7 +139,12 @@ public class PaymentDBAdapter {
         return new Payment(Long.parseLong(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_PAYMENTWAY)),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_AMOUNT))),
-                Long.parseLong(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_ORDERID))));
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_ORDERID))),cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_KEY)));
     }
+	public static String addColumn(String columnName) {
+		String dbc = "ALTER TABLE " + PAYMENT_TABLE_NAME
+				+ " add column " + columnName + " TEXT  DEFAULT '' ;";
+		return dbc;
+	}
 
 }

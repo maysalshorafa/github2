@@ -1,7 +1,5 @@
 package com.pos.leaders.leaderspossystem.Models;
 
-import android.util.Log;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -25,7 +23,7 @@ public class OrderDetails {
 	private double unitPrice;
 	private double paidAmount;
 	private double discount;
-
+	private String orderKey;
 	@JsonIgnore
 	public double rowDiscount = 0;
 
@@ -95,7 +93,7 @@ public class OrderDetails {
 		initObjectID();
 	}
 
-	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id) {
+	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id , String key) {
 		this.orderDetailsId = orderDetailsId;
 		this.productId = productId;
 		this.quantity = quantity;
@@ -105,6 +103,7 @@ public class OrderDetails {
 		this.unitPrice = original_price;
 		this.discount = discount;
 		this.customer_assistance_id = customer_assistance_id;
+		this.orderKey =key;
 		initObjectID();
 	}
 
@@ -150,7 +149,7 @@ public class OrderDetails {
 	}
 
 	public OrderDetails(OrderDetails o) {
-		this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+		this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id(),o.getOrderKey());
 		this.product = o.getProduct();
 	}
 
@@ -185,6 +184,14 @@ public class OrderDetails {
 		return orderId;
 	}
 
+	public String getOrderKey() {
+		return orderKey;
+	}
+
+	public void setOrderKey(String orderKey) {
+		this.orderKey = orderKey;
+	}
+
 	public void setOrderId(long orderId) {
 
 		this.orderId = orderId;
@@ -216,7 +223,6 @@ public class OrderDetails {
 		double temp = (unitPrice * (1 - (discount / 100)));
 		if (rowDiscount == 0)
 			return temp*quantity;
-		Log.d("rowDiscount11",rowDiscount+"");
 		return (temp - (temp * (rowDiscount / 100)))*this.quantity;
 	}
 
@@ -248,8 +254,7 @@ public class OrderDetails {
 			this.paidAmount=0.0;
 		}else {
 			this.paidAmount = (unitPrice * (discount / 100));
-		}
-	}
+		}	}
 
 
 
@@ -290,7 +295,6 @@ public class OrderDetails {
 
 
 	@Override
-
 	public String toString() {
 		return "{"  +
 				"\"productId\":" + productId +
@@ -301,7 +305,8 @@ public class OrderDetails {
 				", \"discount\":" + discount +
 				", \"name\":" + "\""+product.getName() +"\""+
 				", \"scannable\":" + "\""+scannable +"\""+
-				", \"sku\":"+"\""+product.getSku() +"\""+
+				", \"sku\":"+"\""+product.getSku()  +"\""+
+				", \"orderKey\":" + "\""+orderKey +"\""+
 				'}';
 	}
 

@@ -34,13 +34,14 @@ public class OrderDetailsDBAdapter {
 	protected static final String ORDER_DETAILS_COLUMN_UNIT_PRICE = "unit_price";
 	protected static final String ORDER_DETAILES_COLUMN_DISCOUNT = "discount";
 	protected static final String ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID = "custmerAssestID";
+	protected static final String ORDER_DETAILES_COLUMN_KEY = "key";
 
 
 	public static final String DATABASE_CREATE = "CREATE TABLE `OrderDetails` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL , `product_id` INTEGER," +
 			" `quantity` INTEGER, `order_id` INTEGER, " +
 			" '" + ORDER_DETAILS_COLUMN_PAID_AMOUNT + "' REAL , '" + ORDER_DETAILS_COLUMN_UNIT_PRICE + "' REAL, '" + ORDER_DETAILES_COLUMN_DISCOUNT + "' REAL , '" + ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID + "' INTEGER , " +
+			ORDER_DETAILES_COLUMN_KEY + " TEXT , " +
 			"FOREIGN KEY(`product_id`) REFERENCES `products.id`, FOREIGN KEY(`order_id`) REFERENCES `_Order.id` )";
-
     // Variable to hold the database instance
 	private SQLiteDatabase db;
 	// Context of the application using the database.
@@ -79,7 +80,8 @@ public class OrderDetailsDBAdapter {
         val.put(ORDER_DETAILS_COLUMN_UNIT_PRICE, o.getUnitPrice());
         val.put(ORDER_DETAILES_COLUMN_DISCOUNT, o.getDiscount());
 		val.put(ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID,o.getCustomer_assistance_id());
-        try {
+		val.put(ORDER_DETAILES_COLUMN_KEY,o.getOrderKey());
+		try {
             return db.insert(ORDER_DETAILS_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e("ORDER_DETAILS DB insert", "inserting Entry at " + ORDER_DETAILS_TABLE_NAME + ": " + ex.getMessage());
@@ -87,27 +89,27 @@ public class OrderDetailsDBAdapter {
         }
 	}
 
-    public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID) {
-        OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID);
-       sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
+	public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID , String orderDetailsKey) {
+		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey);
+		sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
 
-        try {
-            long insertResult = insertEntry(o);
-            return insertResult;
-        } catch (SQLException ex) {
-            Log.e("ORDER_DETAILS DB ", "inserting Entry at " + ORDER_DETAILS_TABLE_NAME + ": " + ex.getMessage());
-            return 0;
-        }
-    }
-	public long insertEntryFromInvoice(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID) {
-		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID);
+		try {
+			long insertResult = insertEntry(o);
+			return insertResult;
+		} catch (SQLException ex) {
+			Log.e("ORDER_DETAILS DB insertEntry", "inserting Entry at " + ORDER_DETAILS_TABLE_NAME + ": " + ex.getMessage());
+			return 0;
+		}
+	}
+	public long insertEntryFromInvoice(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID  , String orderDetailsKey) {
+		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey);
 		// sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
 
 		try {
 			long insertResult = insertEntry(o);
 			return insertResult;
 		} catch (SQLException ex) {
-			Log.e("ORDER_DETAILS DB", "inserting Entry at " + ORDER_DETAILS_TABLE_NAME + ": " + ex.getMessage());
+			Log.e("ORDER_DETAILS DB insertEntry", "inserting Entry at " + ORDER_DETAILS_TABLE_NAME + ": " + ex.getMessage());
 			return 0;
 		}
 	}
@@ -133,12 +135,17 @@ public class OrderDetailsDBAdapter {
 				cursor.getDouble(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_PAID_AMOUNT)),
 				cursor.getDouble(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_UNIT_PRICE)),
 				cursor.getDouble(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_DISCOUNT)),
-				cursor.getLong(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID))
-		);
+				cursor.getLong(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID)),
+				cursor.getString(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_KEY)));
 	}
-	public static String addColumn(String columnName) {
+	public static String addColumnReal(String columnName) {
 		String dbc = "ALTER TABLE " + ORDER_DETAILS_TABLE_NAME
 				+ " add column " + columnName + " REAL default 0.0;";
+		return dbc;
+	}
+	public static String addColumnText(String columnName) {
+		String dbc = "ALTER TABLE " + ORDER_DETAILS_TABLE_NAME
+				+ " add column " + columnName + " TEXT  DEFAULT '' ;";
 		return dbc;
 	}
 }

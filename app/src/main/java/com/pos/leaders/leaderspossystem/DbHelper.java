@@ -291,11 +291,14 @@ public class DbHelper extends SQLiteOpenHelper {
                     break;
                 case 2:
                     db.execSQL(ClosingReportDBAdapter.DATABASE_CREATE);
-                    db.execSQL(OrderDBAdapter.addColumn("cartDiscount"));
+                    db.execSQL(OrderDBAdapter.addColumnReal("cartDiscount"));
                     db.execSQL(CashPaymentDBAdapter.addColumn("currencyRate"));
                     db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[0]);
                     db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[1]);
                     db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[2]);
+                    db.execSQL(OrderDetailsDBAdapter.addColumnText("key"));
+                    db.execSQL(OrderDBAdapter.addColumnText("key"));
+                    db.execSQL(PaymentDBAdapter.addColumn("key"));
                     break;
             }
         } catch (SQLException e) {
