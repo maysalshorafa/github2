@@ -37,14 +37,14 @@ public class Order {
 
 	@JsonIgnore
 	private Locale locale = new Locale("en");
-
+	private String orderKey;
 	// region Constructors
 
 
 	public Order() {
 	}
 
-	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name,double cartDiscount) {
+	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name,double cartDiscount , String orderKey) {
 		this.orderId = orderId;
 		this.byUser = byUser;
 		this.createdAt = createdAt;
@@ -55,9 +55,10 @@ public class Order {
 		this.customerId = customerId;
 		this.customer_name = customer_name;
 		this.cartDiscount=cartDiscount;
+		this.orderKey = orderKey;
 	}
 
-	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name, Customer customer) {
+	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name, Customer customer,String orderKey) {
 		this.orderId = orderId;
 		this.byUser = byUser;
 		this.createdAt = createdAt;
@@ -68,6 +69,7 @@ public class Order {
 		this.customerId = customerId;
 		this.customer_name = customer_name;
 		this.customer = customer;
+		this.orderKey=orderKey;
 	}
 
 	public Order(long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount) {
@@ -92,17 +94,16 @@ public class Order {
 	}
 
 	public Order(Order s) {
-		this(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name(), s.getCustomer());
+		this(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name(), s.getCustomer(),s.getOrderKey());
 	}
 
 	public static Order newInstance(Order s) {
-		return new Order(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name(),s.getCartDiscount());
+		return new Order(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name(),s.getCartDiscount(),s.getOrderKey());
 	}
 
 	@JsonIgnore
 	public int getNumberOfItems(){
-		if(orders==null)
-			return 0;
+		if(orders==null) return 0;
 		int count=0;
 		for (OrderDetails od : orders) {
 			count += od.getQuantity();
@@ -174,7 +175,7 @@ public class Order {
 	}
 
 
-	//endregion
+//endregion
 
 	//region Setter
 
@@ -237,19 +238,30 @@ public class Order {
 		this.customer_name = customer_name;
 	}
 
-	//endregion
+	public String getOrderKey() {
+		return orderKey;
+	}
+
+	public void setOrderKey(String orderKey) {
+		this.orderKey = orderKey;
+	}
+
+//endregion
 
 	@Override
 	public String toString() {
-		return "ORDER_DETAILS{" +
+		return "Order{" +
 				"orderId=" + orderId +
 				", byUser=" + byUser +
-				", order_date=" + createdAt +
+				", createdAt=" + createdAt +
 				", replacementNote=" + replacementNote +
 				", status=" + status +
-				", total_price=" + totalPrice +
-				", total_paid_amount=" + totalPaidAmount +
-				", user=" + user +
+				", totalPrice=" + totalPrice +
+				", totalPaidAmount=" + totalPaidAmount +
+				", customerId=" + customerId +
+				", cartDiscount=" + cartDiscount +
+				", customer_name='" + customer_name + '\'' +
+				", orderKey='" + orderKey + '\'' +
 				'}';
 	}
 
