@@ -29,12 +29,14 @@ public class ZReport {
     private double checkTotal;
     private  double creditTotal;
     private double totalPosSales;
+    private double invoiceAmount;
+    private double creditInvoiceAmount;
     public ZReport() {
 
 
     }
 
-    public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double openingTotal) {
+    public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double openingTotal,double invoiceAmount, double creditInvoiceAmount) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -48,6 +50,8 @@ public class ZReport {
         this.checkTotal=checkTotal;
         this.creditTotal=creditTotal;
         this.totalPosSales=totalPosSales;
+        this.invoiceAmount=invoiceAmount;
+        this.creditInvoiceAmount=creditInvoiceAmount;
 
     }
 
@@ -225,6 +229,22 @@ public class ZReport {
         this.totalPosSales = totalPosSales;
     }
 
+    public double getInvoiceAmount() {
+        return invoiceAmount;
+    }
+
+    public void setInvoiceAmount(double invoiceAmount) {
+        this.invoiceAmount = invoiceAmount;
+    }
+
+    public double getCreditInvoiceAmount() {
+        return creditInvoiceAmount;
+    }
+
+    public void setCreditInvoiceAmount(double creditInvoiceAmount) {
+        this.creditInvoiceAmount = creditInvoiceAmount;
+    }
+
     //region OpenFormat
     public String BKMVDATA(int rowNumber,String pc,int totalRows){
 
@@ -254,7 +274,9 @@ public class ZReport {
                 ", checkTotal=" + checkTotal +
                 ", creditTotal=" + creditTotal +
                 ", totalPosSales=" + totalPosSales +
+                ", invoiceAmount=" + invoiceAmount +
+                ", creditInvoiceAmount=" + creditInvoiceAmount +
                 '}';
     }
-    //endregion OpenFormat
+//endregion OpenFormat
 }

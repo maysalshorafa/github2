@@ -309,7 +309,6 @@ public class OrderDetails {
 				", \"orderKey\":" + "\""+orderKey +"\""+
 				'}';
 	}
-
 	public Offer getOffer() {
 		return offer;
 	}

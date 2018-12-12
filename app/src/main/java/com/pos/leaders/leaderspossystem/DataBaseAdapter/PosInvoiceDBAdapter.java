@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -22,11 +23,15 @@ public class PosInvoiceDBAdapter {
     public static final String POS_INVOICE_TABLE_NAME = "pos_invoice";
     // Column Names
     protected static final String POS_INVOICE_COLUMN_ID = "id";
+    protected static final String POS_INVOICE_COLUMN_BO_ID = "boID";
     protected static final String POS_INVOICE_COLUMN_AMOUNT = "amount";
     protected static final String POS_INVOICE_COLUMN_LAST_Z_REPORT = "lastZReportId";
+    protected static final String POS_INVOICE_COLUMN_TYPE = "type";
+    protected static final String POS_INVOICE_COLUMN_STATUS = "status";
 
-    public static final String DATABASE_CREATE = "CREATE TABLE pos_invoice ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "`amount` REAL DEFAULT 0 ," +"`lastZReportId` INTEGER DEFAULT 0 )";
+
+    public static final String DATABASE_CREATE = "CREATE TABLE pos_invoice ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +"`boID` TEXT DEFAULT ''," +
+            "`amount` REAL DEFAULT 0 ," +"`lastZReportId` INTEGER DEFAULT 0 ," +"`type` TEXT DEFAULT ''," +"`status` TEXT DEFAULT '')";
 
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -55,8 +60,8 @@ public class PosInvoiceDBAdapter {
     }
 
 
-    public long insertEntry(double amount,long zReportId) {
-        PosInvoice invoice = new PosInvoice(Util.idHealth(this.db, POS_INVOICE_TABLE_NAME, POS_INVOICE_COLUMN_ID), amount,zReportId);
+    public long insertEntry(double amount,long zReportId,String type,String status,String boID) {
+        PosInvoice invoice = new PosInvoice(Util.idHealth(this.db, POS_INVOICE_TABLE_NAME, POS_INVOICE_COLUMN_ID), amount,zReportId,type,status,boID);
         try {
             return insertEntry(invoice);
         } catch (SQLException ex) {
@@ -72,6 +77,9 @@ public class PosInvoiceDBAdapter {
         val.put(POS_INVOICE_COLUMN_ID, invoice.getId());
         val.put(POS_INVOICE_COLUMN_AMOUNT, invoice.getAmount());
         val.put(POS_INVOICE_COLUMN_LAST_Z_REPORT,invoice.getLastZReportId());
+        val.put(POS_INVOICE_COLUMN_TYPE,invoice.getType());
+        val.put(POS_INVOICE_COLUMN_STATUS,invoice.getStatus());
+        val.put(POS_INVOICE_COLUMN_BO_ID,invoice.getBoID());
         try {
 
             return db.insert(POS_INVOICE_TABLE_NAME, null, val);
@@ -81,10 +89,23 @@ public class PosInvoiceDBAdapter {
         }
 
     }
-    public List<PosInvoice> getPosInvoiceList(long zReportId){
+    public List<PosInvoice> getPosInvoiceList(long zReportId,String status){
         List<PosInvoice> posInvoices = new ArrayList<PosInvoice>();
 
-        Cursor cursor = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where "+POS_INVOICE_COLUMN_LAST_Z_REPORT+"='"+zReportId, null);
+        Cursor cursor = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where "+POS_INVOICE_COLUMN_LAST_Z_REPORT+" = "+zReportId+ " and " + POS_INVOICE_COLUMN_STATUS + " = "+ "'"+ status + "' "+ " and " + POS_INVOICE_COLUMN_TYPE +  " = "+"'"+DocumentType.INVOICE.getValue() +"'", null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            posInvoices.add(makePosInvoice(cursor));
+            cursor.moveToNext();
+        }
+
+        return posInvoices;
+    }
+    public List<PosInvoice> getPosInvoiceListByType(long zReportId,String type){
+        List<PosInvoice> posInvoices = new ArrayList<PosInvoice>();
+
+        Cursor cursor = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where "+POS_INVOICE_COLUMN_LAST_Z_REPORT+" = "+zReportId+ " and " + POS_INVOICE_COLUMN_TYPE + " = "+ "'"+type +"'", null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
@@ -97,8 +118,40 @@ public class PosInvoiceDBAdapter {
     private PosInvoice makePosInvoice(Cursor c){
         return new PosInvoice(c.getLong(c.getColumnIndex(POS_INVOICE_COLUMN_ID)),
                 c.getDouble(c.getColumnIndex(POS_INVOICE_COLUMN_AMOUNT)),
-                c.getLong(c.getColumnIndex(POS_INVOICE_COLUMN_LAST_Z_REPORT)));
-
+                c.getLong(c.getColumnIndex(POS_INVOICE_COLUMN_LAST_Z_REPORT)),
+                c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_TYPE)),
+                c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_STATUS)),
+                c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_BO_ID)));
     }
+    public void updateEntry(PosInvoice invoice) {
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(POS_INVOICE_COLUMN_ID, invoice.getId());
+        val.put(POS_INVOICE_COLUMN_AMOUNT, invoice.getAmount());
+        val.put(POS_INVOICE_COLUMN_LAST_Z_REPORT,invoice.getLastZReportId());
+        val.put(POS_INVOICE_COLUMN_TYPE,invoice.getType());
+        val.put(POS_INVOICE_COLUMN_STATUS,invoice.getStatus());
+        val.put(POS_INVOICE_COLUMN_BO_ID,invoice.getBoID());
+        String where = POS_INVOICE_COLUMN_BO_ID + " = ?";
+        db.update(POS_INVOICE_TABLE_NAME, val, where, new String[]{invoice.getId() + ""});
+    }
+    public PosInvoice getPodInvoiceByBoId(String id) {
+        PosInvoice posInvoice = null;
+        Cursor c = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where boID='" + id + "'", null);
+        if (c.getCount() < 1) // UserName Not Exist
+        {
+            c.close();
+            return posInvoice;
+        }
+        c.moveToFirst();
+        posInvoice =  new PosInvoice(c.getLong(c.getColumnIndex(POS_INVOICE_COLUMN_ID)),
+                c.getDouble(c.getColumnIndex(POS_INVOICE_COLUMN_AMOUNT)),
+                c.getLong(c.getColumnIndex(POS_INVOICE_COLUMN_LAST_Z_REPORT)),
+                c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_TYPE)),
+                c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_STATUS)),
+                c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_BO_ID)));
+        c.close();
 
+        return posInvoice;
+    }
 }

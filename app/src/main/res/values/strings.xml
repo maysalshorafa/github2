@@ -669,6 +669,8 @@
     <string name="no_of_items">NoOfItems</string>
     <string name="status">Status</string>
     <string name="opining_report">Opining Report</string>
+    <string name="cant_make_invoice_check_internet_connection">Cant make invoice check internet connection!!</string>
+
 
 
 </resources>

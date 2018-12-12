@@ -337,7 +337,7 @@ public class MainScreenActivity extends Activity {
 												for(OrderDetails o:SESSION._ORDER_DETAILES){
 												//	orderDBAdapter.insertEntry(o.getProductId(),o.getQuantity(),o.getUserOffer(),saleId);
 												}
-												paymentDBAdapter.insertEntry("cash",saleTotalPrice,saleId);
+												//paymentDBAdapter.insertEntry("cash",saleTotalPrice,saleId);
                                                 ///Controller();
                                                 //print();
                                                 try {

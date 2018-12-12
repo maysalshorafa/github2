@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.Tools;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -13,19 +14,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.OrderDocumentStatus;
 import com.pos.leaders.leaderspossystem.Models.OrderDocuments;
 import com.pos.leaders.leaderspossystem.Models.Payment;
+import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.ReceiptDocuments;
+import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.PdfUA;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
+import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
@@ -60,6 +67,7 @@ public class DocumentControl {
     static double  customerGeneralLedger=0.0;
     static  InvoiceImg invoiceImg;
     static boolean success=false;
+    static JSONObject receiptJsonObject = new JSONObject();
     public static boolean sendOrderDocument(final Context context){
         invoiceImg = new InvoiceImg(context);
         ObjectMapper mapper = new ObjectMapper();
@@ -85,10 +93,11 @@ public class DocumentControl {
                     Log.d("customer",customerData.toString());
                     String docOrder = mapper.writeValueAsString(SESSION._ORDERS);
                     JSONObject orderJson = new JSONObject(docOrder);
-                    String docOrderDetails = mapper.writeValueAsString(SESSION._ORDER_DETAILES);
-                    JSONArray orderDetailsJson = new JSONArray(docOrderDetails);
-                    Log.d("OrderDetailsJson",orderDetailsJson.toString());
-                    orderJson.put("orderDetails",orderDetailsJson);
+                        for(OrderDetails orderDetails:SESSION._ORDER_DETAILES){
+                            orderDetails.setPaidAmount(0.0);
+                        }
+                    JSONArray cart = new JSONArray(SESSION._ORDER_DETAILES.toString());
+                    orderJson.put("cartDetailsList",cart);
                     Log.d("orderJson",orderJson.toString());
                     OrderDocuments documents = new OrderDocuments("OrderDocument",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),SESSION._ORDERS.getTotalPrice(),"test","ILS", OrderDocumentStatus.READY);
                     String doc = mapper.writeValueAsString(documents);
@@ -277,25 +286,43 @@ public class DocumentControl {
                 }
                 @Override
                 protected void onPostExecute(Void aVoid) {
+                    try {
+                        if(receiptJsonObject.get("status").equals("200")){
 
-                    try
-                    {
-                        File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
-                        File file = new File(path,SAMPLE_FILE);
-                        RandomAccessFile f = new RandomAccessFile(file, "r");
-                        byte[] data = new byte[(int)f.length()];
-                        f.readFully(data);
-                        pdfLoadImages(data,context);
-                        //pdfLoadImages1(data);
+                        try
+                        {
+                            File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                            File file = new File(path,SAMPLE_FILE);
+                            RandomAccessFile f = new RandomAccessFile(file, "r");
+                            byte[] data = new byte[(int)f.length()];
+                            f.readFully(data);
+                            pdfLoadImages(data,context);
+                            //pdfLoadImages1(data);
+                        }
+                        catch(Exception ignored)
+                        {
+
+                        }
+                        }else {
+                            new android.support.v7.app.AlertDialog.Builder(context)
+                                    .setTitle(context.getString(R.string.invoice))
+                                    .setMessage(context.getString(R.string.cant_make_invoice_check_internet_connection))
+                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    catch(Exception ignored)
-                    {
-
-                    }
-                    //     print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
-
-                    //clearCart();
-
                 }
                 @Override
                 protected Void doInBackground(Void... voids) {
@@ -316,37 +343,63 @@ public class DocumentControl {
                         BoInvoice invoiceA = new BoInvoice(DocumentType.RECEIPT,docJson,docNum);
                         Log.d("Receipt log",invoiceA.toString());
                         String res=transmit.authPost(ApiURL.Documents,invoiceA.toString(), SESSION.token);
-                        JSONObject jsonObject = new JSONObject(res);
-                        String msgData = jsonObject.getString(MessageKey.responseBody);
+                         receiptJsonObject = new JSONObject(res);
+                        String msgData = receiptJsonObject.getString(MessageKey.responseBody);
+
                         Log.d("receiptResult",res);
-                        BoInvoice invoice1 = newInvoice;
-                        JSONObject updataInvoice =invoice1.getDocumentsData();
-                        double total= updataInvoice.getDouble("total");
-                        Log.d("totalPaid",total+"");
-                        updataInvoice.remove("totalPaid");
-                        updataInvoice.remove("balanceDue");
-                        updataInvoice.put("totalPaid",total);
-                        updataInvoice.put("balanceDue",0);
-                        updataInvoice.remove("invoiceStatus");
-                        updataInvoice.put("invoiceStatus", InvoiceStatus.PAID);
-                        invoice1.setDocumentsData(updataInvoice);
-                        Log.d("invoiceRes",invoice1.toString());
+                        if(receiptJsonObject.get("status").equals("200")){
+                            ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
+                            zReportDBAdapter.open();
+                            ZReport zReport =null;
+                            try {
+                                zReport = zReportDBAdapter.getLastRow();
+                                PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
+                                posInvoiceDBAdapter.open();
+                                posInvoiceDBAdapter.insertEntry(Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))),zReport.getzReportId(),DocumentType.RECEIPT.getValue(),"",invoiceNum);
+                            } catch (Exception e) {
+                                PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
+                                posInvoiceDBAdapter.open();
+                                posInvoiceDBAdapter.insertEntry(Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))),-1,DocumentType.RECEIPT.getValue(),"",invoiceNum);
+                                e.printStackTrace();
+                            }
 
-                        String upDataInvoiceRes=transmit.authPutInvoice(ApiURL.Documents,invoice1.toString(), SESSION.token,docNum);
-                        Log.d("invoiceRes",upDataInvoiceRes);
-                        JSONObject upDateInvoice = new JSONObject(upDataInvoiceRes);
-                        String response = upDateInvoice.getString(MessageKey.responseBody);
-                        PdfUA pdfUA = new PdfUA();
+                            BoInvoice invoice1 = newInvoice;
+                            JSONObject updataInvoice =invoice1.getDocumentsData();
+                            double total= updataInvoice.getDouble("total");
+                            Log.d("totalPaid",total+"");
+                            updataInvoice.remove("totalPaid");
+                            updataInvoice.remove("balanceDue");
+                            updataInvoice.put("totalPaid",total);
+                            updataInvoice.put("balanceDue",0);
+                            updataInvoice.remove("invoiceStatus");
+                            updataInvoice.put("invoiceStatus", InvoiceStatus.PAID);
+                            invoice1.setDocumentsData(updataInvoice);
+                            Log.d("invoiceRes",invoice1.toString());
 
-                        try {
-                            pdfUA.printReceiptReport(context,msgData);
-                        } catch (DocumentException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            String upDataInvoiceRes=transmit.authPutInvoice(ApiURL.Documents,invoice1.toString(), SESSION.token,docNum);
+                            Log.d("invoiceRes",upDataInvoiceRes);
+                            JSONObject upDateInvoice = new JSONObject(upDataInvoiceRes);
+                            if(upDateInvoice.get("status").equals("200")){
+                                PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
+                                posInvoiceDBAdapter.open();
+                                PosInvoice posInvoice = posInvoiceDBAdapter.getPodInvoiceByBoId(docNum);
+                                posInvoice.setStatus(InvoiceStatus.PAID.getValue());
+                                posInvoiceDBAdapter.updateEntry(posInvoice);
+                            }
+                            String response = upDateInvoice.getString(MessageKey.responseBody);
+                            PdfUA pdfUA = new PdfUA();
+
+                            try {
+                                pdfUA.printReceiptReport(context,msgData);
+                            } catch (DocumentException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
                         }
 
                     } catch (IOException e) {

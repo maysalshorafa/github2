@@ -43,13 +43,15 @@ public class ZReportDBAdapter {
     protected static final String Z_REPORT_COLUMN_CHECK_AMOUNT= "checkTotal";
     protected static final String Z_REPORT_COLUMN_CREDIT_AMOUNT= "creditTotal";
     protected static final String Z_REPORT_COLUMN_TOTAL_POS_SALES= "totalPosSales";
+    protected static final String Z_REPORT_COLUMN_INVOICE_AMOUNT= "totalInvoiceAmount";
+    protected static final String Z_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT= "totalCreditInvoiceAmount";
 
     public static final String DATABASE_CREATE = "CREATE TABLE `" + Z_REPORT_TABLE_NAME + "` ( `" + Z_REPORT_COLUMN_ID + "` INTEGER PRIMARY KEY AUTOINCREMENT," +
             " `" + Z_REPORT_COLUMN_CREATEDATE + "` TIMESTAMP DEFAULT current_timestamp, `" + Z_REPORT_COLUMN_BYUSER + "`INTEGER," +
             " `" + Z_REPORT_COLUMN_STARTORDERID + "` INTEGER, `" + Z_REPORT_COLUMN_ENDORDERID + "` INTEGER," +
             " `" + Z_REPORT_COLUMN_TOTAL_AMOUNT + "` REAL,`" + Z_REPORT_COLUMN_OPINING_REPORT_TOTAL_AMOUNT + "` REAL, `" + Z_REPORT_COLUMN_TOTAL_SALES_AMOUNT + "` REAL," +
             " `" + Z_REPORT_COLUMN_TAX + "` REAL,`" + Z_REPORT_COLUMN_CASH_AMOUNT + "` REAL, `" + Z_REPORT_COLUMN_CHECK_AMOUNT + "` REAL," +
-            " `" + Z_REPORT_COLUMN_CREDIT_AMOUNT + "` REAL,`" + Z_REPORT_COLUMN_TOTAL_POS_SALES + "` REAL)";
+            " `" + Z_REPORT_COLUMN_CREDIT_AMOUNT + "` REAL,`" + Z_REPORT_COLUMN_TOTAL_POS_SALES + "` REAL,`" + Z_REPORT_COLUMN_INVOICE_AMOUNT + "` REAL,`" + Z_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT + "` REAL)";
     public static final String DATABASE_UPDATE_FROM_V2_TO_V3[] = {"alter table z_report rename to z_report_v3;", DATABASE_CREATE + "; ",
             "insert into z_report (id,createDate,startOrderId,endOrderId,amount) " +
                     "select id,createDate,startOrderId,endOrderId,amount from z_report_v3;"};
@@ -78,8 +80,8 @@ public class ZReportDBAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public long insertEntry(Timestamp creatingDate, long byUserID, long startSaleID, long endSaleID, double amount, double total_amount,double totalCashAmount , double totalCheckAmount , double totalCreditAmount,double totalPosSalesAmount,double amountWithTax,double aReportAmount){
-        ZReport zReport = new ZReport(Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID),creatingDate, byUserID, startSaleID, endSaleID,amount,total_amount,totalCashAmount,totalCheckAmount,totalCreditAmount,totalPosSalesAmount,amountWithTax,aReportAmount);
+    public long insertEntry(Timestamp creatingDate, long byUserID, long startSaleID, long endSaleID, double amount, double total_amount,double totalCashAmount , double totalCheckAmount , double totalCreditAmount,double totalPosSalesAmount,double amountWithTax,double aReportAmount,double invoiceAmount , double creditInvoiceAmount){
+        ZReport zReport = new ZReport(Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID),creatingDate, byUserID, startSaleID, endSaleID,amount,total_amount,totalCashAmount,totalCheckAmount,totalCreditAmount,totalPosSalesAmount,amountWithTax,aReportAmount,invoiceAmount,creditInvoiceAmount);
         sendToBroker(MessageType.ADD_Z_REPORT, zReport, this.context);
         try {
             return insertEntry(zReport);
@@ -105,6 +107,8 @@ public class ZReportDBAdapter {
         val.put(Z_REPORT_COLUMN_OPINING_REPORT_TOTAL_AMOUNT,zReport.getOpeningTotal());
         val.put(Z_REPORT_COLUMN_TAX,zReport.getTax());
         val.put(Z_REPORT_COLUMN_TOTAL_POS_SALES,zReport.getTotalPosSales());
+        val.put(Z_REPORT_COLUMN_INVOICE_AMOUNT,zReport.getInvoiceAmount());
+        val.put(Z_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT,zReport.getCreditInvoiceAmount());
         try {
             return db.insert(Z_REPORT_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -172,16 +176,16 @@ public class ZReportDBAdapter {
         return zReport;
     }
     private ZReport makeZReport(Cursor c){
-        return new ZReport(c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_ID)),
+            return new ZReport(c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_ID)),
                 Timestamp.valueOf(c.getString(c.getColumnIndex(Z_REPORT_COLUMN_CREATEDATE))),
                 c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_BYUSER)),
                 c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_STARTORDERID)),
                 c.getLong(c.getColumnIndex(Z_REPORT_COLUMN_ENDORDERID)),
                 c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_TOTAL_AMOUNT)),
                 c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_TOTAL_SALES_AMOUNT)),c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_CASH_AMOUNT)),
-                                c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_CHECK_AMOUNT)),c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_CREDIT_AMOUNT)),c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_TOTAL_POS_SALES)),c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_OPINING_REPORT_TOTAL_AMOUNT)),
-                c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_TAX)));
-
+                                c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_CHECK_AMOUNT)),c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_CREDIT_AMOUNT)),c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_TOTAL_POS_SALES)),c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_TAX)),
+                c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_OPINING_REPORT_TOTAL_AMOUNT)),  c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_INVOICE_AMOUNT)),
+                c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT)));
     }
     public double getZReportAmount( long from, long to) {
         double amount =0 , amountPlus =0 , amountMinus =0;
@@ -253,7 +257,7 @@ public class ZReportDBAdapter {
             double amount = zReportDBAdapter.zReportTotalAmountUpDate(zReport1.getzReportId());
             totalAmount+=amount;
                 ZReport zReport =new ZReport(zl.get(i).getzReportId(),zl.get(i).getCreatedAt(),zl.get(i).getByUser(),zl.get(i).getStartOrderId(),zl.get(i).getEndOrderId(),zl.get(i).getTotalAmount(),
-                    amount,zl.get(i).getCashTotal(),zl.get(i).getCheckTotal(),zl.get(i).getCreditTotal(),totalAmount,zl.get(i).getTax(),zl.get(i).getOpeningTotal());
+                    amount,zl.get(i).getCashTotal(),zl.get(i).getCheckTotal(),zl.get(i).getCreditTotal(),totalAmount,zl.get(i).getTax(),zl.get(i).getOpeningTotal(),zl.get(i).getInvoiceAmount(),zl.get(i).getCreditInvoiceAmount());
             updateEntry(zReport);
         }
     }
@@ -279,5 +283,11 @@ public class ZReportDBAdapter {
         return zReportList;
     }
 
-
+    public int getProfilesCount() {
+        String countQuery = "SELECT  * FROM " + Z_REPORT_TABLE_NAME;
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
+    }
 }

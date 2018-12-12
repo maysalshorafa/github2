@@ -508,6 +508,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     if (needAReport()) {
                         btAReport.setEnabled(true);
                         btZReport.setEnabled(false);
+                        closingReport.setEnabled(false);
                         salesCart.setEnabled(false);
                     } else {
 
@@ -515,7 +516,6 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                            // btZReport.setEnabled(false);
                         } else
                             btZReport.setEnabled(true);
-                        btAReport.setEnabled(false);
                         salesCart.setEnabled(true);
                     }
 
@@ -611,8 +611,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         if (aReport != null && closingR != null) {
             if (aReport.getOpiningReportId() == closingR.getOpiningReportId()) {
                 closingReport.setEnabled(false);
+                btAReport.setEnabled(true);
             } else {
                 closingReport.setEnabled(true);
+                btAReport.setEnabled(false);
 
             }
 

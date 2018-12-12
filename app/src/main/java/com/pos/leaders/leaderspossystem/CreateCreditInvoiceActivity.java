@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,11 +29,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.CreditInvoiceDocument;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.CreditInvoiceProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CreditInvoiceStatus;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
@@ -79,6 +83,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
     double creditAmount=0;
     final String SAMPLE_FILE = "creditinvoice.pdf";
     final JSONArray newCartDetails = new JSONArray();
+    JSONObject jsonObject = new JSONObject();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,18 +216,41 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                 }
                                 @Override
                                 protected void onPostExecute(Void aVoid) {
-                                    try
-                                    {
-                                        File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
-                                        File file = new File(path,SAMPLE_FILE);
-                                        RandomAccessFile f = new RandomAccessFile(file, "r");
-                                        byte[] data = new byte[(int)f.length()];
-                                        f.readFully(data);
-                                        pdfLoadImages(data,context);
-                                    }
-                                    catch(Exception ignored)
-                                    {
+                                    try {
+                                        if(jsonObject.get("status").equals("200")){
 
+                                            try
+                                        {
+                                            File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                                            File file = new File(path,SAMPLE_FILE);
+                                            RandomAccessFile f = new RandomAccessFile(file, "r");
+                                            byte[] data = new byte[(int)f.length()];
+                                            f.readFully(data);
+                                            pdfLoadImages(data,context);
+                                        }
+                                        catch(Exception ignored)
+                                        {
+
+                                        }
+                                        }else {
+                                            new android.support.v7.app.AlertDialog.Builder(context)
+                                                    .setTitle(context.getString(R.string.invoice))
+                                                    .setMessage(context.getString(R.string.cant_make_invoice_check_internet_connection))
+                                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+
+                                                        }
+                                                    })
+                                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+
+                                                        }
+                                                    })
+                                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                                    .show();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
                                 }
                                 @Override
@@ -248,7 +276,23 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         BoInvoice invoice = new BoInvoice(DocumentType.CREDIT_INVOICE,docJson,"");
                                         Log.d("Invoice log",invoice.toString());
                                         String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
-                                        JSONObject jsonObject = new JSONObject(res);
+                                         jsonObject = new JSONObject(res);
+
+                                        if(jsonObject.get("status").equals("200")){
+                                            ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
+                                            zReportDBAdapter.open();
+                                            ZReport zReport =null;
+                                            try {
+                                                zReport = zReportDBAdapter.getLastRow();
+                                                PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
+                                                posInvoiceDBAdapter.open();
+                                                posInvoiceDBAdapter.insertEntry(creditAmount,zReport.getzReportId(),DocumentType.CREDIT_INVOICE.getValue(),"",jsonObject.getString("docNum"));
+                                            } catch (Exception e) {
+                                                PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
+                                                posInvoiceDBAdapter.open();
+                                                posInvoiceDBAdapter.insertEntry(creditAmount,-1,DocumentType.CREDIT_INVOICE.getValue(),"",jsonObject.getString("docNum"));
+                                                e.printStackTrace();
+                                            }
                                         String msgData = jsonObject.getString(MessageKey.responseBody);
                                         Log.d("result",msgData.toString());
                                         JSONObject finalRes = new JSONObject(msgData);
@@ -260,11 +304,13 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         } catch (DocumentException e) {
                                             e.printStackTrace();
                                         }
-                                        try {
-                                            Thread.sleep(100);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
+                                            try {
+                                                Thread.sleep(100);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
                                         }
+
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     } catch (JSONException e) {

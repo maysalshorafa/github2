@@ -6,19 +6,19 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
@@ -295,10 +295,13 @@ public class PrintTools {
         /*double aReportAmount = 0;
         long aReportId = 0;*/
         double aReportAmount =0.0;
+        double creditInvoiceAmount =0.0;
+        double invoiceAmount=0.0;
         double sheqle_plus = 0, sheqle_minus = 0;
         double usd_plus = 0, usd_minus = 0;
         double eur_plus = 0, eur_minus = 0;
         double gbp_plus = 0, gbp_minus = 0;
+        ZReport lastZReport=null;
         Log.i("CZREPO", "id:" + id + " ,from:" + from + " ,to" + to + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         OrderDBAdapter saleDBAdapter = new OrderDBAdapter(context);
         saleDBAdapter.open();
@@ -307,6 +310,13 @@ public class PrintTools {
         saleDBAdapter.close();
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
         zReportDBAdapter.open();
+        try {
+             lastZReport = zReportDBAdapter.getLastRow();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        creditInvoiceAmount=creditInvoiceAmount*-1;
         OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(context);
         opiningReportDBAdapter.open();
         List<OpiningReport> opiningReportList = opiningReportDBAdapter.getListByLastZReport(zReport.getzReportId()-1);
@@ -421,9 +431,9 @@ public class PrintTools {
             }
 
         }
-
+        totalPosSalesAmount+=zReport.getInvoiceAmount()+zReport.getCreditInvoiceAmount();
         //endregion Currency summary
-        return BitmapInvoice.zPrint(context, zReport, usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReportAmount,totalPosSalesAmount);
+        return BitmapInvoice.zPrint(context, zReport, usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReportAmount,totalPosSalesAmount,zReport.getInvoiceAmount(),zReport.getCreditInvoiceAmount());
         //return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
 
     }

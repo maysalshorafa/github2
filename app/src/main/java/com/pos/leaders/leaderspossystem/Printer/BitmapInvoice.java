@@ -278,7 +278,7 @@ public class BitmapInvoice {
         return b;
     }
 
-    public static Bitmap zPrint(Context context, ZReport zReport, double usa_plus, double usa_minus, double eur_plus, double eur_minus, double gbp_plus, double gbp_minus, double sheqle_plus, double sheqle_minus, double cash_plus, double cash_minus, double check_plus, double check_minus, double creditCard_plus, double creditCard_minus, boolean isCopy, double starterAmount,double totalZReportAmount) {
+    public static Bitmap zPrint(Context context, ZReport zReport, double usa_plus, double usa_minus, double eur_plus, double eur_minus, double gbp_plus, double gbp_minus, double sheqle_plus, double sheqle_minus, double cash_plus, double cash_minus, double check_plus, double check_minus, double creditCard_plus, double creditCard_minus, boolean isCopy, double starterAmount,double totalZReportAmount,double invoiceAmount , double creditInvoiceAmount) {
         ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
         zReportDBAdapter.open();
         EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
@@ -356,12 +356,12 @@ public class BitmapInvoice {
 
 
         String names = "", in = "", out = "", total = "";
-        names +="\u200F"+context.getString(R.string.cash) + "\n" +"\u200F"+context.getString(R.string.credit_card)+ "\n" +"\u200F"+ context.getString(R.string.checks) + "\n"+ "\u200F"+context.getString(R.string.a_report_amount) + "\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount)+ "\n"+"\u200F"+context.getString(R.string.total_sales);
+        names +="\u200F"+context.getString(R.string.cash) + "\n" +"\u200F"+context.getString(R.string.credit_card)+ "\n" +"\u200F"+ context.getString(R.string.checks) + "\n"+ "\u200F"+context.getString(R.string.a_report_amount) + "\n" + "\u200F"+context.getString(R.string.invoice) + "\n" + "\u200F"+context.getString(R.string.credit_invoice_doc) + "\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount)+ "\n"+"\u200F"+context.getString(R.string.total_sales);
 
-        in += dTS(cash_plus) + "\n" + dTS(creditCard_plus) + "\n" + dTS(check_plus) + "\n" + "~" + "\n" + dTS(cash_plus + check_plus + creditCard_plus)+ "\n" + dTS(cash_plus + check_plus + creditCard_plus);
-        out += dTS(cash_minus) + "\n" + dTS(creditCard_minus) + "\n" + dTS(check_minus) + "\n" + "~" + "\n" + dTS(cash_minus + check_minus + creditCard_minus)+ "\n" + dTS(cash_minus + check_minus + creditCard_minus);
-        total += dTS(cash_plus + cash_minus) + "\n" + dTS(creditCard_plus + creditCard_minus) + "\n" + dTS(check_plus + check_minus) + "\n" + starterAmount + "\n" +
-                dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus + starterAmount)+ "\n" +   dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus );
+        in += dTS(cash_plus) + "\n" + dTS(creditCard_plus) + "\n" + dTS(check_plus) + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + dTS(cash_plus + check_plus + creditCard_plus)+ "\n" + dTS(cash_plus + check_plus + creditCard_plus);
+        out += dTS(cash_minus) + "\n" + dTS(creditCard_minus) + "\n" + dTS(check_minus) + "\n" + "~" +  "\n" + "~" + "\n" + "~" + "\n" + dTS(cash_minus + check_minus + creditCard_minus)+ "\n" + dTS(cash_minus + check_minus + creditCard_minus);
+        total += dTS(cash_plus + cash_minus) + "\n" + dTS(creditCard_plus + creditCard_minus) + "\n" + dTS(check_plus + check_minus) + "\n" + starterAmount + "\n" + invoiceAmount + "\n" + creditInvoiceAmount + "\n" +
+                dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus + starterAmount+invoiceAmount+creditInvoiceAmount)+ "\n" +   dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus+invoiceAmount+creditInvoiceAmount );
 
         StaticLayout slNames = new StaticLayout(names, orderTP,
                 (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);

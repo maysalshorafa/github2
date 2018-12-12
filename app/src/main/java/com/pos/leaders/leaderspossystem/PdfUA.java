@@ -507,7 +507,7 @@ public class PdfUA {
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
-//        insertCell(headingTable, context.getString(R.string.date) + jsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
+//        insertCell(headingTable, context.getString(R.string.date) + invoiceJsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
 
         //end
 
@@ -567,7 +567,7 @@ public class PdfUA {
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "Date"+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 2, dateFont);
 
-//        insertCell(headingTable, context.getString(R.string.date) + jsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
+//        insertCell(headingTable, context.getString(R.string.date) + invoiceJsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
 
         //end
 
@@ -716,6 +716,11 @@ public class PdfUA {
         insertCell(dateTable, jsonObject.getDouble("expectedGbp")+"", Element.ALIGN_LEFT, 1, dateFont);
         insertCell(dateTable,  jsonObject.getDouble("actualGbp")-jsonObject.getDouble("expectedGbp")+"", Element.ALIGN_LEFT, 1, dateFont);
 
+        insertCell(dateTable, context.getString(R.string.receipt), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("actualReceipt")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, jsonObject.getDouble("expectedReceipt")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable,  jsonObject.getDouble("actualReceipt")-jsonObject.getDouble("expectedReceipt")+"", Element.ALIGN_LEFT, 1, dateFont);
+
         insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
 
         insertCell(dateTable, "Total", Element.ALIGN_LEFT, 1, dateFont);
@@ -778,7 +783,7 @@ public class PdfUA {
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "Date"+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 2, dateFont);
 
-//        insertCell(headingTable, context.getString(R.string.date) + jsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
+//        insertCell(headingTable, context.getString(R.string.date) + invoiceJsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
 
         //end
 

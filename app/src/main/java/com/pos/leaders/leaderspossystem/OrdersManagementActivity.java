@@ -280,7 +280,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                         saleDBAdapter.close();
                         PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(OrdersManagementActivity.this);
                         paymentDBAdapter1.open();
-                        paymentDBAdapter1.insertEntry(sale.getPayment().getPaymentWay(), sale.getTotalPrice() * -1, sID);
+                        paymentDBAdapter1.insertEntry(sale.getPayment().getPaymentWay(), sale.getTotalPrice() * -1, sID,sale.getOrderKey());
                         paymentDBAdapter1.close();
                         //// TODO: 19/01/2017 cancel this sale and print return note and mony back by the payment way
                     }

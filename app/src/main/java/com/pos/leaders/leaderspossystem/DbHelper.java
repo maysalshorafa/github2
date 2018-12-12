@@ -147,6 +147,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(ClosingReportDBAdapter.DATABASE_CREATE);
         db.execSQL(ClosingReportDetailsDBAdapter.DATABASE_CREATE);
         db.execSQL(InvoiceDBAdapter.DATABASE_CREATE);
+        db.execSQL(PosInvoiceDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
         db.execSQL(EmployeeDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (1,'user1','user','user','"+new Timestamp(System.currentTimeMillis())+"','1234',0,046316969,20,35);");

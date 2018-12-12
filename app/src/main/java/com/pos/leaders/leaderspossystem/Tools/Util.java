@@ -17,10 +17,14 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DocumentType;
+import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
+import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.PdfUA;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
@@ -403,6 +407,8 @@ public class Util {
     public static  ZReport insertZReport(ZReport zReport,Context context)
     {
         double aReportAmount = 0;
+        double invoiceAmount=0;
+        double creditInvoiceAmount=0;
         ZReport lastZReport = getLastZReport(context);
 
         if (lastZReport == null) {
@@ -449,9 +455,43 @@ public class Util {
                     break;
             }
         }
+        if(zReportDBAdapter.getProfilesCount()==0){
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(-1, InvoiceStatus.UNPAID.getValue());
+            for (int i= 0 ;i<posInvoiceList.size();i++){
+                invoiceAmount+=posInvoiceList.get(i).getAmount();
+            }
+            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.CREDIT_INVOICE.getValue());
+            for (int i= 0 ;i<posCreditInvoiceList.size();i++){
+                creditInvoiceAmount+=posCreditInvoiceList.get(i).getAmount();
+            }
+        }else {
+            ZReport zReport1=null;
+            try {
+                 zReport1 = zReportDBAdapter.getLastRow();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(zReport1.getzReportId(), InvoiceStatus.UNPAID.getValue());
+            for (int i= 0 ;i<posInvoiceList.size();i++){
+                invoiceAmount+=posInvoiceList.get(i).getAmount();
+            }
+            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.CREDIT_INVOICE.getValue());
+            for (int i= 0 ;i<posCreditInvoiceList.size();i++){
+                creditInvoiceAmount+=posCreditInvoiceList.get(i).getAmount();
+            }
+        }
+        zReport.setTotalSales(zReport.getTotalSales()+invoiceAmount+creditInvoiceAmount);
+        zReport.setTotalPosSales(zReport.getTotalPosSales()+invoiceAmount+creditInvoiceAmount);
         long zID = zReportDBAdapter.insertEntry(zReport.getCreatedAt(), zReport.getByUser(), zReport.getStartOrderId(), zReport.getEndOrderId(),
-                zReport.getTotalAmount()+aReportAmount+(zReport.getTotalAmount()*SETTINGS.tax/100),zReport.getTotalAmount(),cash_plus,check_plus,creditCard_plus,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax/100,aReportAmount);
+                zReport.getTotalAmount()+aReportAmount+(zReport.getTotalAmount()*SETTINGS.tax/100),zReport.getTotalAmount(),cash_plus,check_plus,creditCard_plus,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax/100,aReportAmount,invoiceAmount,creditInvoiceAmount);
         zReport.setzReportId(zID);
+        zReport.setInvoiceAmount(invoiceAmount);
+        zReport.setCreditInvoiceAmount(creditInvoiceAmount);
+
         return zReport;
     }
     public static List<Payment> paymentList(List<Order> sales,Context context) {
@@ -701,5 +741,4 @@ public class Util {
      }
      }
      **/
-
 }

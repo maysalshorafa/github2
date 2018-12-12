@@ -21,7 +21,7 @@
         android:orientation="vertical"
         android:padding="5dp"
         android:layout_weight="1"
-        android:weightSum="10">
+        android:weightSum="11">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -88,6 +88,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:text="@string/receipt"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="25dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:text="@string/total"
             android:layout_weight="1"
             android:gravity="center"
@@ -101,7 +108,7 @@
         android:orientation="vertical"
         android:padding="5dp"
         android:layout_weight="1"
-        android:weightSum="10"
+        android:weightSum="11"
         >
         <TextView
             android:layout_width="match_parent"
@@ -175,6 +182,14 @@
             android:gravity="center"
             android:hint="@string/TouchPad_0"
             android:inputType="numberSigned"/>
+        <EditText
+            android:id="@+id/actualReceiptValue"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="@string/TouchPad_0"
+            android:inputType="numberSigned"/>
 
         <EditText
             android:id="@+id/actualTotalValue"
@@ -192,7 +207,7 @@
         android:orientation="vertical"
         android:padding="5dp"
         android:layout_weight="1"
-        android:weightSum="10">
+        android:weightSum="11">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -251,6 +266,12 @@
             android:layout_weight="1"
             android:gravity="center"/>
         <TextView
+            android:id="@+id/expectedReceiptValue"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"/>
+        <TextView
             android:id="@+id/expectedTotalValue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -264,7 +285,7 @@
         android:orientation="vertical"
         android:padding="5dp"
         android:layout_weight="1"
-        android:weightSum="10">
+        android:weightSum="11">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -316,6 +337,12 @@
             android:gravity="center"/>
         <TextView
             android:id="@+id/differentGbpValue"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/differentReceiptValue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
