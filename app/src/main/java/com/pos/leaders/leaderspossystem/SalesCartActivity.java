@@ -1103,7 +1103,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                         int indexOfItem = SESSION._ORDER_DETAILES.indexOf(selectedOrderOnCart);
                                         SESSION._ORDER_DETAILES.get(indexOfItem).setCount(pid);
                                         orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity() + "");
-                                        orderTotalPrice.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount() * selectedOrderOnCart.getQuantity()) + getString(R.string.ins));
+                                        orderTotalPrice.setText(selectedOrderOnCart.getPaidAmount() * selectedOrderOnCart.getQuantity() + getString(R.string.ins));
                                         calculateTotalPrice();
 
                                         cashDialog.cancel();
@@ -1162,11 +1162,11 @@ public class SalesCartActivity extends AppCompatActivity {
                                 final TextView discountType = (TextView) cashDialog.findViewById(R.id.cashPaymentDialog_TVStatus);
                                 discountType.append(":" + selectedOrderOnCart.getProduct().getDisplayName());
                                 double pad = (selectedOrderOnCart.getPaidAmount());
-                                priceAfterDiscount.setText( Util.makePrice(pad) + getString(R.string.ins));
+                                priceAfterDiscount.setText( pad + getString(R.string.ins));
                                 selectedOrderOnCart.rowDiscount = 0;
                                 selectedOrderOnCart.setDiscount(0);
                                 double itemOriginalPrice = selectedOrderOnCart.getPaidAmount();
-                                totalPrice.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount() ) + getString(R.string.ins));
+                                totalPrice.setText(selectedOrderOnCart.getPaidAmount() + getString(R.string.ins));
                                 totalDiscount.setText(selectedOrderOnCart.getDiscount()*selectedOrderOnCart.getQuantity() + getString(R.string.ins));
                                 sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                     @Override
@@ -1182,7 +1182,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                             cashETCash.setHint("0");
                                         }
                                         totalDiscount.setText(Util.makePrice((itemOriginalPrice - selectedOrderOnCart.getPaidAmount())*selectedOrderOnCart.getQuantity()) + getString(R.string.ins));
-                                        priceAfterDiscount.setText(Util.makePrice(selectedOrderOnCart.getPaidAmount() * selectedOrderOnCart.getQuantity()) + getString(R.string.ins));
+                                        priceAfterDiscount.setText(selectedOrderOnCart.getPaidAmount() * selectedOrderOnCart.getQuantity() + getString(R.string.ins));
                                     }
                                 });
                                 cashETCash.setHint(R.string.proportion);
@@ -1225,7 +1225,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                         }
 
                                         totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + getString(R.string.ins));
-                                        priceAfterDiscount.setText(Util.makePrice(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100)) + getString(R.string.ins));
+                                        priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + getString(R.string.ins));
 
                                     }
                                 });
@@ -1642,7 +1642,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
                         originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
                     }
-                    totalPrice.setText(Util.makePrice(originalTotalPrice) + getString(R.string.ins));
+                    totalPrice.setText(originalTotalPrice + getString(R.string.ins));
                     totalDiscount.setText(Util.makePrice(valueOfDiscount) + getString(R.string.ins));
                     priceAfterDiscount.setText(tvTotalPrice.getText().toString());
                     sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -1702,7 +1702,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                             SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
                                         }
                                         totalDiscount.setText(Util.makePrice(originalTotalPrice*val/100 ) + getString(R.string.ins));
-                                        priceAfterDiscount.setText(Util.makePrice(originalTotalPrice*(1-val/100)) + getString(R.string.ins));
+                                        priceAfterDiscount.setText(originalTotalPrice*(1-val/100) + getString(R.string.ins));
                                     } else {
                                         totalDiscount.setText(Util.makePrice(valueOfDiscount) + getString(R.string.ins));
                                         priceAfterDiscount.setText(tvTotalPrice.getText().toString());
@@ -1729,7 +1729,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                             SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
                                         }
                                         totalDiscount.setText(Util.makePrice(SaleOriginalityPrice*val/100 ) + getString(R.string.ins));
-                                        priceAfterDiscount.setText(Util.makePrice(SaleOriginalityPrice*(1-val/100)) + getString(R.string.ins));
+                                        priceAfterDiscount.setText(SaleOriginalityPrice*(1-val/100) + getString(R.string.ins));
 
                                     } else {
                                         totalDiscount.setText(Util.makePrice(valueOfDiscount) + getString(R.string.ins));
