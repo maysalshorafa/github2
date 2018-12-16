@@ -38,13 +38,14 @@ public class Order {
 	@JsonIgnore
 	private Locale locale = new Locale("en");
 	private String orderKey;
+	private double numberDiscount;
 	// region Constructors
 
 
 	public Order() {
 	}
 
-	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name,double cartDiscount , String orderKey) {
+	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name,double cartDiscount , String orderKey,double numberDiscount) {
 		this.orderId = orderId;
 		this.byUser = byUser;
 		this.createdAt = createdAt;
@@ -56,6 +57,7 @@ public class Order {
 		this.customer_name = customer_name;
 		this.cartDiscount=cartDiscount;
 		this.orderKey = orderKey;
+		this.numberDiscount=numberDiscount;
 	}
 
 	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name, Customer customer,String orderKey) {
@@ -98,7 +100,7 @@ public class Order {
 	}
 
 	public static Order newInstance(Order s) {
-		return new Order(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name(),s.getCartDiscount(),s.getOrderKey());
+		return new Order(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name(),s.getCartDiscount(),s.getOrderKey(),s.getNumberDiscount());
 	}
 
 	@JsonIgnore
@@ -174,7 +176,9 @@ public class Order {
 		return customer_name;
 	}
 
-
+	public double getNumberDiscount() {
+		return numberDiscount;
+	}
 //endregion
 
 	//region Setter
@@ -246,6 +250,9 @@ public class Order {
 		this.orderKey = orderKey;
 	}
 
+	public void setNumberDiscount(double numberDiscount) {
+		this.numberDiscount = numberDiscount;
+	}
 //endregion
 
 	@Override
@@ -342,5 +349,9 @@ public class Order {
 
 	public Customer getCustomer() {
 		return customer;
+	}
+	public  static  double calculateNumberDiscount(double oldTotalPrice,double saleTotalPrice){
+		double discount = (1 - (saleTotalPrice / oldTotalPrice)) * 100;
+return discount;
 	}
 }

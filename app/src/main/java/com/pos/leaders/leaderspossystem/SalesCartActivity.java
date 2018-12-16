@@ -2135,6 +2135,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 totalSaved = (SaleOriginalityPrice - saleTotalPrice);
                 tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
                 tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
+                SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                 SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
 
             }
@@ -2166,6 +2167,7 @@ public class SalesCartActivity extends AppCompatActivity {
             totalSaved = (SaleOriginalityPrice - saleTotalPrice);
             tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
             tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
+            SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
             SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
         }
 
@@ -2201,6 +2203,7 @@ public class SalesCartActivity extends AppCompatActivity {
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);
         tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
         tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
+        SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
         SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
 
         offerDBAdapter.close();
@@ -2281,6 +2284,7 @@ public class SalesCartActivity extends AppCompatActivity {
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);
         tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " + getString(R.string.ins));
         tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + getString(R.string.ins));
+        SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
         SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
         saleDetailsListViewAdapter.notifyDataSetChanged();
 
@@ -2905,17 +2909,20 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 if (equalUsedPoint) {
                     saleTotalPrice = 0.0;
+                    SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
                     usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
+                    SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
                     usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
+                    SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
                     usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
@@ -3178,17 +3185,20 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 if (equalUsedPoint) {
                     saleTotalPrice = 0.0;
+                    SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
                     usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
+                    SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
                     usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
+                    SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
                     usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
@@ -3302,17 +3312,20 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 if (equalUsedPoint) {
                     saleTotalPrice = 0.0;
+                    SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
+                    SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
+                    SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
@@ -3426,17 +3439,20 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 if (equalUsedPoint) {
                     saleTotalPrice = 0.0;
+                    SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
+                    SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
+                    SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
                     usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
@@ -3555,17 +3571,20 @@ public class SalesCartActivity extends AppCompatActivity {
 
                     if (equalUsedPoint) {
                         saleTotalPrice = 0.0;
+                        SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                         SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                         saleDBAdapter.updateEntry(SESSION._ORDERS);
                         usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                     }
                     if (lessUsedPoint) {
                         saleTotalPrice = 0.0;
+                        SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                         SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                         saleDBAdapter.updateEntry(SESSION._ORDERS);
                         usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
                     }
                     if (biggerUsedPoint) {
+                        SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                         SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                         saleDBAdapter.updateEntry(SESSION._ORDERS);
                         usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
