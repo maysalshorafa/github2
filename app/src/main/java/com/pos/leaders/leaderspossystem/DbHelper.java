@@ -296,6 +296,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(OrderDBAdapter.addColumnReal("cartDiscount"));
                     db.execSQL(OrderDBAdapter.addColumnReal("numberDiscount"));
                     db.execSQL(CashPaymentDBAdapter.addColumn("currencyRate"));
+                    db.execSQL(CashPaymentDBAdapter.addColumn("actualCurrencyRate"));
                     db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[0]);
                     db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[1]);
                     db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[2]);

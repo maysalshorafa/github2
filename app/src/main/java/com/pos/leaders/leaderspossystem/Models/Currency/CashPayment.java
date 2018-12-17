@@ -13,6 +13,7 @@ public class CashPayment {
     private long currency_type;
     private Timestamp createdAt;
     private double currencyRate;
+    private double actualCurrencyRate;
     public CashPayment() {
     }
 
@@ -38,20 +39,30 @@ public class CashPayment {
 
 
     // Constructors
-    public CashPayment(long cashPaymentId, long orderId, double amount, long currency_type, Timestamp createdAt,double currencyRate) {
+    public CashPayment(long cashPaymentId, long orderId, double amount, long currency_type, Timestamp createdAt,double currencyRate , double actualCurrencyRate) {
         this.cashPaymentId = cashPaymentId;
         this.amount = amount;
         this.orderId = orderId;
         this.currency_type=currency_type;
         this.createdAt = createdAt;
         this.currencyRate=currencyRate;
+        this.actualCurrencyRate=actualCurrencyRate;
     }
 
     public CashPayment(CashPayment p) {
-        this(p.getCashPaymentId(),  p.getOrderId(),p.getAmount(),p.getCurrency_type(),p.getCreatedAt(),p.getCurrencyRate());
+        this(p.getCashPaymentId(),  p.getOrderId(),p.getAmount(),p.getCurrency_type(),p.getCreatedAt(),p.getCurrencyRate(),p.getActualCurrencyRate());
     }
 
     // Getters
+
+    public double getActualCurrencyRate() {
+        return actualCurrencyRate;
+    }
+
+    public void setActualCurrencyRate(double actualCurrencyRate) {
+        this.actualCurrencyRate = actualCurrencyRate;
+    }
+
     public long getCashPaymentId() {
         return cashPaymentId;
     }

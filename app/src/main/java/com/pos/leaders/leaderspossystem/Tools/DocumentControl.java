@@ -252,7 +252,7 @@ public class DocumentControl {
             }
             final JSONObject newJsonObject = new JSONObject(payment.toString());
             if(paymentWays.equalsIgnoreCase(CONSTANT.CASH)){
-                CashPayment cashPayment = new CashPayment(0,0, Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), 0, new Timestamp(System.currentTimeMillis()),1);
+                CashPayment cashPayment = new CashPayment(0,0, Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), 0, new Timestamp(System.currentTimeMillis()),1,1);
                 cashPaymentList.add(cashPayment);
                 JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
                 newJsonObject.put("paymentDetails",jsonArray);

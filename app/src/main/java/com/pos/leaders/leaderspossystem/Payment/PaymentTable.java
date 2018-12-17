@@ -16,16 +16,17 @@ public class PaymentTable {
     private double change;
     private String paymentMethod;
     private CurrencyType currency;
-
+    private double actualCurrencyRate;
     public PaymentTable() {
     }
 
-    public PaymentTable(double due, double tendered, double change, String paymentMethod, CurrencyType currency) {
+    public PaymentTable(double due, double tendered, double change, String paymentMethod, CurrencyType currency,double actualCurrencyRate) {
         this.due = due;
         this.tendered = tendered;
         this.change = change;
         this.paymentMethod = paymentMethod;
         this.currency = currency;
+        this.actualCurrencyRate=actualCurrencyRate;
     }
 
     //region Getters
@@ -50,8 +51,10 @@ public class PaymentTable {
         return currency;
     }
 
-
-    //endregion Getters
+    public double getActualCurrencyRate() {
+        return actualCurrencyRate;
+    }
+//endregion Getters
 
     //region Setters
 
@@ -75,7 +78,10 @@ public class PaymentTable {
         this.currency = currency;
     }
 
-    //endregion Setters
+    public void setActualCurrencyRate(double actualCurrencyRate) {
+        this.actualCurrencyRate = actualCurrencyRate;
+    }
+//endregion Setters
 
     @Override
     public String toString() {

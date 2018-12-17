@@ -3372,7 +3372,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
                 SESSION._ORDERS.setPayment(payment);
                 SESSION._ORDERS.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-                cashPaymentDBAdapter.insertEntry(saleIDforCash, saleTotalPrice, 0, new Timestamp(System.currentTimeMillis()),1);
+                cashPaymentDBAdapter.insertEntry(saleIDforCash, saleTotalPrice, 0, new Timestamp(System.currentTimeMillis()),1,1);
 
                 paymentDBAdapter.close();
                 printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
@@ -3559,7 +3559,8 @@ public class SalesCartActivity extends AppCompatActivity {
                     currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, new Order(SESSION._ORDERS));
                     for (int i = 0; i < jsonArray.length() - 1; i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()),getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")));
+                        Log.d("tttttttttt",jsonObject.getDouble("actualCurrencyRate")+"");
+                        cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()),getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")),jsonObject.getDouble("actualCurrencyRate"));
 
                     }
                     cashPaymentDBAdapter.close();
