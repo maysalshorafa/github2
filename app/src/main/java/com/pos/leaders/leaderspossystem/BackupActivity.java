@@ -19,6 +19,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -83,6 +84,11 @@ public class BackupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 backup=new Backup(BackupActivity.this,folderName);
                 backup.encBackupDB();
+                try {
+                    backup.BackupBufferDB();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Toast.makeText(BackupActivity.this, getBaseContext().getString(R.string.done)+" ", Toast.LENGTH_SHORT).show();
             }
         });
