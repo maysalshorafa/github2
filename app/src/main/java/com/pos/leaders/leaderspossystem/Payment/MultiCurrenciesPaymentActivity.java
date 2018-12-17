@@ -37,7 +37,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
     private double totalPrice_defaultCurrency, excess_defaultCurrency, totalPaid = 0.0;
     private double totalPrice, excess, selectedCurrencyRate = 1;
-    double actualCurrencyRate=0.0;
+    double actualCurrencyRate=1.0;
 
     private String defaultCurrency = "ILS";//ILS
 //'\u20aa'
@@ -222,11 +222,12 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     }
 
     private void setExcess() {
-        excess = totalPrice - totalPaid;
+        excess = Double.parseDouble(Util.makePrice(totalPrice/actualCurrencyRate)) - Double.parseDouble(Util.makePrice(totalPaid/actualCurrencyRate)) ;
         tvExcess.setText(Util.makePrice(excess / selectedCurrencyRate));
     }
 
     private void updateView() {
+        Log.d("excess",excess+"");
         if (excess <= 0) {
             llTotalPriceBackground.setBackgroundColor(getResources().getColor(R.color.light_green1));
             btCheckOut.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
