@@ -832,6 +832,45 @@ public class PdfUA {
         document.close();
         //end :)
     }
+    public static void  printOpiningReport(Context context, OpiningReport opiningReport) throws IOException, DocumentException, JSONException {
+        // create file , document region
+        Document document = new Document();
+        String fileName = "opiningreport.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+        if(file.exists()){
+            PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
+            writer.print("");
+            writer.close();
+        }
+
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();        //end region
+        //end region
+
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 30);
+        Font dateFont = new Font(urName, 24);
+        //heading table
+        PdfPTable headingTable = new PdfPTable(1);
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
+     insertCell(headingTable, context.getString(R.string.a_report_amount) , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.a_report_amount) +" "+context.getString(R.string.amount)+ ":"+ opiningReport.getAmount(), Element.ALIGN_CENTER, 1, font);
+
+        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+
+        //add table to document
+        document.add(headingTable);
+        document.close();
+
+        //en
 
 
+}
 }

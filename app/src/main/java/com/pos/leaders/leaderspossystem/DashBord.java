@@ -722,8 +722,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         aReport.setAmount(Double.parseDouble(str));
                         OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
-                        aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
+                     long id = aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
+                        OpiningReport opiningReport = aReportDBAdapter.getById(id);
                         aReportDBAdapter.close();
+                        Util.opiningReport(DashBord.this,opiningReport);
                         discountDialog.cancel();
                         closingReport.setEnabled(true);
                     }
@@ -974,7 +976,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         aReport.setAmount(aReportTotalAmount);
                         OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
-                        aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
+                       long id= aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
+                        OpiningReport opiningReport = aReportDBAdapter.getById(id);
+                        aReportDBAdapter.close();
+                        Util.opiningReport(DashBord.this,opiningReport);
                         try {
                             aReportId = aReportDBAdapter.getLastRow().getOpiningReportId();
                         } catch (Exception e) {

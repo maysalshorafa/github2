@@ -161,4 +161,16 @@ public class OpiningReportDBAdapter {
                 c.getLong(c.getColumnIndex(OPINING_REPORT_COLUMN_LASTSALEID)),
                 c.getLong(c.getColumnIndex(OPINING_REPORT_COLUMN_LASTZREPORTID)));
     }
+    public OpiningReport getById(long id){
+        OpiningReport aReport;
+        Cursor cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME + " where " + OPINING_REPORT_COLUMN_ID + "='" + (id ) + "'", null);
+        if (cursor.getCount() < 1) {
+            //cursor.close();
+            cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME,null);
+            //return null;
+        }
+        cursor.moveToFirst();
+        aReport = makeAReport(cursor);
+        return aReport;
+    }
 }
