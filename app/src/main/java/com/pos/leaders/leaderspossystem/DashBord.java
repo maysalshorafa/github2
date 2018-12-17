@@ -608,6 +608,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (aReport != null&&closingR==null) {
+            closingReport.setEnabled(true);
+            btAReport.setEnabled(false);
+        }
         if (aReport != null && closingR != null) {
             if (aReport.getOpiningReportId() == closingR.getOpiningReportId()) {
                 closingReport.setEnabled(false);
@@ -619,6 +623,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             }
 
         }
+
         if (aReport != null && zReport != null) {
             if (aReport.getLastZReportID() == zReport.getzReportId()) {
 
