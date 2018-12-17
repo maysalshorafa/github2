@@ -42,6 +42,8 @@ public class OpiningReportDBAdapter {
             " `"+ OPINING_REPORT_COLUMN_AMOUNT +"` REAL,  `"+ OPINING_REPORT_COLUMN_LASTSALEID +"` INTEGER , " +
               "`"+ OPINING_REPORT_COLUMN_LASTZREPORTID +"` INTEGER , " +
             "FOREIGN KEY(`"+ OPINING_REPORT_COLUMN_BYUSER +"`) REFERENCES `employees.id` )";
+    public static final String DATABASE_UPDATE_FROM_V1_TO_V2 = "alter table a_report rename to opining_report;";
+
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.

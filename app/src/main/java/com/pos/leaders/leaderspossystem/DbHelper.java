@@ -304,6 +304,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(OrderDBAdapter.addColumnText("key"));
                     db.execSQL(PaymentDBAdapter.addColumn("key"));
                     db.execSQL(PosInvoiceDBAdapter.DATABASE_CREATE);
+                    db.execSQL(OpiningReportDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
                     break;
             }
         } catch (SQLException e) {
