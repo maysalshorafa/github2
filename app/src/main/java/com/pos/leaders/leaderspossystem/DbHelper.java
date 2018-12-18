@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.pos.leaders.leaderspossystem.Backup.Backup;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
@@ -72,7 +73,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -306,6 +307,12 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(PosInvoiceDBAdapter.DATABASE_CREATE);
                     db.execSQL(OpiningReportDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
                     break;
+                case 3:
+                    try {
+                        Backup.BackupBufferDB();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
             }
         } catch (SQLException e) {
             Log.i("onUpgrade", e.getMessage(), e);
