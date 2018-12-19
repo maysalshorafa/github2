@@ -43,6 +43,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.LogInActivity;
@@ -1010,6 +1011,16 @@ public class SyncMessage extends Service {
                     scheduleWorkersDBAdapter.open();
                     rID = scheduleWorkersDBAdapter.insertEntry(scheduleWorkers);
                     scheduleWorkersDBAdapter.close();
+                    break;
+                //end
+                case MessageType.UPDATE_COMPANY_CREDENTIALS:
+                    SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(this);
+                    settingsDBAdapter.open();
+                    JSONObject respnse = new JSONObject(msgData);
+                    int i = settingsDBAdapter.updateEntry(respnse.getString(MessageKey.companyID), respnse.getString(MessageKey.companyName), SESSION.POS_ID_NUMBER + "",
+                            (float) respnse.getDouble(MessageKey.tax), respnse.getString(MessageKey.returnNote), respnse.getInt(MessageKey.endOfReturnNote),
+                            respnse.getString(MessageKey.CCUN), respnse.getString(MessageKey.CCPW));
+                    settingsDBAdapter.close();
                     break;
                 //end
 
