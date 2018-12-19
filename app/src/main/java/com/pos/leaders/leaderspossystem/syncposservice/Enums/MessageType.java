@@ -154,6 +154,6 @@ public interface MessageType{
     String ADD_CLOSING_REPORT_DETAILS = "AddClosingReportDetails";
     String UPDATE_CLOSING_REPORT_DETAILS = "UpdateClosingReportDetails";
     String DELETE_CLOSING_REPORT_DETAILS = "DeleteClosingReportDetails";
-    String UPDATE_COMPANY_CREDENTIALS = "UpdateCompanyCredentials";
+    String UPDATE_COMPANY_CREDENTIALS = "UpdateCompanyCredential";
 
 }

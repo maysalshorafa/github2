@@ -978,10 +978,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         aReportDBAdapter.open();
                        long id= aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
                         OpiningReport opiningReport = aReportDBAdapter.getById(id);
-                        aReportDBAdapter.close();
-                        Util.opiningReport(DashBord.this,opiningReport);
                         try {
                             aReportId = aReportDBAdapter.getLastRow().getOpiningReportId();
+                            aReportDBAdapter.close();
+                            Util.opiningReport(DashBord.this,opiningReport);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
