@@ -49,11 +49,10 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import POSAPI.POSInterfaceAPI;
-import POSAPI.POSUSBAPI;
 import POSSDK.POSSDK;
 
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImages;
+import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesOpiningReport;
 
 
 /**
@@ -546,13 +545,10 @@ public class Util {
 
     public static void sendClosingReport(final Context context, final String res){
         final String SAMPLE_FILE = "closingreport.pdf";
-        final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
             new AsyncTask<Void, Void, Void>(){
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-                    int i = posInterfaceAPI.OpenDevice();
-                    pos = new POSSDK(posInterfaceAPI);
 
                 }
                 @Override
@@ -566,12 +562,6 @@ public class Util {
                         byte[] data = new byte[(int)f.length()];
                         f.readFully(data);
                         pdfLoadImages(data,context);
-                        //pdfLoadImages1(data);
-                        pos.systemFeedLine(2);
-                        pos.systemCutPaper(66, 0);
-                        pos.cashdrawerOpen(0, 20, 20);
-
-                        posInterfaceAPI.CloseDevice();
                     }
                     catch(Exception ignored)
                     {
@@ -607,7 +597,6 @@ public class Util {
     }
     public static void opiningReport(final Context context, final OpiningReport res){
         final String SAMPLE_FILE = "opiningreport.pdf";
-        final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
         new AsyncTask<Void, Void, Void>(){
             @Override
             protected void onPostExecute(Void aVoid) {
@@ -619,13 +608,8 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImages(data,context);
-                    //pdfLoadImages1(data);
-                    pos.systemFeedLine(2);
-                    pos.systemCutPaper(66, 0);
-                    pos.cashdrawerOpen(0, 20, 20);
+                    pdfLoadImagesOpiningReport(data,context);
 
-                    posInterfaceAPI.CloseDevice();
                 }
                 catch(Exception ignored)
                 {
