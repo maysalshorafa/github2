@@ -51,7 +51,6 @@ import java.util.regex.Pattern;
 
 import POSSDK.POSSDK;
 
-import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImages;
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesOpiningReport;
 
 
@@ -544,57 +543,54 @@ public class Util {
     }
 
     public static void sendClosingReport(final Context context, final String res){
-        final String SAMPLE_FILE = "closingreport.pdf";
-            new AsyncTask<Void, Void, Void>(){
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
+        final String SAMPLE_FILE = "opiningreport.pdf";
+        new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                try
+                {
+                    File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                    File file = new File(path,SAMPLE_FILE);
+                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                    byte[] data = new byte[(int)f.length()];
+                    f.readFully(data);
+                    pdfLoadImagesOpiningReport(data,context);
 
                 }
-                @Override
-                protected void onPostExecute(Void aVoid) {
-
-                    try
-                    {
-                        File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
-                        File file = new File(path,SAMPLE_FILE);
-                        RandomAccessFile f = new RandomAccessFile(file, "r");
-                        byte[] data = new byte[(int)f.length()];
-                        f.readFully(data);
-                        pdfLoadImages(data,context);
-                    }
-                    catch(Exception ignored)
-                    {
-
-                    }
-                    //     print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
-
-                    //clearCart();
+                catch(Exception ignored)
+                {
 
                 }
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                //     print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
+
+                //clearCart();
+
+            }
+            @Override
+            protected Void doInBackground(Void... voids) {
+                MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                try {
+                    PdfUA pdfUA = new PdfUA();
+
                     try {
-                        PdfUA pdfUA = new PdfUA();
-
-                        try {
-                            pdfUA.printClosingReport(context,res);
-                        } catch (DocumentException e) {
-                            e.printStackTrace();
-                        }
-
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }catch (JSONException e) {
+                        pdfUA.printClosingReport(context,res);
+                    } catch (DocumentException e) {
                         e.printStackTrace();
                     }
-                    return null;
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            }.execute();
+                return null;
+            }
+        }.execute();
 
     }
+
     public static void opiningReport(final Context context, final OpiningReport res){
         final String SAMPLE_FILE = "opiningreport.pdf";
         new AsyncTask<Void, Void, Void>(){

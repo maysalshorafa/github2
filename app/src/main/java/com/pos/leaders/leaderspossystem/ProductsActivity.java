@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -287,7 +288,11 @@ public class ProductsActivity  extends AppCompatActivity  {
                 }
             }
         }else {
-            lastProduct = productDBAdapter.getLastRow();
+            try {
+                lastProduct = productDBAdapter.getLastRow();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if(editableProduct==null){
                 if(Util.isInteger(lastProduct.getProductCode())){
                     int a = Integer.parseInt(lastProduct.getProductCode())+1;

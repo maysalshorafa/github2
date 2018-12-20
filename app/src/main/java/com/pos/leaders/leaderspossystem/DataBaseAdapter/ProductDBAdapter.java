@@ -12,7 +12,6 @@ import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductStatus;
 import com.pos.leaders.leaderspossystem.Models.ProductUnit;
 import com.pos.leaders.leaderspossystem.R;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -487,12 +486,13 @@ public class ProductDBAdapter {
         }
         return true;
     }
-    public Product getLastRow() {
+    public Product getLastRow() throws Exception {
         Product product = null;
-        Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
+        Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" order by id desc", null);
         if (cursor.getCount() < 1) // zReport Not Exist
         {
             cursor.close();
+            throw new Exception("there is no rows on  product Table");
         }
         cursor.moveToFirst();
         product = makeProduct(cursor);
