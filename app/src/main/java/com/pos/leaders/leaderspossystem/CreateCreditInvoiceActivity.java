@@ -132,7 +132,12 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                         productSkuList.add(cartDetailsObject.getString("sku"));
                         productCount.add(cartDetailsObject.getInt("quantity"));
                         String sku = cartDetailsObject.getString("sku");
-                        productList.add(productDBAdapter.getProductByBarCode(sku));
+                        String pId = cartDetailsObject.getString("productId");
+                        if(Long.parseLong(pId)==-1){
+                            productList.add(new Product(Long.parseLong(String.valueOf(-1)),"General","General",cartDetailsObject.getDouble("unitPrice"),"0","0",Long.parseLong(String.valueOf(1)),Long.parseLong(String.valueOf(1))));
+                        }else {
+                            productList.add(productDBAdapter.getProductByBarCode(sku));
+                        }
                     }
                     final Dialog productDialog = new Dialog(CreateCreditInvoiceActivity.this);
                     productDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -277,30 +282,28 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         Log.d("Invoice log",invoice.toString());
                                         String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
                                          jsonObject = new JSONObject(res);
+                                        Log.d("rrrrr",res);
 
                                         if(jsonObject.get("status").equals("200")){
                                             ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
                                             zReportDBAdapter.open();
                                             ZReport zReport =null;
+                                            JSONObject r = jsonObject.getJSONObject(MessageKey.responseBody);
                                             try {
                                                 zReport = zReportDBAdapter.getLastRow();
                                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
                                                 posInvoiceDBAdapter.open();
-                                                posInvoiceDBAdapter.insertEntry(creditAmount,zReport.getzReportId(),DocumentType.CREDIT_INVOICE.getValue(),"",jsonObject.getString("docNum"));
+                                                posInvoiceDBAdapter.insertEntry(creditAmount,zReport.getzReportId(),DocumentType.CREDIT_INVOICE.getValue(),"",r.getString("docNum"));
                                             } catch (Exception e) {
                                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
                                                 posInvoiceDBAdapter.open();
-                                                posInvoiceDBAdapter.insertEntry(creditAmount,-1,DocumentType.CREDIT_INVOICE.getValue(),"",jsonObject.getString("docNum"));
+                                                posInvoiceDBAdapter.insertEntry(creditAmount,-1,DocumentType.CREDIT_INVOICE.getValue(),"",r.getString("docNum"));
                                                 e.printStackTrace();
                                             }
-                                        String msgData = jsonObject.getString(MessageKey.responseBody);
-                                        Log.d("result",msgData.toString());
-                                        JSONObject finalRes = new JSONObject(msgData);
-                                        JSONObject response = finalRes.getJSONObject("documents");
                                         PdfUA pdfUA = new PdfUA();
 
                                         try {
-                                            pdfUA.printCreditInvoiceReport(context,response.toString(),"source");
+                                            pdfUA.printCreditInvoiceReport(context,r.toString(),"source");
                                         } catch (DocumentException e) {
                                             e.printStackTrace();
                                         }

@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="@string/name"
+                    android:text="@string/product_code"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textSize="20dp"

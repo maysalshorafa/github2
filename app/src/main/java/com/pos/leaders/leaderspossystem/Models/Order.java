@@ -269,6 +269,8 @@ public class Order {
 				", cartDiscount=" + cartDiscount +
 				", customer_name='" + customer_name + '\'' +
 				", orderKey='" + orderKey + '\'' +
+				'\'' +
+				", numberDiscount='" + numberDiscount + '\'' +
 				'}';
 	}
 

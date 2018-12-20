@@ -104,6 +104,7 @@ public class CashPayment {
                 ",\"amount\":" + amount +
                 ",\"orderId\":" + orderId +
                 ",\"currencyRate\":" + currencyRate +
+                ",\"actualCurrencyRate\":" + actualCurrencyRate +
                 "}";
     }
 

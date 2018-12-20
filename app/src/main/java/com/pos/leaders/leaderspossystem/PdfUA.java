@@ -680,12 +680,12 @@ public class PdfUA {
         insertCell(dateTable, jsonObject.getDouble("expectedOpining")+"", Element.ALIGN_LEFT, 1, dateFont);
         insertCell(dateTable,  jsonObject.getDouble("actualOpining")-jsonObject.getDouble("expectedOpining")+"", Element.ALIGN_LEFT, 1, dateFont);
 
-
+/**
         insertCell(dateTable, CONSTANT.CASH, Element.ALIGN_LEFT, 1, dateFont);
         insertCell(dateTable, jsonObject.getDouble("actualCash")+"", Element.ALIGN_LEFT, 1, dateFont);
         insertCell(dateTable, jsonObject.getDouble("expectedCash")+"", Element.ALIGN_LEFT, 1, dateFont);
         insertCell(dateTable,  jsonObject.getDouble("actualCash")-jsonObject.getDouble("expectedCash")+"", Element.ALIGN_LEFT, 1, dateFont);
-
+**/
         insertCell(dateTable, CONSTANT.CHECKS, Element.ALIGN_LEFT, 1, dateFont);
         insertCell(dateTable, jsonObject.getDouble("actualCheck")+"", Element.ALIGN_LEFT, 1, dateFont);
         insertCell(dateTable, jsonObject.getDouble("expectedCheck")+"", Element.ALIGN_LEFT, 1, dateFont);
@@ -812,7 +812,7 @@ public class PdfUA {
             JSONObject jsonObject1 = itemJson.getJSONObject(a);
             String sku = jsonObject1.getString("sku");
             Product product= productDBAdapter.getProductByBarCode(sku);
-            insertCell(orderDetailsTable, product.getName(), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(orderDetailsTable, product.getProductCode(), Element.ALIGN_LEFT, 1, dateFont);
             insertCell(orderDetailsTable, ""+jsonObject1.getInt("quantity"), Element.ALIGN_LEFT, 1, dateFont);
             insertCell(orderDetailsTable,product.getSku(), Element.ALIGN_LEFT, 1, dateFont);
 

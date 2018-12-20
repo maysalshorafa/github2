@@ -223,7 +223,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
     private void setExcess() {
         excess = Double.parseDouble(Util.makePrice(totalPrice/actualCurrencyRate)) - Double.parseDouble(Util.makePrice(totalPaid/actualCurrencyRate)) ;
-        tvExcess.setText(Util.makePrice(excess / selectedCurrencyRate));
+        tvExcess.setText(Util.makePrice(excess));
     }
 
     private void updateView() {

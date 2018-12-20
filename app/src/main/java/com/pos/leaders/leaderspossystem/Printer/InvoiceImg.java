@@ -219,14 +219,14 @@ public class InvoiceImg {
         for (OrderDetails o : orders) {
             count+=o.getQuantity();
             if (o.getProduct().getDisplayName().equals("General"))
-                o.getProduct().setName(context.getString(R.string.general));
+                o.getProduct().setProductCode(context.getString(R.string.general));
             int cut = 11;
             if (o.getProduct().getDisplayName().length() < cut)
                 cut = o.getProduct().getDisplayName().length();
             name.text += (o.getProduct().getDisplayName().substring(0, cut) + newLineL);
             counter.text += o.getQuantity() + "\n";
-            unitPrice.text +=String.format(new Locale("en"), "%.2f", o.getUnitPrice()) + "\n";
-            price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
+            unitPrice.text += Util.makePrice(o.getUnitPrice()) + "\n";
+            price.text +=  Util.makePrice(o.getItemTotalPrice()) + "\n";
             discount.text += String.format(new Locale("en"), "%.2f", o.getDiscount()/100) + "\n";
             SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
             saleTotalPrice += o.getItemTotalPrice();
@@ -388,7 +388,7 @@ public class InvoiceImg {
         for (OrderDetails o : sale.getOrders()) {
             count+=o.getQuantity();
             if (o.getProduct().getDisplayName().equals("General"))
-                o.getProduct().setName(context.getString(R.string.general));
+                o.getProduct().setProductCode(context.getString(R.string.general));
             int cut = 11;
             if (o.getProduct().getDisplayName().length() < cut)
                 cut = o.getProduct().getDisplayName().length();
@@ -541,7 +541,7 @@ public class InvoiceImg {
         for (OrderDetails o : sale.getOrders()) {
             count += o.getQuantity();
             if (o.getProduct().getDisplayName().equals("General"))
-                o.getProduct().setName(context.getString(R.string.general));
+                o.getProduct().setProductCode(context.getString(R.string.general));
             int cut = 11;
             if (o.getProduct().getDisplayName().length() < cut)
                 cut = o.getProduct().getDisplayName().length();
@@ -653,7 +653,7 @@ public class InvoiceImg {
         for (OrderDetails o : sale.getOrders()) {
             count=o.getQuantity();
             if (o.getProduct().getDisplayName().equals("General"))
-                o.getProduct().setName(context.getString(R.string.general));
+                o.getProduct().setProductCode(context.getString(R.string.general));
             int cut = 11;
             if (o.getProduct().getDisplayName().length() < cut)
                 cut = o.getProduct().getDisplayName().length();
@@ -738,7 +738,7 @@ public class InvoiceImg {
         for (OrderDetails o : order.getOrders()) {
             count=o.getQuantity();
             if (o.getProduct().getDisplayName().equals("General"))
-                o.getProduct().setName(context.getString(R.string.general));
+                o.getProduct().setProductCode(context.getString(R.string.general));
             int cut = 11;
             if (o.getProduct().getDisplayName().length() < cut)
                 cut = o.getProduct().getDisplayName().length();
@@ -896,7 +896,7 @@ public class InvoiceImg {
         for (OrderDetails o : orders) {
             count+=o.getQuantity();
             if (o.getProduct().getDisplayName().equals("General"))
-                o.getProduct().setName(context.getString(R.string.general));
+                o.getProduct().setProductCode(context.getString(R.string.general));
             int cut = 11;
             if (o.getProduct().getDisplayName().length() < cut)
                 cut = o.getProduct().getDisplayName().length();
@@ -995,7 +995,7 @@ public class InvoiceImg {
         for (OrderDetails o : orders) {
             count+=o.getQuantity();
             if (o.getProduct().getDisplayName().equals("General"))
-                o.getProduct().setName(context.getString(R.string.general));
+                o.getProduct().setProductCode(context.getString(R.string.general));
             int cut = 11;
             if (o.getProduct().getDisplayName().length() < cut)
                 cut = o.getProduct().getDisplayName().length();

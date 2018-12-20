@@ -1467,7 +1467,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     userData.put("employeeId",SESSION._EMPLOYEE.getEmployeeId());
                                                     userData.put("name",SESSION._EMPLOYEE.getEmployeeName());
                                                     Log.d("customer",customerData.toString());
-                                                    Documents documents = new Documents("Invoice",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),SESSION._ORDERS.getTotalPrice(),0,SESSION._ORDERS.getTotalPrice(), InvoiceStatus.UNPAID,"test","test","ILS",SESSION._ORDERS.cartDiscount);
+                                                    Documents documents = new Documents("Invoice",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),SESSION._ORDERS.getTotalPrice(),0,SESSION._ORDERS.getTotalPrice(), InvoiceStatus.UNPAID,"test","test","ILS",SESSION._ORDERS.cartDiscount,SESSION._ORDERS.getNumberDiscount());
                                                     String doc = mapper.writeValueAsString(documents);
                                                     JSONObject docJson= new JSONObject(doc);
 
@@ -1844,12 +1844,17 @@ public class SalesCartActivity extends AppCompatActivity {
                  JSONArray items = jsonObject.getJSONArray("cartDetailsList");
                  final JSONObject customerJson = orderDocJsonObj.getJSONObject("documentsData").getJSONObject("customer");
                  Order order = new Order(SESSION._EMPLOYEE.getEmployeeId(),new Timestamp(Long.parseLong(orderDocJsonObj.getJSONObject("documentsData").getString("date"))),0,false,orderDocJsonObj.getJSONObject("documentsData").getDouble("total"),0);
-                 Customer customer = customerDBAdapter.getCustomerByID(customerJson.getLong("customerId"));
+                 Customer customer = customerDBAdapter.getCustomerByID(Long.parseLong(orderDocJsonObj.getJSONObject("documentsData").getJSONObject("customer").getString("customerId")));
                  order.setCustomer(customer);
                  SESSION._ORDERS=order;
                  for (int i=0;i<items.length();i++){
+                     Product p = null;
                      JSONObject orderDetailsJson =items.getJSONObject(i);
-                     Product p =productDBAdapter.getProductByBarCode(orderDetailsJson.getString("sku"));
+                     if(Long.parseLong(orderDetailsJson.getString("productId"))==-1){
+                         p=new Product(Long.parseLong(String.valueOf(-1)),"General","General",orderDetailsJson.getDouble("unitPrice"),"0","0",Long.parseLong(String.valueOf(1)),Long.parseLong(String.valueOf(1)));
+                     }else {
+                         p = productDBAdapter.getProductByBarCode(orderDetailsJson.getString("sku"));
+                     }
                      OrderDetails orderDetails= new OrderDetails(orderDetailsJson.getInt("quantity"),orderDetailsJson.getDouble("userOffer"),p,orderDetailsJson.getDouble("amount"),orderDetailsJson.getDouble("unitPrice"),orderDetailsJson.getDouble("discount"));
                         SESSION._ORDER_DETAILES.add(orderDetails);
                  }

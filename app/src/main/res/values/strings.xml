@@ -191,6 +191,7 @@
 
     <!--Products -->
     <string name="name">Name</string>
+    <string name="product_code">Code</string>
     <string name="barcode">Barcode</string>
     <string name="description">Description</string>
     <string name="cost_price">Cost Price</string>

@@ -99,6 +99,7 @@ public class DocumentControl {
                     JSONArray cart = new JSONArray(SESSION._ORDER_DETAILES.toString());
                     orderJson.put("cartDetailsList",cart);
                     Log.d("orderJson",orderJson.toString());
+
                     OrderDocuments documents = new OrderDocuments("OrderDocument",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),SESSION._ORDERS.getTotalPrice(),"test","ILS", OrderDocumentStatus.READY);
                     String doc = mapper.writeValueAsString(documents);
                     Log.d("doc",doc.toString());

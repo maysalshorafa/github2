@@ -28,6 +28,7 @@ import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCategoryGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +62,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     View previouslySelectedItem = null;
 
 	ProductCatalogGridViewAdapter adapter;
-	private Product editableProduct;
+	private Product editableProduct , lastProduct;
     long check;
     long depID;
     boolean withTax , manageStock = true;
@@ -214,6 +215,7 @@ public class ProductsActivity  extends AppCompatActivity  {
 
             }
         });
+
         Bundle extras = getIntent().getExtras();
 
         if(extras!=null) {
@@ -228,7 +230,7 @@ public class ProductsActivity  extends AppCompatActivity  {
             if (extras.containsKey("productID")) {
                 try {
                     editableProduct = productDBAdapter.getProductByID(extras.getLong("productID"));
-                    etName.setText(editableProduct.getName());
+                    etName.setText(editableProduct.getProductCode());
                     etDisplayName.setText(editableProduct.getDisplayName());
                     etBarcode.setText(editableProduct.getBarCode());
                     etSku.setText(editableProduct.getSku());
@@ -284,7 +286,18 @@ public class ProductsActivity  extends AppCompatActivity  {
                     ex.printStackTrace();
                 }
             }
+        }else {
+            lastProduct = productDBAdapter.getLastRow();
+            if(editableProduct==null){
+                if(Util.isInteger(lastProduct.getProductCode())){
+                    int a = Integer.parseInt(lastProduct.getProductCode())+1;
+                    etName.setText(a+"");
+                }else {
+                    etName.setText(lastProduct.getProductCode().concat("1"));
+                }
+            }
         }
+
     }
 
     private boolean addEditProduct() {
@@ -441,7 +454,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                 Toast.makeText(ProductsActivity.this,R.string.please_insert_category_name,Toast.LENGTH_LONG).show();
             }else {
                 editableProduct.setCategoryId(depID);
-                editableProduct.setName(etName.getText().toString());
+                editableProduct.setProductCode(etName.getText().toString());
                 editableProduct.setDisplayName(etDisplayName.getText().toString());
                 editableProduct.setBarCode(etBarcode.getText().toString());
                 editableProduct.setSku(etSku.getText().toString());

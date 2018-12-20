@@ -14,7 +14,7 @@ import java.util.Locale;
 
 public class Product {
     private long productId;
-    private String name;
+    private String productCode;
     private String barCode;
     private String description;
     private double price;
@@ -77,10 +77,10 @@ public class Product {
 
 
 
-    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax,Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight) {
+    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax,Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight) {
 
         this.productId = productId;
-        this.name = name;
+        this.productCode = productCode;
         this.barCode = barCode;
         this.description = description;
         this.price = price;
@@ -104,10 +104,10 @@ public class Product {
     }
 
 
-    public Product(long productId, String name, String barCode, String description, double price, double costPrice, boolean withTax, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight) {
+    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight) {
 
         this.productId = productId;
-        this.name = name;
+        this.productCode =productCode;
         this.barCode = barCode;
         this.description = description;
         this.price = price;
@@ -129,17 +129,17 @@ public class Product {
         this.weight=weight;
     }
 
-    public Product(long productId, String name,String displayName, double price, long byEmployee) {
+    public Product(long productId, String productCode,String displayName, double price, long byEmployee) {
         this.productId = productId;
-        this.name = name;
+        this.productCode = productCode;
         this.displayName = displayName;
         this.price = price;
         this.byEmployee = byEmployee;
     }
 
-    public Product(long productId, String name,String displayName, double price, String barCode,String sku, long categoryId, long byEmployee) {
+    public Product(long productId, String productCode,String displayName, double price, String barCode,String sku, long categoryId, long byEmployee) {
         this.productId = productId;
-        this.name = name;
+        this.productCode = productCode;
         this.price = price;
         this.barCode=barCode;
         this.categoryId =categoryId;
@@ -151,8 +151,8 @@ public class Product {
         this.sku = sku;
     }
 
-    public Product(String name,String displayName, double price, double costPrice, String barCode,String sku, long byEmployee) {
-        this.name = name;
+    public Product(String productCode,String displayName, double price, double costPrice, String barCode,String sku, long byEmployee) {
+        this.productCode = productCode;
         this.price = price;
         this.costPrice = costPrice;
         this.barCode = barCode;
@@ -162,9 +162,9 @@ public class Product {
         this.sku = sku;
     }
 
-    public Product(long productId, String name, String displayName, double price, long byEmployee, String barCode,String sku) {
+    public Product(long productId, String productCode, String displayName, double price, long byEmployee, String barCode,String sku) {
         this.productId = productId;
-        this.name = name;
+        this.productCode = productCode;
         this.price = price;
         this.byEmployee = byEmployee;
         this.barCode = barCode;
@@ -173,7 +173,7 @@ public class Product {
     }
 
     public Product(Product product) {
-        this(product.getProductId(), product.getName(), product.getBarCode(), product.getDescription(),
+        this(product.getProductId(), product.getProductCode(), product.getBarCode(), product.getDescription(),
                 product.getPrice(), product.getCostPrice(), product.isWithTax(),
                 product.getCreatedAt(), product.isHide(), product.getCategoryId(), product.getByEmployee(),
                 product.getWithPos(), product.getWithPointSystem(), product.getSku(), product.getStatus(), product.getDisplayName(),
@@ -195,9 +195,7 @@ public class Product {
     public String getDisplayName() {
         return displayName;
     }
-    public String getName() {
-        return name;
-    }
+
 
     public String getSku() {
         return sku;
@@ -276,8 +274,13 @@ public class Product {
 
     //region Setters
 
-    public void setName(String name) {
-        this.name = name;
+
+    public String getProductCode() {
+        return productCode;
+    }
+
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
     }
 
     public void setBarCode(String barCode) {
@@ -365,7 +368,7 @@ public class Product {
     public String toString() {
         return "Product{" +
                 "productId=" + productId +
-                ", name='" + name + '\'' +
+                ", name='" + productCode + '\'' +
                 ", barCode='" + barCode + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
@@ -398,9 +401,9 @@ public class Product {
             return false;
 
         Product product = (Product) o;
-        if(name==null||product.name==null)
+        if(productCode==null||product.productCode==null)
             return false;
-        if (!name.equals(product.name))
+        if (!productCode.equals(product.productCode))
             return false;
 
         return barCode.equals(product.barCode);
@@ -409,18 +412,18 @@ public class Product {
 
     @Override
     public int hashCode() {
-        int result=(name!=null)?name.hashCode():0;
+        int result=(productCode!=null)?productCode.hashCode():0;
         result = 31 * result + barCode.hashCode();
         return result;
     }
 
     public String BKMVDATA(int rowNumber, String companyID) {
         String OP = "+";
-        if (name.length() > 49)
-            name = name.substring(0, 49);
-        name = "its cool";
+        if (productCode.length() > 49)
+            productCode = productCode.substring(0, 49);
+        productCode = "its cool";
         return "M100" + String.format(Util.locale, "%09d", rowNumber) + companyID + String.format(Util.locale, "%20s", barCode)
-                + String.format(Util.locale, "%20s", barCode) + String.format(Util.locale, "%20s", productId) + String.format("%50s", name)
+                + String.format(Util.locale, "%20s", barCode) + String.format(Util.locale, "%20s", productId) + String.format("%50s", productCode)
                 + Util.spaces(10) + Util.spaces(30) + String.format(new Locale("he"), "%20s", "Unit")
                 + OP + Util.x9V99(0)
                 + OP + Util.x9V99(0)

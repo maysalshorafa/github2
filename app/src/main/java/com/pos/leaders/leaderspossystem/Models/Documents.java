@@ -24,8 +24,19 @@ public class Documents {
     private JSONObject user;
     private ArrayList<JSONObject>cartDetailsList;
     private double cartDiscount;
+    private double numberDiscount;
+
     public Documents() {
     }
+
+    public double getNumberDiscount() {
+        return numberDiscount;
+    }
+
+    public void setNumberDiscount(double numberDiscount) {
+        this.numberDiscount = numberDiscount;
+    }
+
     public String getType() {
         return type;
     }
@@ -145,7 +156,7 @@ public class Documents {
         this.cartDiscount = cartDiscount;
     }
 
-    public Documents(String type, Timestamp date, Timestamp fulfillmentDate, Timestamp dueDate, double total, double totalPaid, double balanceDue, InvoiceStatus invoiceStatus, String publicNote, String privateNote, String currency, double cartDiscount) {
+    public Documents(String type, Timestamp date, Timestamp fulfillmentDate, Timestamp dueDate, double total, double totalPaid, double balanceDue, InvoiceStatus invoiceStatus, String publicNote, String privateNote, String currency, double cartDiscount,double numberDiscount) {
         this.type = type;
         this.date = date;
         this.fulfillmentDate = fulfillmentDate;
@@ -158,6 +169,7 @@ public class Documents {
         this.privateNote = privateNote;
         this.currency = currency;
         this.cartDiscount=cartDiscount;
+        this.numberDiscount=numberDiscount;
     }
 
     @Override
@@ -178,6 +190,8 @@ public class Documents {
                 ", user=" + user +
                 ", cartDetailsList=" + cartDetailsList +
                 ", cartDiscount=" + cartDiscount +
+                ", numberDiscount=" + numberDiscount +
+
                 '}';
     }
 }

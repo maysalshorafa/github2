@@ -12,6 +12,7 @@ import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductStatus;
 import com.pos.leaders.leaderspossystem.Models.ProductUnit;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -137,7 +138,7 @@ public class ProductDBAdapter {
             return product.getProductId();
         }
         Product productCheckName = null;
-        productCheckName = getByProductName(p.getName());
+        productCheckName = getByProductName(p.getProductCode());
         if (productCheckName != null) {
             Log.i("Inserting product", "name is busy");
             return productCheckName.getProductId();
@@ -146,7 +147,7 @@ public class ProductDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(PRODUCTS_COLUMN_ID, p.getProductId());
-        val.put(PRODUCTS_COLUMN_NAME, p.getName());
+        val.put(PRODUCTS_COLUMN_NAME, p.getProductCode());
         val.put(PRODUCTS_COLUMN_BARCODE, p.getBarCode());
         val.put(PRODUCTS_COLUMN_DESCRIPTION, p.getDescription());
         val.put(PRODUCTS_COLUMN_PRICE, p.getPrice());
@@ -272,7 +273,7 @@ public class ProductDBAdapter {
         productDBAdapter.open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(PRODUCTS_COLUMN_NAME, product.getName());
+        val.put(PRODUCTS_COLUMN_NAME, product.getProductCode());
         val.put(PRODUCTS_COLUMN_BARCODE, product.getBarCode());
         val.put(PRODUCTS_COLUMN_DESCRIPTION, product.getDescription());
         val.put(PRODUCTS_COLUMN_PRICE, product.getPrice());
@@ -302,7 +303,7 @@ public class ProductDBAdapter {
         productDBAdapter.open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(PRODUCTS_COLUMN_NAME, product.getName());
+        val.put(PRODUCTS_COLUMN_NAME, product.getProductCode());
         val.put(PRODUCTS_COLUMN_BARCODE, product.getBarCode());
         val.put(PRODUCTS_COLUMN_DESCRIPTION, product.getDescription());
         val.put(PRODUCTS_COLUMN_PRICE, product.getPrice());
@@ -485,5 +486,18 @@ public class ProductDBAdapter {
             return false;
         }
         return true;
+    }
+    public Product getLastRow() {
+        Product product = null;
+        Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
+        if (cursor.getCount() < 1) // zReport Not Exist
+        {
+            cursor.close();
+        }
+        cursor.moveToFirst();
+        product = makeProduct(cursor);
+        cursor.close();
+
+        return product;
     }
 }

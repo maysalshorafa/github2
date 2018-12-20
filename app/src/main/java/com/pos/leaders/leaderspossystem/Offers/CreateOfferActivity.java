@@ -110,7 +110,7 @@ public class CreateOfferActivity extends AppCompatActivity {
                       product = productDBAdapter.getProductByID(a);
                       Log.d("editableOffer",product.toString());
                     }
-                    spRuleValue_1.setText(product.getName());
+                    spRuleValue_1.setText(product.getProductCode());
                     etStart.setText(editableOffer.getStartDate()+"");
                     etEnd.setText(editableOffer.getEndDate()+"");
                     etOfferName.setText(editableOffer.getName());

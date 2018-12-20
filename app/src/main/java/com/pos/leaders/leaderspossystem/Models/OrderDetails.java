@@ -59,7 +59,7 @@ public class OrderDetails {
 		hash = hash * prime + (offerRule ? 7 : 3);
 		hash = hash * prime + (offer == null ? 0 : offer.hashCode());
 		hash = hash * prime + (product == null ? 0 : product.hashCode());
-		hash = hash * prime + (product == null ? 0 : (product.getName()==null?0:product.getName().hashCode()));
+		hash = hash * prime + (product == null ? 0 : (product.getProductCode()==null?0:product.getProductCode().hashCode()));
 		hash = hash * prime + (int) rowDiscount;
 		hash = hash * prime + (int) (new Date().getTime() % 10000);
 		hash = hash * prime + hashCode();
@@ -279,7 +279,7 @@ public class OrderDetails {
 		double totalDiscount = (getItemTotalPrice() * discount / 100);
 		double noTax = paidAmount / (1 + (SETTINGS.tax / 100));
 		if(product.getDisplayName().length()>29){
-			product.setName(product.getDisplayName().substring(0,29));
+			product.setProductCode(product.getDisplayName().substring(0,29));
 		}
 
 		return "D110" + String.format(Util.locale, "%09d", rowNumber) + companyID + s + String.format(Util.locale, "%020d", orderId) + String.format(Util.locale, "%04d", orderDetailsId)
@@ -303,7 +303,7 @@ public class OrderDetails {
 				", \"unitPrice\":" + unitPrice +
 				", \"paidAmount\":" + paidAmount +
 				", \"discount\":" + discount +
-				", \"name\":" + "\""+product.getName() +"\""+
+				", \"name\":" + "\""+product.getProductCode() +"\""+
 				", \"scannable\":" + "\""+scannable +"\""+
 				", \"sku\":"+"\""+product.getSku()  +"\""+
 				", \"orderKey\":" + "\""+orderKey +"\""+
