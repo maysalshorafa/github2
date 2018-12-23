@@ -154,7 +154,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     tvTotalPriceWithMultiCurrency.setVisibility(View.VISIBLE);
                     tvActualCurrencyRate.setVisibility(view.VISIBLE);
                     tvActualCurrencyRate.setText(actualCurrencyRate+"");
-                    tvTotalPriceWithMultiCurrency.setText(Double.parseDouble(Util.makePrice(totalPrice))+"/"+selectedCurrencyRate+"="+Util.makePrice(totalPrice / selectedCurrencyRate) + " " + currenciesNames.get(position));
+                    tvTotalPriceWithMultiCurrency.setText(Double.parseDouble(Util.makePrice(totalPrice))+"/"+actualCurrencyRate+"="+Util.makePrice(totalPrice / actualCurrencyRate) + " " + currenciesNames.get(position));
                 }else {
                     actualCurrencyRate=1;
                     tvTotalPriceWithMultiCurrency.setVisibility(View.GONE);
@@ -183,7 +183,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         ArrayList<PaymentTable> tempArray = new ArrayList<>(paymentTables);
         paymentTables.clear();
         paymentTables.add(new PaymentTable(Double.parseDouble(Util.makePrice(totalPrice)), Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + ""),1));
-        excess = totalPrice;
+        excess = totalPrice/getCurrencyRate(tempArray.get(0).getCurrency().getType());
         totalPaid = 0;
         for(int i=0;i<tempArray.size()-1;i++) {
             insertNewRow(tempArray.get(i).getTendered(), tempArray.get(i).getCurrency().getType(), getCurrencyRate(tempArray.get(i).getCurrency().getType()));
