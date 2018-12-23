@@ -28,6 +28,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
@@ -857,16 +858,42 @@ public class PdfUA {
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
         headingTable.setRunDirection(0);
+
+        PdfPTable dataTable = new PdfPTable(2);
+        dataTable.deleteBodyRows();
+        dataTable.setRunDirection(0);
+
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
      insertCell(headingTable, context.getString(R.string.a_report_amount) , Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, context.getString(R.string.a_report_amount) +" "+context.getString(R.string.amount)+ ":"+ opiningReport.getAmount(), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.a_report_amount) +" "+context.getString(R.string.total)+ ":"+ opiningReport.getAmount(), Element.ALIGN_CENTER, 1, font);
 
         insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+        OpiningReportDetailsDBAdapter opiningReportDetailsDBAdapter = new OpiningReportDetailsDBAdapter(context);
+        opiningReportDetailsDBAdapter.open();
+        List<OpiningReportDetails>opiningReportDetailsList=opiningReportDetailsDBAdapter.getListOpiningReport(opiningReport.getOpiningReportId());
+        if(opiningReportDetailsList.size()>=0){
+            for(int i = 0 ; i<opiningReportDetailsList.size();i++) {
+                String currencyType = "";
+                if(opiningReportDetailsList.get(i).getType()==0){
+                    currencyType="Shekel";
+                }else if(opiningReportDetailsList.get(i).getType()==1){
+                    currencyType="USD";
+                }else if(opiningReportDetailsList.get(i).getType()==2){
+                    currencyType="GBP";
+                }else {
+                    currencyType="EUR";
+                }
+                insertCell(dataTable, context.getString(R.string.opening_report) + ":" + opiningReportDetailsList.get(i).getAmount()+"  "+currencyType, Element.ALIGN_LEFT, 2, dateFont);
+            }
+        }
 
         //add table to document
         document.add(headingTable);
+        if(opiningReportDetailsList.size()>=0) {
+            document.add(dataTable);
+        }
         document.close();
 
         //en

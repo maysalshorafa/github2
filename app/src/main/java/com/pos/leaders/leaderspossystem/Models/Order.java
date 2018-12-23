@@ -40,6 +40,7 @@ public class Order {
 	private String orderKey;
 	private double numberDiscount;
 	// region Constructors
+	public double totalSaved;
 
 
 	public Order() {

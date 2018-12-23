@@ -18,6 +18,7 @@ import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -353,7 +354,7 @@ public class InvoiceImg {
         }
         if ((int) totalSaved != 0) {
             String s = context.getString(R.string.ins);
-            Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" + String.format(new Locale("en"), "%.2f %s", totalSaved, s), 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" + String.format(new Locale("en"), "%.2f %s", SESSION._ORDERS.totalSaved, s), 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
             blocks.add(totSaved.Bold().Left());
         }
 
@@ -482,7 +483,7 @@ public class InvoiceImg {
             blocks.add(bCopyDate.Left());
         }
         if ((int) totalSaved != 0) {
-            Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" + String.format(new Locale("en"), "%.2f", totalSaved) + " " + context.getString(R.string.ins), 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" + String.format(new Locale("en"), "%.2f", SESSION._ORDERS.totalSaved) + " " + context.getString(R.string.ins), 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
             blocks.add(totSaved.Bold().Left());
         }
 
@@ -829,7 +830,7 @@ public class InvoiceImg {
             blocks.add(bCopyDate.Left());
         }
         if ((int) totalSaved != 0) {
-            Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" + String.format(new Locale("en"), "%.2f", totalSaved) + " " + context.getString(R.string.ins), 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" + String.format(new Locale("en"), "%.2f", SESSION._ORDERS.totalSaved) + " " + context.getString(R.string.ins), 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
             blocks.add(totSaved.Bold().Left());
         }
 
@@ -962,7 +963,7 @@ public class InvoiceImg {
         }
         if ((int) totalSaved != 0) {
             String s = context.getString(R.string.ins);
-            Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" + String.format(new Locale("en"), "%.2f %s", totalSaved, s), 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" + String.format(new Locale("en"), "%.2f %s", SESSION._ORDERS.totalSaved, s), 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
             blocks.add(totSaved.Bold().Left());
         }
 

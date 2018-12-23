@@ -1295,6 +1295,11 @@ public class SalesCartActivity extends AppCompatActivity {
                 if (SESSION._ORDER_DETAILES.size() > 0) {
                     if (SETTINGS.enableCurrencies) {
                         //Intent intent = new Intent(SalesCartActivity.this, CashActivity.class);
+                        String s =(tvTotalSaved.getText().toString());
+                        if (s != null && s.length() > 0 && s.charAt(s.length() - 1) == '₪') {
+                            s = s.substring(0, s.length() - 1);
+                        }
+                        SESSION._ORDERS.totalSaved=Double.parseDouble(s);
                         Intent intent = new Intent(SalesCartActivity.this, MultiCurrenciesPaymentActivity.class);
                         intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, Double.parseDouble(Util.makePrice(saleTotalPrice)));
                         startActivityForResult(intent, REQUEST_MULTI_CURRENCY_ACTIVITY_CODE);
@@ -1316,6 +1321,11 @@ public class SalesCartActivity extends AppCompatActivity {
         btnCreditCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String s =(tvTotalSaved.getText().toString());
+                if (s != null && s.length() > 0 && s.charAt(s.length() - 1) == '₪') {
+                    s = s.substring(0, s.length() - 1);
+                }
+                SESSION._ORDERS.totalSaved=Double.parseDouble(s);
                 if (SESSION._ORDER_DETAILES.size() > 0 && SETTINGS.creditCardEnable) {
                     if (SETTINGS.pinpadEnable) {//pinpad is active
                         Log.i("CreditCard", "PinPad is active");
@@ -1341,6 +1351,11 @@ public class SalesCartActivity extends AppCompatActivity {
         btnOtherWays.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String s =(tvTotalSaved.getText().toString());
+                if (s != null && s.length() > 0 && s.charAt(s.length() - 1) == '₪') {
+                    s = s.substring(0, s.length() - 1);
+                }
+                SESSION._ORDERS.totalSaved=Double.parseDouble(s);
                 if (SESSION._ORDER_DETAILES.size() > 0) {
                     Intent intent = new Intent(SalesCartActivity.this, ChecksActivity.class);
                     customerName = customerName_EditText.getText().toString();

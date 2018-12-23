@@ -348,7 +348,7 @@ public class ClosingReportActivity extends AppCompatActivity {
         expectedUsd=usd_plus-usd_minus;
         expectedEur=eur_plus-eur_minus;
         expectedGbp=gbp_plus-gbp_minus;
-        expectedOpining=opiningReport.getAmount();
+        expectedOpining=Double.parseDouble(Util.makePrice(opiningReport.getAmount()));
         opiningExpectedValue.setText(Util.makePrice(expectedOpining));
         cashExpectedValue.setText(Util.makePrice(expectedCash));
         checkExpectedValue.setText(Util.makePrice(expectedCheck));
@@ -375,7 +375,7 @@ public class ClosingReportActivity extends AppCompatActivity {
           actualCredit= Double.parseDouble(creditActualValue.getText().toString());
       }
       if(!shekelActualValue.getText().toString().equals("")){
-          actualCash= Double.parseDouble(shekelActualValue.getText().toString());
+          actualShekel= Double.parseDouble(shekelActualValue.getText().toString());
       }
       if(!usdActualValue.getText().toString().equals("")){
           actualUsd= Double.parseDouble(usdActualValue.getText().toString());

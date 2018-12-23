@@ -12,6 +12,9 @@ import com.pos.leaders.leaderspossystem.Models.OpiningReportDetails;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
@@ -111,6 +114,18 @@ public class OpiningReportDetailsDBAdapter {
                     Double.parseDouble(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_COLUMN_AMOUNT_IN_BASIC_CURRENCY))));
         }
 
+    }
+    public List<OpiningReportDetails> getListOpiningReport(long aReportId){
+        List<OpiningReportDetails> opiningReportDetailsList =new ArrayList<OpiningReportDetails>();
+        Cursor cursor =  db.rawQuery( "select * from "+OPINING_REPORT_DETAILS_TABLE_NAME +" where "+ OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID +"="+aReportId, null );
+        cursor.moveToFirst();
+
+        while(!cursor.isAfterLast()){
+            opiningReportDetailsList.add(makeAReportDetails(cursor));
+            cursor.moveToNext();
+        }
+
+        return opiningReportDetailsList;
     }
 
 

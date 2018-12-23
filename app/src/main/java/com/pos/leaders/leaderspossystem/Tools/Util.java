@@ -543,7 +543,7 @@ public class Util {
     }
 
     public static void sendClosingReport(final Context context, final String res){
-        final String SAMPLE_FILE = "opiningreport.pdf";
+        final String SAMPLE_FILE = "closingreport.pdf";
         new AsyncTask<Void, Void, Void>(){
             @Override
             protected void onPostExecute(Void aVoid) {
