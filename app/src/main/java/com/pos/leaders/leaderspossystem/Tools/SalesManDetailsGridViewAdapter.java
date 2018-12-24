@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.R;
 
 import java.text.SimpleDateFormat;
@@ -121,6 +124,16 @@ public class SalesManDetailsGridViewAdapter extends BaseAdapter {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         salesDate.setText(format.format(customerAssests.get(position).getCreatedAt()));
         saleId.setText(customerAssests.get(position).getOrderId()+"");
+        saleId.setText(customerAssests.get(position).getOrderId()+"");
+
+        if(customerAssests.get(position).getSalesCase().equals("ORDER")){
+            saleId.setText(customerAssests.get(position).getOrderId()+"");
+        }else {
+            OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(context);
+            orderDBAdapter.open();
+            OrderDetails order = orderDBAdapter.getOrderDetailsByID(customerAssests.get(position).getOrderId());
+            saleId.setText(order.getOrderId()+"");
+        }
         if(bgColor%2==0){
             gridView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
         }

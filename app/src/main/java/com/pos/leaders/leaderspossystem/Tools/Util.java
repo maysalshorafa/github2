@@ -31,6 +31,7 @@ import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,6 +52,7 @@ import java.util.regex.Pattern;
 
 import POSSDK.POSSDK;
 
+import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImages;
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesOpiningReport;
 
 
@@ -555,7 +557,7 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImagesOpiningReport(data,context);
+                    pdfLoadImages(data,context);
 
                 }
                 catch(Exception ignored)
@@ -624,6 +626,54 @@ public class Util {
 
                     try {
                         pdfUA.printOpiningReport(context,res);
+                    } catch (DocumentException e) {
+                        e.printStackTrace();
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
+
+    }
+    public static void logInLogOutReport(final Context context, final JSONObject res){
+        final String SAMPLE_FILE = "loginreport.pdf";
+        new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                try
+                {
+                    File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                    File file = new File(path,SAMPLE_FILE);
+                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                    byte[] data = new byte[(int)f.length()];
+                    f.readFully(data);
+                    pdfLoadImages(data,context);
+
+                }
+                catch(Exception ignored)
+                {
+
+                }
+                //     print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
+
+                //clearCart();
+
+            }
+            @Override
+            protected Void doInBackground(Void... voids) {
+                MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                try {
+                    PdfUA pdfUA = new PdfUA();
+
+                    try {
+                        pdfUA.printLogInLogOutUserReport(context,res);
                     } catch (DocumentException e) {
                         e.printStackTrace();
                     }

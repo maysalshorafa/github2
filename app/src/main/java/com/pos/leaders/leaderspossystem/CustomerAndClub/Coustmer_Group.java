@@ -149,7 +149,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
                                 amount= Integer.parseInt(etAmount.getText().toString());
                             }
 
-
+                                if( !etDescription.getText().toString().equals("")&&  !etClubName.getText().toString().equals("")){
                             long i = clubAdapter.insertEntry(etClubName.getText().toString(), etDescription.getText().toString(), id,discount, amount, point);
 
                             if (i > 0) {
@@ -162,6 +162,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
                                     e.printStackTrace();
                                 }
                                 onBackPressed();
+                            }
                             } else {
                                 Log.e("error", "can`t add group");
                                 Toast.makeText(getApplicationContext(), getString(R.string.can_not_add_club_please_try_again), Toast.LENGTH_SHORT).show();

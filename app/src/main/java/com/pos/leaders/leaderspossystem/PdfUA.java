@@ -49,6 +49,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -867,7 +868,6 @@ public class PdfUA {
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
      insertCell(headingTable, context.getString(R.string.a_report_amount) , Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, context.getString(R.string.a_report_amount) +" "+context.getString(R.string.total)+ ":"+ opiningReport.getAmount(), Element.ALIGN_CENTER, 1, font);
 
         insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
         OpiningReportDetailsDBAdapter opiningReportDetailsDBAdapter = new OpiningReportDetailsDBAdapter(context);
@@ -887,6 +887,9 @@ public class PdfUA {
                 }
                 insertCell(dataTable, context.getString(R.string.opening_report) + ":" + opiningReportDetailsList.get(i).getAmount()+"  "+currencyType, Element.ALIGN_LEFT, 2, dateFont);
             }
+        }else {
+            insertCell(headingTable, context.getString(R.string.a_report_amount) +" "+context.getString(R.string.total)+ ":"+ opiningReport.getAmount()+"Shekel", Element.ALIGN_CENTER, 1, font);
+
         }
 
         //add table to document
@@ -900,4 +903,57 @@ public class PdfUA {
 
 
 }
+    public static void  printLogInLogOutUserReport(Context context, JSONObject jsonObject) throws IOException, DocumentException, JSONException {
+        // create file , document region
+        Document document = new Document();
+        String fileName = "loginreport.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+        if(file.exists()){
+            PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
+            writer.print("");
+            writer.close();
+        }
+
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();        //end region
+        //end region
+
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 30);
+        Font dateFont = new Font(urName, 24);
+        //heading table
+        PdfPTable headingTable = new PdfPTable(1);
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+
+        PdfPTable dataTable = new PdfPTable(2);
+        dataTable.deleteBodyRows();
+        dataTable.setRunDirection(0);
+
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.schedule_workers) , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.user_name)+":  " + jsonObject.get("user_name"), Element.ALIGN_CENTER, 1, font);
+        if(jsonObject.get("case").equals("logIn")) {
+            insertCell(headingTable, context.getString(R.string.log_in), Element.ALIGN_CENTER, 1, font);
+        }else  if(jsonObject.get("case").equals("logOut")){
+            insertCell(headingTable, context.getString(R.string.log_out), Element.ALIGN_CENTER, 1, font);
+            insertCell(headingTable, context.getString(R.string.hours_of_work)+" "+jsonObject.get("hours_of_work"), Element.ALIGN_CENTER, 1, font);
+        }
+        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+        Log.d("Uuu",jsonObject.toString());
+
+        //add table to document
+        document.add(headingTable);
+        document.close();
+
+        //en
+
+
+    }
+
 }

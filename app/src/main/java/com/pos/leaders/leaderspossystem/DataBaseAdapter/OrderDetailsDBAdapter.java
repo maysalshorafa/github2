@@ -125,6 +125,20 @@ public class OrderDetailsDBAdapter {
 		}
 		return saleOrderList;
 	}
+	public OrderDetails getOrderDetailsByID(long saleID){
+		OrderDetails orderDetails=new OrderDetails();
+		Cursor cursor =  db.rawQuery( "select * from "+ ORDER_DETAILS_TABLE_NAME +" where "+ ORDER_DETAILS_COLUMN_ID +"="+saleID, null );
+		if (cursor.getCount() < 1) // UserName Not Exist
+		{
+			cursor.close();
+			return orderDetails;
+		}
+		cursor.moveToFirst();
+		orderDetails = make(cursor);
+		cursor.close();
+
+		return orderDetails;
+	}
 
 	private OrderDetails make(Cursor cursor){
 		return new OrderDetails(Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_ID))),

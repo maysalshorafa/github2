@@ -12,11 +12,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.Util;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -77,7 +81,15 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
                         long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getEmployeeId());
                         if(scheduleID>0){
                             Toast.makeText(ScheduleWorkersActivity.this,getString(R.string.welcome)+user.getFullName()+getString(R.string.we_wish_to_you_a_happy_business_day),Toast.LENGTH_LONG).show();
-                            onBackPressed();
+                            JSONObject jsonObject = new JSONObject();
+                            try {
+                                jsonObject.put("user_name",user.getFullName());
+                                jsonObject.put("case","logIn");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Util.logInLogOutReport(ScheduleWorkersActivity.this,jsonObject);
+                          //  onBackPressed();
                         }
                 }
                 else {
@@ -98,7 +110,16 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
                 m=((r-(h*1000*60*60))/(1000*60));
                 s=(r-(m*1000*60)-(h*1000*60*60))/(1000);
                 Toast.makeText(ScheduleWorkersActivity.this,getString(R.string.thanks)+user.getFullName() +getString(R.string.the_number_of_hours_you_work_is)+String.format("%02d:%02d:%02d",h,m,s),Toast.LENGTH_LONG).show();
-                onBackPressed();
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("user_name",user.getFullName());
+                    jsonObject.put("case","logOut");
+                    jsonObject.put("hours_of_work",String.format("%02d:%02d:%02d",h,m,s));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Util.logInLogOutReport(ScheduleWorkersActivity.this,jsonObject);
+              //  onBackPressed();
 
             }});
 
