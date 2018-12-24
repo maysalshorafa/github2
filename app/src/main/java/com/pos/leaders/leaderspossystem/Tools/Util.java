@@ -1,11 +1,15 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
 import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -27,6 +31,9 @@ import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.PdfUA;
+import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
+import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
+import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
@@ -50,9 +57,13 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import HPRTAndroidSDK.HPRTPrinterHelper;
+import POSAPI.POSInterfaceAPI;
+import POSAPI.POSUSBAPI;
 import POSSDK.POSSDK;
 
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImages;
+import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesClosingReport;
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesOpiningReport;
 
 
@@ -557,7 +568,7 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImages(data,context);
+                    pdfLoadImagesClosingReport(data,context);
 
                 }
                 catch(Exception ignored)
@@ -689,4 +700,103 @@ public class Util {
         }.execute();
 
     }
+    public static  void printAndOpenCashBoxBTP880(final Context context, final Bitmap bitmap) {
+        final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
+        // final UsbPrinter printer = new UsbPrinter(1155, 30016);
+
+        final ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                dialog.show();
+                ////Hebrew 15 Windows-1255
+
+                int i = posInterfaceAPI.OpenDevice();
+                pos = new POSSDK(posInterfaceAPI);
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                pos.systemFeedLine(2);
+                pos.systemCutPaper(66, 0);
+                pos.cashdrawerOpen(0, 20, 20);
+
+                posInterfaceAPI.CloseDevice();
+                dialog.cancel();
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                InvoiceImg invoiceImg = new InvoiceImg(context);
+                    pos.imageStandardModeRasterPrint(bitmap, CONSTANT.PRINTER_PAGE_WIDTH);
+                return null;
+            }
+        }.execute();
+    }
+    public static void printAndOpenCashBoxHPRT_TP805(final Context context , final Bitmap bitmap) {
+        if (HPRT_TP805.connect(context)) {
+            final ProgressDialog dialog = new ProgressDialog(context);
+            dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
+
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    dialog.show();
+
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    try {
+                        HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        HPRTPrinterHelper.OpenCashdrawer(0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        try {
+                            HPRTPrinterHelper.OpenCashdrawer(1);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                            try {
+                                HPRTPrinterHelper.OpenCashdrawer(2);
+                            } catch (Exception e2) {
+                                e2.printStackTrace();
+                            }
+                        }
+                    }
+
+                    dialog.cancel();
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    byte b = 0;
+                    try {
+                            HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        } else {
+            new android.support.v7.app.AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                    .setTitle(context.getString(R.string.printer))
+                    .setMessage(context.getString(R.string.please_connect_the_printer))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+    }
+
 }
