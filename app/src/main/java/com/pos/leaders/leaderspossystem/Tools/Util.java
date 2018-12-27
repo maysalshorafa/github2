@@ -420,6 +420,8 @@ public class Util {
         double aReportAmount = 0;
         double invoiceAmount=0;
         double creditInvoiceAmount=0;
+        double receiptInvoiceAmount=0;
+        double receiptInvoiceAmountCheck=0;
         ZReport lastZReport = getLastZReport(context);
 
         if (lastZReport == null) {
@@ -473,9 +475,13 @@ public class Util {
             for (int i= 0 ;i<posInvoiceList.size();i++){
                 invoiceAmount+=posInvoiceList.get(i).getAmount();
             }
-            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.CREDIT_INVOICE.getValue());
+            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.CREDIT_INVOICE.getValue(),CONSTANT.CASH);
             for (int i= 0 ;i<posCreditInvoiceList.size();i++){
                 creditInvoiceAmount+=posCreditInvoiceList.get(i).getAmount();
+            }
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
+            for (int i= 0 ;i<posReceiptList.size();i++){
+                receiptInvoiceAmountCheck+=posReceiptList.get(i).getAmount();
             }
         }else {
             ZReport zReport1=null;
@@ -490,15 +496,26 @@ public class Util {
             for (int i= 0 ;i<posInvoiceList.size();i++){
                 invoiceAmount+=posInvoiceList.get(i).getAmount();
             }
-            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.CREDIT_INVOICE.getValue());
+            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.CREDIT_INVOICE.getValue(),CONSTANT.CASH);
             for (int i= 0 ;i<posCreditInvoiceList.size();i++){
                 creditInvoiceAmount+=posCreditInvoiceList.get(i).getAmount();
             }
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
+            for (int i= 0 ;i<posReceiptList.size();i++){
+                receiptInvoiceAmount+=posReceiptList.get(i).getAmount();
+            }
+            List<PosInvoice>posReceiptListCheck = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
+            for (int i= 0 ;i<posReceiptListCheck.size();i++){
+                receiptInvoiceAmountCheck+=posReceiptListCheck.get(i).getAmount();
+            }
+
         }
+
         zReport.setTotalSales(zReport.getTotalSales()+invoiceAmount+creditInvoiceAmount);
         zReport.setTotalPosSales(zReport.getTotalPosSales()+invoiceAmount+creditInvoiceAmount);
+        zReport.setTotalAmount(zReport.getTotalAmount()+aReportAmount+receiptInvoiceAmount);
         long zID = zReportDBAdapter.insertEntry(zReport.getCreatedAt(), zReport.getByUser(), zReport.getStartOrderId(), zReport.getEndOrderId(),
-                zReport.getTotalAmount()+aReportAmount+(zReport.getTotalAmount()*SETTINGS.tax/100),zReport.getTotalAmount(),cash_plus,check_plus,creditCard_plus,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax/100,aReportAmount,invoiceAmount,creditInvoiceAmount);
+                zReport.getTotalAmount()+aReportAmount+(zReport.getTotalAmount()*SETTINGS.tax/100),zReport.getTotalAmount(),cash_plus+receiptInvoiceAmount,check_plus+receiptInvoiceAmountCheck,creditCard_plus,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax/100,invoiceAmount,creditInvoiceAmount);
         zReport.setzReportId(zID);
         zReport.setInvoiceAmount(invoiceAmount);
         zReport.setCreditInvoiceAmount(creditInvoiceAmount);
@@ -554,8 +571,8 @@ public class Util {
         aReportDBAdapter.close();
         return aReport;
     }
-
-    public static void sendClosingReport(final Context context, final String res){
+        static int b=0;
+    public static int sendClosingReport(final Context context, final String res){
         final String SAMPLE_FILE = "closingreport.pdf";
         new AsyncTask<Void, Void, Void>(){
             @Override
@@ -568,7 +585,7 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImagesClosingReport(data,context);
+                  b=  pdfLoadImagesClosingReport(data,context);
 
                 }
                 catch(Exception ignored)
@@ -602,7 +619,7 @@ public class Util {
             }
         }.execute();
 
-    }
+    return b;}
 
     public static void opiningReport(final Context context, final OpiningReport res){
         final String SAMPLE_FILE = "opiningreport.pdf";
@@ -735,8 +752,9 @@ public class Util {
             }
         }.execute();
     }
-    public static void printAndOpenCashBoxHPRT_TP805(final Context context , final Bitmap bitmap) {
-        if (HPRT_TP805.connect(context)) {
+    static int a=0;
+    public static int printAndOpenCashBoxHPRT_TP805(final Context context , final Bitmap bitmap) {
+       if (HPRT_TP805.connect(context)) {
             final ProgressDialog dialog = new ProgressDialog(context);
             dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
 
@@ -750,7 +768,8 @@ public class Util {
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     try {
-                        HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
+                      a=   HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
+                     //   Toast.makeText(context,a + " ",Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -786,7 +805,7 @@ public class Util {
                     return null;
                 }
             }.execute();
-        } else {
+      } else {
             new android.support.v7.app.AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                     .setTitle(context.getString(R.string.printer))
                     .setMessage(context.getString(R.string.please_connect_the_printer))
@@ -797,6 +816,6 @@ public class Util {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }
-    }
+    return a;}
 
 }

@@ -1181,6 +1181,7 @@ public class SyncMessage extends Service {
                     JSONArray jsonArray = new JSONArray(checkList.toString());
                     newJsonObject.put("paymentDetails",jsonArray);
                 }
+                Log.d("ppppppppp",newJsonObject.toString());
                 res = messageTransmit.authPost(ApiURL.Payment, newJsonObject.toString(), token);
 
                 break;

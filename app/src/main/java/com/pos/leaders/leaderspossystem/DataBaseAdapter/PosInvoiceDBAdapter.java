@@ -28,10 +28,12 @@ public class PosInvoiceDBAdapter {
     protected static final String POS_INVOICE_COLUMN_LAST_Z_REPORT = "lastZReportId";
     protected static final String POS_INVOICE_COLUMN_TYPE = "type";
     protected static final String POS_INVOICE_COLUMN_STATUS = "status";
+    protected static final String POS_INVOICE_COLUMN_PAYMENT_METHOD = "paymentMethod";
+
 
 
     public static final String DATABASE_CREATE = "CREATE TABLE pos_invoice ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +"`boID` TEXT DEFAULT ''," +
-            "`amount` REAL DEFAULT 0 ," +"`lastZReportId` INTEGER DEFAULT 0 ," +"`type` TEXT DEFAULT ''," +"`status` TEXT DEFAULT '')";
+            "`amount` REAL DEFAULT 0 ," +"`lastZReportId` INTEGER DEFAULT 0 ," +"`type` TEXT DEFAULT ''," +"`status` TEXT DEFAULT ''," +"`paymentMethod` TEXT DEFAULT '')";
 
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -60,8 +62,9 @@ public class PosInvoiceDBAdapter {
     }
 
 
-    public long insertEntry(double amount,long zReportId,String type,String status,String boID) {
-        PosInvoice invoice = new PosInvoice(Util.idHealth(this.db, POS_INVOICE_TABLE_NAME, POS_INVOICE_COLUMN_ID), amount,zReportId,type,status,boID);
+    public long insertEntry(double amount,long zReportId,String type,String status,String boID,String paymentMethod) {
+        PosInvoice invoice = new PosInvoice(Util.idHealth(this.db, POS_INVOICE_TABLE_NAME, POS_INVOICE_COLUMN_ID), amount,zReportId,type,status,boID,paymentMethod);
+
         try {
             return insertEntry(invoice);
         } catch (SQLException ex) {
@@ -80,6 +83,7 @@ public class PosInvoiceDBAdapter {
         val.put(POS_INVOICE_COLUMN_TYPE,invoice.getType());
         val.put(POS_INVOICE_COLUMN_STATUS,invoice.getStatus());
         val.put(POS_INVOICE_COLUMN_BO_ID,invoice.getBoID());
+        val.put(POS_INVOICE_COLUMN_PAYMENT_METHOD,invoice.getPaymentMethod());
         try {
 
             return db.insert(POS_INVOICE_TABLE_NAME, null, val);
@@ -102,10 +106,10 @@ public class PosInvoiceDBAdapter {
 
         return posInvoices;
     }
-    public List<PosInvoice> getPosInvoiceListByType(long zReportId,String type){
+    public List<PosInvoice> getPosInvoiceListByType(long zReportId,String type,String paymentMethod){
         List<PosInvoice> posInvoices = new ArrayList<PosInvoice>();
 
-        Cursor cursor = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where "+POS_INVOICE_COLUMN_LAST_Z_REPORT+" = "+zReportId+ " and " + POS_INVOICE_COLUMN_TYPE + " = "+ "'"+type +"'", null);
+        Cursor cursor = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where "+POS_INVOICE_COLUMN_LAST_Z_REPORT+" = "+zReportId+ " and " + POS_INVOICE_COLUMN_TYPE + " = "+ "'"+type +"'"+ " and " + POS_INVOICE_COLUMN_PAYMENT_METHOD + " = "+ "'"+paymentMethod +"'", null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
@@ -121,7 +125,8 @@ public class PosInvoiceDBAdapter {
                 c.getLong(c.getColumnIndex(POS_INVOICE_COLUMN_LAST_Z_REPORT)),
                 c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_TYPE)),
                 c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_STATUS)),
-                c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_BO_ID)));
+                c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_BO_ID)),
+                c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_PAYMENT_METHOD)));
     }
     public void updateEntry(PosInvoice invoice) {
         ContentValues val = new ContentValues();
@@ -132,7 +137,8 @@ public class PosInvoiceDBAdapter {
         val.put(POS_INVOICE_COLUMN_TYPE,invoice.getType());
         val.put(POS_INVOICE_COLUMN_STATUS,invoice.getStatus());
         val.put(POS_INVOICE_COLUMN_BO_ID,invoice.getBoID());
-        String where = POS_INVOICE_COLUMN_BO_ID + " = ?";
+        val.put(POS_INVOICE_COLUMN_PAYMENT_METHOD,invoice.getPaymentMethod());
+        String where = POS_INVOICE_COLUMN_ID + " = ?";
         db.update(POS_INVOICE_TABLE_NAME, val, where, new String[]{invoice.getId() + ""});
     }
     public PosInvoice getPodInvoiceByBoId(String id) {
@@ -149,7 +155,8 @@ public class PosInvoiceDBAdapter {
                 c.getLong(c.getColumnIndex(POS_INVOICE_COLUMN_LAST_Z_REPORT)),
                 c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_TYPE)),
                 c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_STATUS)),
-                c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_BO_ID)));
+                c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_BO_ID)),
+                c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_PAYMENT_METHOD)));
         c.close();
 
         return posInvoice;

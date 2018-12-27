@@ -88,7 +88,7 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
                         if(etAmount.getText().toString()!=null){
                             try {
                                 if(Double.parseDouble(etAmount.getText().toString())>=Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total")))) {
-                                    DocumentControl.sendDoc(getContext(), invoicesList.get(position), CONSTANT.CASH);
+                                    DocumentControl.sendDoc(getContext(), invoicesList.get(position), CONSTANT.CASH,Double.parseDouble(etAmount.getText().toString()));
                                     cashReceiptDialog.dismiss();
                                 }else {
                                     Toast.makeText(getContext(),"Inserted amount not equal to required amount",Toast.LENGTH_LONG).show();

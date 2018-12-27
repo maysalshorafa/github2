@@ -21,7 +21,6 @@ public class ZReport {
     private long endOrderId;
     @JsonIgnore
     private Order endSale;
-    private double openingTotal;
     private double totalSales;
     private double totalAmount;
     private double tax;
@@ -36,7 +35,7 @@ public class ZReport {
 
     }
 
-    public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double openingTotal,double invoiceAmount, double creditInvoiceAmount) {
+    public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -44,7 +43,6 @@ public class ZReport {
         this.endOrderId = endOrderId;
         this.totalSales=totalSales;
         this.totalAmount = totalAmount;
-        this.openingTotal=openingTotal;
         this.tax=tax;
         this.cashTotal=cashTotal;
         this.checkTotal=checkTotal;
@@ -173,13 +171,6 @@ public class ZReport {
         this.totalAmount = totalAmount;
     }
 
-    public double getOpeningTotal() {
-        return openingTotal;
-    }
-
-    public void setOpeningTotal(double openingTotal) {
-        this.openingTotal = openingTotal;
-    }
 
     public double getTotalSales() {
         return totalSales;
@@ -266,7 +257,6 @@ public class ZReport {
                 ", startSale=" + startSale +
                 ", endOrderId=" + endOrderId +
                 ", endSale=" + endSale +
-                ", openingTotal=" + openingTotal +
                 ", totalSales=" + totalSales +
                 ", totalAmount=" + totalAmount +
                 ", tax=" + tax +

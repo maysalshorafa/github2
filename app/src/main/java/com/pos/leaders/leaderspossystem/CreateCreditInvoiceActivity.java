@@ -37,6 +37,7 @@ import com.pos.leaders.leaderspossystem.Models.CreditInvoiceDocument;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CreditInvoiceProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CreditInvoiceStatus;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
@@ -293,11 +294,11 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                                 zReport = zReportDBAdapter.getLastRow();
                                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
                                                 posInvoiceDBAdapter.open();
-                                                posInvoiceDBAdapter.insertEntry(creditAmount,zReport.getzReportId(),DocumentType.CREDIT_INVOICE.getValue(),"",r.getString("docNum"));
+                                                posInvoiceDBAdapter.insertEntry(creditAmount*-1,zReport.getzReportId(),DocumentType.CREDIT_INVOICE.getValue(),"",r.getString("docNum"), CONSTANT.CASH);
                                             } catch (Exception e) {
                                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
                                                 posInvoiceDBAdapter.open();
-                                                posInvoiceDBAdapter.insertEntry(creditAmount,-1,DocumentType.CREDIT_INVOICE.getValue(),"",r.getString("docNum"));
+                                                posInvoiceDBAdapter.insertEntry(creditAmount*-1,-1,DocumentType.CREDIT_INVOICE.getValue(),"",r.getString("docNum"), CONSTANT.CASH);
                                                 e.printStackTrace();
                                             }
                                         PdfUA pdfUA = new PdfUA();

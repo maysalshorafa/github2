@@ -282,7 +282,8 @@ public class DocumentControl {
             e.printStackTrace();
         }
     }
-    public static void pdfLoadImagesClosingReport(final byte[] data, final Context context) {
+    static int r =0;
+    public static int pdfLoadImagesClosingReport(final byte[] data, final Context context) {
 
         final ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
         try {
@@ -298,12 +299,11 @@ public class DocumentControl {
                 @Override
                 protected void onPostExecute(String html) {
                     for(int i=1;i<bitmapList.size();i++){
-                            Util.printAndOpenCashBoxHPRT_TP805(context, bitmapList.get(i));
+                          r=  Util.printAndOpenCashBoxHPRT_TP805(context, bitmapList.get(i));
                     }
                     //   print(context,bitmapList);
                     //after async close progress dialog
                     progressDialog.dismiss();
-                    ((Activity)context).finish();
                     //load the html in the webview
                     //	wv1.loadDataWithBaseURL("", html, "randompdf/html", "UTF-8", "");
                 }
@@ -355,7 +355,7 @@ public class DocumentControl {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+   return r; }
 
 
     public static void print(Context context, ArrayList<Bitmap> bitmapList){
@@ -368,7 +368,7 @@ public class DocumentControl {
 
     }
 
-    public static void sendDoc(final Context context, final BoInvoice invoice, String paymentWays){
+    public static void sendDoc(final Context context, final BoInvoice invoice, final String paymentWays, double totalPaid){
         List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
         List<Payment> paymentList = new ArrayList<Payment>();
         List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
@@ -392,13 +392,13 @@ public class DocumentControl {
             newInvoice=new BoInvoice(DocumentType.INVOICE,DocData,invoice.getDocNum());
             Payment payment=null;
             if(paymentWays.equals(CASH)) {
-                 payment = new Payment(0, CASH, Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), 0);
+                 payment = new Payment(0, CASH, totalPaid, 0);
             }else {
-                 payment = new Payment(0, CHECKS, Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), 0);
+                 payment = new Payment(0, CHECKS, totalPaid, 0);
             }
             final JSONObject newJsonObject = new JSONObject(payment.toString());
             if(paymentWays.equalsIgnoreCase(CONSTANT.CASH)){
-                CashPayment cashPayment = new CashPayment(0,0, Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), 0, new Timestamp(System.currentTimeMillis()),1,1);
+                CashPayment cashPayment = new CashPayment(0,0,totalPaid, 0, new Timestamp(System.currentTimeMillis()),1,1);
                 cashPaymentList.add(cashPayment);
                 JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
                 newJsonObject.put("paymentDetails",jsonArray);
@@ -501,11 +501,20 @@ public class DocumentControl {
                                 zReport = zReportDBAdapter.getLastRow();
                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
                                 posInvoiceDBAdapter.open();
-                                posInvoiceDBAdapter.insertEntry(Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))),zReport.getzReportId(),DocumentType.RECEIPT.getValue(),"",invoiceNum);
+                                if(paymentWays.equals(CASH)) {
+                                    posInvoiceDBAdapter.insertEntry(Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), zReport.getzReportId(), DocumentType.RECEIPT.getValue(), "", invoiceNum,CONSTANT.CASH);
+                                }else {
+                                    posInvoiceDBAdapter.insertEntry(Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), zReport.getzReportId(), DocumentType.RECEIPT.getValue(), "", invoiceNum,CONSTANT.CHECKS);
+                                }
                             } catch (Exception e) {
                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
                                 posInvoiceDBAdapter.open();
-                                posInvoiceDBAdapter.insertEntry(Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))),-1,DocumentType.RECEIPT.getValue(),"",invoiceNum);
+                                if(paymentWays.equals(CASH)) {
+                                    posInvoiceDBAdapter.insertEntry(Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))),-1,DocumentType.RECEIPT.getValue(),"",invoiceNum,CONSTANT.CASH);
+                                }else {
+                                    posInvoiceDBAdapter.insertEntry(Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))),-1,DocumentType.RECEIPT.getValue(),"",invoiceNum,CONSTANT.CHECKS);
+
+                                }
                                 e.printStackTrace();
                             }
 

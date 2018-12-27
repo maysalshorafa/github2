@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -23,13 +24,17 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
@@ -42,7 +47,15 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +84,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
     List<OrderDetails> orders;
     List<Check> checks;
     List<Order> All_orders;
+    public static List<BoInvoice>invoiceList=new ArrayList<>();
+    public static Context context = null;
 
     private final static int DAY_MINUS_ONE_SECOND = 86399999;
     @Override
@@ -83,6 +98,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sales_management);
         TitleBar.setTitleBar(this);
+        context=this;
         lvOrders = (ListView) findViewById(R.id.saleManagement_LVSales);
 
         etSearch = (EditText) findViewById(R.id.etSearch);
@@ -98,7 +114,13 @@ public class OrdersManagementActivity extends AppCompatActivity {
         paymentDBAdapter = new PaymentDBAdapter(this);
 
         orderDBAdapter.open();
-
+        StartInvoiceAndCreditInvoiceConnection startInvoiceConnection = new StartInvoiceAndCreditInvoiceConnection();
+        startInvoiceConnection.execute("1");
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         _saleList = orderDBAdapter.lazyLoad(loadItemOffset, countLoad);
 
         orderDBAdapter.close();
@@ -126,7 +148,11 @@ public class OrdersManagementActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvOrders, false);
         lvOrders.addHeaderView(header, null, false);
-        adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, _saleList);
+        final List<Object>objectList = new ArrayList<Object>();
+        objectList.addAll(_saleList);
+        objectList.addAll(invoiceList);
+        Log.d("objictList",objectList.toString());
+            adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, objectList);
 
         lvOrders.setAdapter(adapter);
 
@@ -152,7 +178,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
         lvOrders.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                final Order sale = _saleList.get(position);
+                if(objectList.get(position) instanceof  Order){
+                final Order sale = (Order) objectList.get(position);
                 OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(OrdersManagementActivity.this);
                 orderDBAdapter.open();
                 orders = orderDBAdapter.getOrderBySaleID(sale.getOrderId());
@@ -288,6 +315,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
                 //endregion Cancellation ORDER Button
 
                 previousView.setBackgroundColor(getResources().getColor(R.color.list_background_color));
+                }else {
+                }
             }
         });
 
@@ -365,25 +394,98 @@ public class OrdersManagementActivity extends AppCompatActivity {
     private void print(Bitmap bitmap) {
         PrintTools printTools = new PrintTools(this);
         printTools.PrintReport(bitmap);
-        /*POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(SalesManagementActivity.this);
-
-        int i = posInterfaceAPI.OpenDevice();
-        POSSDK pos = new POSSDK(posInterfaceAPI);
-
-        pos.textSelectCharSetAndCodePage(POSSDK.CharacterSetUSA, 15);
-        pos.systemSelectPrintMode(0);
-        pos.systemFeedLine(1);
-        pos.imageStandardModeRasterPrint(bitmap, CONSTANT.PRINTER_PAGE_WIDTH);
-        pos.systemFeedLine(3);
-        pos.systemCutPaper(66, 0);
-
-        posInterfaceAPI.CloseDevice();*/
     }
+
 
 }
-/**class OutcomeDescComparator implements Comparator<ORDER>
-{
-    public int compare(ORDER fSale, ORDER lSale) {
-        return lSale.getOrder_date().compareTo(fSale.getOrder_date());
+class StartInvoiceAndCreditInvoiceConnection extends AsyncTask<String,Void,String> {
+    private MessageTransmit messageTransmit;
+    ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    BoInvoice invoice;
+    StartInvoiceAndCreditInvoiceConnection() {
+        messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
     }
-}*/
+
+    final ProgressDialog progressDialog = new ProgressDialog(OrdersManagementActivity.context);
+    final ProgressDialog progressDialog2 =new ProgressDialog(OrdersManagementActivity.context);
+
+    @Override
+    protected void onPreExecute() {
+        progressDialog.setTitle("Please Wait");
+        progressDialog2.setTitle("Please Wait");
+        progressDialog.show();
+    }
+
+    @Override
+    protected String doInBackground(String... args) {
+        String customerId=args[0];
+        try {
+            String url = ApiURL.Documents+"/InvoicesAndCreditInvoice/";
+            String invoiceRes = messageTransmit.authGet(url,SESSION.token);
+            JSONObject jsonObject = new JSONObject(invoiceRes);
+            String msgData = jsonObject.getString(MessageKey.responseBody);
+            if (msgData.startsWith("[")) {
+                try {
+                    JSONArray jsonArray = new JSONArray(msgData);
+
+                    for (int i = 0; i < jsonArray.length() ; i++) {
+                        msgData = jsonArray.getJSONObject(i).toString();
+                        JSONObject msgDataJson =new JSONObject(msgData);
+                        Log.d("tttt",msgDataJson.getString("type"));
+                        if(msgDataJson.getString("type").equals("INVOICE")){
+                        invoice = new BoInvoice(DocumentType.INVOICE,msgDataJson.getJSONObject("documentsData"),msgDataJson.getString("docNum"));
+
+                        }else  if(msgDataJson.getString("type").equals("CREDIT_INVOICE")){
+                            invoice = new BoInvoice(DocumentType.CREDIT_INVOICE,msgDataJson.getJSONObject("documentsData"),msgDataJson.getString("docNum"));
+                        }
+                        OrdersManagementActivity.invoiceList.add(invoice);
+                    }
+
+                } catch (Exception e) {
+                    Log.d("exception1",e.toString());
+                }
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        if (s != null) {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    progressDialog2.setTitle("Success.");
+                    progressDialog2.show();
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    progressDialog2.cancel();
+                    super.onPostExecute(aVoid);
+                }
+            }.execute();
+        } else {
+            //fail
+            Toast.makeText(CreateCreditInvoiceActivity.context, "Try Again.", Toast.LENGTH_SHORT).show();
+        }
+        progressDialog.cancel();
+        super.onPostExecute(s);
+
+        //endregion
+    }
+}

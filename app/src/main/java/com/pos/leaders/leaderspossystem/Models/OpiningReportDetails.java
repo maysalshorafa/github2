@@ -66,4 +66,15 @@ public class OpiningReportDetails {
     public OpiningReportDetails(OpiningReportDetails a) {
         this(a.getOpiningReportDetailsId(),a.getOpiningReportId(),a.getAmount(),a.getType(),a.getAmount_in_basic_currency());
     }
+
+    @Override
+    public String toString() {
+        return "OpiningReportDetails{" +
+                "opiningReportDetailsId=" + opiningReportDetailsId +
+                ", opiningReportId=" + opiningReportId +
+                ", amount=" + amount +
+                ", type=" + type +
+                ", amount_in_basic_currency=" + amount_in_basic_currency +
+                '}';
+    }
 }

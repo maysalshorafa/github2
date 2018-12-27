@@ -210,33 +210,37 @@ public class ChecksActivity extends AppCompatActivity {
 						if(extras.containsKey("checksReceipt")){
 							List<Check> finalCheckList = new ArrayList<Check>();
 
-							for(int i=1;i<=lvChecks.getCount()-1;i++) {
-								ChecksListViewAdapter.ViewHolder lastItem = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(i).getTag();
-								if(i==1){
-									_check = new Check(lastItem.getEtCheckNumHint(), lastItem.getEtBankNumHint(), lastItem.getEtBenchNumHint(), lastItem.getEtAccountNumHint(),
-											lastItem.getEtHint(),new Timestamp(System.currentTimeMillis()), false);
-								}else {
-									Date utilDate=DateConverter.stringToDate(lastItem.getEtDate());
-									_check = new Check(lastItem.getEtCheckNum(), lastItem.getEtBankNum(), lastItem.getEtBenchNum(), lastItem.getEtAccountNum(),
-											lastItem.getEtAmount(), new java.sql.Timestamp(utilDate.getTime()), false);
+							for (int i = 0; i <= checkList.size()-1; i++) {
+								//ChecksListViewAdapter.ViewHolder item = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(i).getTag();
+								if (i == 0) {
+									_check = new Check(checkList.get(i).getCheckNum(), checkList.get(i).getBankNum(), checkList.get(i).getBranchNum(), checkList.get(i).getAccountNum(),
+											checkList.get(i).getAmount(), new Timestamp(System.currentTimeMillis()), false);
+								} else {
+									//Date utilDate = DateConverter.stringToDate(item.getEtDate());
+									_check = new Check(checkList.get(i).getCheckNum(), checkList.get(i).getBankNum(), checkList.get(i).getBranchNum(), checkList.get(i).getAccountNum(),
+											checkList.get(i).getAmount(),  checkList.get(i).getCreatedAt(), false);
+									/**	_check = new Check(item.getEtCheckNum(), item.getEtBankNum(), item.getEtBenchNum(), item.getEtAccountNum(),
+									 item.getEtAmount(), new java.sql.Timestamp(utilDate.getTime()), false);**/
 								}
 								finalCheckList.add(_check);
 							}
 							SESSION._CHECKS_HOLDER = finalCheckList;
-							DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS);
+							DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,0);
 						}else {
 
 							 List<Check> finalCheckList = new ArrayList<Check>();
 
-							for(int i=1;i<=lvChecks.getCount()-1;i++) {
-								ChecksListViewAdapter.ViewHolder lastItem = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(i).getTag();
-								if(i==1){
-									_check = new Check(lastItem.getEtCheckNumHint(), lastItem.getEtBankNumHint(), lastItem.getEtBenchNumHint(), lastItem.getEtAccountNumHint(),
-											lastItem.getEtHint(),new Timestamp(System.currentTimeMillis()), false);
-								}else {
-									Date utilDate=DateConverter.stringToDate(lastItem.getEtDate());
-									_check = new Check(lastItem.getEtCheckNum(), lastItem.getEtBankNum(), lastItem.getEtBenchNum(), lastItem.getEtAccountNum(),
-											lastItem.getEtAmount(), new java.sql.Timestamp(utilDate.getTime()), false);
+							for (int i = 0; i <= checkList.size()-1; i++) {
+								//ChecksListViewAdapter.ViewHolder item = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(i).getTag();
+								if (i == 0) {
+									_check = new Check(checkList.get(i).getCheckNum(), checkList.get(i).getBankNum(), checkList.get(i).getBranchNum(), checkList.get(i).getAccountNum(),
+											checkList.get(i).getAmount(), new Timestamp(System.currentTimeMillis()), false);
+								} else {
+									//Date utilDate = DateConverter.stringToDate(item.getEtDate());
+									_check = new Check(checkList.get(i).getCheckNum(), checkList.get(i).getBankNum(), checkList.get(i).getBranchNum(), checkList.get(i).getAccountNum(),
+											checkList.get(i).getAmount(),  checkList.get(i).getCreatedAt(), false);
+									/**	_check = new Check(item.getEtCheckNum(), item.getEtBankNum(), item.getEtBenchNum(), item.getEtAccountNum(),
+									 item.getEtAmount(), new java.sql.Timestamp(utilDate.getTime()), false);**/
 								}
 								finalCheckList.add(_check);
 							}
@@ -260,20 +264,22 @@ public class ChecksActivity extends AppCompatActivity {
 						lastItem.setEtAmount(needAmount);
 						Toast.makeText(ChecksActivity.this, getString(R.string.checks_amount_more_than_amount_need), Toast.LENGTH_SHORT).show();
 						List<Check> finalCheckList = new ArrayList<Check>();
-						for (int i = 1; i <= lvChecks.getCount() - 1; i++) {
-							ChecksListViewAdapter.ViewHolder item = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(i).getTag();
-							if (i == 1) {
-								_check = new Check(item.getEtCheckNumHint(), item.getEtBankNumHint(), item.getEtBenchNumHint(), item.getEtAccountNumHint(),
-										item.getEtHint(), new Timestamp(System.currentTimeMillis()), false);
+						for (int i = 0; i <= checkList.size()-1; i++) {
+							//ChecksListViewAdapter.ViewHolder item = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(i).getTag();
+							if (i == 0) {
+								_check = new Check(checkList.get(i).getCheckNum(), checkList.get(i).getBankNum(), checkList.get(i).getBranchNum(), checkList.get(i).getAccountNum(),
+										checkList.get(i).getAmount(), new Timestamp(System.currentTimeMillis()), false);
 							} else {
-								Date utilDate = DateConverter.stringToDate(item.getEtDate());
-								_check = new Check(item.getEtCheckNum(), item.getEtBankNum(), item.getEtBenchNum(), item.getEtAccountNum(),
-										item.getEtAmount(), new java.sql.Timestamp(utilDate.getTime()), false);
+								//Date utilDate = DateConverter.stringToDate(item.getEtDate());
+								_check = new Check(checkList.get(i).getCheckNum(), checkList.get(i).getBankNum(), checkList.get(i).getBranchNum(), checkList.get(i).getAccountNum(),
+										checkList.get(i).getAmount(),  checkList.get(i).getCreatedAt(), false);
+								/**	_check = new Check(item.getEtCheckNum(), item.getEtBankNum(), item.getEtBenchNum(), item.getEtAccountNum(),
+								 item.getEtAmount(), new java.sql.Timestamp(utilDate.getTime()), false);**/
 							}
 							finalCheckList.add(_check);
 						}
 						SESSION._CHECKS_HOLDER = finalCheckList;
-						DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS);
+						DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,0);
 					}else {
 						double d = getTotalPid() - checkList.get(checkList.size() - 1).getAmount();
 						double needAmount = totalPrice - d;
@@ -282,15 +288,17 @@ public class ChecksActivity extends AppCompatActivity {
 						lastItem.setEtAmount(needAmount);
 						Toast.makeText(ChecksActivity.this, getString(R.string.checks_amount_more_than_amount_need), Toast.LENGTH_SHORT).show();
 						List<Check> finalCheckList = new ArrayList<Check>();
-						for (int i = 1; i <= lvChecks.getCount() - 1; i++) {
-							ChecksListViewAdapter.ViewHolder item = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(i).getTag();
-							if (i == 1) {
-								_check = new Check(item.getEtCheckNumHint(), item.getEtBankNumHint(), item.getEtBenchNumHint(), item.getEtAccountNumHint(),
-										item.getEtHint(), new Timestamp(System.currentTimeMillis()), false);
+						for (int i = 0; i <= checkList.size()-1; i++) {
+							//ChecksListViewAdapter.ViewHolder item = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(i).getTag();
+							if (i == 0) {
+								_check = new Check(checkList.get(i).getCheckNum(), checkList.get(i).getBankNum(), checkList.get(i).getBranchNum(), checkList.get(i).getAccountNum(),
+										checkList.get(i).getAmount(), new Timestamp(System.currentTimeMillis()), false);
 							} else {
-								Date utilDate = DateConverter.stringToDate(item.getEtDate());
-								_check = new Check(item.getEtCheckNum(), item.getEtBankNum(), item.getEtBenchNum(), item.getEtAccountNum(),
-										item.getEtAmount(), new java.sql.Timestamp(utilDate.getTime()), false);
+								//Date utilDate = DateConverter.stringToDate(item.getEtDate());
+								_check = new Check(checkList.get(i).getCheckNum(), checkList.get(i).getBankNum(), checkList.get(i).getBranchNum(), checkList.get(i).getAccountNum(),
+										checkList.get(i).getAmount(),  checkList.get(i).getCreatedAt(), false);
+							/**	_check = new Check(item.getEtCheckNum(), item.getEtBankNum(), item.getEtBenchNum(), item.getEtAccountNum(),
+										item.getEtAmount(), new java.sql.Timestamp(utilDate.getTime()), false);**/
 							}
 							finalCheckList.add(_check);
 						}

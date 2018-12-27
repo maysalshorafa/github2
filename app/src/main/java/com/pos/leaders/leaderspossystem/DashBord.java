@@ -977,11 +977,13 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
                        long id= aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
-                        OpiningReport opiningReport = aReportDBAdapter.getById(id);
+                        Log.d("iiii",id+"");
+                        OpiningReport opiningReport = null;
                         try {
                             aReportId = aReportDBAdapter.getLastRow().getOpiningReportId();
+                            Log.d("iiii1111",aReportId+"");
+                            opiningReport= aReportDBAdapter.getById(aReportId);
                             aReportDBAdapter.close();
-                            Util.opiningReport(DashBord.this,opiningReport);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -1001,6 +1003,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         aReportDialog.cancel();
                         aReportDBAdapter.close();
                         aReportDetailsDBAdapter.close();
+                        Util.opiningReport(DashBord.this,opiningReport);
                         closingReport.setEnabled(true);
 
                     }

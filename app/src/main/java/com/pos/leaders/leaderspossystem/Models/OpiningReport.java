@@ -147,5 +147,19 @@ public class OpiningReport {
         return "A100" + String.format(Util.locale,"%09d", rowNumber) + pc + String.format(Util.locale,"%015d", 1) + "&OF1.31&" + spaces;
     }
 
+    @Override
+    public String toString() {
+        return "OpiningReport{" +
+                "opiningReportId=" + opiningReportId +
+                ", createdAt=" + createdAt +
+                ", byUserID=" + byUserID +
+                ", byUser=" + byUser +
+                ", amount=" + amount +
+                ", lastOrderId=" + lastOrderId +
+                ", lastSale=" + lastSale +
+                ", lastZReportID=" + lastZReportID +
+                ", lastZReport=" + lastZReport +
+                '}';
+    }
     //endregion OpenFormat
 }

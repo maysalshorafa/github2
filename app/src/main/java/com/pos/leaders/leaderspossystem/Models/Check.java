@@ -144,7 +144,7 @@ public class Check {
 				",\"bankNum\":" + bankNum +
 				",\" branchNum\":" + branchNum +
 				",\"amount\":" + amount +
-				",\"date\":"+"\""+ createdAt.getTime()+"\"" +
+				",\"createdAt\":"+"\""+ createdAt.getTime()+"\"" +
 				",\"orderId\":" + orderId +
 				"}";
 	}

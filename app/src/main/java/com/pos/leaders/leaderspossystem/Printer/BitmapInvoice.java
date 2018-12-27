@@ -356,13 +356,11 @@ public class BitmapInvoice {
 
 
         String names = "", in = "", out = "", total = "";
-        names +="\u200F"+context.getString(R.string.cash) + "\n" +"\u200F"+context.getString(R.string.credit_card)+ "\n" +"\u200F"+ context.getString(R.string.checks) + "\n"+ "\u200F"+context.getString(R.string.a_report_amount) + "\n" + "\u200F"+context.getString(R.string.invoice) + "\n" + "\u200F"+context.getString(R.string.credit_invoice_doc) + "\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount)+ "\n"+"\u200F"+context.getString(R.string.total_sales);
+        names +="\u200F"+context.getString(R.string.cash) + "\n" +"\u200F"+context.getString(R.string.credit_card)+ "\n" +"\u200F"+ context.getString(R.string.checks) +"\n" + "\u200F"+context.getString(R.string.invoice) + "\n" + "\u200F"+context.getString(R.string.credit_invoice_doc) + "\n"+"\u200F"+context.getString(R.string.total_sales);
 
-        in += dTS(cash_plus) + "\n" + dTS(creditCard_plus) + "\n" + dTS(check_plus) + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + dTS(cash_plus + check_plus + creditCard_plus)+ "\n" + dTS(cash_plus + check_plus + creditCard_plus);
-        out += dTS(cash_minus) + "\n" + dTS(creditCard_minus) + "\n" + dTS(check_minus) + "\n" + "~" +  "\n" + "~" + "\n" + "~" + "\n" + dTS(cash_minus + check_minus + creditCard_minus)+ "\n" + dTS(cash_minus + check_minus + creditCard_minus);
-        total += dTS(cash_plus + cash_minus) + "\n" + dTS(creditCard_plus + creditCard_minus) + "\n" + dTS(check_plus + check_minus) + "\n" + starterAmount + "\n" + invoiceAmount + "\n" + creditInvoiceAmount + "\n" +
-                dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus + starterAmount+invoiceAmount+creditInvoiceAmount)+ "\n" +   dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus+invoiceAmount+creditInvoiceAmount );
-
+        in += dTS(cash_plus) + "\n" + dTS(creditCard_plus) + "\n" + dTS(check_plus) + "\n" + "~" + "\n" + "~" + "\n" + dTS(cash_plus + check_plus + creditCard_plus);
+        out += dTS(cash_minus) + "\n" + dTS(creditCard_minus) + "\n" + dTS(check_minus) + "\n" + "~" +  "\n" + "~"+ "\n" + dTS(cash_minus + check_minus + creditCard_minus);
+        total += dTS(cash_plus + cash_minus) + "\n" + dTS(creditCard_plus + creditCard_minus) + "\n" + dTS(check_plus + check_minus) +"\n" + invoiceAmount + "\n" + creditInvoiceAmount+ "\n" +   dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus+invoiceAmount+creditInvoiceAmount );
         StaticLayout slNames = new StaticLayout(names, orderTP,
                 (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
         StaticLayout slIn = new StaticLayout(in, orderTP,
@@ -380,12 +378,13 @@ public class BitmapInvoice {
                 PAGE_WIDTH, Layout.Alignment.ALIGN_OPPOSITE, 1.0f, 1.0f, true);
 
 
-        names = "\u200F"+context.getString(R.string.usd) + "\n"+"\u200F"+ context.getString(R.string.eur) + "\n" +"\u200F"+ context.getString(R.string.gbp) + "\n" +"\u200F"+ context.getString(R.string.shekel);
+        names = "\u200F"+context.getString(R.string.usd) + "\n"+"\u200F"+ context.getString(R.string.eur) + "\n" +"\u200F"+ context.getString(R.string.gbp) + "\n" +"\u200F"+ context.getString(R.string.shekel)+ "\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
 
         String cIn = "", cOut = "", cTotal = "";
-        cIn = dTS(usa_plus) + "\n" + dTS(eur_plus) + "\n" + dTS(gbp_plus) + "\n" + dTS(sheqle_plus);
-        cOut = dTS(usa_minus) + "\n" + dTS(eur_minus) + "\n" + dTS(gbp_minus) + "\n" + dTS(sheqle_minus);
-        cTotal = "\n" + dTS(usa_plus - usa_minus) + "\n" + dTS(eur_plus - eur_minus) + "\n" + dTS(gbp_plus - gbp_minus) + "\n" + dTS(sheqle_plus - sheqle_minus);
+        cIn = dTS(usa_plus) + "\n" + dTS(eur_plus) + "\n" + dTS(gbp_plus) + "\n" + dTS(sheqle_plus)+ "\n" +dTS(cash_plus + check_plus + creditCard_plus);
+        cOut = dTS(usa_minus) + "\n" + dTS(eur_minus) + "\n" + dTS(gbp_minus) + "\n" + dTS(sheqle_minus) + "\n"  + dTS(cash_minus + check_minus + creditCard_minus);
+        cTotal = "\n" + dTS(usa_plus - usa_minus) + "\n" + dTS(eur_plus - eur_minus) + "\n" + dTS(gbp_plus - gbp_minus) + "\n" + dTS(sheqle_plus - sheqle_minus) + "\n" +
+                dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus + starterAmount+invoiceAmount+creditInvoiceAmount);
 
         StaticLayout cSlNames = new StaticLayout(names, orderTP,
                 (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
@@ -718,4 +717,5 @@ public class BitmapInvoice {
         return null;//invoiceImg.make();
     }
 }
+
 

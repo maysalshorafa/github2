@@ -11,17 +11,19 @@ public class PosInvoice {
     private String type;
     private String status;
     private String boID;
+    private String paymentMethod;
 
     public PosInvoice() {
     }
 
-    public PosInvoice(long id, double amount, long lastZReportId,String type,String status,String boID) {
+    public PosInvoice(long id, double amount, long lastZReportId,String type,String status,String boID,String paymentMethod) {
         this.id = id;
         this.amount = amount;
         this.lastZReportId = lastZReportId;
         this.type=type;
         this.status=status;
         this.boID=boID;
+        this.paymentMethod=paymentMethod;
     }
 
     public String getType() {
@@ -70,5 +72,26 @@ public class PosInvoice {
 
     public void setBoID(String boID) {
         this.boID = boID;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    @Override
+    public String toString() {
+        return "PosInvoice{" +
+                "id=" + id +
+                ", amount=" + amount +
+                ", lastZReportId=" + lastZReportId +
+                ", type='" + type + '\'' +
+                ", status='" + status + '\'' +
+                ", boID='" + boID + '\'' +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                '}';
     }
 }

@@ -21,7 +21,7 @@
         android:orientation="vertical"
         android:padding="5dp"
         android:layout_weight="1"
-        android:weightSum="10">
+        android:weightSum="9">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -36,14 +36,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textSize="25dp"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/cash"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="25dp"
-            android:visibility="gone"/>
         <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -86,13 +78,7 @@
         android:layout_weight="1"
             android:gravity="center"
             android:textSize="25dp"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/receipt"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="25dp"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -109,7 +95,7 @@
         android:orientation="vertical"
         android:padding="5dp"
         android:layout_weight="1"
-        android:weightSum="10"
+        android:weightSum="9"
         >
         <TextView
             android:layout_width="match_parent"
@@ -126,15 +112,6 @@
             android:gravity="center"
             android:hint="@string/TouchPad_0"
             android:inputType="numberSigned"/>
-        <EditText
-            android:id="@+id/actualCashValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:hint="@string/TouchPad_0"
-            android:inputType="numberSigned"
-            android:visibility="gone"/>
         <EditText
             android:id="@+id/actualCheckValue"
             android:layout_width="match_parent"
@@ -184,14 +161,6 @@
             android:gravity="center"
             android:hint="@string/TouchPad_0"
             android:inputType="numberSigned"/>
-        <EditText
-            android:id="@+id/actualReceiptValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:hint="@string/TouchPad_0"
-            android:inputType="numberSigned"/>
 
         <EditText
             android:id="@+id/actualTotalValue"
@@ -209,7 +178,7 @@
         android:orientation="vertical"
         android:padding="5dp"
         android:layout_weight="1"
-        android:weightSum="10">
+        android:weightSum="9">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -224,14 +193,6 @@
             android:layout_weight="1"
             android:gravity="center"
             />
-        <TextView
-            android:id="@+id/expectedCashValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:visibility="gone"
-           />
         <TextView
             android:id="@+id/expectedCheckValue"
             android:layout_width="match_parent"
@@ -269,12 +230,6 @@
             android:layout_weight="1"
             android:gravity="center"/>
         <TextView
-            android:id="@+id/expectedReceiptValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"/>
-        <TextView
             android:id="@+id/expectedTotalValue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -288,7 +243,7 @@
         android:orientation="vertical"
         android:padding="5dp"
         android:layout_weight="1"
-        android:weightSum="10">
+        android:weightSum="9">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -302,13 +257,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"/>
-        <TextView
-            android:id="@+id/differentCashValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:visibility="gone"/>
         <TextView
             android:id="@+id/differentCheckValue"
             android:layout_width="match_parent"
@@ -341,12 +289,6 @@
             android:gravity="center"/>
         <TextView
             android:id="@+id/differentGbpValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/differentReceiptValue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

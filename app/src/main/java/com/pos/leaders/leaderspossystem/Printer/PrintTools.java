@@ -13,7 +13,9 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
@@ -21,6 +23,7 @@ import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
+import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
@@ -295,8 +298,6 @@ public class PrintTools {
         /*double aReportAmount = 0;
         long aReportId = 0;*/
         double aReportAmount =0.0;
-        double creditInvoiceAmount =0.0;
-        double invoiceAmount=0.0;
         double sheqle_plus = 0, sheqle_minus = 0;
         double usd_plus = 0, usd_minus = 0;
         double eur_plus = 0, eur_minus = 0;
@@ -316,7 +317,6 @@ public class PrintTools {
             e.printStackTrace();
         }
 
-        creditInvoiceAmount=creditInvoiceAmount*-1;
         OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(context);
         opiningReportDBAdapter.open();
         List<OpiningReport> opiningReportList = opiningReportDBAdapter.getListByLastZReport(zReport.getzReportId()-1);
@@ -324,12 +324,6 @@ public class PrintTools {
             aReportAmount+=opiningReportList.get(i).getAmount();
             Log.d("areport",aReportAmount+"");
         }
-        /*try {
-            aReportAmount = aReportDBAdapter.getLastRow().getAmount();
-            aReportId = aReportDBAdapter.getLastRow().getCashPaymentId();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
         double aReportDetailsForFirstCurrency=0;
         double aReportDetailsForSecondCurrency=0;
         double aReportDetailsForThirdCurrency=0;
@@ -431,9 +425,31 @@ public class PrintTools {
             }
 
         }
+        double receiptInvoiceAmount =0;
+        if(zReportDBAdapter.getProfilesCount()==0){
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
+            for (int i= 0 ;i<posReceiptList.size();i++){
+                receiptInvoiceAmount+=posReceiptList.get(i).getAmount();
+            }
+        }else {
+            ZReport zReport1=null;
+            try {
+                zReport1 = zReportDBAdapter.getLastRow();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
+            for (int i= 0 ;i<posReceiptList.size();i++){
+                receiptInvoiceAmount+=posReceiptList.get(i).getAmount();
+            }
+        }
         totalPosSalesAmount+=zReport.getInvoiceAmount()+zReport.getCreditInvoiceAmount();
         //endregion Currency summary
-        return BitmapInvoice.zPrint(context, zReport, usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReportAmount,totalPosSalesAmount,zReport.getInvoiceAmount(),zReport.getCreditInvoiceAmount());
+        return BitmapInvoice.zPrint(context, zReport, usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency+receiptInvoiceAmount, sheqle_minus, zReport.getCashTotal(), cash_minus, zReport.getCheckTotal(), check_minus, creditCard_plus, creditCard_minus, isCopy, aReportAmount,totalPosSalesAmount,zReport.getInvoiceAmount(),zReport.getCreditInvoiceAmount());
         //return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
 
     }

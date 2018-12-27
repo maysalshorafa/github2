@@ -117,7 +117,7 @@ public class OpiningReportDetailsDBAdapter {
     }
     public List<OpiningReportDetails> getListOpiningReport(long aReportId){
         List<OpiningReportDetails> opiningReportDetailsList =new ArrayList<OpiningReportDetails>();
-        Cursor cursor =  db.rawQuery( "select * from "+OPINING_REPORT_DETAILS_TABLE_NAME +" where "+ OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID +"="+aReportId, null );
+        Cursor cursor =  db.rawQuery( "select * from "+OPINING_REPORT_DETAILS_TABLE_NAME +" where "+ OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID +" = "+aReportId, null );
         cursor.moveToFirst();
 
         while(!cursor.isAfterLast()){

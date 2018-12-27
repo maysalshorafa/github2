@@ -10,8 +10,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DocumentType;
+import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -22,7 +28,7 @@ import java.util.Locale;
  */
 
 public class SaleManagementListViewAdapter extends ArrayAdapter {
-	private List<Order> salesList;
+	private List<Object> salesList;
 	private int resource;
 	private LayoutInflater inflater;
 	private Context context;
@@ -34,7 +40,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 	 * @param resource The resource ID for a layout file containing a layout to use when
 	 * @param objects  The objects to represent in the ListView.
 	 */
-	public SaleManagementListViewAdapter(Context context, int resource, List<Order> objects) {
+	public SaleManagementListViewAdapter(Context context, int resource, List<Object> objects) {
 		super(context, resource, objects);
 		this.context = context;
 		this.resource = resource;
@@ -65,35 +71,37 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
+	//	Order order = (Order)salesList.get(position);
+		if(salesList.get(position)instanceof Order){
 		double price;
-		Order o = salesList.get(position);
-		price = o.getTotalPrice();
-		holder.tvID.setText(o.getOrderId() + "");
-		holder.tvDiscount.setText(o.getCartDiscount()+"");
+		Order order = (Order)salesList.get(position);
+		price = order.getTotalPrice();
+		holder.tvID.setText(order.getOrderId() + "");
+		holder.tvDiscount.setText(order.getCartDiscount()+"");
 		OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(context);
 		orderDetailsDBAdapter.open();
-		o.setOrders(orderDetailsDBAdapter.getOrderBySaleID(o.getOrderId()));
-		holder.tvNumberOfItems.setText(o.getNumberOfItems()+"");
+		order.setOrders(orderDetailsDBAdapter.getOrderBySaleID(order.getOrderId()));
+		holder.tvNumberOfItems.setText(order.getNumberOfItems()+"");
 
-		if (o.getCustomer_name() != null && !o.getCustomer_name().equals("")) {
-			holder.tvCustomerName.setText(o.getCustomer_name());
+		if (order.getCustomer_name() != null && !order.getCustomer_name().equals("")) {
+			holder.tvCustomerName.setText(order.getCustomer_name());
 		} else{
 			holder.tvCustomerName.setText(context.getString(R.string.general_customer));
 		}
 
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-		holder.tvDate.setText(String.format(new Locale("en"),format.format(salesList.get(position).getCreatedAt())));
+		holder.tvDate.setText(String.format(new Locale("en"),format.format(order.getCreatedAt())));
 
 		holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
 
-		holder.tvStatus.setText(R.string.invoice_with_tax);
+		holder.tvStatus.setText(R.string.invoice_receipt);
 
 		holder.FL.setVisibility(View.GONE);
 
 		try {
-			if (salesList.get(position).getPayment().getPaymentWay().equals(CONSTANT.CREDIT_CARD)) {
+			if (order.getPayment().getPaymentWay().equals(CONSTANT.CREDIT_CARD)) {
 				convertView.setBackground(context.getResources().getDrawable(R.color.credit_card_bg));
-			} else if (salesList.get(position).getPayment().getPaymentWay().equals(CONSTANT.CHECKS)) {
+			} else if (order.getPayment().getPaymentWay().equals(CONSTANT.CHECKS)) {
 				convertView.setBackground(context.getResources().getDrawable(R.color.check_bg));
 			} else {
 				convertView.setBackground(context.getResources().getDrawable(R.color.sale_bg));
@@ -101,6 +109,36 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		} catch (Exception e) {
 			//e.printStackTrace();
 			convertView.setBackground(context.getResources().getDrawable(R.color.sale_bg));
+		}
+		}else {
+				double price;
+				BoInvoice boInvoice = (BoInvoice)salesList.get(position);;
+				JSONObject doc = boInvoice.getDocumentsData();
+				holder.tvID.setText(boInvoice.getDocNum() );
+				try {
+					if(boInvoice.getType().equals(DocumentType.INVOICE)) {
+						holder.tvStatus.setText(R.string.invoice_with_tax);
+					}else {
+						holder.tvStatus.setText(R.string.credit_invoice_doc);
+					}
+					price = doc.getDouble("total");
+					holder.tvDiscount.setText(doc.getDouble("cartDiscount")+"");
+					SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+//					holder.tvDate.setText(String.format(new Locale("en"),format.format(doc.getString("date"))));
+					holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
+					JSONObject customerJson= doc.getJSONObject("customer");
+					holder.tvCustomerName.setText(customerJson.get("firstName")+" "+customerJson.get("lastName"));
+					int count =0;
+					JSONArray jsonArray = doc.getJSONArray("cartDetailsList");
+					for (int c = 0;c<jsonArray.length();c++){
+						JSONObject j = jsonArray.getJSONObject(c);
+						count+=j.getInt("quantity");
+					}
+					holder.tvNumberOfItems.setText(count+"");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				holder.FL.setVisibility(View.GONE);
 		}
 
 		return convertView;
