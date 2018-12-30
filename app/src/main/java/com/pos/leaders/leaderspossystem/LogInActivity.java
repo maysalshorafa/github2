@@ -14,16 +14,15 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.OrderDetails;
-import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
-import com.pos.leaders.leaderspossystem.Tools.SendLog;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
@@ -313,7 +312,6 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.loginActivity_btnLogin:
                 login();
-                SendLog.sendLogFile();
                 break;
             case
                     R.id.schedule_workers:
