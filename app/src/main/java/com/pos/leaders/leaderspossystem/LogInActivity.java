@@ -23,6 +23,7 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SendLog;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
@@ -312,6 +313,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.loginActivity_btnLogin:
                 login();
+                SendLog.sendLogFile();
                 break;
             case
                     R.id.schedule_workers:

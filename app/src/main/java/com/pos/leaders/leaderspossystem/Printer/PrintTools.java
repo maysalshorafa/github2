@@ -165,6 +165,22 @@ public class PrintTools {
                     try {
                         HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
                         HPRTPrinterHelper.ClearPageModePrintAreaData();
+
+                        try {
+                            HPRTPrinterHelper.OpenCashdrawer(0);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            try {
+                                HPRTPrinterHelper.OpenCashdrawer(1);
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+                                try {
+                                    HPRTPrinterHelper.OpenCashdrawer(2);
+                                } catch (Exception e2) {
+                                    e2.printStackTrace();
+                                }
+                            }
+                        }
                         dialog.cancel();
                     } catch (Exception e) {
                         e.printStackTrace();
