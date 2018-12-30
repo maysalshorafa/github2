@@ -519,8 +519,9 @@ public class Util {
         zReport.setzReportId(zID);
         zReport.setInvoiceAmount(invoiceAmount);
         zReport.setCreditInvoiceAmount(creditInvoiceAmount);
+        ZReport finalZ = zReportDBAdapter.getByID(zReport.getzReportId());
 
-        return zReport;
+        return finalZ;
     }
     public static List<Payment> paymentList(List<Order> sales,Context context) {
         List<Payment> pl = new ArrayList<Payment>();
