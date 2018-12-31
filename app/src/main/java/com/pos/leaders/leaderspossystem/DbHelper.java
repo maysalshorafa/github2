@@ -306,10 +306,9 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(OpiningReportDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
                     db.execSQL(CustomerDBAdapter.addColumn("customerType"));
                     db.execSQL(ClosingReportDBAdapter.DATABASE_CREATE);
-                    List<String> tblNames = tablesName(db);
-                    String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
-                    db.execSQL(dbc);
-                    db.execSQL(IdsCounterDBAdapter.INIT(tblNames));
+                    db.execSQL(IdsCounterDBAdapter.addColumn("closing_report"));
+                    db.execSQL(IdsCounterDBAdapter.addColumn("pos_invoice"));
+
                     break;
 
 
