@@ -752,7 +752,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         }
         // With Currency Model
         else {
-
+             firstCurrencyInDefaultValue = 0;
+            secondCurrencyInDefaultValue = 0;
+            thirdCurrencyInDefaultValue = 0;
+            forthCurrencyInDefaultValue = 0;
             final Dialog aReportDialog = new Dialog(DashBord.this);
             aReportDialog.setTitle(R.string.opening_report);
             aReportDialog.setContentView(R.layout.areport_details_dialog);
