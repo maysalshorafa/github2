@@ -7,14 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.Backup.Backup;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
@@ -35,6 +32,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferRuleDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
@@ -73,7 +72,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 3;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -306,13 +305,9 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(PaymentDBAdapter.addColumn("key"));
                     db.execSQL(PosInvoiceDBAdapter.DATABASE_CREATE);
                     db.execSQL(OpiningReportDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
+                    db.execSQL(CustomerDBAdapter.addColumn("customerType"));
                     break;
-                case 3:
-                    try {
-                        Backup.BackupBufferDB();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
             }
         } catch (SQLException e) {
             Log.i("onUpgrade", e.getMessage(), e);

@@ -438,5 +438,9 @@ public class CustomerDBAdapter {
         }
         return true;
     }
-
+    public static String addColumn(String columnName) {
+        String dbc = "ALTER TABLE " + CUSTOMER_TABLE_NAME
+                + " add column " + columnName + " TEXT default normal;";
+        return dbc;
+    }
 }
