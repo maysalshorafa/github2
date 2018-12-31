@@ -49,8 +49,8 @@ public class ZReportDBAdapter {
             " `" + Z_REPORT_COLUMN_CREATEDATE + "` TIMESTAMP DEFAULT current_timestamp, `" + Z_REPORT_COLUMN_BYUSER + "`INTEGER," +
             " `" + Z_REPORT_COLUMN_STARTORDERID + "` INTEGER, `" + Z_REPORT_COLUMN_ENDORDERID + "` INTEGER," +
             " `" + Z_REPORT_COLUMN_TOTAL_AMOUNT + "` REAL,`"  + Z_REPORT_COLUMN_TOTAL_SALES_AMOUNT + "` REAL," +
-            " `" + Z_REPORT_COLUMN_TAX + "` REAL,`" + Z_REPORT_COLUMN_CASH_AMOUNT + "` REAL, `" + Z_REPORT_COLUMN_CHECK_AMOUNT + "` REAL," +
-            " `" + Z_REPORT_COLUMN_CREDIT_AMOUNT + "` REAL,`" + Z_REPORT_COLUMN_TOTAL_POS_SALES + "` REAL,`" + Z_REPORT_COLUMN_INVOICE_AMOUNT + "` REAL,`" + Z_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT + "` REAL)";
+            " `" + Z_REPORT_COLUMN_TAX + "` REAL,`" + Z_REPORT_COLUMN_CASH_AMOUNT + "` REAL default 0.0, `" + Z_REPORT_COLUMN_CHECK_AMOUNT + "` REAL default 0.0," +
+            " `" + Z_REPORT_COLUMN_CREDIT_AMOUNT + "` REAL default 0.0,`" + Z_REPORT_COLUMN_TOTAL_POS_SALES + "` REAL,`" + Z_REPORT_COLUMN_INVOICE_AMOUNT + "` REAL default 0.0,`" + Z_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT + "` REAL default 0.0)";
     public static final String DATABASE_UPDATE_FROM_V2_TO_V3[] = {"alter table z_report rename to z_report_v3;", DATABASE_CREATE + "; ",
             "insert into z_report (id,createDate,startOrderId,endOrderId,amount) " +
                     "select id,createDate,startOrderId,endOrderId,amount from z_report_v3;"};

@@ -292,7 +292,6 @@ public class DbHelper extends SQLiteOpenHelper {
                     clearSync.execute(context);
                     break;
                 case 2:
-                    db.execSQL(ClosingReportDBAdapter.DATABASE_CREATE);
                     db.execSQL(OrderDBAdapter.addColumnReal("cartDiscount"));
                     db.execSQL(OrderDBAdapter.addColumnReal("numberDiscount"));
                     db.execSQL(CashPaymentDBAdapter.addColumn("currencyRate"));
@@ -306,7 +305,13 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(PosInvoiceDBAdapter.DATABASE_CREATE);
                     db.execSQL(OpiningReportDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2);
                     db.execSQL(CustomerDBAdapter.addColumn("customerType"));
+                    db.execSQL(ClosingReportDBAdapter.DATABASE_CREATE);
+                    List<String> tblNames = tablesName(db);
+                    String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
+                    db.execSQL(dbc);
+                    db.execSQL(IdsCounterDBAdapter.INIT(tblNames));
                     break;
+
 
             }
         } catch (SQLException e) {
