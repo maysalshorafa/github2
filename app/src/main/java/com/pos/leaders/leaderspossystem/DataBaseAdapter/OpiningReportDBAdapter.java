@@ -26,7 +26,7 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 
 public class OpiningReportDBAdapter {
     // Table Name
-    protected static final String OPINING_REPORT_TABLE_NAME = "opining_report";
+    public static final String OPINING_REPORT_TABLE_NAME = "opining_report";
     // Column Names
     protected static final String OPINING_REPORT_COLUMN_ID = "id";
     protected static final String OPINING_REPORT_COLUMN_CREATEDATE = "createDate";
