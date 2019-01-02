@@ -54,7 +54,9 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Feedback.ClearSync;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Models.Permission.EmployeesPermissions;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 import com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper;
@@ -196,17 +198,41 @@ public class DbHelper extends SQLiteOpenHelper {
         Permissions permissions11= new Permissions(11,"offers");
         BrokerHelper.sendToBroker(MessageType.ADD_PERMISSION,permissions11,context);
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(1,1,1);");
+        EmployeesPermissions employeesPermissions1 = new EmployeesPermissions(1,1,1);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION,employeesPermissions1,context);
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(2,2,1);");
+        EmployeesPermissions employeesPermissions2 = new EmployeesPermissions(2,2,1);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION,employeesPermissions1,context);
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(3,2,3);");
+        EmployeesPermissions employeesPermissions3 = new EmployeesPermissions(3,2,3);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION,employeesPermissions3,context);
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(4,2,4);");
+        EmployeesPermissions employeesPermissions4 = new EmployeesPermissions(4,2,4);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION,employeesPermissions4,context);
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(5,2,5);");
+        EmployeesPermissions employeesPermissions5= new EmployeesPermissions(5,2,5);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION,employeesPermissions5,context);
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(6,2,6);");
+        EmployeesPermissions employeesPermissions6= new EmployeesPermissions(6,2,6);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION,employeesPermissions6,context);
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(7,2,7);");
+        EmployeesPermissions employeesPermissions7= new EmployeesPermissions(7,2,7);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION,employeesPermissions7,context);
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(8,2,8);");
+        EmployeesPermissions employeesPermissions8= new EmployeesPermissions(8,2,8);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION,employeesPermissions8,context);
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(9,2,9);");
+        EmployeesPermissions employeesPermissions9= new EmployeesPermissions(9,2,9);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION,employeesPermissions9,context);
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(10,2,10);");
+        EmployeesPermissions employeesPermissions10= new EmployeesPermissions(10,2,10);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION,employeesPermissions10,context);
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(11,2,2);");
+        EmployeesPermissions employeesPermissions11= new EmployeesPermissions(11,2,11);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION,employeesPermissions11,context);
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(12,2,11);");
+        EmployeesPermissions employeesPermissions12= new EmployeesPermissions(12,2,12);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION,employeesPermissions12,context);
         /**  db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(11,2,4.2,2.3);");
           db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(12,2,3.2,2.3);");
           db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(13,2,2.3,2.3);");**/
@@ -230,6 +256,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Timestamp(System.currentTimeMillis())+"');");
         db.execSQL("insert into "+ CategoryDBAdapter.CATEGORY_TABLE_NAME +" values(1, 'כללי','"+ new Timestamp(System.currentTimeMillis()) +"',1,0);");
+        Category category= new Category(1,"כללי", new Timestamp(System.currentTimeMillis()),1,0);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION,employeesPermissions5,context);
 //        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'test1','test1','female','11/8/1994','example@gmail.com','coder','123',0,'1',1,1,'1',1,'1',0.0,0.0,0.0);");
 
 

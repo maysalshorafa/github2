@@ -47,6 +47,9 @@ public class Category {
     public Category() {
 
     }
+
+    public Category(int categoryId, String כללי, Timestamp createdAt, int byUser, int i) {
+    }
     //endregion
 
 	// region Setters
