@@ -62,7 +62,6 @@
         <activity
             android:name=".AddEmployeeActivity"
             android:label="@string/title_add_user_activity" />
-
         <activity
             android:name=".OrdersManagementActivity"
             android:label="@string/title_sales_management_activity" />
@@ -208,18 +207,19 @@
             android:name=".InvoiceManagementActivity"
             android:label="@string/invoice_management_activity" />
         <activity android:name=".GiftProductActivity" />
-        <activity android:name=".ClosingReportActivity"
-            android:label="@string/closing_report_activity"></activity>
+        <activity
+            android:name=".ClosingReportActivity"
+            android:label="@string/closing_report_activity" />
         <activity
             android:name=".OrderDocumentManagementActivity"
             android:label="@string/order_document_management_activity" />
         <activity
             android:name=".CreateCreditInvoiceActivity"
             android:label="@string/create_credit_invoice_management_activity" />
-        <activity android:name=".ViewCreditInvoiceActivity"
-            android:label="@string/view_credit_invoice_management_activity"
-            >
-        </activity>
+        <activity
+            android:name=".ViewCreditInvoiceActivity"
+            android:label="@string/view_credit_invoice_management_activity"></activity>
+        <activity android:name=".MonthZReportView"></activity>
     </application>
 
 </manifest>

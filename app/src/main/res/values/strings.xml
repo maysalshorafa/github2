@@ -416,7 +416,7 @@
     <string name="z_report_view">Z REPORT VIEW</string>
     <string name="x_report">X REPORT</string>
     <string name="z_report">Z Report</string>
-
+    <string name="month_z_report_view">Month Z Report</string>
 
     <!--online setup -->
     <string name="key">Key</string>
@@ -672,7 +672,6 @@
     <string name="status">Status</string>
     <string name="opining_report">Opining Report</string>
     <string name="cant_make_invoice_check_internet_connection">Cant make invoice check internet connection!!</string>
-
 
 
 </resources>
