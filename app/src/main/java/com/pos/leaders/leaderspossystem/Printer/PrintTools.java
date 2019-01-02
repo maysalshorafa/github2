@@ -310,6 +310,11 @@ public class PrintTools {
         //return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
 
     }
+    public Bitmap createMonthZReport(ZReport zReport , boolean isCopy,Date from, Date to  ) {
+        return BitmapInvoice.monthZPrint(context, zReport,  isCopy,from,to);
+        //return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
+
+    }
 
     // get Payment List
     public static List<Payment> paymentList(List<Order> sales) {

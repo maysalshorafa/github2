@@ -126,12 +126,13 @@ public class MonthZReportView extends AppCompatActivity {
         double gbpAmount=0;
         double invoiceReceiptAmount=0;
         zReportDBAdapter.open();
+        zReportList=new ArrayList<>();
         zReportList = zReportDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime()+ DAY_MINUS_ONE_SECOND);
         if(zReportList.size()>0){
             imageView.setVisibility(View.VISIBLE);
             ZReport zReport = null;
-        for(int i = 0 ; i<zReportList.size();i++){
-           totalAmount+=zReportList.get(i).getTotalAmount();
+            for(int i = 0 ; i<zReportList.size();i++){
+            totalAmount+=zReportList.get(i).getTotalAmount();
             totalSales+=zReportList.get(i).getTotalSales();
             cashTotal+=zReportList.get(i).getCashTotal();
             checkTotal+=zReportList.get(i).getCheckTotal();
@@ -144,11 +145,12 @@ public class MonthZReportView extends AppCompatActivity {
             eurAmount+=zReportList.get(i).getEurAmount();
             gbpAmount+=zReportList.get(i).getGbpAmount();
             invoiceReceiptAmount+=zReportList.get(i).getInvoiceReceiptAmount();
-        }
+
+            }
 
         zReport=new ZReport(0,new Timestamp(System.currentTimeMillis()),zReportList.get(0).getByUser(),0,0,totalAmount,totalSales,cashTotal,checkTotal,creditTotal,totalPosSales,zReportList.get(0).getTax(),invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount);
         pt=new PrintTools(MonthZReportView.this);
-            p=pt.createZReport(zReport,false);
+            p=pt.createMonthZReport(zReport,false,from,to);
        imageView.setImageBitmap(p);
         }else {
             imageView.setVisibility(View.INVISIBLE);

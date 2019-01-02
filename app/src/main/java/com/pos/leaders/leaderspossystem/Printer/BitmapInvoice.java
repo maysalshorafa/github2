@@ -721,6 +721,181 @@ public class BitmapInvoice {
 
         return null;//invoiceImg.make();
     }
+    public static Bitmap monthZPrint(Context context, ZReport zReport ,  boolean isCopy ,Date from , Date to) {
+        ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
+        zReportDBAdapter.open();
+        EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
+        employeeDBAdapter.open();
+        zReport.setUser( employeeDBAdapter.getEmployeeByID(zReport.getByUser()));
+        //miriam_libre_bold.ttf
+        //miriam_libre_regular.ttf
+        //carmelitregular.ttf
+        int PAGE_WIDTH = CONSTANT.PRINTER_PAGE_WIDTH;
+        String status = context.getString(R.string.source_invoice);
+
+        Typeface plain = Typeface.createFromAsset(context.getAssets(), "carmelitregular.ttf");
+        Typeface normal = Typeface.create(plain, Typeface.NORMAL);
+        Typeface bold = Typeface.create(plain, Typeface.BOLD);
+
+        TextPaint head = new TextPaint(Paint.ANTI_ALIAS_FLAG
+                | Paint.LINEAR_TEXT_FLAG);
+        head.setStyle(Paint.Style.FILL);
+        head.setColor(Color.BLACK);
+        head.setTypeface(normal);
+        head.setTextSize(38);
+
+        if (isCopy)
+            status = context.getString(R.string.copy_invoice);
+        StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" +context.getString(R.string.from)+"  "+DateConverter.geDate(from) +"\n\r" +context.getString(R.string.to)+"  "+DateConverter.geDate(to) + "\n\r" + "קןפאי : " + zReport.getUser().getFullName()+ status , head,
+                PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
+
+        TextPaint invoiceHead = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
+        invoiceHead.setStyle(Paint.Style.FILL);
+        invoiceHead.setColor(Color.BLACK);
+        invoiceHead.setTypeface(bold);
+        invoiceHead.setTextSize(38);
+        StaticLayout sInvoiceHead = new StaticLayout("\n\r---------------------------", invoiceHead,
+                PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
+
+
+        TextPaint invoiceD = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
+        invoiceD.setStyle(Paint.Style.FILL);
+        invoiceD.setColor(Color.BLACK);
+        invoiceD.setTypeface(bold);
+        invoiceD.setTextSize(28);
+        invoiceD.setLinearText(true);
+
+        //invoiceD.setTextAlign(Paint.Align.LEFT);
+
+        TextPaint invoiceCD = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
+        invoiceCD.setStyle(Paint.Style.FILL);
+        invoiceCD.setColor(Color.BLACK);
+        invoiceCD.setTypeface(bold);
+        invoiceCD.setTextSize(28);
+        invoiceCD.setLinearText(true);
+
+        TextPaint orderTP = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
+        orderTP.setStyle(Paint.Style.FILL);
+        orderTP.setColor(Color.BLACK);
+        orderTP.setTypeface(normal);
+        orderTP.setTextSize(25);
+        orderTP.setLinearText(true);
+
+        StaticLayout sInvoiceD = new StaticLayout("\u200F"+context.getString(R.string.details) +  "\t\t\t\t\t\t\t\t\t"+context.getString(R.string.in_put)+ "\t\t"+ context.getString(R.string.out_put) + "\t\t\t" + context.getString(R.string.total) , invoiceD,
+                PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+
+        StaticLayout scInvoiceD = new StaticLayout("\u200F"+context.getString(R.string.currency) +  "\t\t\t\t\t\t\t\t"+context.getString(R.string.in_put)+ "\t\t"+ context.getString(R.string.out_put) + "\t\t\t" + context.getString(R.string.total) , invoiceD,
+                PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+
+
+        String names = "", in = "", out = "", total = "";
+        names +="\u200F"+ context.getString(R.string.invoice_receipt) +"\n" + "\u200F"+context.getString(R.string.invoice) + "\n" + "\u200F"+context.getString(R.string.credit_invoice_doc) + "\n"+"\u200F"+context.getString(R.string.total_sales);
+
+        in +=  "~" + "\n" + "~" + "\n" +"~" + "\n" +"~";
+        out +=  "~" + "\n" + "~" + "\n" +"~" + "\n" +"~";
+        total += dTS(zReport.getInvoiceReceiptAmount()) + "\n" + dTS(zReport.getInvoiceAmount()) + "\n" + dTS(zReport.getCreditInvoiceAmount()) + "\n" +dTS(zReport.getTotalSales());
+        StaticLayout slNames = new StaticLayout(names, orderTP,
+                (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+        StaticLayout slIn = new StaticLayout(in, orderTP,
+                (int) (PAGE_WIDTH * 0.2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+        StaticLayout slOut = new StaticLayout(out, orderTP,
+                (int) (PAGE_WIDTH * 0.2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+        StaticLayout slTotal = new StaticLayout(total, orderTP,
+                (int) (PAGE_WIDTH * 0.2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+
+        //orderTP.setTextSize(60);
+        //orderTP.setTypeface(bold);
+
+
+        StaticLayout sNewLine = new StaticLayout("-----------------------------", invoiceHead,
+                PAGE_WIDTH, Layout.Alignment.ALIGN_OPPOSITE, 1.0f, 1.0f, true);
+
+
+
+        String cIn = "", cOut = "", cTotal = "";
+        if(SETTINGS.enableCurrencies) {
+            names = "\u200F"+context.getString(R.string.shekel) + "\n"+"\u200F"+ context.getString(R.string.usd) + "\n" +"\u200F"+ context.getString(R.string.eur) + "\n" +"\u200F"+ context.getString(R.string.gbp)+  "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
+            cIn = "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~"+ "\n" + "~";
+            cOut = "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n"+ "~" + "\n" + "~";
+            cTotal = "\n" + zReport.getShekelAmount() + "\n" + zReport.getUsdAmount() + "\n" + zReport.getEurAmount() + "\n" + zReport.getGbpAmount()  + "\n" + zReport.getCheckTotal() + "\n" + zReport.getCreditTotal() + "\n" + zReport.getTotalAmount();
+        }else {
+            names = "\u200F"+context.getString(R.string.shekel)+ "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
+            cIn = "~" + "\n" + "~"+"\n" + "~" + "\n" + "~";
+            cOut = "~" + "\n"+ "~" + "\n" +"~" + "\n" + "~";
+            cTotal = "\n" + zReport.getShekelAmount()+ "\n" + zReport.getCheckTotal() + "\n" + zReport.getCreditTotal() + "\n" + zReport.getTotalAmount();
+        }
+        StaticLayout cSlNames = new StaticLayout(names, orderTP,
+                (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+        StaticLayout cSlIn = new StaticLayout(cIn, orderTP,
+                (int) (PAGE_WIDTH * 0.2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+        StaticLayout cSlOut = new StaticLayout(cOut, orderTP,
+                (int) (PAGE_WIDTH * 0.2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+        StaticLayout cSlTotal = new StaticLayout(cTotal, orderTP,
+                (int) (PAGE_WIDTH * 0.2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+
+
+        // invoiceD.setTextAlign(Paint.Align.CENTER);
+        // Create bitmap and canvas to draw to
+        //RGB_565
+        int Page_Height = 0;
+        if (SETTINGS.enableCurrencies)
+            Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight() + cSlNames.getHeight() + sNewLine.getHeight() + scInvoiceD.getHeight()+ sNewLine.getHeight();
+     /*   else
+            Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight()+posSales.getHeight();**/
+        Bitmap b = Bitmap.createBitmap(PAGE_WIDTH, Page_Height, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+
+
+        // Draw background
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG
+                | Paint.LINEAR_TEXT_FLAG);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.WHITE);
+        c.drawPaint(paint);
+
+        // Draw text
+        c.save();
+        c.translate(0, 0);
+        sHead.draw(c);
+        c.translate(0, sHead.getHeight());
+        sInvoiceHead.draw(c);
+        c.translate(0, sInvoiceHead.getHeight());
+        sInvoiceD.draw(c);
+
+
+        c.translate(0, sInvoiceD.getHeight());
+        slTotal.draw(c);
+        c.translate(slTotal.getWidth(), 0);
+        slOut.draw(c);
+        c.translate(slOut.getWidth(), 0);
+        slIn.draw(c);
+        c.translate(slIn.getWidth(), 0);
+        slNames.draw(c);
+        c.translate(-(int) (PAGE_WIDTH * 0.60), slNames.getHeight());
+        sNewLine.draw(c);
+
+        //   if (SETTINGS.enableCurrencies) {
+        c.translate(0, sNewLine.getHeight());
+        cSlTotal.draw(c);
+        scInvoiceD.draw(c);
+
+        c.translate(cSlTotal.getWidth(), 0);
+        c.translate(0, scInvoiceD.getHeight());
+
+        cSlOut.draw(c);
+        c.translate(cSlOut.getWidth(), 0);
+        cSlIn.draw(c);
+        c.translate(cSlIn.getWidth(), 0);
+        cSlNames.draw(c);
+
+        c.translate(-(int) (PAGE_WIDTH * 0.60), cSlNames.getHeight());
+        sNewLine.draw(c);
+        //   }
+
+        c.restore();
+        return b;
+    }
+
 }
 
 
