@@ -31,6 +31,8 @@ public class ClosingReportDBAdapter {
     protected static final String CLOSING_REPORT_COLUMN_CREATEDAT = "createdAt";
     protected static final String CLOSING_REPORT_COLUMN_OPINING_REPORT_ID = "opiningReportId";
     protected static final String CLOSING_REPORT_COLUMN_LAST_ORDER_ID = "lastOrderId";
+    protected static final String CLOSING_REPORT_COLUMN_BY_USER = "byUser";
+
 
     public static final String DATABASE_CREATE = "CREATE TABLE closing_report ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "`actualTotalValue` REAL,  " +
@@ -38,7 +40,8 @@ public class ClosingReportDBAdapter {
             "`differentTotalValue` REAL," +
             "`createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
             "`lastOrderId` INTEGER , " +
-            "`opiningReportId` INTEGER)";
+            "`opiningReportId` INTEGER , " +
+            "`byUser` INTEGER)";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -66,8 +69,8 @@ public class ClosingReportDBAdapter {
     }
 
 
-    public long insertEntry(double actualTotalValue,double expectedTotalValue ,double differentTotalValue ,Timestamp createdAt , long  opiningReportId,long lastOrderId ) {
-        ClosingReport closingReport = new ClosingReport(Util.idHealth(this.db, CLOSING_REPORT_TABLE_NAME, CLOSING_REPORT_COLUMN_ID), actualTotalValue,expectedTotalValue,differentTotalValue, createdAt, opiningReportId,lastOrderId);
+    public long insertEntry(double actualTotalValue,double expectedTotalValue ,double differentTotalValue ,Timestamp createdAt , long  opiningReportId,long lastOrderId ,long byUser) {
+        ClosingReport closingReport = new ClosingReport(Util.idHealth(this.db, CLOSING_REPORT_TABLE_NAME, CLOSING_REPORT_COLUMN_ID), actualTotalValue,expectedTotalValue,differentTotalValue, createdAt, opiningReportId,lastOrderId,byUser);
         sendToBroker(MessageType.ADD_CLOSING_REPORT, closingReport, this.context);
 
         try {
@@ -89,6 +92,7 @@ public class ClosingReportDBAdapter {
         val.put(CLOSING_REPORT_COLUMN_CREATEDAT, String.valueOf(closingReport.getCreatedAt()));
         val.put(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID,closingReport.getOpiningReportId());
         val.put(CLOSING_REPORT_COLUMN_LAST_ORDER_ID,closingReport.getLastOrderId());
+        val.put(CLOSING_REPORT_COLUMN_BY_USER,closingReport.getByUser());
 
         try {
             return db.insert(CLOSING_REPORT_TABLE_NAME, null, val);
@@ -113,7 +117,8 @@ public class ClosingReportDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE))),
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_CREATEDAT))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID))),
-                Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))));
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))),
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_BY_USER))));
         cursor.close();
 
         return closingReport;
@@ -132,7 +137,8 @@ public class ClosingReportDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE))),
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_CREATEDAT))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID))),
-                Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))));
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))),
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_BY_USER))));
         cursor.close();
 
         return closingReport;
@@ -160,7 +166,8 @@ public class ClosingReportDBAdapter {
                     Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE))),
                     Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_CREATEDAT))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID))),
-                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))));
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))),
+                        Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_BY_USER))));
         } catch (Exception ex) {
             return new ClosingReport(
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_ID))),
@@ -169,7 +176,8 @@ public class ClosingReportDBAdapter {
                     Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_DIFFERENT_TOTAL_VALUE))),
                     Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_CREATEDAT))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_OPINING_REPORT_ID))),
-                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))));
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_BY_USER))));
 
         }
     }

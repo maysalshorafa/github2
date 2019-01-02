@@ -66,9 +66,9 @@ public class ReportZDetailsActivity extends Activity {
         ZReport zReport = zReportDBAdapter.getByID(id);
         pt=new PrintTools(ReportZDetailsActivity.this);
         if(isCopy){
-            p=pt.createZReport(zReport,id,from,to,true,totalZReportAmount);
+            p=pt.createZReport(zReport,true);
         }else {
-            p=pt.createZReport(zReport,id,from,to,false,totalZReportAmount);
+            p=pt.createZReport(zReport,false);
 
         }
         // p=pt.createXReport(id,from, SESSION._EMPLOYEE,new java.util.Date()); // testing xReport

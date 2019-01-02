@@ -14,9 +14,10 @@ public class ClosingReport{
     private Timestamp createdAt;
     private long opiningReportId;
     private long lastOrderId;
+    private long byUser;
 
 
-    public ClosingReport(long closingReportId, double actualTotalValue, double expectedTotalValue, double differentTotalValue, Timestamp createdAt,long opiningReportId , long lastOrderId) {
+    public ClosingReport(long closingReportId, double actualTotalValue, double expectedTotalValue, double differentTotalValue, Timestamp createdAt,long opiningReportId , long lastOrderId,long byUser) {
         this.closingReportId = closingReportId;
         this.actualTotalValue = actualTotalValue;
         this.expectedTotalValue = expectedTotalValue;
@@ -24,6 +25,7 @@ public class ClosingReport{
         this.createdAt = createdAt;
         this.opiningReportId=opiningReportId;
         this.lastOrderId=lastOrderId;
+        this.byUser=byUser;
     }
 
 
@@ -82,5 +84,13 @@ public class ClosingReport{
 
     public void setLastOrderId(long lastOrderId) {
         this.lastOrderId = lastOrderId;
+    }
+
+    public long getByUser() {
+        return byUser;
+    }
+
+    public void setByUser(long byUser) {
+        this.byUser = byUser;
     }
 }

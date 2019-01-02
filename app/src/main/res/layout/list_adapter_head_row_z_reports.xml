@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:background="@color/header_color"
             android:padding="8dp"
-            android:text="@string/total_amount"
+            android:text="@string/total_sales"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold"/>

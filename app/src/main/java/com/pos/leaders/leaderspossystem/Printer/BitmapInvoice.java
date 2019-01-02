@@ -278,7 +278,7 @@ public class BitmapInvoice {
         return b;
     }
 
-    public static Bitmap zPrint(Context context, ZReport zReport, double usa_plus, double usa_minus, double eur_plus, double eur_minus, double gbp_plus, double gbp_minus, double sheqle_plus, double sheqle_minus, double cash_plus, double cash_minus, double check_plus, double check_minus, double creditCard_plus, double creditCard_minus, boolean isCopy, double starterAmount,double totalZReportAmount,double invoiceAmount , double creditInvoiceAmount) {
+    public static Bitmap zPrint(Context context, ZReport zReport ,  boolean isCopy) {
         ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
         zReportDBAdapter.open();
         EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
@@ -312,7 +312,7 @@ public class BitmapInvoice {
             status = context.getString(R.string.copy_invoice);
         StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" + DateConverter.dateToString(zReport.getCreatedAt().getTime()) + "\n\r" + "קןפאי : " + zReport.getUser().getFullName()+ status , head,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
-        StaticLayout posSales = new StaticLayout( "\n"  +context.getString(R.string.pos_sales)+" "+totalZReportAmount, posSaleStyle,
+        StaticLayout posSales = new StaticLayout( "\n"  +context.getString(R.string.pos_sales)+" "+zReport.getTotalPosSales(), posSaleStyle,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
 
 
@@ -356,11 +356,11 @@ public class BitmapInvoice {
 
 
         String names = "", in = "", out = "", total = "";
-        names +="\u200F"+context.getString(R.string.cash) + "\n" +"\u200F"+context.getString(R.string.credit_card)+ "\n" +"\u200F"+ context.getString(R.string.checks) +"\n" + "\u200F"+context.getString(R.string.invoice) + "\n" + "\u200F"+context.getString(R.string.credit_invoice_doc) + "\n"+"\u200F"+context.getString(R.string.total_sales);
+        names +="\u200F"+ context.getString(R.string.invoice_receipt) +"\n" + "\u200F"+context.getString(R.string.invoice) + "\n" + "\u200F"+context.getString(R.string.credit_invoice_doc) + "\n"+"\u200F"+context.getString(R.string.total_sales);
 
-        in += dTS(cash_plus) + "\n" + dTS(creditCard_plus) + "\n" + dTS(check_plus) + "\n" + "~" + "\n" + "~" + "\n" + dTS(cash_plus + check_plus + creditCard_plus);
-        out += dTS(cash_minus) + "\n" + dTS(creditCard_minus) + "\n" + dTS(check_minus) + "\n" + "~" +  "\n" + "~"+ "\n" + dTS(cash_minus + check_minus + creditCard_minus);
-        total += dTS(cash_plus + cash_minus) + "\n" + dTS(creditCard_plus + creditCard_minus) + "\n" + dTS(check_plus + check_minus) +"\n" + invoiceAmount + "\n" + creditInvoiceAmount+ "\n" +   dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus+invoiceAmount+creditInvoiceAmount );
+        in +=  "~" + "\n" + "~" + "\n" +"~" + "\n" +"~";
+        out +=  "~" + "\n" + "~" + "\n" +"~" + "\n" +"~";
+        total += dTS(zReport.getInvoiceReceiptAmount()) + "\n" + dTS(zReport.getInvoiceAmount()) + "\n" + dTS(zReport.getCreditInvoiceAmount()) + "\n" +dTS(zReport.getTotalSales());
         StaticLayout slNames = new StaticLayout(names, orderTP,
                 (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
         StaticLayout slIn = new StaticLayout(in, orderTP,
@@ -378,14 +378,20 @@ public class BitmapInvoice {
                 PAGE_WIDTH, Layout.Alignment.ALIGN_OPPOSITE, 1.0f, 1.0f, true);
 
 
-        names = "\u200F"+context.getString(R.string.usd) + "\n"+"\u200F"+ context.getString(R.string.eur) + "\n" +"\u200F"+ context.getString(R.string.gbp) + "\n" +"\u200F"+ context.getString(R.string.shekel)+ "\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
 
         String cIn = "", cOut = "", cTotal = "";
-        cIn = dTS(usa_plus) + "\n" + dTS(eur_plus) + "\n" + dTS(gbp_plus) + "\n" + dTS(sheqle_plus)+ "\n" +dTS(cash_plus + check_plus + creditCard_plus);
-        cOut = dTS(usa_minus) + "\n" + dTS(eur_minus) + "\n" + dTS(gbp_minus) + "\n" + dTS(sheqle_minus) + "\n"  + dTS(cash_minus + check_minus + creditCard_minus);
-        cTotal = "\n" + dTS(usa_plus - usa_minus) + "\n" + dTS(eur_plus - eur_minus) + "\n" + dTS(gbp_plus - gbp_minus) + "\n" + dTS(sheqle_plus - sheqle_minus) + "\n" +
-                dTS(cash_plus + cash_minus + creditCard_plus + creditCard_minus + check_plus + check_minus + starterAmount+invoiceAmount+creditInvoiceAmount);
-
+        if(SETTINGS.enableCurrencies) {
+            names = "\u200F"+context.getString(R.string.shekel) + "\n"+"\u200F"+ context.getString(R.string.usd) + "\n" +"\u200F"+ context.getString(R.string.eur) + "\n" +"\u200F"+ context.getString(R.string.gbp)+ "\n" +"\u200F"+ context.getString(R.string.cash)+  "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
+            cIn = "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" +"\n" +  "~" + "\n" + "~";
+            cOut = "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n"+ "~" + "\n" + "~";
+            cTotal = "\n" + zReport.getShekelAmount() + "\n" + zReport.getUsdAmount() + "\n" + zReport.getEurAmount() + "\n" + zReport.getGbpAmount() + "\n" +
+                    zReport.getCashTotal() + "\n" + zReport.getCheckTotal() + "\n" + zReport.getCreditTotal() + "\n" + zReport.getTotalAmount();
+        }else {
+            names = "\u200F"+context.getString(R.string.shekel) + "\n" +"\u200F"+ context.getString(R.string.cash)+  "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
+            cIn = "~" + "\n" + "~" + "\n" + "~" +"\n" + "~" + "\n" + "~";
+            cOut = "~" + "\n" + "~" + "\n" + "~" + "\n" +"~" + "\n" + "~";
+            cTotal = "\n" + zReport.getShekelAmount() + zReport.getCashTotal() + "\n" + zReport.getCheckTotal() + "\n" + zReport.getCreditTotal() + "\n" + zReport.getTotalAmount();
+        }
         StaticLayout cSlNames = new StaticLayout(names, orderTP,
                 (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
         StaticLayout cSlIn = new StaticLayout(cIn, orderTP,
@@ -402,8 +408,8 @@ public class BitmapInvoice {
         int Page_Height = 0;
         if (SETTINGS.enableCurrencies)
             Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight() + cSlNames.getHeight() + sNewLine.getHeight() + scInvoiceD.getHeight()+ sNewLine.getHeight() +posSales.getHeight();
-        else
-            Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight()+posSales.getHeight();
+     /*   else
+            Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight()+posSales.getHeight();**/
         Bitmap b = Bitmap.createBitmap(PAGE_WIDTH, Page_Height, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
 
@@ -436,7 +442,7 @@ public class BitmapInvoice {
         c.translate(-(int) (PAGE_WIDTH * 0.60), slNames.getHeight());
         sNewLine.draw(c);
 
-        if (SETTINGS.enableCurrencies) {
+     //   if (SETTINGS.enableCurrencies) {
             c.translate(0, sNewLine.getHeight());
             cSlTotal.draw(c);
             scInvoiceD.draw(c);
@@ -452,7 +458,7 @@ public class BitmapInvoice {
 
             c.translate(-(int) (PAGE_WIDTH * 0.60), cSlNames.getHeight());
             sNewLine.draw(c);
-        }
+     //   }
         posSales.draw(c);
         c.translate(0, posSales.getHeight());
         c.restore();

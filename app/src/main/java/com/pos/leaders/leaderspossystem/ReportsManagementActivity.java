@@ -136,9 +136,16 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                 ZReport z = new ZReport(0,  new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE, lastZReport.getEndOrderId() + 1, lastSale);
                                 z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
                                 double amount = zReportDBAdapter.getZReportAmount(z.getStartOrderId(), z.getEndOrderId());
-                                totalZReportAmount=zReportDBAdapter.zReportTotalAmount()+amount;
-                                z.setTotalAmount(amount);
-                                z.setTotalPosSales(totalZReportAmount);
+                                    try {
+                                        totalZReportAmount=zReportDBAdapter.getLastRow().getTotalPosSales()+amount;
+                                    } catch (Exception e) {
+                                        totalZReportAmount=amount;
+
+                                        e.printStackTrace();
+                                    }
+                                    z.setTotalAmount(amount);
+                                    z.setTotalSales(amount);
+                                    z.setTotalPosSales(totalZReportAmount);
                                 ZReport zReport= Util.insertZReport(z,getApplicationContext());
                                 Intent i = new Intent(ReportsManagementActivity.this, ReportZDetailsActivity.class);
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());

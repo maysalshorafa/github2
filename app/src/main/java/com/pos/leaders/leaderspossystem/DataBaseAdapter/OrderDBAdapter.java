@@ -206,7 +206,7 @@ public class OrderDBAdapter {
 
 	public List<Order> getBetween(long from, long to){
 		List<Order> saleList = new ArrayList<Order>();
-		Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +" <= "+to+" and "+ ORDER_COLUMN_ID +" >= "+from,null);
+		Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +" <= "+to+" and "+ ORDER_COLUMN_ID +" >= "+from+ " and id like '%"+SESSION.POS_ID_NUMBER+"%'",null);
 		//Cursor cursor = db.rawQuery("select * from "+ORDER_DETAILS_TABLE_NAME+" where "+ORDER_COLUMN_ORDERDATE+" <= "+to+" and "+ORDER_COLUMN_ORDERDATE +" >= "+from,null);
 		cursor.moveToFirst();
 

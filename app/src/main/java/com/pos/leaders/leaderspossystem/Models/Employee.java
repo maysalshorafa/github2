@@ -26,6 +26,18 @@ public class Employee {
     @JsonIgnore
     private List<Permissions> permissionsList;
 
+    public Employee(int employeeId, String master, String password, String master1, String master2, Timestamp createdAt, int i, String phoneNumber, double present, double hourlyWage) {
+        this.employeeId = employeeId;
+        this.employeeName = employeeName;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.createdAt = createdAt;
+        this.hide = hide;
+        this.phoneNumber = phoneNumber;
+        this.present = present;
+        this.hourlyWage = hourlyWage;}
+
     public void setEmployeeId(long employeeId) {
         this.employeeId = employeeId;
     }

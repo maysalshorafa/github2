@@ -54,6 +54,10 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Feedback.ClearSync;
+import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
+import com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -152,20 +156,45 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(EmployeeDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (1,'user1','user','user','"+new Timestamp(System.currentTimeMillis())+"','1234',0,046316969,20,35);");
         db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (2,'master','master','master','"+new Timestamp(System.currentTimeMillis())+"','123456',0,046316969,20,35);");
+
+        Employee master = new Employee(2,"master","123456","master","master",new Timestamp(System.currentTimeMillis()),0,"046316969",20.0,35.0);
+        Employee user1 = new Employee(1,"user1","1234","user","user",new Timestamp(System.currentTimeMillis()),0,"046316969",20.0,35.0);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE,master,context);
+        BrokerHelper.sendToBroker(MessageType.ADD_EMPLOYEE,user1,context);
         db.execSQL(EmployeePermissionsDBAdapter.DATABASE_CREATE);
-
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (1 , 'sales cart');");
+        Permissions permissions1 = new Permissions(1,"sales cart");
+        BrokerHelper.sendToBroker(MessageType.ADD_PERMISSION,permissions1,context);
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (2 , 'report');");
+        Permissions permissions2 = new Permissions(2,"report");
+        BrokerHelper.sendToBroker(MessageType.ADD_PERMISSION,permissions2,context);
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (3 , 'product');");
+        Permissions permissions3 = new Permissions(3,"product");
+        BrokerHelper.sendToBroker(MessageType.ADD_PERMISSION,permissions3,context);
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (4 , 'category');");
+        Permissions permissions4 = new Permissions(4,"category");
+        BrokerHelper.sendToBroker(MessageType.ADD_PERMISSION,permissions4,context);
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (5 , 'employee');");
+        Permissions permissions5 = new Permissions(5,"employee");
+        BrokerHelper.sendToBroker(MessageType.ADD_PERMISSION,permissions5,context);
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (6 , 'Schedule Workers');");
+        Permissions permissions6 = new Permissions(6,"Schedule Workers");
+        BrokerHelper.sendToBroker(MessageType.ADD_PERMISSION,permissions6,context);
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (7 , 'back up');");
+        Permissions permissions7 = new Permissions(7,"back up");
+        BrokerHelper.sendToBroker(MessageType.ADD_PERMISSION,permissions7,context);
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (8 , 'settings');");
+        Permissions permissions8 = new Permissions(8,"settings");
+        BrokerHelper.sendToBroker(MessageType.ADD_PERMISSION,permissions8,context);
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (9 , 'user club');");
+        Permissions permissions9 = new Permissions(9,"user club");
+        BrokerHelper.sendToBroker(MessageType.ADD_PERMISSION,permissions9,context);
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (10 , 'sales man');");
+        Permissions permissions10 = new Permissions(10,"sales man");
+        BrokerHelper.sendToBroker(MessageType.ADD_PERMISSION,permissions10,context);
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (11 , 'offers');");
-
+        Permissions permissions11= new Permissions(11,"offers");
+        BrokerHelper.sendToBroker(MessageType.ADD_PERMISSION,permissions11,context);
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(1,1,1);");
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(2,2,1);");
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(3,2,3);");

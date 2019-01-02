@@ -667,11 +667,6 @@ public class PdfUA {
         insertCell(dateTable, context.getString(R.string.expected), Element.ALIGN_LEFT, 1, dateFont);
         insertCell(dateTable, context.getString(R.string.different), Element.ALIGN_LEFT, 1, dateFont);
 
-        insertCell(dateTable, context.getString(R.string.opening_report), Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable, jsonObject.getDouble("actualOpining")+"", Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable, jsonObject.getDouble("expectedOpining")+"", Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable,  jsonObject.getDouble("actualOpining")-jsonObject.getDouble("expectedOpining")+"", Element.ALIGN_LEFT, 1, dateFont);
-
         insertCell(dateTable, CONSTANT.CHECKS, Element.ALIGN_LEFT, 1, dateFont);
         insertCell(dateTable, jsonObject.getDouble("actualCheck")+"", Element.ALIGN_LEFT, 1, dateFont);
         insertCell(dateTable, jsonObject.getDouble("expectedCheck")+"", Element.ALIGN_LEFT, 1, dateFont);
@@ -703,10 +698,6 @@ public class PdfUA {
         insertCell(dateTable,  jsonObject.getDouble("actualGbp")-jsonObject.getDouble("expectedGbp")+"", Element.ALIGN_LEFT, 1, dateFont);
         insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
 
-        insertCell(dateTable, "Total", Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable, jsonObject.getDouble("actualTotal")+"", Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable, jsonObject.getDouble("expectedTotal")+"", Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable,  jsonObject.getDouble("actualTotal")-jsonObject.getDouble("expectedTotal")+"", Element.ALIGN_LEFT, 1, dateFont);
         //end
 
         // schedule worker table

@@ -30,12 +30,18 @@ public class ZReport {
     private double totalPosSales;
     private double invoiceAmount;
     private double creditInvoiceAmount;
+    private double shekelAmount;
+    private double usdAmount;
+    private double eurAmount;
+    private double gbpAmount;
+    private double invoiceReceiptAmount;
     public ZReport() {
 
 
     }
 
-    public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount) {
+    public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount,double shekelAmount,double usdAmount, double eurAmount,
+                   double gbpAmount, double invoiceReceiptAmount) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -50,7 +56,11 @@ public class ZReport {
         this.totalPosSales=totalPosSales;
         this.invoiceAmount=invoiceAmount;
         this.creditInvoiceAmount=creditInvoiceAmount;
-
+        this.shekelAmount=shekelAmount;
+        this.usdAmount=usdAmount;
+        this.eurAmount=eurAmount;
+        this.gbpAmount=gbpAmount;
+        this.invoiceReceiptAmount=invoiceReceiptAmount;
     }
 
     public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount) {
@@ -236,6 +246,46 @@ public class ZReport {
         this.creditInvoiceAmount = creditInvoiceAmount;
     }
 
+    public double getShekelAmount() {
+        return shekelAmount;
+    }
+
+    public void setShekelAmount(double shekelAmount) {
+        this.shekelAmount = shekelAmount;
+    }
+
+    public double getUsdAmount() {
+        return usdAmount;
+    }
+
+    public void setUsdAmount(double usdAmount) {
+        this.usdAmount = usdAmount;
+    }
+
+    public double getEurAmount() {
+        return eurAmount;
+    }
+
+    public void setEurAmount(double eurAmount) {
+        this.eurAmount = eurAmount;
+    }
+
+    public double getGbpAmount() {
+        return gbpAmount;
+    }
+
+    public void setGbpAmount(double gbpAmount) {
+        this.gbpAmount = gbpAmount;
+    }
+
+    public double getInvoiceReceiptAmount() {
+        return invoiceReceiptAmount;
+    }
+
+    public void setInvoiceReceiptAmount(double invoiceReceiptAmount) {
+        this.invoiceReceiptAmount = invoiceReceiptAmount;
+    }
+
     //region OpenFormat
     public String BKMVDATA(int rowNumber,String pc,int totalRows){
 
@@ -266,6 +316,11 @@ public class ZReport {
                 ", totalPosSales=" + totalPosSales +
                 ", invoiceAmount=" + invoiceAmount +
                 ", creditInvoiceAmount=" + creditInvoiceAmount +
+                ", shekelAmount=" + shekelAmount +
+                ", usdAmount=" + usdAmount +
+                ", eurAmount=" + eurAmount +
+                ", gbpAmount=" + gbpAmount +
+                ", invoiceReceiptAmount=" + invoiceReceiptAmount +
                 '}';
     }
 //endregion OpenFormat
