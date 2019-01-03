@@ -26,7 +26,7 @@ public class OpiningReportDetailsDBAdapter {
     protected static final String OPINING_REPORT_DETAILS_TABLE_NAME = "opining_report_details";
     // Column Names
     protected static final String OPINING_REPORT_DETAILS_COLUMN_ID = "id";
-    protected static final String OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID = "opining_report_id";
+    protected static final String OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID = "a_report_id";
     protected static final String OPINING_REPORT_DETAILS_COLUMN_AMOUNT = "amount";
     protected static final String OPINING_REPORT_DETAILS_COLUMN_TYPE = "type";
     protected static final String OPINING_REPORT_DETAILS_COLUMN_AMOUNT_IN_BASIC_CURRENCY = "amount_in_basic_currency";
