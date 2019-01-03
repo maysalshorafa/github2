@@ -300,6 +300,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                         //sales Amount
                                                         z.setTotalAmount(amount);
                                                         z.setTotalSales(amount);
+                                                        z.setInvoiceReceiptAmount(amount);
                                                         z.setTotalPosSales(totalZReportAmount);
                                                         ZReport zReport= Util.insertZReport(z,getApplicationContext());
                                                         btZReport.setEnabled(false);

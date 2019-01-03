@@ -144,6 +144,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
 
                                         e.printStackTrace();
                                     }
+                                    z.setInvoiceReceiptAmount(amount);
                                     z.setTotalAmount(amount);
                                     z.setTotalSales(amount);
                                     z.setTotalPosSales(totalZReportAmount);

@@ -3579,7 +3579,6 @@ public class SalesCartActivity extends AppCompatActivity {
                     currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, new Order(SESSION._ORDERS));
                     for (int i = 0; i < jsonArray.length() - 1; i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        Log.d("tttttttttt",jsonObject.getDouble("actualCurrencyRate")+"");
                         cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()),getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")),jsonObject.getDouble("actualCurrencyRate"));
 
                     }

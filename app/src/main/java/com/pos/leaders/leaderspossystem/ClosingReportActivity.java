@@ -330,6 +330,7 @@ public class ClosingReportActivity extends AppCompatActivity {
 
                 }
             }else {
+                zReport=zReportDBAdapter.getLastRow();
                 List<PosInvoice>tempPosCashInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport.getzReportId(),DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
                 List<PosInvoice>newPosInvoiceListCash =new ArrayList<>();
                 for(int i=0;i<tempPosCashInvoiceList.size();i++){
@@ -391,7 +392,13 @@ public class ClosingReportActivity extends AppCompatActivity {
         expectedGbp=gbp_plus-gbp_minus+expectedOpiningGbp;
         checkExpectedValue.setText(Util.makePrice(expectedCheck));
         creditExpectedValue.setText(Util.makePrice(expectedCredit));
+        if(SETTINGS.enableCurrencies){
         shekelExpectedValue.setText(Util.makePrice(expectedShekel));
+        }else {
+            expectedShekel=cash_plus+opiningReport.getAmount()-sheqle_plus;
+            shekelExpectedValue.setText(Util.makePrice(expectedShekel));
+
+        }
         usdExpectedValue.setText(Util.makePrice(expectedUsd));
         eurAExpectedValue.setText(Util.makePrice(expectedEur));
         gbpExpectedValue.setText(Util.makePrice(expectedGbp));

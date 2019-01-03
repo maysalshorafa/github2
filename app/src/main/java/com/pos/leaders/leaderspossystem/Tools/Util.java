@@ -611,12 +611,13 @@ public class Util {
 
         }
 
-        zReport.setTotalAmount(zReport.getTotalAmount()+aReportAmount);
+        zReport.setTotalAmount(zReport.getTotalAmount()+aReportAmount+receiptInvoiceAmount);
+        zReport.setTotalSales(zReport.getTotalSales()+invoiceAmount+creditInvoiceAmount);
 
         long zID = zReportDBAdapter.insertEntry(zReport.getCreatedAt(), zReport.getByUser(), zReport.getStartOrderId(), zReport.getEndOrderId(),
                 zReport.getTotalAmount(),zReport.getTotalSales(),cash_plus,check_plus+receiptInvoiceAmountCheck,creditCard_plus
                 ,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax/100,invoiceAmount,
-                creditInvoiceAmount,(sheqle_plus-sheqle_minus)+aReportDetailsForFirstCurrency+receiptInvoiceAmount,(usd_plus-usd_minus)+aReportDetailsForSecondCurrency,(eur_plus-eur_minus)+aReportDetailsForThirdCurrency,(gbp_plus-gbp_minus)+aReportDetailsForForthCurrency,cash_plus+check_plus+creditCard_plus);
+                creditInvoiceAmount,(sheqle_plus-sheqle_minus)+aReportDetailsForFirstCurrency+receiptInvoiceAmount,(usd_plus-usd_minus)+aReportDetailsForSecondCurrency,(eur_plus-eur_minus)+aReportDetailsForThirdCurrency,(gbp_plus-gbp_minus)+aReportDetailsForForthCurrency,zReport.getInvoiceReceiptAmount());
         zReport.setzReportId(zID);
         zReport.setInvoiceAmount(invoiceAmount);
         zReport.setCreditInvoiceAmount(creditInvoiceAmount);
