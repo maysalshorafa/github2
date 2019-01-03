@@ -70,7 +70,7 @@ public class OpiningReportDBAdapter {
     }
 
     public long insertEntry(Timestamp createDate, long byUser, double amount, long lastSaleID, long lastZReport) {
-        OpiningReport aReport = new OpiningReport(Util.idHealth(this.db, OPINING_REPORT_TABLE_NAME, OPINING_REPORT_COLUMN_ID), createDate, byUser, amount, lastSaleID, lastZReport);
+        OpiningReport aReport = new OpiningReport(Util.idHealth(this.db, "a_report", OPINING_REPORT_COLUMN_ID), createDate, byUser, amount, lastSaleID, lastZReport);
         sendToBroker(MessageType.ADD_OPINING_REPORT, aReport, this.context);
         try {
             return insertEntry(aReport);
