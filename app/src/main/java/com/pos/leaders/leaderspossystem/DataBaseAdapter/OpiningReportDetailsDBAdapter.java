@@ -34,7 +34,9 @@ public class OpiningReportDetailsDBAdapter {
     public static final String DATABASE_CREATE = "CREATE TABLE " + OPINING_REPORT_DETAILS_TABLE_NAME
             + " ( `" + OPINING_REPORT_DETAILS_COLUMN_ID + "` INTEGER PRIMARY KEY AUTOINCREMENT, `" + OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID + "` INTEGER,  `"
             + OPINING_REPORT_DETAILS_COLUMN_AMOUNT + "` REAL NOT NULL, " + " `" + OPINING_REPORT_DETAILS_COLUMN_TYPE + "` INTEGER,  `" + OPINING_REPORT_DETAILS_COLUMN_AMOUNT_IN_BASIC_CURRENCY + "` REAL NOT NULL , " +
-            "FOREIGN KEY(`" + OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID + "`) REFERENCES `a_report.id` )";
+            "FOREIGN KEY(`" + OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID + "`) REFERENCES `opining_report.id` )";
+    public static final String DATABASE_UPDATE_FROM_V1_TO_V2 = "alter table a_report_details rename to opining_report_details;";
+
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -61,7 +63,7 @@ public class OpiningReportDetailsDBAdapter {
     }
 
     public long insertEntry(long a_report_id, double amount, long type, double amount_in_basic_currency) {
-        OpiningReportDetails aReportDetails = new OpiningReportDetails(Util.idHealth(this.db, OPINING_REPORT_DETAILS_TABLE_NAME, OPINING_REPORT_DETAILS_COLUMN_ID), a_report_id, amount, type, amount_in_basic_currency);
+        OpiningReportDetails aReportDetails = new OpiningReportDetails(Util.idHealth(this.db, "a_report_details", OPINING_REPORT_DETAILS_COLUMN_ID), a_report_id, amount, type, amount_in_basic_currency);
         sendToBroker(MessageType.ADD_OPINING_REPORT_DETAILS, aReportDetails, this.context);
         try {
             return insertEntry(aReportDetails);
