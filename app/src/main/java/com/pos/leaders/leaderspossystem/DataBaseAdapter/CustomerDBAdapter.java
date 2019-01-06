@@ -125,7 +125,7 @@ public class CustomerDBAdapter {
         boCustomer.setPostalCode(Util.getString(boCustomer.getPostalCode()));
         boCustomer.setCountry(Util.getString(boCustomer.getCountry()));
         boCustomer.setCountryCode(Util.getString(boCustomer.getCountryCode()));
-        boCustomer.setCountryCode(Util.getString(boCustomer.getCustomerCode()));
+        boCustomer.setCustomerCode(Util.getString(boCustomer.getCustomerCode()));
 
         sendToBroker(MessageType.ADD_CUSTOMER,boCustomer,context);
 

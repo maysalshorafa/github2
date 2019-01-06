@@ -355,7 +355,7 @@
                             android:layout_marginTop="15dp"
                             android:layout_weight="1"
                             android:background="@drawable/bubble"
-                            android:hint="@string/house_number"
+                            android:hint="@string/customer_code_in_another_programme"
                             android:padding="8dp" />
 
 

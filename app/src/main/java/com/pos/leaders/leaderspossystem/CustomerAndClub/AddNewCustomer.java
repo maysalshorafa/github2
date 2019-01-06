@@ -56,7 +56,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    String street="" , job="" , email="" , houseNo="" , postalCode="" , country="" , countryCode="",customerCode;
+    String street="" , job="" , email="" , houseNo="" , postalCode="" , country="" , countryCode="",customerCode="";
     int cityId=0;
     EditText etCustomerFirstName, etCustomerLastName, etStreet, etJob, etEmail, etPhoneNo, etHouseNumber, etPostalCode, etCountry, etCountryCode,etCustomerCode;
     Button btAddCustomer, btCancel;

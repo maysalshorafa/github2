@@ -403,6 +403,7 @@
     <string name="customer_type">Customer Type</string>
     <string name="edit_max_customer_credit">Edit max customer credit</string>
     <string name="job">Job</string>
+    <string name="customer_code_in_another_programme">Customer Code In Another Programme</string>
     <string name="email">Email</string>
     <string name="phone">Phone</string>
     <string name="address">Address</string>
