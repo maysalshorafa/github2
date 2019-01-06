@@ -23,7 +23,7 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 
 public class OpiningReportDetailsDBAdapter {
     // Table Name
-    protected static final String OPINING_REPORT_DETAILS_TABLE_NAME = "opining_report_details";
+    protected static final String OPINING_REPORT_DETAILS_TABLE_NAME = "a_report_details";
     // Column Names
     protected static final String OPINING_REPORT_DETAILS_COLUMN_ID = "id";
     protected static final String OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID = "a_report_id";
@@ -63,7 +63,7 @@ public class OpiningReportDetailsDBAdapter {
     }
 
     public long insertEntry(long a_report_id, double amount, long type, double amount_in_basic_currency) {
-        OpiningReportDetails aReportDetails = new OpiningReportDetails(Util.idHealth(this.db, "a_report_details", OPINING_REPORT_DETAILS_COLUMN_ID), a_report_id, amount, type, amount_in_basic_currency);
+        OpiningReportDetails aReportDetails = new OpiningReportDetails(Util.idHealth(this.db,OPINING_REPORT_DETAILS_TABLE_NAME, OPINING_REPORT_DETAILS_COLUMN_ID), a_report_id, amount, type, amount_in_basic_currency);
         sendToBroker(MessageType.ADD_OPINING_REPORT_DETAILS, aReportDetails, this.context);
         try {
             return insertEntry(aReportDetails);
