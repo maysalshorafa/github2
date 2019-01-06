@@ -360,10 +360,12 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(OrderDBAdapter.addColumnText("key"));
                     db.execSQL(PaymentDBAdapter.addColumn("key"));
                     db.execSQL(PosInvoiceDBAdapter.DATABASE_CREATE);
+                    db.execSQL(ClosingReportDetailsDBAdapter.DATABASE_CREATE);
                     db.execSQL(CustomerDBAdapter.addColumn("customerType"));
                     db.execSQL(CustomerDBAdapter.addColumn("customerCode"));
                     db.execSQL(ClosingReportDBAdapter.DATABASE_CREATE);
                     db.execSQL(IdsCounterDBAdapter.addColumn("closing_report"));
+                    db.execSQL(IdsCounterDBAdapter.addColumn("closing_report_details"));
                     db.execSQL(IdsCounterDBAdapter.addColumn("pos_invoice"));
 
                     break;
