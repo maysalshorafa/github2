@@ -23,11 +23,12 @@ public class Customer {
     String country;
     String countryCode;
     Double balance;
+    String customerCode;
     CustomerType customerType;
     public Customer() {
     }
 
-    public Customer(long customerId, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode,double balance,CustomerType customerType) {
+    public Customer(long customerId, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode,double balance,CustomerType customerType,String customerCode) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -45,13 +46,14 @@ public class Customer {
         this.countryCode = countryCode;
         this.balance=balance;
         this.customerType=customerType;
+        this.customerCode=customerCode;
     }
 
     public Customer(Customer customer){
         this(customer.getCustomerId(),customer.getFirstName(),customer.getLastName(),customer.getGender(),
                 customer.getEmail(),customer.getJob(),customer.getPhoneNumber(),customer.getStreet(),
                 customer.getHide(),customer.getCity(),customer.getClub(),customer.getHouseNumber()
-                ,customer.getPostalCode(),customer.getCountry(),customer.getCountryCode(),customer.getBalance(),customer.getCustomerType());
+                ,customer.getPostalCode(),customer.getCountry(),customer.getCountryCode(),customer.getBalance(),customer.getCustomerType(),customer.getCustomerCode());
     }
     @JsonIgnore
     public String getFullName() {
@@ -209,6 +211,14 @@ public class Customer {
         this.customerType = customerType;
     }
 
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -229,6 +239,7 @@ public class Customer {
                 ","+"\""+"countryCode"+ "\""+":" + "\""+  countryCode +"\"" +
                 ","+"\""+"balance"+ "\""+":" + "\""+ balance +"\"" +
                 ","+"\""+"customerType"+ "\""+":" + "\""+ customerType +"\"" +
+                ","+"\""+"customerCode"+ "\""+":" + "\""+ customerCode +"\"" +
                 '}';
     }
 

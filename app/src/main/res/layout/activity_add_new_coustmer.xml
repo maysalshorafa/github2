@@ -168,7 +168,7 @@
                         android:layout_marginTop="15dp"
                         android:layout_weight="1.7"
                         android:orientation="vertical"
-                        android:weightSum="7">
+                        android:weightSum="8">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -254,6 +254,17 @@
                             android:textColor="@color/black"
                             android:textSize="20dp"
                             android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="@string/customer_code"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
@@ -264,7 +275,7 @@
                         android:background="#FFFFFF"
                         android:orientation="vertical"
                         android:padding="5dp"
-                        android:weightSum="7">
+                        android:weightSum="8">
 
                         <EditText
                             android:id="@+id/etCustomerCountryCode"
@@ -330,6 +341,15 @@
 
                         <EditText
                             android:id="@+id/etHouseNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bubble"
+                            android:hint="@string/house_number"
+                            android:padding="8dp" />
+                        <EditText
+                            android:id="@+id/etCustomerCode"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginTop="15dp"

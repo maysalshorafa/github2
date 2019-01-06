@@ -432,6 +432,7 @@
     <string name="hours_of_work">Hours Of Work</string>
     <string name="customer_club">Customer Club</string>
     <string name="customer">Customer</string>
+    <string name="customer_code">Customer Code</string>
     <string name="club">Club</string>
     <string name="general_customer">General Customer</string>
     <string name="please_set_password">Please set password.</string>
