@@ -133,7 +133,6 @@ public class MonthZReportView extends AppCompatActivity {
             ZReport zReport = null;
             for(int i = 0 ; i<zReportList.size();i++){
             totalAmount+=zReportList.get(i).getTotalAmount();
-            totalSales+=zReportList.get(i).getTotalSales();
             cashTotal+=zReportList.get(i).getCashTotal();
             checkTotal+=zReportList.get(i).getCheckTotal();
             creditTotal+=zReportList.get(i).getCreditTotal();
@@ -147,6 +146,7 @@ public class MonthZReportView extends AppCompatActivity {
             invoiceReceiptAmount+=zReportList.get(i).getInvoiceReceiptAmount();
 
             }
+            totalSales=invoiceReceiptAmount+invoiceAmount+creditInvoiceAmount;
 
         zReport=new ZReport(0,new Timestamp(System.currentTimeMillis()),zReportList.get(0).getByUser(),0,0,totalAmount,totalSales,cashTotal,checkTotal,creditTotal,totalPosSales,zReportList.get(0).getTax(),invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount);
         pt=new PrintTools(MonthZReportView.this);

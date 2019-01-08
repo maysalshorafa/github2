@@ -12,6 +12,7 @@ import android.text.TextPaint;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
@@ -192,6 +193,13 @@ public class InvoiceImg {
         blocks.add(Title);
         blocks.add(subTitle);
         blocks.add(third_part);
+        if(SESSION._ORDERS.getCustomer().getCustomerType().equals(CustomerType.CREDIT)){
+            Block fourth_part = new Block("\u200E " + context.getString(R.string.customer_ledger) +
+                    ": " + SESSION._ORDERS.CustomerLedger + "\n" + line, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+
+            fourth_part.Left();
+            blocks.add(fourth_part);
+        }
         return blocks;
     }
 

@@ -22,15 +22,11 @@ import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
-import com.pos.leaders.leaderspossystem.Models.OrderDetails;
-import com.pos.leaders.leaderspossystem.Models.OrderDocumentStatus;
-import com.pos.leaders.leaderspossystem.Models.OrderDocuments;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.ReceiptDocuments;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.PdfUA;
-import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
@@ -64,85 +60,7 @@ import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CHECKS;
 public class DocumentControl {
     public static Locale locale = new Locale("en");
     static String invoiceNum;
-    static double  customerGeneralLedger=0.0;
-    static  InvoiceImg invoiceImg;
-    static boolean success=false;
     static JSONObject receiptJsonObject = new JSONObject();
-    public static boolean sendOrderDocument(final Context context){
-        invoiceImg = new InvoiceImg(context);
-        ObjectMapper mapper = new ObjectMapper();
-        new AsyncTask<Void, Void, Void>(){
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                print(invoiceImg.OrderDocument( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum),context);
-                success= true;
-                // SalesCartActivity.clearCart();
-
-            }
-            @Override
-            protected Void doInBackground(Void... voids) {
-                MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
-                JSONObject customerData = new JSONObject();
-                try {
-                    ObjectMapper mapper = new ObjectMapper();
-                    customerData.put("customerId", SESSION._ORDERS.getCustomer().getCustomerId());
-                    Log.d("customer",customerData.toString());
-                    String docOrder = mapper.writeValueAsString(SESSION._ORDERS);
-                    JSONObject orderJson = new JSONObject(docOrder);
-                        for(OrderDetails orderDetails:SESSION._ORDER_DETAILES){
-                            orderDetails.setPaidAmount(0.0);
-                        }
-                    JSONArray cart = new JSONArray(SESSION._ORDER_DETAILES.toString());
-                    orderJson.put("cartDetailsList",cart);
-                    Log.d("orderJson",orderJson.toString());
-
-                    OrderDocuments documents = new OrderDocuments("OrderDocument",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),SESSION._ORDERS.getTotalPrice(),"test","ILS", OrderDocumentStatus.READY);
-                    String doc = mapper.writeValueAsString(documents);
-                    Log.d("doc",doc.toString());
-
-                    JSONObject docJson= new JSONObject(doc);
-                    String type = docJson.getString("type");
-                    docJson.remove("type");
-                    docJson.put("@type",type);
-                    docJson.put("customer",customerData);
-                    docJson.put("order",orderJson);
-                    Log.d("Document vale", docJson.toString());
-                    BoInvoice invoice = new BoInvoice(DocumentType.ORDER_DOCUMENT,docJson,"");
-                    Log.d("Invoice log",invoice.toString());
-                    String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
-                    JSONObject jsonObject = new JSONObject(res);
-                    String msgData = jsonObject.getString(MessageKey.responseBody);
-                    JSONObject msgDataJson = new JSONObject(msgData);
-                    JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
-                    invoiceNum = msgDataJson.getString("docNum");
-                    Log.d("Invoice log res", res+"");
-                    Log.d("Invoice Num", invoiceNum);
-
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        }.execute();
-        return success;
-    }
-
-    private static void print(Bitmap bitmap, Context context) {
-        PrintTools printTools = new PrintTools(context);
-        printTools.PrintReport(bitmap);
-    }
     public static void pdfLoadImages(final byte[] data, final Context context) {
 
         final ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();

@@ -3,7 +3,6 @@ package com.pos.leaders.leaderspossystem;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -127,6 +126,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                     productDBAdapter.open();
                     final BoInvoice invoice = CreateCreditInvoiceActivity.invoiceList.get(position);
                     final JSONObject docDocument = invoice.getDocumentsData();
+                    String reference=invoice.getDocNum();
                     final JSONArray cartDetailsList = docDocument.getJSONArray("cartDetailsList");
                     for (int i=0;i<cartDetailsList.length();i++){
                         JSONObject cartDetailsObject =cartDetailsList.getJSONObject(i);
@@ -137,7 +137,14 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                         if(Long.parseLong(pId)==-1){
                             productList.add(new Product(Long.parseLong(String.valueOf(-1)),"General","General",cartDetailsObject.getDouble("unitPrice"),"0","0",Long.parseLong(String.valueOf(1)),Long.parseLong(String.valueOf(1))));
                         }else {
-                            productList.add(productDBAdapter.getProductByBarCode(sku));
+                            Product product = productDBAdapter.getProductByBarCode(sku);
+                            if(cartDetailsObject.getDouble("discount")>0){
+                            product.setPrice(cartDetailsObject.getDouble("unitPrice")*(100-cartDetailsObject.getDouble("discount"))/100);
+                            }else {
+                                product.setPrice(cartDetailsObject.getDouble("unitPrice"));
+                            }
+
+                            productList.add(product);
                         }
                     }
                     final Dialog productDialog = new Dialog(CreateCreditInvoiceActivity.this);
@@ -147,7 +154,11 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                     final ListView gvProduct = (ListView) productDialog.findViewById(R.id.criditInvoice_LVProductInvoice);
                     TextView totalPrice = (TextView)productDialog.findViewById(R.id.creditInvoiceDialog_TVPrice);
                     totalPrice.setText(Util.makePrice(docDocument.getDouble("total")));
+                    TextView tvCartDiscount = (TextView)productDialog.findViewById(R.id.tvCartDiscountValue);
+                    tvCartDiscount.setText(Util.makePrice(docDocument.getDouble("cartDiscount")));
                    final TextView credit = (TextView)productDialog.findViewById(R.id.AC_tvReq);
+                    final TextView refInvoice = (TextView)productDialog.findViewById(R.id.ReferenceInvoice_tvValue);
+                    refInvoice.setText(reference);
                     Button done =(Button)productDialog.findViewById(R.id.btn_done);
                     Button cancel =(Button)productDialog.findViewById(R.id.btn_cancel);
                     credit.setText(Util.makePrice(0));
@@ -222,8 +233,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                 }
                                 @Override
                                 protected void onPostExecute(Void aVoid) {
-                                    try {
-                                        if(jsonObject.get("status").equals("200")){
+                                     //   if(jsonObject.get("status").equals("200")){
 
                                             try
                                         {
@@ -238,7 +248,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         {
 
                                         }
-                                        }else {
+                                    /*    }else {
                                             new android.support.v7.app.AlertDialog.Builder(context)
                                                     .setTitle(context.getString(R.string.invoice))
                                                     .setMessage(context.getString(R.string.cant_make_invoice_check_internet_connection))
@@ -254,10 +264,8 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                                     })
                                                     .setIcon(android.R.drawable.ic_dialog_alert)
                                                     .show();
-                                        }
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                                        }*/
+
                                 }
                                 @Override
                                 protected Void doInBackground(Void... voids) {
@@ -426,7 +434,9 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                     for (Customer c : AllCustmerList) {
 
                         if (c.getFirstName().toLowerCase().contains(word.toLowerCase()) ||
-                                c.getLastName().toLowerCase().contains(word.toLowerCase())) {
+                                c.getLastName().toLowerCase().contains(word.toLowerCase())||
+                                c.getCustomerIdentity().toLowerCase().contains(word.toLowerCase())||
+                                c.getPhoneNumber().toLowerCase().contains(word.toLowerCase())){
                             customerList.add(c);
 
                         }

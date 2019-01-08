@@ -744,6 +744,7 @@ public class PdfUA {
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.customer_name)+":"+customerInfo.getString("firstName")+customerInfo.getString("lastName"), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(headingTable,context.getString(R.string.invoice)+" "+context.getString(R.string.no)+" "+customerJson.getString("reference"),Element.ALIGN_LEFT,1,dateFont);
         insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
 
 

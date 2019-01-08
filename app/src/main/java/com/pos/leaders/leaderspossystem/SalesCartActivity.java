@@ -46,6 +46,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
@@ -88,6 +89,7 @@ import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.OrderDocumentStatus;
+import com.pos.leaders.leaderspossystem.Models.OrderDocuments;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
@@ -105,7 +107,6 @@ import com.pos.leaders.leaderspossystem.Tools.CashActivity;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -165,12 +166,17 @@ public class SalesCartActivity extends AppCompatActivity {
     Button btnPercentProduct, btnPauseSale, btnResumeSale;
     ImageButton search_person;
     Button btnCash, btnCreditCard, btnOtherWays , createInvoice;
-    TextView tvTotalPrice, tvTotalSaved, salesSaleMan, customerBalance, payment_by_customer_credit;
+    TextView tvTotalPrice;
+    TextView tvTotalSaved;
+    TextView salesSaleMan;
+    static TextView customerBalance;
+    TextView payment_by_customer_credit;
     EditText etSearch;
     ImageButton btnDone;
     ImageButton btnGrid, btnList;
     ScrollView scDepartment;
-    LinearLayout llDepartments, linearLayoutCustomerBalance;
+    LinearLayout llDepartments;
+    static LinearLayout linearLayoutCustomerBalance;
     FrameLayout fragmentTouchPad;
     GridView gvProducts;
     ListView lvProducts;
@@ -300,6 +306,7 @@ public class SalesCartActivity extends AppCompatActivity {
     boolean orderDocumentFlag=false;
     String orderDocNum ="";
     JSONObject invoiceJsonObject =new JSONObject();
+    static Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -317,7 +324,7 @@ public class SalesCartActivity extends AppCompatActivity {
             intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, SETTINGS.BO_SERVER_URL);
             startService(intent);
         }
-
+        context=SalesCartActivity.this;
         customerName_EditText = (EditText) findViewById(R.id.customer_textView);
 
         Button btAddProductShortLink = (Button) findViewById(R.id.mainActivity_btAddProductShortLink);
@@ -1581,12 +1588,77 @@ public class SalesCartActivity extends AppCompatActivity {
                                                 }
                                             }
                                         }
-                                        DocumentControl.sendOrderDocument(SalesCartActivity.this);
+                                        final InvoiceImg invoiceImg1 = new InvoiceImg(getApplicationContext());
+                                        new AsyncTask<Void, Void, Void>(){
+                                            @Override
+                                            protected void onPreExecute() {
+                                                super.onPreExecute();
+                                            }
+                                            @Override
+                                            protected void onPostExecute(Void aVoid) {
+                                                print(invoiceImg1.OrderDocument( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
+                                              clearCart();
+
+                                            }
+                                            @Override
+                                            protected Void doInBackground(Void... voids) {
+                                                MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                                                JSONObject customerData = new JSONObject();
+                                                try {
+                                                    ObjectMapper mapper = new ObjectMapper();
+                                                    customerData.put("customerId", SESSION._ORDERS.getCustomer().getCustomerId());
+                                                    Log.d("customer",customerData.toString());
+                                                    String docOrder = mapper.writeValueAsString(SESSION._ORDERS);
+                                                    JSONObject orderJson = new JSONObject(docOrder);
+                                                    for(OrderDetails orderDetails:SESSION._ORDER_DETAILES){
+                                                        orderDetails.setPaidAmount(0.0);
+                                                    }
+                                                    JSONArray cart = new JSONArray(SESSION._ORDER_DETAILES.toString());
+                                                    orderJson.put("cartDetailsList",cart);
+                                                    Log.d("orderJson",orderJson.toString());
+
+                                                    OrderDocuments documents = new OrderDocuments("OrderDocument",new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),SESSION._ORDERS.getTotalPrice(),"test","ILS", OrderDocumentStatus.READY);
+                                                    String doc = mapper.writeValueAsString(documents);
+                                                    Log.d("doc",doc.toString());
+
+                                                    JSONObject docJson= new JSONObject(doc);
+                                                    String type = docJson.getString("type");
+                                                    docJson.remove("type");
+                                                    docJson.put("@type",type);
+                                                    docJson.put("customer",customerData);
+                                                    docJson.put("order",orderJson);
+                                                    Log.d("Document vale", docJson.toString());
+                                                    BoInvoice invoice = new BoInvoice(DocumentType.ORDER_DOCUMENT,docJson,"");
+                                                    Log.d("Invoice log",invoice.toString());
+                                                    String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
+                                                    JSONObject jsonObject = new JSONObject(res);
+                                                    String msgData = jsonObject.getString(MessageKey.responseBody);
+                                                    JSONObject msgDataJson = new JSONObject(msgData);
+                                                    JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
+                                                    invoiceNum = msgDataJson.getString("docNum");
+                                                    Log.d("Invoice log res", res+"");
+                                                    Log.d("Invoice Num", invoiceNum);
+
+                                                    try {
+                                                        Thread.sleep(100);
+                                                    } catch (InterruptedException e) {
+                                                        e.printStackTrace();
+                                                    }
+
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                return null;
+                                            }
+                                        }.execute();
+                                        //DocumentControl.sendOrderDocument(SalesCartActivity.this);
                                     } else{
                                         Toast.makeText(SalesCartActivity.this, "There is no items into on cart.", Toast.LENGTH_SHORT).show();
                                     }}
                                 else {
-                                    Toast.makeText(SalesCartActivity.this, "Choose Customer Please.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SalesCartActivity.this, "Choose Customer Please to Create Order Document.", Toast.LENGTH_SHORT).show();
 
                                 }
 
@@ -3833,7 +3905,9 @@ public class SalesCartActivity extends AppCompatActivity {
                     for (Customer c : AllCustmerList) {
 
                         if (c.getFirstName().toLowerCase().contains(word.toLowerCase()) ||
-                                c.getLastName().toLowerCase().contains(word.toLowerCase())) {
+                                c.getLastName().toLowerCase().contains(word.toLowerCase())||
+                                c.getCustomerIdentity().toLowerCase().contains(word.toLowerCase())||
+                                c.getPhoneNumber().toLowerCase().contains(word.toLowerCase())) {
                             customerList.add(c);
 
                         }
@@ -4123,8 +4197,12 @@ public class SalesCartActivity extends AppCompatActivity {
         }
 
         calculateTotalPrice();
-        linearLayoutCustomerBalance.setVisibility(View.VISIBLE);
-        customerBalance.setText(Util.makePrice(Math.abs(customer.getBalance())));
+        if(customer.getCustomerType().equals(CustomerType.CREDIT)){
+
+          StartGetCustomerGeneralLedgerConnection startGetCustomerGeneralLedgerConnection = new StartGetCustomerGeneralLedgerConnection();
+            startGetCustomerGeneralLedgerConnection.execute(String.valueOf(customer.getCustomerId()));
+
+        }
         mainActivity_btnRemoveCustomer.setVisibility(View.VISIBLE);
 
     }
@@ -4167,4 +4245,57 @@ public class SalesCartActivity extends AppCompatActivity {
         PrintTools printTools = new PrintTools(this);
         printTools.PrintReport(bitmap);
     }
+
 }
+class StartGetCustomerGeneralLedgerConnection extends AsyncTask<String,Void,String> {
+    private MessageTransmit messageTransmit;
+    ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    BoInvoice invoice;
+    StartGetCustomerGeneralLedgerConnection() {
+        messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+    }
+
+    final ProgressDialog progressDialog = new ProgressDialog(SalesCartActivity.context);
+    final ProgressDialog progressDialog2 =new ProgressDialog(SalesCartActivity.context);
+
+    @Override
+    protected void onPreExecute() {
+        progressDialog.setTitle("Please Wait");
+        progressDialog2.setTitle("Please Wait");
+        progressDialog.show();
+    }
+
+    @Override
+    protected String doInBackground(String... args) {
+        String customerId=args[0];
+        try {
+            String url = "GeneralLedger/"+customerId;
+            String invoiceRes = messageTransmit.authGet(url,SESSION.token);
+            JSONObject jsonObject = new JSONObject(invoiceRes);
+            String msgData = jsonObject.getString(MessageKey.responseBody);
+            JSONObject response = new JSONObject(msgData);
+                Order.CustomerLedger=response.getDouble("creditAmount");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        if(Order.CustomerLedger>0){
+            SalesCartActivity.linearLayoutCustomerBalance.setVisibility(View.VISIBLE);
+            SalesCartActivity.customerBalance.setText(Util.makePrice(Order.CustomerLedger));
+        }
+        progressDialog.cancel();
+        super.onPostExecute(s);
+
+        //endregion
+    }
+}
+

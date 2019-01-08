@@ -41,7 +41,7 @@ public class Order {
 	private double numberDiscount;
 	// region Constructors
 	public double totalSaved;
-
+	public static double CustomerLedger;
 
 	public Order() {
 	}

@@ -363,6 +363,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(ClosingReportDetailsDBAdapter.DATABASE_CREATE);
                     db.execSQL(CustomerDBAdapter.addColumn("customerType"));
                     db.execSQL(CustomerDBAdapter.addColumn("customerCode"));
+                    db.execSQL(CustomerDBAdapter.addColumn("customerIdentity"));
                     db.execSQL(ClosingReportDBAdapter.DATABASE_CREATE);
                     db.execSQL(IdsCounterDBAdapter.addColumn("closing_report"));
                     db.execSQL(IdsCounterDBAdapter.addColumn("closing_report_details"));

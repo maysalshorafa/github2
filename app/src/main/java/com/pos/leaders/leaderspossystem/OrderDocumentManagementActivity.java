@@ -198,7 +198,9 @@ public class OrderDocumentManagementActivity extends AppCompatActivity {
                     for (Customer c : AllCustmerList) {
 
                         if (c.getFirstName().toLowerCase().contains(word.toLowerCase()) ||
-                                c.getLastName().toLowerCase().contains(word.toLowerCase())) {
+                                c.getLastName().toLowerCase().contains(word.toLowerCase())||
+                                c.getCustomerIdentity().toLowerCase().contains(word.toLowerCase())||
+                                c.getPhoneNumber().toLowerCase().contains(word.toLowerCase())) {
                             customerList.add(c);
 
                         }

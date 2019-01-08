@@ -25,10 +25,11 @@ public class Customer {
     Double balance;
     String customerCode;
     CustomerType customerType;
+    String customerIdentity;
     public Customer() {
     }
 
-    public Customer(long customerId, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode,double balance,CustomerType customerType,String customerCode) {
+    public Customer(long customerId, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode,double balance,CustomerType customerType,String customerCode,String customerIdentity) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -47,13 +48,14 @@ public class Customer {
         this.balance=balance;
         this.customerType=customerType;
         this.customerCode=customerCode;
+        this.customerIdentity=customerIdentity;
     }
 
     public Customer(Customer customer){
         this(customer.getCustomerId(),customer.getFirstName(),customer.getLastName(),customer.getGender(),
                 customer.getEmail(),customer.getJob(),customer.getPhoneNumber(),customer.getStreet(),
                 customer.getHide(),customer.getCity(),customer.getClub(),customer.getHouseNumber()
-                ,customer.getPostalCode(),customer.getCountry(),customer.getCountryCode(),customer.getBalance(),customer.getCustomerType(),customer.getCustomerCode());
+                ,customer.getPostalCode(),customer.getCountry(),customer.getCountryCode(),customer.getBalance(),customer.getCustomerType(),customer.getCustomerCode(),customer.getCustomerIdentity());
     }
     @JsonIgnore
     public String getFullName() {
@@ -219,6 +221,14 @@ public class Customer {
         this.customerCode = customerCode;
     }
 
+    public String getCustomerIdentity() {
+        return customerIdentity;
+    }
+
+    public void setCustomerIdentity(String customerIdentity) {
+        this.customerIdentity = customerIdentity;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -240,6 +250,7 @@ public class Customer {
                 ","+"\""+"balance"+ "\""+":" + "\""+ balance +"\"" +
                 ","+"\""+"customerType"+ "\""+":" + "\""+ customerType +"\"" +
                 ","+"\""+"customerCode"+ "\""+":" + "\""+ customerCode +"\"" +
+                ","+"\""+"customerIdentity"+ "\""+":" + "\""+ customerIdentity +"\"" +
                 '}';
     }
 
