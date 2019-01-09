@@ -289,7 +289,7 @@ public class Backup{
         File dbFile = new File(inFileName);
         FileInputStream fis = new FileInputStream(dbFile);
 
-        String outFileName = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+"/database_copy.db";
+        String outFileName = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+"/BufferDb.db";
 
         // Open the empty db as the output stream
         OutputStream output = new FileOutputStream(outFileName);
