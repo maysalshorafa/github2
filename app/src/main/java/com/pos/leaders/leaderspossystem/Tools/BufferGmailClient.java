@@ -67,7 +67,7 @@ public class BufferGmailClient {
                     Multipart multipart = new MimeMultipart();
 
                     messageBodyPart = new MimeBodyPart();
-                    String fileName = "BufferDb.db";
+                    String fileName = "POSDB.db";
                     DataSource source = new FileDataSource(file);
                     messageBodyPart.setDataHandler(new DataHandler(source));
                     messageBodyPart.setFileName(fileName);

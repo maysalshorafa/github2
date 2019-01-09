@@ -314,7 +314,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(IdsCounterDBAdapter.addColumn("pos_invoice"));
                     if(SETTINGS.BufferEmail) {
                         try {
-                            Backup.BackupBufferDB();
+                            Backup.BackupPOSDB();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

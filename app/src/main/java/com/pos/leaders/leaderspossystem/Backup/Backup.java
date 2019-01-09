@@ -306,4 +306,26 @@ public class Backup{
         output.close();
         fis.close();
     }
+    public static void BackupPOSDB() throws IOException {
+        final String inFileName = "/data/data/com.pos.leaders.leaderspossystem/databases/POSDB.db";
+        File dbFile = new File(inFileName);
+        FileInputStream fis = new FileInputStream(dbFile);
+
+        String outFileName = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+"/POSDB.db";
+
+        // Open the empty db as the output stream
+        OutputStream output = new FileOutputStream(outFileName);
+
+        // Transfer bytes from the inputfile to the outputfile
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = fis.read(buffer))>0){
+            output.write(buffer, 0, length);
+        }
+
+        // Close the streams
+        output.flush();
+        output.close();
+        fis.close();
+    }
 }
