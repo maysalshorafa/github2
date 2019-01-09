@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.Backup.Backup;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
@@ -23,12 +22,9 @@ import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
-import com.pos.leaders.leaderspossystem.Tools.BufferDbEmail;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
-import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -225,15 +221,6 @@ public class LogInActivity extends Activity implements View.OnClickListener {
 
                 SESSION._EMPLOYEE = new Employee(user);
                 Toast.makeText(getApplicationContext(), "Hello " + user.getFullName() + " !!", Toast.LENGTH_SHORT).show();
-                if(SETTINGS.BufferEmail) {
-                    try {
-                        Backup.BackupBufferDB();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    BufferDbEmail.sendLogFile();
-                    SETTINGS.BufferEmail=false;
-                }
                 //open main screen
                 //// TODO: 01/06/2017 open dashboard screen
 
