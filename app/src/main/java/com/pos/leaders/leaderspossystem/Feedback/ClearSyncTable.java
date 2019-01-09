@@ -97,16 +97,16 @@ public class ClearSyncTable {
             //endregion CHECK
 
             //region DEPARTMENT
-            case "AddDepartment":
-                res = messageTransmit.authPost("Department", msgData, token);
+            case MessageType.ADD_CATEGORY:
+                res = messageTransmit.authPost(ApiURL.Category, msgData, token);
                 break;
-            case "UpdateDepartment":
+            case MessageType.UPDATE_CATEGORY:
                 JSONObject newDepartmentJson = new JSONObject(msgData);
-                res = messageTransmit.authPut("Department", msgData, token, newDepartmentJson.getLong("departmentId"));
+                res = messageTransmit.authPut(ApiURL.Category, msgData, token, newDepartmentJson.getLong("categoryId"));
                 break;
-            case "DeleteDepartment":
+            case MessageType.DELETE_CATEGORY:
                 JSONObject newDeleteDepartmentJson = new JSONObject(msgData);
-                res = messageTransmit.authDelete("Department", newDeleteDepartmentJson.getString("departmentId"), token);
+                res = messageTransmit.authDelete(ApiURL.Category, newDeleteDepartmentJson.getString("categoryId"), token);
                 break;
             //endregion DEPARTMENT
 
