@@ -1596,8 +1596,35 @@ public class SalesCartActivity extends AppCompatActivity {
                                             }
                                             @Override
                                             protected void onPostExecute(Void aVoid) {
-                                                print(invoiceImg1.OrderDocument( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
-                                              clearCart();
+                                                try {
+                                                    if(invoiceJsonObject.getString("status").equals("200")) {
+
+                                                        print(invoiceImg1.OrderDocument( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
+                                                        clearCart();
+
+                                                    }
+                                                    else {
+                                                        new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this)
+                                                                .setTitle(getString(R.string.invoice))
+                                                                .setMessage(getString(R.string.cant_make_invoice_check_internet_connection))
+                                                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                                    }
+                                                                })
+                                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                        clearCart();
+
+                                                                    }
+                                                                })
+                                                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                                                .show();
+
+                                                    }
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
 
                                             }
                                             @Override
