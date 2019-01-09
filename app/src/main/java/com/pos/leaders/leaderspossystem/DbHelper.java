@@ -312,6 +312,9 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(IdsCounterDBAdapter.addColumn("closing_report"));
                     db.execSQL(IdsCounterDBAdapter.addColumn("closing_report_details"));
                     db.execSQL(IdsCounterDBAdapter.addColumn("pos_invoice"));
+
+                    ClearSync clearSync1 = new ClearSync(context);
+                    clearSync1.execute(context);
                     if(SETTINGS.BufferEmail) {
                         try {
                             Backup.BackupPOSDB();
