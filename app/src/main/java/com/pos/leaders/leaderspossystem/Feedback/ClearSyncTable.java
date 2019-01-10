@@ -1,11 +1,19 @@
 package com.pos.leaders.leaderspossystem.Feedback;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.OpiningReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.Payment;
+import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -18,12 +26,14 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class ClearSyncTable {
 
 
-    public static boolean doSyncV1(BrokerMessage bm, MessageTransmit messageTransmit,String token) throws JSONException, IOException {
+    public static boolean doSyncV1(BrokerMessage bm, MessageTransmit messageTransmit, String token, Context context) throws JSONException, IOException {
         //if(!isConnected(this))
         // return false;
         // TODO: 24/08/2017 ladfjkgnk
@@ -124,7 +134,40 @@ public class ClearSyncTable {
 
             //region PAYMENT
             case MessageType.ADD_PAYMENT:
-                res = messageTransmit.authPost(ApiURL.Payment, msgData, token);
+                JSONObject newJsonObject = new JSONObject(jsonObject.getString(MessageKey.Data));
+                String paymentWay = newJsonObject.getString("paymentWay");
+                long orderId = newJsonObject.getLong("orderId");
+                List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
+                List<Payment> paymentList = new ArrayList<Payment>();
+                List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
+                List<Check> checkList = new ArrayList<Check>();
+                if(paymentWay.equalsIgnoreCase(CONSTANT.CASH)){
+                    //get cash payment detail by order id
+                    CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
+                    cashPaymentDBAdapter.open();
+                    cashPaymentList = cashPaymentDBAdapter.getPaymentBySaleID(orderId);
+                    JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
+                    newJsonObject.put("paymentDetails",jsonArray);
+                }
+                if(paymentWay.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
+                    //get credit payment detail by order id
+                    CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(context);
+                    creditCardPaymentDBAdapter.open();
+                    creditCardPaymentList = creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
+                    JSONArray jsonArray = new JSONArray(creditCardPaymentList.toString());
+                    newJsonObject.put("paymentDetails",jsonArray);
+                }
+                if(paymentWay.equalsIgnoreCase(CONSTANT.CHECKS)){
+                    //get check payment detail by order id
+                    ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(context);
+                    checksDBAdapter.open();
+                    checkList = checksDBAdapter.getPaymentBySaleID(orderId);
+                    JSONArray jsonArray = new JSONArray(checkList.toString());
+                    newJsonObject.put("paymentDetails",jsonArray);
+                }
+                Log.d("ppppppppp",newJsonObject.toString());
+                res = messageTransmit.authPost(ApiURL.Payment, newJsonObject.toString(), token);
+
                 break;
             case MessageType.UPDATE_PAYMENT:
                 res = messageTransmit.authPut(ApiURL.Payment, msgData, token, new JSONObject(msgData).getLong("paymentId"));
