@@ -99,11 +99,14 @@ import java.util.List;
             }
 
             TextView tvCustmerName=(TextView)gridView.findViewById(R.id.custmerGridView_TVCustmerName);
+            TextView tvCustmerLastName=(TextView)gridView.findViewById(R.id.custmerGridView_TVCustmerLastName);
+
             //TextView tvFullName=(TextView)gridView.findViewById(R.id.custmerGridView_TVFullName);
             TextView tvPhoneNumber=(TextView)gridView.findViewById(R.id.custmerGridView_TVPhoneNumber);
 
             tvCustmerName.setText(customers.get(position).getFirstName());
             //   tvFullName.setText(customers.get(position).getFullName());
+            tvCustmerLastName.setText(customers.get(position).getLastName());
             tvPhoneNumber.setText(customers.get(position).getPhoneNumber());
 
             return gridView;
