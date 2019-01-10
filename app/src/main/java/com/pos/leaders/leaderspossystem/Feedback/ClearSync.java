@@ -31,7 +31,7 @@ public class ClearSync extends AsyncTask<Context, Void, String> {
     ProgressDialog progressDialog;
 
     public ClearSync(Context context){
-        messageTransmitV1 = new MessageTransmit(SETTINGS.BO_SERVER_URL_V1);
+        messageTransmitV1 = new MessageTransmit(SETTINGS.BO_SERVER_URL_V2);
         messageTransmitFeedback = new MessageTransmit(SETTINGS.FEEDBACK_SERVER);
 
         this.context = context;
@@ -127,7 +127,7 @@ public class ClearSync extends AsyncTask<Context, Void, String> {
         }
 
         AccessToken accessToken = new AccessToken(context);
-        accessToken.setMessageTransmit(new MessageTransmit(SETTINGS.BO_SERVER_URL_V1));
+        accessToken.setMessageTransmit(new MessageTransmit(SETTINGS.BO_SERVER_URL_V2));
         accessToken.execute(context);
 
         //load pos id from shared file
