@@ -570,6 +570,32 @@
     <string name="equal">equal</string>
     <string name="invoice">الفواتير</string>
     <string name="invoice_management_activity">دارة الفواتير</string>
+    <string name="calculate">حساب</string>
+    <string name="closing_report">Closing Report</string>
+    <string name="closing_report_activity">Closing Report</string>
+    <string name="product_code">رقم المننوج</string>
+    <string name="create_credit_invoice_doc">انشاء وصل ارجاع</string>
+    <string name="create_credit_invoice_management_activity">Create Credit Invoice ManagementActivity</string>
+    <string name="actual">الحقيقي</string>
+    <string name="are_you_want_to_print_and_save_closing_report">هل تريد طباعة وحفط هذا التقرير؟</string>
+    <string name="cant_make_invoice_check_internet_connection">لا تستطيع عمل فاتورة افحص اعدادات النترنت!!</string>
+    <string name="customer_code_in_another_programme">رقم االزبون في تطبيقات اخرى</string>
+    <string name="customer_code">رقم الزبون</string>
+    <string name="credit_invoice_doc">وصل ارجاع</string>
+    <string name="customer_ledger">CustomerLedger</string>
+    <string name="create_closing_report">" Closing Reportانشاء "</string>
+    <string name="edit_max_customer_credit">تعديل المبلغ المسموح للمستخدم</string>
+    <string name="expected">المتوقع</string>
+    <string name="invoice_receipt">فاتورة وصل</string>
+    <string name="you_must_create_closing_report_before_z_report">عليك انشاء تقرير اغلاق الورديه قبل انشاء تقرير Z</string>
+    <string name="month_z_report_view">Month Z Report</string>
+    <string name="status">حالة</string>
+    <string name="opining_report">Opining Report</string>
+    <string name="order_document_management_activity">Order Document ManagementActivity</string>
+    <string name="no_of_items">عدد المشتريات</string>
+    <string name="view_credit_invoice_management_activity">View Credit Invoice ManagementActivity</string>
+    <string name="view_credit_invoice_doc">عرض وصول الارجاع</string>
+    <string name="checks_amount_more_than_amount_need">المبلغ الحالي اكثر من المبلغ المطلوب</string>
 
 </resources>
 

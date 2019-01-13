@@ -246,20 +246,24 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                 @Override
                                 protected void onPostExecute(Void aVoid) {
                                      //   if(jsonObject.get("status").equals("200")){
+                                    try {
+                                        if(jsonObject.get("status").equals("200")){
+                                                try
+                                            {
+                                                File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                                                File file = new File(path,SAMPLE_FILE);
+                                                RandomAccessFile f = new RandomAccessFile(file, "r");
+                                                byte[] data = new byte[(int)f.length()];
+                                                f.readFully(data);
+                                                pdfLoadImages(data,context);
+                                            }
+                                            catch(Exception ignored)
+                                            {
 
-                                            try
-                                        {
-                                            File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
-                                            File file = new File(path,SAMPLE_FILE);
-                                            RandomAccessFile f = new RandomAccessFile(file, "r");
-                                            byte[] data = new byte[(int)f.length()];
-                                            f.readFully(data);
-                                            pdfLoadImages(data,context);
-                                        }
-                                        catch(Exception ignored)
-                                        {
-
-                                        }
+                                            }}
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                     /*    }else {
                                             new android.support.v7.app.AlertDialog.Builder(context)
                                                     .setTitle(context.getString(R.string.invoice))

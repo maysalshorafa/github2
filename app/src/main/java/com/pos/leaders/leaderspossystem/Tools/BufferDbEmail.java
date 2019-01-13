@@ -14,7 +14,7 @@ public class BufferDbEmail {
         String to ="lead2018pos@gmail.com";
         final String password = "mais1234";
         String subject ="Log File for"+"Company Name :"+SETTINGS.companyName +"  "+ "to POS No:"+SETTINGS.posID+"  "+DateConverter.currentDateTime();
-        String filename1="POSDB.db";
+        String filename1="BufferDb.db";
         File filelocation = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename1);
         String file = filelocation.getAbsolutePath();
         BufferGmailClient gmailClient = new BufferGmailClient();

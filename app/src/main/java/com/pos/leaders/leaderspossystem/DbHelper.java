@@ -317,7 +317,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     clearSync1.execute(context);
                     if(SETTINGS.BufferEmail) {
                         try {
-                            Backup.BackupPOSDB();
+                            Backup.BackupBufferDB();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

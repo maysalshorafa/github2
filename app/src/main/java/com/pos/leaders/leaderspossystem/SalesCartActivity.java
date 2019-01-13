@@ -1832,7 +1832,13 @@ public class SalesCartActivity extends AppCompatActivity {
                             } else {
                                 if (!(str.equals(""))) {
                                     float val = Float.parseFloat(str);
-                                    if (val <= X) {
+                                    double originalTotalPrice=0;
+                                    double salePrice=0;
+                                    for (OrderDetails o : orderList) {
+                                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
+                                        salePrice+=o.getUnitPrice()*o.getQuantity();
+                                    }
+                                    if (originalTotalPrice*(1-(val/100)) >=(1- (X/100))*salePrice) {
                                         for (OrderDetails o : orderList) {
                                             //o.setDiscount(val);
                                         }
@@ -1888,7 +1894,13 @@ public class SalesCartActivity extends AppCompatActivity {
                                 if (!(str.equals(""))) {
                                     float val = Float.parseFloat(str);
                                     valueOfDiscount = val;
-                                    if (val <= X) {
+                                    double originalTotalPrice=0;
+                                    double salePrice=0;
+                                    for (OrderDetails o : orderList) {
+                                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
+                                        salePrice+=o.getUnitPrice()*o.getQuantity();
+                                    }
+                                    if (originalTotalPrice*(1-(val/100)) >=(1- (X/100))*salePrice){
                                         valueOfDiscount = val;
                                         SESSION._ORDERS.cartDiscount=val;
                                         refreshCart();
