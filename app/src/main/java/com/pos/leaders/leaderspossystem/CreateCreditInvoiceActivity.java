@@ -139,9 +139,21 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                         }else {
                             Product product = productDBAdapter.getProductByBarCode(sku);
                             if(cartDetailsObject.getDouble("discount")>0){
-                            product.setPrice(cartDetailsObject.getDouble("unitPrice")*(100-cartDetailsObject.getDouble("discount"))/100);
+                                if(docDocument.getDouble("cartDiscount")>0){
+                                    product.setPrice((cartDetailsObject.getDouble("unitPrice"))*(100-(cartDetailsObject.getDouble("discount")+docDocument.getDouble("cartDiscount")))/100);
+
+                                }else {
+                                    product.setPrice(cartDetailsObject.getDouble("unitPrice")*(100-cartDetailsObject.getDouble("discount"))/100);
+
+                                }
                             }else {
-                                product.setPrice(cartDetailsObject.getDouble("unitPrice"));
+                                if(docDocument.getDouble("cartDiscount")>0){
+                                    product.setPrice((cartDetailsObject.getDouble("unitPrice"))*(100-(cartDetailsObject.getDouble("discount")+docDocument.getDouble("cartDiscount")))/100);
+
+                                }else {
+                                    product.setPrice(cartDetailsObject.getDouble("unitPrice"));
+
+                                }
                             }
 
                             productList.add(product);
@@ -312,6 +324,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         PdfUA pdfUA = new PdfUA();
 
                                         try {
+                                            Log.d("yyyyy",r.toString());
                                             pdfUA.printCreditInvoiceReport(context,r.toString(),"source");
                                         } catch (DocumentException e) {
                                             e.printStackTrace();

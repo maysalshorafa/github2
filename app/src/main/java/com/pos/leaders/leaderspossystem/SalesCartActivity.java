@@ -1660,6 +1660,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
                                                     JSONObject jsonObject = new JSONObject(res);
                                                     String msgData = jsonObject.getString(MessageKey.responseBody);
+                                                    invoiceJsonObject=jsonObject;
                                                     JSONObject msgDataJson = new JSONObject(msgData);
                                                     JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
                                                     invoiceNum = msgDataJson.getString("docNum");

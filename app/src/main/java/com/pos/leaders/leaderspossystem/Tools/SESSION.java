@@ -50,6 +50,8 @@ public class SESSION {
 		SESSION._ORDERS = new Order(SESSION._EMPLOYEE.getEmployeeId(),new Timestamp(System.currentTimeMillis()), 0, false, 0, 0);
 		SESSION._CHECKS_HOLDER = new ArrayList<Check>();
 		SESSION._ORDER = null;
+		SESSION._ORDERS.cartDiscount=0;
+		SESSION._ORDERS.CustomerLedger=0;
 
 	}
 

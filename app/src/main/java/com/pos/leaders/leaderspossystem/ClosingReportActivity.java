@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -42,6 +43,8 @@ import org.json.JSONObject;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import HPRTAndroidSDK.HPRTPrinterHelper;
 
 public class ClosingReportActivity extends AppCompatActivity {
     EditText  checkActualValue ,creditActualValue ,shekelActualValue ,usdActualValue , eurActualValue , gbpActualValue ;
@@ -386,7 +389,7 @@ public class ClosingReportActivity extends AppCompatActivity {
         expectedTotal+=cashReceipt;
         expectedCheck=(check_plus-check_minus)+checkReceipt;
         expectedCredit=creditCard_plus-creditCard_minus;
-        expectedShekel=sheqle_plus-sheqle_minus+expectedOpiningShekel;
+        expectedShekel=sheqle_plus-sheqle_minus+expectedOpiningShekel+cashReceipt;
         expectedUsd=usd_plus-usd_minus+expectedOpiningUsd;
         expectedEur=eur_plus-eur_minus+expectedOpiningEur;
         expectedGbp=gbp_plus-gbp_minus+expectedOpiningGbp;
@@ -479,6 +482,40 @@ public class ClosingReportActivity extends AppCompatActivity {
             pl.addAll(payments);
         }
         currencyOperationDBAdapter.close();
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+
+
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                try {
+                    HPRTPrinterHelper.OpenCashdrawer(0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    try {
+                        HPRTPrinterHelper.OpenCashdrawer(1);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                        try {
+                            HPRTPrinterHelper.OpenCashdrawer(2);
+                        } catch (Exception e2) {
+                            e2.printStackTrace();
+                        }
+                    }
+                }
+
+
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                byte b = 0;
+                return null;
+            }
+        }.execute();
         return pl;
     }
 }

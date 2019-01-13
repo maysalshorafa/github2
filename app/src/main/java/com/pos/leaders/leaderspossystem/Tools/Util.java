@@ -604,6 +604,7 @@ public class Util {
             for (int i= 0 ;i<posReceiptList.size();i++){
                 receiptInvoiceAmount+=posReceiptList.get(i).getAmount();
             }
+            Log.d("teeest",receiptInvoiceAmount+"");
             List<PosInvoice>posReceiptListCheck = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
             for (int i= 0 ;i<posReceiptListCheck.size();i++){
                 receiptInvoiceAmountCheck+=posReceiptListCheck.get(i).getAmount();
@@ -877,7 +878,7 @@ public class Util {
                         e.printStackTrace();
                     }
 
-                    try {
+                  /**  try {
                         HPRTPrinterHelper.OpenCashdrawer(0);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -891,7 +892,7 @@ public class Util {
                                 e2.printStackTrace();
                             }
                         }
-                    }
+                    }*/
 
                     dialog.cancel();
                 }
