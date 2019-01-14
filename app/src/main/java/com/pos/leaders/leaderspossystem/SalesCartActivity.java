@@ -1327,7 +1327,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                 salePrice= salePrice - (salePrice * (X/ 100));
                                                 if (originalTotalPrice>=salePrice){
                                                     discount = (1 - (d / (selectedOrderOnCart.getUnitPrice() * selectedOrderOnCart.getQuantity()))) * 100;
-                                                    SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(Double.parseDouble(Util.makePrice(discount * 100)));
+                                                    SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(Double.parseDouble(Util.makePrice(discount)));
                                                     calculateTotalPrice();
 
                                                     cashDialog.cancel();
