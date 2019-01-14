@@ -1006,7 +1006,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 view.findViewById(R.id.rowSaleDetails_LLMethods).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.saleManLayout).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.offerLayout).setVisibility(View.VISIBLE);
-                double discount = SESSION._ORDER_DETAILES.get(position).getDiscount();
+                final double discount = SESSION._ORDER_DETAILES.get(position).getDiscount();
                 if (discount > 0) {
                     view.findViewById(R.id.discountLayout).setVisibility(View.VISIBLE);
 
@@ -1207,11 +1207,76 @@ public class SalesCartActivity extends AppCompatActivity {
                                     public void afterTextChanged(Editable s) {
                                         cashETCash.setBackgroundResource(R.drawable.catalogproduct_item_bg);
                                         String str = cashETCash.getText().toString();
-
+                                        double discount = 0;
                                         selectedOrderOnCart.rowDiscount = 0;
                                         selectedOrderOnCart.setDiscount(0);
                                         double itemOriginalPrice = selectedOrderOnCart.getPaidAmount();
+                                        double X = SESSION._EMPLOYEE.getPresent();
+                                        if (sw.isChecked()) {
+                                            if (!(str.equals(""))) {
+                                                double d = Double.parseDouble(str);
+                                                double originalTotalPrice = 0;
+                                                double salePrice=0;
+                                                for (int i=0;i<SESSION._ORDER_DETAILES.size();i++) {
+                                                    OrderDetails o =SESSION._ORDER_DETAILES.get(i);
+                                                    salePrice+=(o.getUnitPrice() * o.getQuantity());
+                                                    if(i!=position){
+                                                    originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
+                                                    }else {
+                                                        originalTotalPrice += d;
+                                                    }
+                                                }
+                                                originalTotalPrice= originalTotalPrice - (originalTotalPrice * (SESSION._ORDERS.cartDiscount / 100));
+                                                salePrice= salePrice - (salePrice * (X/ 100));
+                                                Log.d("teeestr",originalTotalPrice+":  "+salePrice);
+                                                if (originalTotalPrice>=salePrice){
+                                                    discount = (1 - (d / (selectedOrderOnCart.getUnitPrice() * selectedOrderOnCart.getQuantity()))) * 100;
+                                                    selectedOrderOnCart.setDiscount(discount);
+                                                    totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + getString(R.string.ins));
+                                                    priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + getString(R.string.ins));
+                                                } else {
+                                                    Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                    cashETCash.setBackgroundResource(R.drawable.backtext);
+                                                }
 
+                                            } else {
+                                                totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + getString(R.string.ins));
+                                                priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + getString(R.string.ins));
+                                            }
+                                        } else {
+                                            if (!(str.equals(""))) {
+                                                double d = Double.parseDouble(str);
+                                                double originalTotalPrice = 0;
+                                                double salePrice=0;
+                                                for (int i=0;i<SESSION._ORDER_DETAILES.size();i++) {
+                                                    OrderDetails o =SESSION._ORDER_DETAILES.get(i);
+                                                    salePrice+=(o.getUnitPrice() * o.getQuantity());
+                                                    if(i!=position){
+                                                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
+                                                    }else {
+                                                        originalTotalPrice += (selectedOrderOnCart.getUnitPrice() * selectedOrderOnCart.getQuantity())*(1-d/100);
+                                                    }
+                                                }
+                                                originalTotalPrice= originalTotalPrice - (originalTotalPrice * (SESSION._ORDERS.cartDiscount / 100));
+                                                salePrice= salePrice - (salePrice * (X/ 100));
+                                                if (originalTotalPrice>=salePrice){
+                                                    discount= Double.parseDouble(str);
+                                                    selectedOrderOnCart.setDiscount(discount);
+                                                    Log.d("teeestr",itemOriginalPrice +"  "+ selectedOrderOnCart.getDiscount()/100);
+                                                    totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + getString(R.string.ins));
+                                                    priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + getString(R.string.ins));
+                                                } else {
+                                                    Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                    cashETCash.setBackgroundResource(R.drawable.backtext);
+                                                }
+
+
+                                            } else {
+                                                totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + getString(R.string.ins));
+                                                priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + getString(R.string.ins));
+                                            }
+                                        }
+                                        /*
                                         double X = SESSION._EMPLOYEE.getPresent();
                                         double discount = 0;
                                         if (!(str.equals(""))) {
@@ -1233,16 +1298,70 @@ public class SalesCartActivity extends AppCompatActivity {
 
                                         totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + getString(R.string.ins));
                                         priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + getString(R.string.ins));
-
+*/
                                     }
                                 });
                                 cashBTOk.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        double discount=0;
+                                        double itemOriginalPrice = selectedOrderOnCart.getPaidAmount();
                                         String str = cashETCash.getText().toString();
                                         int indexOfItem = SESSION._ORDER_DETAILES.indexOf(selectedOrderOnCart);
                                         double X = SESSION._EMPLOYEE.getPresent();
                                         if (sw.isChecked()) {
+                                            if (!(str.equals(""))) {
+                                                double d = Double.parseDouble(str);
+                                                double originalTotalPrice = 0;
+                                                double salePrice=0;
+                                                for (int i=0;i<SESSION._ORDER_DETAILES.size();i++) {
+                                                    OrderDetails o =SESSION._ORDER_DETAILES.get(i);
+                                                    salePrice+=(o.getUnitPrice() * o.getQuantity());
+                                                    if(i!=position){
+                                                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
+                                                    }else {
+                                                        originalTotalPrice += d;
+                                                    }
+                                                }
+                                                originalTotalPrice= originalTotalPrice - (originalTotalPrice * (SESSION._ORDERS.cartDiscount / 100));
+                                                salePrice= salePrice - (salePrice * (X/ 100));
+                                                if (originalTotalPrice>=salePrice){
+                                                    discount = (1 - (d / (selectedOrderOnCart.getUnitPrice() * selectedOrderOnCart.getQuantity()))) * 100;
+                                                    SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(Double.parseDouble(Util.makePrice(discount * 100)));
+                                                    calculateTotalPrice();
+
+                                                    cashDialog.cancel();
+                                                } else {
+                                                    Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                    cashETCash.setBackgroundResource(R.drawable.backtext);
+                                                }
+                                            }
+                                        } else {
+                                            if (!(str.equals(""))) {
+                                                double d = Double.parseDouble(str);
+                                                double originalTotalPrice = 0;
+                                                double salePrice=0;
+                                                for (int i=0;i<SESSION._ORDER_DETAILES.size();i++) {
+                                                    OrderDetails o =SESSION._ORDER_DETAILES.get(i);
+                                                    salePrice+=(o.getUnitPrice() * o.getQuantity());
+                                                    if(i!=position){
+                                                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
+                                                    }else {
+                                                        originalTotalPrice += (selectedOrderOnCart.getUnitPrice() * selectedOrderOnCart.getQuantity())*(1-d/100);
+                                                    }
+                                                }
+                                                originalTotalPrice= originalTotalPrice - (originalTotalPrice * (SESSION._ORDERS.cartDiscount / 100));
+                                                salePrice= salePrice - (salePrice * (X/ 100));
+                                                if (originalTotalPrice>=salePrice){
+                                                    discount= Double.parseDouble(str);
+                                                    SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(Double.parseDouble(Util.makePrice(discount)));
+
+                                                    calculateTotalPrice();
+                                                    cashDialog.cancel();
+                                                }
+                                            }
+                                        }
+                                      /*  if (sw.isChecked()) {
                                             if (!(str.equals(""))) {
                                                 double d = Double.parseDouble(str);
                                                 int count = SESSION._ORDER_DETAILES.get(indexOfItem).getQuantity();
@@ -1271,7 +1390,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
-                                        }
+                                        }*/
                                     }
                                 });
                             } else {
