@@ -59,8 +59,8 @@ public class ZReportDBAdapter {
             Z_REPORT_COLUMN_INVOICE_AMOUNT + "` REAL default 0.0,`" +  Z_REPORT_COLUMN_SHEKEL_AMOUNT + "` REAL default 0.0,`" +  Z_REPORT_COLUMN_USD_AMOUNT + "` REAL default 0.0,`" + Z_REPORT_COLUMN_EUR_AMOUNT + "` REAL default 0.0,`" + Z_REPORT_COLUMN_GBP_AMOUNT + "` REAL default 0.0,`" + Z_REPORT_COLUMN_INVOICE_RECEIPT_AMOUNT + "` REAL default 0.0,`" +
             Z_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT + "` REAL default 0.0)";
     public static final String DATABASE_UPDATE_FROM_V2_TO_V3[] = {"alter table z_report rename to z_report_v3;", DATABASE_CREATE + "; ",
-            "insert into z_report (id,createDate,startOrderId,endOrderId,amount) " +
-                    "select id,createDate,startOrderId,endOrderId,amount from z_report_v3;"};
+            "insert into z_report (id,createDate,startOrderId,endOrderId,amount,byUser,totalInvoiceReceiptAmount,shekelAmount,totalPosSales) " +
+                    "select id,createDate,startOrderId,endOrderId,amount,byUser,amount,amount,total_amount from z_report_v3;"};
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.

@@ -1873,11 +1873,19 @@ public class SalesCartActivity extends AppCompatActivity {
                         }
                     });
                     double originalTotalPrice = 0;
+                    double discountAmount=0;
                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
                         originalTotalPrice += (o.getUnitPrice() * o.getQuantity());
+                        if(o.getDiscount()>0) {
+                            discountAmount += o.getUnitPrice() * o.getQuantity() * o.getDiscount();
+                        }else {
+                            discountAmount += o.getUnitPrice() * o.getQuantity();
+                        }
                     }
+                    discountAmount = discountAmount - (discountAmount * (SESSION._ORDERS.cartDiscount / 100));
                     totalPrice.setText(originalTotalPrice + getString(R.string.ins));
-                    totalDiscount.setText(Util.makePrice(valueOfDiscount) + getString(R.string.ins));
+
+                    totalDiscount.setText(Util.makePrice(originalTotalPrice-discountAmount) + getString(R.string.ins));
                     priceAfterDiscount.setText(tvTotalPrice.getText().toString());
                     sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
