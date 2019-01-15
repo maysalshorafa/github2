@@ -35,8 +35,8 @@ public class SETTINGS {
 	public static boolean timerState = false;
 	public static boolean BufferEmail = true;
 	public static String BO_SERVER_URL = "http://192.168.1.26:8000";
-	public static String BO_SERVER_URL_V1 = "http://192.168.1.26:8000";
-	public static String BO_SERVER_URL_V2 = "http://192.168.1.26:8080/webapi-0.0.2";
+	public static String BO_SERVER_URL_V1 = "http://api.leadpos.net/webapi";
+	public static String BO_SERVER_URL_V2 = "http://apiv2.leadpos.net";
 	public static String FEEDBACK_SERVER = "http://report.leadpos.net/api";
 
 

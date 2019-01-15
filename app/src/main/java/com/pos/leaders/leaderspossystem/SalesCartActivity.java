@@ -4404,7 +4404,6 @@ public class SalesCartActivity extends AppCompatActivity {
         PrintTools printTools = new PrintTools(this);
         printTools.PrintReport(bitmap);
     }
-
 }
 class StartGetCustomerGeneralLedgerConnection extends AsyncTask<String,Void,String> {
     private MessageTransmit messageTransmit;
@@ -4447,10 +4446,9 @@ class StartGetCustomerGeneralLedgerConnection extends AsyncTask<String,Void,Stri
 
     @Override
     protected void onPostExecute(String s) {
-        if(Order.CustomerLedger>0){
             SalesCartActivity.linearLayoutCustomerBalance.setVisibility(View.VISIBLE);
             SalesCartActivity.customerBalance.setText(Util.makePrice(Order.CustomerLedger));
-        }
+
         progressDialog.cancel();
         super.onPostExecute(s);
 
