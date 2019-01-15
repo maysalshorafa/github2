@@ -1188,8 +1188,8 @@ public class SalesCartActivity extends AppCompatActivity {
                                             cashETCash.setText("");
                                             cashETCash.setHint("0");
                                         }
-                                        totalDiscount.setText(Util.makePrice((itemOriginalPrice - selectedOrderOnCart.getPaidAmount())*selectedOrderOnCart.getQuantity()) + getString(R.string.ins));
-                                        priceAfterDiscount.setText(selectedOrderOnCart.getPaidAmount() * selectedOrderOnCart.getQuantity() + getString(R.string.ins));
+                                        totalDiscount.setText(Util.makePrice((itemOriginalPrice - selectedOrderOnCart.getPaidAmount())) + getString(R.string.ins));
+                                        priceAfterDiscount.setText(selectedOrderOnCart.getPaidAmount()+ getString(R.string.ins));
                                     }
                                 });
                                 cashETCash.setHint(R.string.proportion);
@@ -1874,7 +1874,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     });
                     double originalTotalPrice = 0;
                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
+                        originalTotalPrice += (o.getUnitPrice() * o.getQuantity());
                     }
                     totalPrice.setText(originalTotalPrice + getString(R.string.ins));
                     totalDiscount.setText(Util.makePrice(valueOfDiscount) + getString(R.string.ins));
