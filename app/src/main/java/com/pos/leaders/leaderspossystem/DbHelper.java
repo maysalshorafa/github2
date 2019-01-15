@@ -312,7 +312,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(IdsCounterDBAdapter.addColumn("closing_report"));
                     db.execSQL(IdsCounterDBAdapter.addColumn("closing_report_details"));
                     db.execSQL(IdsCounterDBAdapter.addColumn("pos_invoice"));
-                    db.execSQL("UPDATE customer SET phoneNumber = 0 WHERE id = 921323976161");
+                    db.execSQL("update customer set phoneNumber=1 where id =921530436797;");
 
                     ClearSync clearSync1 = new ClearSync(context);
                     clearSync1.execute(context);
@@ -326,7 +326,6 @@ public class DbHelper extends SQLiteOpenHelper {
                         SETTINGS.BufferEmail=false;
                     }
                     break;
-
 
             }
         } catch (SQLException e) {

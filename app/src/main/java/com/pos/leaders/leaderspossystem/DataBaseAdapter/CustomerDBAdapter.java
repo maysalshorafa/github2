@@ -38,7 +38,7 @@ public class CustomerDBAdapter {
     protected static final String CUSTOMER_COLUMN_GENDER = "gender";
     protected static final String CUSTOMER_COLUMN_EMAIL = "email";
     protected static final String CUSTOMER_COLUMN_JOB = "job";
-    protected static final String CUSTOMER_COLUMN_PHONE_NUMBER = "phoneNumber";
+    public static final String CUSTOMER_COLUMN_PHONE_NUMBER = "phoneNumber";
     protected static final String CUSTOMER_COLUMN_STREET = "street";
     protected static final String CUSTOMER_COLUMN_DISENABLED = "hide";
     protected static final String CUSTOMER_COLUMN_CITY = "cityId";
