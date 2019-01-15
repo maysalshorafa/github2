@@ -1877,12 +1877,15 @@ public class SalesCartActivity extends AppCompatActivity {
                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
                         originalTotalPrice += (o.getUnitPrice() * o.getQuantity());
                         if(o.getDiscount()>0) {
-                            discountAmount += o.getUnitPrice() * o.getQuantity() * o.getDiscount();
+                            discountAmount += o.getUnitPrice() * o.getQuantity()- o.getUnitPrice() * o.getQuantity() * o.getDiscount()/100;
+
                         }else {
                             discountAmount += o.getUnitPrice() * o.getQuantity();
+
                         }
                     }
                     discountAmount = discountAmount - (discountAmount * (SESSION._ORDERS.cartDiscount / 100));
+
                     totalPrice.setText(originalTotalPrice + getString(R.string.ins));
 
                     totalDiscount.setText(Util.makePrice(originalTotalPrice-discountAmount) + getString(R.string.ins));
