@@ -778,10 +778,10 @@ public class PdfUA {
             JSONObject jsonObject1 = itemJson.getJSONObject(a);
             String sku = jsonObject1.getString("sku");
             Product product= productDBAdapter.getProductByBarCode(sku);
-            insertCell(orderDetailsTable, product.getProductCode(), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(orderDetailsTable, product.getDisplayName(), Element.ALIGN_LEFT, 1, dateFont);
             insertCell(orderDetailsTable, ""+jsonObject1.getInt("quantity"), Element.ALIGN_LEFT, 1, dateFont);
-            insertCell(orderDetailsTable,Util.makePrice(product.getPrice()), Element.ALIGN_LEFT, 1, dateFont);
-            insertCell(orderDetailsTable, Util.makePrice(product.getPrice()*jsonObject1.getInt("quantity")), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(orderDetailsTable,Util.makePrice(jsonObject1.getDouble("unitPrice")), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(orderDetailsTable, Util.makePrice(jsonObject1.getDouble("unitPrice")*jsonObject1.getInt("quantity")), Element.ALIGN_LEFT, 1, dateFont);
         }
         insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
         insertCell(orderDetailsTable, "customerGeneralLedger"+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 4, dateFont);

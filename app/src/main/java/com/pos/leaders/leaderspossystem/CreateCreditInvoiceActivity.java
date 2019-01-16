@@ -77,7 +77,6 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
     public static ArrayList<String>invoiceNumberList=new ArrayList<>();
     View previousView = null;
     boolean haveCart=false;
-     int x=0;
     public static  List<String>orderIds=new ArrayList<>();
      Product product;
     double creditAmount=0;
@@ -117,6 +116,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 try {
+                     newCartDetails = new JSONArray();
                     creditAmount=0;
                     Log.d("Invoice", CreateCreditInvoiceActivity.invoiceList.get(position).toString());
                     List<String>productSkuList = new ArrayList<String>();
@@ -179,16 +179,45 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
 
                     gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            product=productList.get(position);
-                            int count = productCount.get(position);
+                        public void onItemClick(AdapterView<?> parent, View view, int position1, long id) {
+                            product=productList.get(position1);
+                            int count = productCount.get(position1);
                             haveCart=false;
                             creditAmount+=product.getPrice();
                             credit.setText(Util.makePrice(creditAmount));
+                            JSONObject newCartJson=new JSONObject();
                             try {
-                                JSONObject tempJson = cartDetailsList.getJSONObject(x);
-                                x=x+1;
+                            for(int a= 0;a<cartDetailsList.length();a++){
+
+                                    if(cartDetailsList.getJSONObject(a).getLong("productId")==product.getProductId()){
+                                        newCartJson=cartDetailsList.getJSONObject(a);
+                                    }
+                                }
+                                for(int p=0;p<newCartDetails.length();p++){
+                                    if(newCartDetails.getJSONObject(p).getLong("productId")==newCartJson.getLong("productId")){
+                                        int c=newCartDetails.getJSONObject(p).getInt("quantity");
+                                        newCartDetails.getJSONObject(p).remove("quantity");
+                                        newCartDetails.getJSONObject(p).put("quantity",c+1);
+                                        newCartDetails.getJSONObject(p).remove("unitPrice");
+                                        newCartDetails.getJSONObject(p).put("unitPrice", product.getPrice());
+                                        haveCart=true;
+                                    }
+                                }
+                                if(!haveCart){
+                                    newCartJson.remove("unitPrice");
+                                    newCartJson.put("unitPrice", product.getPrice());
+                                  newCartDetails.put(newCartJson);
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                          Log.d("newCartDeteails",newCartDetails.toString());
+                           /* try {
+                                JSONObject tempJson = cartDetailsList.getJSONObject(position1);
+                                Log.d("newObjectFinal222",tempJson.toString());
                                 long productId = tempJson.getLong("productId");
+                                Log.d("newObjectFinal",newCartDetails.toString());
                                 for(int i=0;i<newCartDetails.length();i++) {
                                     JSONObject currentCartObject = newCartDetails.getJSONObject(i);
                                     if(productId==currentCartObject.getLong("productId")){
@@ -199,6 +228,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         currentCartObject.put("unitPrice", product.getPrice());
                                         newCartDetails.remove(i);
                                         newCartDetails.put(currentCartObject);
+                                        Log.d("newObject1",currentCartObject.toString());
                                         haveCart=true;
                                     }
                                 }
@@ -209,13 +239,15 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                     a.remove("quantity");
                                     a.put("quantity", 1);
                                     newCartDetails.put(a);
+                                    Log.d("newObject",a.toString());
+
                                 }
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                            }
+                            }*/
                             for (int i = 0; i < gvProduct.getChildCount(); i++) {
-                                if(position == i ){
+                                if(position1 == i ){
                                     gvProduct.getChildAt(i).setBackgroundColor(Color.RED);
                                 }else{
                                     gvProduct.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
@@ -223,12 +255,12 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                             }
 
                             if(count<=1){
-                                productList.remove(position);
+                                productList.remove(position1);
                                 final CreditInvoiceProductCatalogGridViewAdapter productCatalogGridViewAdapter = new CreditInvoiceProductCatalogGridViewAdapter(getApplicationContext(),productList,productCount);
                                 gvProduct.setAdapter(productCatalogGridViewAdapter);
                                 productCatalogGridViewAdapter.notifyDataSetChanged();
                             }else {
-                                productCount.set(position,count-1);
+                                productCount.set(position1,count-1);
                                 final CreditInvoiceProductCatalogGridViewAdapter productCatalogGridViewAdapter = new CreditInvoiceProductCatalogGridViewAdapter(getApplicationContext(),productList,productCount);
                                 gvProduct.setAdapter(productCatalogGridViewAdapter);
                                 productCatalogGridViewAdapter.notifyDataSetChanged();
@@ -248,12 +280,13 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                     done.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Log.d("empty",newCartDetails.length()+"");
 
                             if(newCartDetails.length()==0){
                             Toast.makeText(CreateCreditInvoiceActivity.this,"Choose Product want to return",Toast.LENGTH_LONG).show();
                             }else {
-                            new AsyncTask<Void, Void, Void>(){
+                                Log.d("empty",newCartDetails.toString()+"");
+
+                                new AsyncTask<Void, Void, Void>(){
                                 @Override
                                 protected void onPreExecute() {
                                     super.onPreExecute();

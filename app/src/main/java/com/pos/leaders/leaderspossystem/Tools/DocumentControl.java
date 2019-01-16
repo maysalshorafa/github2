@@ -456,9 +456,10 @@ public class DocumentControl {
                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
                                 posInvoiceDBAdapter.open();
                                 PosInvoice posInvoice = posInvoiceDBAdapter.getPodInvoiceByBoId(docNum);
+                                if(posInvoice!=null){
                                 posInvoice.setStatus(InvoiceStatus.PAID.getValue());
                                 posInvoiceDBAdapter.updateEntry(posInvoice);
-                            }
+                            }}
                             String response = upDateInvoice.getString(MessageKey.responseBody);
                             PdfUA pdfUA = new PdfUA();
 
