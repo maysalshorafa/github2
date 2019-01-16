@@ -458,4 +458,30 @@ public class CustomerDBAdapter {
                 + " add column " + columnName + " TEXT default normal;";
         return dbc;
     }
+    public List<Customer> getAllNormalCustomer() {
+        List<Customer> customerMs = new ArrayList<Customer>();
+        Cursor cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where " + CUSTOMER_COLUMN_DISENABLED + "=0"+" and " + CUSTOMER_COLUMN_TYPE + " = '"+ CustomerType.CREDIT.getValue()+"' order by id desc", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            customerMs.add(new Customer(Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_ID))),
+                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_FIRST_NAME)),
+                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_LAST_NAME)),
+                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_GENDER)),
+                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_EMAIL)),
+                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_JOB)),
+                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_PHONE_NUMBER)),
+                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_STREET)),
+                    Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_DISENABLED))),
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_CITY))),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_CLUB))),
+                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_HOUSE_NUMBER)),
+                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_POSTAL_CODE)),
+                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY)),
+                    cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))),CustomerType.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_TYPE)).toUpperCase()), cursor.getString(cursor.getColumnIndex(CUSTOMER_CODE)), cursor.getString(cursor.getColumnIndex(CUSTOMER_IDENTITY))));
+            cursor.moveToNext();
+        }
+        return customerMs;
+    }
+
 }

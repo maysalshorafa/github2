@@ -77,12 +77,12 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
     public static ArrayList<String>invoiceNumberList=new ArrayList<>();
     View previousView = null;
     boolean haveCart=false;
-
+     int x=0;
     public static  List<String>orderIds=new ArrayList<>();
      Product product;
     double creditAmount=0;
     final String SAMPLE_FILE = "creditinvoice.pdf";
-    final JSONArray newCartDetails = new JSONArray();
+    JSONArray newCartDetails = new JSONArray();
     JSONObject jsonObject = new JSONObject();
 
     @Override
@@ -176,10 +176,44 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                     credit.setText(Util.makePrice(0));
                     final CreditInvoiceProductCatalogGridViewAdapter productCatalogGridViewAdapter = new CreditInvoiceProductCatalogGridViewAdapter(getApplicationContext(),productList,productCount);
                     gvProduct.setAdapter(productCatalogGridViewAdapter);
+
                     gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            product=productList.get(position);
+                            int count = productCount.get(position);
                             haveCart=false;
+                            creditAmount+=product.getPrice();
+                            credit.setText(Util.makePrice(creditAmount));
+                            try {
+                                JSONObject tempJson = cartDetailsList.getJSONObject(x);
+                                x=x+1;
+                                long productId = tempJson.getLong("productId");
+                                for(int i=0;i<newCartDetails.length();i++) {
+                                    JSONObject currentCartObject = newCartDetails.getJSONObject(i);
+                                    if(productId==currentCartObject.getLong("productId")){
+                                        int c = currentCartObject.getInt("quantity");
+                                        currentCartObject.remove("quantity");
+                                        currentCartObject.put("quantity",c+1);
+                                        currentCartObject.remove("unitPrice");
+                                        currentCartObject.put("unitPrice", product.getPrice());
+                                        newCartDetails.remove(i);
+                                        newCartDetails.put(currentCartObject);
+                                        haveCart=true;
+                                    }
+                                }
+                                if(!haveCart){
+                                    JSONObject a= tempJson;
+                                    a.remove("unitPrice");
+                                    a.put("unitPrice", product.getPrice());
+                                    a.remove("quantity");
+                                    a.put("quantity", 1);
+                                    newCartDetails.put(a);
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             for (int i = 0; i < gvProduct.getChildCount(); i++) {
                                 if(position == i ){
                                     gvProduct.getChildAt(i).setBackgroundColor(Color.RED);
@@ -187,8 +221,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                     gvProduct.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
                                 }
                             }
-                            product=productList.get(position);
-                            int count = productCount.get(position);
+
                             if(count<=1){
                                 productList.remove(position);
                                 final CreditInvoiceProductCatalogGridViewAdapter productCatalogGridViewAdapter = new CreditInvoiceProductCatalogGridViewAdapter(getApplicationContext(),productList,productCount);
@@ -202,30 +235,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                             }
 
 
-                            creditAmount+=product.getPrice();
-                            credit.setText(Util.makePrice(creditAmount));
-                            try {
-                                JSONObject tempJson = cartDetailsList.getJSONObject(position);
-                                long productId = tempJson.getLong("productId");
-                                for(int i=0;i<newCartDetails.length();i++) {
-                                    JSONObject currentCartObject = newCartDetails.getJSONObject(i);
-                                    if(productId==currentCartObject.getLong("productId")){
-                                        int c = currentCartObject.getInt("quantity");
-                                        currentCartObject.remove("quantity");
-                                        currentCartObject.put("quantity",c+1);
-                                        newCartDetails.remove(i);
-                                        newCartDetails.put(currentCartObject);
-                                        haveCart=true;
-                                    }
-                                }
-                                if(!haveCart){
-                                        tempJson.remove("quantity");
-                                            tempJson.put("quantity", 1);
-                                            newCartDetails.put(tempJson);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+
 
                         }
                     });
@@ -238,6 +248,11 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                     done.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            Log.d("empty",newCartDetails.length()+"");
+
+                            if(newCartDetails.length()==0){
+                            Toast.makeText(CreateCreditInvoiceActivity.this,"Choose Product want to return",Toast.LENGTH_LONG).show();
+                            }else {
                             new AsyncTask<Void, Void, Void>(){
                                 @Override
                                 protected void onPreExecute() {
@@ -310,6 +325,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         Log.d("rrrrr",res);
 
                                         if(jsonObject.get("status").equals("200")){
+                                            newCartDetails=new JSONArray();
                                             ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
                                             zReportDBAdapter.open();
                                             ZReport zReport =null;
@@ -348,6 +364,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                     return null;
                                 }
                             }.execute();
+                            }
                         }
                     });
 
@@ -410,7 +427,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
             }
         });
 
-        customerList = customerDBAdapter.getAllCustomer();
+        customerList = customerDBAdapter.getAllNormalCustomer();
         AllCustmerList = customerList;
 
         CustomerCatalogGridViewAdapter custmerCatalogGridViewAdapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), customerList);
