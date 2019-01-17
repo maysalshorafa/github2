@@ -201,11 +201,14 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         newCartDetails.getJSONObject(p).remove("unitPrice");
                                         newCartDetails.getJSONObject(p).put("unitPrice", product.getPrice());
                                         haveCart=true;
+
                                     }
                                 }
                                 if(!haveCart){
                                     newCartJson.remove("unitPrice");
                                     newCartJson.put("unitPrice", product.getPrice());
+                                    newCartJson.remove("quantity");
+                                    newCartJson.put("quantity", 1);
                                   newCartDetails.put(newCartJson);
 
                                 }
