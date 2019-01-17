@@ -81,7 +81,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     Context context;
 
-    public static boolean DATABASE_ENABEL_ALTER_COLUMN = true;
+    public static boolean DATABASE_ENABEL_ALTER_COLUMN = false;
     public DbHelper(Context context)
     {
         super(context, DATABASE_NAME ,null,DATABASE_VERSION);
@@ -293,6 +293,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     clearSync.execute(context);
                     break;
                 case 2:
+                    DATABASE_ENABEL_ALTER_COLUMN = true;
                     db.execSQL(OrderDBAdapter.addColumnReal("cartDiscount"));
                     db.execSQL(OrderDBAdapter.addColumnReal("numberDiscount"));
                     db.execSQL(CashPaymentDBAdapter.addColumn("currencyRate"));
@@ -313,9 +314,6 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(IdsCounterDBAdapter.addColumn("closing_report_details"));
                     db.execSQL(IdsCounterDBAdapter.addColumn("pos_invoice"));
                     db.execSQL("update customer set phoneNumber=1 where id =921530436797;");
-                    ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
-                    zReportDBAdapter.open();
-                    zReportDBAdapter.upDatePosSalesV3();
                     ClearSync clearSync1 = new ClearSync(context);
                     clearSync1.execute(context);
                     if(SETTINGS.BufferEmail) {
