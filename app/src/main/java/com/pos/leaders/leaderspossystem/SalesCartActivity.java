@@ -1531,7 +1531,7 @@ public class SalesCartActivity extends AppCompatActivity {
             public void onClick(View view) {
                 final String[] items = {
                         getString(R.string.invoice),
-                        getString(R.string.receipt),getString(R.string.order_document),getString(R.string.create_credit_invoice_doc),getString(R.string.view_credit_invoice_doc)
+                        getString(R.string.receipt),getString(R.string.create_order_document),getString(R.string.view_order_document),getString(R.string.create_credit_invoice_doc),getString(R.string.view_credit_invoice_doc)
 
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(SalesCartActivity.this);
@@ -1811,12 +1811,16 @@ public class SalesCartActivity extends AppCompatActivity {
 
                                 break;
                             case 3:
-                                Intent intent3 = new Intent(SalesCartActivity.this, CreateCreditInvoiceActivity.class);
+                                Intent intent3 = new Intent(SalesCartActivity.this, OrderDocumentManagementActivity.class);
                                 startActivity(intent3);
-                                break;
+                            break ;
                             case 4:
-                                Intent intent4= new Intent(SalesCartActivity.this, ViewCreditInvoiceActivity.class);
+                                Intent intent4 = new Intent(SalesCartActivity.this, CreateCreditInvoiceActivity.class);
                                 startActivity(intent4);
+                                break;
+                            case 5:
+                                Intent intent5= new Intent(SalesCartActivity.this, ViewCreditInvoiceActivity.class);
+                                startActivity(intent5);
                                 break;
 
 
