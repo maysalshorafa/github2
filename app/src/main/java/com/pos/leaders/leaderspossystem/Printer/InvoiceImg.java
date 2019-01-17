@@ -1045,16 +1045,17 @@ public class InvoiceImg {
         if(isCopy)
             status=context.getString(R.string.copy_invoice);
         Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        Block inum = new Block("\u200E"+ context.getString(R.string.order_document)+": " +invoiceNum
+        Block inum = new Block("\u200E"+ context.getString(R.string.invoice_with_tax)+": " +invoiceNum
                 , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(bStatus);
         blocks.add(inum);
         blocks.add(lineR);
-        Block name = new Block("\u200E" + context.getString(R.string.product) + newLineL, 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+        Block name = new Block("\u200E" + context.getString(R.string.product) + newLineL, 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.35));
         Block counter = new Block("\u200E" + context.getString(R.string.qty) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
-        Block unitPrice = new Block("\u200E" + context.getString(R.string.price) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.2));
-        Block price = new Block("\u200E" + context.getString(R.string.total) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
-        Block discount = new Block("\u200E" + context.getString(R.string.discount) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
+        Block unitPrice = new Block("\u200E" + context.getString(R.string.price) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
+        Block price = new Block("\u200E" + context.getString(R.string.total) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.2));
+        Block discount = new Block("\u200E" + "%" + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
+
         double SaleOriginalityPrice = 0, saleTotalPrice = 0;
         double totalSaved = 0.0;
         for (OrderDetails o : orders) {
@@ -1068,7 +1069,8 @@ public class InvoiceImg {
             counter.text += o.getQuantity() + "\n";
             unitPrice.text +=String.format(new Locale("en"), "%.2f", o.getUnitPrice()) + "\n";
             price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
-            discount.text= String.format(new Locale("en"), "%.2f", o.getDiscount()) + "\n";
+            discount.text += String.format(new Locale("en"), "%.2f", o.getDiscount()) + "\n";
+
             SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
             saleTotalPrice += o.getItemTotalPrice();
         }
@@ -1107,6 +1109,9 @@ public class InvoiceImg {
         blocks.add(productCount);
         blocks.add(productCountText);
         blocks.add(clear.Left());
+        blocks.add(toPid);
+        blocks.add(toPidText);
+        blocks.add(clear.Left());
         if(sale.cartDiscount>0) {
             blocks.add(discountAmount);
             blocks.add(discountText);
@@ -1115,10 +1120,6 @@ public class InvoiceImg {
             blocks.add(toPidTextBeforeDiscount);
             blocks.add(clear.Left());
         }
-        blocks.add(toPid);
-        blocks.add(toPidText);
-        blocks.add(clear.Left());
-
         Block addsTax = new Block("\u200E" + context.getString(R.string.tax) + ": "+Util.makePrice(SETTINGS.tax)+"%"  , 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         double noTax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
         Block addsTaxValue = new Block(Util.makePrice(noTax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
@@ -1144,7 +1145,7 @@ public class InvoiceImg {
         }
         if ((int) totalSaved != 0) {
             String s = context.getString(R.string.ins);
-            Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" + String.format(new Locale("en"), "%.2f %s", totalSaved, s), 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" + String.format(new Locale("en"), "%.2f %s", SESSION._ORDERS.totalSaved, s), 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
             blocks.add(totSaved.Bold().Left());
         }
 

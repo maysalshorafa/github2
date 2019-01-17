@@ -569,8 +569,7 @@ public class PdfUA {
         headingTable.setRunDirection(0);
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, "Date"+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 2, dateFont);
+        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
 
 //        insertCell(headingTable, context.getString(R.string.date) + invoiceJsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
 
@@ -581,8 +580,14 @@ public class PdfUA {
         dateTable.setRunDirection(0);
         dateTable.setWidthPercentage(108f);
 
-        insertCell(dateTable, context.getString(R.string.customer_name)+":"+customerInfo.getString("firstName")+customerInfo.getString("lastName"), Element.ALIGN_LEFT, 2, dateFont);
         insertCell(dateTable, "Receipt Numbers"+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 3, dateFont);
+        insertCell(dateTable, "ReferenceInvoice"+":"+refNumber.get(0), Element.ALIGN_LEFT, 3, dateFont);
+
+        insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+
+        insertCell(dateTable, context.getString(R.string.customer_name)+":"+customerInfo.getString("firstName")+customerInfo.getString("lastName"), Element.ALIGN_LEFT, 2, dateFont);
+        insertCell(dateTable, "CustomerGeneralLedger"+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 3, dateFont);
+
         //end
         insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
 
@@ -595,8 +600,10 @@ public class PdfUA {
         }else {
             insertCell(orderDetailsTable, context.getString(R.string.total_paid) + ": " + payment.getJSONObject(0).getDouble("amount"), Element.ALIGN_LEFT, 3, dateFont);
         }
-        insertCell(orderDetailsTable, "CustomerGeneralLedger"+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 3, dateFont);
-        insertCell(orderDetailsTable, "ReferenceInvoice"+":"+refNumber.get(0), Element.ALIGN_LEFT, 3, dateFont);
+        insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 3, font);
+        insertCell(orderDetailsTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 3, font);
+        insertCell(orderDetailsTable, "Date"+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 3, dateFont);
+
         insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 3, font);
 
         if (payment.getJSONObject(0).getString("paymentWay").equals("checks")) {
@@ -751,42 +758,55 @@ public class PdfUA {
         }
         insertCell(headingTable, context.getString(R.string.customer_name)+":"+customerInfo.getString("firstName")+customerInfo.getString("lastName"), Element.ALIGN_LEFT, 1, dateFont);
         insertCell(headingTable,context.getString(R.string.invoice)+" "+context.getString(R.string.no)+" "+customerJson.getString("reference"),Element.ALIGN_LEFT,1,dateFont);
-        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
 
 
         if(source=="source"){
             insertCell(headingTable,  context.getString(R.string.source_invoice) , Element.ALIGN_CENTER, 1, font);
+            insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
 
         }else {
             insertCell(headingTable,  context.getString(R.string.copy_invoice) , Element.ALIGN_CENTER, 1, font);
+            insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
 
         }
-        insertCell(headingTable,  context.getString(R.string.credit_invoice_doc) , Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, jsonObject.getString("docNum") , Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
-        PdfPTable orderDetailsTable = new PdfPTable(4);
+        insertCell(headingTable,  context.getString(R.string.credit_invoice_doc) +" : "+jsonObject.getString("docNum") , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
+        PdfPTable orderDetailsTable = new PdfPTable(5);
         orderDetailsTable.setRunDirection(0);
         orderDetailsTable.setWidthPercentage(108f);
         Log.d("customerJson",customerJson.toString());
 
         JSONArray itemJson = customerJson.getJSONArray("cartDetailsList");
-        insertCell(orderDetailsTable, context.getString(R.string.name), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(orderDetailsTable, context.getString(R.string.product), Element.ALIGN_LEFT, 1, dateFont);
         insertCell(orderDetailsTable,context.getString(R.string.qty), Element.ALIGN_LEFT, 1, dateFont);
         insertCell(orderDetailsTable, context.getString(R.string.price), Element.ALIGN_LEFT, 1, dateFont);
         insertCell(orderDetailsTable, context.getString(R.string.total), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(orderDetailsTable, context.getString(R.string.discount), Element.ALIGN_LEFT, 1, dateFont);
+int q = 0;
         for (int a = 0 ; a<itemJson.length();a++) {
             JSONObject jsonObject1 = itemJson.getJSONObject(a);
             String sku = jsonObject1.getString("sku");
             Product product= productDBAdapter.getProductByBarCode(sku);
             insertCell(orderDetailsTable, product.getDisplayName(), Element.ALIGN_LEFT, 1, dateFont);
             insertCell(orderDetailsTable, ""+jsonObject1.getInt("quantity"), Element.ALIGN_LEFT, 1, dateFont);
+            q+=jsonObject1.getInt("quantity");
             insertCell(orderDetailsTable,Util.makePrice(jsonObject1.getDouble("unitPrice")), Element.ALIGN_LEFT, 1, dateFont);
             insertCell(orderDetailsTable, Util.makePrice(jsonObject1.getDouble("unitPrice")*jsonObject1.getInt("quantity")), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(orderDetailsTable, Util.makePrice(jsonObject1.getDouble("discount"))+"%", Element.ALIGN_LEFT, 1, dateFont);
+
         }
-        insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
-        insertCell(orderDetailsTable, "customerGeneralLedger"+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 4, dateFont);
-        insertCell(orderDetailsTable, "Date"+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 4, dateFont);
-        insertCell(orderDetailsTable, context.getString(R.string.total_paid)+":"+customerJson.getDouble("total"), Element.ALIGN_LEFT, 4, dateFont);
+        insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 5, font);
+
+        insertCell(orderDetailsTable, context.getString(R.string.product_quantity)+" : "+q , Element.ALIGN_CENTER, 1, dateFont);
+        if(customerJson.getDouble("cartDiscount")>0){
+            insertCell(orderDetailsTable, context.getString(R.string.cart_discount)+" "+customerJson.getDouble("cartDiscount") , Element.ALIGN_CENTER, 1, dateFont);
+        }
+        insertCell(orderDetailsTable, context.getString(R.string.total_price)+" : "+customerJson.getDouble("total") , Element.ALIGN_CENTER,1, dateFont);
+        insertCell(orderDetailsTable, "customerGeneralLedger"+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 5, dateFont);
+        insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 5, font);
+        insertCell(orderDetailsTable, "Date"+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 5, dateFont);
+        insertCell(orderDetailsTable, context.getString(R.string.total_paid)+":"+customerJson.getDouble("total"), Element.ALIGN_LEFT, 5, dateFont);
 
         //end
 
