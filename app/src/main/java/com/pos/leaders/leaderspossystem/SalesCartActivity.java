@@ -1569,8 +1569,14 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         print(invoiceImg.Invoice(SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, invoiceNum, customerGeneralLedger));
                                                         clearCart();
 
+                                                    }else if(invoiceJsonObject.getString("message").equals("Maximum allowed credit amount is 2000.0")){
+                                                        Toast.makeText(SalesCartActivity.this,"Maximum allowed credit amount is 2000.0",Toast.LENGTH_LONG).show();
+                                                    }
+                                                    else if(invoiceJsonObject.getString("message").equals("Customer  not found with id :")){
+                                                        Toast.makeText(SalesCartActivity.this,"Customer  not found",Toast.LENGTH_LONG).show();
                                                     }
                                                     else {
+
                                                         new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this)
                                                                 .setTitle(getString(R.string.invoice))
                                                                 .setMessage(getString(R.string.cant_make_invoice_check_internet_connection))

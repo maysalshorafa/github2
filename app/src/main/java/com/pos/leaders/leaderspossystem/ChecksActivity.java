@@ -225,7 +225,7 @@ public class ChecksActivity extends AppCompatActivity {
 								finalCheckList.add(_check);
 							}
 							SESSION._CHECKS_HOLDER = finalCheckList;
-							DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,0);
+							DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,totalPrice);
 						}else {
 
 							 List<Check> finalCheckList = new ArrayList<Check>();
@@ -279,7 +279,7 @@ public class ChecksActivity extends AppCompatActivity {
 							finalCheckList.add(_check);
 						}
 						SESSION._CHECKS_HOLDER = finalCheckList;
-						DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,0);
+						DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,totalPrice);
 					}else {
 						double d = getTotalPid() - checkList.get(checkList.size() - 1).getAmount();
 						double needAmount = totalPrice - d;

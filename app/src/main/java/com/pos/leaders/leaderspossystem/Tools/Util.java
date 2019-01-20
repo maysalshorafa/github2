@@ -600,11 +600,6 @@ public class Util {
             for (int i= 0 ;i<posCreditInvoiceList.size();i++){
                 creditInvoiceAmount+=posCreditInvoiceList.get(i).getAmount();
             }
-            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
-            for (int i= 0 ;i<posReceiptList.size();i++){
-                receiptInvoiceAmount+=posReceiptList.get(i).getAmount();
-            }
-            Log.d("teeest",receiptInvoiceAmount+"");
             List<PosInvoice>posReceiptListCheck = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
             for (int i= 0 ;i<posReceiptListCheck.size();i++){
                 receiptInvoiceAmountCheck+=posReceiptListCheck.get(i).getAmount();
@@ -614,7 +609,6 @@ public class Util {
         zReport.setTotalPosSales(zReport.getTotalPosSales()+invoiceAmount);
         zReport.setTotalAmount(zReport.getTotalAmount()+aReportAmount+receiptInvoiceAmount);
         zReport.setTotalSales(zReport.getTotalSales()+invoiceAmount+creditInvoiceAmount);
-
         long zID = zReportDBAdapter.insertEntry(zReport.getCreatedAt(), zReport.getByUser(), zReport.getStartOrderId(), zReport.getEndOrderId(),
                 zReport.getTotalAmount(),zReport.getTotalSales(),cash_plus,check_plus+receiptInvoiceAmountCheck,creditCard_plus
                 ,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax/100,invoiceAmount,

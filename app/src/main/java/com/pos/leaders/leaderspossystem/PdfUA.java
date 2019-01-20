@@ -594,7 +594,7 @@ public class PdfUA {
         Log.d("customerJson",customerJson.toString());
         if (payment.getJSONObject(0).getString("paymentWay").equals("checks")) {
             insertCell(orderDetailsTable, context.getString(R.string.payment)+": "+context.getString(R.string.checks), Element.ALIGN_LEFT, 3, dateFont);
-            insertCell(orderDetailsTable, context.getString(R.string.total_paid)+": "+payment.getJSONObject(0).getDouble("paidAmount"), Element.ALIGN_LEFT, 3, dateFont);
+            insertCell(orderDetailsTable, context.getString(R.string.total_paid)+": "+customerJson.getDouble("paidAmount"), Element.ALIGN_LEFT, 3, dateFont);
         }else {
             insertCell(orderDetailsTable, context.getString(R.string.payment)+": "+context.getString(R.string.cash), Element.ALIGN_LEFT, 3, dateFont);
             insertCell(orderDetailsTable, context.getString(R.string.total_paid) + ": " + payment.getJSONObject(0).getDouble("amount"), Element.ALIGN_LEFT, 3, dateFont);
@@ -758,7 +758,7 @@ public class PdfUA {
             insertCell(headingTable, context.getString(R.string.cashiers) + employee.getFullName(), Element.ALIGN_CENTER, 1, font);
         }
         insertCell(headingTable, context.getString(R.string.customer_name)+":"+customerInfo.getString("firstName")+customerInfo.getString("lastName"), Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(headingTable,context.getString(R.string.invoice)+" "+context.getString(R.string.no)+" "+customerJson.getString("reference"),Element.ALIGN_LEFT,1,dateFont);
+        insertCell(headingTable,context.getString(R.string.reference_invoice)+" "+" "+customerJson.getString("reference"),Element.ALIGN_LEFT,1,dateFont);
         insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
 
 
@@ -789,7 +789,11 @@ int q = 0;
             JSONObject jsonObject1 = itemJson.getJSONObject(a);
             String sku = jsonObject1.getString("sku");
             Product product= productDBAdapter.getProductByBarCode(sku);
-            insertCell(orderDetailsTable, product.getDisplayName(), Element.ALIGN_LEFT, 1, dateFont);
+            if(product==null){
+                insertCell(orderDetailsTable, context.getString(R.string.general_product), Element.ALIGN_LEFT, 1, dateFont);
+            }else {
+                insertCell(orderDetailsTable, product.getDisplayName(), Element.ALIGN_LEFT, 1, dateFont);
+            }
             insertCell(orderDetailsTable, ""+jsonObject1.getInt("quantity"), Element.ALIGN_LEFT, 1, dateFont);
             q+=jsonObject1.getInt("quantity");
             insertCell(orderDetailsTable,Util.makePrice(jsonObject1.getDouble("unitPrice")), Element.ALIGN_LEFT, 1, dateFont);

@@ -286,7 +286,7 @@ public class DocumentControl {
 
     }
 
-    public static void sendDoc(final Context context, final BoInvoice invoice, final String paymentWays, double totalPaid){
+    public static void sendDoc(final Context context, final BoInvoice invoice, final String paymentWays, final double totalPaid){
         List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
         List<Payment> paymentList = new ArrayList<Payment>();
         List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
@@ -420,9 +420,9 @@ public class DocumentControl {
                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
                                 posInvoiceDBAdapter.open();
                                 if(paymentWays.equals(CASH)) {
-                                    posInvoiceDBAdapter.insertEntry(Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), zReport.getzReportId(), DocumentType.RECEIPT.getValue(), "", invoiceNum,CONSTANT.CASH);
+                                    posInvoiceDBAdapter.insertEntry(totalPaid, zReport.getzReportId(), DocumentType.RECEIPT.getValue(), "", invoiceNum,CONSTANT.CASH);
                                 }else {
-                                    posInvoiceDBAdapter.insertEntry(Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))), zReport.getzReportId(), DocumentType.RECEIPT.getValue(), "", invoiceNum,CONSTANT.CHECKS);
+                                    posInvoiceDBAdapter.insertEntry(totalPaid, zReport.getzReportId(), DocumentType.RECEIPT.getValue(), "", invoiceNum,CONSTANT.CHECKS);
                                 }
                             } catch (Exception e) {
                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);

@@ -278,8 +278,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                     OpiningReport opiningReport = Util.getLastAReport(getApplicationContext());
                                                     ClosingReportDBAdapter closingReportDBAdapter =new ClosingReportDBAdapter(getApplicationContext());
                                                     closingReportDBAdapter.open();
-                                                    ClosingReport closingReport = closingReportDBAdapter.getClosingReportByOpiningReportId(opiningReport.getOpiningReportId());
-                                                    if(closingReport!=null){
+                                                    ClosingReport closingReport1 = closingReportDBAdapter.getClosingReportByOpiningReportId(opiningReport.getOpiningReportId());
+                                                    if(closingReport1!=null){
                                                         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(DashBord.this);
                                                         zReportDBAdapter.open();
                                                         ZReport lastZReport = Util.getLastZReport(getApplicationContext());
@@ -309,8 +309,19 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                             PrintTools printTools = new PrintTools(DashBord.this);
                                                             bitmap=printTools.createZReport(zReport,false);
                                                             printTools.PrintReport(bitmap);
-                                                            needAReport();
-                                                        /**    Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
+                                                            if (needAReport()) {
+                                                                btAReport.setEnabled(true);
+                                                                btZReport.setEnabled(false);
+                                                                closingReport.setEnabled(false);
+                                                                salesCart.setEnabled(false);
+                                                            } else {
+
+                                                                if (lastSale == null) {
+                                                                    // btZReport.setEnabled(false);
+                                                                } else
+                                                                    btZReport.setEnabled(true);
+                                                                salesCart.setEnabled(true);
+                                                            }                                                        /**    Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
                                                         i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
                                                         i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
                                                         i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
@@ -362,8 +373,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                     OpiningReport opiningReport = Util.getLastAReport(getApplicationContext());
                                     ClosingReportDBAdapter closingReportDBAdapter =new ClosingReportDBAdapter(getApplicationContext());
                                     closingReportDBAdapter.open();
-                                    ClosingReport closingReport = closingReportDBAdapter.getClosingReportByOpiningReportId(opiningReport.getOpiningReportId());
-                                    if(closingReport!=null){
+                                    ClosingReport closingReport1 = closingReportDBAdapter.getClosingReportByOpiningReportId(opiningReport.getOpiningReportId());
+                                    if(closingReport1!=null){
                                         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(DashBord.this);
                                         zReportDBAdapter.open();
                                         ZReport lastZReport = Util.getLastZReport(getApplicationContext());
@@ -392,8 +403,19 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                             PrintTools printTools = new PrintTools(DashBord.this);
                                             bitmap=printTools.createZReport(zReport,false);
                                             printTools.PrintReport(bitmap);
-                                            needAReport();
-                                            /** Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
+                                            if (needAReport()) {
+                                                btAReport.setEnabled(true);
+                                                btZReport.setEnabled(false);
+                                                closingReport.setEnabled(false);
+                                                salesCart.setEnabled(false);
+                                            } else {
+
+                                                if (lastSale == null) {
+                                                    // btZReport.setEnabled(false);
+                                                } else
+                                                    btZReport.setEnabled(true);
+                                                salesCart.setEnabled(true);
+                                            }                                                  /** Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());

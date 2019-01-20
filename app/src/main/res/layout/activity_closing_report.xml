@@ -98,7 +98,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:hint="@string/TouchPad_0"
-            android:inputType="numberSigned"/>
+            android:inputType="number"/>
         <EditText
             android:id="@+id/actualCreditValue"
             android:layout_width="match_parent"
