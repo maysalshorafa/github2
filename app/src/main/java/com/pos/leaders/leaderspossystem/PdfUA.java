@@ -580,13 +580,10 @@ public class PdfUA {
         dateTable.setRunDirection(0);
         dateTable.setWidthPercentage(108f);
 
-        insertCell(dateTable, "Receipt Numbers"+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 3, dateFont);
-        insertCell(dateTable, "ReferenceInvoice"+":"+refNumber.get(0), Element.ALIGN_LEFT, 3, dateFont);
-
+        insertCell(dateTable, context.getString(R.string.receipt_numbers)+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 3, dateFont);
         insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
 
         insertCell(dateTable, context.getString(R.string.customer_name)+":"+customerInfo.getString("firstName")+customerInfo.getString("lastName"), Element.ALIGN_LEFT, 2, dateFont);
-        insertCell(dateTable, "CustomerGeneralLedger"+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 3, dateFont);
 
         //end
         insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
@@ -596,13 +593,17 @@ public class PdfUA {
         orderDetailsTable.setWidthPercentage(108f);
         Log.d("customerJson",customerJson.toString());
         if (payment.getJSONObject(0).getString("paymentWay").equals("checks")) {
+            insertCell(orderDetailsTable, context.getString(R.string.payment)+": "+context.getString(R.string.checks), Element.ALIGN_LEFT, 3, dateFont);
             insertCell(orderDetailsTable, context.getString(R.string.total_paid)+": "+payment.getJSONObject(0).getDouble("paidAmount"), Element.ALIGN_LEFT, 3, dateFont);
         }else {
+            insertCell(orderDetailsTable, context.getString(R.string.payment)+": "+context.getString(R.string.cash), Element.ALIGN_LEFT, 3, dateFont);
             insertCell(orderDetailsTable, context.getString(R.string.total_paid) + ": " + payment.getJSONObject(0).getDouble("amount"), Element.ALIGN_LEFT, 3, dateFont);
         }
         insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 3, font);
         insertCell(orderDetailsTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 3, font);
-        insertCell(orderDetailsTable, "Date"+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 3, dateFont);
+        insertCell(orderDetailsTable, context.getString(R.string.date)+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 3, dateFont);
+        insertCell(dateTable, context.getString(R.string.reference_invoice)+":"+refNumber.get(0), Element.ALIGN_LEFT, 3, dateFont);
+        insertCell(dateTable, context.getString(R.string.customer_ledger)+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 3, dateFont);
 
         insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 3, font);
 
@@ -803,7 +804,7 @@ int q = 0;
             insertCell(orderDetailsTable, context.getString(R.string.cart_discount)+" "+customerJson.getDouble("cartDiscount") , Element.ALIGN_CENTER, 1, dateFont);
         }
         insertCell(orderDetailsTable, context.getString(R.string.total_price)+" : "+customerJson.getDouble("total") , Element.ALIGN_CENTER,1, dateFont);
-        insertCell(orderDetailsTable, "customerGeneralLedger"+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 5, dateFont);
+        insertCell(orderDetailsTable, context.getString(R.string.customer_ledger)+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 5, dateFont);
         insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 5, font);
         insertCell(orderDetailsTable, "Date"+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 5, dateFont);
         insertCell(orderDetailsTable, context.getString(R.string.total_paid)+":"+customerJson.getDouble("total"), Element.ALIGN_LEFT, 5, dateFont);

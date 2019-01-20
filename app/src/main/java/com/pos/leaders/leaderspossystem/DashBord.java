@@ -309,6 +309,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                             PrintTools printTools = new PrintTools(DashBord.this);
                                                             bitmap=printTools.createZReport(zReport,false);
                                                             printTools.PrintReport(bitmap);
+                                                            needAReport();
                                                         /**    Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
                                                         i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
                                                         i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
@@ -391,14 +392,15 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                             PrintTools printTools = new PrintTools(DashBord.this);
                                             bitmap=printTools.createZReport(zReport,false);
                                             printTools.PrintReport(bitmap);
-                                       /** Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
-                                        i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
-                                        i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
-                                        i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
-                                        i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
-                                        i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,amount);
-                                        finish();
-                                        startActivity(i);**/
+                                            needAReport();
+                                            /** Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
+                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
+                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
+                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
+                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
+                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,amount);
+                                             finish();
+                                             startActivity(i);**/
                                         }
 
                                     }else {

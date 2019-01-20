@@ -611,7 +611,7 @@ public class Util {
             }
 
         }
-
+        zReport.setTotalPosSales(zReport.getTotalPosSales()+invoiceAmount);
         zReport.setTotalAmount(zReport.getTotalAmount()+aReportAmount+receiptInvoiceAmount);
         zReport.setTotalSales(zReport.getTotalSales()+invoiceAmount+creditInvoiceAmount);
 

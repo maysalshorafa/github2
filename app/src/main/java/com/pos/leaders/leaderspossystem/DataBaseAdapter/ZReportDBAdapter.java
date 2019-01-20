@@ -144,7 +144,7 @@ public class ZReportDBAdapter {
     public List<ZReport> getAll() {
         List<ZReport> zReports = new ArrayList<ZReport>();
 
-        Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
+        Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME , null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
@@ -154,6 +154,7 @@ public class ZReportDBAdapter {
 
         return zReports;
     }
+
 
     public List<ZReport> getBetween(Date fromDate,Date toDate){
         List<ZReport> zReports = new ArrayList<ZReport>();
@@ -276,6 +277,7 @@ public class ZReportDBAdapter {
         //Assign values for each row.
         val.put(Z_REPORT_COLUMN_TOTAL_SALES_AMOUNT, zReport.getTotalSales());
         val.put(Z_REPORT_COLUMN_TOTAL_AMOUNT, zReport.getTotalAmount());
+        val.put(Z_REPORT_COLUMN_TOTAL_POS_SALES, zReport.getTotalPosSales());
 
         String where = Z_REPORT_COLUMN_ID + " = ?";
         db.update(Z_REPORT_TABLE_NAME, val, where, new String[]{zReport.getzReportId() + ""});
@@ -303,20 +305,22 @@ public class ZReportDBAdapter {
     public void  upDatePosSalesV3(){
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
         zReportDBAdapter.open();
-        List<ZReport> zReportList = getAll();
+        List<ZReport>zReportList = new ArrayList<ZReport>();
+         zReportList = getAll();
         double totalAmount =0;
         for (int  i= 0 ; i<zReportList.size();i++){
             ZReport zReport1 = zReportList.get(i);
             if(i==0){
-                zReport1.setTotalPosSales(zReport1.getInvoiceReceiptAmount());
+                totalAmount=zReport1.getInvoiceReceiptAmount();
             }else {
                 totalAmount+=zReport1.getInvoiceReceiptAmount();
             }
-            ZReport zReport =new ZReport(zReport1.getzReportId(),zReport1.getCreatedAt(),zReport1.getByUser(),zReport1.getStartOrderId(),zReport1.getEndOrderId(),zReport1.getTotalAmount(),
+             zReport1 =new ZReport(zReport1.getzReportId(),zReport1.getCreatedAt(),zReport1.getByUser(),zReport1.getStartOrderId(),zReport1.getEndOrderId(),zReport1.getTotalAmount(),
                    zReport1.getTotalSales(),zReport1.getCashTotal(),zReport1.getCheckTotal(),zReport1.getCreditTotal(),totalAmount,zReport1.getTax(),
                     zReport1.getInvoiceAmount(),zReport1.getCreditInvoiceAmount(),zReport1.getShekelAmount(),zReport1.getUsdAmount(),zReport1.getEurAmount(),zReport1.getGbpAmount(),
                    zReport1.getInvoiceReceiptAmount());
-            updateEntry(zReport);
+            Log.d("testZRRR",zReport1.toString());
+            updateEntry(zReport1);
         }
     }
 

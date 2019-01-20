@@ -32,7 +32,9 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
+import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -491,6 +493,7 @@ public class ClosingReportActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                if(SETTINGS.printer.equals(PrinterType.HPRT_TP805)){
                 try {
                     HPRTPrinterHelper.OpenCashdrawer(0);
                 } catch (Exception e) {
@@ -504,6 +507,12 @@ public class ClosingReportActivity extends AppCompatActivity {
                         } catch (Exception e2) {
                             e2.printStackTrace();
                         }
+                    }
+                }}else if(SETTINGS.printer.equals(PrinterType.SUNMI_T1)){
+                    try {
+                        AidlUtil.getInstance().openCashBox();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

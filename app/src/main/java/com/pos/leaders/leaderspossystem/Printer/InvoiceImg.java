@@ -1016,7 +1016,7 @@ public class InvoiceImg {
         cashierName.Left();
         blocks.add(cashierName);
         blocks.add(cashier);
-        Block customerGeneralLedgerView = new Block("\u200E" + "CustomerLedger"+ ":"+Util.makePrice(customerGeneralLedger)+""+ "\n"+ line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block customerGeneralLedgerView = new Block("\u200E" + context.getString(R.string.customer_ledger)+ ":"+Util.makePrice(customerGeneralLedger)+""+ "\n"+ line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(customerGeneralLedgerView);
         Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getCreatedAt()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());

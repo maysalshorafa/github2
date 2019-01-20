@@ -2104,7 +2104,9 @@ public class SalesCartActivity extends AppCompatActivity {
                  SETTINGS.orderDocument=orderDocJsonObj;
                  JSONArray items = jsonObject.getJSONArray("cartDetailsList");
                  final JSONObject customerJson = orderDocJsonObj.getJSONObject("documentsData").getJSONObject("customer");
-                 Order order = new Order(SESSION._EMPLOYEE.getEmployeeId(),new Timestamp(Long.parseLong(orderDocJsonObj.getJSONObject("documentsData").getString("date"))),0,false,orderDocJsonObj.getJSONObject("documentsData").getDouble("total"),0);
+                 JSONObject a =  orderDocJsonObj.getJSONObject("documentsData").getJSONObject("order");
+                 Order order = new Order(a.getLong("byUser"),new Timestamp(Long.parseLong(orderDocJsonObj.getJSONObject("documentsData").getString("date"))),0,false,orderDocJsonObj.getJSONObject("documentsData").getDouble("total"),0);
+                 SESSION._EMPLOYEE.setEmployeeId(a.getLong("byUser"));
                  Customer customer = customerDBAdapter.getCustomerByID(Long.parseLong(orderDocJsonObj.getJSONObject("documentsData").getJSONObject("customer").getString("customerId")));
                  order.setCustomer(customer);
                  SESSION._ORDERS=order;

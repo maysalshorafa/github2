@@ -217,7 +217,7 @@ public class DocumentControl {
                 @Override
                 protected void onPostExecute(String html) {
                     for(int i=1;i<bitmapList.size();i++){
-                          r=  Util.printAndOpenCashBoxHPRT_TP805(context, bitmapList.get(i));
+                        print(context,bitmapList);
                     }
                     //   print(context,bitmapList);
                     //after async close progress dialog
