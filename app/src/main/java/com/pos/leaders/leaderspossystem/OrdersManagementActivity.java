@@ -178,6 +178,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
         lvOrders.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                if(position!=_saleList.size()){
                 if(objectList.get(position) instanceof  Order){
                 final Order sale = (Order) objectList.get(position);
                 OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(OrdersManagementActivity.this);
@@ -315,7 +316,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                 //endregion Cancellation ORDER Button
 
                 previousView.setBackgroundColor(getResources().getColor(R.color.list_background_color));
-                }else {
+                }}else {
                 }
             }
         });
