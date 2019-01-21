@@ -293,15 +293,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     clearSync.execute(context);
                     break;
                 case 2:
-                    if(SETTINGS.BufferEmail) {
-                        try {
-                            Backup.BackupBufferDB();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        BufferDbEmail.sendLogFile();
-                        SETTINGS.BufferEmail=false;
-                    }
+
                     DATABASE_ENABEL_ALTER_COLUMN = true;
                     db.execSQL(OrderDBAdapter.addColumnReal("cartDiscount"));
                     db.execSQL(OrderDBAdapter.addColumnReal("numberDiscount"));
@@ -325,6 +317,15 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL("update customer set phoneNumber=1 where id =921530436797;");
                     ClearSync clearSync1 = new ClearSync(context);
                     clearSync1.execute(context);
+                    if(SETTINGS.BufferEmail) {
+                        try {
+                            Backup.BackupBufferDB();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        BufferDbEmail.sendLogFile();
+                        SETTINGS.BufferEmail=false;
+                    }
                     break;
 
             }
