@@ -219,7 +219,7 @@ public class OrderDBAdapter {
 	}
     public List<Order> getBetweenTwoSalesForClosingReport(long from, long to){
         List<Order> saleList = new ArrayList<Order>();
-        Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +" <= "+to+" and "+ ORDER_COLUMN_ID +" > "+from,null);
+        Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +" <= "+to+" and "+ ORDER_COLUMN_ID +" > "+from+" and id like '%"+SESSION.POS_ID_NUMBER+"%'",null);
         //Cursor cursor = db.rawQuery("select * from "+ORDER_DETAILS_TABLE_NAME+" where "+ORDER_COLUMN_ORDERDATE+" <= "+to+" and "+ORDER_COLUMN_ORDERDATE +" >= "+from,null);
         cursor.moveToFirst();
 
@@ -257,7 +257,7 @@ public class OrderDBAdapter {
 				price +
 						" or " + ORDER_COLUMN_ORDERDATE + " like '%" + str + "%'"+" or " + ORDER_COLUMN_ID + " like '%" + str + "%'"+
 				" and " + ORDER_COLUMN_STATUS + " < 1" +
-				" order by id desc limit " + offset + "," + count, null);
+				" and id like '%"+SESSION.POS_ID_NUMBER+"%'"+" order by id desc limit " + offset + "," + count, null);
 		cursor.moveToFirst();
 
 		while (!cursor.isAfterLast()) {
@@ -271,7 +271,7 @@ public class OrderDBAdapter {
 		List<Order> orderList = new ArrayList<Order>();
 
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " +
-				ORDER_COLUMN_STATUS + " < 1" +
+				ORDER_COLUMN_STATUS + " < 1" +" and id like '%"+SESSION.POS_ID_NUMBER+"%'"+
 				" order by id desc limit " + offset + "," + count, null);
 		cursor.moveToFirst();
 
