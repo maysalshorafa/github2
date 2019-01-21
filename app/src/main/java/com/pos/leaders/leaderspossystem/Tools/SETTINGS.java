@@ -33,7 +33,7 @@ public class SETTINGS {
 	public static boolean creditCardEnable;
 	public static boolean pinpadEnable;
 	public static boolean timerState = false;
-	public static boolean BufferEmail = true;
+	public static boolean BufferEmail = false;
 	public static String BO_SERVER_URL = "http://apiv3.leadpos.net/";
 	public static String BO_SERVER_URL_V1 = "http://api.leadpos.net/webapi";
 	public static String BO_SERVER_URL_V2 = "http://apiv2.leadpos.net";

@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.pos.leaders.leaderspossystem.Backup.Backup;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
@@ -55,8 +54,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Feedback.ClearSync;
-import com.pos.leaders.leaderspossystem.Tools.BufferDbEmail;
-import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -317,15 +314,6 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL("update customer set phoneNumber=1 where id =921530436797;");
                     ClearSync clearSync1 = new ClearSync(context);
                     clearSync1.execute(context);
-                    if(SETTINGS.BufferEmail) {
-                        try {
-                            Backup.BackupBufferDB();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        BufferDbEmail.sendLogFile();
-                        SETTINGS.BufferEmail=false;
-                    }
                     break;
 
             }
