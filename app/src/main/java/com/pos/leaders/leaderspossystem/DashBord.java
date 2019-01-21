@@ -207,15 +207,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         customerClub = (IButton) findViewById(R.id.coustmerClub);
         settings = (IButton) findViewById(R.id.settings);
 
-        if(!SETTINGS.BufferEmail) {
-            try {
-                Backup.BackupBufferDB();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            BufferDbEmail.sendLogFile();
-            SETTINGS.BufferEmail=true;
-        }
+
             EnableButtons();
 
         /**  logOut.setOnClickListener(new View.OnClickListener() {
