@@ -135,7 +135,17 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                         String sku = cartDetailsObject.getString("sku");
                         String pId = cartDetailsObject.getString("productId");
                         if(Long.parseLong(pId)==-1){
-                            productList.add(new Product(Long.parseLong(String.valueOf(-1)),"General","General",cartDetailsObject.getDouble("unitPrice"),"0","0",Long.parseLong(String.valueOf(1)),Long.parseLong(String.valueOf(1))));
+                            Product product =new Product(Long.parseLong(String.valueOf(-1)),"General","General",cartDetailsObject.getDouble("amount"),"0","0",Long.parseLong(String.valueOf(1)),Long.parseLong(String.valueOf(1)));
+
+                                if(docDocument.getDouble("cartDiscount")>0){
+                                    product.setPrice((cartDetailsObject.getDouble("amount"))*(100-(docDocument.getDouble("cartDiscount")))/100);
+
+                                }else {
+                                    product.setPrice(cartDetailsObject.getDouble("amount"));
+
+                                }
+
+                            productList.add(product);
                         }else {
                             Product product = productDBAdapter.getProductByBarCode(sku);
                             if(cartDetailsObject.getDouble("discount")>0){
@@ -210,6 +220,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                     newCartJson.remove("quantity");
                                     newCartJson.put("quantity", 1);
                                   newCartDetails.put(newCartJson);
+                                    Log.d("newCartDeteails111",newCartJson.toString());
 
                                 }
                             } catch (JSONException e) {
