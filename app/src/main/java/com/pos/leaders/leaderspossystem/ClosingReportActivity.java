@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -47,6 +48,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import HPRTAndroidSDK.HPRTPrinterHelper;
+
+import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 
 public class ClosingReportActivity extends AppCompatActivity {
     EditText  checkActualValue ,creditActualValue ,shekelActualValue ,usdActualValue , eurActualValue , gbpActualValue ;
@@ -192,224 +195,234 @@ public class ClosingReportActivity extends AppCompatActivity {
 
     }
 
-    private void calculateActualAmount() throws Exception {
+    private void calculateActualAmount(){
         long aReportId = 0;
         double usd_plus = 0, usd_minus = 0;
         double eur_plus = 0, eur_minus = 0;
         double gbp_plus = 0, gbp_minus = 0;
         double sheqle_plus = 0, sheqle_minus = 0;
         double aReportAmount = 0;
+        try {
+            OrderDBAdapter orderDb = new OrderDBAdapter(getApplicationContext());
+            orderDb.open();
+            ClosingReportDBAdapter closingReportDBAdapter = new ClosingReportDBAdapter(getApplicationContext());
+            closingReportDBAdapter.open();
 
-        OrderDBAdapter orderDb = new OrderDBAdapter(getApplicationContext());
-        orderDb.open();
-        ClosingReportDBAdapter closingReportDBAdapter = new ClosingReportDBAdapter(getApplicationContext());
-        closingReportDBAdapter.open();
-        ClosingReport closingReport = closingReportDBAdapter.getLastRow();
-        Order order =orderDb.getLast();
-        Order order1 =orderDb.getFirst();
-        List<Order> orders;
-        if(closingReport==null){
-           orders = orderDb.getBetween(order1.getOrderId(), order.getOrderId());
+            ClosingReport closingReport = null;
+            closingReport = closingReportDBAdapter.getLastRow();
+            ZReportDBAdapter zReportDBAdapter1 = new ZReportDBAdapter(ClosingReportActivity.this);
+            zReportDBAdapter1.open();
+            Order order =orderDb.getLast();
+            ZReport zReport1 =zReportDBAdapter1.getLastRow();
+            List<Order> orders;
+            if(closingReport==null){
 
-        }else {
-         orders = orderDb.getBetweenTwoSalesForClosingReport(closingReport.getLastOrderId(), order.getOrderId());
-        }
-        orderDb.close();
+                orders = orderDb.getBetween(zReport1.getEndOrderId(), order.getOrderId());
 
-
-        // get payment , cashPayment , returnList
-        List<Payment> payments = paymentList(orders);
-        List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(orders);
-        List<CurrencyReturns> currencyReturnList = returnPaymentList(orders);
-        double cash_plus = 0, cash_minus = 0;
-        double check_plus = 0, check_minus = 0;
-        double creditCard_plus = 0, creditCard_minus = 0;
-        for (Payment p : payments) {
-            int i = 0;
-            switch (p.getPaymentWay()) {
-
-               case CONSTANT.CASH:
-                    if (p.getAmount() > 0)
-                        cash_plus += p.getAmount();
-                    else
-                        cash_minus += p.getAmount();
-                    break;
-                case CONSTANT.CREDIT_CARD:
-                    if (p.getAmount() > 0)
-                        creditCard_plus += p.getAmount();
-                    else
-                        creditCard_minus += p.getAmount();
-                    break;
-                case CONSTANT.CHECKS:
-                    if (p.getAmount() > 0)
-                        check_plus += p.getAmount();
-                    else
-                        check_minus += p.getAmount();
-                    break;
+            }else {
+                orders = orderDb.getBetweenTwoSalesForClosingReport(closingReport.getLastOrderId(), order.getOrderId());
             }
-            expectedTotal+=p.getAmount();
-        }
+            orderDb.close();
+
+
+            // get payment , cashPayment , returnList
+            List<Payment> payments = paymentList(orders);
+            List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(orders);
+            List<CurrencyReturns> currencyReturnList = returnPaymentList(orders);
+            double cash_plus = 0, cash_minus = 0;
+            double check_plus = 0, check_minus = 0;
+            double creditCard_plus = 0, creditCard_minus = 0;
+            for (Payment p : payments) {
+                int i = 0;
+                switch (p.getPaymentWay()) {
+
+                    case CONSTANT.CASH:
+                        if (p.getAmount() > 0)
+                            cash_plus += p.getAmount();
+                        else
+                            cash_minus += p.getAmount();
+                        break;
+                    case CONSTANT.CREDIT_CARD:
+                        if (p.getAmount() > 0)
+                            creditCard_plus += p.getAmount();
+                        else
+                            creditCard_minus += p.getAmount();
+                        break;
+                    case CONSTANT.CHECKS:
+                        if (p.getAmount() > 0)
+                            check_plus += p.getAmount();
+                        else
+                            check_minus += p.getAmount();
+                        break;
+                }
+                expectedTotal+=p.getAmount();
+            }
 
 
 //with Currency
-        if (SETTINGS.enableCurrencies) {
+            if (SETTINGS.enableCurrencies) {
 
-            for (CurrencyOperation cp : currencyOperationList) {
-                switch (cp.getCurrency_type()) {
+                for (CurrencyOperation cp : currencyOperationList) {
+                    switch (cp.getCurrency_type()) {
 
-                    case "ILS":
-                        if (cp.getAmount() > 0)
-                            sheqle_plus += cp.getAmount();
-                        break;
-                    case "USD":
-                        if (cp.getAmount() > 0)
-                            usd_plus += cp.getAmount();
-                        break;
-                    case "EUR":
-                        if (cp.getAmount() > 0)
-                            eur_plus += cp.getAmount();
+                        case "ILS":
+                            if (cp.getAmount() > 0)
+                                sheqle_plus += cp.getAmount();
+                            break;
+                        case "USD":
+                            if (cp.getAmount() > 0)
+                                usd_plus += cp.getAmount();
+                            break;
+                        case "EUR":
+                            if (cp.getAmount() > 0)
+                                eur_plus += cp.getAmount();
 
-                        break;
-                    case "GBP":
-                        if (cp.getAmount() > 0)
-                            gbp_plus += cp.getAmount();
-                        break;
+                            break;
+                        case "GBP":
+                            if (cp.getAmount() > 0)
+                                gbp_plus += cp.getAmount();
+                            break;
+                    }
                 }
-            }
-            for (CurrencyReturns cp : currencyReturnList) {
-                switch ((int) cp.getCurrency_type()) {
+                for (CurrencyReturns cp : currencyReturnList) {
+                    switch ((int) cp.getCurrency_type()) {
 
-                    case CONSTANT.Shekel:
-                        if (cp.getAmount() > 0)
-                            sheqle_minus += cp.getAmount();
-                        break;
-                    case CONSTANT.USD:
-                        if (cp.getAmount() > 0)
-                            usd_minus += cp.getAmount();
-                        break;
-                    case CONSTANT.EUR:
-                        if (cp.getAmount() > 0)
-                            eur_minus += cp.getAmount();
+                        case CONSTANT.Shekel:
+                            if (cp.getAmount() > 0)
+                                sheqle_minus += cp.getAmount();
+                            break;
+                        case CONSTANT.USD:
+                            if (cp.getAmount() > 0)
+                                usd_minus += cp.getAmount();
+                            break;
+                        case CONSTANT.EUR:
+                            if (cp.getAmount() > 0)
+                                eur_minus += cp.getAmount();
 
-                        break;
-                    case CONSTANT.GBP:
-                        if (cp.getAmount() > 0)
-                            gbp_minus += cp.getAmount();
-                        break;
-                }
-            }
-
-        }
-        //calculate receipt Amount
-        ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(ClosingReportActivity.this);
-        zReportDBAdapter.open();
-        PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(ClosingReportActivity.this);
-        posInvoiceDBAdapter.open();
-        ZReport zReport =null;
-        try {
-            if(zReportDBAdapter.getProfilesCount()==0){
-                List<PosInvoice>tempPosCashInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(-1,DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
-                List<PosInvoice>newPosInvoiceListCash =new ArrayList<>();
-                for(int i=0;i<tempPosCashInvoiceList.size();i++){
-                    if(tempPosCashInvoiceList.get(i).getLastZReportId()==opiningReport.getLastZReportID()){
-                        newPosInvoiceListCash.add(tempPosCashInvoiceList.get(i));
+                            break;
+                        case CONSTANT.GBP:
+                            if (cp.getAmount() > 0)
+                                gbp_minus += cp.getAmount();
+                            break;
                     }
                 }
 
-                for (int i=0;i<newPosInvoiceListCash.size();i++) {
-                    cashReceipt+=newPosInvoiceListCash.get(i).getAmount();
+            }
+            //calculate receipt Amount
+            ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(ClosingReportActivity.this);
+            zReportDBAdapter.open();
+            PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(ClosingReportActivity.this);
+            posInvoiceDBAdapter.open();
+            ZReport zReport =null;
+            try {
+                if(zReportDBAdapter.getProfilesCount()==0){
+                    List<PosInvoice>tempPosCashInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(-1,DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
+                    List<PosInvoice>newPosInvoiceListCash =new ArrayList<>();
+                    for(int i=0;i<tempPosCashInvoiceList.size();i++){
+                        if(tempPosCashInvoiceList.get(i).getLastZReportId()==opiningReport.getLastZReportID()){
+                            newPosInvoiceListCash.add(tempPosCashInvoiceList.get(i));
+                        }
+                    }
 
-                }
+                    for (int i=0;i<newPosInvoiceListCash.size();i++) {
+                        cashReceipt+=newPosInvoiceListCash.get(i).getAmount();
 
-                //checkReceipt
-                List<PosInvoice>tempPosCheckInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(-1,DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
-                List<PosInvoice>newPosInvoiceListCheck =new ArrayList<>();
-                for(int i=0;i<tempPosCheckInvoiceList.size();i++){
-                    if(tempPosCheckInvoiceList.get(i).getLastZReportId()==opiningReport.getLastZReportID()){
-                        newPosInvoiceListCheck.add(tempPosCheckInvoiceList.get(i));
+                    }
+
+                    //checkReceipt
+                    List<PosInvoice>tempPosCheckInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(-1,DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
+                    List<PosInvoice>newPosInvoiceListCheck =new ArrayList<>();
+                    for(int i=0;i<tempPosCheckInvoiceList.size();i++){
+                        if(tempPosCheckInvoiceList.get(i).getLastZReportId()==opiningReport.getLastZReportID()){
+                            newPosInvoiceListCheck.add(tempPosCheckInvoiceList.get(i));
+                        }
+                    }
+
+                    for (int i=0;i<newPosInvoiceListCheck.size();i++) {
+                        checkReceipt+=newPosInvoiceListCheck.get(i).getAmount();
+
+                    }
+                }else {
+                    zReport=zReportDBAdapter.getLastRow();
+                    List<PosInvoice>tempPosCashInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport.getzReportId(),DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
+                    List<PosInvoice>newPosInvoiceListCash =new ArrayList<>();
+                    for(int i=0;i<tempPosCashInvoiceList.size();i++){
+                        if(tempPosCashInvoiceList.get(i).getLastZReportId()==opiningReport.getLastZReportID()){
+                            newPosInvoiceListCash.add(tempPosCashInvoiceList.get(i));
+                        }
+                    }
+
+                    for (int i=0;i<newPosInvoiceListCash.size();i++) {
+                        cashReceipt+=newPosInvoiceListCash.get(i).getAmount();
+
+                    }
+
+                    List<PosInvoice>tempPosCheckInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport.getzReportId(),DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
+                    List<PosInvoice>newPosInvoiceListCheck =new ArrayList<>();
+                    for(int i=0;i<tempPosCheckInvoiceList.size();i++){
+                        if(tempPosCheckInvoiceList.get(i).getLastZReportId()==opiningReport.getLastZReportID()){
+                            newPosInvoiceListCheck.add(tempPosCheckInvoiceList.get(i));
+                        }
+                    }
+
+                    for (int i=0;i<newPosInvoiceListCheck.size();i++) {
+                        checkReceipt+=newPosInvoiceListCheck.get(i).getAmount();
+
                     }
                 }
 
-                for (int i=0;i<newPosInvoiceListCheck.size();i++) {
-                    checkReceipt+=newPosInvoiceListCheck.get(i).getAmount();
+            } catch (Exception e) {
 
+                e.printStackTrace();
+            }
+
+            expectedOpining=Double.parseDouble(Util.makePrice(opiningReport.getAmount()));
+            OpiningReportDetailsDBAdapter opiningReportDetailsDBAdapter = new OpiningReportDetailsDBAdapter(ClosingReportActivity.this);
+            opiningReportDetailsDBAdapter.open();
+            List<OpiningReportDetails>opiningReportDetailsList=opiningReportDetailsDBAdapter.getListOpiningReport(opiningReport.getOpiningReportId());
+            if(opiningReportDetailsList.size()>0) {
+                for (int i = 0; i < opiningReportDetailsList.size(); i++) {
+                    if (opiningReportDetailsList.get(i).getType() == 0) {
+                        expectedOpiningShekel+=opiningReportDetailsList.get(i).getAmount();
+                    } else if (opiningReportDetailsList.get(i).getType() == 1) {
+                        expectedOpiningUsd+=opiningReportDetailsList.get(i).getAmount();
+
+                    } else if (opiningReportDetailsList.get(i).getType() == 2) {
+                        expectedOpiningGbp+=opiningReportDetailsList.get(i).getAmount();
+
+                    } else if (opiningReportDetailsList.get(i).getType() == 3) {
+                        expectedOpiningEur+=opiningReportDetailsList.get(i).getAmount();
+
+                    }
                 }
+            }
+            expectedTotal+=cashReceipt;
+            expectedCheck=(check_plus-check_minus)+checkReceipt;
+            expectedCredit=creditCard_plus-creditCard_minus;
+            expectedShekel=sheqle_plus-sheqle_minus+expectedOpiningShekel+cashReceipt;
+            expectedUsd=usd_plus-usd_minus+expectedOpiningUsd;
+            expectedEur=eur_plus-eur_minus+expectedOpiningEur;
+            expectedGbp=gbp_plus-gbp_minus+expectedOpiningGbp;
+            checkExpectedValue.setText(Util.makePrice(expectedCheck));
+            creditExpectedValue.setText(Util.makePrice(expectedCredit));
+            if(SETTINGS.enableCurrencies){
+                shekelExpectedValue.setText(Util.makePrice(expectedShekel));
             }else {
-                zReport=zReportDBAdapter.getLastRow();
-                List<PosInvoice>tempPosCashInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport.getzReportId(),DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
-                List<PosInvoice>newPosInvoiceListCash =new ArrayList<>();
-                for(int i=0;i<tempPosCashInvoiceList.size();i++){
-                    if(tempPosCashInvoiceList.get(i).getLastZReportId()==opiningReport.getLastZReportID()){
-                        newPosInvoiceListCash.add(tempPosCashInvoiceList.get(i));
-                    }
-                }
+                expectedShekel=cash_plus+opiningReport.getAmount()-sheqle_plus;
+                shekelExpectedValue.setText(Util.makePrice(expectedShekel));
 
-                for (int i=0;i<newPosInvoiceListCash.size();i++) {
-                    cashReceipt+=newPosInvoiceListCash.get(i).getAmount();
-
-                }
-
-                List<PosInvoice>tempPosCheckInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport.getzReportId(),DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
-                List<PosInvoice>newPosInvoiceListCheck =new ArrayList<>();
-                for(int i=0;i<tempPosCheckInvoiceList.size();i++){
-                    if(tempPosCheckInvoiceList.get(i).getLastZReportId()==opiningReport.getLastZReportID()){
-                        newPosInvoiceListCheck.add(tempPosCheckInvoiceList.get(i));
-                    }
-                }
-
-                for (int i=0;i<newPosInvoiceListCheck.size();i++) {
-                    checkReceipt+=newPosInvoiceListCheck.get(i).getAmount();
-
-                }
             }
-
+            usdExpectedValue.setText(Util.makePrice(expectedUsd));
+            eurAExpectedValue.setText(Util.makePrice(expectedEur));
+            gbpExpectedValue.setText(Util.makePrice(expectedGbp));
         } catch (Exception e) {
-
+            Log.d("exceeeption",e.toString());
             e.printStackTrace();
+            sendLogFile();
         }
 
-        expectedOpining=Double.parseDouble(Util.makePrice(opiningReport.getAmount()));
-        OpiningReportDetailsDBAdapter opiningReportDetailsDBAdapter = new OpiningReportDetailsDBAdapter(ClosingReportActivity.this);
-        opiningReportDetailsDBAdapter.open();
-        List<OpiningReportDetails>opiningReportDetailsList=opiningReportDetailsDBAdapter.getListOpiningReport(opiningReport.getOpiningReportId());
-        if(opiningReportDetailsList.size()>0) {
-            for (int i = 0; i < opiningReportDetailsList.size(); i++) {
-                if (opiningReportDetailsList.get(i).getType() == 0) {
-                    expectedOpiningShekel+=opiningReportDetailsList.get(i).getAmount();
-                } else if (opiningReportDetailsList.get(i).getType() == 1) {
-                    expectedOpiningUsd+=opiningReportDetailsList.get(i).getAmount();
 
-                } else if (opiningReportDetailsList.get(i).getType() == 2) {
-                    expectedOpiningGbp+=opiningReportDetailsList.get(i).getAmount();
-
-                } else if (opiningReportDetailsList.get(i).getType() == 3) {
-                    expectedOpiningEur+=opiningReportDetailsList.get(i).getAmount();
-
-                }
-            }
-        }
-        expectedTotal+=cashReceipt;
-        expectedCheck=(check_plus-check_minus)+checkReceipt;
-        expectedCredit=creditCard_plus-creditCard_minus;
-        expectedShekel=sheqle_plus-sheqle_minus+expectedOpiningShekel+cashReceipt;
-        expectedUsd=usd_plus-usd_minus+expectedOpiningUsd;
-        expectedEur=eur_plus-eur_minus+expectedOpiningEur;
-        expectedGbp=gbp_plus-gbp_minus+expectedOpiningGbp;
-        checkExpectedValue.setText(Util.makePrice(expectedCheck));
-        creditExpectedValue.setText(Util.makePrice(expectedCredit));
-        if(SETTINGS.enableCurrencies){
-        shekelExpectedValue.setText(Util.makePrice(expectedShekel));
-        }else {
-            expectedShekel=cash_plus+opiningReport.getAmount()-sheqle_plus;
-            shekelExpectedValue.setText(Util.makePrice(expectedShekel));
-
-        }
-        usdExpectedValue.setText(Util.makePrice(expectedUsd));
-        eurAExpectedValue.setText(Util.makePrice(expectedEur));
-        gbpExpectedValue.setText(Util.makePrice(expectedGbp));
-
-    }
-  private void calculateMethodAmount() throws Exception {
+    }  private void calculateMethodAmount() throws Exception {
       if(!checkActualValue.getText().toString().equals("")){
           actualCheck= Double.parseDouble(checkActualValue.getText().toString());
       }

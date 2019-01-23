@@ -176,15 +176,17 @@ public class InvoiceImg {
 
         Block subTitle = new Block("\u200E " + context.getString(R.string.private_company) +
                 ": " + SETTINGS.companyID, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
-
-        if (sale.getCustomer_name() == null) {
-            customerName = context.getString(R.string.general_customer);
-        } else if (sale.getCustomer_name().equals("")) {
-            customerName = context.getString(R.string.general_customer);
-        } else {
-            customerName = sale.getCustomer_name();
-        }
-
+            if(sale.getCustomer()!=null) {
+                if (sale.getCustomer_name() == null) {
+                    customerName = context.getString(R.string.general_customer);
+                } else if (sale.getCustomer_name().equals("")) {
+                    customerName = context.getString(R.string.general_customer);
+                } else {
+                    customerName = sale.getCustomer_name();
+                }
+            }else {
+                customerName = context.getString(R.string.general_customer);
+            }
         Block third_part = new Block("\u200E " + context.getString(R.string.customer_name) +
                 ": " + customerName + "\n" + line, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
 

@@ -60,6 +60,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
+
 /**
  * Created by KARAM on 26/10/2016.
  * Editing by KARAM on 10/04/2017.
@@ -246,16 +248,33 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                 .setMessage(getString(R.string.print_copy_invoice))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
+
                                         if (checks.size() > 0){
-                                            Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                                            SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, checks);
-                                            startActivity(i);
+                                            try {
+                                                Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                                SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, checks);
+                                                startActivity(i);
+                                            }catch (Exception e){
+                                                Log.d("exception",sale.toString());
+
+                                                Log.d("exception",sale.toString());
+                                                sendLogFile();
+
+                                            }
+
                                             // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._EMPLOYEE, checks));
                                         }
                                         else{
-                                            Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                                            SETTINGS.copyInvoiceBitMap =invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, null);
-                                            startActivity(i);
+                                            try {
+                                                Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                                SETTINGS.copyInvoiceBitMap =invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, null);
+                                                startActivity(i);
+                                            }catch (Exception e){
+                                                Log.d("exception",sale.toString());
+                                                Log.d("exception",e.toString());
+                                                sendLogFile();
+                                            }
+
                                          // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._EMPLOYEE, null));
 
                                         }
