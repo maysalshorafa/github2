@@ -520,13 +520,6 @@ public class InvoiceImg {
             fourth_part.Left();
             blocks.add(fourth_part);
         }
-        if(SESSION._ORDERS.getCustomer().getCustomerType().equals(CustomerType.CREDIT)){
-            Block fourth_part = new Block("\u200E " + context.getString(R.string.customer_ledger) +
-                    ": " + SESSION._ORDERS.CustomerLedger + "\n" + line, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
-
-            fourth_part.Left();
-            blocks.add(fourth_part);
-        }
         Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getCreatedAt()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
         if(isCopy){
@@ -584,11 +577,11 @@ public class InvoiceImg {
         blocks.add(inum);
 
 
-        Block name = new Block("\u200E" + context.getString(R.string.product) + newLineL, 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+        Block name = new Block("\u200E" + context.getString(R.string.product) + newLineL, 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.35));
         Block counter = new Block("\u200E" + context.getString(R.string.qty) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
-        Block unitPrice = new Block("\u200E" + context.getString(R.string.price) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.2));
-        Block price = new Block("\u200E" + context.getString(R.string.total) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
-        Block discount = new Block("\u200E" +  "%" + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
+        Block unitPrice = new Block("\u200E" + context.getString(R.string.price) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
+        Block price = new Block("\u200E" + context.getString(R.string.total) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.2));
+        Block discount = new Block("\u200E" + "%" + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
 
         for (OrderDetails o : sale.getOrders()) {
             count += o.getQuantity();
@@ -674,13 +667,7 @@ public class InvoiceImg {
         cashierName.Left();
         blocks.add(cashierName);
         blocks.add(cashier);
-        if(SESSION._ORDERS.getCustomer().getCustomerType().equals(CustomerType.CREDIT)){
-            Block fourth_part = new Block("\u200E " + context.getString(R.string.customer_ledger) +
-                    ": " + SESSION._ORDERS.CustomerLedger + "\n" + line, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
 
-            fourth_part.Left();
-            blocks.add(fourth_part);
-        }
         Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getCreatedAt()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
 

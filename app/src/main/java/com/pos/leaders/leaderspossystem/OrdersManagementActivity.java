@@ -331,19 +331,37 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
                         saleDBAdapter.open();
-                        saleDBAdapter.deleteEntry(sale.getOrderId());
-                        if (checks.size() > 0)
-                            print(invoiceImg.cancelingInvoice(sale, false, checks));
-                        else
-                            print(invoiceImg.cancelingInvoice(sale, false, null));
                         sale.setPayment(new Payment(payments.get(0)));
-                        long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(),sale.getCartDiscount(),sale.getNumberDiscount());
-
-                        saleDBAdapter.close();
+                        long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(),sale.getCartDiscount(),sale.getNumberDiscount(),sale.getOrderId());
+                        Order order = saleDBAdapter.getOrderById(sID);
+                        sale.setCancellingOrderId(sID);
+                        saleDBAdapter.updateEntry(sale);
                         PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(OrdersManagementActivity.this);
                         paymentDBAdapter1.open();
-                        paymentDBAdapter1.insertEntry(sale.getPayment().getPaymentWay(), sale.getTotalPrice() * -1, sID,sale.getOrderKey());
+                        paymentDBAdapter1.insertEntry(sale.getPayment().getPaymentWay(), sale.getTotalPrice() * -1, sID,order.getOrderKey());
                         paymentDBAdapter1.close();
+                        if (checks.size() > 0)
+                        try {
+                            Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                            SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(sale,false,checks);
+                            startActivity(i);
+                        }catch (Exception e){
+                            Log.d("exception",sale.toString());
+                            Log.d("exception",e.toString());
+                            sendLogFile();
+                        }
+                        else
+                        try {
+                            Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                            SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(sale,false,null);
+                            startActivity(i);
+                        }catch (Exception e){
+                            Log.d("exception",sale.toString());
+                            Log.d("exception",e.toString());
+                            sendLogFile();
+                        }
+
+
                         //// TODO: 19/01/2017 cancel this sale and print return note and mony back by the payment way
                     }
                 });

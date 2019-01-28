@@ -236,6 +236,7 @@
     <string name="credit_invoice_doc">Credit Invoice</string>
     <string name="create_credit_invoice_doc">Create Credit Invoice</string>
     <string name="view_credit_invoice_doc">View Credit Invoice</string>
+    <string name="cancel_invoice_id">CID</string>
 
 
     <!--Credit Card-->

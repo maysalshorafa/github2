@@ -39,9 +39,10 @@ public class OrderDBAdapter {
 	protected static final String ORDER_COLUMN_ORDER_DISCOUNT = "cartDiscount";
 	protected static final String ORDER_COLUMN_ORDER_KEY = "key";
 	protected static final String ORDER_COLUMN_ORDER_NUMBER_DISCOUNT = "numberDiscount";
+	protected static final String ORDER_COLUMN_CANCELING_ORDER_ID = "cancellingOrderId";
 
 	public static final String DATABASE_CREATE = "CREATE TABLE _Order( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byEmployee` INTEGER, `order_date` TIMESTAMP DEFAULT current_timestamp, " +
-			"`replacementNote` INTEGER DEFAULT 0, `status` INTEGER DEFAULT 0, total_price REAL, total_paid_amount REAL, customerId  INTEGER DEFAULT 0 ,customer_name  TEXT,cartDiscount REAL DEFAULT 0.0, key  TEXT , numberDiscount REAL DEFAULT 0.0," +
+			"`replacementNote` INTEGER DEFAULT 0, `status` INTEGER DEFAULT 0, total_price REAL, total_paid_amount REAL, customerId  INTEGER DEFAULT 0 ,customer_name  TEXT,cartDiscount REAL DEFAULT 0.0, key  TEXT , numberDiscount REAL DEFAULT 0.0, cancellingOrderId INTEGER DEFAULT 0," +
 			"FOREIGN KEY(`byEmployee`) REFERENCES `employees.id`)";
 
 	// Variable to hold the database instance
@@ -71,9 +72,9 @@ public class OrderDBAdapter {
 
 
 
-	public long insertEntry(long byUser, Timestamp saleDate, int replacementNote, boolean canceled, double totalPrice, double totalPaid, long custmer_id, String custmer_name,double cartDiscount,double numberDiscount) {
+	public long insertEntry(long byUser, Timestamp saleDate, int replacementNote, boolean canceled, double totalPrice, double totalPaid, long custmer_id, String custmer_name,double cartDiscount,double numberDiscount,long cancellingOrderId) {
 		Generators key = new Generators().setLength(6);
-		Order order = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name,cartDiscount,key.generate(),numberDiscount);
+		Order order = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name,cartDiscount,key.generate(),numberDiscount,cancellingOrderId);
 
 		sendToBroker(MessageType.ADD_ORDER, order, this.context);
 
@@ -101,35 +102,36 @@ public class OrderDBAdapter {
 
 	public long insertEntry(Order order , long _custmer_id, String custmer_name,boolean invoiceStatus) {
 		if(!invoiceStatus){
-		return insertEntry(order.getByUser(), order.getCreatedAt(), order.getReplacementNote(), order.isStatus(), order.getTotalPrice(),order.getTotalPaidAmount(),_custmer_id,custmer_name,order.getCartDiscount(),order.getNumberDiscount());
-	}
-	return invoiceInsertEntry(order.getByUser(), order.getCreatedAt(), order.getReplacementNote(), order.isStatus(), order.getTotalPrice(),order.getTotalPaidAmount(),_custmer_id,custmer_name,order.getCartDiscount(),order
-	.getNumberDiscount());
+			return insertEntry(order.getByUser(), order.getCreatedAt(), order.getReplacementNote(), order.isStatus(), order.getTotalPrice(),order.getTotalPaidAmount(),_custmer_id,custmer_name,order.getCartDiscount(),order.getNumberDiscount(),order.getCancellingOrderId());
+		}
+		return invoiceInsertEntry(order.getByUser(), order.getCreatedAt(), order.getReplacementNote(), order.isStatus(), order.getTotalPrice(),order.getTotalPaidAmount(),_custmer_id,custmer_name,order.getCartDiscount(),order
+				.getNumberDiscount());
 
 	}
 	public long insertEntry(Order order){
-        ContentValues val = new ContentValues();
-        val.put(ORDER_COLUMN_ID,order.getOrderId());
-        //Assign values for each row.
-        val.put(ORDER_COLUMN_BYUSER, order.getByUser());
-        val.put(ORDER_COLUMN_REPLACEMENTNOTE, order.getReplacementNote());
-        val.put(ORDER_COLUMN_STATUS, order.isStatus()?1:0);
-        val.put(ORDER_COLUMN_TOTALPRICE, order.getTotalPrice());
-        val.put(ORDER_COLUMN_TOTALPAID, order.getTotalPaidAmount());
-        val.put(ORDER_COLUMN_CUSTOMER_ID, order.getCustomerId());
-        val.put(ORDER_COLUMN_CUSTOMER_NAME, order.getCustomer_name());
+		ContentValues val = new ContentValues();
+		val.put(ORDER_COLUMN_ID,order.getOrderId());
+		//Assign values for each row.
+		val.put(ORDER_COLUMN_BYUSER, order.getByUser());
+		val.put(ORDER_COLUMN_REPLACEMENTNOTE, order.getReplacementNote());
+		val.put(ORDER_COLUMN_STATUS, order.isStatus()?1:0);
+		val.put(ORDER_COLUMN_TOTALPRICE, order.getTotalPrice());
+		val.put(ORDER_COLUMN_TOTALPAID, order.getTotalPaidAmount());
+		val.put(ORDER_COLUMN_CUSTOMER_ID, order.getCustomerId());
+		val.put(ORDER_COLUMN_CUSTOMER_NAME, order.getCustomer_name());
 		val.put(ORDER_COLUMN_ORDER_DISCOUNT,order.getCartDiscount());
 		val.put(ORDER_COLUMN_ORDER_KEY,order.getOrderKey());
 		val.put(ORDER_COLUMN_ORDER_NUMBER_DISCOUNT,order.getNumberDiscount());
+		val.put(ORDER_COLUMN_CANCELING_ORDER_ID,order.getCancellingOrderId());
 
 
 		try {
-            return db.insert(ORDER_TABLE_NAME, null, val);
-        } catch (SQLException ex) {
-            Log.e("Order DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
-            return 0;
-        }
-    }
+			return db.insert(ORDER_TABLE_NAME, null, val);
+		} catch (SQLException ex) {
+			Log.e("Order DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
+			return 0;
+		}
+	}
 
 	public Order getOrderById(long id) {
 		Order order = null;
@@ -147,8 +149,8 @@ public class OrderDBAdapter {
 	}
 
 	public long deleteEntry(long id) {
-        OrderDBAdapter orderDBAdapter=new OrderDBAdapter(context);
-        orderDBAdapter.open();
+		OrderDBAdapter orderDBAdapter=new OrderDBAdapter(context);
+		orderDBAdapter.open();
 		// Define the updated row content.
 		ContentValues updatedValues = new ContentValues();
 		// Assign values for each row.
@@ -156,8 +158,8 @@ public class OrderDBAdapter {
 
 		String where = ORDER_COLUMN_ID + " = ?";
 		try {
-			 db.update(ORDER_TABLE_NAME, updatedValues, where, new String[]{id + ""});
-            Order order = orderDBAdapter.getOrderById(id);
+			db.update(ORDER_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+			Order order = orderDBAdapter.getOrderById(id);
 			sendToBroker(MessageType.DELETE_ORDER, order, this.context);
 			return 1;
 		} catch (SQLException ex) {
@@ -176,8 +178,15 @@ public class OrderDBAdapter {
 		val.put(ORDER_COLUMN_ORDER_DISCOUNT,sale.getCartDiscount());
 		val.put(ORDER_COLUMN_ORDER_KEY,sale.getOrderKey());
 		val.put(ORDER_COLUMN_ORDER_NUMBER_DISCOUNT,sale.getNumberDiscount());
+		val.put(ORDER_COLUMN_CANCELING_ORDER_ID,sale.getCancellingOrderId());
+		val.put(ORDER_COLUMN_ORDERDATE, String.valueOf(new Timestamp(System.currentTimeMillis())));
 		String where = ORDER_COLUMN_ID + " = ?";
 		db.update(ORDER_TABLE_NAME, val, where, new String[]{sale.getOrderId() + ""});
+		OrderDBAdapter orderDBAdapter =new OrderDBAdapter(context);
+		orderDBAdapter.open();
+		Order a= orderDBAdapter.getOrderById(sale.getOrderId());
+		a.setCancellingOrderId(sale.getCancellingOrderId());
+		sendToBroker(MessageType.UPDATE_ORDER,a,context);
 	}
 
 	public List<Order> getAllSales() {
@@ -217,19 +226,19 @@ public class OrderDBAdapter {
 
 		return saleList;
 	}
-    public List<Order> getBetweenTwoSalesForClosingReport(long from, long to){
-        List<Order> saleList = new ArrayList<Order>();
-        Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +" <= "+to+" and "+ ORDER_COLUMN_ID +" > "+from+" and id like '%"+SESSION.POS_ID_NUMBER+"%'",null);
-        //Cursor cursor = db.rawQuery("select * from "+ORDER_DETAILS_TABLE_NAME+" where "+ORDER_COLUMN_ORDERDATE+" <= "+to+" and "+ORDER_COLUMN_ORDERDATE +" >= "+from,null);
-        cursor.moveToFirst();
+	public List<Order> getBetweenTwoSalesForClosingReport(long from, long to){
+		List<Order> saleList = new ArrayList<Order>();
+		Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +" <= "+to+" and "+ ORDER_COLUMN_ID +" > "+from+" and id like '%"+SESSION.POS_ID_NUMBER+"%'",null);
+		//Cursor cursor = db.rawQuery("select * from "+ORDER_DETAILS_TABLE_NAME+" where "+ORDER_COLUMN_ORDERDATE+" <= "+to+" and "+ORDER_COLUMN_ORDERDATE +" >= "+from,null);
+		cursor.moveToFirst();
 
-        while (!cursor.isAfterLast()) {
-            saleList.add(makeSale(cursor));
-            cursor.moveToNext();
-        }
+		while (!cursor.isAfterLast()) {
+			saleList.add(makeSale(cursor));
+			cursor.moveToNext();
+		}
 
-        return saleList;
-    }
+		return saleList;
+	}
 
 	public List<Order> getBetweenTwoDates(long from, long to){
 		List<Order> orderList = new ArrayList<Order>();
@@ -245,6 +254,7 @@ public class OrderDBAdapter {
 		return orderList;
 	}
 
+
 	public List<Order> search(String hint,int from,int count){
 		List<Order> orderList = new ArrayList<Order>();
 		String price = "";
@@ -256,7 +266,7 @@ public class OrderDBAdapter {
 		Cursor cursor=null;
 
 		if(price!="") {
-			 cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_CUSTOMER_NAME + " like '%" +
+			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_CUSTOMER_NAME + " like '%" +
 					hint + "%' OR " + ORDER_COLUMN_ORDERDATE + " like '%" + hint + "%' OR " + ORDER_COLUMN_ID + " like '%" + hint + " %' OR " + price + " like '%" + hint + "%'" + " order by id desc limit " + from + "," + count, null);
 		}else {
 			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_CUSTOMER_NAME + " like '%" +
@@ -270,11 +280,11 @@ public class OrderDBAdapter {
 		}
 		return orderList;
 	}
+
 	public List<Order> lazyLoad(int offset,int count){
 		List<Order> orderList = new ArrayList<Order>();
 
-		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " +
-				ORDER_COLUMN_STATUS + " < 1" +" and id like '%"+SESSION.POS_ID_NUMBER+"%'"+
+		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " +" id like '%"+SESSION.POS_ID_NUMBER+"%'"+
 				" order by id desc limit " + offset + "," + count, null);
 		cursor.moveToFirst();
 
@@ -337,7 +347,7 @@ public class OrderDBAdapter {
 					cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_TOTALPRICE)),
 					cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_TOTALPAID)),
 					Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_CUSTOMER_ID))),cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_CUSTOMER_NAME)),cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_ORDER_DISCOUNT)),
-					cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_ORDER_KEY)),cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_ORDER_NUMBER_DISCOUNT)));
+					cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_ORDER_KEY)),cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_ORDER_NUMBER_DISCOUNT)),Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_CANCELING_ORDER_ID))));
 		}
 		catch (Exception ex){
 			return new Order(Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_ID))),
@@ -348,7 +358,8 @@ public class OrderDBAdapter {
 					cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_TOTALPRICE)),
 					cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_TOTALPAID)),
 					0,"",cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_ORDER_DISCOUNT)),
-					cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_ORDER_KEY)),cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_ORDER_NUMBER_DISCOUNT)));
+					cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_ORDER_KEY)),cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_ORDER_NUMBER_DISCOUNT)),
+					Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_CANCELING_ORDER_ID))));
 		}
 
 	}
@@ -362,4 +373,10 @@ public class OrderDBAdapter {
 				+ " add column " + columnName + " TEXT  DEFAULT '' ;";
 		return dbc;
 	}
+	public static String addColumnLong(String columnName) {
+		String dbc = "ALTER TABLE " + ORDER_TABLE_NAME
+				+ " add column " + columnName + " TEXT  DEFAULT '' ;";
+		return dbc;
+	}
 }
+

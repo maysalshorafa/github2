@@ -75,7 +75,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -327,6 +327,11 @@ public class DbHelper extends SQLiteOpenHelper {
                         SETTINGS.BufferEmail=true;
                     }
                     break;
+                case 3:
+                    db.execSQL(OrderDBAdapter.addColumnLong("cancellingOrderId"));
+                    BufferDbEmail.sendLogFile();
+                    break;
+
 
             }
         } catch (SQLException e) {

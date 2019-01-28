@@ -42,10 +42,26 @@ public class Order {
 	// region Constructors
 	public double totalSaved;
 	public static double CustomerLedger;
+	public long cancellingOrderId;
 
 	public Order() {
 	}
 
+	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name,double cartDiscount , String orderKey,double numberDiscount,long cancellingOrderId) {
+		this.orderId = orderId;
+		this.byUser = byUser;
+		this.createdAt = createdAt;
+		this.replacementNote = replacementNote;
+		this.status = status;
+		this.totalPrice = totalPrice;
+		this.totalPaidAmount = totalPaidAmount;
+		this.customerId = customerId;
+		this.customer_name = customer_name;
+		this.cartDiscount=cartDiscount;
+		this.orderKey = orderKey;
+		this.numberDiscount=numberDiscount;
+		this.cancellingOrderId=cancellingOrderId;
+	}
 	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name,double cartDiscount , String orderKey,double numberDiscount) {
 		this.orderId = orderId;
 		this.byUser = byUser;
@@ -101,7 +117,7 @@ public class Order {
 	}
 
 	public static Order newInstance(Order s) {
-		return new Order(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name(),s.getCartDiscount(),s.getOrderKey(),s.getNumberDiscount());
+		return new Order(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name(),s.getCartDiscount(),s.getOrderKey(),s.getNumberDiscount(),s.getCancellingOrderId());
 	}
 
 	@JsonIgnore
@@ -180,7 +196,11 @@ public class Order {
 	public double getNumberDiscount() {
 		return numberDiscount;
 	}
-//endregion
+
+	public long getCancellingOrderId() {
+		return cancellingOrderId;
+	}
+	//endregion
 
 	//region Setter
 
@@ -254,7 +274,11 @@ public class Order {
 	public void setNumberDiscount(double numberDiscount) {
 		this.numberDiscount = numberDiscount;
 	}
-//endregion
+
+	public void setCancellingOrderId(long cancellingOrderId) {
+		this.cancellingOrderId = cancellingOrderId;
+	}
+	//endregion
 
 	@Override
 	public String toString() {
@@ -272,6 +296,7 @@ public class Order {
 				", orderKey='" + orderKey + '\'' +
 				'\'' +
 				", numberDiscount='" + numberDiscount + '\'' +
+						", cancellingOrderId=" + cancellingOrderId  +
 				'}';
 	}
 
@@ -355,6 +380,6 @@ public class Order {
 	}
 	public  static  double calculateNumberDiscount(double oldTotalPrice,double saleTotalPrice){
 		double discount = (1 - (saleTotalPrice / oldTotalPrice)) * 100;
-return discount;
+		return discount;
 	}
 }

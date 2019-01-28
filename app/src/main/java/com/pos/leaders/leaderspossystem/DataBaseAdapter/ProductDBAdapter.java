@@ -280,7 +280,6 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_WITHTAX, product.isWithTax());
         val.put(PRODUCTS_COLUMN_CATEGORYID, product.getCategoryId());
         val.put(PRODUCTS_COLUMN_BYUSER, product.getByEmployee());
-        val.put(PRODUCTS_COLUMN_BYUSER, product.getByEmployee());
         val.put(PRODUCTS_COLUMN_SKU, product.getSku());
         val.put(PRODUCTS_COLUMN_STATUS, product.getStatus().getValue());
         val.put(PRODUCTS_COLUMN_DISPLAY_NAME, product.getDisplayName());

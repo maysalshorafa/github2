@@ -1230,8 +1230,10 @@ public class SyncMessage extends Service {
                 break;
             case MessageType.UPDATE_ORDER:
                 Order order=null;
-                order=objectMapper.readValue(msgData, Order.class);
-                res = messageTransmit.authPut(ApiURL.ORDER, jsonObject.getString(MessageKey.Data), token,order.getOrderId());
+                JSONObject newOrderJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                newOrderJson.remove("createdAt");
+                order=objectMapper.readValue(newOrderJson.toString(), Order.class);
+                res = messageTransmit.authPut(ApiURL.ORDER, newOrderJson.toString(), token,order.getOrderId());
                 break;
             case MessageType.DELETE_ORDER:
                 JSONObject newDeleteOrderJson = new JSONObject(jsonObject.getString(MessageKey.Data));

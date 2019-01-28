@@ -69,6 +69,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			holder.btReturn = (Button) convertView.findViewById(R.id.listSaleManagement_BTReturn);
 			holder.btView = (Button) convertView.findViewById(R.id.listSaleManagement_BTView);
 			holder.tvDiscount = (TextView) convertView.findViewById(R.id.listSaleManagement_TVDiscount);
+			holder.cancelingOrderId = (TextView) convertView.findViewById(R.id.listSaleManagement_TVCancelOrderId);
 
 			convertView.setTag(holder);
 		} else {
@@ -91,7 +92,12 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		} else{
 			holder.tvCustomerName.setText(context.getString(R.string.general_customer));
 		}
-
+		if(order.getCancellingOrderId()>0){
+			holder.cancelingOrderId.setText(order.getCancellingOrderId()+"");
+		}
+		else {
+			holder.cancelingOrderId.setText("");
+		}
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		holder.tvDate.setText(String.format(new Locale("en"),format.format(order.getCreatedAt())));
 
@@ -114,7 +120,8 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			convertView.setBackground(context.getResources().getDrawable(R.color.sale_bg));
 		}
 		}else {
-				double price;
+            holder.cancelingOrderId.setText("");
+            double price;
 				BoInvoice boInvoice = (BoInvoice)salesList.get(position);;
 				JSONObject doc = boInvoice.getDocumentsData();
 				holder.tvID.setText(boInvoice.getDocNum() );
@@ -160,5 +167,6 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		private Button btReturn;
 		private Button btView;
 		private TextView tvDiscount;
+		private TextView cancelingOrderId;
 	}
 }
