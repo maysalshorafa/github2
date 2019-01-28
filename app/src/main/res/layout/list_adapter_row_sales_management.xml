@@ -19,20 +19,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_weight="1"
+            android:layout_weight=".90"
             android:maxLines="1"
             android:text="ID"
             android:textColor="@color/Gray"
             android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/listSaleManagement_TVNumberOfItems"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:textColor="@color/Gray"
-            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/listSaleManagement_TVCustomerName"

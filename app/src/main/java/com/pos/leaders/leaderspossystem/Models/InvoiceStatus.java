@@ -11,6 +11,7 @@ public enum InvoiceStatus{
     PARTIALLY_PAID("partially_paid")
     ,PAID("paid"),
     UNPAID("unpaid"),
+    CANCELED("canceled"),
     OVERDUE("overdue");
     InvoiceStatus(final String value) {
         this.value = value;

@@ -11,6 +11,8 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.Log;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Models.Employee;
@@ -22,6 +24,10 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -176,17 +182,36 @@ public class InvoiceImg {
 
         Block subTitle = new Block("\u200E " + context.getString(R.string.private_company) +
                 ": " + SETTINGS.companyID, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
-            if(sale.getCustomer()!=null) {
-                if (sale.getCustomer_name() == null) {
-                    customerName = context.getString(R.string.general_customer);
-                } else if (sale.getCustomer_name().equals("")) {
-                    customerName = context.getString(R.string.general_customer);
-                } else {
-                    customerName = sale.getCustomer_name();
-                }
-            }else {
+        if(sale.getCustomer()!=null) {
+            if (sale.getCustomer_name() == null) {
                 customerName = context.getString(R.string.general_customer);
+            } else if (sale.getCustomer_name().equals("")) {
+                customerName = context.getString(R.string.general_customer);
+            } else {
+                customerName = sale.getCustomer_name();
             }
+        }else {
+            customerName = context.getString(R.string.general_customer);
+        }
+        Block third_part = new Block("\u200E " + context.getString(R.string.customer_name) +
+                ": " + customerName + "\n" + line, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+
+        third_part.Left();
+        subTitle.Left();
+        blocks.add(Title);
+        blocks.add(subTitle);
+        blocks.add(third_part);
+        return blocks;
+    }
+    private List<Block> HeadCopyInvoice(String customerName) {
+        List<Block> blocks = new ArrayList<Block>();
+
+        Block Title = new Block("\u200E" + SETTINGS.companyName, 38.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Title.Left().Bold();
+
+        Block subTitle = new Block("\u200E " + context.getString(R.string.private_company) +
+                ": " + SETTINGS.companyID, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+
         Block third_part = new Block("\u200E " + context.getString(R.string.customer_name) +
                 ": " + customerName + "\n" + line, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
 
@@ -680,9 +705,9 @@ public class InvoiceImg {
 
         Block name = new Block("\u200E" + context.getString(R.string.product) + newLineL, 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.35));
         Block counter = new Block("\u200E" + context.getString(R.string.qty) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
-        Block unitPrice = new Block("\u200E" + context.getString(R.string.price) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
-        Block price = new Block("\u200E" + context.getString(R.string.total) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.2));
-        Block discount = new Block("\u200E" + "%" + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
+        //Block unitPrice = new Block("\u200E" + context.getString(R.string.price) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
+    //    Block price = new Block("\u200E" + context.getString(R.string.total) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.2));
+      //  Block discount = new Block("\u200E" + "%" + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
 
         for (OrderDetails o : sale.getOrders()) {
             count=o.getQuantity();
@@ -693,39 +718,39 @@ public class InvoiceImg {
                 cut = o.getProduct().getDisplayName().length();
             name.text += (o.getProduct().getDisplayName().substring(0, cut) + newLineL);
             counter.text += o.getQuantity() + "\n";
-            unitPrice.text += String.format(new Locale("en"), "%.2f", o.getUnitPrice()) + "\n";
-            price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
+          //  unitPrice.text += String.format(new Locale("en"), "%.2f", o.getUnitPrice()) + "\n";
+          //  price.text += String.format(new Locale("en"), "%.2f", o.getItemTotalPrice()) + "\n";
         }
-        blocks.add(discount.Left());
-        blocks.add(price.Left());
-        blocks.add(unitPrice.Left());
+      //  blocks.add(discount.Left());
+      //  blocks.add(price.Left());
+      //  blocks.add(unitPrice.Left());
         blocks.add(counter.Left());
         name.Left();
         blocks.add(name);
         Block lineR = new Block("\u200E" + line, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         Block productCountText = new Block("\u200E" + context.getString(R.string.product_quantity), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block productCount = new Block("\u200E" + String.valueOf(count), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
-        Block toPidText = new Block("\u200E" + context.getString(R.string.total_price),40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
-        Block toPid = new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+      //  Block toPidText = new Block("\u200E" + context.getString(R.string.total_price),40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+      //  Block toPid = new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         productCount.Left();
         productCountText.Left();
-        toPid.Left();
-        toPidText.Left();
-        toPid.Bold();
-        toPidText.Bold();
+     //   toPid.Left();
+     //   toPidText.Left();
+     //   toPid.Bold();
+     //   toPidText.Bold();
         blocks.add(lineR);
         blocks.add(productCount);
         blocks.add(productCountText);
         blocks.add(clear.Left());
-        blocks.add(toPid);
-        blocks.add(toPidText);
-        blocks.add(clear.Left());
-        Block addsTax = new Block("\u200E" + context.getString(R.string.tax) + ": "+Util.makePrice(SETTINGS.tax)+ "%" , 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
-        double noTax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
-        Block addsTaxValue = new Block(Util.makePrice(noTax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
-        blocks.add(addsTaxValue.Left());
-        blocks.add(addsTax.Left());
-        blocks.add(clear.Left());
+       // blocks.add(toPid);
+      //  blocks.add(toPidText);
+    //    blocks.add(clear.Left());
+       // Block addsTax = new Block("\u200E" + context.getString(R.string.tax) + ": "+Util.makePrice(SETTINGS.tax)+ "%" , 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+      //  double noTax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
+    //    Block addsTaxValue = new Block(Util.makePrice(noTax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+    //    blocks.add(addsTaxValue.Left());
+    //    blocks.add(addsTax.Left());
+     //   blocks.add(clear.Left());
         blocks.add(lineR.Left());
 
         Block cashier = new Block("\u200e" + context.getString(R.string.cashier)+ " " , 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
@@ -735,13 +760,14 @@ public class InvoiceImg {
         cashierName.Left();
         blocks.add(cashierName);
         blocks.add(cashier);
-        if(SESSION._ORDERS.getCustomer().getCustomerType().equals(CustomerType.CREDIT)){
+
+      /*  if(sale.getCustomer().getCustomerType().equals(CustomerType.CREDIT)){
             Block fourth_part = new Block("\u200E " + context.getString(R.string.customer_ledger) +
                     ": " + SESSION._ORDERS.CustomerLedger + "\n" + line, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
 
             fourth_part.Left();
             blocks.add(fourth_part);
-        }
+        }*/
         Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getCreatedAt()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
 
@@ -1153,6 +1179,197 @@ public class InvoiceImg {
 
         Block thanks = new Block(SETTINGS.returnNote, 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(thanks.Left());
+
+        return make(blocks);
+    }
+
+    public Bitmap copyInvoice(BoInvoice boInvoice) throws JSONException {
+        JSONObject documentsData = boInvoice.getDocumentsData();
+        JSONObject customerJson= documentsData.getJSONObject("customer");
+        String invoiceNum= boInvoice.getDocNum();
+        JSONArray cartDetailsList = documentsData.getJSONArray("cartDetailsList");
+        int count =0;
+        List<Block> blocks = new ArrayList<Block>();
+        blocks.addAll(HeadCopyInvoice(customerJson.getString("firstName")));
+        Block lineR = new Block("\u200E" + line + "\u200E", 30.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
+        String status=context.getString(R.string.copy_invoice);
+        Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block inum = new Block("\u200E"+ context.getString(R.string.invoice)+": " +invoiceNum
+                , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        blocks.add(bStatus);
+        blocks.add(inum);
+        blocks.add(lineR);
+        Block name = new Block("\u200E" + context.getString(R.string.product) + newLineL, 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.35));
+        Block counter = new Block("\u200E" + context.getString(R.string.qty) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
+        Block unitPrice = new Block("\u200E" + context.getString(R.string.price) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
+        Block price = new Block("\u200E" + context.getString(R.string.total) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.2));
+        Block discount = new Block("\u200E" + "%" + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
+
+        double SaleOriginalityPrice = 0, saleTotalPrice = 0;
+        double totalSaved = 0.0;
+        for (int a=0;a<cartDetailsList.length();a++) {
+            JSONObject o = cartDetailsList.getJSONObject(a);
+            count+=o.getInt("quantity");
+            int cut = 11;
+            if (o.getString("name").length() < cut)
+                cut = o.getString("name").length();
+            name.text += (o.getString("name").substring(0, cut) + newLineL);
+            counter.text += o.getInt("quantity") + "\n";
+            unitPrice.text +=String.format(new Locale("en"), "%.2f", o.getDouble("unitPrice")) + "\n";
+            price.text += String.format(new Locale("en"), "%.2f",(o.getDouble("unitPrice")*o.getInt("quantity"))-(o.getDouble("unitPrice")*o.getInt("quantity")*o.getDouble("discount")/100)) + "\n";
+            discount.text += String.format(new Locale("en"), "%.2f", o.getDouble("discount")) + "\n";
+
+            SaleOriginalityPrice +=o.getDouble("unitPrice")*o.getInt("quantity") ;
+            saleTotalPrice += o.getDouble("unitPrice")*o.getInt("quantity")-o.getDouble("unitPrice")*o.getInt("quantity")*o.getDouble("discount")/100;
+        }
+        totalSaved = (SaleOriginalityPrice - saleTotalPrice);
+        blocks.add(discount.Left());
+        blocks.add(price.Left());
+        blocks.add(unitPrice.Left());
+        blocks.add(counter.Left());
+        //name.text = String.format(new Locale("he"), name.text);
+        name.Left();
+        blocks.add(name);
+        Block productCountText = new Block("\u200E" + context.getString(R.string.product_quantity), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block productCount = new Block("\u200E" + String.valueOf(count), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block toPidText = new Block("\u200E" + context.getString(R.string.total_price),25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block discountText = new Block("\u200E" + context.getString(R.string.discount), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+
+
+        Block toPidTextBeforeDiscount = new Block("\u200E" + context.getString(R.string.price_before_discount),40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block toPid = new Block(String.format(new Locale("en"), "%.2f", saleTotalPrice), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block discountAmount = new Block("\u200E" + String.valueOf(documentsData.getDouble("cartDiscount"))+ "%", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+
+        Block toPidBeforeDiscount= new Block(String.format(new Locale("en"), "%.2f", saleTotalPrice+(documentsData.getDouble("cartDiscount")/100)*saleTotalPrice), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        productCount.Bold();
+        productCountText.Bold();
+        productCount.Left();
+        productCountText.Left();
+        toPid.Left();
+        toPidText.Left();
+        discountText.Left();
+        discountAmount.Left();
+        toPidTextBeforeDiscount.Left();
+        toPidBeforeDiscount.Left();
+        toPid.Bold();
+        toPidText.Bold();
+        blocks.add(lineR);
+        blocks.add(productCount);
+        blocks.add(productCountText);
+        blocks.add(clear.Left());
+        blocks.add(toPid);
+        blocks.add(toPidText);
+        blocks.add(clear.Left());
+        if(documentsData.getDouble("cartDiscount")>0) {
+            blocks.add(discountAmount);
+            blocks.add(discountText);
+            blocks.add(clear.Left());
+            blocks.add(toPidBeforeDiscount);
+            blocks.add(toPidTextBeforeDiscount);
+            blocks.add(clear.Left());
+        }
+        Block addsTax = new Block("\u200E" + context.getString(R.string.tax) + ": "+Util.makePrice(SETTINGS.tax)+"%"  , 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        double noTax = saleTotalPrice / (1 + (SETTINGS.tax / 100));
+        Block addsTaxValue = new Block(Util.makePrice(noTax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        // Block numTax = new Block("\u200E" + String.format(new Locale("en"), "\u200E%.2f\n\u200E%.2f\n\u200E%.2f", noTax * (SETTINGS.tax / 100), 0.0f), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        //blocks.add(numTax.Left());
+        blocks.add(addsTaxValue.Left().Bold());
+        blocks.add(addsTax.Left().Bold());
+        blocks.add(clear.Left());
+        //pid and price
+        blocks.add(clear.Left());
+        blocks.add(lineR.Left());
+        Block cashier = new Block("\u200e" + context.getString(R.string.cashier)+ " " , 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+        EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
+        employeeDBAdapter.open();
+        Employee employee = employeeDBAdapter.getEmployeeByID( documentsData.getJSONObject("user").getLong("employeeId"));
+        Block cashierName = new Block("\u200E" +employee.getFirstName() , 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+        cashier.Left();
+        cashierName.Left();
+        blocks.add(cashierName);
+        blocks.add(cashier);
+        Block customerGeneralLedgerView = new Block("\u200E" + context.getString(R.string.customer_ledger)+ ":"+Util.makePrice(documentsData.getDouble("customerGeneralLedger"))+""+ "\n"+ line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        blocks.add(customerGeneralLedgerView);
+        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(documentsData.getLong("date")), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        blocks.add(date.Left());
+
+            Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            blocks.add(bCopyDate.Left());
+
+        if ((int) totalSaved != 0) {
+            String s = context.getString(R.string.ins);
+            Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" + String.format(new Locale("en"), "%.2f %s",totalSaved, s), 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            blocks.add(totSaved.Bold().Left());
+        }
+
+        Block thanks = new Block(SETTINGS.returnNote, 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        blocks.add(thanks.Left());
+
+        return make(blocks);
+    }
+
+
+    public Bitmap replaceInvoice(BoInvoice boInvoice) throws JSONException {
+        JSONObject documentsData = boInvoice.getDocumentsData();
+        JSONObject customerJson= documentsData.getJSONObject("customer");
+        String invoiceNum= boInvoice.getDocNum();
+        JSONArray cartDetailsList = documentsData.getJSONArray("cartDetailsList");
+        int count =0;
+        List<Block> blocks = new ArrayList<Block>();
+        blocks.addAll(HeadCopyInvoice(customerJson.getString("firstName")));
+        Block lineR = new Block("\u200E" + line + "\u200E", 30.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
+        String status=context.getString(R.string.copy_invoice);
+        Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block inum = new Block("\u200E"+ context.getString(R.string.invoice)+": " +invoiceNum
+                , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        blocks.add(bStatus);
+        blocks.add(inum);
+        blocks.add(lineR);
+        Block name = new Block("\u200e" + context.getString(R.string.product) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+        Block counter =new Block("\u200e" + context.getString(R.string.qty) +   "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+        for (int a=0;a<cartDetailsList.length();a++) {
+            JSONObject o = cartDetailsList.getJSONObject(a);
+            count += o.getInt("quantity");
+            int cut = 11;
+            if (o.getString("name").length() < cut)
+                cut = o.getString("name").length();
+            name.text += (o.getString("name").substring(0, cut) + newLineL);
+            counter.text += o.getInt("quantity") + "\n";
+        }
+        counter.Left();
+        name.Left();
+        blocks.add(counter);
+        blocks.add(name);
+            //name.text = String.format(new Locale("he"), name.text);
+
+
+            // Block numTax = new Block("\u200E" + String.format(new Locale("en"), "\u200E%.2f\n\u200E%.2f\n\u200E%.2f", noTax * (SETTINGS.tax / 100), 0.0f), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+            //blocks.add(numTax.Left());
+            //pid and price
+            blocks.add(clear.Left());
+            blocks.add(lineR.Left());
+            Block cashier = new Block("\u200e" + context.getString(R.string.cashier) + " ", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+            EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
+            employeeDBAdapter.open();
+            Employee employee = employeeDBAdapter.getEmployeeByID(documentsData.getJSONObject("user").getLong("employeeId"));
+            Block cashierName = new Block("\u200E" + employee.getFirstName(), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+            cashier.Left();
+            cashierName.Left();
+            blocks.add(cashierName);
+            blocks.add(cashier);
+            Block customerGeneralLedgerView = new Block("\u200E" + context.getString(R.string.customer_ledger) + ":" + Util.makePrice(documentsData.getDouble("customerGeneralLedger")) + "" + "\n" + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+            blocks.add(customerGeneralLedgerView);
+            Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(documentsData.getLong("date")), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            blocks.add(date.Left());
+
+            Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            blocks.add(bCopyDate.Left());
+
+
+            Block thanks = new Block(SETTINGS.returnNote, 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            blocks.add(thanks.Left());
 
         return make(blocks);
     }

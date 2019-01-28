@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,6 +49,8 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
+
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
@@ -56,7 +59,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			holder = new ViewHolder();
 			convertView = inflater.inflate(resource, null);
 			holder.tvID = (TextView) convertView.findViewById(R.id.listSaleManagement_TVSaleID);
-			holder.tvNumberOfItems = (TextView) convertView.findViewById(R.id.listSaleManagement_TVNumberOfItems);
+		//	holder.tvNumberOfItems = (TextView) convertView.findViewById(R.id.listSaleManagement_TVNumberOfItems);
 			holder.tvCustomerName = (TextView) convertView.findViewById(R.id.listSaleManagement_TVCustomerName);
 			holder.tvDate = (TextView) convertView.findViewById(R.id.listSaleManagement_TVDate);
 			holder.tvPrice = (TextView) convertView.findViewById(R.id.listSaleManagement_TVPrice);
@@ -81,7 +84,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(context);
 		orderDetailsDBAdapter.open();
 		order.setOrders(orderDetailsDBAdapter.getOrderBySaleID(order.getOrderId()));
-		holder.tvNumberOfItems.setText(order.getNumberOfItems()+"");
+		//holder.tvNumberOfItems.setText(order.getNumberOfItems()+"");
 
 		if (order.getCustomer_name() != null && !order.getCustomer_name().equals("")) {
 			holder.tvCustomerName.setText(order.getCustomer_name());
@@ -89,12 +92,12 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			holder.tvCustomerName.setText(context.getString(R.string.general_customer));
 		}
 
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 		holder.tvDate.setText(String.format(new Locale("en"),format.format(order.getCreatedAt())));
 
 		holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
 
-		holder.tvStatus.setText(R.string.invoice_receipt);
+		holder.tvStatus.setText("INRC");
 
 		holder.FL.setVisibility(View.GONE);
 
@@ -117,14 +120,16 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 				holder.tvID.setText(boInvoice.getDocNum() );
 				try {
 					if(boInvoice.getType().equals(DocumentType.INVOICE)) {
-						holder.tvStatus.setText(R.string.invoice_with_tax);
+						holder.tvStatus.setText("IN");
 					}else {
-						holder.tvStatus.setText(R.string.credit_invoice_doc);
+						holder.tvStatus.setText("CIN");
 					}
 					price = doc.getDouble("total");
 					holder.tvDiscount.setText(doc.getDouble("cartDiscount")+"");
 					SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-//					holder.tvDate.setText(String.format(new Locale("en"),format.format(doc.getString("date"))));
+					Date date = DateConverter.stringToDate(doc.getString("date"));
+
+					holder.tvDate.setText(DateConverter.geDate(date));
 					holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
 					JSONObject customerJson= doc.getJSONObject("customer");
 					holder.tvCustomerName.setText(customerJson.get("firstName")+" "+customerJson.get("lastName"));
@@ -134,7 +139,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 						JSONObject j = jsonArray.getJSONObject(c);
 						count+=j.getInt("quantity");
 					}
-					holder.tvNumberOfItems.setText(count+"");
+				//	holder.tvNumberOfItems.setText(count+"");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -145,7 +150,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 	}
 	class ViewHolder {
 		private TextView tvID;
-		private TextView tvNumberOfItems;
+		//private TextView tvNumberOfItems;
 		private TextView tvCustomerName;
 		private TextView tvDate;
 		private TextView tvPrice;

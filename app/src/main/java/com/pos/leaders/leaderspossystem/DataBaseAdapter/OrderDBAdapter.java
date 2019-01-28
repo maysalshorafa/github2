@@ -245,19 +245,23 @@ public class OrderDBAdapter {
 		return orderList;
 	}
 
-	public List<Order> search(String str,int offset,int count){
+	public List<Order> search(String hint,int from,int count){
 		List<Order> orderList = new ArrayList<Order>();
 		String price = "";
 		try{
-			price = " or " + ORDER_COLUMN_TOTALPRICE + "=" + Integer.parseInt(str);
-		} catch (Exception e){}
+			price =  ORDER_COLUMN_TOTALPRICE + "=" + Double.parseDouble(hint);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		Cursor cursor=null;
 
-
-		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_CUSTOMER_NAME + " like '%" + str + "%'" +
-				price +
-						" or " + ORDER_COLUMN_ORDERDATE + " like '%" + str + "%'"+" or " + ORDER_COLUMN_ID + " like '%" + str + "%'"+
-				" and " + ORDER_COLUMN_STATUS + " < 1" +
-				" and id like '%"+SESSION.POS_ID_NUMBER+"%'"+" order by id desc limit " + offset + "," + count, null);
+		if(price!="") {
+			 cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_CUSTOMER_NAME + " like '%" +
+					hint + "%' OR " + ORDER_COLUMN_ORDERDATE + " like '%" + hint + "%' OR " + ORDER_COLUMN_ID + " like '%" + hint + " %' OR " + price + " like '%" + hint + "%'" + " order by id desc limit " + from + "," + count, null);
+		}else {
+			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_CUSTOMER_NAME + " like '%" +
+					hint + "%' OR " + ORDER_COLUMN_ORDERDATE + " like '%" + hint + "%' OR " + ORDER_COLUMN_ID + " like '%" + hint +  "%'" +" order by id desc limit " + from + "," + count, null);
+		}
 		cursor.moveToFirst();
 
 		while (!cursor.isAfterLast()) {
@@ -266,7 +270,6 @@ public class OrderDBAdapter {
 		}
 		return orderList;
 	}
-
 	public List<Order> lazyLoad(int offset,int count){
 		List<Order> orderList = new ArrayList<Order>();
 

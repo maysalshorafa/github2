@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
@@ -36,6 +37,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
@@ -69,7 +71,7 @@ import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 public class OrdersManagementActivity extends AppCompatActivity {
 
     int loadItemOffset = 0;
-    int countLoad = 20;
+    int countLoad = 60;
     boolean userScrolled = false;
     String searchWord = "";
 
@@ -86,8 +88,11 @@ public class OrdersManagementActivity extends AppCompatActivity {
     List<OrderDetails> orders;
     List<Check> checks;
     List<Order> All_orders;
+    List<Order>filterOrderList;
+    List<BoInvoice>filterBoInvoice;
     public static List<BoInvoice>invoiceList=new ArrayList<>();
     public static Context context = null;
+    List<Object>list=new ArrayList<Object>();
 
     private final static int DAY_MINUS_ONE_SECOND = 86399999;
     @Override
@@ -153,7 +158,6 @@ public class OrdersManagementActivity extends AppCompatActivity {
         final List<Object>objectList = new ArrayList<Object>();
         objectList.addAll(_saleList);
         objectList.addAll(invoiceList);
-        Log.d("objictList",objectList.toString());
             adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, objectList);
 
         lvOrders.setAdapter(adapter);
@@ -180,10 +184,14 @@ public class OrdersManagementActivity extends AppCompatActivity {
         lvOrders.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                if(position!=_saleList.size()){
-                if(objectList.get(position) instanceof  Order){
-                final Order sale = (Order) objectList.get(position);
-                OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(OrdersManagementActivity.this);
+                Log.d("testInvoice",objectList.get(position-1).toString()+"");
+                if(objectList.get(position-1) instanceof  Order){
+                final Order sale = (Order) objectList.get(position-1);
+                    CustomerDBAdapter customerDBAdapter = new CustomerDBAdapter(OrdersManagementActivity.this);
+                    customerDBAdapter.open();
+                    Customer customer =customerDBAdapter.getCustomerByID(sale.getCustomerId());
+                    sale.setCustomer(customer);
+                    OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(OrdersManagementActivity.this);
                 orderDBAdapter.open();
                 orders = orderDBAdapter.getOrderBySaleID(sale.getOrderId());
                 orderDBAdapter.close();
@@ -302,8 +310,15 @@ public class OrdersManagementActivity extends AppCompatActivity {
                         sale.setReplacementNote(sale.getReplacementNote() + 1);
                         saleDBAdapter.updateEntry(sale);
                         saleDBAdapter.close();
-
-                        print(invoiceImg.replacmentNote(sale, false));
+                        try {
+                            Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                            SETTINGS.copyInvoiceBitMap =invoiceImg.replacmentNote(sale,false);
+                            startActivity(i);
+                        }catch (Exception e){
+                            Log.d("exception",sale.toString());
+                            Log.d("exception",e.toString());
+                            sendLogFile();
+                        }
                     }
                 });
                 //endregion Replacement Note Button
@@ -335,7 +350,72 @@ public class OrdersManagementActivity extends AppCompatActivity {
                 //endregion Cancellation ORDER Button
 
                 previousView.setBackgroundColor(getResources().getColor(R.color.list_background_color));
-                }}else {
+                }else {
+                    LinearLayout fr = (LinearLayout) view.findViewById(R.id.listSaleManagement_FLMore);
+                    if (previousView == null) {
+                        fr.setVisibility(View.VISIBLE);
+                        previousView = view;
+                    } else {
+                        fr.setVisibility(View.VISIBLE);
+                        previousView.findViewById(R.id.listSaleManagement_FLMore).setVisibility(View.GONE);
+                        previousView.setBackgroundColor(getResources().getColor(R.color.transparent));
+                        previousView = view;
+                    }
+                    final InvoiceImg invoiceImg = new InvoiceImg(OrdersManagementActivity.this);
+
+                    //  Log.d("testInvoice",objectList.get(position).toString());
+                    final Button print = (Button) view.findViewById(R.id.listSaleManagement_BTView);
+                    print.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //send customerName copy from the in voice
+                            new AlertDialog.Builder(OrdersManagementActivity.this)
+                                    .setTitle(getString(R.string.copyinvoice))
+                                    .setMessage(getString(R.string.print_copy_invoice))
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            BoInvoice boInvoice = (BoInvoice) objectList.get(position-1);
+                                            try {
+                                                Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                                SETTINGS.copyInvoiceBitMap = invoiceImg.copyInvoice(boInvoice);
+                                                startActivity(i);
+                                            }catch (Exception e){
+                                                e.printStackTrace();
+                                                Log.d("exception",e.toString());
+                                                sendLogFile();
+
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // do nothing
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                        }
+                    });
+                    Button btnRN = (Button) view.findViewById(R.id.listSaleManagement_BTReturn);
+                    btnRN.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            BoInvoice boInvoice = (BoInvoice) objectList.get(position-1);
+                            try {
+                                Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                SETTINGS.copyInvoiceBitMap = invoiceImg.replaceInvoice(boInvoice);
+                                startActivity(i);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                Log.d("exception",e.toString());
+                                sendLogFile();
+
+                            }
+                        }
+                    });
+                    Button btnCan = (Button) view.findViewById(R.id.listSaleManagement_BTCancel);
+                    btnCan.setVisibility(View.INVISIBLE);
+
                 }
             }
         });
@@ -350,7 +430,6 @@ public class OrdersManagementActivity extends AppCompatActivity {
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //lvOrders.setTextFilterEnabled(true);
 
             }
 
@@ -361,13 +440,58 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                list=new ArrayList<Object>();
+                filterOrderList = new ArrayList<Order>();
+                filterBoInvoice=new ArrayList<BoInvoice>();
                 String word = etSearch.getText().toString();
-                loadItemOffset = 0;
-                searchWord = word;
-                _saleList.clear();
-                LoadMore();
+                if (!word.equals("")) {
+                    // Database query can be a time consuming task ..
+                    // so its safe to call database query in another thread
+                    // Handler, will handle this stuff
+                    new AsyncTask<String, Void, Void>() {
+                        @Override
+                        protected void onPreExecute() {
+                            filterOrderList = new ArrayList<Order>();
+                            filterBoInvoice=new ArrayList<BoInvoice>();
+                            super.onPreExecute();
+                        }
+
+                        @Override
+                        protected Void doInBackground(String... params) {
+                            try {
+                                Thread.sleep(200);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            orderDBAdapter.open();
+                            filterOrderList = orderDBAdapter.search(params[0], loadItemOffset, countLoad);
+                            filterBoInvoice = searchInInvoiceList(params[0]);
+
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+
+                            list.addAll(filterOrderList);
+                            list.addAll(filterBoInvoice);
+                            SaleManagementListViewAdapter adapter = new SaleManagementListViewAdapter(OrdersManagementActivity.this, R.layout.list_adapter_row_sales_management, list);
+                            lvOrders.setAdapter(adapter);
+                        }
+                    }.execute(word);
+                } else {
+                    filterOrderList = _saleList;
+                    filterBoInvoice=invoiceList;
+                    list.addAll(filterOrderList);
+                    list.addAll(filterBoInvoice);
+                    SaleManagementListViewAdapter adapter = new SaleManagementListViewAdapter(OrdersManagementActivity.this, R.layout.list_adapter_row_sales_management, list);
+                    lvOrders.setAdapter(adapter);
+                }
+
             }
         });
+
 
     }
 
@@ -415,6 +539,22 @@ public class OrdersManagementActivity extends AppCompatActivity {
         PrintTools printTools = new PrintTools(this);
         printTools.PrintReport(bitmap);
     }
+    public  ArrayList<BoInvoice> searchInInvoiceList(String hint){
+        ArrayList<BoInvoice>newInvoiceList=new ArrayList<>();
+        for (int i =0;i<invoiceList.size();i++){
+            BoInvoice boInvoice = invoiceList.get(i);
+            JSONObject documentData = boInvoice.getDocumentsData();
+            try {
+                JSONObject customerJson = documentData.getJSONObject("customer");
+                if(customerJson.getString("firstName").contains(hint)||customerJson.getString("lastName").contains(hint)||documentData.getString("date").contains(hint)){
+                    newInvoiceList.add(boInvoice);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return newInvoiceList;
+    }
 
 
 }
@@ -461,6 +601,8 @@ class StartInvoiceAndCreditInvoiceConnection extends AsyncTask<String,Void,Strin
                         }
                         OrdersManagementActivity.invoiceList.add(invoice);
                     }
+                    Log.d("objictListTEst",  OrdersManagementActivity.invoiceList.toString()+"");
+
 
                 } catch (Exception e) {
                     Log.d("exception1",e.toString());
