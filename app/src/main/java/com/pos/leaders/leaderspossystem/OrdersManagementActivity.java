@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,6 +94,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
     public static List<BoInvoice>invoiceList=new ArrayList<>();
     public static Context context = null;
     List<Object>list=new ArrayList<Object>();
+    Spinner searchSpinner;
 
     private final static int DAY_MINUS_ONE_SECOND = 86399999;
     @Override
@@ -109,6 +111,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
         lvOrders = (ListView) findViewById(R.id.saleManagement_LVSales);
 
         etSearch = (EditText) findViewById(R.id.etSearch);
+        searchSpinner=(Spinner)findViewById(R.id.searchSpinner);
         etSearch.setText("");
         etSearch.setHint("Search..");
         etSearch.setFocusable(true);
