@@ -28,6 +28,8 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
+
 /**
  * Created by KARAM on 19/11/2016.
  */
@@ -182,6 +184,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     }
 
     private void login() {
+        sendLogFile();
         MakeDefaultUser();
         String str = et.getText().toString();
         if (str.equals("")) {
