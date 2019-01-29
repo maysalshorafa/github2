@@ -45,6 +45,9 @@ public class OrderDBAdapter {
 	public static final String DATABASE_CREATE = "CREATE TABLE _Order( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byEmployee` INTEGER, `order_date` TIMESTAMP DEFAULT current_timestamp, " +
 			"`replacementNote` INTEGER DEFAULT 0, `status` INTEGER DEFAULT 0, total_price REAL, total_paid_amount REAL, customerId  INTEGER DEFAULT 0 ,customer_name  TEXT,cartDiscount REAL DEFAULT 0.0, key  TEXT , numberDiscount REAL DEFAULT 0.0, cancellingOrderId INTEGER DEFAULT 0," +
 			"FOREIGN KEY(`byEmployee`) REFERENCES `employees.id`)";
+    public static final String DATABASE_UPDATE_FROM_V2_TO_V3[] = {"alter table _Order rename to _Order_v3;", DATABASE_CREATE + "; ",
+            "insert into _Order (id,byEmployee,order_date,replacementNote,status,total_price,total_paid_amount,customerId,customer_name,cartDiscount,key,numberDiscount,cancellingOrderId,) " +
+                    "select id,byEmployee,order_date,replacementNote,status,total_price,total_paid_amount,customerId,customer_name,cartDiscount,key,numberDiscount,0 from _Order_v3;"};
 
 	// Variable to hold the database instance
 	private SQLiteDatabase db;

@@ -328,7 +328,9 @@ public class DbHelper extends SQLiteOpenHelper {
                     }
                     break;
                 case 3:
-                    db.execSQL(OrderDBAdapter.addColumnLong("cancellingOrderId"));
+                    db.execSQL(OrderDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[0]);
+                    db.execSQL(OrderDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[1]);
+                    db.execSQL(OrderDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[2]);
                     BufferDbEmail.sendLogFile();
                     break;
 
