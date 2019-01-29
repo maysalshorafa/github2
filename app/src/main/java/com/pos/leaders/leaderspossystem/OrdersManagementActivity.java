@@ -19,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -112,6 +113,22 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
         etSearch = (EditText) findViewById(R.id.etSearch);
         searchSpinner=(Spinner)findViewById(R.id.searchSpinner);
+        final ArrayList<Integer> idForSearchType = new ArrayList<Integer>();
+        final ArrayList<String> hintForSearchType = new ArrayList<String>();
+        hintForSearchType.add(getString(R.string.customer));
+        hintForSearchType.add(getString(R.string.sale_id));
+        hintForSearchType.add(getString(R.string.date));
+        hintForSearchType.add(getString(R.string.price));
+        hintForSearchType.add(getString(R.string.type));
+        idForSearchType.add(0);
+        idForSearchType.add(1);
+        idForSearchType.add(2);
+        idForSearchType.add(3);
+        idForSearchType.add(4);
+
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, hintForSearchType);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        searchSpinner.setAdapter(adapter1);
         etSearch.setText("");
         etSearch.setHint("Search..");
         etSearch.setFocusable(true);
@@ -463,7 +480,6 @@ public class OrdersManagementActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 list=new ArrayList<Object>();
                 filterOrderList = new ArrayList<Order>();
-                filterBoInvoice=new ArrayList<BoInvoice>();
                 String word = etSearch.getText().toString();
                 if (!word.equals("")) {
                     // Database query can be a time consuming task ..
@@ -472,21 +488,21 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     new AsyncTask<String, Void, Void>() {
                         @Override
                         protected void onPreExecute() {
-                            filterOrderList = new ArrayList<Order>();
-                            filterBoInvoice=new ArrayList<BoInvoice>();
                             super.onPreExecute();
                         }
 
                         @Override
                         protected Void doInBackground(String... params) {
+                            final String type = searchSpinner.getSelectedItem().toString();
+                            filterOrderList = new ArrayList<Order>();
                             try {
                                 Thread.sleep(200);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                             orderDBAdapter.open();
-                            filterOrderList = orderDBAdapter.search(params[0], loadItemOffset, countLoad);
-                            filterBoInvoice = searchInInvoiceList(params[0]);
+                            filterOrderList = orderDBAdapter.search(params[0], loadItemOffset,countLoad,type);
+                        //    filterBoInvoice = searchInInvoiceList(params[0]);
 
                             return null;
                         }
@@ -494,9 +510,9 @@ public class OrdersManagementActivity extends AppCompatActivity {
                         @Override
                         protected void onPostExecute(Void aVoid) {
                             super.onPostExecute(aVoid);
-
+                            Log.d("filterOrderList",filterOrderList.toString());
                             list.addAll(filterOrderList);
-                            list.addAll(filterBoInvoice);
+                     //       list.addAll(filterBoInvoice);
                             SaleManagementListViewAdapter adapter = new SaleManagementListViewAdapter(OrdersManagementActivity.this, R.layout.list_adapter_row_sales_management, list);
                             lvOrders.setAdapter(adapter);
                         }
@@ -538,9 +554,10 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void... params) {
+                final String type = searchSpinner.getSelectedItem().toString();
                 orderDBAdapter.open();
                 if (!searchWord.equals("")) {
-                    _saleList.addAll(orderDBAdapter.search(searchWord, loadItemOffset, countLoad));
+                    _saleList.addAll(orderDBAdapter.search(searchWord, loadItemOffset, countLoad,type));
                 } else {
                     searchWord = "";
                     _saleList.addAll(orderDBAdapter.lazyLoad(loadItemOffset, countLoad));

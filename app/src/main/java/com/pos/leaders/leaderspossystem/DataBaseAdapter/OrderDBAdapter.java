@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.Generators;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -255,23 +256,31 @@ public class OrderDBAdapter {
 	}
 
 
-	public List<Order> search(String hint,int from,int count){
+	public List<Order> search(String hint,int from,int count,String type){
 		List<Order> orderList = new ArrayList<Order>();
-		String price = "";
-		try{
-			price =  ORDER_COLUMN_TOTALPRICE + "=" + Double.parseDouble(hint);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
 		Cursor cursor=null;
 
-		if(price!="") {
-			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_CUSTOMER_NAME + " like '%" +
-					hint + "%' OR " + ORDER_COLUMN_ORDERDATE + " like '%" + hint + "%' OR " + ORDER_COLUMN_ID + " like '%" + hint + " %' OR " + price + " like '%" + hint + "%'" + " order by id desc limit " + from + "," + count, null);
-		}else {
-			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_CUSTOMER_NAME + " like '%" +
-					hint + "%' OR " + ORDER_COLUMN_ORDERDATE + " like '%" + hint + "%' OR " + ORDER_COLUMN_ID + " like '%" + hint +  "%'" +" order by id desc limit " + from + "," + count, null);
+		if(type.equals(context.getString(R.string.price))){
+
+			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_TOTALPRICE + " like '%" +
+					hint + "%' "+" order by id desc limit " + from + "," + count, null);
+
+		}else if(type.equals(context.getString(R.string.customer))){
+
+					cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_CUSTOMER_NAME + " like '%" +
+							hint + "%' "+" order by id desc limit " + from + "," + count, null);
+
+		} else if(type.equals(context.getString(R.string.date))){
+
+			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_ORDERDATE + " like '%" +
+					hint + "%' "+" order by id desc limit " + from + "," + count, null);
 		}
+		else if(type.equals(context.getString(R.string.sale_id))){
+
+			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_ID + " like '%" +
+					hint + "%' "+" order by id desc limit " + from + "," + count, null);
+		}
+
 		cursor.moveToFirst();
 
 		while (!cursor.isAfterLast()) {

@@ -168,7 +168,8 @@
         <activity
             android:name=".CustomerAndClub.CustomerMeasurementManagementActivity"
             android:label="@string/title_activity_customer_measurement_management_activity" />
-        <activity android:name=".CreditCard.MainCreditCardActivity" />
+        <activity android:name=".CreditCard.MainCreditCardActivity"
+            android:label="@string/title_credit_card_activity"/>
         <activity
             android:name=".SetUpManagement"
             android:theme="@style/AppTheme.NoActionBar" />

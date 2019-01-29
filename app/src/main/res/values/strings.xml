@@ -582,6 +582,8 @@
     <string name="title_reports_management_activity">Report Management Activity</string>
     <string name="title_report_zdetails_activity">Report Z Details Activity</string>
     <string name="title_backup_activity">BackUP Activity</string>
+    <string name="title_credit_card_activity">Credit Card Activity</string>
+
     <string name="title_credit_card_by_phone_activity">Credit Card By Phone Activity</string>
     <string name="title_customer_and_club_management_activity">Customer And Club Management Activity</string>
     <string name="title_add_new_customer_activity">Add New Customer Activity</string>
