@@ -598,6 +598,8 @@
     <string name="view_credit_invoice_management_activity">View Credit Invoice ManagementActivity</string>
     <string name="view_credit_invoice_doc">عرض وصول الارجاع</string>
     <string name="checks_amount_more_than_amount_need">المبلغ الحالي اكثر من المبلغ المطلوب</string>
+    <string name="cancel_invoice_id">رقم البيعه الملغاه</string>
+
 
 </resources>
 
