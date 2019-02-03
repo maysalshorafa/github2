@@ -39,6 +39,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
@@ -647,14 +649,14 @@ public class SyncMessage extends Service {
 
                 //region Order
                 case MessageType.ADD_ORDER:
-                    /**
+
                     Order order = null;
                     order = objectMapper.readValue(msgData, Order.class);
 
                     OrderDBAdapter orderDBAdapter = new OrderDBAdapter(this);
                     orderDBAdapter.open();
                     rID = orderDBAdapter.insertEntry(order);
-                    orderDBAdapter.close();**/
+                    orderDBAdapter.close();
                     rID=1;
                     break;
                 case MessageType.UPDATE_ORDER:
@@ -738,13 +740,13 @@ public class SyncMessage extends Service {
 
                 //region ORDERDetails
                 case MessageType.ADD_ORDER_DETAILS:
-                 /**   OrderDetails o;
+                  OrderDetails o;
                     o = objectMapper.readValue(msgData, OrderDetails.class);
 
                     OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(this);
                     orderDetailsDBAdapter.open();
                     rID = orderDetailsDBAdapter.insertEntry(o);
-                    orderDetailsDBAdapter.close();**/
+                    orderDetailsDBAdapter.close();
                  rID=1;
                     break;
                 case MessageType.UPDATE_ORDER_DETAILS:

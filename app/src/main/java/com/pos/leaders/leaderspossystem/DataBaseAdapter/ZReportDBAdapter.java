@@ -173,7 +173,7 @@ public class ZReportDBAdapter {
 
     public ZReport getLastRow() throws Exception {
         ZReport zReport = null;
-        Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
+        Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME +" order by id desc", null);
         if (cursor.getCount() < 1) // zReport Not Exist
         {
             cursor.close();

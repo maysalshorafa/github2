@@ -296,7 +296,7 @@ public class OrderDBAdapter {
 	public List<Order> lazyLoad(int offset,int count){
 		List<Order> orderList = new ArrayList<Order>();
 
-		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " +" id like '%"+SESSION.POS_ID_NUMBER+"%'"+
+		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME +
 				" order by id desc limit " + offset + "," + count, null);
 		cursor.moveToFirst();
 
