@@ -154,7 +154,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     tvTotalPriceWithMultiCurrency.setVisibility(View.VISIBLE);
                     tvActualCurrencyRate.setVisibility(view.VISIBLE);
                     tvActualCurrencyRate.setText(actualCurrencyRate+"");
-                    tvTotalPriceWithMultiCurrency.setText(Double.parseDouble(Util.makePrice(totalPrice))+"/"+actualCurrencyRate+"="+Util.makePrice(totalPrice / actualCurrencyRate) + " " + currenciesNames.get(position));
+                    tvTotalPriceWithMultiCurrency.setText(Double.parseDouble(Util.makePrice(totalPrice))+"/"+selectedCurrencyRate+"="+Util.makePrice(totalPrice / actualCurrencyRate) + " " + currenciesNames.get(position));
                 }else {
                     actualCurrencyRate=1;
                     tvTotalPriceWithMultiCurrency.setVisibility(View.GONE);
