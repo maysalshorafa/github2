@@ -39,7 +39,7 @@
     <!--Invoice-->
     <string name="source_invoice">- מקור -</string>
     <string name="copy_invoice">- עותק -</string>
-    <string name="private_company">ח.פ. / ע.מ.</string>
+    <string name="private_company"> ע.ר</string>
     <!--\u0190-->
     <string name="invoice_with_tax">חש\' מס-קבלה</string>
     <string name="credit_invoice">חש\' זיכוי</string>
@@ -596,7 +596,7 @@
     <string name="create_closing_report">הפקת סגירת משמרת</string>
     <string name="expected">מחושב</string>
     <string name="log_out">יציאה</string>
-    <string name="invoice_receipt">חשבונית מס קבלה</string>
+    <string name="invoice_receipt">חשבון עסקה</string>
     <string name="invoice_management_activity">Invoice ManagementActivity</string>
     <string name="edit_max_customer_credit">מקסימום אובליגו ללקוח</string>
     <string name="customer_type">סוג לקוח</string>
