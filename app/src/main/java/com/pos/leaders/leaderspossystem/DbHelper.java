@@ -336,6 +336,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     BufferDbEmail.sendLogFile();
                     break;
                 case 4:
+                    db.execSQL(IdsCounterDBAdapter.addColumn("x_report"));
                     db.execSQL(XReportDBAdapter.DATABASE_CREATE);
                     break;
 
