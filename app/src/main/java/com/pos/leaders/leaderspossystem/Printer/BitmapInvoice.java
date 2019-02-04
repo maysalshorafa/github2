@@ -510,7 +510,7 @@ public class BitmapInvoice {
         invoiceHead.setColor(Color.BLACK);
         invoiceHead.setTypeface(bold);
         invoiceHead.setTextSize(38);
-        StaticLayout sInvoiceHead = new StaticLayout(context.getString(R.string.z_number) + " " + String.format("%06d", xReport.getxReportId()) + "\n\r---------------------------", invoiceHead,
+        StaticLayout sInvoiceHead = new StaticLayout(context.getString(R.string.x) + " " + String.format("%06d", xReport.getxReportId()) + "\n\r---------------------------", invoiceHead,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
 
 
