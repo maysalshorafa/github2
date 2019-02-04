@@ -78,6 +78,7 @@ import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.SumPoint;
 import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
+import com.pos.leaders.leaderspossystem.Models.XReport;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Offers.ResourceType;
 import com.pos.leaders.leaderspossystem.Offers.Rules;
@@ -1256,6 +1257,19 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.ZReport, jsonObject.getString(MessageKey.Data), token);
                 break;
             //endregion Z REPORT
+            //region X REPORT
+            case MessageType.ADD_X_REPORT:
+                res = messageTransmit.authPost(ApiURL.XReport, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_X_REPORT:
+                XReport xReport=null;
+                xReport=objectMapper.readValue(msgData, XReport.class);
+                res = messageTransmit.authPut(ApiURL.XReport, jsonObject.getString(MessageKey.Data), token,xReport.getxReportId());
+                break;
+            case MessageType.DELETE_X_REPORT:
+                res = messageTransmit.authDelete(ApiURL.XReport, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //endregion X REPORT
 
             case MessageType.ADD_CLUB:
                 res = messageTransmit.authPost(ApiURL.Club, jsonObject.getString(MessageKey.Data), token);

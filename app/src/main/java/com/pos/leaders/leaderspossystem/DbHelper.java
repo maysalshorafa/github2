@@ -53,6 +53,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Feedback.ClearSync;
 import com.pos.leaders.leaderspossystem.Tools.BufferDbEmail;
@@ -75,7 +76,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -215,6 +216,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CustomerMeasurementDBAdapter.DATABASE_CREATE);
         db.execSQL(MeasurementsDetailsDBAdapter.DATABASE_CREATE);
         db.execSQL(MeasurementDynamicVariableDBAdapter.DATABASE_CREATE);
+        db.execSQL(XReportDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (1,'משקל','Double','KG',0);");
         db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (2,'יד ימין 1','Double','CM',0);");
         db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (3,'יד ימין 2','Double','CM',0);");
@@ -332,6 +334,9 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(OrderDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[1]);
                     db.execSQL(OrderDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[2]);
                     BufferDbEmail.sendLogFile();
+                    break;
+                case 4:
+                    db.execSQL(XReportDBAdapter.DATABASE_CREATE);
                     break;
 
 

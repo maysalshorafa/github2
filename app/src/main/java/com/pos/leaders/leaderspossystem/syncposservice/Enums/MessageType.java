@@ -156,4 +156,9 @@ public interface MessageType{
     String DELETE_CLOSING_REPORT_DETAILS = "DeleteClosingReportDetails";
     String UPDATE_COMPANY_CREDENTIALS = "UpdateCompanyCredential";
 
+    String ADD_X_REPORT = "AddXReport";
+    String UPDATE_X_REPORT = "UpdateXReport";
+    String DELETE_X_REPORT = "DeleteXReport";
+
+
 }

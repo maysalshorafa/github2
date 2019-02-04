@@ -213,13 +213,16 @@ public class ClosingReportActivity extends AppCompatActivity {
             ZReportDBAdapter zReportDBAdapter1 = new ZReportDBAdapter(ClosingReportActivity.this);
             zReportDBAdapter1.open();
             Order order =orderDb.getLast();
-            ZReport zReport1 =zReportDBAdapter1.getLastRow();
             List<Order> orders;
-            if(closingReport==null){
+            if(closingReport==null&&zReportDBAdapter1.getProfilesCount()>0){
+                ZReport zReport1 =zReportDBAdapter1.getLastRow();
 
                 orders = orderDb.getBetween(zReport1.getEndOrderId(), order.getOrderId());
 
-            }else {
+            }else if(closingReport==null&&zReportDBAdapter1.getProfilesCount()==0){
+                orders = orderDb.getBetween(0, order.getOrderId());
+            }
+            else {
                 orders = orderDb.getBetweenTwoSalesForClosingReport(closingReport.getLastOrderId(), order.getOrderId());
             }
             orderDb.close();
