@@ -19,11 +19,16 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Category;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductStatus;
 import com.pos.leaders.leaderspossystem.Models.ProductUnit;
+import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCategoryGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -45,7 +50,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     ArrayAdapter<String> LAdapter;
     List<Category> listDepartment;
     List<String> departmentsName;
-    Spinner productUnitSp;
+    Spinner productUnitSp , SpProductCurrency;
     Button btSave,btnCancel;
     EditText etName,etBarcode,etDescription,etPrice,etCostPrice,etDisplayName,etSku,etStockQuantity,etProductWeight;
     Switch swWithTax,swManageStock;
@@ -68,6 +73,10 @@ public class ProductsActivity  extends AppCompatActivity  {
     boolean withTax , manageStock = true;
     ProductUnit unit ;
     LinearLayout llWeight;
+    String currencyType="";
+    List<Currency> currenciesList;
+    private List<CurrencyType> currencyTypesList = null;
+    private List<String> currenciesNames = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +109,7 @@ public class ProductsActivity  extends AppCompatActivity  {
 
         swWithTax=(Switch)findViewById(R.id.SWWithTax);
         productUnitSp = (Spinner)findViewById(R.id.SpProductUnit);
+        SpProductCurrency = (Spinner)findViewById(R.id.SpProductCurrency);
         llWeight = (LinearLayout)findViewById(R.id.llWeight);
         etProductWeight = (EditText)findViewById(R.id.ETWeight);
         productDBAdapter = new ProductDBAdapter(this);
@@ -117,6 +127,30 @@ public class ProductsActivity  extends AppCompatActivity  {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
         productUnitSp.setAdapter(dataAdapter);
+        //region spinner
+        //Getting default currencies name and values
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
+        currencyTypeDBAdapter.open();
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        currencyTypeDBAdapter.close();
+        //get currency value
+        CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(ProductsActivity.this);
+        currencyDBAdapter.open();
+        currenciesList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
+        currencyDBAdapter.close();
+
+        currenciesNames = new ArrayList<String>();
+        for (int i = 0; i < currencyTypesList.size(); i++) {
+            currenciesNames.add(currencyTypesList.get(i).getType());
+        }
+
+        // Creating adapter for spinner
+        final ArrayAdapter<String> dataAdapterCurrency = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currenciesNames);
+
+        // Drop down layout style - list view with radio button
+        // attaching data adapter to spinner
+        dataAdapterCurrency.setDropDownViewResource(R.layout.simple_spinner_dropdown);
+        SpProductCurrency.setAdapter(dataAdapterCurrency);
         //region Add product button
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
