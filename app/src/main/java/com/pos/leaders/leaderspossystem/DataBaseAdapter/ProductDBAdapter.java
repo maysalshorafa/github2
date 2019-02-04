@@ -56,6 +56,7 @@ public class ProductDBAdapter {
     protected static final String PRODUCTS_COLUMN_SKU = "sku";
     protected static final String PRODUCTS_COLUMN_UNIT = "unit";
     protected static final String PRODUCTS_COLUMN_WEIGHT = "weight";
+    protected static final String PRODUCTS_COLUMN_CURRENCY_TYPE = "currency_type";
 
 
     // TODO: Create public field for each column in your table.
@@ -68,12 +69,14 @@ public class ProductDBAdapter {
             "`" +PRODUCTS_COLUMN_CREATINGDATE + "` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
             "`" + PRODUCTS_COLUMN_DISENABLED + "` INTEGER DEFAULT 0, `" + PRODUCTS_COLUMN_CATEGORYID + "` INTEGER NOT NULL, " +
             "`" + PRODUCTS_COLUMN_BYUSER + "` INTEGER NOT NULL, `" + PRODUCTS_COLUMN_STATUS + "` TEXT NOT NULL DEFAULT 'PUBLISHED' , " +
-            "`" + PRODUCTS_COLUMN_with_pos + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_with_point_system + "` INTEGER NOT NULL DEFAULT 1 ,`"+PRODUCTS_COLUMN_UNIT + "` TEXT NOT NULL DEFAULT 'quantity' , '"+PRODUCTS_COLUMN_WEIGHT+"' REAL DEFAULT 0.0 )";
+            "`" + PRODUCTS_COLUMN_with_pos + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_with_point_system + "` INTEGER NOT NULL DEFAULT 1 ,`"+PRODUCTS_COLUMN_UNIT + "` TEXT NOT NULL DEFAULT 'quantity' , '"+ PRODUCTS_COLUMN_CURRENCY_TYPE + "` INTEGER NOT NULL DEFAULT 0, " +PRODUCTS_COLUMN_WEIGHT+"' REAL DEFAULT 0.0 )";
 
     public static final String DATABASE_UPDATE_FROM_V1_TO_V2[] = {"alter table products rename to product_v1;", DATABASE_CREATE + "; ",
             "insert into products (id,name,displayName,barcode,sku,description,price,costPrice,regularPrice,withTax,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system) " +
                     "select id,name,name,barcode,barcode,description,price,costPrice,price,withTax,creatingDate,hide,depId,byEmployee,with_pos,with_point_system from product_v1;"};
-
+    public static final String DATABASE_UPDATE_FROM_V2_TO_V3[] = {"alter table products rename to product_v1;", DATABASE_CREATE + "; ",
+            "insert into products (id,name,displayName,barcode,sku,description,price,costPrice,regularPrice,withTax,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system,unit,weight) " +
+                    "select id,name,name,barcode,barcode,description,price,costPrice,price,withTax,creatingDate,hide,depId,byEmployee,with_pos,with_point_system from product_v1;"};
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
