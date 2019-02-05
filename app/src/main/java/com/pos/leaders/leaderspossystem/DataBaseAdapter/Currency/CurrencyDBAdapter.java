@@ -172,5 +172,24 @@ public class CurrencyDBAdapter {
         }
 
     }
+    public Currency getCurrencyByCode(String code) {
+        Currency currency = null;
+        Cursor cursor = db.rawQuery("select * from " + CURRENCY_TABLE_NAME + " where currency_code='" + code + "'", null);
+        if (cursor.getCount() < 1) // UserName Not Exist
+        {
+            cursor.close();
+            return currency;
+        }
+        cursor.moveToFirst();
+        currency =  new Currency(Long.parseLong(cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_ID))),
+                cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_NAME)),
+                cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_CURRENCYCODE)),
+                cursor.getString(cursor.getColumnIndex(CURRENCY_COLUMN_COUNTRY)),
+                Double.parseDouble( cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_RATE))),
+                Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_CREATEDATE))));
+        cursor.close();
+
+        return currency;
+    }
 
 }

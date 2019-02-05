@@ -94,10 +94,18 @@ public class ProductCatalogGridViewAdapter extends BaseAdapter {
 
 		tvName.setText(_Substring(products.get(position).getDisplayName()));
 		tvBarcode.setText(products.get(position).getSku());
-		tvPrice.setText(products.get(position).getPrice()+ " " +  context.getString(R.string.ins));
-
-
-
+		if(products.get(position).getCurrencyType()==0) {
+			tvPrice.setText(products.get(position).getPrice() + " " + context.getString(R.string.ins));
+		}
+		if(products.get(position).getCurrencyType()==1) {
+			tvPrice.setText(products.get(position).getPrice() + " " + context.getString(R.string.dolor_sign));
+		}
+		if(products.get(position).getCurrencyType()==2) {
+			tvPrice.setText(products.get(position).getPrice() + " " + context.getString(R.string.eur_sign));
+		}
+		if(products.get(position).getCurrencyType()==3) {
+			tvPrice.setText(products.get(position).getPrice() + " " + context.getString(R.string.gbp));
+		}
 
 		return gridView;
 	}

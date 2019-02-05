@@ -2599,7 +2599,24 @@ public class SalesCartActivity extends AppCompatActivity {
             }
         }
         if (!isMatch) {
-            SESSION._ORDER_DETAILES.add(new OrderDetails(1, 0, p, p.getPrice(), p.getPrice(), 0));
+            String currencyType="";
+               if(p.getCurrencyType()==0) {
+                   currencyType="ILS";
+            }
+            if(p.getCurrencyType()==1) {
+                currencyType="USD";
+            }
+            if(p.getCurrencyType()==2) {
+                currencyType="GBP";
+            }
+            if(p.getCurrencyType()==3) {
+                currencyType="EUR";
+            }
+            CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(SalesCartActivity.this);
+            currencyDBAdapter.open();
+            Currency currency = currencyDBAdapter.getCurrencyByCode(currencyType);
+            SESSION._ORDER_DETAILES.add(new OrderDetails(1, 0, p, p.getPrice() *currency.getRate(), p.getPrice()*currency.getRate(), 0));
+
         }
         //restCategoryOffers();
         removeOrderItemSelection();

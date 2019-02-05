@@ -69,7 +69,7 @@ public class ProductDBAdapter {
             "`" +PRODUCTS_COLUMN_CREATINGDATE + "` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
             "`" + PRODUCTS_COLUMN_DISENABLED + "` INTEGER DEFAULT 0, `" + PRODUCTS_COLUMN_CATEGORYID + "` INTEGER NOT NULL, " +
             "`" + PRODUCTS_COLUMN_BYUSER + "` INTEGER NOT NULL, `" + PRODUCTS_COLUMN_STATUS + "` TEXT NOT NULL DEFAULT 'PUBLISHED' , " +
-            "`" + PRODUCTS_COLUMN_with_pos + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_with_point_system + "` INTEGER NOT NULL DEFAULT 1 ,`"+PRODUCTS_COLUMN_UNIT + "` TEXT NOT NULL DEFAULT 'quantity' , '"+ PRODUCTS_COLUMN_CURRENCY_TYPE + "` INTEGER NOT NULL DEFAULT 0, " +PRODUCTS_COLUMN_WEIGHT+"' REAL DEFAULT 0.0 )";
+            "`" + PRODUCTS_COLUMN_with_pos + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_with_point_system + "` INTEGER NOT NULL DEFAULT 1 ,`"+PRODUCTS_COLUMN_UNIT + "` TEXT NOT NULL DEFAULT 'quantity' , `"+ PRODUCTS_COLUMN_CURRENCY_TYPE + "` INTEGER NOT NULL DEFAULT 0, '" +PRODUCTS_COLUMN_WEIGHT+"' REAL DEFAULT 0.0 )";
 
     public static final String DATABASE_UPDATE_FROM_V1_TO_V2[] = {"alter table products rename to product_v1;", DATABASE_CREATE + "; ",
             "insert into products (id,name,displayName,barcode,sku,description,price,costPrice,regularPrice,withTax,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system) " +
