@@ -551,7 +551,7 @@ public class Util {
             }
 
         }else {
-            sheqle_plus+=cash_plus;
+            sheqle_plus+=cash_plus+cash_minus;
         }
         if(zReportDBAdapter.getProfilesCount()==0){
             PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
@@ -622,7 +622,7 @@ if(SETTINGS.enableCurrencies){
     sheqle_plus=(sheqle_plus-sheqle_minus)+aReportAmount+receiptInvoiceAmount;
 }
         long zID = zReportDBAdapter.insertEntry(zReport.getCreatedAt(), zReport.getByUser(), zReport.getStartOrderId(), zReport.getEndOrderId(),
-                zReport.getTotalAmount(),zReport.getTotalSales(),cash_plus,check_plus+receiptInvoiceAmountCheck,creditCard_plus
+                zReport.getTotalAmount(),zReport.getTotalSales(),cash_plus,check_minus+check_plus+receiptInvoiceAmountCheck,creditCard_minus+creditCard_plus
                 ,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax/100,invoiceAmount,
                 creditInvoiceAmount,sheqle_plus,(usd_plus-usd_minus)+aReportDetailsForSecondCurrency,(eur_plus-eur_minus)+aReportDetailsForThirdCurrency,(gbp_plus-gbp_minus)+aReportDetailsForForthCurrency,zReport.getInvoiceReceiptAmount());
         zReport.setzReportId(zID);
