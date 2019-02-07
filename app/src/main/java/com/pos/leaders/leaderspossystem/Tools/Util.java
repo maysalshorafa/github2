@@ -506,20 +506,16 @@ public class Util {
                 switch (cp.getCurrency_type()) {
 
                     case "ILS":
-                        if (cp.getAmount() > 0)
                             sheqle_plus += cp.getAmount();
                         break;
                     case "USD":
-                        if (cp.getAmount() > 0)
                             usd_plus += cp.getAmount();
                         break;
                     case "EUR":
-                        if (cp.getAmount() > 0)
                             eur_plus += cp.getAmount();
 
                         break;
                     case "GBP":
-                        if (cp.getAmount() > 0)
                             gbp_plus += cp.getAmount();
                         break;
                 }
@@ -719,20 +715,16 @@ if(SETTINGS.enableCurrencies){
                 switch (cp.getCurrency_type()) {
 
                     case "ILS":
-                        if (cp.getAmount() > 0)
                             sheqle_plus += cp.getAmount();
                         break;
                     case "USD":
-                        if (cp.getAmount() > 0)
                             usd_plus += cp.getAmount();
                         break;
                     case "EUR":
-                        if (cp.getAmount() > 0)
                             eur_plus += cp.getAmount();
 
                         break;
                     case "GBP":
-                        if (cp.getAmount() > 0)
                             gbp_plus += cp.getAmount();
                         break;
                 }

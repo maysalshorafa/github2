@@ -247,6 +247,7 @@ public class ChecksActivity extends AppCompatActivity {
 							SESSION._CHECKS_HOLDER = finalCheckList;
 							Intent i = new Intent();
 							i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
+							i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
 							setResult(RESULT_OK, i);
 							finish();
 						}

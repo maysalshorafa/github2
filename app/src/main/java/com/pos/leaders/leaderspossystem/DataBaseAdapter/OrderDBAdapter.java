@@ -297,7 +297,7 @@ public class OrderDBAdapter {
 		List<Order> orderList = new ArrayList<Order>();
 
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME +
-				" order by id desc limit " + offset + "," + count, null);
+				" order by id desc limit " + offset + "," + count+" and id like '%"+SESSION.POS_ID_NUMBER+"%'", null);
 		cursor.moveToFirst();
 
 		while (!cursor.isAfterLast()) {
