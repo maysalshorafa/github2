@@ -264,6 +264,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         btZReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("testLastSale",lastSale.toString());
                 if(PRINTER_STATE){
                     new android.support.v7.app.AlertDialog.Builder(DashBord.this, android.app.AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                             .setTitle(getString(R.string.printer))
