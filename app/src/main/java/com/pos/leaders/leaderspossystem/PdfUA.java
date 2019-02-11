@@ -28,7 +28,6 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
-import com.pos.leaders.leaderspossystem.Models.OpiningReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
@@ -50,6 +49,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -60,65 +60,65 @@ import java.util.concurrent.TimeUnit;
 
 public class PdfUA {
 
-   public static PdfPTable currencyTable = new PdfPTable(4);
+    public static PdfPTable currencyTable = new PdfPTable(4);
     public static Employee user;
-   public static ZReport zReport;
- /**   public static void  createZReportPdf(Context context, long id, long from, long to, boolean isCopy, double totalZReportAmount) throws IOException, DocumentException {
+    public static ZReport zReport;
+    /**   public static void  createZReportPdf(Context context, long id, long from, long to, boolean isCopy, double totalZReportAmount) throws IOException, DocumentException {
      Document document = new Document();
 
-        String status ="-Source-";
-        if(isCopy){
-            status="-Copy-";
-        }
-        String fileName = "randompdf.pdf";
-        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
-        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
-        path.mkdirs();
-        File file = new File(path, fileName);
-    if(file.exists()){
-        PrintWriter writer = new PrintWriter(file);
-        writer.print("");
-        writer.close();
-        }
-        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
-        document.open();
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
-        Font urFontName = new Font(urName, 30);
-        BaseFont urName1 = BaseFont.createFont("assets/Rubik-Light.ttf", "Identity-H",true,BaseFont.EMBEDDED);
-        Font font = new Font(urName1, 24);
+     String status ="-Source-";
+     if(isCopy){
+     status="-Copy-";
+     }
+     String fileName = "randompdf.pdf";
+     final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+     File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+     path.mkdirs();
+     File file = new File(path, fileName);
+     if(file.exists()){
+     PrintWriter writer = new PrintWriter(file);
+     writer.print("");
+     writer.close();
+     }
+     PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+     document.open();
+     BaseFont urName = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+     Font urFontName = new Font(urName, 30);
+     BaseFont urName1 = BaseFont.createFont("assets/Rubik-Light.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+     Font font = new Font(urName1, 24);
 
-        PdfPTable headingTable = new PdfPTable(1);
-        PdfPTable posTable = new PdfPTable(1);
-        posTable.setWidthPercentage(115f);
+     PdfPTable headingTable = new PdfPTable(1);
+     PdfPTable posTable = new PdfPTable(1);
+     posTable.setWidthPercentage(115f);
 
-        PdfPTable table = new PdfPTable(4);
-        createZReport(table,context,id,from,to,urFontName); // fill ZReport info
-        //heading table
-        headingTable.deleteBodyRows();
-        headingTable.setRunDirection(0);
-        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, urFontName);
-        insertCell(headingTable, status , Element.ALIGN_CENTER, 1, urFontName);
-        insertCell(headingTable, DateConverter.dateToString(zReport.getCreatedAt()) , Element.ALIGN_CENTER, 1, urFontName);
-        insertCell(headingTable, context.getString(R.string.cashiers) + user.getFullName() , Element.ALIGN_CENTER, 1, urFontName);
-        insertCell(headingTable,  String.format("%06d", zReport.getCashPaymentId()) , Element.ALIGN_CENTER, 1, urFontName);
-        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, urFontName);
-        document.add(headingTable);
-        //end
+     PdfPTable table = new PdfPTable(4);
+     createZReport(table,context,id,from,to,urFontName); // fill ZReport info
+     //heading table
+     headingTable.deleteBodyRows();
+     headingTable.setRunDirection(0);
+     insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, urFontName);
+     insertCell(headingTable, status , Element.ALIGN_CENTER, 1, urFontName);
+     insertCell(headingTable, DateConverter.dateToString(zReport.getCreatedAt()) , Element.ALIGN_CENTER, 1, urFontName);
+     insertCell(headingTable, context.getString(R.string.cashiers) + user.getFullName() , Element.ALIGN_CENTER, 1, urFontName);
+     insertCell(headingTable,  String.format("%06d", zReport.getCashPaymentId()) , Element.ALIGN_CENTER, 1, urFontName);
+     insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, urFontName);
+     document.add(headingTable);
+     //end
 
 
-        document.add(table);
+     document.add(table);
 
-        if(SETTINGS.enableCurrencies)// add space between two table
-        {
-            document.add(currencyTable);//add currency table
-        }
-        posTable.deleteBodyRows();
-        posTable.setRunDirection(0);
-        insertCell(posTable, context.getString(R.string.pos_sales)+" "+Util.makePrice(totalZReportAmount), Element.ALIGN_LEFT, 1, font);
-        document.add(posTable);
+     if(SETTINGS.enableCurrencies)// add space between two table
+     {
+     document.add(currencyTable);//add currency table
+     }
+     posTable.deleteBodyRows();
+     posTable.setRunDirection(0);
+     insertCell(posTable, context.getString(R.string.pos_sales)+" "+Util.makePrice(totalZReportAmount), Element.ALIGN_LEFT, 1, font);
+     document.add(posTable);
 
-            document.close();
-    }**/
+     document.close();
+     }**/
     public static void  printUserReport(Context context, List<ScheduleWorkers>scheduleWorkersArrayList,long userId,Date from ,Date to) throws IOException, DocumentException {
         EmployeeDBAdapter userDBAdapter = new EmployeeDBAdapter(context);
         userDBAdapter.open();
@@ -208,7 +208,7 @@ public class PdfUA {
         saleDBAdapter.close();
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
         zReportDBAdapter.open();
-         zReport = zReportDBAdapter.getByID(id);
+        zReport = zReportDBAdapter.getByID(id);
         zReportDBAdapter.close();
         EmployeeDBAdapter userDBAdapter = new EmployeeDBAdapter(context);
         userDBAdapter.open();
@@ -422,7 +422,7 @@ public class PdfUA {
             insertCell(table, "  " +DateConverter.geDate(date), Element.ALIGN_CENTER, 1, urFontName); // insert date value
 
             if(scheduleWorkersList.get(i).getStartTime()>0){
-            startAt= new Date(scheduleWorkersList.get(i).getStartTime());
+                startAt= new Date(scheduleWorkersList.get(i).getStartTime());
                 insertCell(table, DateConverter.getTime(startAt), Element.ALIGN_CENTER, 1, urFontName);
             }else {
                 insertCell(table, "", Element.ALIGN_CENTER, 1, urFontName);
@@ -611,20 +611,20 @@ public class PdfUA {
             insertCell(orderDetailsTable, context.getString(R.string.amount), Element.ALIGN_LEFT, 1, dateFont);
             insertCell(orderDetailsTable, context.getString(R.string.date), Element.ALIGN_LEFT, 1, dateFont);
             insertCell(orderDetailsTable, context.getString(R.string.checks), Element.ALIGN_LEFT, 1, dateFont);
-           JSONArray paymentDetails= payment.getJSONObject(0).getJSONArray("paymentDetails");
+            JSONArray paymentDetails= payment.getJSONObject(0).getJSONArray("paymentDetails");
             for(int i =0 ; i<paymentDetails.length();i++){
                 JSONObject jsonObject1 = paymentDetails.getJSONObject(i);
                 insertCell(orderDetailsTable, jsonObject1.getDouble("amount")+"", Element.ALIGN_LEFT, 1, dateFont);
                 insertCell(orderDetailsTable, DateConverter.toDate(new Date(jsonObject1.getLong("createdAt"))), Element.ALIGN_LEFT, 1, dateFont);
                 insertCell(orderDetailsTable, jsonObject1.getInt("checkNum")+"", Element.ALIGN_LEFT, 1, dateFont);
             }
-        //end
+            //end
 
-        //add table to document
+            //add table to document
 
 
-        //end :)
-    }
+            //end :)
+        }
         document.add(headingTable);
         document.add(dateTable);
         document.add(orderDetailsTable);
@@ -784,7 +784,7 @@ public class PdfUA {
         insertCell(orderDetailsTable, context.getString(R.string.price), Element.ALIGN_LEFT, 1, dateFont);
         insertCell(orderDetailsTable, context.getString(R.string.total), Element.ALIGN_LEFT, 1, dateFont);
         insertCell(orderDetailsTable, context.getString(R.string.discount), Element.ALIGN_LEFT, 1, dateFont);
-int q = 0;
+        int q = 0;
         for (int a = 0 ; a<itemJson.length();a++) {
             JSONObject jsonObject1 = itemJson.getJSONObject(a);
             String sku = jsonObject1.getString("sku");
@@ -821,7 +821,7 @@ int q = 0;
         document.close();
         //end :)
     }
-    public static void  printOpiningReport(Context context, OpiningReport opiningReport) throws IOException, DocumentException, JSONException {
+    public static void  printOpiningReport(Context context, OpiningReport opiningReport, final ArrayList<String> currencyTypeList, final ArrayList<Double>currencyAmount) throws IOException, DocumentException, JSONException {
         // create file , document region
         Document document = new Document();
         String fileName = "opiningreport.pdf";
@@ -860,47 +860,26 @@ int q = 0;
         insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
         OpiningReportDetailsDBAdapter opiningReportDetailsDBAdapter = new OpiningReportDetailsDBAdapter(context);
         opiningReportDetailsDBAdapter.open();
-        if(SETTINGS.enableCurrencies){
-        List<OpiningReportDetails>opiningReportDetailsList=opiningReportDetailsDBAdapter.getListOpiningReport(opiningReport.getOpiningReportId());
-        if(opiningReportDetailsList.size()>0) {
-            Log.d("opiningList", opiningReportDetailsList.toString());
-            for (int i = 0; i < opiningReportDetailsList.size(); i++) {
-                String currencyType = "";
-                if (opiningReportDetailsList.get(i).getType() == 0) {
-                    currencyType = "Shekel";
-                    Log.d("opiningList", opiningReportDetailsList.get(i).getAmount() + (""));
-
-                    insertCell(dataTable, context.getString(R.string.opening_report) + " : " + opiningReportDetailsList.get(i).getAmount() + "  " + currencyType, Element.ALIGN_LEFT, 2, dateFont);
-
-                } else if (opiningReportDetailsList.get(i).getType() == 1) {
-                    currencyType = "USD";
-                    Log.d("opiningList", opiningReportDetailsList.get(i).getAmount() + (""));
-                    insertCell(dataTable, context.getString(R.string.opening_report) + " : " + opiningReportDetailsList.get(i).getAmount() + "  " + currencyType, Element.ALIGN_LEFT, 2, dateFont);
-                } else if (opiningReportDetailsList.get(i).getType() == 2) {
-                    currencyType = "GBP";
-                    Log.d("opiningList", opiningReportDetailsList.get(i).getAmount() + (""));
-                    insertCell(dataTable, context.getString(R.string.opening_report) + " : " + opiningReportDetailsList.get(i).getAmount() + "  " + currencyType, Element.ALIGN_LEFT, 2, dateFont);
-                } else if (opiningReportDetailsList.get(i).getType() == 3) {
-                    currencyType = "EUR";
-                    Log.d("opiningList", opiningReportDetailsList.get(i).getAmount() + (""));
-                    insertCell(dataTable, context.getString(R.string.opening_report) + " : " + opiningReportDetailsList.get(i).getAmount() + "  " + currencyType, Element.ALIGN_LEFT, 2, dateFont);
+        if(currencyAmount.size()>0) {
+            for (int i = 0; i < currencyAmount.size(); i++) {
+                if(currencyAmount.get(i)>0) {
+                    insertCell(dataTable, context.getString(R.string.opening_report) + " : " + currencyAmount.get(i) + "  " + currencyTypeList.get(i), Element.ALIGN_LEFT, 2, dateFont);
                 }
-            }
-        }}else {
+            }}else {
             insertCell(dataTable, context.getString(R.string.opening_report) + " : "+  opiningReport.getAmount()+"  "+"Shekel", Element.ALIGN_LEFT, 2, dateFont);
 
         }
 
         //add table to document
         document.add(headingTable);
-            document.add(dataTable);
+        document.add(dataTable);
 
         document.close();
 
         //en
 
 
-}
+    }
     public static void  printLogInLogOutUserReport(Context context, JSONObject jsonObject) throws IOException, DocumentException, JSONException {
         // create file , document region
         Document document = new Document();

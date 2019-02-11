@@ -266,22 +266,26 @@ public class OrderDBAdapter {
 		if(type.equals(context.getString(R.string.price))){
 
 			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_TOTALPRICE + " like '%" +
-					hint + "%' "+" order by id desc limit " + from + "," + count, null);
+					hint + "%' " +" and " +" id like '%"+SESSION.POS_ID_NUMBER+"%'"+
+					" order by id desc limit " + from + "," + count, null);
 
 		}else if(type.equals(context.getString(R.string.customer))){
 
 					cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_CUSTOMER_NAME + " like '%" +
-							hint + "%' "+" order by id desc limit " + from + "," + count, null);
+							hint + "%' "+" and " +" id like '%"+SESSION.POS_ID_NUMBER+"%'"+
+							" order by id desc limit " + from + "," + count, null);
 
 		} else if(type.equals(context.getString(R.string.date))){
 
 			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_ORDERDATE + " like '%" +
-					hint + "%' "+" order by id desc limit " + from + "," + count, null);
+					hint + "%' "+" and " +" id like '%"+SESSION.POS_ID_NUMBER+"%'"+
+					" order by id desc limit " + from + "," + count, null);
 		}
 		else if(type.equals(context.getString(R.string.sale_id))){
 
 			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_ID + " like '%" +
-					hint + "%' "+" order by id desc limit " + from + "," + count, null);
+					hint + "%' "+" and " +" id like '%"+SESSION.POS_ID_NUMBER+"%'"+
+					" order by id desc limit " + from + "," + count, null);
 		}
 
 		cursor.moveToFirst();
@@ -296,9 +300,10 @@ public class OrderDBAdapter {
 	public List<Order> lazyLoad(int offset,int count){
 		List<Order> orderList = new ArrayList<Order>();
 
-		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME +
-				" order by id desc limit " + offset + "," + count+" and id like '%"+SESSION.POS_ID_NUMBER+"%'", null);
+		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " +" id like '%"+SESSION.POS_ID_NUMBER+"%'"+
+				" order by id desc limit " + offset + "," + count, null);
 		cursor.moveToFirst();
+
 
 		while (!cursor.isAfterLast()) {
 			orderList.add(makeSale(cursor));
@@ -330,7 +335,7 @@ public class OrderDBAdapter {
 		cursor.moveToFirst();
 		sale = new Order(makeSale(cursor));
 		cursor.close();
-
+		Log.d("LasstSlae",sale.toString());
 		return sale;
 	}
 	public Order getFirst(){

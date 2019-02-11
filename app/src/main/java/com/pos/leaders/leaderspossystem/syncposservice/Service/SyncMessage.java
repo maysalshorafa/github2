@@ -39,8 +39,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
@@ -431,7 +429,6 @@ public class SyncMessage extends Service {
                     /*
                     OpiningReportDetails aReportDetails = null;
                     aReportDetails = objectMapper.readValue(msgData, OpiningReportDetails.class);
-
                     AReportDetailsDBAdapter aReportDetailsDBAdapter = new AReportDetailsDBAdapter(this);
                     aReportDetailsDBAdapter.open();
                     rID = aReportDetailsDBAdapter.insertEntry(aReportDetails);
@@ -494,7 +491,6 @@ public class SyncMessage extends Service {
                  case MessageType.ADD_CHECK:
                  Check check = null;
                  check = objectMapper.readValue(msgData, Check.class);
-
                  ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(this);
                  checksDBAdapter.open();
                  rID = checksDBAdapter.insertEntry(check);
@@ -513,7 +509,6 @@ public class SyncMessage extends Service {
                  case MessageType.ADD_CHECK:
                  Check check = null;
                  check = objectMapper.readValue(msgData, Check.class);
-
                  ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(this);
                  checksDBAdapter.open();
                  rID = checksDBAdapter.insertEntry(check);
@@ -650,14 +645,13 @@ public class SyncMessage extends Service {
 
                 //region Order
                 case MessageType.ADD_ORDER:
-
-                    Order order = null;
-                    order = objectMapper.readValue(msgData, Order.class);
-
-                    OrderDBAdapter orderDBAdapter = new OrderDBAdapter(this);
-                    orderDBAdapter.open();
-                    rID = orderDBAdapter.insertEntry(order);
-                    orderDBAdapter.close();
+                    /**
+                     Order order = null;
+                     order = objectMapper.readValue(msgData, Order.class);
+                     OrderDBAdapter orderDBAdapter = new OrderDBAdapter(this);
+                     orderDBAdapter.open();
+                     rID = orderDBAdapter.insertEntry(order);
+                     orderDBAdapter.close();**/
                     rID=1;
                     break;
                 case MessageType.UPDATE_ORDER:
@@ -741,14 +735,13 @@ public class SyncMessage extends Service {
 
                 //region ORDERDetails
                 case MessageType.ADD_ORDER_DETAILS:
-                  OrderDetails o;
-                    o = objectMapper.readValue(msgData, OrderDetails.class);
-
-                    OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(this);
-                    orderDetailsDBAdapter.open();
-                    rID = orderDetailsDBAdapter.insertEntry(o);
-                    orderDetailsDBAdapter.close();
-                 rID=1;
+                    /**   OrderDetails o;
+                     o = objectMapper.readValue(msgData, OrderDetails.class);
+                     OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(this);
+                     orderDetailsDBAdapter.open();
+                     rID = orderDetailsDBAdapter.insertEntry(o);
+                     orderDetailsDBAdapter.close();**/
+                    rID=1;
                     break;
                 case MessageType.UPDATE_ORDER_DETAILS:
                     break;
@@ -859,14 +852,13 @@ public class SyncMessage extends Service {
 
                 //region CurrencyReturns
                 case MessageType.ADD_CURRENCY_RETURN:
-                /**    CurrencyReturns c = null;
-                    c = objectMapper.readValue(msgData, CurrencyReturns.class);
-
-                    CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(this);
-                    currencyReturnsDBAdapter.open();
-                    rID = currencyReturnsDBAdapter.insertEntry(c);
-                    currencyReturnsDBAdapter.close();**/
-                rID=1;
+                    /**    CurrencyReturns c = null;
+                     c = objectMapper.readValue(msgData, CurrencyReturns.class);
+                     CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(this);
+                     currencyReturnsDBAdapter.open();
+                     rID = currencyReturnsDBAdapter.insertEntry(c);
+                     currencyReturnsDBAdapter.close();**/
+                    rID=1;
 
                     break;
                 case MessageType.UPDATE_CURRENCY_RETURN:
@@ -1142,7 +1134,7 @@ public class SyncMessage extends Service {
                 newOfferJson.remove("offerData");
                 newOfferJson.put("offerData",jsonObject2);
                 Log.d("newOffer",newOfferJson.toString());
-             //   offer=objectMapper.readValue(msgData, Offer.class);
+                //   offer=objectMapper.readValue(msgData, Offer.class);
                 res = messageTransmit.authPut(ApiURL.Offer, newOfferJson.toString(), token,newOfferJson.getLong("offerId"));
                 break;
             case MessageType.DELETE_OFFER:
@@ -1270,7 +1262,6 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.XReport, jsonObject.getString(MessageKey.Data), token);
                 break;
             //endregion X REPORT
-
             case MessageType.ADD_CLUB:
                 res = messageTransmit.authPost(ApiURL.Club, jsonObject.getString(MessageKey.Data), token);
                 break;
@@ -1451,33 +1442,33 @@ public class SyncMessage extends Service {
 
                 break;
             //region CashPayment
-             case MessageType.ADD_CASH_PAYMENT:
-             res = messageTransmit.authPost(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
-             break;
-             case MessageType.UPDATE_CASH_PAYMENT:
-             CashPayment cashPayment=null;
-             cashPayment=objectMapper.readValue(msgData, CashPayment.class);
-             res = messageTransmit.authPut(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token,cashPayment.getCashPaymentId());
-             break;
-             case MessageType.DELETE_CASH_PAYMENT:
-             res = messageTransmit.authDelete(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
-             break;
-             //endregion CashPayment
+            case MessageType.ADD_CASH_PAYMENT:
+                res = messageTransmit.authPost(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_CASH_PAYMENT:
+                CashPayment cashPayment=null;
+                cashPayment=objectMapper.readValue(msgData, CashPayment.class);
+                res = messageTransmit.authPut(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token,cashPayment.getCashPaymentId());
+                break;
+            case MessageType.DELETE_CASH_PAYMENT:
+                res = messageTransmit.authDelete(ApiURL.CashPayment, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //endregion CashPayment
 
 
             //region Credit Card Payment
-             case MessageType.ADD_CREDIT_CARD_PAYMENT:
-             res = messageTransmit.authPost(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
-             break;
-             case MessageType.UPDATE_CREDIT_CARD_PAYMENT:
-             CreditCardPayment creditCardPayment=null;
-             creditCardPayment=objectMapper.readValue(msgData, CreditCardPayment.class);
-             res = messageTransmit.authPut(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token,creditCardPayment.getCreditCardPaymentId());
-             break;
-             case MessageType.DELETE_CREDIT_CARD_PAYMENT:
-             res = messageTransmit.authDelete(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
-             break;
-             //endregion Credit Card Payment**/
+            case MessageType.ADD_CREDIT_CARD_PAYMENT:
+                res = messageTransmit.authPost(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_CREDIT_CARD_PAYMENT:
+                CreditCardPayment creditCardPayment=null;
+                creditCardPayment=objectMapper.readValue(msgData, CreditCardPayment.class);
+                res = messageTransmit.authPut(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token,creditCardPayment.getCreditCardPaymentId());
+                break;
+            case MessageType.DELETE_CREDIT_CARD_PAYMENT:
+                res = messageTransmit.authDelete(ApiURL.CreditCardPayment, jsonObject.getString(MessageKey.Data), token);
+                break;
+            //endregion Credit Card Payment**/
 
             //CUSTOMER_ASSISTANT
             case MessageType.ADD_CUSTOMER_ASSISTANT:
@@ -1650,4 +1641,3 @@ public class SyncMessage extends Service {
         }
     }
 }
-

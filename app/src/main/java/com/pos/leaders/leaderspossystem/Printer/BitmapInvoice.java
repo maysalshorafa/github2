@@ -501,8 +501,8 @@ public class BitmapInvoice {
             status = context.getString(R.string.copy_invoice);
         StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" + DateConverter.dateToString(xReport.getCreatedAt().getTime()) + "\n\r" + "קןפאי : " + xReport.getUser().getFullName()+ status , head,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
-        StaticLayout posSales = new StaticLayout( "\n"  +context.getString(R.string.pos_sales)+" "+xReport.getTotalPosSales(), posSaleStyle,
-                PAGE_WIDTH, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
+    /**    StaticLayout posSales = new StaticLayout( "\n"  +context.getString(R.string.pos_sales)+" "+xReport.getTotalPosSales(), posSaleStyle,
+                PAGE_WIDTH, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);**/
 
 
         TextPaint invoiceHead = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
@@ -596,7 +596,7 @@ public class BitmapInvoice {
         //RGB_565
         int Page_Height = 0;
         //  if (SETTINGS.enableCurrencies)
-        Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight() + cSlNames.getHeight() + sNewLine.getHeight() + scInvoiceD.getHeight()+ sNewLine.getHeight() +posSales.getHeight();
+        Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight() + cSlNames.getHeight() + sNewLine.getHeight() + scInvoiceD.getHeight()+ sNewLine.getHeight() ;
 
         //   Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight();
         Bitmap b = Bitmap.createBitmap(PAGE_WIDTH, Page_Height, Bitmap.Config.ARGB_8888);
@@ -648,8 +648,8 @@ public class BitmapInvoice {
         c.translate(-(int) (PAGE_WIDTH * 0.60), cSlNames.getHeight());
         sNewLine.draw(c);
         //   }
-        posSales.draw(c);
-        c.translate(0, posSales.getHeight());
+        /*posSales.draw(c);
+        c.translate(0, posSales.getHeight());**/
         c.restore();
         return b;
     }

@@ -286,20 +286,16 @@ public class ClosingReportActivity extends AppCompatActivity {
                     switch ((int) cp.getCurrency_type()) {
 
                         case CONSTANT.Shekel:
-                            if (cp.getAmount() > 0)
                                 sheqle_minus += cp.getAmount();
                             break;
                         case CONSTANT.USD:
-                            if (cp.getAmount() > 0)
                                 usd_minus += cp.getAmount();
                             break;
                         case CONSTANT.EUR:
-                            if (cp.getAmount() > 0)
                                 eur_minus += cp.getAmount();
 
                             break;
                         case CONSTANT.GBP:
-                            if (cp.getAmount() > 0)
                                 gbp_minus += cp.getAmount();
                             break;
                     }

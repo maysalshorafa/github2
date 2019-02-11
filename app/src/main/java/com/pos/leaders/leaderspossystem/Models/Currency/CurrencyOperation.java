@@ -75,4 +75,16 @@ public class CurrencyOperation {
     public void setCurrency_type(String currency_type) {
         this.currency_type = currency_type;
     }
+
+    @Override
+    public String toString() {
+        return "CurrencyOperation{" +
+                "currencyOperationId=" + currencyOperationId +
+                ", createdAt=" + createdAt +
+                ", operation_id=" + operation_id +
+                ", operation_type='" + operation_type + '\'' +
+                ", amount=" + amount +
+                ", currency_type='" + currency_type + '\'' +
+                '}';
+    }
 }
