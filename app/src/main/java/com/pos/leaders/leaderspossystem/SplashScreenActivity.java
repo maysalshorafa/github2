@@ -40,7 +40,7 @@ public class SplashScreenActivity extends Activity {
     private static final int SPLASH_SCREEN_TIME_OUT = 1500;
     private ZReport lastZReport = null;
     public static boolean  currencyEnable , creditCardEnable , pinpadEnable , customerMeasurementEnable ;
-    public static int floatPoint;
+    public static int floatPoint , branchId;
     public static String printerType ;
     public static final String LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_VERSION = "LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_VERSION";
     public static final String LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_DB_VERSION = "LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_DB_VERSION";
@@ -536,6 +536,20 @@ public class SplashScreenActivity extends Activity {
                 Intent i = new Intent(context, SetUpManagement.class);
                 context.startActivity(i);
             }
+            //Branch
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID)) {
+                branchId = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, "0"));
+                Log.d("testtttt",branchId+"");
+                if(branchId==0){
+                    SETTINGS.enableAllBranch=true;
+                }else {
+                    SETTINGS.enableAllBranch=false;
+
+                }
+            } else {
+                return false;
+            }
+            //end
 
         } else {
             Intent i = new Intent(context, SetUpManagement.class);

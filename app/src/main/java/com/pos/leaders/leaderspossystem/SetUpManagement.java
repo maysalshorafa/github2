@@ -174,7 +174,8 @@ public class SetUpManagement extends AppCompatActivity {
                if(branchSpinner.getSelectedItem().toString().equals(getString(R.string.all))){
                    branchId=0;
                    SETTINGS.enableAllBranch=true;
-               }else {SETTINGS.enableAllBranch=false;
+               }else {
+                   SETTINGS.enableAllBranch=false;
                }
 
             }
@@ -297,12 +298,12 @@ public class SetUpManagement extends AppCompatActivity {
                     }
                     //BranchId
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID)) {
-                        int editNoOfPoint = branchId;
-                        editor.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, editNoOfPoint+"");
+                        int branch = branchId;
+                        editor.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, branch+"");
                         if(branchId==0) {
                             SETTINGS.enableAllBranch = true;
                         }else {
-                            SETTINGS.enableCurrencies=false;
+                            SETTINGS.enableAllBranch=false;
                         }
                     }
                 }

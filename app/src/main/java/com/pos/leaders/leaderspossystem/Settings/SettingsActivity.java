@@ -353,7 +353,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
             addPreferencesFromResource(R.xml.pref_pos_managment);
             setHasOptionsMenu(true);
-
+           Log.d("testtttt",SETTINGS.enableAllBranch+"");
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are

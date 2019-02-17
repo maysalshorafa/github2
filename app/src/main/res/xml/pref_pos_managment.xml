@@ -40,7 +40,7 @@
         android:positiveButtonText="@null"
         android:title="@string/printer_type" />
     <ListPreference
-        android:defaultValue="@string/branch"
+        android:defaultValue="@string/all"
         android:entries="@array/branch_list_preference"
         android:entryValues="@array/float_point_list_preference"
         android:key="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID"

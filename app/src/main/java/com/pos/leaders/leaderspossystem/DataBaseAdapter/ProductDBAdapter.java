@@ -12,6 +12,7 @@ import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductStatus;
 import com.pos.leaders.leaderspossystem.Models.ProductUnit;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -339,8 +340,13 @@ public class ProductDBAdapter {
 
     public List<Product> getAllProducts(){
         List<Product> productsList =new ArrayList<Product>();
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+             cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
+        }else {
+            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
 
-        Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc", null );
+        }
         cursor.moveToFirst();
 
 
@@ -354,8 +360,13 @@ public class ProductDBAdapter {
 
 	public List<Product> getAllProductsByCategory(long categoryId){
 		List<Product> productsList =new ArrayList<Product>();
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +" = 0 order by id desc", null );
+        }else {
+            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
 
-		Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +"="+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc", null );
+        }
 		cursor.moveToFirst();
 
 		while(!cursor.isAfterLast()){
@@ -368,9 +379,13 @@ public class ProductDBAdapter {
 
     public List<Product> getAllProductsByCategory(long categoryId, int from , int count){
         List<Product> productsList =new ArrayList<Product>();
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
+        }else {
+            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc limit "+from+","+count, null);
 
-        Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +"="+categoryId+" and "+PRODUCTS_COLUMN_DISENABLED+"=0 order by id desc limit "+from+","+count, null );
-
+        }
         cursor.moveToFirst();
 
         while(!cursor.isAfterLast()){
@@ -384,7 +399,16 @@ public class ProductDBAdapter {
     public List<Product> getTopProducts(int from ,int count){
         List<Product> productsList =new ArrayList<Product>();
         //SELECT * FROM table limit 100, 200
-        Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            Log.d("teeest1",SETTINGS.enableAllBranch+"   "+SETTINGS.branchId);
+
+            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null);
+        }else {
+            Log.d("teeest",SETTINGS.enableAllBranch+"   "+SETTINGS.branchId);
+            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED+"=0 order by id desc limit "+from+","+count, null);
+
+        }
         cursor.moveToFirst();
 
         while(!cursor.isAfterLast()){
@@ -467,9 +491,17 @@ public class ProductDBAdapter {
 
     public List<Product> getAllProductsByHint(String hint , int from , int count ){
         List<Product> productsList =new ArrayList<Product>();
-
-        Cursor cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
-                hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+ hint+"%'" +" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
+                    hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+ hint+"%'"
+                    +" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
+        }else {
+            cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
+                    hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+
+                    hint+"%'" +" and " + PRODUCTS_COLUMN_BRANCH_ID +
+                    " = "+ SETTINGS.branchId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
+        }
 
         cursor.moveToFirst();
 
