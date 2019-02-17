@@ -27,6 +27,7 @@ public class SETTINGS {
 	public static PrinterType printer ;
 	public static boolean enableCurrencies ;
 	public static int decimalNumbers  ;
+	public static boolean enableAllBranch;
 
 	public static boolean enableCustomerMeasurement;
 

@@ -347,6 +347,10 @@
         <item>2</item>
         <item>3</item>
     </string-array>
+    <string-array name="branch_list_preference">
+        <item>All</item>
+        <item>PosBranch</item>
+    </string-array>
 
     <string-array name="multi_select_list_preference_default_value" />
 
