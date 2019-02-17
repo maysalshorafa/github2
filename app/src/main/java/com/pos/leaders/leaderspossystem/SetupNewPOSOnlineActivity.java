@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.multidex.MultiDex;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -270,7 +269,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
                 settingsDBAdapter.open();
                 int i = settingsDBAdapter.updateEntry(respnse.getString(MessageKey.companyID), respnse.getString(MessageKey.companyName), SESSION.POS_ID_NUMBER + "",
                         (float) respnse.getDouble(MessageKey.tax), respnse.getString(MessageKey.returnNote), respnse.getInt(MessageKey.endOfReturnNote),
-                        respnse.getString(MessageKey.CCUN), respnse.getString(MessageKey.CCPW));
+                        respnse.getString(MessageKey.CCUN), respnse.getString(MessageKey.CCPW),respnse.getInt(MessageKey.branchId));
                 settingsDBAdapter.close();
                 if (i == 1) {
                     Util.isFirstLaunch(SetupNewPOSOnlineActivity.context, true);

@@ -120,7 +120,7 @@ public class GeneralSettings extends Fragment {
                                                     SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(getContext());
                                                     settingsDBAdapter.open();
 
-                                                    int i = settingsDBAdapter.updateEntry(PrivateCompany, CompanyName, SESSION.POS_ID_NUMBER + "", Tax, ReturnNote, InvoiceNote, TerminalNumber, TerminalPassword);
+                                                  /**  int i = settingsDBAdapter.updateEntry(PrivateCompany, CompanyName, SESSION.POS_ID_NUMBER + "", Tax, ReturnNote, InvoiceNote, TerminalNumber, TerminalPassword);
                                                     settingsDBAdapter.close();
 
                                                     if (i == 1) {
@@ -136,7 +136,7 @@ public class GeneralSettings extends Fragment {
 
                                                     } else {
                                                         Toast.makeText(getContext(), getString(R.string.fail_to_save_settings), Toast.LENGTH_SHORT).show();
-                                                    }
+                                                    }**/
                                                 }
                                             })
                                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

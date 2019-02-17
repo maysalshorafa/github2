@@ -14,11 +14,12 @@ public class Club {
     private int amount;
     private int point;
     private boolean hide=false;
+    private int branchId;
 
     public Club() {
     }
 
-    public Club(long clubId, String name, String description, int type, float percent, int amount, int point, boolean hide) {
+    public Club(long clubId, String name, String description, int type, float percent, int amount, int point, boolean hide,int branchId) {
         this.clubId = clubId;
         this.name=name;
         this.description=description;
@@ -26,8 +27,10 @@ public class Club {
         this.percent = percent;
         this.amount=amount;
         this.point=point;
+        this.hide=hide;
+        this.branchId=branchId;
     }
-    public Club(long clubId, String name, String description, int type, float percent, int amount, int point) {
+    public Club(long clubId, String name, String description, int type, float percent, int amount, int point,int branchId) {
         this.clubId = clubId;
         this.name=name;
         this.description=description;
@@ -35,11 +38,19 @@ public class Club {
         this.percent = percent;
         this.amount=amount;
         this.point=point;
+        this.branchId=branchId;
     }
     public Club(Club club) {
-        this(club.getClubId(),club.getName(),club.getDescription(),club.getType(),club.getPercent(),club.getAmount(),club.getPoint());
+        this(club.getClubId(),club.getName(),club.getDescription(),club.getType(),club.getPercent(),club.getAmount(),club.getPoint(),club.getBranchId());
     }
 
+    public int getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(int branchId) {
+        this.branchId = branchId;
+    }
 
     public long getClubId() {
         return clubId;

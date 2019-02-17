@@ -22,29 +22,12 @@ public class Employee {
     private double present;
     private double hourlyWage;
     private String permissionsName;
+    private int branchId;
 
     @JsonIgnore
     private List<Permissions> permissionsList;
 
-    public Employee(int employeeId, String master, String password, String master1, String master2, Timestamp createdAt, int i, String phoneNumber, double present, double hourlyWage) {
-        this.employeeId = employeeId;
-        this.employeeName = employeeName;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.createdAt = createdAt;
-        this.hide = hide;
-        this.phoneNumber = phoneNumber;
-        this.present = present;
-        this.hourlyWage = hourlyWage;}
-
-    public void setEmployeeId(long employeeId) {
-        this.employeeId = employeeId;
-    }
-
-
-
-    public Employee(long employeeId, String employeeName, String password, String firstName, String lastName, Timestamp createdAt, boolean hide, String phoneNumber, double present, double hourlyWage ) {
+    public Employee(int employeeId, String master, String password, String master1, String master2, Timestamp createdAt, int i, String phoneNumber, double present, double hourlyWage,int branchId) {
         this.employeeId = employeeId;
         this.employeeName = employeeName;
         this.password = password;
@@ -55,12 +38,40 @@ public class Employee {
         this.phoneNumber = phoneNumber;
         this.present = present;
         this.hourlyWage = hourlyWage;
+    this.branchId=branchId;}
+
+    public void setEmployeeId(long employeeId) {
+        this.employeeId = employeeId;
+    }
+
+
+
+    public Employee(long employeeId, String employeeName, String password, String firstName, String lastName, Timestamp createdAt, boolean hide, String phoneNumber, double present, double hourlyWage , int branchId ) {
+        this.employeeId = employeeId;
+        this.employeeName = employeeName;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.createdAt = createdAt;
+        this.hide = hide;
+        this.phoneNumber = phoneNumber;
+        this.present = present;
+        this.hourlyWage = hourlyWage;
+        this.branchId=branchId;
     }
     public Employee(Employee user){
         this(user.getEmployeeId(),user.getEmployeeName(),user.getPassword(),user.getFirstName(),
-                user.getLastName(),user.getCreatedAt(),user.isHide(),user.getPhoneNumber(),user.getPresent(),user.getHourlyWage());
+                user.getLastName(),user.getCreatedAt(),user.isHide(),user.getPhoneNumber(),user.getPresent(),user.getHourlyWage(),user.getBranchId());
     }
     public Employee(){}
+
+    public int getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(int branchId) {
+        this.branchId = branchId;
+    }
 
     @JsonIgnore
     public String getFullName(){
@@ -171,6 +182,7 @@ public class Employee {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", present=" + present +
                 ", hourlyWage=" + hourlyWage +
+                ", branchId=" + branchId +
 
                 '}';
     }

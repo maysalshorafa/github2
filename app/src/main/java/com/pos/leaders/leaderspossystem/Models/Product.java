@@ -36,7 +36,7 @@ public class Product {
     private boolean inStock;
     private ProductUnit unit;
     private double weight;
-
+    private int branchId;
 
     @JsonIgnore
     private List<Integer> offersIDs = new ArrayList<Integer>();
@@ -77,7 +77,7 @@ public class Product {
 
 
 
-    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax,Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight) {
+    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax,Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight,int branchId) {
 
         this.productId = productId;
         this.productCode = productCode;
@@ -101,10 +101,11 @@ public class Product {
         this.inStock = inStock;
         this.unit=unit;
         this.weight=weight;
+        this.branchId=branchId;
     }
 
 
-    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight) {
+    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight,int branchId) {
 
         this.productId = productId;
         this.productCode =productCode;
@@ -127,6 +128,7 @@ public class Product {
         this.inStock = inStock;
         this.unit=unit;
         this.weight=weight;
+        this.branchId=branchId;
     }
 
     public Product(long productId, String productCode,String displayName, double price, long byEmployee) {
@@ -177,7 +179,7 @@ public class Product {
                 product.getPrice(), product.getCostPrice(), product.isWithTax(),
                 product.getCreatedAt(), product.isHide(), product.getCategoryId(), product.getByEmployee(),
                 product.getWithPos(), product.getWithPointSystem(), product.getSku(), product.getStatus(), product.getDisplayName(),
-                product.getRegularPrice(), product.getStockQuantity(), product.isManageStock(), product.isInStock(),product.getUnit(),product.getWeight());
+                product.getRegularPrice(), product.getStockQuantity(), product.isManageStock(), product.isInStock(),product.getUnit(),product.getWeight(),product.getBranchId());
     }
 
     public Product() {
@@ -187,6 +189,10 @@ public class Product {
 
     // region Getters
 
+
+    public int getBranchId() {
+        return branchId;
+    }
 
     public long getProductId() {
         return productId;
@@ -274,6 +280,10 @@ public class Product {
 
     //region Setters
 
+
+    public void setBranchId(int branchId) {
+        this.branchId = branchId;
+    }
 
     public String getProductCode() {
         return productCode;
@@ -389,6 +399,7 @@ public class Product {
                 ", inStock=" + inStock +
                 ", unit=" + unit +
                 ", offersIDs=" + offersIDs +
+                ", branchId=" + branchId+
                 '}';
     }
 

@@ -7,14 +7,20 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddNewCategory extends AppCompatActivity {
     Button addNewCategory, cancel;
@@ -22,7 +28,8 @@ public class AddNewCategory extends AppCompatActivity {
     CategoryDBAdapter categoryDBAdapter;
     long categoryId;
     Category category;
-
+    Spinner SpCategoryBranch;
+    int branchId=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +42,13 @@ public class AddNewCategory extends AppCompatActivity {
         addNewCategory = (Button) findViewById(R.id.addNewDepartment);
         cancel = (Button) findViewById(R.id.cancelAddDepartment);
         categoryName = (EditText) findViewById(R.id.etdepartmentName);
+        SpCategoryBranch = (Spinner)findViewById(R.id.SpCategoryBranch);
+        final List<String> categoryBranch = new ArrayList<String>();
+        categoryBranch.add(getString(R.string.all));
+        categoryBranch.add(getString(R.string.pos_branch));
+        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoryBranch);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        SpCategoryBranch.setAdapter(dataAdapter);
         categoryDBAdapter = new CategoryDBAdapter(this);
         categoryDBAdapter.open();
         Bundle bundle = getIntent().getExtras();
@@ -55,6 +69,11 @@ public class AddNewCategory extends AppCompatActivity {
             public void onClick(View v) {
                 //add new category region
                 if (category == null) {
+                    if(SpCategoryBranch.getSelectedItem().toString().equals(getString(R.string.all))){
+                            branchId=0;
+                        }else {
+                            branchId= SETTINGS.branchId;
+                    }
                     //if empty input
                     if (categoryName.getText().toString().equals("")) {
                         Toast.makeText(getApplicationContext(), getString(R.string.please_insert_category_name), Toast.LENGTH_LONG).show();
@@ -68,7 +87,7 @@ public class AddNewCategory extends AppCompatActivity {
                         }
                         //unique
                         else {
-                            long check = categoryDBAdapter.insertEntry(categoryName.getText().toString(), SESSION._EMPLOYEE.getEmployeeId());
+                            long check = categoryDBAdapter.insertEntry(categoryName.getText().toString(), SESSION._EMPLOYEE.getEmployeeId(),branchId);
                             if (check > 0) {
                                 Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_new_category), Toast.LENGTH_LONG).show();
                                 Log.i("success", "added category");
@@ -94,6 +113,11 @@ public class AddNewCategory extends AppCompatActivity {
                 //upDate region
 
                 else {
+                    if(SpCategoryBranch.getSelectedItem().toString().equals(getString(R.string.all))){
+                        branchId=0;
+                    }else {
+                        branchId= SETTINGS.branchId;
+                    }
                     //if empty input
                     if (categoryName.getText().toString().equals("")) {
                         Toast.makeText(getApplicationContext(), getString(R.string.please_insert_category_name), Toast.LENGTH_LONG).show();
@@ -108,6 +132,7 @@ public class AddNewCategory extends AppCompatActivity {
                         } else {
                             //unique name
                             category.setName(categoryName.getText().toString());
+                            category.setBranchId(branchId);
                             categoryDBAdapter.updateEntry(category);
                             try {
                                 Thread.sleep(500);

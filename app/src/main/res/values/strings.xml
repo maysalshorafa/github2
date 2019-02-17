@@ -123,6 +123,7 @@
     <string name="cashier">Cashier</string>
     <string name="total_saved">Total Saved</string>
     <string name="all">All</string>
+    <string name="pos_branch">Pos Branch</string>
     <string name="general">General</string>
     <string name="general_product">General Product</string>
     <string name="price">Price</string>

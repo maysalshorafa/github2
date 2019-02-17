@@ -31,10 +31,11 @@ public class CategoryDBAdapter {
     protected static final String CATEGORY_COLUMN_CREATINGDATE = "creatingDate";
     protected static final String CATEGORY_COLUMN_BYUSER = "byEmployee";
     protected static final String CATEGORY_COLUMN_DISENABLED = "hide";
+    protected static final String CATEGORY_COLUMN_BRANCH_ID= "branchId";
 
     public static final String DATABASE_CREATE = "CREATE TABLE Category ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "`name` TEXT NOT NULL , `creatingDate` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
-            "`byEmployee` INTEGER, `hide` INTEGER DEFAULT 0, FOREIGN KEY(`byEmployee`) REFERENCES `employees.id` )";
+            "`byEmployee` INTEGER, `hide` INTEGER DEFAULT 0,`branchId` INTEGER DEFAULT 0, FOREIGN KEY(`byEmployee`) REFERENCES `employees.id` )";
     public static final String DATABASE_UPDATE_FROM_V1_TO_V2 = "alter table departments rename to Category;";
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -63,8 +64,8 @@ public class CategoryDBAdapter {
     }
 
 
-    public long insertEntry(String name, long byUser) {
-        Category department = new Category(Util.idHealth(this.db, CATEGORY_TABLE_NAME, CATEGORY_COLUMN_ID), name, new Timestamp(System.currentTimeMillis()), byUser, false);
+    public long insertEntry(String name, long byUser,int branchId) {
+        Category department = new Category(Util.idHealth(this.db, CATEGORY_TABLE_NAME, CATEGORY_COLUMN_ID), name, new Timestamp(System.currentTimeMillis()), byUser, false,branchId);
         Category boDepartment = department;
         boDepartment.setName(Util.getString(boDepartment.getName()));
         Log.d("test", boDepartment.getName());
@@ -87,7 +88,7 @@ public class CategoryDBAdapter {
         val.put(CATEGORY_COLUMN_BYUSER, department.getByUser());
         val.put(CATEGORY_COLUMN_DISENABLED, department.isHide() ? 1 : 0);
         val.put(CATEGORY_COLUMN_CREATINGDATE, String.valueOf(department.getCreatedAt()));
-
+        val.put(CATEGORY_COLUMN_BRANCH_ID,department.getBranchId());
         try {
 
             return db.insert(CATEGORY_TABLE_NAME, null, val);
@@ -109,7 +110,9 @@ public class CategoryDBAdapter {
         cursor.moveToFirst();
         department = new Category(id, cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_NAME)),
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_CREATINGDATE))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_BYUSER))), Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_DISENABLED))));
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_BYUSER))),
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_DISENABLED))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_BRANCH_ID))));
         cursor.close();
 
         return department;
@@ -158,6 +161,8 @@ public class CategoryDBAdapter {
         val.put(CATEGORY_COLUMN_NAME, department.getName());
         val.put(CATEGORY_COLUMN_BYUSER, department.getByUser());
         val.put(CATEGORY_COLUMN_DISENABLED, department.isHide());
+        val.put(CATEGORY_COLUMN_BRANCH_ID,department.getBranchId());
+
         try {
             String where = CATEGORY_COLUMN_ID + " = ?";
             db.update(CATEGORY_TABLE_NAME, val, where, new String[]{department.getCategoryId() + ""});
@@ -178,6 +183,7 @@ public class CategoryDBAdapter {
         val.put(CATEGORY_COLUMN_NAME, department.getName());
         val.put(CATEGORY_COLUMN_BYUSER, department.getByUser());
         val.put(CATEGORY_COLUMN_DISENABLED, department.isHide());
+        val.put(CATEGORY_COLUMN_BRANCH_ID,department.getBranchId());
 
         String where = CATEGORY_COLUMN_ID + " = ?";
         db.update(CATEGORY_TABLE_NAME, val, where, new String[]{department.getCategoryId() + ""});
@@ -198,7 +204,8 @@ public class CategoryDBAdapter {
                     cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_NAME)),
                     Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_CREATINGDATE))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_BYUSER))),
-                    Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_DISENABLED)))));
+                    Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_DISENABLED))),
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_BRANCH_ID)))));
             cursor.moveToNext();
         }
 
@@ -237,7 +244,8 @@ public class CategoryDBAdapter {
                     cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_NAME)),
                     Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_CREATINGDATE))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_BYUSER))),
-                    Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_DISENABLED)))));
+                    Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_DISENABLED))),
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_BRANCH_ID)))));
 
             return d;
         } catch (Exception ex) {
@@ -245,7 +253,8 @@ public class CategoryDBAdapter {
                     cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_NAME)),
                     Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_CREATINGDATE))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_BYUSER))),
-                    Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_DISENABLED)))));
+                    Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_DISENABLED))),
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_BRANCH_ID)))));
 
             return d;
         }

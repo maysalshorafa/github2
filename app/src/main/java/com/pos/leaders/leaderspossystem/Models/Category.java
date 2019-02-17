@@ -18,6 +18,7 @@ public class Category {
     private long byUser;
     private boolean hide;
     private boolean checked = false;
+    private int branchId;
     @JsonIgnore
     private List<Product> products;
 
@@ -25,12 +26,13 @@ public class Category {
 
 
 
-    public Category(long categoryId, String name, Timestamp createdAt, long byUser, boolean hide) {
+    public Category(long categoryId, String name, Timestamp createdAt, long byUser, boolean hide,int branchId) {
         this.categoryId = categoryId;
         this.name = name;
         this.createdAt = createdAt;
         this.byUser = byUser;
         this.hide = hide;
+        this.branchId=branchId;
     }
 
     public Category(String name, Timestamp createdAt, long byUser) {
@@ -41,7 +43,7 @@ public class Category {
     }
 
     public Category(Category c) {
-        new Category(c.getCategoryId(), c.getName(), c.getCreatedAt(), c.getByUser(), c.isHide());
+        new Category(c.getCategoryId(), c.getName(), c.getCreatedAt(), c.getByUser(), c.isHide(),c.getBranchId());
     }
 
     public Category() {
@@ -54,7 +56,11 @@ public class Category {
 
 	// region Setters
 
-	public void setProducts(List<Product> products) {
+    public void setBranchId(int branchId) {
+        this.branchId = branchId;
+    }
+
+    public void setProducts(List<Product> products) {
 		this.products = products;
 	}
 
@@ -81,6 +87,10 @@ public class Category {
     //endregion
 
 	// region Getters
+
+    public int getBranchId() {
+        return branchId;
+    }
 
     public long getCategoryId() {
         return categoryId;

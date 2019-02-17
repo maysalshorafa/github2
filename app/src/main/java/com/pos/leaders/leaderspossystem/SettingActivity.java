@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -138,10 +137,10 @@ public class SettingActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                            SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(SettingActivity.context);
                              settingsDBAdapter.open();
-                             int i = settingsDBAdapter.updateEntry(PrivateCompany, CompanyName,  SESSION.POS_ID_NUMBER +"", Tax, String.valueOf(InvoiceNote), 0, TerminalNumber, TerminalPassword);
+                            // int i = settingsDBAdapter.updateEntry(PrivateCompany, CompanyName,  SESSION.POS_ID_NUMBER +"", Tax, String.valueOf(InvoiceNote), 0, TerminalNumber, TerminalPassword);
                             settingsDBAdapter.close();
 
-                             if (i == 1) {
+                             /**if (i == 1) {
                                  SETTINGS.companyName=CompanyName;
                                  SETTINGS.companyID=PrivateCompany;
                                  SETTINGS.tax=Tax;
@@ -152,7 +151,7 @@ public class SettingActivity extends AppCompatActivity {
                             finish();
                              } else {
                                 Toast.makeText(SettingActivity.context,getString(R.string.fail_to_save_settings), Toast.LENGTH_SHORT).show();
-                             }
+                             }*/
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

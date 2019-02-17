@@ -1,7 +1,7 @@
 package com.pos.leaders.leaderspossystem;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
-import com.pos.leaders.leaderspossystem.Tools.Util;
 
 public class SetupNewPOSActivity extends AppCompatActivity {
 
@@ -62,7 +61,7 @@ public class SetupNewPOSActivity extends AppCompatActivity {
         } else{
             SettingsDBAdapter settingsDBAdapter=new SettingsDBAdapter(this);
             settingsDBAdapter.open();
-            int i = settingsDBAdapter.updateEntry(etPC.getText().toString(),etName.getText().toString(),etPOSID.getText().toString(),
+         /**   int i = settingsDBAdapter.updateEntry(etPC.getText().toString(),etName.getText().toString(),etPOSID.getText().toString(),
                     Float.parseFloat(etTax.getText().toString()),etINote.getText().toString(),Integer.parseInt(etED.getText().toString()),
                     etCCUN.getText().toString(),etCCPASS.getText().toString());
             settingsDBAdapter.close();
@@ -72,7 +71,7 @@ public class SetupNewPOSActivity extends AppCompatActivity {
             }
             else{
                 Toast.makeText(this, getString(R.string.try_again), Toast.LENGTH_SHORT);
-            }
+            }**/
         }
     }
 }

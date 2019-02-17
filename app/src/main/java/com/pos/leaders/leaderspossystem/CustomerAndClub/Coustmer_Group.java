@@ -23,6 +23,7 @@ import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import java.util.List;
 public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     TextView tvPercent, tvPoint, tvAmount;
     EditText etClubName, etPercent, etAmount, etPoint, etDescription;
-    Spinner clubType;
+    Spinner clubType,SpClubBranch;
     Button btAddGroup, btCancel;
     ClubAdapter clubAdapter = new ClubAdapter(this);
     Club club;
@@ -40,7 +41,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
     GridView gvCustomer;
     int id=0;
     float discount=0;
-    int point ,amount=0;
+    int point ,amount=0,branchId=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +66,13 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
         btCancel = (Button) findViewById(R.id.addGroup_BTCancel);
         btAddGroup = (Button) findViewById(R.id.add_group);
         gvCustomer = (GridView) findViewById(R.id.custmerManagement_GVCustmerClub);
+        SpClubBranch = (Spinner)findViewById(R.id.SpClubBranch);
+        final List<String> clubBranch = new ArrayList<String>();
+        clubBranch.add(getString(R.string.all));
+        clubBranch.add(getString(R.string.pos_branch));
+        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, clubBranch);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        SpClubBranch.setAdapter(dataAdapter);
         club = null;
         etAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         etPoint.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -83,7 +91,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
         clubType.setAdapter(adapter1);
         String name = clubType.getSelectedItem().toString();
 
-        Bundle bundle = getIntent().getExtras();
+        final Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             long i = (long) bundle.get("id");
             club = clubAdapter.getGroupByID(i);
@@ -150,7 +158,12 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
                             }
 
                                 if( !etDescription.getText().toString().equals("")&&  !etClubName.getText().toString().equals("")){
-                            long i = clubAdapter.insertEntry(etClubName.getText().toString(), etDescription.getText().toString(), id,discount, amount, point);
+                                    if(SpClubBranch.getSelectedItem().toString().equals(getString(R.string.all))){
+                                        branchId=0;
+                                    }else {
+                                        branchId= SETTINGS.branchId;
+                                    }
+                            long i = clubAdapter.insertEntry(etClubName.getText().toString(), etDescription.getText().toString(), id,discount, amount, point,branchId);
 
                             if (i > 0) {
                                 Log.i("success", "adding new Club");
@@ -181,21 +194,30 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_club_description), Toast.LENGTH_LONG).show();
                         } else {
                             try {
+                                if(SpClubBranch.getSelectedItem().toString().equals(getString(R.string.all))){
+                                    branchId=0;
+                                }else {
+                                    branchId= SETTINGS.branchId;
+                                }
                                 if(club.getType()==0){
                                     club.setName(etClubName.getText().toString());
                                     club.setDescription(etDescription.getText().toString());
+                                    club.setBranchId(branchId);
 
                                 }
                                 if(club.getType()==1){
                                     club.setName(etClubName.getText().toString());
                                     club.setDescription(etDescription.getText().toString());
                                     club.setPercent(Float.parseFloat(etPercent.getText().toString()));
+                                    club.setBranchId(branchId);
+
                                 }
                                 if(club.getType()==2){
                                     club.setName(etClubName.getText().toString());
                                     club.setDescription(etDescription.getText().toString());
                                     club.setAmount(Integer.parseInt(etAmount.getText().toString()));
                                     club.setPoint(Integer.parseInt(etPoint.getText().toString()));
+                                    club.setBranchId(branchId);
 
                                 }
                                 clubAdapter.updateEntry(club);

@@ -1019,7 +1019,7 @@ public class SyncMessage extends Service {
                     JSONObject respnse = new JSONObject(msgData);
                     int i = settingsDBAdapter.updateEntry(respnse.getString(MessageKey.companyID), respnse.getString(MessageKey.companyName), SESSION.POS_ID_NUMBER + "",
                             (float) respnse.getDouble(MessageKey.tax), respnse.getString(MessageKey.returnNote), respnse.getInt(MessageKey.endOfReturnNote),
-                            respnse.getString(MessageKey.CCUN), respnse.getString(MessageKey.CCPW));
+                            respnse.getString(MessageKey.CCUN), respnse.getString(MessageKey.CCPW),respnse.getInt(MessageKey.branchId));
                     settingsDBAdapter.close();
                     break;
                 //end

@@ -27,8 +27,9 @@ public class SettingsDBAdapter {
     protected static final String SETTINGS_COLUMN_END_OF_REPLACEMENT_NOTE = "eorn";
     protected static final String SETTINGS_COLUMN_CREDIT_CARD_USERNAME = "cc_un";
     protected static final String SETTINGS_COLUMN_CREDIT_CARD_PASSWORD = "cc_pw";
+    protected static final String SETTINGS_COLUMN_BRANCH_ID = "branchId";
 
-    public static final String DATABASE_CREATE= "CREATE TABLE tbl_settings ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+"`company_id` TEXT NOT NULL,"+"`company_name` TEXT NOT NULL,"+" `pos_number` TEXT,"+"`tax` REAL NOT NULL,"+" `return_note` TEXT NOT NULL,"+" `eorn` TEXT NOT NULL,"+" `cc_un` TEXT NOT NULL,"+"`cc_pw` TEXT NOT NULL  )";
+    public static final String DATABASE_CREATE= "CREATE TABLE tbl_settings ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+"`company_id` TEXT NOT NULL,"+"`company_name` TEXT NOT NULL,"+" `pos_number` TEXT,"+"`tax` REAL NOT NULL,"+" `return_note` TEXT NOT NULL,"+" `eorn` TEXT NOT NULL,"+" `cc_un` TEXT NOT NULL,"+"`cc_pw` TEXT NOT NULL,"+"`branchId` INTEGER NOT NULL  )";
 
 
     // Variable to hold the database instance
@@ -74,7 +75,7 @@ public class SettingsDBAdapter {
         return cursor.getCount();
     }
 
-    public int insertEntry(String companyID,String companyName,String posNumber,float tax,String returnNote,int eorn,String ccUserName,String ccPass){
+    public int insertEntry(String companyID,String companyName,String posNumber,float tax,String returnNote,int eorn,String ccUserName,String ccPass,int branchId){
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(SETTINGS_COLUMN_COMPANY_ID,companyID);
@@ -85,6 +86,8 @@ public class SettingsDBAdapter {
         val.put(SETTINGS_COLUMN_END_OF_REPLACEMENT_NOTE, eorn);
         val.put(SETTINGS_COLUMN_CREDIT_CARD_USERNAME, ccUserName);
         val.put(SETTINGS_COLUMN_CREDIT_CARD_PASSWORD, ccPass);
+        val.put(SETTINGS_COLUMN_BRANCH_ID, branchId);
+
         try {
 
                     db.insert(SETTINGS_TABLE_NAME, null, val);
@@ -95,7 +98,7 @@ public class SettingsDBAdapter {
         }
     }
 
-    public int updateEntry(String companyID,String companyName,String posNumber,float tax,String returnNote,int eorn,String ccUserName,String ccPass){
+    public int updateEntry(String companyID,String companyName,String posNumber,float tax,String returnNote,int eorn,String ccUserName,String ccPass,int branchId){
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(SETTINGS_COLUMN_COMPANY_ID,companyID);
@@ -106,6 +109,8 @@ public class SettingsDBAdapter {
         val.put(SETTINGS_COLUMN_END_OF_REPLACEMENT_NOTE, eorn);
         val.put(SETTINGS_COLUMN_CREDIT_CARD_USERNAME, ccUserName);
         val.put(SETTINGS_COLUMN_CREDIT_CARD_PASSWORD, ccPass);
+        val.put(SETTINGS_COLUMN_BRANCH_ID, branchId);
+
         try {
             db.update(SETTINGS_TABLE_NAME,val,null,null);
             return 1;
@@ -127,6 +132,7 @@ public class SettingsDBAdapter {
         SETTINGS.endOfInvoice = cursor.getInt(cursor.getColumnIndex(SETTINGS_COLUMN_END_OF_REPLACEMENT_NOTE));
         SETTINGS.ccNumber = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_CREDIT_CARD_USERNAME));
         SETTINGS.ccPassword = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_CREDIT_CARD_PASSWORD));
+        SETTINGS.branchId=cursor.getInt(cursor.getColumnIndex(SETTINGS_COLUMN_BRANCH_ID));
         cursor.close();
     }
 

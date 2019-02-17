@@ -9,9 +9,11 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
@@ -20,6 +22,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAda
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Tools.PermissionsGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
 import java.util.ArrayList;
@@ -48,10 +51,10 @@ public class AddEmployeeActivity extends AppCompatActivity {
     List<Permissions> userPermissionses;
     List<String> permissionName;
     Map<String, Long> permissionsMap = new HashMap<String, Long>();
-
+    Spinner SpEmployeeBranch;
     List<Permissions> permissionsList = new ArrayList<Permissions>();
     boolean addPerm = true;
-
+    int branchId=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +82,13 @@ public class AddEmployeeActivity extends AppCompatActivity {
         btAdd = (Button) findViewById(R.id.addUser_BTAdd);
         btCancel = (Button) findViewById(R.id.addUser_BTCancel);
         lvPermissions = (ListView) findViewById(R.id.addUser_LVPermissions);
-
+        SpEmployeeBranch = (Spinner)findViewById(R.id.SpEmployeeBranch);
+        final List<String> employeeBranch = new ArrayList<String>();
+        employeeBranch.add(getString(R.string.all));
+        employeeBranch.add(getString(R.string.pos_branch));
+        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, employeeBranch);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        SpEmployeeBranch.setAdapter(dataAdapter);
         userDBAdapter = new EmployeeDBAdapter(this);
 
         final EmployeePermissionsDBAdapter userPermissionsDBAdapter = new EmployeePermissionsDBAdapter(this);
@@ -123,7 +132,9 @@ public class AddEmployeeActivity extends AppCompatActivity {
             userDBAdapter.open();
             user = userDBAdapter.getEmployeeByID(i);
             userDBAdapter.close();
-
+            if(user.getBranchId()==0){
+                SpEmployeeBranch.setSelection(0);
+            }else {SpEmployeeBranch.setSelection(1);}
             etUserName.setText(user.getEmployeeName());
             etPassword.setText(user.getPassword());
             etREPassword.setText(user.getPassword());
@@ -162,6 +173,11 @@ public class AddEmployeeActivity extends AppCompatActivity {
                 boolean availableUserName =userDBAdapter.availableEmployeeName(_userName);
                 Intent intent;
                 if (user == null) {
+                    if(SpEmployeeBranch.getSelectedItem().toString().equals(getString(R.string.all))){
+                        branchId=0;
+                    }else {
+                        branchId= SETTINGS.branchId;
+                    }
                     if (!_userName.equals("")&& !(etPassword.getText().toString().equals(""))) {
                         if (availablePass&& availableUserName) {
                              if (!(etPassword.getText().toString().equals(etREPassword.getText().toString()))) {
@@ -175,7 +191,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
                             } else {
                                 long i = userDBAdapter.insertEntry(etUserName.getText().toString(), etPassword.getText().toString(), etFirstName.getText().toString()
                                         , etLastName.getText().toString(), etPhoneNumber.getText().toString()
-                                        , Double.parseDouble(etPresent.getText().toString()), Double.parseDouble(etHourlyWage.getText().toString()));
+                                        , Double.parseDouble(etPresent.getText().toString()), Double.parseDouble(etHourlyWage.getText().toString()),branchId);
                                 if (i > 0) {
                                     EmployeePermissionsDBAdapter userPermissionAdapter = new EmployeePermissionsDBAdapter(AddEmployeeActivity.this);
                                     userPermissionAdapter.open();
@@ -237,6 +253,11 @@ public class AddEmployeeActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_hourly_wage), Toast.LENGTH_LONG).show();
                         } else {
                             try {
+                                if(SpEmployeeBranch.getSelectedItem().toString().equals(getString(R.string.all))){
+                                    branchId=0;
+                                }else {
+                                    branchId= SETTINGS.branchId;
+                                }
 
                                 user.setEmployeeName(etUserName.getText().toString());
                                 user.setFirstName(etFirstName.getText().toString());
@@ -244,6 +265,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
                                 user.setPhoneNumber(etPhoneNumber.getText().toString());
                                 user.setHourlyWage(Double.parseDouble(etHourlyWage.getText().toString()));
                                 user.setPresent(Double.parseDouble(etPresent.getText().toString()));
+                                user.setBranchId(branchId);
                                 EmployeePermissionsDBAdapter userPermissionAdapter = new EmployeePermissionsDBAdapter(AddEmployeeActivity.this);
                                 userPermissionAdapter.open();
                                 for (int i = 0; i <= userPermissions.size() - 1; i++) {
