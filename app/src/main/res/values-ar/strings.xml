@@ -456,6 +456,7 @@
     <string name="eur">EUR</string>
     <string name="expired_card">انتهت صلاحية البطاقة</string>
     <string name="category_management">ادارة الأقسام</string>
+    <string name="category_product">ضافة منتوجات من قسم</string>
     <string name="delete_all_selected_products">احذف المنتوجات المحددة</string>
     <string name="customer_have_money_from_point_less_then_total_price">نقاط الزبون اقل من السعر الكلي</string>
     <string name="clearCartAlertTitle">تنظيف سلة المبيعات</string>

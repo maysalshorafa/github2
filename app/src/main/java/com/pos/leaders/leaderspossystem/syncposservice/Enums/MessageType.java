@@ -24,6 +24,10 @@ public interface MessageType{
     String UPDATE_CATEGORY = "UpdateCategory";
     String DELETE_CATEGORY = "DeleteCategory";
 
+    String ADD_OFFER_CATEGORY = "AddOfferCategory";
+    String UPDATE_OFFER_CATEGORY = "UpdateOfferCategory";
+    String DELETE_OFFER_CATEGORY = "DeleteOfferCategory";
+
     String ADD_OFFER = "AddOffer";
     String UPDATE_OFFER = "UpdateOffer";
     String DELETE_OFFER = "DeleteOffer";
