@@ -31,24 +31,23 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.Backup.Backup;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Elements.IButton;
 import com.pos.leaders.leaderspossystem.Models.ClosingReport;
-import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
@@ -57,7 +56,6 @@ import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Settings.SettingsActivity;
 import com.pos.leaders.leaderspossystem.SettingsTab.SettingsTab;
-import com.pos.leaders.leaderspossystem.Tools.BufferDbEmail;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -68,7 +66,6 @@ import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 import com.sunmi.aidl.MSCardService;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -486,8 +483,30 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         category.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), CategoryActivity.class);
-                startActivity(i);
+
+                final String[] items = {
+                        getString(R.string.categorys),
+                        getString(R.string.categorys_offer)
+                };
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(DashBord.this);
+                builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        Intent intent;
+                        switch (item) {
+                            case 0:
+                                i = new Intent(getApplicationContext(), CategoryActivity.class);
+                                startActivity(i);
+                            case 1:
+                                i = new Intent(getApplicationContext(), CategoryOfferActivity.class);
+                                startActivity(i);
+                                break;
+                        }
+                    }
+                });
+                android.app.AlertDialog alert = builder.create();
+                alert.show();
+
             }
         });
         closingReport.setOnClickListener(new View.OnClickListener() {

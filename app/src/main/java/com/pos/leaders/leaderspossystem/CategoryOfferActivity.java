@@ -3,9 +3,11 @@ package com.pos.leaders.leaderspossystem;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -21,6 +23,9 @@ import java.util.List;
 public class CategoryOfferActivity extends AppCompatActivity {
     EditText categoryOfferName;
     Button saveCategory , cancelAddCategoryOffer , addCategoryProduct , addProduct;
+    List<Category>filter_categoryList = new ArrayList<>();
+     Category category =new Category();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +81,6 @@ public class CategoryOfferActivity extends AppCompatActivity {
         gvCategory.setNumColumns(3);
        Button btn_cancel = (Button) addProductFromCategoryDialog.findViewById(R.id.btn_cancel);
         Button btn_add = (Button) addProductFromCategoryDialog.findViewById(R.id.btn_add);
-        List<Category>filter_categoryList = new ArrayList<>();
 
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,9 +92,16 @@ public class CategoryOfferActivity extends AppCompatActivity {
         categoryDBAdapter.open();
 
         filter_categoryList = categoryDBAdapter.getAllDepartments();
-        listCategory = filter_categoryList;
-        adapter = new CategoryGridViewAdapter(this, listCategory);
+        CategoryGridViewAdapter adapter = new CategoryGridViewAdapter(this, filter_categoryList);
         gvCategory.setAdapter(adapter);
+        gvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                category=filter_categoryList.get(position);
+                Log.d("testCategory",category.toString());
+
+            }
+        });
 
     }
 }
