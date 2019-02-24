@@ -135,6 +135,8 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
                 }
                 else {
                 i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE, deltaPrice);
+                    i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
+
                 }
                 setResult(RESULT_OK, i);
                 finish();

@@ -140,6 +140,7 @@ import POSSDK.POSSDK;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CASH;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CHECKS;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CREDIT_CARD;
+
 /**
  * Created by Karam on 21/11/2016.
  */
@@ -3165,7 +3166,8 @@ public class SalesCartActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-
+                double totalPrice = data.getDoubleExtra(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, 0.0f);
+                SESSION._ORDERS.setTotalPrice(totalPrice);
                 if (data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote).equals("anyType{}"))
                     return;
                 SESSION._ORDERS.setTotalPaidAmount(SESSION._ORDERS.getTotalPrice());
@@ -3344,6 +3346,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 //endregion
 
                 //region save the transaction
+                double totalPrice = data.getDoubleExtra(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, 0.0f);
+                SESSION._ORDERS.setTotalPrice(totalPrice);
                 SESSION._ORDERS.setTotalPaidAmount(SESSION._ORDERS.getTotalPrice());
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 saleDBAdapter.open();
@@ -3445,6 +3449,8 @@ public class SalesCartActivity extends AppCompatActivity {
                     }
                 }
                 final double result = data.getDoubleExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, 0.0f);
+                double totalPrice = data.getDoubleExtra(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, 0.0f);
+                SESSION._ORDERS.setTotalPrice(totalPrice);
                 SESSION._ORDERS.setTotalPaidAmount(result);
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 saleDBAdapter.open();
@@ -3568,7 +3574,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 // Get data from CashActivityWithOutCurrency
                 double totalPaidWithOutCurrency = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_TOTAL_PAID, 0.0f);
                 double excess = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE, 0.0f);
-
+                double totalPrice = data.getDoubleExtra(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, 0.0f);
+                SESSION._ORDERS.setTotalPrice(totalPrice);
                 SESSION._ORDERS.setTotalPaidAmount(totalPaidWithOutCurrency);
 
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
@@ -3811,6 +3818,8 @@ public class SalesCartActivity extends AppCompatActivity {
                     double change = 0;
 
                     String MultiCurrencyResult = data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE);
+                    double totalPrice = data.getDoubleExtra(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, 0.0f);
+                    SESSION._ORDERS.setTotalPrice(totalPrice);
                     jsonArray = new JSONArray(MultiCurrencyResult);
                     Log.d("MultiCurrencyResult", MultiCurrencyResult);
                     ObjectMapper objectMapper = new ObjectMapper();
@@ -3821,12 +3830,15 @@ public class SalesCartActivity extends AppCompatActivity {
                         TotalPaidAmount += jsonObject.getDouble("tendered") * getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
                         change = Math.abs(jsonObject.getDouble("change")) * getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
                     }
+
+
                     SESSION._ORDERS.setTotalPaidAmount(TotalPaidAmount);
                     saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
                     Order order = saleDBAdapter.getOrderById(saleIDforCash);
                     Log.d("oooo",order.toString());
 
                     SESSION._ORDERS.setOrderId(saleIDforCash);
+                    SESSION._ORDERS.setNumberDiscount(order.getNumberDiscount());
                     for (int i = 0 ;i<paymentTableArrayList.size();i++){
                         currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,paymentTableArrayList.get(i).getTendered(),paymentTableArrayList.get(i).getCurrency().getType());
                     }

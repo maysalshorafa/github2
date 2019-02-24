@@ -51,6 +51,7 @@ public interface ApiURL {
     String GeneralLedger="GeneralLedger";
     String ClosingReport="ClosingReport";
     String ClosingReportDetails="ClosingReportDetails";
+    String XReport = "XReport";
 
 
 }

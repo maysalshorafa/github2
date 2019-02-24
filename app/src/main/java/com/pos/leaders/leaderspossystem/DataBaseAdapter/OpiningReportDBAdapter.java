@@ -142,11 +142,11 @@ public class OpiningReportDBAdapter {
 
     public OpiningReport getLastRow() throws Exception {
         OpiningReport aReport = null;
-        Cursor cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME + " where id like '"+SESSION.POS_ID_NUMBER+"%' order by id desc", null);
+        Cursor cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME + " where id like '%"+SESSION.POS_ID_NUMBER+"%' order by id desc", null);
         if (cursor.getCount() < 1) // zReport Not Exist
         {
             cursor.close();
-             throw new Exception("there is no rows on Z Report Table");
+             throw new Exception("there is no rows on A Report Table");
         }
         cursor.moveToFirst();
         aReport = makeAReport(cursor);

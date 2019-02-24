@@ -118,7 +118,6 @@ public class PaymentDBAdapter {
 		List<Payment> salePaymentList = new ArrayList<Payment>();
 
 		Cursor cursor = db.rawQuery("select * from " + PAYMENT_TABLE_NAME +" where "+PAYMENT_COLUMN_ORDERID+"="+saleID + " and "+ " id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
-
 		cursor.moveToFirst();
 
 		while (!cursor.isAfterLast()) {

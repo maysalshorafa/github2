@@ -295,7 +295,7 @@ public class Order {
 				", customer_name='" + customer_name + '\'' +
 				", orderKey='" + orderKey + '\'' +
 				'\'' +
-				", numberDiscount='" + numberDiscount + '\'' +
+				", numberDiscount='" + numberDiscount +
 						", cancellingOrderId=" + cancellingOrderId  +
 				'}';
 	}

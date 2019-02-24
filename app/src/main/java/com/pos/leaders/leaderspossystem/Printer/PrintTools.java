@@ -8,24 +8,19 @@ import android.os.AsyncTask;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
-import com.pos.leaders.leaderspossystem.Models.Employee;
-import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
+import com.pos.leaders.leaderspossystem.Models.XReport;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
-import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -376,129 +371,9 @@ public class PrintTools {
         return pl;
     }
 
-    public Bitmap createXReport(long endSaleId, long id, Employee user, Date date) {
-        long aReportId = 0;
-        double usd_plus = 0, usd_minus = 0;
-        double eur_plus = 0, eur_minus = 0;
-        double gbp_plus = 0, gbp_minus = 0;
-        double sheqle_plus = 0, sheqle_minus = 0;
-        double aReportAmount = 0;
-        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(context);
-        saleDBAdapter.open();
-
-
-        List<Order> sales = saleDBAdapter.getBetween(endSaleId, id);
-
-        saleDBAdapter.close();
-
-        OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(context);
-        aReportDBAdapter.open();
-        OpiningReport aReport = aReportDBAdapter.getByLastZReport((int) id);
-        try {
-            aReportAmount = aReportDBAdapter.getLastRow().getAmount();
-            aReportId = aReportDBAdapter.getLastRow().getOpiningReportId();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        double aReportDetailsForFirstCurrency=0;
-        double aReportDetailsForSecondCurrency=0;
-        double aReportDetailsForThirdCurrency=0;
-        double aReportDetailsForForthCurrency=0;
-
-        // get payment , cashPayment , returnList
-        List<Payment> payments = paymentList(sales);
-        List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(sales);
-        List<CurrencyReturns> currencyReturnList = returnPaymentList(sales);
-        if (SETTINGS.enableCurrencies) {
-            OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
-            aReportDetailsDBAdapter.open();
-
-            aReportDetailsForFirstCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, aReportId);
-            aReportDetailsForSecondCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, aReportId);
-            aReportDetailsForThirdCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, aReportId);
-            aReportDetailsForForthCurrency = aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, aReportId);
-        }
-        double cash_plus = 0, cash_minus = 0;
-        double check_plus = 0, check_minus = 0;
-        double creditCard_plus = 0, creditCard_minus = 0;
-        aReportDBAdapter.close();
-        for (Payment p : payments) {
-            int i = 0;
-            switch (p.getPaymentWay()) {
-
-                case CONSTANT.CASH:
-                    if (p.getAmount() > 0)
-                        cash_plus += p.getAmount();
-                    else
-                        cash_minus += p.getAmount();
-                    break;
-                case CONSTANT.CREDIT_CARD:
-                    if (p.getAmount() > 0)
-                        creditCard_plus += p.getAmount();
-                    else
-                        creditCard_minus += p.getAmount();
-                    break;
-                case CONSTANT.CHECKS:
-                    if (p.getAmount() > 0)
-                        check_plus += p.getAmount();
-                    else
-                        check_minus += p.getAmount();
-                    break;
-            }
-        }
-
-
-//with Currency
-        if (SETTINGS.enableCurrencies) {
-
-            for (CurrencyOperation cp : currencyOperationList) {
-                switch (cp.getCurrency_type()) {
-
-                    case "ILS":
-                        if (cp.getAmount() > 0)
-                            sheqle_plus += cp.getAmount();
-                        break;
-                    case "USD":
-                        if (cp.getAmount() > 0)
-                            usd_plus += cp.getAmount();
-                        break;
-                    case "EUR":
-                        if (cp.getAmount() > 0)
-                            eur_plus += cp.getAmount();
-
-                        break;
-                    case "GBP":
-                        if (cp.getAmount() > 0)
-                            gbp_plus += cp.getAmount();
-                        break;
-                }
-            }
-            for (CurrencyReturns cp : currencyReturnList) {
-                switch ((int) cp.getCurrency_type()) {
-
-                    case CONSTANT.Shekel:
-                        if (cp.getAmount() > 0)
-                            sheqle_minus += cp.getAmount();
-                        break;
-                    case CONSTANT.USD:
-                        if (cp.getAmount() > 0)
-                            usd_minus += cp.getAmount();
-                        break;
-                    case CONSTANT.EUR:
-                        if (cp.getAmount() > 0)
-                            eur_minus += cp.getAmount();
-
-                        break;
-                    case CONSTANT.GBP:
-                        if (cp.getAmount() > 0)
-                            gbp_minus += cp.getAmount();
-                        break;
-                }
-            }
-
-        }
-        return BitmapInvoice.xPrint(context, user, date.getTime(), usd_plus+aReportDetailsForSecondCurrency, usd_minus, eur_plus+aReportDetailsForForthCurrency, eur_minus, gbp_plus+aReportDetailsForThirdCurrency, gbp_minus, sheqle_plus+aReportDetailsForFirstCurrency, sheqle_minus, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, Double.parseDouble(Util.makePrice(aReportAmount)));
+    public Bitmap createXReport(XReport xReport , boolean isCopy  ) {
+        return BitmapInvoice.xPrint(context, xReport,  isCopy);
+        //return BitmapInvoice.zPrint(context, zReport, cash_plus, cash_minus, check_plus, check_minus, creditCard_plus, creditCard_minus, isCopy, aReport.getAmount());
 
     }
-
 }

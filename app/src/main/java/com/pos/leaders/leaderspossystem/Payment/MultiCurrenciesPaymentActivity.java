@@ -77,7 +77,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     Log.d("PaymentTables",paymentTables.toString());
                     Intent i = new Intent();
                     i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE, paymentTables.toString());
-
+                    i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
                     setResult(RESULT_OK, i);
                     finish();
                 }
@@ -154,8 +154,10 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     tvTotalPriceWithMultiCurrency.setVisibility(View.VISIBLE);
                     tvActualCurrencyRate.setVisibility(view.VISIBLE);
                     tvActualCurrencyRate.setText(actualCurrencyRate+"");
+
                     tvTotalPriceWithMultiCurrency.setText(Double.parseDouble(Util.makePrice(totalPrice))+"/"+selectedCurrencyRate+"="+Util.makePrice(totalPrice / actualCurrencyRate) + " " + currenciesNames.get(position));
                 }else {
+
                     actualCurrencyRate=1;
                     tvTotalPriceWithMultiCurrency.setVisibility(View.GONE);
                     tvTotalPriceWithMultiCurrency.setText("");

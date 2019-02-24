@@ -213,13 +213,16 @@ public class ClosingReportActivity extends AppCompatActivity {
             ZReportDBAdapter zReportDBAdapter1 = new ZReportDBAdapter(ClosingReportActivity.this);
             zReportDBAdapter1.open();
             Order order =orderDb.getLast();
-            ZReport zReport1 =zReportDBAdapter1.getLastRow();
             List<Order> orders;
-            if(closingReport==null){
+            if(closingReport==null&&zReportDBAdapter1.getProfilesCount()>0){
+                ZReport zReport1 =zReportDBAdapter1.getLastRow();
 
                 orders = orderDb.getBetween(zReport1.getEndOrderId(), order.getOrderId());
 
-            }else {
+            }else if(closingReport==null&&zReportDBAdapter1.getProfilesCount()==0){
+                orders = orderDb.getBetween(0, order.getOrderId());
+            }
+            else {
                 orders = orderDb.getBetweenTwoSalesForClosingReport(closingReport.getLastOrderId(), order.getOrderId());
             }
             orderDb.close();
@@ -264,22 +267,17 @@ public class ClosingReportActivity extends AppCompatActivity {
 
                 for (CurrencyOperation cp : currencyOperationList) {
                     switch (cp.getCurrency_type()) {
-
                         case "ILS":
-                            if (cp.getAmount() > 0)
                                 sheqle_plus += cp.getAmount();
                             break;
                         case "USD":
-                            if (cp.getAmount() > 0)
                                 usd_plus += cp.getAmount();
                             break;
                         case "EUR":
-                            if (cp.getAmount() > 0)
                                 eur_plus += cp.getAmount();
 
                             break;
                         case "GBP":
-                            if (cp.getAmount() > 0)
                                 gbp_plus += cp.getAmount();
                             break;
                     }
@@ -288,20 +286,16 @@ public class ClosingReportActivity extends AppCompatActivity {
                     switch ((int) cp.getCurrency_type()) {
 
                         case CONSTANT.Shekel:
-                            if (cp.getAmount() > 0)
                                 sheqle_minus += cp.getAmount();
                             break;
                         case CONSTANT.USD:
-                            if (cp.getAmount() > 0)
                                 usd_minus += cp.getAmount();
                             break;
                         case CONSTANT.EUR:
-                            if (cp.getAmount() > 0)
                                 eur_minus += cp.getAmount();
 
                             break;
                         case CONSTANT.GBP:
-                            if (cp.getAmount() > 0)
                                 gbp_minus += cp.getAmount();
                             break;
                     }
@@ -397,8 +391,9 @@ public class ClosingReportActivity extends AppCompatActivity {
                 }
             }
             expectedTotal+=cashReceipt;
-            expectedCheck=(check_plus-check_minus)+checkReceipt;
-            expectedCredit=creditCard_plus-creditCard_minus;
+            expectedCheck=(check_plus+check_minus)+checkReceipt;
+            expectedCredit=creditCard_plus+creditCard_minus;
+            Log.d("teeest",sheqle_plus+"  "+sheqle_minus);
             expectedShekel=sheqle_plus-sheqle_minus+expectedOpiningShekel+cashReceipt;
             expectedUsd=usd_plus-usd_minus+expectedOpiningUsd;
             expectedEur=eur_plus-eur_minus+expectedOpiningEur;
@@ -408,7 +403,7 @@ public class ClosingReportActivity extends AppCompatActivity {
             if(SETTINGS.enableCurrencies){
                 shekelExpectedValue.setText(Util.makePrice(expectedShekel));
             }else {
-                expectedShekel=cash_plus+opiningReport.getAmount()-sheqle_plus;
+                expectedShekel=cash_plus+cash_minus+opiningReport.getAmount()-sheqle_plus;
                 shekelExpectedValue.setText(Util.makePrice(expectedShekel));
 
             }

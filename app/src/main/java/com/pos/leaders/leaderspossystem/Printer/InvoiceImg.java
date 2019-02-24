@@ -277,7 +277,7 @@ public class InvoiceImg {
         Block toPid = new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         Block discountAmount = new Block("\u200E" + String.valueOf(sale.cartDiscount)+ "%", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
 
-        Block toPidBeforeDiscount= new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()+(sale.cartDiscount/100)*sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block toPidBeforeDiscount= new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()*100/(100-sale.cartDiscount)), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         productCount.Left();
         productCountText.Left();
         toPid.Left();

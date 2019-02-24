@@ -2,7 +2,6 @@ package com.pos.leaders.leaderspossystem;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,20 +14,27 @@ import android.widget.Button;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.ClosingReport;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.XReport;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
-import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 public class ReportsManagementActivity  extends AppCompatActivity {
+    public static final String COM_LEADPOS_XREPORT_FORM = "COM_LEADPOS_XREPORT_FORM";
+    public static final String COM_LEADPOS_XREPORT_TO = "COM_LEADPOS_XREPORT_TO";
+    public static final String COM_LEADPOS_XREPORT_ID = "COM_LEADPOS_XREPORT_ID";
+    public static final String COM_LEADPOS_XREPORT_FLAG = "COM_LEADPOS_XREPORT_FLAG";
+    public static final String COM_LEADPOS_XREPORT_TOTAL_AMOUNT = "COM_LEADPOS_XREPORT_TOTAL_AMOUNT";
+    public static final String COM_LEADPOS_XREPORT_AMOUNT = "COM_LEADPOS_XREPORT_AMOUNT";
+
     Button btnZ, btnZView,btnX, btnOrder,btnExFiles ,btnSalesMan , btnInvoice , btnClosingReport , btnMonthZReportView;
 
     ZReportDBAdapter zReportDBAdapter;
@@ -98,6 +104,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                 Log.e(ex.getLocalizedMessage(), ex.getMessage());
             }
         }
+        if(lastZReport==null) {btnX.setEnabled(false);}
         try {
             opiningReportDBAdapter.open();
             closingReportDBAdapter.open();
@@ -156,6 +163,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
                                 i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,amount);
 
+
                                 startActivity(i);
                                 btnZ.setEnabled(false);
                                 }else {
@@ -196,19 +204,35 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         btnX.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PrintTools pt=new PrintTools(ReportsManagementActivity.this);
-                if (lastZReport!=null){ // test if have at least i row in ZReportTable Then make XReport
-                Bitmap bmap = pt.createXReport(lastZReport.getEndOrderId()+1,lastSale.getOrderId(),SESSION._EMPLOYEE,new Date());
+                if (lastZReport!=null) {
+                    double totalXreportAmount = 0;
+                    XReportDBAdapter xReportDBAdapter = new XReportDBAdapter(ReportsManagementActivity.this);
+                    xReportDBAdapter.open();
+                    XReport x = new XReport(0, new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE, lastZReport.getEndOrderId() + 1, lastSale);
+                    x.setByUser(SESSION._EMPLOYEE.getEmployeeId());
+                    double amount = xReportDBAdapter.getXReportAmount(x.getStartOrderId(), x.getEndOrderId());
+                    try {
+                        totalXreportAmount = xReportDBAdapter.getLastRow().getTotalPosSales() + amount;
+                    } catch (Exception e) {
+                        totalXreportAmount = amount;
 
-                    pt.PrintReport(bmap);
-                    //create and print x report
-/** test xReport use zActivity
-                    Intent i=new Intent(ReportsManagementActivity.this,ReportZDetailsActivity.class);
-                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID,lastZReport.getCashPaymentId());
-                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM,lastZReport.getStartOrderId());
-                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO,lastZReport.getEndOrderId());
-                    startActivity(i);**/}
+                        e.printStackTrace();
+                    }
+                    x.setInvoiceReceiptAmount(amount);
+                    x.setTotalAmount(amount);
+                    x.setTotalSales(amount);
+                    x.setTotalPosSales(totalXreportAmount);
+                    XReport xReport = Util.insertXReport(x, getApplicationContext());
+                    Intent i = new Intent(ReportsManagementActivity.this, ReportZDetailsActivity.class);
+                    i.putExtra(COM_LEADPOS_XREPORT_ID, xReport.getxReportId());
+                    i.putExtra(COM_LEADPOS_XREPORT_FORM, xReport.getStartOrderId());
+                    i.putExtra(COM_LEADPOS_XREPORT_TO, xReport.getEndOrderId());
+                    i.putExtra(COM_LEADPOS_XREPORT_TOTAL_AMOUNT, totalXreportAmount);
+                    i.putExtra(COM_LEADPOS_XREPORT_AMOUNT, amount);
+                    i.putExtra(COM_LEADPOS_XREPORT_FLAG, true);
 
+                    startActivity(i);
+                }
 
             }
         });

@@ -6,8 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -26,13 +26,12 @@ import com.pos.leaders.leaderspossystem.Pinpad.Credix.ResponseCode;
 import com.pos.leaders.leaderspossystem.Pinpad.Credix.SendRequestType;
 import com.pos.leaders.leaderspossystem.Pinpad.Credix.TransactionCode;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.SalesCartActivity;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Iterator;
 
 import static com.pos.leaders.leaderspossystem.SettingsTab.PinpadTap.PINPAD_IP;
 import static com.pos.leaders.leaderspossystem.SettingsTab.PinpadTap.PINPAD_PASSWORD;
@@ -169,7 +168,7 @@ public class PinpadActivity extends AppCompatActivity {
 
         Intent i = new Intent();
         i.putExtra(RESULT_INTENT_CODE_PIN_PAD_ACTIVITY_FULL_RESPONSE, jo.toString());
-
+        i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
         setResult(RESULT_OK, i);
         finish();
     }
