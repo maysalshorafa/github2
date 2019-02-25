@@ -302,7 +302,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     .setMessage(getString(R.string.are_you_want_to_cancel_payment_activity))
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            finish();
+                           finish();
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -315,6 +315,10 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onBackPressed() {
+        // Do Here what ever you want do on back press;
     }
 
 }

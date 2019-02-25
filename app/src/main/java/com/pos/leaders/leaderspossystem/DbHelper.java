@@ -53,7 +53,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Feedback.ClearSync;
 import com.pos.leaders.leaderspossystem.Tools.BufferDbEmail;
@@ -181,8 +180,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(11,2,2);");
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(12,2,11);");
         /**  db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(11,2,4.2,2.3);");
-          db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(12,2,3.2,2.3);");
-          db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(13,2,2.3,2.3);");**/
+         db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(12,2,3.2,2.3);");
+         db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(13,2,2.3,2.3);");**/
 
 
         // Currency Statment
@@ -216,7 +215,6 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CustomerMeasurementDBAdapter.DATABASE_CREATE);
         db.execSQL(MeasurementsDetailsDBAdapter.DATABASE_CREATE);
         db.execSQL(MeasurementDynamicVariableDBAdapter.DATABASE_CREATE);
-        db.execSQL(XReportDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (1,'משקל','Double','KG',0);");
         db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (2,'יד ימין 1','Double','CM',0);");
         db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (3,'יד ימין 2','Double','CM',0);");
@@ -334,10 +332,6 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(OrderDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[1]);
                     db.execSQL(OrderDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[2]);
                     BufferDbEmail.sendLogFile();
-                    break;
-                case 4:
-                    db.execSQL(IdsCounterDBAdapter.addColumn("x_report"));
-                    db.execSQL(XReportDBAdapter.DATABASE_CREATE);
                     break;
 
 

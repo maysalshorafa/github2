@@ -3269,10 +3269,11 @@ public class SalesCartActivity extends AppCompatActivity {
                 Log.w("mainMer", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote));
                 Log.w("mainCli", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
 
+                    printAndOpenCashBox(data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY),
+                            data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote),
+                            data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote), REQUEST_CREDIT_CARD_ACTIVITY_CODE);
 
-                printAndOpenCashBox(data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY),
-                        data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote),
-                        data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote), REQUEST_CREDIT_CARD_ACTIVITY_CODE);
+
 
                 //get the invoice plugin
                 //print invoice
@@ -3414,8 +3415,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 Payment payment = new Payment(paymentID, CREDIT_CARD, saleTotalPrice, saleID);
                 SESSION._ORDERS.setPayment(payment);
                 //endregion
+                    printAndOpenCashBox("PINPAD", jsonObject.toString(), "", REQUEST_PIN_PAD_ACTIVITY_CODE);
 
-                printAndOpenCashBox("PINPAD", jsonObject.toString(), "", REQUEST_PIN_PAD_ACTIVITY_CODE);
 
             } else if (resultCode == RESULT_CANCELED) {
                 new AlertDialog.Builder(this)
@@ -3540,8 +3541,9 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 checksDBAdapter.close();
 
+                    printAndOpenCashBox("", "", "", REQUEST_CHECKS_ACTIVITY_CODE);
 
-                printAndOpenCashBox("", "", "", REQUEST_CHECKS_ACTIVITY_CODE);
+
                 return;
             }
         }
@@ -3584,6 +3586,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 SESSION._ORDERS.setOrderId(saleIDforCash);
 
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess, new Order(SESSION._ORDERS));
+
 
                 /// Club with point and amount
                 if (clubType == 2) {
@@ -3656,7 +3659,11 @@ public class SalesCartActivity extends AppCompatActivity {
                 cashPaymentDBAdapter.insertEntry(saleIDforCash, saleTotalPrice, 0, new Timestamp(System.currentTimeMillis()),1,1);
 
                 paymentDBAdapter.close();
-                printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
+                if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
+                    printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
+                    CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
+
+                }
                 saleDBAdapter.close();
                 return;
             }
@@ -3781,8 +3788,12 @@ public class SalesCartActivity extends AppCompatActivity {
                 SESSION._ORDERS.setPayment(payment);
 
                 paymentDBAdapter.close();
+                if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
+                    printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
+                    CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
 
-                printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
+                }
+
 
                 return;
             }
@@ -3919,7 +3930,11 @@ public class SalesCartActivity extends AppCompatActivity {
 
                     paymentDBAdapter.close();
 
-                    printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
+                    if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
+                        printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
+                        CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
+
+                    }
 
                     return;
                 } catch (Exception e) {

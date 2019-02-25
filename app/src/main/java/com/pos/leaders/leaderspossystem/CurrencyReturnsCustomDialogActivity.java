@@ -39,6 +39,8 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
     private double excess = 0;
     Currency rCurrency;
     private Order sale;
+    public static boolean REQUEST_CURRENCY_RETURN_ACTIVITY_CODE = true;
+
 
     public CurrencyReturnsCustomDialogActivity() {
         super(null);
@@ -84,6 +86,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
                     currencyReturnsDBAdapter.open();
                     double returnCurrencyValue = Double.parseDouble(tvExcess.getText().toString());
                     currencyReturnsDBAdapter.insertEntry(sale.getOrderId(), returnCurrencyValue, new Timestamp(System.currentTimeMillis()), rCurrency.getId());
+                    REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=true;
                     currencyReturnsDBAdapter.close();
                 }
                 cancel();

@@ -10,12 +10,21 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DocumentType;
+import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+import com.pos.leaders.leaderspossystem.Models.Payment;
+import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.XReport;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
@@ -29,12 +38,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.pos.leaders.leaderspossystem.Tools.Util.currencyOperationPaymentList;
+import static com.pos.leaders.leaderspossystem.Tools.Util.paymentList;
+
 /**
  * Created by Karam on 26/12/2016.
  */
 
 public class BitmapInvoice {
-
+    static  int invoiceReceiptCount=0 ,invoiceCount=0 , CreditInvoiceCount=0 , ShekelCount=0 ,UsdCount=0 , EurCount=0,GbpCount=0 ,checkCount=0 , creditCardCount=0 ,receiptInvoiceAmountCheck=0 , cashCount=0,receiptInvoiceAmount=0;
+    static  double cashAmount=0;
+   static List<List<Check>> checkList = new ArrayList<>();
     public static Bitmap print(int id, List<OrderDetails> orders, Order sale, boolean isCopy, Employee user, Context context) {
         //miriam_libre_bold.ttf
         //miriam_libre_regular.ttf
@@ -282,6 +296,8 @@ public class BitmapInvoice {
     }
 
     public static Bitmap zPrint(Context context, ZReport zReport ,  boolean isCopy) {
+        int layOutHight=0;
+        getCountForZReport(context,zReport);
         ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
         zReportDBAdapter.open();
         EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
@@ -291,6 +307,7 @@ public class BitmapInvoice {
         //miriam_libre_regular.ttf
         //carmelitregular.ttf
         int PAGE_WIDTH = CONSTANT.PRINTER_PAGE_WIDTH;
+
         String status = context.getString(R.string.source_invoice);
 
         Typeface plain = Typeface.createFromAsset(context.getAssets(), "carmelitregular.ttf");
@@ -316,6 +333,8 @@ public class BitmapInvoice {
         StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" + DateConverter.dateToString(zReport.getCreatedAt().getTime()) + "\n\r" + "קןפאי : " + zReport.getUser().getFullName()+ status , head,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
         StaticLayout posSales = new StaticLayout( "\n"  +context.getString(R.string.pos_sales)+" "+zReport.getTotalPosSales(), posSaleStyle,
+                PAGE_WIDTH, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
+        StaticLayout cashLayout = new StaticLayout( "\n"  +context.getString(R.string.cash)+" "+cashAmount + "  "+ zReport.getCashTotal(), posSaleStyle,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
 
 
@@ -351,19 +370,20 @@ public class BitmapInvoice {
         orderTP.setTextSize(25);
         orderTP.setLinearText(true);
 
-        StaticLayout sInvoiceD = new StaticLayout("\u200F"+context.getString(R.string.details) +  "\t\t\t\t\t\t\t\t\t"+context.getString(R.string.in_put)+ "\t\t"+ context.getString(R.string.out_put) + "\t\t\t" + context.getString(R.string.total) , invoiceD,
+        StaticLayout sInvoiceD = new StaticLayout("\u200F"+context.getString(R.string.details) +  "\t\t\t\t\t\t\t\t\t"+context.getString(R.string.count) + "\t\t\t\t\t\t\t\t\t" + context.getString(R.string.total) , invoiceD,
                 PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
 
-        StaticLayout scInvoiceD = new StaticLayout("\u200F"+context.getString(R.string.currency) +  "\t\t\t\t\t\t\t\t"+context.getString(R.string.in_put)+ "\t\t"+ context.getString(R.string.out_put) + "\t\t\t" + context.getString(R.string.total) , invoiceD,
+        StaticLayout scInvoiceD =new StaticLayout("\u200F"+context.getString(R.string.currency) +  "\t\t\t\t\t\t\t\t\t"+context.getString(R.string.count) + "\t\t\t\t\t\t" + context.getString(R.string.total) , invoiceD,
                 PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
-
+        StaticLayout checkHead =new StaticLayout("\u200F"+context.getString(R.string.checks) +  "\t\t\t\t\t\t\t\t\t\t" + context.getString(R.string.date)+  "\t\t\t\t\t\t" + context.getString(R.string.amount) , invoiceD,
+                PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
 
         String names = "", in = "", out = "", total = "";
-        names +="\u200F"+ context.getString(R.string.invoice_receipt) +"\n" + "\u200F"+context.getString(R.string.invoice) + "\n" + "\u200F"+context.getString(R.string.credit_invoice_doc) + "\n"+"\u200F"+context.getString(R.string.total_sales);
+        names +="\u200F"+ context.getString(R.string.cash)+"\n"+"\u200F"+ context.getString(R.string.invoice_receipt) +"\n" + "\u200F"+context.getString(R.string.invoice) + "\n" + "\u200F"+context.getString(R.string.credit_invoice_doc) + "\n"+"\u200F"+context.getString(R.string.total_sales);
 
-        in +=  "~" + "\n" + "~" + "\n" +"~" + "\n" +"~";
-        out +=  "~" + "\n" + "~" + "\n" +"~" + "\n" +"~";
-        total += dTS(zReport.getInvoiceReceiptAmount()) + "\n" + dTS(zReport.getInvoiceAmount()) + "\n" + dTS(zReport.getCreditInvoiceAmount()) + "\n" +dTS(zReport.getTotalSales());
+        in +=  cashCount+"\n"+invoiceReceiptCount + "\n" +invoiceCount + "\n" +CreditInvoiceCount + "\n" +"~";
+        out +=  " " + "\n" + " " + "\n" +" " + "\n" +"  ";
+        total +=dTS(zReport.getInvoiceReceiptAmount()) +"\n"+ dTS(zReport.getInvoiceReceiptAmount()) + "\n" + dTS(zReport.getInvoiceAmount()) + "\n" + dTS(zReport.getCreditInvoiceAmount()) + "\n" +dTS(zReport.getTotalSales());
         StaticLayout slNames = new StaticLayout(names, orderTP,
                 (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
         StaticLayout slIn = new StaticLayout(in, orderTP,
@@ -385,14 +405,14 @@ public class BitmapInvoice {
         String cIn = "", cOut = "", cTotal = "";
         if(SETTINGS.enableCurrencies) {
             names = "\u200F"+context.getString(R.string.shekel) + "\n"+"\u200F"+ context.getString(R.string.usd) + "\n" +"\u200F"+ context.getString(R.string.eur) + "\n" +"\u200F"+ context.getString(R.string.gbp)+  "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
-            cIn = "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~"+ "\n" + "~";
-            cOut = "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n"+ "~" + "\n" + "~";
+            cIn = ShekelCount + "\n" + UsdCount + "\n" +EurCount + "\n" + GbpCount + "\n" + checkCount+ "\n" +creditCardCount+ "\n" + "~";
+            cOut =  " " + "\n" +  " " + "\n" +  " " + "\n" +  " "+ "\n" + " " + "\n"+ " " + "\n" +  " ";
             cTotal = "\n" + Util.makePrice(zReport.getShekelAmount()) + "\n" + Util.makePrice(zReport.getUsdAmount()) + "\n" + Util.makePrice(zReport.getEurAmount()) + "\n" + Util.makePrice(zReport.getGbpAmount())
                     + "\n" + Util.makePrice(zReport.getCheckTotal()) + "\n" + Util.makePrice(zReport.getCreditTotal()) + "\n" + Util.makePrice(zReport.getTotalAmount());
         }else {
             names = "\u200F"+context.getString(R.string.shekel)+ "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
-            cIn = "~" + "\n" + "~"+"\n" + "~" + "\n" + "~";
-            cOut = "~" + "\n"+ "~" + "\n" +"~" + "\n" + "~";
+            cIn = ShekelCount + "\n" + checkCount+"\n" + creditCardCount + "\n" + "~";
+            cOut =  " " + "\n"+  " " + "\n" + " " + "\n" +  " ";
             cTotal = "\n" + Util.makePrice(zReport.getShekelAmount())+ "\n" + Util.makePrice(zReport.getCheckTotal()) + "\n" + Util.makePrice(zReport.getCreditTotal()) + "\n" + Util.makePrice(zReport.getTotalAmount());
         }
         StaticLayout cSlNames = new StaticLayout(names, orderTP,
@@ -404,15 +424,28 @@ public class BitmapInvoice {
         StaticLayout cSlTotal = new StaticLayout(cTotal, orderTP,
                 (int) (PAGE_WIDTH * 0.2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
 
-
         // invoiceD.setTextAlign(Paint.Align.CENTER);
         // Create bitmap and canvas to draw to
         //RGB_565
-        int Page_Height = 0;
-      //  if (SETTINGS.enableCurrencies)
-            Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight() + cSlNames.getHeight() + sNewLine.getHeight() + scInvoiceD.getHeight()+ sNewLine.getHeight() +posSales.getHeight();
+        List<StaticLayout>staticLayoutList=new ArrayList<>();
+        if(checkList.size()>0){
+            for(int i=0;i<checkList.size();i++){
+                List<Check>list = checkList.get(i);
 
-         //   Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight();
+                for (int f =0;f<list.size();f++){
+                    StaticLayout currentCheck =new StaticLayout("\u200F"+"    "+list.get(f).getCheckNum() +  "\t\t\t\t\t\t\t\t\t\t" + DateConverter.toDate(new Date(list.get(f).getCreatedAt().getTime()))+  "\t\t\t\t\t\t" + list.get(f).getAmount() , invoiceD,
+                            PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+                    staticLayoutList.add(currentCheck);
+                    layOutHight+=currentCheck.getHeight();
+
+                }
+            }
+        }
+        int Page_Height = 0;
+        //  if (SETTINGS.enableCurrencies)
+        Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight() + cSlNames.getHeight() + sNewLine.getHeight() + scInvoiceD.getHeight()+ sNewLine.getHeight()+checkHead.getHeight()+ sNewLine.getHeight()+layOutHight + sNewLine.getHeight()+posSales.getHeight();
+
+        //   Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight();
         Bitmap b = Bitmap.createBitmap(PAGE_WIDTH, Page_Height, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
 
@@ -445,28 +478,156 @@ public class BitmapInvoice {
         c.translate(-(int) (PAGE_WIDTH * 0.60), slNames.getHeight());
         sNewLine.draw(c);
 
-     //   if (SETTINGS.enableCurrencies) {
+        //   if (SETTINGS.enableCurrencies) {
+        c.translate(0, sNewLine.getHeight());
+        cSlTotal.draw(c);
+        scInvoiceD.draw(c);
+
+        c.translate(cSlTotal.getWidth(), 0);
+        c.translate(0, scInvoiceD.getHeight());
+
+        cSlOut.draw(c);
+        c.translate(cSlOut.getWidth(), 0);
+        cSlIn.draw(c);
+        c.translate(cSlIn.getWidth(), 0);
+        cSlNames.draw(c);
+
+        c.translate(-(int) (PAGE_WIDTH * 0.60), cSlNames.getHeight());
+        sNewLine.draw(c);
+        //   }
+        if(checkList.size()>0){
             c.translate(0, sNewLine.getHeight());
-            cSlTotal.draw(c);
-            scInvoiceD.draw(c);
+            ///check Region
 
-            c.translate(cSlTotal.getWidth(), 0);
-            c.translate(0, scInvoiceD.getHeight());
+            checkHead.draw(c);
+            c.translate(0, checkHead.getHeight());
+            for(int i=0;i<staticLayoutList.size();i++){
+             StaticLayout s= staticLayoutList.get(i);
+                    s.draw(c);
+                    c.translate(0, s.getHeight());
+            }
 
-            cSlOut.draw(c);
-            c.translate(cSlOut.getWidth(), 0);
-            cSlIn.draw(c);
-            c.translate(cSlIn.getWidth(), 0);
-            cSlNames.draw(c);
-
-            c.translate(-(int) (PAGE_WIDTH * 0.60), cSlNames.getHeight());
             sNewLine.draw(c);
-     //   }
+        }
+
         posSales.draw(c);
         c.translate(0, posSales.getHeight());
         c.restore();
         return b;
     }
+
+    public static void getCountForZReport(Context context, ZReport z) {
+        checkList=new ArrayList<>();
+        cashAmount=0;
+        invoiceReceiptCount=0 ;invoiceCount=0; CreditInvoiceCount=0 ; ShekelCount=0 ;UsdCount=0 ;EurCount=0; GbpCount=0 ;checkCount=0 ; creditCardCount=0 ;receiptInvoiceAmountCheck=0 ; cashCount=0;receiptInvoiceAmount=0;
+        OrderDBAdapter orderDb = new OrderDBAdapter(context);
+        orderDb.open();
+        ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
+        zReportDBAdapter.open();
+        invoiceReceiptCount = orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()).size();
+        if(zReportDBAdapter.getProfilesCount()==0){
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(-1, InvoiceStatus.UNPAID.getValue());
+                invoiceCount+=posInvoiceList.size();
+
+            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.CREDIT_INVOICE.getValue(),CONSTANT.CASH);
+                CreditInvoiceCount+=posCreditInvoiceList.size();
+
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
+                receiptInvoiceAmountCheck+=posReceiptList.size();
+
+        }else {
+            ZReport zReport1=null;
+            try {
+                zReport1 = zReportDBAdapter.getLastRow();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(zReport1.getzReportId(), InvoiceStatus.UNPAID.getValue());
+                invoiceCount+=posInvoiceList.size();
+
+            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.CREDIT_INVOICE.getValue(),CONSTANT.CASH);
+                CreditInvoiceCount+=posCreditInvoiceList.size();
+
+            List<PosInvoice>posReceiptListCheck = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
+                receiptInvoiceAmountCheck+=posReceiptListCheck.size();
+        }
+        List<Long>orderIds= new ArrayList<>();
+        List<Payment> payments = paymentList(orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()),context);
+        for (Payment p : payments) {
+            int i = 0;
+            switch (p.getPaymentWay()) {
+
+                case CONSTANT.CASH:
+                  cashCount+=1;
+                    cashAmount+=p.getAmount();
+                    break;
+                case CONSTANT.CREDIT_CARD:
+                 creditCardCount+=1;
+                    break;
+                case CONSTANT.CHECKS:
+                  checkCount+=1;
+                    orderIds.add(p.getOrderId());
+                    break;
+            }
+        }
+        if(orderIds.size()>0){
+            for (int id = 0;id<orderIds.size();id++){
+                ChecksDBAdapter checkDb= new ChecksDBAdapter(context);
+                checkDb.open();
+                List<Check> c = checkDb.getPaymentBySaleID(orderIds.get(id));
+                checkList.add(c);
+            }
+        }
+        //with Currency
+        if (SETTINGS.enableCurrencies) {
+            List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()),context);
+            for (CurrencyOperation cp : currencyOperationList) {
+                switch (cp.getCurrency_type()) {
+                    case "ILS":
+                        ShekelCount+=1;
+                        break;
+                    case "USD":
+                        UsdCount+=1;
+                        break;
+                    case "EUR":
+                        EurCount+=1;
+
+                        break;
+                    case "GBP":
+                        GbpCount+=1;
+                        break;
+                }
+            }
+
+        }
+        if(zReportDBAdapter.getProfilesCount()==0){
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
+            receiptInvoiceAmount+=posReceiptList.size();
+
+        }else {
+            ZReport zReport1=null;
+            try {
+                zReport1 = zReportDBAdapter.getLastRow();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
+            receiptInvoiceAmount+=posReceiptList.size();
+
+        }
+        ShekelCount+=receiptInvoiceAmount;
+        checkCount+=receiptInvoiceAmountCheck;
+
+    }
+
     public static Bitmap xPrint(Context context, XReport xReport , boolean isCopy) {
         XReportDBAdapter xReportDBAdapter =new XReportDBAdapter(context);
         xReportDBAdapter.open();
