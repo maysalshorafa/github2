@@ -197,7 +197,7 @@ public class SetUpManagement extends AppCompatActivity {
                 editor.putBoolean(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, customerMeasurementEnable);
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, noOfPoint+"");
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, printerType);
-                editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, branchId+"");
+                editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, branchId+"");
 
                 editor.apply();
 
@@ -305,6 +305,7 @@ public class SetUpManagement extends AppCompatActivity {
                         }else {
                             SETTINGS.enableAllBranch=false;
                         }
+
                     }
                 }
                 editor.apply();

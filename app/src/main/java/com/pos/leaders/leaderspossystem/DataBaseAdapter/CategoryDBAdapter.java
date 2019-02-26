@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Category;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -195,8 +196,12 @@ public class CategoryDBAdapter {
 
     public List<Category> getAllDepartments() {
         List<Category> departmentList = new ArrayList<Category>();
-
-        Cursor cursor = db.rawQuery("select * from " + CATEGORY_TABLE_NAME + " where " + CATEGORY_COLUMN_DISENABLED + "=0 order by id desc", null);
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+         cursor  = db.rawQuery("select * from " + CATEGORY_TABLE_NAME + " where " + CATEGORY_COLUMN_DISENABLED + "=0 order by id desc", null);
+        }else {
+            cursor  = db.rawQuery("select * from " + CATEGORY_TABLE_NAME + " where " + CATEGORY_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + CATEGORY_COLUMN_DISENABLED + "=0 order by id desc", null);
+        }
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {

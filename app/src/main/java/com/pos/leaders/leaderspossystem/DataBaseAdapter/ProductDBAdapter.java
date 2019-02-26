@@ -208,7 +208,13 @@ public class ProductDBAdapter {
     }
 
     public int getProductsCount() {
-        String countQuery = "SELECT  * FROM " + PRODUCTS_TABLE_NAME;
+        String countQuery="";
+        if(!SETTINGS.enableAllBranch){
+            countQuery  = "SELECT  * FROM " + PRODUCTS_TABLE_NAME+ " where " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc";
+        }else {
+            countQuery  = "SELECT  * FROM " + PRODUCTS_TABLE_NAME+ " where "+ PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc";
+
+        }
         Cursor cursor = db.rawQuery(countQuery, null);
         int count = cursor.getCount();
         cursor.close();

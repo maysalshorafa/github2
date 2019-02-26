@@ -135,5 +135,25 @@ public class SettingsDBAdapter {
         SETTINGS.branchId=cursor.getInt(cursor.getColumnIndex(SETTINGS_COLUMN_BRANCH_ID));
         cursor.close();
     }
+    public void readSetting() {
+        Cursor cursor = db.rawQuery("select * from " + SETTINGS_TABLE_NAME , null);
+        if (cursor.getCount() < 1) // NO DATA HAS BEEN SET
+        {
+            cursor.close();
+        }
+        cursor.moveToFirst();
+        SETTINGS.companyID = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_COMPANY_ID));
+        SETTINGS.companyName = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_COMPANY_NAME));
+        SETTINGS.posID = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_POS_NUMBER));
+        SETTINGS.tax = cursor.getFloat(cursor.getColumnIndex(SETTINGS_COLUMN_TAX));
+
+        SETTINGS.returnNote = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_RETURN_NOTE));
+        SETTINGS.endOfInvoice = cursor.getInt(cursor.getColumnIndex(SETTINGS_COLUMN_END_OF_REPLACEMENT_NOTE));
+        SETTINGS.ccNumber = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_CREDIT_CARD_USERNAME));
+        SETTINGS.ccPassword = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_CREDIT_CARD_PASSWORD));
+        SETTINGS.branchId=cursor.getInt(cursor.getColumnIndex(SETTINGS_COLUMN_BRANCH_ID));
+        cursor.close();
+    }
+
 
 }

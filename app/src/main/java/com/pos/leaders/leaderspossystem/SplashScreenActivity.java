@@ -536,10 +536,9 @@ public class SplashScreenActivity extends Activity {
                 Intent i = new Intent(context, SetUpManagement.class);
                 context.startActivity(i);
             }
-            //Branch
+            //BranchId
             if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID)) {
-                branchId = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, "0"));
-                Log.d("testtttt",branchId+"");
+                branchId = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, "0"));
                 if(branchId==0){
                     SETTINGS.enableAllBranch=true;
                 }else {
@@ -547,9 +546,9 @@ public class SplashScreenActivity extends Activity {
 
                 }
             } else {
-                return false;
+                Intent i = new Intent(context, SetUpManagement.class);
+                context.startActivity(i);
             }
-            //end
 
         } else {
             Intent i = new Intent(context, SetUpManagement.class);
@@ -557,7 +556,6 @@ public class SplashScreenActivity extends Activity {
         }
         return true;
     }
-
     // get BoSetting and store in shared preference file
     private void BoSetting() {
         final SharedPreferences preferences =getSharedPreferences(BO_SETTING, MODE_PRIVATE);

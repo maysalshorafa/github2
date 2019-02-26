@@ -11,6 +11,7 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.CustomerType;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -305,7 +306,13 @@ public class CustomerDBAdapter {
 
     public List<Customer> getTopCustomer(int from, int count) {
         List<Customer> customerList = new ArrayList<Customer>();
-        Cursor cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where " + CUSTOMER_COLUMN_DISENABLED + "=0 order by id desc", null);
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            cursor =  db.rawQuery( "select * from "+CUSTOMER_TABLE_NAME+ " where " + CUSTOMER_COLUMN_DISENABLED +" = 0 order by id desc", null );
+        }else {
+            cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where " + CUSTOMER_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + CUSTOMER_COLUMN_DISENABLED + "=0 order by id desc", null);
+
+        }
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
@@ -342,7 +349,13 @@ public class CustomerDBAdapter {
 
     public List<Customer> getAllCustomer() {
         List<Customer> customerMs = new ArrayList<Customer>();
-        Cursor cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where " + CUSTOMER_COLUMN_DISENABLED + "=0 order by id desc", null);
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            cursor =  db.rawQuery( "select * from "+CUSTOMER_TABLE_NAME+ " where " + CUSTOMER_COLUMN_DISENABLED +" = 0 order by id desc", null );
+        }else {
+            cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where " + CUSTOMER_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + CUSTOMER_COLUMN_DISENABLED + "=0 order by id desc", null);
+
+        }
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             customerMs.add(new Customer(Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_ID))),
@@ -369,8 +382,13 @@ public class CustomerDBAdapter {
 
     public List<Customer> getAllCustomerInClub(long id) {
         List<Customer> customerMs = new ArrayList<Customer>();
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            cursor =  db.rawQuery( "select * from "+CUSTOMER_TABLE_NAME+ " where "+ CUSTOMER_COLUMN_CLUB +"=" +id  +" and "  + CUSTOMER_COLUMN_DISENABLED +" = 0 order by id desc", null );
+        }else {
+            cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where "+ CUSTOMER_COLUMN_CLUB +"=" +id  +" and " + CUSTOMER_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + CUSTOMER_COLUMN_DISENABLED + "=0 order by id desc", null);
 
-        Cursor cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where "+ CUSTOMER_COLUMN_CLUB +"=" +id +" and " + CUSTOMER_COLUMN_DISENABLED + "=0 order by id desc", null);
+        }
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             customerMs.add(new Customer(Long.parseLong(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_ID))),

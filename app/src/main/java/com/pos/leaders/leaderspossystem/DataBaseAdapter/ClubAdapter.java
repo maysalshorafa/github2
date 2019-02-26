@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Club;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -218,7 +219,13 @@ public class ClubAdapter {
     }
     public List<Club> getAllGroup() {
         List<Club> groups = new ArrayList<Club>();
-        Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME + " where " + Group_COLUMN_DISENABLED + "=0 order by id desc", null);
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            cursor =  db.rawQuery( "select * from "+Group_TABLE_NAME+ " where " + Group_COLUMN_DISENABLED +" = 0 order by id desc", null );
+        }else {
+            cursor = db.rawQuery("select * from " + Group_TABLE_NAME + " where " + Group_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + Group_COLUMN_DISENABLED + "=0 order by id desc", null);
+
+        }
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             groups.add(createNewGroup(cursor));
