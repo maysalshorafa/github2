@@ -341,7 +341,9 @@
     <string name="active_credit_card_service_in_pos">الرجاء تفعيل خدمة الدفع عن طريق بطاقة الائتمان</string>
     <string name="ccv">CCV</string>
     <string name="ins">₪</string>
-
+    <string name="dolor_sign">$</string>
+    <string name="eur_sign">€</string>
+    <string name="gbp_sign">£</string>
     <string name="pinpad_connection_error">الرجاء تحدث مع فريق الدعم الفني</string>
     <string name="transaction_error">Transaction error</string>
 

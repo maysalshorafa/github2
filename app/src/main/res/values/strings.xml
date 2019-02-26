@@ -7,6 +7,9 @@
     <string name="add_to_cart">Add to cart</string>
 
     <string name="ins">₪</string>
+    <string name="dolor_sign">$</string>
+    <string name="eur_sign">€</string>
+    <string name="gbp_sign">£</string>
     <string name="refresh">Refresh</string>
     <string name="add">Add</string>
     <string name="user_name">Employee Name</string>

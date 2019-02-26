@@ -318,6 +318,9 @@
     <string name="id">ת\'\'ז</string>
     <string name="if_you_want_to_update_general_setting_click_ok">אם ברצונך לעדכן את הגדרות כלליות לחץ על אישור</string>
     <string name="ins">₪</string>
+    <string name="dolor_sign">$</string>
+    <string name="eur_sign">€</string>
+    <string name="gbp_sign">£</string>
     <string name="insert_category_name_massage">הזן שם מחלקה.</string>
     <string name="insert_new_category_name_massage">אנא הכנס שם מחלקה חדש.</string>
     <string name="integrated_payment">תשלום משולב</string>

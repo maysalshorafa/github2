@@ -19,8 +19,12 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Category;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductStatus;
 import com.pos.leaders.leaderspossystem.Models.ProductUnit;
@@ -45,7 +49,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     ArrayAdapter<String> LAdapter;
     List<Category> listDepartment;
     List<String> departmentsName;
-    Spinner productUnitSp;
+    Spinner productUnitSp , SpProductCurrency;
     Button btSave,btnCancel;
     EditText etName,etBarcode,etDescription,etPrice,etCostPrice,etDisplayName,etSku,etStockQuantity,etProductWeight;
     Switch swWithTax,swManageStock;
@@ -68,6 +72,10 @@ public class ProductsActivity  extends AppCompatActivity  {
     boolean withTax , manageStock = true;
     ProductUnit unit ;
     LinearLayout llWeight;
+    String currencyType="";
+    List<Currency> currenciesList;
+    private List<CurrencyType> currencyTypesList = null;
+    private List<String> currenciesNames = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +108,7 @@ public class ProductsActivity  extends AppCompatActivity  {
 
         swWithTax=(Switch)findViewById(R.id.SWWithTax);
         productUnitSp = (Spinner)findViewById(R.id.SpProductUnit);
+        SpProductCurrency = (Spinner)findViewById(R.id.SpProductCurrency);
         llWeight = (LinearLayout)findViewById(R.id.llWeight);
         etProductWeight = (EditText)findViewById(R.id.ETWeight);
         productDBAdapter = new ProductDBAdapter(this);
@@ -117,6 +126,30 @@ public class ProductsActivity  extends AppCompatActivity  {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
         productUnitSp.setAdapter(dataAdapter);
+        //region spinner
+        //Getting default currencies name and values
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
+        currencyTypeDBAdapter.open();
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        currencyTypeDBAdapter.close();
+        //get currency value
+        CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(ProductsActivity.this);
+        currencyDBAdapter.open();
+        currenciesList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
+        currencyDBAdapter.close();
+
+        currenciesNames = new ArrayList<String>();
+        for (int i = 0; i < currencyTypesList.size(); i++) {
+            currenciesNames.add(currencyTypesList.get(i).getType());
+        }
+
+        // Creating adapter for spinner
+        final ArrayAdapter<String> dataAdapterCurrency = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currenciesNames);
+
+        // Drop down layout style - list view with radio button
+        // attaching data adapter to spinner
+        dataAdapterCurrency.setDropDownViewResource(R.layout.simple_spinner_dropdown);
+        SpProductCurrency.setAdapter(dataAdapterCurrency);
         //region Add product button
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,6 +287,13 @@ public class ProductsActivity  extends AppCompatActivity  {
 
                         }
                     }
+                    for (int i = 0; i < currencyTypesList.size(); i++) {
+                        CurrencyType currencyType1 = currencyTypesList.get(i);
+                        if (currencyType1.getCurrencyTypeId() == editableProduct.getCurrencyType()) {
+                            SpProductCurrency.setSelection(i);
+
+                        }
+                    }
                     selectedDepartment = d.getName();
                     for (Category dep : listDepartment) {
                         if (dep.getCategoryId() == (editableProduct.getCategoryId())) {
@@ -322,6 +362,13 @@ public class ProductsActivity  extends AppCompatActivity  {
         }
 
         if (editableProduct == null) {
+            String currency = SpProductCurrency.getSelectedItem().toString();
+            int currencyId=0;
+            for(int i=0; i<currencyTypesList.size();i++){
+                if(currencyTypesList.get(i).getType()==currency){
+                    currencyId= (int) currencyTypesList.get(i).getCurrencyTypeId();
+                }
+            }
             if(!etBarcode.getText().toString().equals("")) {
                 etBarcode.setText(newBarCode);
             }
@@ -376,7 +423,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                         }
                         check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
                                 etDescription.getText().toString(), price, costPrice, withTax, depID, SESSION._EMPLOYEE.getEmployeeId(), with_pos, with_point_system,
-                                etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit,weight);
+                                etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit,weight,currencyId);
 
                         if (check > 0) {
                             Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_product), Toast.LENGTH_LONG).show();
@@ -402,6 +449,13 @@ public class ProductsActivity  extends AppCompatActivity  {
 
 
         } else {
+            String currency = SpProductCurrency.getSelectedItem().toString();
+            int currencyId=0;
+            for(int i=0; i<currencyTypesList.size();i++){
+                if(currencyTypesList.get(i).getType()==currency){
+                    currencyId= (int) currencyTypesList.get(i).getCurrencyTypeId();
+                }
+            }
             for (Category d : listDepartment) {
                 if (d.isChecked()) {
                     depID = d.getCategoryId();
@@ -471,6 +525,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                 editableProduct.setManageStock(manageStock);
                 editableProduct.setInStock(stockQuantity>0);
                 editableProduct.setUnit(unit);
+                editableProduct.setCurrencyType(currencyId);
                 if(llWeight.getVisibility()==View.VISIBLE) {
                     editableProduct.setWeight(weight);
                 }
