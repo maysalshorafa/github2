@@ -341,9 +341,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(XReportDBAdapter.DATABASE_CREATE);
                     break;
                 case 5:
-                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[0]);
-                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[1]);
-                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[2]);
+                    db.execSQL(ProductDBAdapter.addColumnInteger("currencyType"));
                     break;
 
 

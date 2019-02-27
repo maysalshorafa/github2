@@ -74,9 +74,6 @@ public class ProductDBAdapter {
     public static final String DATABASE_UPDATE_FROM_V1_TO_V2[] = {"alter table products rename to product_v1;", DATABASE_CREATE + "; ",
             "insert into products (id,name,displayName,barcode,sku,description,price,costPrice,regularPrice,withTax,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system) " +
                     "select id,name,name,barcode,barcode,description,price,costPrice,price,withTax,creatingDate,hide,depId,byEmployee,with_pos,with_point_system from product_v1;"};
-    public static final String DATABASE_UPDATE_FROM_V2_TO_V3[] = {"alter table products rename to product_v2;", DATABASE_CREATE + "; ",
-            "insert into products (id,name,displayName,barcode,sku,description,price,costPrice,regularPrice,withTax,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system,unit,weight,currencyType) " +
-                    "select id,name,name,barcode,barcode,description,price,costPrice,price,withTax,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system ,unit,weight,0 from product_v2;"};
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
@@ -507,5 +504,10 @@ public class ProductDBAdapter {
         cursor.close();
 
         return product;
+    }
+    public static String addColumnInteger(String columnName) {
+        String dbc = "ALTER TABLE " + PRODUCTS_TABLE_NAME
+                + " add column " + columnName + " INTEGER default 0.0;";
+        return dbc;
     }
 }
