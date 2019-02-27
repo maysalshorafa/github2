@@ -355,7 +355,7 @@ public class BitmapInvoice {
             status = context.getString(R.string.copy_invoice);
         StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" + DateConverter.dateToString(zReport.getCreatedAt().getTime()) + "\n\r" + "קןפאי : " + zReport.getUser().getFullName()+ status , head,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
-        StaticLayout posSales = new StaticLayout( "\n"  +context.getString(R.string.pos_sales)+" "+zReport.getTotalPosSales(), posSaleStyle,
+        StaticLayout posSales = new StaticLayout( "\n"  +context.getString(R.string.pos_sales)+" "+Util.makePrice(zReport.getTotalPosSales()), posSaleStyle,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
         StaticLayout opiningReport=  new StaticLayout("\n"+"\u200F"+context.getString(R.string.opining_report) +  "\t\t\t\t\t"+" "  , opiningReportStyle,
                 PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
