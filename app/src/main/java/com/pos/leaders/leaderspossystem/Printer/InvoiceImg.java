@@ -11,9 +11,11 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.Log;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Order;
@@ -351,7 +353,29 @@ public class InvoiceImg {
         blocks.add(b_payment.Left());
 
         blocks.add(lineR.Left());
+        if(SETTINGS.enableCurrencies) {
+            Block currencyDetails = new Block("\u200E" + context.getString(R.string.currency), 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+            Block currencyText = new Block("\u200E" + "", 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
 
+            Block currencyType = new Block("\u200E" + context.getString(R.string.type) + newLineL, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block currencyAmount = new Block("\u200E" + context.getString(R.string.amount) + newLineL, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+
+            CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(context);
+            currencyOperationDBAdapter.open();
+            List<CurrencyOperation> currencyOperationList = currencyOperationDBAdapter.getCurrencyOperationByOrderID(sale.getOrderId());
+            for (int i = 0; i < currencyOperationList.size(); i++) {
+                currencyType.text += (currencyOperationList.get(i).getCurrency_type()) + newLineL;
+                currencyAmount.text += (currencyOperationList.get(i).getAmount()) + newLineL;
+            }
+            blocks.add(currencyText.Bold().Left());
+            blocks.add(currencyDetails.Bold().Left());
+            blocks.add(clear.Left());
+            blocks.add(currencyText.Left());
+            blocks.add(currencyText.Left());
+            blocks.add(currencyAmount.Left());
+            blocks.add(currencyType.Left());
+            blocks.add(lineR.Left());
+        }
         if (checks != null) {
             Block b_checks_number = new Block("\u200e" + context.getString(R.string.checks), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
             Block b_checks_date = new Block(context.getString(R.string.date), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));

@@ -12,6 +12,8 @@ import android.text.TextPaint;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
@@ -21,6 +23,7 @@ import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
@@ -49,6 +52,12 @@ public class BitmapInvoice {
     static  int invoiceReceiptCount=0 ,invoiceCount=0 , CreditInvoiceCount=0 , ShekelCount=0 ,UsdCount=0 , EurCount=0,GbpCount=0 ,checkCount=0 , creditCardCount=0 ,receiptInvoiceAmountCheck=0 , cashCount=0,receiptInvoiceAmount=0;
     static  double cashAmount=0;
    static List<List<Check>> checkList = new ArrayList<>();
+    static List<OpiningReport> opiningReportList=new ArrayList<>();
+    static double aReportDetailsForFirstCurrency=0;
+    static double aReportDetailsForSecondCurrency=0;
+    static double aReportDetailsForThirdCurrency=0;
+    static double aReportDetailsForForthCurrency=0;
+    static double aReportAmount = 0;
     public static Bitmap print(int id, List<OrderDetails> orders, Order sale, boolean isCopy, Employee user, Context context) {
         //miriam_libre_bold.ttf
         //miriam_libre_regular.ttf
@@ -297,6 +306,8 @@ public class BitmapInvoice {
 
     public static Bitmap zPrint(Context context, ZReport zReport ,  boolean isCopy) {
         int layOutHight=0;
+        int layOutCurrencyHight=0;
+
         getCountForZReport(context,zReport);
         ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
         zReportDBAdapter.open();
@@ -327,17 +338,56 @@ public class BitmapInvoice {
         posSaleStyle.setTextSize(28);
         posSaleStyle.setTextAlign(Paint.Align.LEFT);
         posSaleStyle.setLinearText(true);
-
+        TextPaint opiningReportStyle =new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
+        opiningReportStyle.setStyle(Paint.Style.FILL);
+        opiningReportStyle.setColor(Color.BLACK);
+        opiningReportStyle.setTypeface(normal);
+        opiningReportStyle.setTextSize(28);
+        opiningReportStyle.setTextAlign(Paint.Align.LEFT);
+        opiningReportStyle.setLinearText(true);
+        TextPaint orderTP = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
+        orderTP.setStyle(Paint.Style.FILL);
+        orderTP.setColor(Color.BLACK);
+        orderTP.setTypeface(normal);
+        orderTP.setTextSize(25);
+        orderTP.setLinearText(true);
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
         StaticLayout sHead = new StaticLayout(context.getString(R.string.private_company) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" + DateConverter.dateToString(zReport.getCreatedAt().getTime()) + "\n\r" + "קןפאי : " + zReport.getUser().getFullName()+ status , head,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
         StaticLayout posSales = new StaticLayout( "\n"  +context.getString(R.string.pos_sales)+" "+zReport.getTotalPosSales(), posSaleStyle,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
-        StaticLayout cashLayout = new StaticLayout( "\n"  +context.getString(R.string.cash)+" "+cashAmount + "  "+ zReport.getCashTotal(), posSaleStyle,
-                PAGE_WIDTH, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, true);
+        StaticLayout opiningReport=  new StaticLayout("\n"+"\u200F"+context.getString(R.string.opining_report) +  "\t\t\t\t\t"+" "  , opiningReportStyle,
+                PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+        StaticLayout opiningReportAmountLayout = new StaticLayout("\u200F"+context.getString(R.string.amount) +  "\t\t\t\t\t"+aReportAmount  , opiningReportStyle,
+                PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+        StaticLayout opiningReportStyleLayoutCount = new StaticLayout("\u200F"+context.getString(R.string.count) +  "\t\t\t\t\t"+opiningReportList.size()  , opiningReportStyle,
+                PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+        List<StaticLayout> currencyDetailsLayOut=new ArrayList<>();
+
+        if(SETTINGS.enableCurrencies){
+            String currencyType="" , currencyAmount="";
+            currencyType +="\u200F"+ "ILS"+"\n"+"\u200F"+ "USD" +"\n" + "\u200F"+"GBP" + "\n" + "\u200F"+"EUR";
+            currencyAmount+="\u200F"+ aReportDetailsForFirstCurrency+"\n"+"\u200F"+ aReportDetailsForSecondCurrency +"\n" + "\u200F"+aReportDetailsForThirdCurrency + "\n" + "\u200F"+aReportDetailsForForthCurrency;
+            StaticLayout firstCurrencyLayOut =new StaticLayout("\u200F"+"ILS" +  "\t\t\t\t\t"+aReportDetailsForFirstCurrency  , opiningReportStyle,
+                     PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+            StaticLayout secondCurrencyLayOut =new StaticLayout("\u200F"+"USD" +  "\t\t\t\t\t"+aReportDetailsForSecondCurrency  , opiningReportStyle,
+                    PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+            StaticLayout thirdCurrencyLayOut =new StaticLayout("\u200F"+"GBP" +  "\t\t\t\t\t"+aReportDetailsForThirdCurrency  , opiningReportStyle,
+                    PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+            StaticLayout fourthCurrencyLayOut =new StaticLayout("\u200F"+"EUR" +  "\t\t\t\t\t"+aReportDetailsForForthCurrency  , opiningReportStyle,
+                    PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+           currencyDetailsLayOut.add(firstCurrencyLayOut);
+            currencyDetailsLayOut.add(secondCurrencyLayOut);
+            currencyDetailsLayOut.add(thirdCurrencyLayOut);
+            currencyDetailsLayOut.add(fourthCurrencyLayOut);
+            layOutCurrencyHight+=firstCurrencyLayOut.getHeight();
+            layOutCurrencyHight+=secondCurrencyLayOut.getHeight();
+            layOutCurrencyHight+=thirdCurrencyLayOut.getHeight();
+            layOutCurrencyHight+=fourthCurrencyLayOut.getHeight();
 
 
+        }
         TextPaint invoiceHead = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
         invoiceHead.setStyle(Paint.Style.FILL);
         invoiceHead.setColor(Color.BLACK);
@@ -363,12 +413,7 @@ public class BitmapInvoice {
         invoiceCD.setTextSize(28);
         invoiceCD.setLinearText(true);
 
-        TextPaint orderTP = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
-        orderTP.setStyle(Paint.Style.FILL);
-        orderTP.setColor(Color.BLACK);
-        orderTP.setTypeface(normal);
-        orderTP.setTextSize(25);
-        orderTP.setLinearText(true);
+
 
         StaticLayout sInvoiceD = new StaticLayout("\u200F"+context.getString(R.string.details) +  "\t\t\t\t\t\t\t\t\t"+context.getString(R.string.count) + "\t\t\t\t\t\t\t\t\t" + context.getString(R.string.total) , invoiceD,
                 PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
@@ -443,7 +488,7 @@ public class BitmapInvoice {
         }
         int Page_Height = 0;
         //  if (SETTINGS.enableCurrencies)
-        Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight() + cSlNames.getHeight() + sNewLine.getHeight() + scInvoiceD.getHeight()+ sNewLine.getHeight()+checkHead.getHeight()+ sNewLine.getHeight()+layOutHight + sNewLine.getHeight()+posSales.getHeight();
+        Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight() + cSlNames.getHeight() + sNewLine.getHeight() + scInvoiceD.getHeight()+ sNewLine.getHeight()+checkHead.getHeight()+ sNewLine.getHeight()+layOutHight  + scInvoiceD.getHeight()+ sNewLine.getHeight()+opiningReport.getHeight()+ sNewLine.getHeight()+opiningReportAmountLayout.getHeight()+ sNewLine.getHeight()+opiningReportStyleLayoutCount.getHeight()+ sNewLine.getHeight()+layOutCurrencyHight+ sNewLine.getHeight()+posSales.getHeight();
 
         //   Page_Height = sHead.getHeight() + sInvoiceHead.getHeight() + sInvoiceD.getHeight() + slNames.getHeight() + sNewLine.getHeight();
         Bitmap b = Bitmap.createBitmap(PAGE_WIDTH, Page_Height, Bitmap.Config.ARGB_8888);
@@ -509,7 +554,22 @@ public class BitmapInvoice {
 
             sNewLine.draw(c);
         }
+        sNewLine.draw(c);
 
+        opiningReport.draw(c);
+        c.translate(0, opiningReport.getHeight());
+        opiningReportAmountLayout.draw(c);
+        c.translate(0, opiningReportAmountLayout.getHeight());
+        opiningReportStyleLayoutCount.draw(c);
+        c.translate(0, opiningReportStyleLayoutCount.getHeight());
+        if(SETTINGS.enableCurrencies){
+           for(int i=0;i<currencyDetailsLayOut.size();i++){
+               currencyDetailsLayOut.get(i).draw(c);
+               c.translate(0, currencyDetailsLayOut.get(i).getHeight());
+           }
+            sNewLine.draw(c);
+        }
+        sNewLine.draw(c);
         posSales.draw(c);
         c.translate(0, posSales.getHeight());
         c.restore();
@@ -517,6 +577,32 @@ public class BitmapInvoice {
     }
 
     public static void getCountForZReport(Context context, ZReport z) {
+        aReportAmount=0;
+        opiningReportList=new ArrayList<>();
+         aReportDetailsForFirstCurrency=0;
+         aReportDetailsForSecondCurrency=0;
+         aReportDetailsForThirdCurrency=0;
+         aReportDetailsForForthCurrency=0;
+
+        OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(context);
+        opiningReportDBAdapter.open();
+        opiningReportList = opiningReportDBAdapter.getListByLastZReport(z.getzReportId()-1);
+        for (int i=0;i<opiningReportList.size();i++){
+            aReportAmount+=opiningReportList.get(i).getAmount();
+        }
+        if (SETTINGS.enableCurrencies) {
+            OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
+            aReportDetailsDBAdapter.open();
+            for (int a=0 ;a<opiningReportList.size();a++) {
+                //aReportAmount+=opiningReportList.get(a).getAmount();
+                OpiningReport opiningReport = opiningReportList.get(a);
+                aReportDetailsForFirstCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, opiningReport.getOpiningReportId());
+                aReportDetailsForSecondCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, opiningReport.getOpiningReportId());
+                aReportDetailsForThirdCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, opiningReport.getOpiningReportId());
+                aReportDetailsForForthCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, opiningReport.getOpiningReportId());
+            }
+
+        }
         checkList=new ArrayList<>();
         cashAmount=0;
         invoiceReceiptCount=0 ;invoiceCount=0; CreditInvoiceCount=0 ; ShekelCount=0 ;UsdCount=0 ;EurCount=0; GbpCount=0 ;checkCount=0 ; creditCardCount=0 ;receiptInvoiceAmountCheck=0 ; cashCount=0;receiptInvoiceAmount=0;
