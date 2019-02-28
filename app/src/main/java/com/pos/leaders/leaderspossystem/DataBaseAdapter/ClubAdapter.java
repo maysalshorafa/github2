@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Club;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -33,10 +34,11 @@ public class ClubAdapter {
     protected static final String Group_COLUMN_Amount = "amount";
     protected static final String Group_COLUMN_Point = "point";
     protected static final String Group_COLUMN_DISENABLED = "hide";
+    protected static final String Group_COLUMN_BRANCH_ID = "branchId";
 
 
 
-    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS club ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+"`name` TEXT NOT NULL,"+"'description' Text ,"+"'type' INTEGER  DEFAULT 0,"+" 'parcent'  REAL DEFAULT 0 ,"+" 'amount' REAL DEFAULT 0,"+" 'point' REAL DEFAULT 0 ,"+"`hide` INTEGER DEFAULT 0 )";
+    public static final String DATABASE_CREATE= "CREATE TABLE IF NOT EXISTS club ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+"`name` TEXT NOT NULL,"+"'description' Text ,"+"'type' INTEGER  DEFAULT 0,"+" 'parcent'  REAL DEFAULT 0 ,"+" 'amount' REAL DEFAULT 0,"+" 'point' REAL DEFAULT 0 ,"+"`hide` INTEGER DEFAULT 0,"+"`branchId` INTEGER DEFAULT 0 )";
     private SQLiteDatabase db;
 
     // Context of the application using the database.
@@ -69,8 +71,8 @@ public class ClubAdapter {
         return cursor.getCount();
     }
 
-    public long insertEntry( String name,String description, int type, float parcent, int amount, int point) {
-        Club group = new Club(Util.idHealth(this.db, Group_TABLE_NAME, Group_COLUMN__ID), name, description, type, parcent, amount, point, false );
+    public long insertEntry( String name,String description, int type, float parcent, int amount, int point,int branchId) {
+        Club group = new Club(Util.idHealth(this.db, Group_TABLE_NAME, Group_COLUMN__ID), name, description, type, parcent, amount, point, false,branchId );
         Club boClub=group;
         boClub.setName(Util.getString(boClub.getName()));
         boClub.setDescription(Util.getString(boClub.getDescription()));
@@ -96,6 +98,7 @@ public class ClubAdapter {
         val.put(Group_COLUMN_Amount, group.getAmount());
         val.put(Group_COLUMN_Point, group.getPoint());
         val.put(Group_COLUMN_DISENABLED, group.isHide()?1:0);
+        val.put(Group_COLUMN_BRANCH_ID,group.getBranchId());
         try {
             return db.insert(Group_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -115,6 +118,8 @@ public class ClubAdapter {
         val.put(Group_COLUMN_Parcent,club.getPercent());
         val.put(Group_COLUMN_Amount,club.getAmount());
         val.put(Group_COLUMN_Point,club.getPoint());
+        val.put(Group_COLUMN_BRANCH_ID,club.getBranchId());
+
         try {
             String where = Group_COLUMN__ID + " = ?";
             db.update(Group_TABLE_NAME, val, where, new String[]{club.getClubId() + ""});
@@ -140,6 +145,8 @@ public class ClubAdapter {
         val.put(Group_COLUMN_Parcent,club.getPercent());
         val.put(Group_COLUMN_Amount,club.getAmount());
         val.put(Group_COLUMN_Point,club.getPoint());
+        val.put(Group_COLUMN_BRANCH_ID,club.getBranchId());
+
         try {
             String where = Group_COLUMN__ID + " = ?";
             db.update(Group_TABLE_NAME, val, where, new String[]{club.getClubId() + ""});
@@ -191,7 +198,7 @@ public class ClubAdapter {
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Type))),
                 (float) Double.parseDouble(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Parcent))),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Amount))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Point))), Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(Group_COLUMN_DISENABLED))));
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Point))), Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(Group_COLUMN_DISENABLED))),Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_BRANCH_ID))));
         cursor.close();
 
         return group;
@@ -212,7 +219,13 @@ public class ClubAdapter {
     }
     public List<Club> getAllGroup() {
         List<Club> groups = new ArrayList<Club>();
-        Cursor cursor = db.rawQuery("select * from " + Group_TABLE_NAME + " where " + Group_COLUMN_DISENABLED + "=0 order by id desc", null);
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            cursor =  db.rawQuery( "select * from "+Group_TABLE_NAME+ " where " + Group_COLUMN_DISENABLED +" = 0 order by id desc", null );
+        }else {
+            cursor = db.rawQuery("select * from " + Group_TABLE_NAME + " where " + Group_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + Group_COLUMN_DISENABLED + "=0 order by id desc", null);
+
+        }
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             groups.add(createNewGroup(cursor));
@@ -229,7 +242,7 @@ public class ClubAdapter {
                 (float) Double.parseDouble(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Parcent))),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Amount))),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_Point))),
-                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(Group_COLUMN_DISENABLED))));
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(Group_COLUMN_DISENABLED))),Integer.parseInt(cursor.getString(cursor.getColumnIndex(Group_COLUMN_BRANCH_ID))));
     }
     public int deleteEntry(long id) {
         ClubAdapter clubAdapter=new ClubAdapter(context);

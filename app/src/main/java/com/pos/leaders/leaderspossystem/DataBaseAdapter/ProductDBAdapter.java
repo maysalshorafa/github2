@@ -12,6 +12,7 @@ import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductStatus;
 import com.pos.leaders.leaderspossystem.Models.ProductUnit;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -57,6 +58,8 @@ public class ProductDBAdapter {
     protected static final String PRODUCTS_COLUMN_UNIT = "unit";
     protected static final String PRODUCTS_COLUMN_WEIGHT = "weight";
     protected static final String PRODUCTS_COLUMN_CURRENCY_TYPE = "currencyType";
+    protected static final String PRODUCTS_COLUMN_BRANCH_ID = "branchId";
+
 
 
     // TODO: Create public field for each column in your table.
@@ -69,7 +72,8 @@ public class ProductDBAdapter {
             "`" +PRODUCTS_COLUMN_CREATINGDATE + "` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
             "`" + PRODUCTS_COLUMN_DISENABLED + "` INTEGER DEFAULT 0, `" + PRODUCTS_COLUMN_CATEGORYID + "` INTEGER NOT NULL, " +
             "`" + PRODUCTS_COLUMN_BYUSER + "` INTEGER NOT NULL, `" + PRODUCTS_COLUMN_STATUS + "` TEXT NOT NULL DEFAULT 'PUBLISHED' , " +
-            "`" + PRODUCTS_COLUMN_with_pos + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_with_point_system + "` INTEGER NOT NULL DEFAULT 1 ,`"+PRODUCTS_COLUMN_UNIT + "` TEXT NOT NULL DEFAULT 'quantity' , `"+ PRODUCTS_COLUMN_CURRENCY_TYPE + "` INTEGER NOT NULL DEFAULT 0, '" +PRODUCTS_COLUMN_WEIGHT+"' REAL DEFAULT 0.0 )";
+            "`" + PRODUCTS_COLUMN_with_pos + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_with_point_system + "` INTEGER NOT NULL DEFAULT 1 ,`"+PRODUCTS_COLUMN_UNIT + "` TEXT NOT NULL DEFAULT 'quantity' , `"+ PRODUCTS_COLUMN_CURRENCY_TYPE + "` INTEGER NOT NULL DEFAULT 0, '"+PRODUCTS_COLUMN_BRANCH_ID+"' INTEGER NOT NULL DEFAULT 0 , '" +PRODUCTS_COLUMN_WEIGHT+"' REAL DEFAULT 0.0 )";
+
 
     public static final String DATABASE_UPDATE_FROM_V1_TO_V2[] = {"alter table products rename to product_v1;", DATABASE_CREATE + "; ",
             "insert into products (id,name,displayName,barcode,sku,description,price,costPrice,regularPrice,withTax,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system) " +
@@ -102,9 +106,10 @@ public class ProductDBAdapter {
 
     public long insertEntry(String name, String barCode, String description, double price, double costPrice,
                             boolean withTax, long categoryId, long byUser , int pos, int point_system,
-                            String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock, ProductUnit unit,double weight,int currencyType) {
+
+                            String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock, ProductUnit unit,double weight,int currencyType,int branchId) {
         Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price,
-                costPrice, withTax,  new Timestamp(System.currentTimeMillis()), categoryId, byUser, pos, point_system, sku, status, displayName, regularPrice, stockQuantity, manageStock, inStock,unit,weight,currencyType);
+                costPrice, withTax,  new Timestamp(System.currentTimeMillis()), categoryId, byUser, pos, point_system, sku, status, displayName, regularPrice, stockQuantity, manageStock, inStock,unit,weight,currencyType,branchId);
 
 
         long id = insertEntry(p);
@@ -166,7 +171,10 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_IN_STOCK, p.isInStock());
         val.put(PRODUCTS_COLUMN_UNIT,p.getUnit().getValue());
         val.put(PRODUCTS_COLUMN_WEIGHT,p.getWeight());
+
         val.put(PRODUCTS_COLUMN_CURRENCY_TYPE,p.getCurrencyType());
+        val.put(PRODUCTS_COLUMN_BRANCH_ID,p.getBranchId());
+
         try {
             return db.insert(PRODUCTS_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -206,7 +214,13 @@ public class ProductDBAdapter {
     }
 
     public int getProductsCount() {
-        String countQuery = "SELECT  * FROM " + PRODUCTS_TABLE_NAME;
+        String countQuery="";
+        if(!SETTINGS.enableAllBranch){
+            countQuery  = "SELECT  * FROM " + PRODUCTS_TABLE_NAME+ " where " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc";
+        }else {
+            countQuery  = "SELECT  * FROM " + PRODUCTS_TABLE_NAME+ " where "+ PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc";
+
+        }
         Cursor cursor = db.rawQuery(countQuery, null);
         int count = cursor.getCount();
         cursor.close();
@@ -291,6 +305,7 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_UNIT,product.getUnit().getValue());
         val.put(PRODUCTS_COLUMN_WEIGHT,product.getWeight());
         val.put(PRODUCTS_COLUMN_CURRENCY_TYPE,product.getCurrencyType());
+        val.put(PRODUCTS_COLUMN_BRANCH_ID,product.getBranchId());
 
         String where = PRODUCTS_COLUMN_ID + " = ?";
         db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getProductId() + ""});
@@ -323,6 +338,7 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_UNIT,product.getUnit().getValue());
         val.put(PRODUCTS_COLUMN_WEIGHT,product.getWeight());
         val.put(PRODUCTS_COLUMN_CURRENCY_TYPE,product.getCurrencyType());
+        val.put(PRODUCTS_COLUMN_BRANCH_ID,product.getBranchId());
 
         try {
             String where = PRODUCTS_COLUMN_ID + " = ?";
@@ -338,8 +354,13 @@ public class ProductDBAdapter {
 
     public List<Product> getAllProducts(){
         List<Product> productsList =new ArrayList<Product>();
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+             cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
+        }else {
+            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
 
-        Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc", null );
+        }
         cursor.moveToFirst();
 
 
@@ -353,8 +374,13 @@ public class ProductDBAdapter {
 
 	public List<Product> getAllProductsByCategory(long categoryId){
 		List<Product> productsList =new ArrayList<Product>();
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +" = 0 order by id desc", null );
+        }else {
+            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
 
-		Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +"="+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc", null );
+        }
 		cursor.moveToFirst();
 
 		while(!cursor.isAfterLast()){
@@ -367,9 +393,13 @@ public class ProductDBAdapter {
 
     public List<Product> getAllProductsByCategory(long categoryId, int from , int count){
         List<Product> productsList =new ArrayList<Product>();
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
+        }else {
+            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc limit "+from+","+count, null);
 
-        Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +"="+categoryId+" and "+PRODUCTS_COLUMN_DISENABLED+"=0 order by id desc limit "+from+","+count, null );
-
+        }
         cursor.moveToFirst();
 
         while(!cursor.isAfterLast()){
@@ -383,7 +413,16 @@ public class ProductDBAdapter {
     public List<Product> getTopProducts(int from ,int count){
         List<Product> productsList =new ArrayList<Product>();
         //SELECT * FROM table limit 100, 200
-        Cursor cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            Log.d("teeest1",SETTINGS.enableAllBranch+"   "+SETTINGS.branchId);
+
+            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null);
+        }else {
+            Log.d("teeest",SETTINGS.enableAllBranch+"   "+SETTINGS.branchId);
+            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED+"=0 order by id desc limit "+from+","+count, null);
+
+        }
         cursor.moveToFirst();
 
         while(!cursor.isAfterLast()){
@@ -423,9 +462,10 @@ public class ProductDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_REGULAR_PRICE))),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_STOCK_QUANTITY))),
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_MANAGE_STOCK))),
+
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_IN_STOCK))), ProductUnit.valueOf(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_UNIT)).toUpperCase()),Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHT))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CURRENCY_TYPE)))
-        );
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CURRENCY_TYPE))), Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BRANCH_ID))));
+
         if(p.getDescription()==null){
             p.setDescription("");
         }
@@ -468,9 +508,17 @@ public class ProductDBAdapter {
 
     public List<Product> getAllProductsByHint(String hint , int from , int count ){
         List<Product> productsList =new ArrayList<Product>();
-
-        Cursor cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
-                hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+ hint+"%'" +" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
+                    hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+ hint+"%'"
+                    +" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
+        }else {
+            cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
+                    hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+
+                    hint+"%'" +" and " + PRODUCTS_COLUMN_BRANCH_ID +
+                    " = "+ SETTINGS.branchId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
+        }
 
         cursor.moveToFirst();
 

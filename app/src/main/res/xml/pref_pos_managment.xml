@@ -39,6 +39,14 @@
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
         android:title="@string/printer_type" />
+    <ListPreference
+        android:defaultValue="@string/all"
+        android:entries="@array/branch_list_preference"
+        android:entryValues="@array/float_point_list_preference"
+        android:key="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/branch" />
 
    <!-- &lt;!&ndash; Allows the user to choose a ringtone in the 'notification' category. &ndash;&gt;
     &lt;!&ndash; NOTE: This preference will be enabled only when the checkbox above is checked. &ndash;&gt;

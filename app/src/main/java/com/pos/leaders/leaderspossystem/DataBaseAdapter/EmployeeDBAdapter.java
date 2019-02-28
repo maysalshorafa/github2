@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -36,11 +37,12 @@ public class EmployeeDBAdapter {
     protected static final String EMPLOYEE_COLUMN_PHONE_NUMBER = "phoneNumber";
     protected static final String EMPLOYEE_COLUMN_DISCOUNTINPERCENTAGE = "present";
     protected static final String EMPLOYEE_COLUMN_HOURLYWAGE = "hourlyWage";
+    protected static final String EMPLOYEE_COLUMN_BRANCH_ID = "branchId";
 
 
     // TODO: Create public field for each column in your table.
     // SQL Statement to create a new database.
-    public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS employees ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,`employeeName` TEXT UNIQUE, `firstName` TEXT NOT NULL, `lastName` TEXT, `visitDate` TIMESTAMP NOT NULL DEFAULT current_timestamp,`pwd` TEXT , `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, `hourlyWage` REAL DEFAULT 0.0 )";
+    public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS employees ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,`employeeName` TEXT UNIQUE, `firstName` TEXT NOT NULL, `lastName` TEXT, `visitDate` TIMESTAMP NOT NULL DEFAULT current_timestamp,`pwd` TEXT , `hide` INTEGER DEFAULT 0, `phoneNumber` TEXT, `present` REAL NOT NULL DEFAULT 0, `hourlyWage` REAL DEFAULT 0.0, `branchId` INTEGER DEFAULT 0 )";
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
@@ -66,9 +68,9 @@ public class EmployeeDBAdapter {
         return db;
     }
 
-    public long insertEntry(String employeeName, String password, String firstName, String lastName, String phoneNumber, Double persent, Double hourlyWag) {
+    public long insertEntry(String employeeName, String password, String firstName, String lastName, String phoneNumber, Double persent, Double hourlyWag,int branchId) {
 
-        Employee u = new Employee(Util.idHealth(this.db, EMPLOYEE_TABLE_NAME, EMPLOYEE_COLUMN_ID), employeeName, password, firstName, lastName, new Timestamp(System.currentTimeMillis()), false, phoneNumber, persent, hourlyWag);
+        Employee u = new Employee(Util.idHealth(this.db, EMPLOYEE_TABLE_NAME, EMPLOYEE_COLUMN_ID), employeeName, password, firstName, lastName, new Timestamp(System.currentTimeMillis()), false, phoneNumber, persent, hourlyWag,branchId);
         Employee boEmployee = u;
         boEmployee.setEmployeeName(Util.getString(boEmployee.getEmployeeName()));
         boEmployee.setPassword(Util.getString(boEmployee.getPassword()));
@@ -98,6 +100,7 @@ public class EmployeeDBAdapter {
         val.put(EMPLOYEE_COLUMN_PHONE_NUMBER, employee.getPhoneNumber());
         val.put(EMPLOYEE_COLUMN_DISCOUNTINPERCENTAGE, employee.getPresent());
         val.put(EMPLOYEE_COLUMN_HOURLYWAGE, employee.getHourlyWage());
+        val.put(EMPLOYEE_COLUMN_BRANCH_ID,employee.getBranchId());
 
         long id = db.insertOrThrow(EMPLOYEE_TABLE_NAME, null, val);
 
@@ -169,7 +172,7 @@ public class EmployeeDBAdapter {
             sendToBroker(MessageType.DELETE_EMPLOYEE, user, this.context);
             return 1;
         } catch (SQLException ex) {
-            Log.e("employeeDBAdapter deleteEntry", "enable hide Entry at " + EMPLOYEE_TABLE_NAME + ": " + ex.getMessage());
+            Log.e("deleteEntry", "enable hide Entry at " + EMPLOYEE_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
@@ -201,6 +204,7 @@ public class EmployeeDBAdapter {
         val.put(EMPLOYEE_COLUMN_PHONE_NUMBER, employee.getPhoneNumber());
         val.put(EMPLOYEE_COLUMN_DISCOUNTINPERCENTAGE, employee.getPresent());
         val.put(EMPLOYEE_COLUMN_HOURLYWAGE, employee.getHourlyWage());
+        val.put(EMPLOYEE_COLUMN_BRANCH_ID,employee.getBranchId());
 
         String where = EMPLOYEE_COLUMN_ID + " = ?";
         db.update(EMPLOYEE_TABLE_NAME, val, where, new String[]{employee.getEmployeeId() + ""});
@@ -221,6 +225,7 @@ public class EmployeeDBAdapter {
         val.put(EMPLOYEE_COLUMN_PHONE_NUMBER, employee.getPhoneNumber());
         val.put(EMPLOYEE_COLUMN_DISCOUNTINPERCENTAGE, employee.getPresent());
         val.put(EMPLOYEE_COLUMN_HOURLYWAGE, employee.getHourlyWage());
+        val.put(EMPLOYEE_COLUMN_BRANCH_ID,employee.getBranchId());
 
         try {
             String where = EMPLOYEE_COLUMN_ID + " = ?";
@@ -257,7 +262,13 @@ public class EmployeeDBAdapter {
     }
     public List<Employee> getAllEmployee() {
         List<Employee> employee = new ArrayList<Employee>();
-        Cursor cursor = db.rawQuery("select * from " + EMPLOYEE_TABLE_NAME + " where " + EMPLOYEE_COLUMN_DISENABLED + "=0 order by id desc", null);
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            cursor =  db.rawQuery( "select * from "+EMPLOYEE_TABLE_NAME+" where "+  EMPLOYEE_COLUMN_DISENABLED +" = 0 order by id desc", null );
+        }else {
+            cursor = db.rawQuery("select * from " + EMPLOYEE_TABLE_NAME +" where " + EMPLOYEE_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + EMPLOYEE_COLUMN_DISENABLED + "=0 order by id desc", null);
+
+        }
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             employee.add(createNewEmployee(cursor));
@@ -275,7 +286,12 @@ public class EmployeeDBAdapter {
 
         Cursor cursor = null;
         for (int i = 0; i < salesManId.size(); i++) {
-            cursor = db.rawQuery("select * from " + EMPLOYEE_TABLE_NAME + " where  id='" + salesManId.get(i) + "'"+ " and " + EMPLOYEE_COLUMN_DISENABLED + "=0", null);
+            if(SETTINGS.enableAllBranch) {
+                cursor =  db.rawQuery( "select * from "+EMPLOYEE_TABLE_NAME+ " where " + EMPLOYEE_COLUMN_ID + " = " + salesManId.get(i)+" and "+  EMPLOYEE_COLUMN_DISENABLED +" = 0 order by id desc", null );
+            }else {
+                cursor = db.rawQuery("select * from " + EMPLOYEE_TABLE_NAME + " where " + EMPLOYEE_COLUMN_ID + " = " + salesManId.get(i)+" and " + EMPLOYEE_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + EMPLOYEE_COLUMN_DISENABLED + "=0 order by id desc", null);
+
+            }
             if (cursor != null) {
 
                 while (cursor.moveToNext()) {
@@ -296,7 +312,7 @@ public class EmployeeDBAdapter {
                 , Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_DISENABLED)))
                 , cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_PHONE_NUMBER))
                 , Double.parseDouble(cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_DISCOUNTINPERCENTAGE)))
-                , Double.parseDouble(cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_HOURLYWAGE)))
+                , Double.parseDouble(cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_HOURLYWAGE))),Integer.parseInt(cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_BRANCH_ID)))
         );
     }
 
@@ -319,6 +335,7 @@ public class EmployeeDBAdapter {
                 , cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_PHONE_NUMBER))
                 , Double.parseDouble(cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_DISCOUNTINPERCENTAGE)))
                 , Double.parseDouble(cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_HOURLYWAGE)))
+                ,Integer.parseInt(cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_BRANCH_ID)))
         );
         cursor.close();
         return employee.getFullName();
@@ -350,6 +367,7 @@ public class EmployeeDBAdapter {
                 , cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_PHONE_NUMBER))
                 , Double.parseDouble(cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_DISCOUNTINPERCENTAGE)))
                 , Double.parseDouble(cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_HOURLYWAGE)))
+                ,Integer.parseInt(cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_BRANCH_ID)))
         );
         cursor.close();
         return employee;

@@ -397,8 +397,18 @@
                         android:layout_marginTop="15dp"
                         android:layout_weight="1.7"
                         android:orientation="vertical"
-                        android:weightSum="3">
-
+                        android:weightSum="4">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="@string/branch"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="70dp"
@@ -445,7 +455,15 @@
                         android:background="#FFFFFF"
                         android:orientation="vertical"
                         android:padding="5dp"
-                        android:weightSum="3">
+                        android:weightSum="4">
+                        <Spinner
+                            android:id="@+id/customerBranch"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="1"
+                            android:inputType="text"
+                            android:padding="8dp" />
 
                         <Spinner
                             android:id="@+id/customerType"

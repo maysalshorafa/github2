@@ -21,9 +21,12 @@ import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SetUpManagement extends AppCompatActivity {
     CheckBox currencyCheckBox, creditCardCheckBox,cbPinpad, customerMeasurementCheckBox;
-    Spinner printerTypeSpinner, floatPointSpinner;
+    Spinner printerTypeSpinner, floatPointSpinner , branchSpinner;
     Button saveButton, editButton;
     ImageView currencyImage, customerMeasurementImage, creditCardImage,ivPinpad;
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY";
@@ -32,6 +35,8 @@ public class SetUpManagement extends AppCompatActivity {
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT_2";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID";
+
     boolean currencyEnable, creditCardEnable,pinpadEnable, customerMeasurementEnable = false;
     int noOfPoint;
     String printerType;
@@ -41,6 +46,8 @@ public class SetUpManagement extends AppCompatActivity {
     String printer[];
     public final static String POS_Management = "POS_Management";
     public static Context context = null;
+    int branchId;
+    final List<String> branch = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +69,7 @@ public class SetUpManagement extends AppCompatActivity {
         customerMeasurementCheckBox = (CheckBox) findViewById(R.id.setUpManagementCustomerMeasurementCheckBox);
         floatPointSpinner = (Spinner) findViewById(R.id.setUpManagementFloatPointSpinner);
         printerTypeSpinner = (Spinner) findViewById(R.id.setUpManagementPrinterTypeSpinner);
+        branchSpinner = (Spinner) findViewById(R.id.setUpManagementBranchSpinner);
         saveButton = (Button) findViewById(R.id.setUpManagementSaveButton);
         editButton = (Button) findViewById(R.id.setUpManagementEditButton);
         currencyImage = (ImageView) findViewById(R.id.currencyImage);
@@ -80,6 +88,11 @@ public class SetUpManagement extends AppCompatActivity {
 
         printerTypeSpinner.setAdapter(spinnerArrayAdapter);
         floatPointSpinner.setAdapter(floatPointSpinnerArrayAdapter);
+        branch.add(getString(R.string.all));
+        branch.add(getString(R.string.pos_branch));
+        final ArrayAdapter<String> dataAdapterBranch = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, branch);
+        dataAdapterBranch.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        branchSpinner.setAdapter(dataAdapterBranch);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             saveButton.setVisibility(View.GONE);
@@ -155,6 +168,23 @@ public class SetUpManagement extends AppCompatActivity {
 
             }
         });
+        branchSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+               if(branchSpinner.getSelectedItem().toString().equals(getString(R.string.all))){
+                   branchId=0;
+                   SETTINGS.enableAllBranch=true;
+               }else {
+                   SETTINGS.enableAllBranch=false;
+               }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,6 +197,8 @@ public class SetUpManagement extends AppCompatActivity {
                 editor.putBoolean(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, customerMeasurementEnable);
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, noOfPoint+"");
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, printerType);
+                editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, branchId+"");
+
                 editor.apply();
 
                 if (Util.isFirstLaunch(SetUpManagement.this, false)) {
@@ -264,7 +296,17 @@ public class SetUpManagement extends AppCompatActivity {
                         PrinterType printer = PrinterType.valueOf(editPrinterType);
                         SETTINGS.printer = printer;
                     }
+                    //BranchId
+                    if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID)) {
+                        int branch = branchId;
+                        editor.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, branch+"");
+                        if(branchId==0) {
+                            SETTINGS.enableAllBranch = true;
+                        }else {
+                            SETTINGS.enableAllBranch=false;
+                        }
 
+                    }
                 }
                 editor.apply();
                 Toast.makeText(SetUpManagement.this, R.string.success_edit_POS_setting, Toast.LENGTH_LONG).show();
@@ -340,6 +382,18 @@ public class SetUpManagement extends AppCompatActivity {
                     }
                 }
             }
+            //BranchId
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID)) {
+                int branchI = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, "0"));
+                    if (branchI==0) {
+                        branchSpinner.setSelection(0);
+
+                }else {
+                        branchSpinner.setSelection(1);
+                    }
+            }
+
+            //end
 
 
         }

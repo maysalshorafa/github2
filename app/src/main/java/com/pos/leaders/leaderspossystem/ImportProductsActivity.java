@@ -178,7 +178,7 @@ public class ImportProductsActivity extends Activity {
 
                 for (Category d : lsDepartment) {
                     departmentDBAdapter.open();
-                    long depID = departmentDBAdapter.insertEntry(d.getName(), d.getByUser());
+                    long depID = departmentDBAdapter.insertEntry(d.getName(), d.getByUser(),d.getBranchId());
                     departmentDBAdapter.close();
 
                     productDBAdapter.open();
@@ -188,7 +188,8 @@ public class ImportProductsActivity extends Activity {
                         if(availableProductName&&availableBarCode) {
                             productDBAdapter.insertEntry(p.getProductCode(), p.getBarCode(),
                                     "", p.getPrice(), p.getCostPrice(), true, depID, p.getByEmployee(), 1, 1,
-                                    p.getSku(), p.getStatus(), p.getDisplayName(), p.getRegularPrice(), p.getStockQuantity(), p.isManageStock(), p.isInStock(),p.getUnit(),p.getWeight(),p.getCurrencyType());
+                                    p.getSku(), p.getStatus(), p.getDisplayName(), p.getRegularPrice(), p.getStockQuantity(), p.isManageStock(), p.isInStock(),p.getUnit(),p.getWeight(),p.getCurrencyType(),p.getBranchId());
+
                         }
                     }
                     productDBAdapter.close();

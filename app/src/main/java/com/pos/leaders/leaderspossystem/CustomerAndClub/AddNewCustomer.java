@@ -57,10 +57,10 @@ import java.util.List;
 
 public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     String street="" , job="" , email="" , houseNo="" , postalCode="" , country="" , countryCode="",customerCode="",strCustomerId="";
-    int cityId=0;
+    int cityId=0,branchId=0;
     EditText etCustomerFirstName, etCustomerLastName, etStreet, etJob, etEmail, etPhoneNo, etHouseNumber, etPostalCode, etCountry, etCountryCode,etCustomerCode,etCustomerId;
     Button btAddCustomer, btCancel;
-    Spinner selectCitySpinner, selectClubSpinner , customerTypeSpinner;
+    Spinner selectCitySpinner, selectClubSpinner , customerTypeSpinner , customerBranch;
     CustomerDBAdapter customerDBAdapter;
     Customer customer;
     LinearLayout secondCustomerInformation ;
@@ -189,6 +189,11 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 if (customer == null) {
                     if (!_customerName.equals("")) {
                         if(secondCustomerInformation.getVisibility()== View.VISIBLE){
+                            if(customerBranch.getSelectedItem().toString().equals(getString(R.string.all))){
+                                branchId=0;
+                            }else {
+                                branchId= SETTINGS.branchId;
+                            }
                             street=etStreet.getText().toString();
                             job=etJob.getText().toString();
                             email=etEmail.getText().toString();
@@ -232,7 +237,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                             try {
                                 i = customerDBAdapter.insertEntry(etCustomerFirstName.getText().toString(),
                                         etCustomerLastName.getText().toString(), gender, email, job, etPhoneNo.getText().toString(), street, cityId, clubID, houseNo, etPostalCode.getText().toString(),
-                                        country, countryCode,0,customerType,customerCode,strCustomerId);
+                                        country, countryCode,0,customerType,customerCode,strCustomerId,branchId);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -248,6 +253,11 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                     // Edit mode
                     if (_customerName != "") {
                         if(secondCustomerInformation.getVisibility()== View.VISIBLE){
+                            if(customerBranch.getSelectedItem().toString().equals(getString(R.string.all))){
+                                branchId=0;
+                            }else {
+                                branchId= SETTINGS.branchId;
+                            }
                             street=etStreet.getText().toString();
                             job=etJob.getText().toString();
                             email=etEmail.getText().toString();
@@ -293,6 +303,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                 customer.setClub(clubID);
                                 customer.setPhoneNumber(etPhoneNo.getText().toString());
                                 if(secondCustomerInformation.getVisibility()==View.VISIBLE){
+                                    customer.setBranchId(branchId);
                                 customer.setJob(job);
                                 customer.setEmail(email);
                                 customer.setStreet(street);
@@ -417,6 +428,13 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 }
             }
         });
+        customerBranch = (Spinner)findViewById(R.id.customerBranch);
+        final List<String> customerBranchList = new ArrayList<String>();
+        customerBranchList.add(getString(R.string.all));
+        customerBranchList.add(getString(R.string.pos_branch));
+        final ArrayAdapter<String> branchDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, customerBranchList);
+        branchDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        customerBranch.setAdapter(branchDataAdapter);
 
     }
 

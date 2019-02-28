@@ -126,6 +126,7 @@
     <string name="cashier">Cashier</string>
     <string name="total_saved">Total Saved</string>
     <string name="all">All</string>
+    <string name="pos_branch">Pos Branch</string>
     <string name="general">General</string>
     <string name="general_product">General Product</string>
     <string name="price">Price</string>
@@ -348,6 +349,10 @@
         <item>1</item>
         <item>2</item>
         <item>3</item>
+    </string-array>
+    <string-array name="branch_list_preference">
+        <item>All</item>
+        <item>PosBranch</item>
     </string-array>
 
     <string-array name="multi_select_list_preference_default_value" />

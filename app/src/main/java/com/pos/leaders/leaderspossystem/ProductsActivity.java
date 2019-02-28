@@ -31,6 +31,7 @@ import com.pos.leaders.leaderspossystem.Models.ProductUnit;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCategoryGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -49,7 +50,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     ArrayAdapter<String> LAdapter;
     List<Category> listDepartment;
     List<String> departmentsName;
-    Spinner productUnitSp , SpProductCurrency;
+    Spinner productUnitSp , SpProductCurrency , SpProductBranch;
     Button btSave,btnCancel;
     EditText etName,etBarcode,etDescription,etPrice,etCostPrice,etDisplayName,etSku,etStockQuantity,etProductWeight;
     Switch swWithTax,swManageStock;
@@ -76,6 +77,8 @@ public class ProductsActivity  extends AppCompatActivity  {
     List<Currency> currenciesList;
     private List<CurrencyType> currencyTypesList = null;
     private List<String> currenciesNames = null;
+    int branchId=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +114,13 @@ public class ProductsActivity  extends AppCompatActivity  {
         SpProductCurrency = (Spinner)findViewById(R.id.SpProductCurrency);
         llWeight = (LinearLayout)findViewById(R.id.llWeight);
         etProductWeight = (EditText)findViewById(R.id.ETWeight);
+        SpProductBranch = (Spinner)findViewById(R.id.SpBranchId);
+        final List<String> productBranch = new ArrayList<String>();
+        productBranch.add(getString(R.string.all));
+        productBranch.add(getString(R.string.pos_branch));
+        final ArrayAdapter<String> dataAdapterBranch = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, productBranch);
+        dataAdapterBranch.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        SpProductBranch.setAdapter(dataAdapterBranch);
         productDBAdapter = new ProductDBAdapter(this);
         productDBAdapter.open();
         final List<ProductUnit>productUnit = new ArrayList<ProductUnit>();
@@ -301,7 +311,11 @@ public class ProductsActivity  extends AppCompatActivity  {
                         }
                     }
                     departmentGridViewAdapter.updateRecords(listDepartment);
-
+                    if(editableProduct.getBranchId()==0){
+                        SpProductBranch.setSelection(0);
+                    }else {
+                        SpProductBranch.setSelection(1);
+                    }
                     if (ProductCatalogActivity.Product_Management_Edit == 8) {
                         btSave.setText(getString(R.string.edit));
                         ProductCatalogActivity.Product_Management_Edit =0;
@@ -364,10 +378,16 @@ public class ProductsActivity  extends AppCompatActivity  {
         if (editableProduct == null) {
             String currency = SpProductCurrency.getSelectedItem().toString();
             int currencyId=0;
-            for(int i=0; i<currencyTypesList.size();i++){
-                if(currencyTypesList.get(i).getType()==currency){
-                    currencyId= (int) currencyTypesList.get(i).getCurrencyTypeId();
+            for(int i=0; i<currencyTypesList.size();i++) {
+                if (currencyTypesList.get(i).getType() == currency) {
+                    currencyId = (int) currencyTypesList.get(i).getCurrencyTypeId();
                 }
+            }
+            if(SpProductBranch.getSelectedItem().toString().equals(getString(R.string.all))){
+                branchId=0;
+            }else {
+                branchId= SETTINGS.branchId;
+
             }
             if(!etBarcode.getText().toString().equals("")) {
                 etBarcode.setText(newBarCode);
@@ -423,7 +443,8 @@ public class ProductsActivity  extends AppCompatActivity  {
                         }
                         check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
                                 etDescription.getText().toString(), price, costPrice, withTax, depID, SESSION._EMPLOYEE.getEmployeeId(), with_pos, with_point_system,
-                                etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit,weight,currencyId);
+                                etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit,weight,currencyId,branchId);
+
 
                         if (check > 0) {
                             Toast.makeText(getApplicationContext(), getString(R.string.success_to_add_product), Toast.LENGTH_LONG).show();
@@ -449,12 +470,20 @@ public class ProductsActivity  extends AppCompatActivity  {
 
 
         } else {
+
             String currency = SpProductCurrency.getSelectedItem().toString();
             int currencyId=0;
             for(int i=0; i<currencyTypesList.size();i++){
                 if(currencyTypesList.get(i).getType()==currency){
                     currencyId= (int) currencyTypesList.get(i).getCurrencyTypeId();
                 }
+            }
+
+            if(SpProductBranch.getSelectedItem().toString().equals(getString(R.string.all))){
+                branchId=0;
+            }else {
+                branchId= SETTINGS.branchId;
+
             }
             for (Category d : listDepartment) {
                 if (d.isChecked()) {
@@ -526,6 +555,8 @@ public class ProductsActivity  extends AppCompatActivity  {
                 editableProduct.setInStock(stockQuantity>0);
                 editableProduct.setUnit(unit);
                 editableProduct.setCurrencyType(currencyId);
+                editableProduct.setBranchId(branchId);
+
                 if(llWeight.getVisibility()==View.VISIBLE) {
                     editableProduct.setWeight(weight);
                 }

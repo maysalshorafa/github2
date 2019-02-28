@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.BackupActivity;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.LogInActivity;
 import com.pos.leaders.leaderspossystem.R;
@@ -353,7 +354,14 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
             addPreferencesFromResource(R.xml.pref_pos_managment);
             setHasOptionsMenu(true);
+            if(SETTINGS.enableAllBranch){
+            SETTINGS.branchId=0;
+            }else {
+                SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(getContext());
+                settingsDBAdapter.open();
+                settingsDBAdapter.readSetting();
 
+            }
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are

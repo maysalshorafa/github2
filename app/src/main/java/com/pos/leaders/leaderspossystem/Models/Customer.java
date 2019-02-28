@@ -26,10 +26,11 @@ public class Customer {
     String customerCode;
     CustomerType customerType;
     String customerIdentity;
+    int branchId;
     public Customer() {
     }
 
-    public Customer(long customerId, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode,double balance,CustomerType customerType,String customerCode,String customerIdentity) {
+    public Customer(long customerId, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode,double balance,CustomerType customerType,String customerCode,String customerIdentity,int branchId) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -49,13 +50,14 @@ public class Customer {
         this.customerType=customerType;
         this.customerCode=customerCode;
         this.customerIdentity=customerIdentity;
+        this.branchId=branchId;
     }
 
     public Customer(Customer customer){
         this(customer.getCustomerId(),customer.getFirstName(),customer.getLastName(),customer.getGender(),
                 customer.getEmail(),customer.getJob(),customer.getPhoneNumber(),customer.getStreet(),
                 customer.getHide(),customer.getCity(),customer.getClub(),customer.getHouseNumber()
-                ,customer.getPostalCode(),customer.getCountry(),customer.getCountryCode(),customer.getBalance(),customer.getCustomerType(),customer.getCustomerCode(),customer.getCustomerIdentity());
+                ,customer.getPostalCode(),customer.getCountry(),customer.getCountryCode(),customer.getBalance(),customer.getCustomerType(),customer.getCustomerCode(),customer.getCustomerIdentity(),customer.getBranchId());
     }
     @JsonIgnore
     public String getFullName() {
@@ -64,6 +66,14 @@ public class Customer {
         if (lastName == null)
             lastName = "";
         return firstName + " " + lastName;
+    }
+
+    public int getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(int branchId) {
+        this.branchId = branchId;
     }
 
     public String getLastName() {
@@ -251,6 +261,7 @@ public class Customer {
                 ","+"\""+"customerType"+ "\""+":" + "\""+ customerType +"\"" +
                 ","+"\""+"customerCode"+ "\""+":" + "\""+ customerCode +"\"" +
                 ","+"\""+"customerIdentity"+ "\""+":" + "\""+ customerIdentity +"\"" +
+                ","+"\""+"branchId"+ "\""+":" + "\""+ branchId +"\"" +
                 '}';
     }
 

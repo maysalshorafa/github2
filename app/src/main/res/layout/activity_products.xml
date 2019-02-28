@@ -28,12 +28,14 @@
             android:layout_marginStart="16dp"
             android:layout_weight="1"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
                 android:weightSum="1">
+
                 <TextView
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
@@ -44,6 +46,7 @@
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/ETName"
                     android:layout_width="match_parent"
@@ -53,14 +56,13 @@
             </LinearLayout>
 
 
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
                 android:weightSum="1">
+
                 <TextView
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
@@ -71,6 +73,7 @@
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/ETDDisplayName"
                     android:layout_width="match_parent"
@@ -78,7 +81,6 @@
                     android:background="@drawable/bubble"
                     android:padding="8dp" />
             </LinearLayout>
-
 
 
             <LinearLayout
@@ -161,6 +163,7 @@
                     android:background="@drawable/bubble"
                     android:padding="8dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -185,6 +188,7 @@
                     android:layout_height="40dp"
                     android:paddingLeft="5dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -209,14 +213,15 @@
                     android:layout_height="40dp"
                     android:paddingLeft="5dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/llWeight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:orientation="horizontal"
-                android:weightSum="1"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:weightSum="1">
 
                 <TextView
                     android:layout_width="120dp"
@@ -234,10 +239,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bubble"
-                    android:padding="8dp"
                     android:inputType="numberDecimal"
-                    />
+                    android:padding="8dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -348,6 +353,7 @@
                     android:layout_height="40dp"
                     android:paddingLeft="5dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -373,6 +379,30 @@
                     android:paddingLeft="5dp" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/branch"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/SpBranchId"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:paddingLeft="5dp" />
+            </LinearLayout>
 
         </LinearLayout>
 

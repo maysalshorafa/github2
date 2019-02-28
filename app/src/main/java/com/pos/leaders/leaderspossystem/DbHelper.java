@@ -152,10 +152,10 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(ClosingReportDetailsDBAdapter.DATABASE_CREATE);
         db.execSQL(InvoiceDBAdapter.DATABASE_CREATE);
         db.execSQL(PosInvoiceDBAdapter.DATABASE_CREATE);
-        db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0');");
+        db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0',0);");
         db.execSQL(EmployeeDBAdapter.DATABASE_CREATE);
-        db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (1,'user1','user','user','"+new Timestamp(System.currentTimeMillis())+"','1234',0,046316969,20,35);");
-        db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (2,'master','master','master','"+new Timestamp(System.currentTimeMillis())+"','123456',0,046316969,20,35);");
+        db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (1,'user1','user','user','"+new Timestamp(System.currentTimeMillis())+"','1234',0,046316969,20,35,0);");
+        db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (2,'master','master','master','"+new Timestamp(System.currentTimeMillis())+"','123456',0,046316969,20,35,0);");
         db.execSQL(EmployeePermissionsDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (1 , 'sales cart');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (2 , 'report');");
@@ -202,16 +202,16 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (3 , 'EUR');");
 
         db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Timestamp(System.currentTimeMillis())+"');");
-        db.execSQL("insert into "+ CategoryDBAdapter.CATEGORY_TABLE_NAME +" values(1, 'כללי','"+ new Timestamp(System.currentTimeMillis()) +"',1,0);");
+        db.execSQL("insert into "+ CategoryDBAdapter.CATEGORY_TABLE_NAME +" values(1, 'כללי','"+ new Timestamp(System.currentTimeMillis()) +"',1,0,0);");
 //        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'test1','test1','female','11/8/1994','example@gmail.com','coder','123',0,'1',1,1,'1',1,'1',0.0,0.0,0.0);");
 
 
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (0,'Hifa');");
 
-        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (0,'General','General',0,0,0,0,0);");
-        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (1,'Sever','Sever',1,.2,0,0,0);");
-        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (2,'Golden','Golden',2,0,50,200,0);");
-        db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (4,'test1','test1','test1','"+new Timestamp(System.currentTimeMillis())+"','12',0,046316969,20,35);");
+        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (0,'General','General',0,0,0,0,0,0);");
+        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (1,'Sever','Sever',1,.2,0,0,0,0);");
+        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (2,'Golden','Golden',2,0,50,200,0,0);");
+        db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (4,'test1','test1','test1','"+new Timestamp(System.currentTimeMillis())+"','12',0,046316969,20,35,0);");
 
         db.execSQL(CustomerMeasurementDBAdapter.DATABASE_CREATE);
         db.execSQL(MeasurementsDetailsDBAdapter.DATABASE_CREATE);
