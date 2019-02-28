@@ -76,7 +76,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 5;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -339,10 +339,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 case 4:
                     db.execSQL(IdsCounterDBAdapter.addColumn("x_report"));
                     db.execSQL(XReportDBAdapter.DATABASE_CREATE);
-                    break;
-                case 5:
                     db.execSQL(ProductDBAdapter.addColumnInteger("currencyType"));
                     break;
+                
 
 
             }
