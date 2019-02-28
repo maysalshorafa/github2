@@ -483,8 +483,30 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         category.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = new Intent(getApplicationContext(), CategoryActivity.class);
-                startActivity(i);
+
+                final String[] items = {
+                        getString(R.string.categorys),
+                        getString(R.string.categorys_offer)
+                };
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(DashBord.this);
+                builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        Intent intent;
+                        switch (item) {
+                            case 0:
+                                i = new Intent(getApplicationContext(), CategoryActivity.class);
+                                startActivity(i);
+                            case 1:
+                                i = new Intent(getApplicationContext(), CategoryOfferActivity.class);
+                                startActivity(i);
+                                break;
+                        }
+                    }
+                });
+                android.app.AlertDialog alert = builder.create();
+                alert.show();
+
             }
         });
         closingReport.setOnClickListener(new View.OnClickListener() {

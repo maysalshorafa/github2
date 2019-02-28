@@ -64,6 +64,7 @@ import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDy
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Models.OfferCategory;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.OpiningReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
@@ -1548,6 +1549,21 @@ public class SyncMessage extends Service {
             case MessageType.ADD_CLOSING_REPORT_DETAILS:
                 Log.d("ClosingReportDetails",jsonObject.getString(MessageKey.Data));
                 res = messageTransmit.authPost(ApiURL.ClosingReportDetails, jsonObject.getString(MessageKey.Data), token);
+                break;
+
+            case MessageType.ADD_OFFER_CATEGORY:
+                res = messageTransmit.authPost(ApiURL.OfferCategory, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_OFFER_CATEGORY:
+                OfferCategory offerCategory=null;
+                JSONObject newOfferCategoryJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                newOfferCategoryJson.remove("createdAt");
+                offerCategory=objectMapper.readValue(newOfferCategoryJson.toString(), OfferCategory.class);
+                res = messageTransmit.authPut(ApiURL.Product, newOfferCategoryJson.toString(), token,offerCategory.getOfferCategoryId());
+                break;
+            case MessageType.DELETE_OFFER_CATEGORY:
+                JSONObject newDeleteOfferCategoryJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authDelete(ApiURL.OfferCategory, newDeleteOfferCategoryJson.getString("offerCategoryId"), token);
                 break;
 
             //endregion ClosingReport

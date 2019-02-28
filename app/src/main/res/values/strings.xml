@@ -23,6 +23,7 @@
     <string name="present">Present</string>
     <string name="log_out">Log Out</string>
     <string name="category_management">Category Management</string>
+    <string name="category_product">Category Product</string>
     <string name="product_management">Product Management</string>
     <string name="offer_name">Offer Name</string>
     <string name="start_at">Start At</string>
@@ -440,6 +441,8 @@
     <!--DashBord String-->
     <string name="main_screen">Sales Cart</string>
     <string name="categorys">Category</string>
+    <string name="categorys_offer">Category Offer</string>
+
     <string name="back_up">BackUp</string>
     <string name="hours_of_work">Hours Of Work</string>
     <string name="customer_club">Customer Club</string>
@@ -690,7 +693,6 @@
     <string name="customer_ledger">CustomerLedger</string>
     <string name="receipt_numbers">Receipt Numbers</string>
     <string name="reference_invoice">ReferenceInvoice</string>
-
 
 
 </resources>

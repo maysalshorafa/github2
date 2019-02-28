@@ -18,6 +18,7 @@ public interface ApiURL {
     String OpiningReportDetails = "OpiningReportDetails";
     String Check = "Check";
     String Category = "Category";
+    String OfferCategory = "OfferCategory";
     String Offer = "Offer";
     String Payment = "Payment";
     String Permission = "Permission";
