@@ -27,7 +27,6 @@
             android:ems="10"
             android:padding="16dp"
             android:textColor="@color/black"
-            app:drawableLeftCompat="@drawable/ic_icons_leaders_search"
             android:hint="@string/category_name"/>
 
 
