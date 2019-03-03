@@ -11,24 +11,15 @@ public class OfferCategory {
     private long offerCategoryId;
     private String name;
     private Timestamp createdAt;
-    private String productsIdList;
-    private List<String> productsIdListBO;
+    private List<String> productsIdList;
 
     private long byEmployee;
     private int branchId;
 
     public OfferCategory() {
     }
-    public OfferCategory(long offerCategoryId, String name, Timestamp createdAt, List<String> productsIdListBO, long byEmployee,int branchId) {
-        this.offerCategoryId = offerCategoryId;
-        this.name = name;
-        this.createdAt = createdAt;
-        this.productsIdListBO = productsIdListBO;
-        this.byEmployee = byEmployee;
-        this.branchId=branchId;
-    }
 
-    public OfferCategory(long offerCategoryId, String name, Timestamp createdAt, String productsIdList, long byEmployee,int branchId) {
+    public OfferCategory(long offerCategoryId, String name, Timestamp createdAt,  List<String> productsIdList, long byEmployee,int branchId) {
         this.offerCategoryId = offerCategoryId;
         this.name = name;
         this.createdAt = createdAt;
@@ -61,13 +52,6 @@ public class OfferCategory {
         this.createdAt = createdAt;
     }
 
-    public String getProductsIdList() {
-        return productsIdList;
-    }
-
-    public void setProductsIdList(String productsIdList) {
-        this.productsIdList = productsIdList;
-    }
 
     public long getByEmployee() {
         return byEmployee;
@@ -85,12 +69,12 @@ public class OfferCategory {
         this.branchId = branchId;
     }
 
-    public List<String> getProductsIdListBO() {
-        return productsIdListBO;
+    public List<String> getProductsIdList() {
+        return productsIdList;
     }
 
-    public void setProductsIdListBO(List<String> productsIdListBO) {
-        this.productsIdListBO = productsIdListBO;
+    public void setProductsIdList(List<String> productsIdList) {
+        this.productsIdList = productsIdList;
     }
 
     @Override
@@ -99,7 +83,7 @@ public class OfferCategory {
                 "offerCategoryId=" + offerCategoryId +
                 ", name='" + name + '\'' +
                 ", createdAt=" + createdAt +
-                ", productsIdListBO='" + productsIdListBO + '\'' +
+                ", productsIdList='" + productsIdList + '\'' +
                 ", byEmployee=" + byEmployee +
                 ", branchId=" + branchId +
                 '}';

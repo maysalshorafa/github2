@@ -60,10 +60,9 @@ public class OfferCategoryDbAdapter {
 
 
     public long insertEntry(String name, long byUser, List<String> productIdList, int branchId) {
-            OfferCategory offerCategory = new OfferCategory(Util.idHealth(this.db, OFFER_CATEGORY_TABLE_NAME, OFFER_CATEGORY_COLUMN_ID), name, new Timestamp(System.currentTimeMillis()), productIdList.toString(), byUser,branchId);
-        OfferCategory offerCategoryBo = new OfferCategory(Util.idHealth(this.db, OFFER_CATEGORY_TABLE_NAME, OFFER_CATEGORY_COLUMN_ID), name, new Timestamp(System.currentTimeMillis()), productIdList, byUser,branchId);
+            OfferCategory offerCategory = new OfferCategory(Util.idHealth(this.db, OFFER_CATEGORY_TABLE_NAME, OFFER_CATEGORY_COLUMN_ID), name, new Timestamp(System.currentTimeMillis()), productIdList, byUser,branchId);
 
-        sendToBroker(MessageType.ADD_OFFER_CATEGORY, offerCategoryBo, this.context);
+        sendToBroker(MessageType.ADD_OFFER_CATEGORY, offerCategory, this.context);
 
         try {
             return insertEntry(offerCategory);
@@ -80,7 +79,7 @@ public class OfferCategoryDbAdapter {
         val.put(OFFER_CATEGORY_COLUMN_ID, category.getOfferCategoryId());
         val.put(OFFER_CATEGORY_COLUMN_NAME, category.getName());
         val.put(OFFER_CATEGORY_COLUMN_BYUSER, category.getByEmployee());
-        val.put(OFFER_CATEGORY_COLUMN_PRODUCT_ID_LIST, category.getProductsIdList());
+        val.put(OFFER_CATEGORY_COLUMN_PRODUCT_ID_LIST, String.valueOf(category.getProductsIdList()));
         val.put(OFFER_CATEGORY_COLUMN_CREATINGDATE, String.valueOf(category.getCreatedAt()));
 
         try {

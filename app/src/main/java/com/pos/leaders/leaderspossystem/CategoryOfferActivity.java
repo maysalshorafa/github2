@@ -20,6 +20,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Tools.CategoryGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -33,6 +34,9 @@ public class CategoryOfferActivity extends AppCompatActivity {
     List<Category>filter_categoryList = new ArrayList<>();
      Category category =new Category();
     List<Category>categoryList = new ArrayList<>();
+    List<Product>filter_productList = new ArrayList<>();
+    Product product =new Product();
+    List<Product>productList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +62,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
         addProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                addProductFromProductDialog();
             }
         });
 
@@ -117,7 +121,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
                 if(categoryName.getText().toString().equals("")){
                     Toast.makeText(CategoryOfferActivity.this,"please insert category offer name",Toast.LENGTH_LONG).show();
                 }else {
@@ -132,7 +136,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
                     products.addAll(productDBAdapter.getAllProductsByCategory(categoryList.get(i).getCategoryId()));
                 }
                 for(int p=0;p<products.size();p++){
-                    productIdList.add( "\""+products.get(p).getProductId()+"\"");
+                    productIdList.add(String.valueOf(products.get(p).getProductId()));
                 }
                 OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(CategoryOfferActivity.this);
                 offerCategoryDbAdapter.open();
@@ -143,4 +147,67 @@ public class CategoryOfferActivity extends AppCompatActivity {
         });
 
     }
+    private void addProductFromProductDialog() {
+        final Dialog addProductFromProductDialog = new Dialog(CategoryOfferActivity.this);
+        addProductFromProductDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        addProductFromProductDialog.show();
+        addProductFromProductDialog.setContentView(R.layout.add_category_offer_product_from_product_catalog);
+        final EditText categoryName = (EditText) addProductFromProductDialog.findViewById(R.id.categoryName);
+        final GridView gvProduct = (GridView) addProductFromProductDialog.findViewById(R.id.gvProduct);
+        gvProduct.setNumColumns(3);
+        Button btn_cancel_add_product = (Button) addProductFromProductDialog.findViewById(R.id.btn_cancel_add_product);
+        Button btn_add_product = (Button) addProductFromProductDialog.findViewById(R.id.btn_add_product);
+
+        btn_cancel_add_product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addProductFromProductDialog.dismiss();
+            }
+        });
+        ProductDBAdapter  productDBAdapter = new ProductDBAdapter(this);
+        productDBAdapter.open();
+
+        filter_productList = productDBAdapter.getAllProducts();
+        ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(this, filter_productList);
+        gvProduct.setAdapter(adapter);
+        gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                product=filter_productList.get(position);
+                Log.d("testProduct",product.toString());
+                productList.add(product);
+                for (int i = 0; i < gvProduct.getChildCount(); i++) {
+                    if(position == i ){
+                        gvProduct.getChildAt(i).setBackgroundColor(Color.BLACK);
+                    }
+                }
+            }
+        });
+        btn_add_product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(categoryName.getText().toString().equals("")){
+                    Toast.makeText(CategoryOfferActivity.this,"please insert category offer name",Toast.LENGTH_LONG).show();
+                }else {
+                    addProductFromProductDialog.dismiss();
+                    Log.d("testProductList",productList.toString());
+                    ArrayList<String>productIdList=new ArrayList<String>();
+                    ArrayList<Product>products=new ArrayList<Product>();
+
+                    for (int i=0;i<productList.size();i++){
+                        productIdList.add(String.valueOf(productList.get(i).getProductId()));
+
+                    }
+
+                    OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(CategoryOfferActivity.this);
+                    offerCategoryDbAdapter.open();
+                    offerCategoryDbAdapter.insertEntry(categoryName.getText().toString(), SESSION._EMPLOYEE.getEmployeeId(),productIdList, SETTINGS.branchId);
+                }
+
+            }
+        });
+
+    }
+
 }
