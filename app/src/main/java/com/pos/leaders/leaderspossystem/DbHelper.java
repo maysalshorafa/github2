@@ -31,6 +31,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InvoiceDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferRuleDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
@@ -217,6 +218,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(MeasurementsDetailsDBAdapter.DATABASE_CREATE);
         db.execSQL(MeasurementDynamicVariableDBAdapter.DATABASE_CREATE);
         db.execSQL(XReportDBAdapter.DATABASE_CREATE);
+        db.execSQL(OfferCategoryDbAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (1,'משקל','Double','KG',0);");
         db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (2,'יד ימין 1','Double','CM',0);");
         db.execSQL("insert into "+MeasurementDynamicVariableDBAdapter.MEASUREMENT_DYNAMIC_VARIABLE_TABLE_NAME+"  values (3,'יד ימין 2','Double','CM',0);");
@@ -340,6 +342,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(IdsCounterDBAdapter.addColumn("x_report"));
                     db.execSQL(XReportDBAdapter.DATABASE_CREATE);
                     db.execSQL(ProductDBAdapter.addColumnInteger("currencyType"));
+                    db.execSQL(OfferCategoryDbAdapter.DATABASE_CREATE);
                     break;
                 
 

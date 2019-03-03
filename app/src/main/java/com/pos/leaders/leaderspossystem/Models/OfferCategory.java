@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Created by Win8.1 on 2/17/2019.
@@ -11,10 +12,20 @@ public class OfferCategory {
     private String name;
     private Timestamp createdAt;
     private String productsIdList;
+    private List<String> productsIdListBO;
+
     private long byEmployee;
     private int branchId;
 
     public OfferCategory() {
+    }
+    public OfferCategory(long offerCategoryId, String name, Timestamp createdAt, List<String> productsIdListBO, long byEmployee,int branchId) {
+        this.offerCategoryId = offerCategoryId;
+        this.name = name;
+        this.createdAt = createdAt;
+        this.productsIdListBO = productsIdListBO;
+        this.byEmployee = byEmployee;
+        this.branchId=branchId;
     }
 
     public OfferCategory(long offerCategoryId, String name, Timestamp createdAt, String productsIdList, long byEmployee,int branchId) {
@@ -74,13 +85,21 @@ public class OfferCategory {
         this.branchId = branchId;
     }
 
+    public List<String> getProductsIdListBO() {
+        return productsIdListBO;
+    }
+
+    public void setProductsIdListBO(List<String> productsIdListBO) {
+        this.productsIdListBO = productsIdListBO;
+    }
+
     @Override
     public String toString() {
         return "OfferCategory{" +
                 "offerCategoryId=" + offerCategoryId +
                 ", name='" + name + '\'' +
                 ", createdAt=" + createdAt +
-                ", productsIdList='" + productsIdList + '\'' +
+                ", productsIdListBO='" + productsIdListBO + '\'' +
                 ", byEmployee=" + byEmployee +
                 ", branchId=" + branchId +
                 '}';

@@ -497,6 +497,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                             case 0:
                                 i = new Intent(getApplicationContext(), CategoryActivity.class);
                                 startActivity(i);
+                                break;
                             case 1:
                                 i = new Intent(getApplicationContext(), CategoryOfferActivity.class);
                                 startActivity(i);

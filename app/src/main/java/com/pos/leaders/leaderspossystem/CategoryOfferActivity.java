@@ -123,7 +123,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
                 }else {
                 addProductFromCategoryDialog.dismiss();
                 Log.d("testCategory",categoryList.toString());
-                ArrayList<Long>productIdList=new ArrayList<Long>();
+                ArrayList<String>productIdList=new ArrayList<String>();
                 ArrayList<Product>products=new ArrayList<Product>();
 
                 for (int i=0;i<categoryList.size();i++){
@@ -132,11 +132,11 @@ public class CategoryOfferActivity extends AppCompatActivity {
                     products.addAll(productDBAdapter.getAllProductsByCategory(categoryList.get(i).getCategoryId()));
                 }
                 for(int p=0;p<products.size();p++){
-                    productIdList.add(products.get(p).getProductId());
+                    productIdList.add( "\""+products.get(p).getProductId()+"\"");
                 }
                 OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(CategoryOfferActivity.this);
                 offerCategoryDbAdapter.open();
-                offerCategoryDbAdapter.insertEntry(categoryName.getText().toString(), SESSION._EMPLOYEE.getEmployeeId(),productIdList.toString(), SETTINGS.branchId);
+                offerCategoryDbAdapter.insertEntry(categoryName.getText().toString(), SESSION._EMPLOYEE.getEmployeeId(),productIdList, SETTINGS.branchId);
                 }
 
             }

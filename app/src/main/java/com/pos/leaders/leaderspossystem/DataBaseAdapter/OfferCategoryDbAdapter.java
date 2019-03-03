@@ -12,6 +12,7 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
@@ -58,9 +59,11 @@ public class OfferCategoryDbAdapter {
     }
 
 
-    public long insertEntry(String name, long byUser,String productIdList,int branchId) {
-            OfferCategory offerCategory = new OfferCategory(Util.idHealth(this.db, OFFER_CATEGORY_TABLE_NAME, OFFER_CATEGORY_COLUMN_ID), name, new Timestamp(System.currentTimeMillis()), productIdList, byUser,branchId);
-        sendToBroker(MessageType.ADD_OFFER_CATEGORY, offerCategory, this.context);
+    public long insertEntry(String name, long byUser, List<String> productIdList, int branchId) {
+            OfferCategory offerCategory = new OfferCategory(Util.idHealth(this.db, OFFER_CATEGORY_TABLE_NAME, OFFER_CATEGORY_COLUMN_ID), name, new Timestamp(System.currentTimeMillis()), productIdList.toString(), byUser,branchId);
+        OfferCategory offerCategoryBo = new OfferCategory(Util.idHealth(this.db, OFFER_CATEGORY_TABLE_NAME, OFFER_CATEGORY_COLUMN_ID), name, new Timestamp(System.currentTimeMillis()), productIdList, byUser,branchId);
+
+        sendToBroker(MessageType.ADD_OFFER_CATEGORY, offerCategoryBo, this.context);
 
         try {
             return insertEntry(offerCategory);
