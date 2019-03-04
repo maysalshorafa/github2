@@ -25,6 +25,7 @@
     <string name="credit_card">אשראי</string>
     <string name="other_ways">אחר</string>
     <string name="cash">מזומן</string>
+    <string name="_cash">מזומן</string>
 
     <string-array name="credit_card_type">
         <!--<item>רגיל</item>

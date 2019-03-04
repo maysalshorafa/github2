@@ -2138,7 +2138,9 @@ public class SalesCartActivity extends AppCompatActivity {
              }
          }
          //str = extras.getString("orderJson");
-         }
+         }else {
+         clearCart();
+     }
 
     }
 
@@ -3130,7 +3132,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
     }
 
-    private void printAndOpenCashBox(String mainAns, final String mainMer, final String mainCli, int source) {
+    public void printAndOpenCashBox(String mainAns, final String mainMer, final String mainCli, int source) {
         switch (SETTINGS.printer) {
             case BTP880:
                 printAndOpenCashBoxBTP880(mainAns, mainMer, mainCli);
@@ -3145,8 +3147,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 printAndOpenCashBoxSM_S230I(mainAns, mainMer, mainCli);
                 break;
         }
-        if (source == REQUEST_CASH_ACTIVITY_CODE || source == REQUEST_CASH_ACTIVITY_WITH_CURRENCY_CODE)
-            currencyReturnsCustomDialogActivity.show();
+       // if (source == REQUEST_CASH_ACTIVITY_CODE || source == REQUEST_CASH_ACTIVITY_WITH_CURRENCY_CODE)
+         //   currencyReturnsCustomDialogActivity.show();
 
     }
 
@@ -3870,7 +3872,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     for (int i = 0 ;i<paymentTableArrayList.size();i++){
                         currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,paymentTableArrayList.get(i).getTendered(),paymentTableArrayList.get(i).getCurrency().getType());
                     }
-                    currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, new Order(SESSION._ORDERS));
+
                     for (int i = 0; i < jsonArray.length() - 1; i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()),getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")),jsonObject.getDouble("actualCurrencyRate"));
@@ -3946,12 +3948,10 @@ public class SalesCartActivity extends AppCompatActivity {
                     SESSION._ORDERS.setPayment(payment);
 
                     paymentDBAdapter.close();
-
-                    if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
-                        printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
-                        CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
-
-                    }
+                    Order order1 = new Order(SESSION._ORDERS);
+                    order1.setPayment(payment);
+                    currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1);
+                    currencyReturnsCustomDialogActivity.show();
 
                     return;
                 } catch (Exception e) {
@@ -3993,7 +3993,9 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
             }.execute();
     }
-
+    public void  callClearCart(){
+        clearCart();
+    }
     private long getCurrencyIdByType(String type) {
         CurrencyTypeDBAdapter currency = new CurrencyTypeDBAdapter(this);
         currency.open();
@@ -4520,5 +4522,6 @@ class StartGetCustomerGeneralLedgerConnection extends AsyncTask<String,Void,Stri
 
         //endregion
     }
+
 }
 
