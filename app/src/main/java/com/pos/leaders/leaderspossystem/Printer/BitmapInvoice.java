@@ -424,11 +424,11 @@ public class BitmapInvoice {
                 PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
 
         String names = "", in = "", out = "", total = "";
-        names +="\u200F"+ context.getString(R.string.cash)+"\n"+"\u200F"+ context.getString(R.string.invoice_receipt) +"\n" + "\u200F"+context.getString(R.string.invoice) + "\n" + "\u200F"+context.getString(R.string.credit_invoice_doc) + "\n"+"\u200F"+context.getString(R.string.total_sales);
+        names +="\u200F"+ context.getString(R.string.invoice_receipt) +"\n" + "\u200F"+context.getString(R.string.invoice) + "\n" + "\u200F"+context.getString(R.string.credit_invoice_doc) + "\n"+"\u200F"+context.getString(R.string.total_sales);
 
-        in +=  cashCount+"\n"+invoiceReceiptCount + "\n" +invoiceCount + "\n" +CreditInvoiceCount + "\n" +"~";
-        out +=  " " + "\n" + " " + "\n" +" " + "\n" +"  ";
-        total +=dTS(zReport.getInvoiceReceiptAmount()) +"\n"+ dTS(zReport.getInvoiceReceiptAmount()) + "\n" + dTS(zReport.getInvoiceAmount()) + "\n" + dTS(zReport.getCreditInvoiceAmount()) + "\n" +dTS(zReport.getTotalSales());
+        in +=  invoiceReceiptCount + "\n" +invoiceCount + "\n" +CreditInvoiceCount + "\n" +"~";
+        out +=  " " + "\n" +" " + "\n" +"  ";
+        total += dTS(zReport.getInvoiceReceiptAmount()) + "\n" + dTS(zReport.getInvoiceAmount()) + "\n" + dTS(zReport.getCreditInvoiceAmount()) + "\n" +dTS(zReport.getTotalSales());
         StaticLayout slNames = new StaticLayout(names, orderTP,
                 (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
         StaticLayout slIn = new StaticLayout(in, orderTP,
@@ -449,16 +449,16 @@ public class BitmapInvoice {
 
         String cIn = "", cOut = "", cTotal = "";
         if(SETTINGS.enableCurrencies) {
-            names = "\u200F"+context.getString(R.string.shekel) + "\n"+"\u200F"+ context.getString(R.string.usd) + "\n" +"\u200F"+ context.getString(R.string.eur) + "\n" +"\u200F"+ context.getString(R.string.gbp)+  "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
-            cIn = ShekelCount + "\n" + UsdCount + "\n" +EurCount + "\n" + GbpCount + "\n" + checkCount+ "\n" +creditCardCount+ "\n" + "~";
-            cOut =  " " + "\n" +  " " + "\n" +  " " + "\n" +  " "+ "\n" + " " + "\n"+ " " + "\n" +  " ";
-            cTotal = "\n" + Util.makePrice(zReport.getShekelAmount()) + "\n" + Util.makePrice(zReport.getUsdAmount()) + "\n" + Util.makePrice(zReport.getEurAmount()) + "\n" + Util.makePrice(zReport.getGbpAmount())
+            names = "\u200F"+ context.getString(R.string._cash)+"\n"+"\u200F"+context.getString(R.string.shekel) + "\n"+"\u200F"+ context.getString(R.string.usd) + "\n" +"\u200F"+ context.getString(R.string.eur) + "\n" +"\u200F"+ context.getString(R.string.gbp)+  "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
+            cIn =cashCount+"\n"+ ShekelCount + "\n" + UsdCount + "\n" +EurCount + "\n" + GbpCount + "\n" + checkCount+ "\n" +creditCardCount+ "\n" + "~";
+            cOut =  " " + "\n"+ " " + "\n" +  " " + "\n" +  " " + "\n" +  " "+ "\n" + " " + "\n"+ " " + "\n" +  " ";
+            cTotal = "\n" + Util.makePrice(cashAmount) +"\n" + Util.makePrice(zReport.getShekelAmount()) + "\n" + Util.makePrice(zReport.getUsdAmount()) + "\n" + Util.makePrice(zReport.getEurAmount()) + "\n" + Util.makePrice(zReport.getGbpAmount())
                     + "\n" + Util.makePrice(zReport.getCheckTotal()) + "\n" + Util.makePrice(zReport.getCreditTotal()) + "\n" + Util.makePrice(zReport.getTotalAmount());
         }else {
-            names = "\u200F"+context.getString(R.string.shekel)+ "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
-            cIn = ShekelCount + "\n" + checkCount+"\n" + creditCardCount + "\n" + "~";
-            cOut =  " " + "\n"+  " " + "\n" + " " + "\n" +  " ";
-            cTotal = "\n" + Util.makePrice(zReport.getShekelAmount())+ "\n" + Util.makePrice(zReport.getCheckTotal()) + "\n" + Util.makePrice(zReport.getCreditTotal()) + "\n" + Util.makePrice(zReport.getTotalAmount());
+            names = "\u200F"+context.getString(R.string._cash)+"\n"+"\u200F"+context.getString(R.string.shekel)+ "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
+            cIn =cashCount+"\n"+ ShekelCount + "\n" + checkCount+"\n" + creditCardCount + "\n" + "~";
+            cOut =  "\n"+  " "+ " " + "\n"+  " " + "\n" + " " + "\n" +  " ";
+            cTotal = "\n" + Util.makePrice(cashAmount)+"\n" + Util.makePrice(zReport.getShekelAmount())+ "\n" + Util.makePrice(zReport.getCheckTotal()) + "\n" + Util.makePrice(zReport.getCreditTotal()) + "\n" + Util.makePrice(zReport.getTotalAmount());
         }
         StaticLayout cSlNames = new StaticLayout(names, orderTP,
                 (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);

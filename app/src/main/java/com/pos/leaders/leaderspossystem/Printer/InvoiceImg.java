@@ -12,10 +12,12 @@ import android.text.TextPaint;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Order;
@@ -318,6 +320,7 @@ public class InvoiceImg {
         //pid and price
         Block paidBy = new Block("\u200E" + context.getString(R.string.paid_by), 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block paidByText = new Block("\u200E" + "", 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+
         String strPaymentWay = sale.getPayment().getPaymentWay().toString();
         switch (sale.getPayment().getPaymentWay().toString()) {
             case CONSTANT.CASH:
@@ -354,23 +357,68 @@ public class InvoiceImg {
 
         blocks.add(lineR.Left());
         if(SETTINGS.enableCurrencies) {
+            double shekelPaid =0,shekelReturn =0 ,usdPaid=0 , usdReturn=0,GbpPaid=0,GbpReturn=0,EurPaid=0, EurReturn=0;
             Block currencyDetails = new Block("\u200E" + context.getString(R.string.currency), 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
             Block currencyText = new Block("\u200E" + "", 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
 
             Block currencyType = new Block("\u200E" + context.getString(R.string.type) + newLineL, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
-            Block currencyAmount = new Block("\u200E" + context.getString(R.string.amount) + newLineL, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block currencyAmount = new Block("\u200E" + context.getString(R.string.given) + newLineL, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block currencyReturned = new Block("\u200E" + context.getString(R.string.returned) + newLineL, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
 
             CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(context);
             currencyOperationDBAdapter.open();
             List<CurrencyOperation> currencyOperationList = currencyOperationDBAdapter.getCurrencyOperationByOrderID(sale.getOrderId());
+            CurrencyReturnsDBAdapter currencyReturnDBAdapter = new CurrencyReturnsDBAdapter(context);
+            currencyReturnDBAdapter.open();
+           List<CurrencyReturns> currencyReturnsList=currencyReturnDBAdapter.getCurencyReturnBySaleID(sale.getOrderId());
             for (int i = 0; i < currencyOperationList.size(); i++) {
-                currencyType.text += (currencyOperationList.get(i).getCurrency_type()) + newLineL;
-                currencyAmount.text += (currencyOperationList.get(i).getAmount()) + newLineL;
+                if(currencyOperationList.get(i).getCurrency_type().equals("ILS")){
+                    shekelPaid+=currencyOperationList.get(i).getAmount();
+                }else if(currencyOperationList.get(i).getCurrency_type().equals("USD")){
+                    usdPaid+=currencyOperationList.get(i).getAmount();
+                }  else if(currencyOperationList.get(i).getCurrency_type().equals("GBP")){
+                    GbpPaid+=currencyOperationList.get(i).getAmount();
+                }else  if(currencyOperationList.get(i).getCurrency_type().equals("EUR")){
+                    EurPaid+=currencyOperationList.get(i).getAmount();
+                }
+
+            }
+            for (int i = 0; i < currencyReturnsList.size(); i++) {
+                if(currencyReturnsList.get(i).getCurrency_type()==0){
+                    shekelReturn+=currencyReturnsList.get(i).getAmount();
+                }else if(currencyReturnsList.get(i).getCurrency_type()==1){
+                    usdReturn+=currencyReturnsList.get(i).getAmount();
+                }  else if(currencyReturnsList.get(i).getCurrency_type()==2){
+                    GbpReturn+=currencyReturnsList.get(i).getAmount();
+                }else  if(currencyReturnsList.get(i).getCurrency_type()==3){
+                    EurReturn+=currencyReturnsList.get(i).getAmount();
+                }
+
+            }
+            if(shekelPaid>0||shekelReturn>0){
+                currencyType.text += context.getString(R.string.shekel) + newLineL;
+                currencyAmount.text += shekelPaid + newLineL;
+                currencyReturned.text+=shekelReturn+newLineL;
+            }
+            if(usdPaid>0||usdReturn>0){
+                currencyType.text += context.getString(R.string.usd) + newLineL;
+                currencyAmount.text += usdPaid + newLineL;
+                currencyReturned.text+=usdReturn+newLineL;
+            }
+            if(GbpPaid>0||GbpReturn>0){
+                currencyType.text += context.getString(R.string.gbp) + newLineL;
+                currencyAmount.text += GbpPaid + newLineL;
+                currencyReturned.text+=GbpReturn+newLineL;
+            }
+            if(EurPaid>0||EurReturn>0){
+                currencyType.text += context.getString(R.string.eur) + newLineL;
+                currencyAmount.text += EurPaid + newLineL;
+                currencyReturned.text+=EurReturn+newLineL;
             }
             blocks.add(currencyText.Bold().Left());
             blocks.add(currencyDetails.Bold().Left());
             blocks.add(clear.Left());
-            blocks.add(currencyText.Left());
+            blocks.add(currencyReturned.Left());
             blocks.add(currencyText.Left());
             blocks.add(currencyAmount.Left());
             blocks.add(currencyType.Left());

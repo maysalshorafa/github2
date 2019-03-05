@@ -40,6 +40,8 @@
     <string name="delete">Delete</string>
     <string name="report">Report</string>
     <string name="pay_cash">Pay Cash</string>
+    <string name="_cash">Cash</string>
+
     <string name="checks">Checks</string>
     <string name="pay_by_credit_card">Pay By Credit Card</string>
     <string name="integrated_payment">Integrated Payment</string>

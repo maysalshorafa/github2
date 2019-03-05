@@ -20,6 +20,7 @@
     <string name="cancel">إلغاء</string>
     <string name="cant_do_this_function_discount">لا يمكنك منح هذا التخفيض</string>
     <string name="cash">دفع نقدًا</string>
+    <string name="_cash">دفع نقدًا</string>
     <string name="cashier">امين الصندوق</string>
     <string name="change_password">تغير كلمة المرور</string>
     <string name="product">منتج</string>

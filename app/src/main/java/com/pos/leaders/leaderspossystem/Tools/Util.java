@@ -606,7 +606,7 @@ public class Util {
         }
         long zID = zReportDBAdapter.insertEntry(zReport.getCreatedAt(), zReport.getByUser(), zReport.getStartOrderId(), zReport.getEndOrderId(),
                 zReport.getTotalAmount(),zReport.getTotalSales(),cash_plus,check_plus+receiptInvoiceAmountCheck,creditCard_plus
-                ,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax/100,invoiceAmount,
+                ,Double.parseDouble(Util.makePrice(zReport.getTotalPosSales())),zReport.getTotalAmount()*SETTINGS.tax/100,invoiceAmount,
                 creditInvoiceAmount,sheqle_plus,(usd_plus-usd_minus)+aReportDetailsForSecondCurrency,(eur_plus-eur_minus)+aReportDetailsForThirdCurrency,(gbp_plus-gbp_minus)+aReportDetailsForForthCurrency,zReport.getInvoiceReceiptAmount());
         zReport.setzReportId(zID);
         zReport.setInvoiceAmount(invoiceAmount);
