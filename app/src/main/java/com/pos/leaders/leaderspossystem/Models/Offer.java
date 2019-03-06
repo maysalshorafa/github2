@@ -11,8 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -159,6 +157,7 @@ public class Offer {
 			return null;
 		}
 	}
+
 
 	@JsonIgnore
 	public int getActionQuantity() {

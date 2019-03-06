@@ -62,6 +62,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBA
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
@@ -86,6 +87,7 @@ import com.pos.leaders.leaderspossystem.Models.Documents;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Models.OfferCategory;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.OrderDocumentStatus;
@@ -308,6 +310,8 @@ public class SalesCartActivity extends AppCompatActivity {
     String orderDocNum ="";
     JSONObject invoiceJsonObject =new JSONObject();
     static Context context;
+    List<Offer>validOffer = new ArrayList<>();
+    int offerQuntity=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -327,7 +331,10 @@ public class SalesCartActivity extends AppCompatActivity {
         }
         context=SalesCartActivity.this;
         customerName_EditText = (EditText) findViewById(R.id.customer_textView);
-
+        //getValid Offer
+        offerDBAdapter=new OfferDBAdapter(SalesCartActivity.this);
+        offerDBAdapter.open();
+        validOffer=offerDBAdapter.getListOfValidOffers();
         Button btAddProductShortLink = (Button) findViewById(R.id.mainActivity_btAddProductShortLink);
         btAddProductShortLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -4444,8 +4451,49 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     public OrderDetails calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
+        //getOfferCategoryForProduct
+        OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(SalesCartActivity.this);
+        offerCategoryDbAdapter.open();
+        List<OfferCategory>offerCategoryList=offerCategoryDbAdapter.getOfferCategoryByProductId(orderDetails.getProductId());
 
-        List<Offer> offerList = OfferController.getOffersForResource(orderDetails.getProductId(),orderDetails.getProduct().getSku(),orderDetails.getProduct().getCategoryId(), getApplicationContext());
+       /** for(int c=0;c<SESSION._ORDER_DETAILES.size();c++){
+            if(SESSION._ORDER_DETAILES.get(c).getProductId()!=orderDetails.getProductId()){
+           //     Log.d("tessst",",mayyys");
+                List<OfferCategory>offerCategoryListForOldOrderDetails=offerCategoryDbAdapter.getOfferCategoryByProductId(SESSION._ORDER_DETAILES.get(c).getProductId());
+             //   Log.d("tessst",offerCategoryListForOldOrderDetails.toString());
+
+                for(int x=0 ;x<offerCategoryListForOldOrderDetails.size();x++){
+                    for(int y=0;y<offerCategoryList.size();y++){
+                        if(offerCategoryList.get(y).getOfferCategoryId()==offerCategoryListForOldOrderDetails.get(x).getOfferCategoryId()){
+                           SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).setQuantity();
+                        }
+                    }
+                }
+
+            }
+        }**/
+        //test if offerCategory be in active offer
+        for(int i=0 ; i<validOffer.size();i++){
+            Offer offer = validOffer.get(i);
+            JSONObject offerRules =offer.getRules();
+            JSONArray offerCategoryListInOffer = offerRules.getJSONArray("offerCategoryList");
+
+            for(int a=0;a<offerCategoryListInOffer.length();a++){
+                for (int b=0;b<offerCategoryList.size();b++){
+                    if(Long.parseLong((String) offerCategoryListInOffer.get(a))==offerCategoryList.get(b).getOfferCategoryId()){
+                        OrderDetails o=orderDetails;
+                        if (OfferController.check(offer, o)) {
+                            Log.d("offerCategoryListmmmm",Long.parseLong((String) offerCategoryListInOffer.get(0))+"     "+offerCategoryList.get(0).getOfferCategoryId() );
+                            o= OfferController.execute(offer, o,this);
+                            return o;
+                        }else {
+                            offerQuntity+=1;
+                        }
+                    }
+                }
+            }
+        }
+       /** List<Offer> offerList = OfferController.getOffersForResource(orderDetails.getProductId(),orderDetails.getProduct().getSku(),orderDetails.getProduct().getCategoryId(), getApplicationContext());
         orderDetails.offerList = offerList;
         if (offerList != null) {
             OrderDetails o=orderDetails;
@@ -4455,7 +4503,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
             }
             return o;
-        }
+        }**/
         return orderDetails;
     }
 

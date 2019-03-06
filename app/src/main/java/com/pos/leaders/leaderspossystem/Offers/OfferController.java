@@ -5,12 +5,9 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
-
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Offer;
-import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
-import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -388,7 +385,6 @@ public class OfferController {
         String actionName = action.getString(Action.NAME.getValue());
         int quantity = rules.getInt(Rules.quantity.getValue());
         orderDetails.offer = offer;
-        if(action.getBoolean(Action.SAME_RESOURCE.getValue())) {
             if (actionName.equalsIgnoreCase(Action.GET_GIFT_PRODUCT.getValue())) {
                 if (orderDetails.getQuantity() >= quantity + 1) {
                     int productGroup = orderDetails.getQuantity() / (quantity + 1);
@@ -452,7 +448,7 @@ public class OfferController {
                 }
 
             }
-        }
+
         return orderDetails;
     }
 }

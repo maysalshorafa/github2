@@ -176,6 +176,10 @@ public class OrderDetails {
 		return quantity;
 	}
 
+	public void setQuantity() {
+		this.quantity = this.quantity+1;
+	}
+
 	public double getUserOffer() {
 		return userOffer;
 	}
