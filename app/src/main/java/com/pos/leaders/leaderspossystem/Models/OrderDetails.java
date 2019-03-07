@@ -24,6 +24,7 @@ public class OrderDetails {
 	private double paidAmount;
 	private double discount;
 	private String orderKey;
+	private long offerCategory;
 	@JsonIgnore
 	public double rowDiscount = 0;
 
@@ -321,4 +322,11 @@ public class OrderDetails {
 		this.offer = offer;
 	}
 
+	public long getOfferCategory() {
+		return offerCategory;
+	}
+
+	public void setOfferCategory(long offerCategory) {
+		this.offerCategory = offerCategory;
+	}
 }

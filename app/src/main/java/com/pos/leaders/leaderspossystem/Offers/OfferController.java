@@ -42,7 +42,7 @@ public class OfferController {
 
                 List<Long> categoryIds = new ArrayList<>();
                 if (offer.getResourceType() == ResourceType.CATEGORY) {
-                    categoryIds = Arrays.asList(new ObjectMapper().readValue(rules.getString(Rules.categoryList.getValue()), Long[].class));
+                    categoryIds = Arrays.asList(new ObjectMapper().readValue(rules.getString(Rules.offerCategoryList.getValue()), Long[].class));
                 }
 
                 //COLLECT ALL PRODUCT ON IMPLEMENT OFFER
@@ -58,7 +58,7 @@ public class OfferController {
 
                     Log.i("orderDetails", orderDetails.toString());
                     if (offer.getResourceType() == ResourceType.CATEGORY) {
-                        if (categoryIds.contains(orderDetails.getProduct().getCategoryId())) {
+                        if (categoryIds.contains(orderDetails.getOfferCategory())) {
                             productCount += orderDetails.getQuantity();
                             offer.conditionList.add(orderDetails);
                         }

@@ -37,6 +37,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
@@ -1020,7 +1021,37 @@ public class SyncMessage extends Service {
                     break;
                 //end
 
+                case MessageType.ADD_OFFER_CATEGORY:
+                    OfferCategory offerCategory = null;
+                    offerCategory = objectMapper.readValue(msgData, OfferCategory.class);
+                    OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(this);
+                    offerCategoryDbAdapter.open();
+                    rID = offerCategoryDbAdapter.insertEntry(offerCategory);
+                    offerCategoryDbAdapter.close();
 
+                    break;
+                case MessageType.UPDATE_OFFER_CATEGORY:
+                    OfferCategory updateOfferCategory = null;
+                    updateOfferCategory = objectMapper.readValue(msgData, OfferCategory.class);
+                    OfferCategoryDbAdapter updateOfferCategoryDBAdapter = new OfferCategoryDbAdapter(this);
+                    updateOfferCategoryDBAdapter.open();
+                    rID = updateOfferCategoryDBAdapter.updateEntryBo(updateOfferCategory);
+                    updateOfferCategoryDBAdapter.close();
+                    break;
+                case MessageType.DELETE_OFFER_CATEGORY:
+                    OfferCategory deleteOfferategory = null;
+                    deleteOfferategory = objectMapper.readValue(msgData, OfferCategory.class);
+
+                    OfferCategoryDbAdapter deleteOfferCategoryDBAdapter = new OfferCategoryDbAdapter(this);
+                    deleteOfferCategoryDBAdapter.open();
+                    try {
+                        rID = deleteOfferCategoryDBAdapter.deleteEntryBo(deleteOfferategory);
+                    } catch (Exception ex) {
+                        rID = 0;
+                        ex.printStackTrace();
+                    }
+                    deleteOfferCategoryDBAdapter.close();
+                    break;
             }
         } else {
             //todo: does not have message type

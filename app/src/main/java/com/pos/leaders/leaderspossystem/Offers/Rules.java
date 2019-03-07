@@ -9,7 +9,7 @@ public enum Rules {
     product_sku("productSku"),
     quantity("quantity"),
     category("category"),
-    categoryList("categoryList");
+    categoryList("categoryList"),offerCategoryList("offerCategoryList");
 
     Rules(final String value) {
         this.value = value;

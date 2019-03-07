@@ -33,10 +33,11 @@ public class OfferCategoryDbAdapter {
     protected static final String OFFER_CATEGORY_COLUMN_BYUSER = "byEmployee";
     protected static final String OFFER_CATEGORY_COLUMN_PRODUCT_ID_LIST = "productIdList";
     protected static final String OFFER_CATEGORY_COLUMN_BRANCH_ID = "branchId";
+    protected static final String OFFER_CATEGORY_COLUMN_HIDE = "hide";
 
     public static final String DATABASE_CREATE = "CREATE TABLE OfferCategory ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "`name` TEXT NOT NULL , `creatingDate` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
-            "`byEmployee` INTEGER, `productIdList` TEXT NOT NULL, branchId INTEGER DEFAULT 0, FOREIGN KEY(`byEmployee`) REFERENCES `employees.id` )";
+            "`byEmployee` INTEGER, `productIdList` TEXT NOT NULL, branchId INTEGER DEFAULT 0, hide INTEGER DEFAULT 0 ,FOREIGN KEY(`byEmployee`) REFERENCES `employees.id` )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -101,7 +102,7 @@ public class OfferCategoryDbAdapter {
             List<OfferCategory> tempOfferCategoryList = new ArrayList<OfferCategory>();
         List<OfferCategory> offerCategoryList = new ArrayList<OfferCategory>();
 
-        Cursor cursor = db.rawQuery("select * from " + OFFER_CATEGORY_TABLE_NAME + " order by " + OFFER_CATEGORY_COLUMN_ID + " desc", null);
+        Cursor cursor = db.rawQuery("select * from " + OFFER_CATEGORY_TABLE_NAME + " where " +OFFER_CATEGORY_COLUMN_HIDE+"=0  order by " + OFFER_CATEGORY_COLUMN_ID + " desc", null);
             cursor.moveToFirst();
 
             while(!cursor.isAfterLast()){
@@ -134,5 +135,53 @@ public class OfferCategoryDbAdapter {
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(OFFER_CATEGORY_COLUMN_CREATINGDATE))),result,
                 cursor.getLong(cursor.getColumnIndex(OFFER_CATEGORY_COLUMN_BYUSER)),cursor.getInt(cursor.getColumnIndex(OFFER_CATEGORY_COLUMN_BRANCH_ID)));
     }
+    public long updateEntryBo(OfferCategory offerCategory) {
+        OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(context);
+        offerCategoryDbAdapter.open();
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(OFFER_CATEGORY_COLUMN_ID, offerCategory.getOfferCategoryId());
+        val.put(OFFER_CATEGORY_COLUMN_NAME, offerCategory.getName());
+        val.put(OFFER_CATEGORY_COLUMN_BYUSER, offerCategory.getByEmployee());
+        val.put(OFFER_CATEGORY_COLUMN_CREATINGDATE, String.valueOf(offerCategory.getCreatedAt()));
+        val.put(OFFER_CATEGORY_COLUMN_BRANCH_ID, offerCategory.getBranchId());
+        val.put(OFFER_CATEGORY_COLUMN_PRODUCT_ID_LIST, String.valueOf(offerCategory.getProductsIdList()));
+        try {
+            String where = OFFER_CATEGORY_COLUMN_ID + " = ?";
+            db.update(OFFER_CATEGORY_TABLE_NAME, val, where, new String[]{offerCategory.getOfferCategoryId() + ""});
+            OfferCategory p=offerCategoryDbAdapter.getOfferById(offerCategory.getOfferCategoryId());
+            Log.d("Update Object",p.toString());
+            offerCategoryDbAdapter.close();
+            return 1;
+        } catch (SQLException ex) {
+            return 0;
+        }
+    }
+    public OfferCategory getOfferById(long id){
+        Cursor cursor = db.rawQuery("select * from " + OFFER_CATEGORY_TABLE_NAME + " where "+OFFER_CATEGORY_COLUMN_ID+"='" + id + "'", null);
+        if (cursor.getCount() < 1) // Offer Not Exist
+        {
+            cursor.close();
+            return null;
+        }
+        cursor.moveToFirst();
+        return createOfferCategoryObject(cursor);
+    }
+    public long deleteEntryBo(OfferCategory offerCategory) {
+        // Define the updated row content.
+        ContentValues updatedValues = new ContentValues();
+        // Assign values for each row.
+        updatedValues.put(OFFER_CATEGORY_COLUMN_HIDE, 1);
+
+        String where = OFFER_CATEGORY_COLUMN_ID + " = ?";
+        try {
+            db.update(OFFER_CATEGORY_TABLE_NAME, updatedValues, where, new String[]{offerCategory.getOfferCategoryId() + ""});
+            return 1;
+        } catch (SQLException ex) {
+            Log.e("OfferCategory delete", "enable hide " + OFFER_CATEGORY_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+    }
+
 
 }

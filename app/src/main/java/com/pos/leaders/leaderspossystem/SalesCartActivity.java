@@ -311,7 +311,6 @@ public class SalesCartActivity extends AppCompatActivity {
     JSONObject invoiceJsonObject =new JSONObject();
     static Context context;
     List<Offer>validOffer = new ArrayList<>();
-    int offerQuntity=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -4455,23 +4454,9 @@ public class SalesCartActivity extends AppCompatActivity {
         OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(SalesCartActivity.this);
         offerCategoryDbAdapter.open();
         List<OfferCategory>offerCategoryList=offerCategoryDbAdapter.getOfferCategoryByProductId(orderDetails.getProductId());
-
-       /** for(int c=0;c<SESSION._ORDER_DETAILES.size();c++){
-            if(SESSION._ORDER_DETAILES.get(c).getProductId()!=orderDetails.getProductId()){
-           //     Log.d("tessst",",mayyys");
-                List<OfferCategory>offerCategoryListForOldOrderDetails=offerCategoryDbAdapter.getOfferCategoryByProductId(SESSION._ORDER_DETAILES.get(c).getProductId());
-             //   Log.d("tessst",offerCategoryListForOldOrderDetails.toString());
-
-                for(int x=0 ;x<offerCategoryListForOldOrderDetails.size();x++){
-                    for(int y=0;y<offerCategoryList.size();y++){
-                        if(offerCategoryList.get(y).getOfferCategoryId()==offerCategoryListForOldOrderDetails.get(x).getOfferCategoryId()){
-                           SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).setQuantity();
-                        }
-                    }
-                }
-
-            }
-        }**/
+        if(offerCategoryList.size()>0){
+        orderDetails.setOfferCategory(offerCategoryList.get(offerCategoryList.size()-1).getOfferCategoryId());
+        }
         //test if offerCategory be in active offer
         for(int i=0 ; i<validOffer.size();i++){
             Offer offer = validOffer.get(i);
@@ -4483,11 +4468,8 @@ public class SalesCartActivity extends AppCompatActivity {
                     if(Long.parseLong((String) offerCategoryListInOffer.get(a))==offerCategoryList.get(b).getOfferCategoryId()){
                         OrderDetails o=orderDetails;
                         if (OfferController.check(offer, o)) {
-                            Log.d("offerCategoryListmmmm",Long.parseLong((String) offerCategoryListInOffer.get(0))+"     "+offerCategoryList.get(0).getOfferCategoryId() );
                             o= OfferController.execute(offer, o,this);
                             return o;
-                        }else {
-                            offerQuntity+=1;
                         }
                     }
                 }
