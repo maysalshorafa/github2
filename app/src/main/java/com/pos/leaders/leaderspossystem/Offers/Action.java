@@ -10,7 +10,7 @@ import java.util.Map;
 public enum Action {
     ACTION("action"),
     PRICE_FOR_PRODUCT("PRICE_FOR_PRODUCT"),
-    GET_GIFT_PRODUCT("Get gift product"),
+    GET_GIFT_PRODUCT("GET_GIFT_PRODUCT"),
     GET_DISCOUNT("Getdiscount"),
     NAME("name"),
     VALUE("value"),

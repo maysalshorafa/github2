@@ -2526,7 +2526,7 @@ public class SalesCartActivity extends AppCompatActivity {
             }
         }
         try {
-            if (OfferController.executeCategoryOffers(SESSION._ORDER_DETAILES, new ArrayList<Offer>(offers.values()))) {
+            if (OfferController.executeCategoryOffers(SESSION._ORDER_DETAILES, validOffer)) {
                 //refreshCart();
             }
         } catch (JSONException e) {
@@ -2603,6 +2603,13 @@ public class SalesCartActivity extends AppCompatActivity {
             //Log.d("Product", p.toString());
             if (o.getProduct().equals(p) && o.getProduct().getProductId() != -1&&!o.giftProduct&&o.scannable) {
                 SESSION._ORDER_DETAILES.get(i).setCount(SESSION._ORDER_DETAILES.get(i).getQuantity() + 1);
+                //getOfferCategoryForProduct
+                OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(SalesCartActivity.this);
+                offerCategoryDbAdapter.open();
+                List<OfferCategory>offerCategoryList=offerCategoryDbAdapter.getOfferCategoryByProductId(p.getProductId());
+                if(offerCategoryList.size()>0){
+                    SESSION._ORDER_DETAILES.get(i).setOfferCategory(offerCategoryList.get(offerCategoryList.size()-1).getOfferCategoryId());
+                }
                 isMatch = true;
                 break;
             }
@@ -2627,6 +2634,7 @@ public class SalesCartActivity extends AppCompatActivity {
             SESSION._ORDER_DETAILES.add(new OrderDetails(1, 0, p, p.getPrice() *currency.getRate(), p.getPrice()*currency.getRate(), 0));
 
         }
+
         //restCategoryOffers();
         removeOrderItemSelection();
         refreshCart();
@@ -4454,9 +4462,6 @@ public class SalesCartActivity extends AppCompatActivity {
         OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(SalesCartActivity.this);
         offerCategoryDbAdapter.open();
         List<OfferCategory>offerCategoryList=offerCategoryDbAdapter.getOfferCategoryByProductId(orderDetails.getProductId());
-        if(offerCategoryList.size()>0){
-        orderDetails.setOfferCategory(offerCategoryList.get(offerCategoryList.size()-1).getOfferCategoryId());
-        }
         //test if offerCategory be in active offer
         for(int i=0 ; i<validOffer.size();i++){
             Offer offer = validOffer.get(i);
@@ -4475,7 +4480,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
             }
         }
-       /** List<Offer> offerList = OfferController.getOffersForResource(orderDetails.getProductId(),orderDetails.getProduct().getSku(),orderDetails.getProduct().getCategoryId(), getApplicationContext());
+    /**List<Offer> offerList = OfferController.getOffersForResource(orderDetails.getProductId(),orderDetails.getProduct().getSku(),orderDetails.getProduct().getCategoryId(), getApplicationContext());
         orderDetails.offerList = offerList;
         if (offerList != null) {
             OrderDetails o=orderDetails;

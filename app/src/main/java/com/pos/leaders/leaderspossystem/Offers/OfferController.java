@@ -32,7 +32,7 @@ public class OfferController {
 
         boolean changes = false;
         for(Offer offer:offers) {
-            if (!offer.isActionSameResource()) {
+          //  if (!offer.isActionSameResource()) {
                 JSONObject rules = offer.getRules();
                 int quantity = offer.getRuleQuantity();
 
@@ -43,10 +43,13 @@ public class OfferController {
                 List<Long> categoryIds = new ArrayList<>();
                 if (offer.getResourceType() == ResourceType.CATEGORY) {
                     categoryIds = Arrays.asList(new ObjectMapper().readValue(rules.getString(Rules.offerCategoryList.getValue()), Long[].class));
+                    Log.d("teeestOffer11",categoryIds.toString());
+
                 }
 
                 //COLLECT ALL PRODUCT ON IMPLEMENT OFFER
                 for (OrderDetails orderDetails : ods) {
+
                     if(orderDetails.giftProduct) {
                         continue;
                     }
@@ -59,6 +62,7 @@ public class OfferController {
                     Log.i("orderDetails", orderDetails.toString());
                     if (offer.getResourceType() == ResourceType.CATEGORY) {
                         if (categoryIds.contains(orderDetails.getOfferCategory())) {
+
                             productCount += orderDetails.getQuantity();
                             offer.conditionList.add(orderDetails);
                         }
@@ -91,14 +95,15 @@ public class OfferController {
                         if (targetQuantity + od.getQuantity() > quantity) {
                             //must split this order details
                             List<OrderDetails> spitedOrderDetails = splitOrderDetails(od, quantity - targetQuantity);
-
                             //reset on the main orders list
                             ods.remove(od);
 
 
                             OrderDetails cond = spitedOrderDetails.get(0);
+
                             cond.scannable = false;
                             ods.add(cond);
+                           // spitedOrderDetails.get(1).setUnitPrice(0);
                             ods.add(spitedOrderDetails.get(1));
 
                             //rejoin the two item to the first of the tem list
@@ -113,9 +118,10 @@ public class OfferController {
                         ods.remove(od);
                         od.scannable = false;
                         ods.add(od);
+
                         offer.conditionList.add(0, od);
                     }
-
+                    if (offer.getName().equals(Action.GET_GIFT_PRODUCT.getValue())){
                     //search the gift product
                     List<Long> giftProductsIds = new ArrayList<>();
                     giftProductsIds = Arrays.asList(offer.getActionResourceList());
@@ -136,6 +142,7 @@ public class OfferController {
                     }
 
                     if (targetResourceCount >= giftQuantity) {
+
                         //search the first X product and implement the offer
                         for (OrderDetails orderDetails : ods) {
                             if (giftQuantity > 0) {
@@ -143,6 +150,7 @@ public class OfferController {
                                 if(!orderDetails.scannable) continue;
 
                                 if (resourceType.equalsIgnoreCase(ResourceType.CATEGORY.getValue())) {
+
                                     if (giftProductsIds.contains(orderDetails.getProduct().getCategoryId())) {
                                         changes = true;
                                         if (giftQuantity - orderDetails.getQuantity() > 0) {
@@ -150,11 +158,13 @@ public class OfferController {
                                             orderDetails.setDiscount(100);
                                             orderDetails.giftProduct = true;
                                             orderDetails.scannable = false;
+
                                         } else if(giftQuantity - orderDetails.getQuantity() == 0){
                                             giftQuantity -= orderDetails.getQuantity();
                                             orderDetails.setDiscount(100);
                                             orderDetails.giftProduct = true;
                                             orderDetails.scannable = false;
+
                                             break;
                                         } else {
                                             //split this order details
@@ -164,6 +174,7 @@ public class OfferController {
                                             orderDetails1.get(0).setDiscount(100);
                                             orderDetails1.get(0).giftProduct = true;
                                             orderDetails1.get(0).scannable = false;
+
                                             ods.addAll(orderDetails1);
 
                                             break;
@@ -175,12 +186,13 @@ public class OfferController {
                     } else {
                         for (OrderDetails od : offer.conditionList) {
                             od.scannable = true;
-                        }
+                        }}
                         //not reach the rule condition
+                    }else {Log.d("test","ooo");
                     }
                 }
             }
-        }
+      //  }
         return changes;
     }
 
@@ -385,7 +397,8 @@ public class OfferController {
         String actionName = action.getString(Action.NAME.getValue());
         int quantity = rules.getInt(Rules.quantity.getValue());
         orderDetails.offer = offer;
-            if (actionName.equalsIgnoreCase(Action.GET_GIFT_PRODUCT.getValue())) {
+        Log.d("teeestOffer22",actionName);
+        if (actionName.equalsIgnoreCase(Action.GET_GIFT_PRODUCT.getValue())) {
                 if (orderDetails.getQuantity() >= quantity + 1) {
                     int productGroup = orderDetails.getQuantity() / (quantity + 1);
 

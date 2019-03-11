@@ -165,7 +165,12 @@ public class OrderDetails {
 
 	//region Getters
 
-	public long getProductId() {
+
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public long getProductId() {
 		return productId;
 	}
 
@@ -312,6 +317,7 @@ public class OrderDetails {
 				", \"scannable\":" + "\""+scannable +"\""+
 				", \"sku\":"+"\""+product.getSku()  +"\""+
 				", \"orderKey\":" + "\""+orderKey +"\""+
+				", \"offerCategory\":" + "\""+offerCategory +"\""+
 				'}';
 	}
 	public Offer getOffer() {
