@@ -113,7 +113,6 @@ public class OfferCategoryDbAdapter {
         List<String>productIdList=new ArrayList<>();
         for (int i= 0; i<tempOfferCategoryList.size();i++){
                 productIdList=tempOfferCategoryList.get(i).getProductsIdList();
-            Log.d("tessst11",tempOfferCategoryList.toString()+"  ");
 
             for (int a=0;a<productIdList.size();a++){
 

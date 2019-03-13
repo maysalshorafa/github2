@@ -35,12 +35,14 @@ public class OrderDetailsDBAdapter {
 	protected static final String ORDER_DETAILES_COLUMN_DISCOUNT = "discount";
 	protected static final String ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID = "custmerAssestID";
 	protected static final String ORDER_DETAILES_COLUMN_KEY = "key";
+	protected static final String ORDER_DETAILES_COLUMN_PRICE_AFTER_DISCOUNT = "price_after_discount";
+	protected static final String ORDER_DETAILES_COLUMN_OFFER_ID = "offerId";
 
 
 	public static final String DATABASE_CREATE = "CREATE TABLE `OrderDetails` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL , `product_id` INTEGER," +
 			" `quantity` INTEGER, `order_id` INTEGER, " +
 			" '" + ORDER_DETAILS_COLUMN_PAID_AMOUNT + "' REAL , '" + ORDER_DETAILS_COLUMN_UNIT_PRICE + "' REAL, '" + ORDER_DETAILES_COLUMN_DISCOUNT + "' REAL , '" + ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID + "' INTEGER , " +
-			ORDER_DETAILES_COLUMN_KEY + " TEXT , " +
+			ORDER_DETAILES_COLUMN_KEY + " TEXT , " +	ORDER_DETAILES_COLUMN_PRICE_AFTER_DISCOUNT + " REAL DEFAULT 0.0, " +ORDER_DETAILES_COLUMN_OFFER_ID + " INTEGER DEFAULT 0, " +
 			"FOREIGN KEY(`product_id`) REFERENCES `products.id`, FOREIGN KEY(`order_id`) REFERENCES `_Order.id` )";
     // Variable to hold the database instance
 	private SQLiteDatabase db;
@@ -89,27 +91,27 @@ public class OrderDetailsDBAdapter {
         }
 	}
 
-	public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID , String orderDetailsKey) {
-		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey);
+	public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID , String orderDetailsKey,double priceAfterProduct,long offerId) {
+		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey,priceAfterProduct,offerId);
 		sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
 
 		try {
 			long insertResult = insertEntry(o);
 			return insertResult;
 		} catch (SQLException ex) {
-			Log.e("ORDER_DETAILS DB insertEntry", "inserting Entry at " + ORDER_DETAILS_TABLE_NAME + ": " + ex.getMessage());
+			Log.e("ORDER_DETAILS DB ", "inserting Entry at " + ORDER_DETAILS_TABLE_NAME + ": " + ex.getMessage());
 			return 0;
 		}
 	}
-	public long insertEntryFromInvoice(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID  , String orderDetailsKey) {
-		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey);
+	public long insertEntryFromInvoice(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID  , String orderDetailsKey,double priceAfterProduct,long offerId) {
+		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey,priceAfterProduct,offerId);
 		// sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
 
 		try {
 			long insertResult = insertEntry(o);
 			return insertResult;
 		} catch (SQLException ex) {
-			Log.e("ORDER_DETAILS DB insertEntry", "inserting Entry at " + ORDER_DETAILS_TABLE_NAME + ": " + ex.getMessage());
+			Log.e("ORDER_DETAILS DB ", "inserting Entry at " + ORDER_DETAILS_TABLE_NAME + ": " + ex.getMessage());
 			return 0;
 		}
 	}
@@ -150,7 +152,9 @@ public class OrderDetailsDBAdapter {
 				cursor.getDouble(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_UNIT_PRICE)),
 				cursor.getDouble(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_DISCOUNT)),
 				cursor.getLong(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID)),
-				cursor.getString(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_KEY)));
+				cursor.getString(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_KEY)),
+				Double.parseDouble(cursor.getString(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_PRICE_AFTER_DISCOUNT))),
+				Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_ORDER_ID))));
 	}
 	public static String addColumnReal(String columnName) {
 		String dbc = "ALTER TABLE " + ORDER_DETAILS_TABLE_NAME
@@ -160,6 +164,11 @@ public class OrderDetailsDBAdapter {
 	public static String addColumnText(String columnName) {
 		String dbc = "ALTER TABLE " + ORDER_DETAILS_TABLE_NAME
 				+ " add column " + columnName + " TEXT  DEFAULT '' ;";
+		return dbc;
+	}
+	public static String addColumnLong(String columnName) {
+		String dbc = "ALTER TABLE " + ORDER_DETAILS_TABLE_NAME
+				+ " add column " + columnName + " INTEGER  DEFAULT '' ;";
 		return dbc;
 	}
 }
