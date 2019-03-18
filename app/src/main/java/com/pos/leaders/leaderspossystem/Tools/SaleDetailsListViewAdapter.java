@@ -89,9 +89,22 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
         price = orderList.get(position).getPaidAmount();
         count = orderList.get(position).getQuantity();
         holder.tvName.setText(_Substring(orderList.get(position).getProduct().getDisplayName()));
-        holder.tvPrice.setText(String.format(new Locale("en"), "%.2f", orderList.get(position).getUnitPrice()) + " " + context.getString(R.string.ins));
+        String currencyType="";
+        if(orderList.get(position).getProduct().getCurrencyType()==0) {
+            currencyType=context.getString(R.string.ins);
+        }
+        if(orderList.get(position).getProduct().getCurrencyType()==1) {
+            currencyType=context.getString(R.string.dolor_sign);
+        }
+        if(orderList.get(position).getProduct().getCurrencyType()==2) {
+            currencyType=context.getString(R.string.gbp);
+        }
+        if(orderList.get(position).getProduct().getCurrencyType()==3) {
+            currencyType=context.getString(R.string.eur);
+        }
+        holder.tvPrice.setText(String.format(new Locale("en"), "%.2f", orderList.get(position).getUnitPrice()) + " " + currencyType);
         holder.tvCount.setText(count + "");
-        holder.tvTotal.setText(String.format(new Locale("en"), "%.2f", (price )) + " " + context.getString(R.string.ins));
+        holder.tvTotal.setText(String.format(new Locale("en"), "%.2f", (price )) + " " + currencyType);
         holder.tvPercentage.setText(R.string.discount_percentage);
         holder.tvPercentageAmount.setText(String.format(new Locale("en"), "%.2f", (discount)) + " %");
 

@@ -11,6 +11,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ public class SalesAssistantDetailesSalesMangmentActivity extends AppCompatActivi
     List<CustomerAssistant>All_custmerAssestint;
     boolean userScrolled=true;
     Date to , from ;
+    Button print , cancel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +62,8 @@ public class SalesAssistantDetailesSalesMangmentActivity extends AppCompatActivi
         etAmount=(TextView)findViewById(R.id.etAmount);
         etUserName.setText(": "+userName);
         etSearch = (EditText) findViewById(R.id.etSearch);
+        print = (Button)findViewById(R.id.salesManManagement_BTPrintReport);
+        cancel = (Button)findViewById(R.id.salesManManagement_BTCancel);
         gvSalesMan = (ListView) findViewById(R.id.Management_GVSalesManSalesDetails);
         customerAssetDB= new CustomerAssetDB(this);
         customerAssetDB.open();
@@ -149,6 +153,20 @@ public class SalesAssistantDetailesSalesMangmentActivity extends AppCompatActivi
 
             }
         });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.salesManReport(SalesAssistantDetailesSalesMangmentActivity.this,customerAssests);
+
+            }
+        });
+
 
 
     }

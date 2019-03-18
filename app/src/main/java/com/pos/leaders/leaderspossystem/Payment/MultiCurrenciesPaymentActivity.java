@@ -210,7 +210,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             if(excess<=0)
                 return;
             //get currency rate
-            totalPaid += val * currencyRate;
+            totalPaid += val * actualCurrencyRate;
             double beforeChangeExcess = excess;
             setExcess();
             updateView();
@@ -229,7 +229,6 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     }
 
     private void updateView() {
-        Log.d("excess",excess+"");
         if (excess <= 0) {
             llTotalPriceBackground.setBackgroundColor(getResources().getColor(R.color.light_green1));
             btCheckOut.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));

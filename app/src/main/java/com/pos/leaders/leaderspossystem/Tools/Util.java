@@ -29,6 +29,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
+import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
@@ -71,6 +72,7 @@ import POSSDK.POSSDK;
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImages;
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesClosingReport;
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesOpiningReport;
+import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesZReport;
 
 
 /**
@@ -481,6 +483,8 @@ public class Util {
 
                 case CONSTANT.CASH:
                         cash_plus += p.getAmount();
+                    if(p.getAmount()<0)
+                        cash_minus+=p.getAmount();
                     break;
                 case CONSTANT.CREDIT_CARD:
                         creditCard_plus += p.getAmount();
@@ -512,6 +516,7 @@ public class Util {
                         break;
                 }
             }
+            sheqle_plus+=cash_minus;
 
 
             for (CurrencyReturns cp : currencyReturnList) {
@@ -811,6 +816,53 @@ public class Util {
         }.execute();
 
     }
+    public static void salesManReport(final Context context, final List<CustomerAssistant>customerAssistantList){
+        final String SAMPLE_FILE = "salesmanreport.pdf";
+        new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                try
+                {
+                    File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                    File file = new File(path,SAMPLE_FILE);
+                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                    byte[] data = new byte[(int)f.length()];
+                    f.readFully(data);
+                    pdfLoadImages(data,context);
+
+                }
+                catch(Exception ignored)
+                {
+
+                }
+                //     print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
+
+                //clearCart();
+
+            }
+            @Override
+            protected Void doInBackground(Void... voids) {
+                MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                try {
+                    PdfUA pdfUA = new PdfUA();
+
+                    try {
+                        pdfUA.createSalesManReport(context,customerAssistantList);
+                    } catch (DocumentException e) {
+                        e.printStackTrace();
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
+
+    }
+
     public static  void printAndOpenCashBoxBTP880(final Context context, final Bitmap bitmap) {
         final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
@@ -1134,6 +1186,54 @@ public class Util {
         currencyOperationDBAdapter.close();
         return pl;
     }
+    static List<Bitmap> bitmapList=new ArrayList<Bitmap>();
+
+    public static List<Bitmap> ZReport(final Context context, final ZReport zReport, final boolean source){
+        final String SAMPLE_FILE = "zreport.pdf";
+        new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                try
+                {
+                    File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                    File file = new File(path,SAMPLE_FILE);
+                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                    byte[] data = new byte[(int)f.length()];
+                    f.readFully(data);
+                    bitmapList = pdfLoadImagesZReport(data,context);
+                    Log.d("tesrr11",bitmapList.size()+"");
+
+                }
+                catch(Exception ignored)
+                {
+
+                }
+            }
+            @Override
+            protected Void doInBackground(Void... voids) {
+                MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                try {
+                    PdfUA pdfUA = new PdfUA();
+
+                    try {
+                        pdfUA.createZReport(context,zReport,source);
+                    } catch (DocumentException e) {
+                        e.printStackTrace();
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
+
+
+        return bitmapList;
+    }
+
 
 }
 

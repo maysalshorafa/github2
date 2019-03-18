@@ -349,6 +349,12 @@ public class OrdersManagementActivity extends AppCompatActivity {
                 //region Cancellation ORDER Button
 
                 Button btnCan = (Button) view.findViewById(R.id.listSaleManagement_BTCancel);
+                    if(sale.getCancellingOrderId()>0){
+                        btnCan.setVisibility(View.GONE);
+                    }else {
+                        btnCan.setVisibility(View.VISIBLE);
+                    }
+
                 btnCan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

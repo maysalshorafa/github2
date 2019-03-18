@@ -182,5 +182,41 @@
             android:verticalSpacing="10dp"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="-13dp" />
+
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/salesManManagement_BTPrintReport"
+            style="@style/AppTheme.bt_green"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/print"
+            android:textColor="#fff"
+            android:textSize="20dp" />
+
+        <Button
+
+            android:id="@+id/salesManManagement_BTCancel"
+            style="@style/AppTheme.bt_dangers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="#fff"
+            android:textSize="20dp" />
+
+
+    </LinearLayout>
+
 </LinearLayout>
