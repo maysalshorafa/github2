@@ -33,6 +33,7 @@ import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.XReport;
@@ -849,6 +850,52 @@ public class Util {
 
                     try {
                         pdfUA.createSalesManReport(context,customerAssistantList);
+                    } catch (DocumentException e) {
+                        e.printStackTrace();
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
+
+    }
+    public static void printPauseInvoice(final Context context, final List<OrderDetails>orderDetailsList){
+        final String SAMPLE_FILE = "pauseInvoice.pdf";
+        new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                try
+                {
+                    File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                    File file = new File(path,SAMPLE_FILE);
+                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                    byte[] data = new byte[(int)f.length()];
+                    f.readFully(data);
+                    pdfLoadImages(data,context);
+
+                }
+                catch(Exception ignored)
+                {
+
+                }
+                //     print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
+
+                //clearCart();
+
+            }
+            @Override
+            protected Void doInBackground(Void... voids) {
+                MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                try {
+                    PdfUA pdfUA = new PdfUA();
+
+                    try {
+                        pdfUA.createPauseInvoice(context,orderDetailsList);
                     } catch (DocumentException e) {
                         e.printStackTrace();
                     }

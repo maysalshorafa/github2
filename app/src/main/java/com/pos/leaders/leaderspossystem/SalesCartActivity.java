@@ -1540,6 +1540,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
 
                 if (SESSION._ORDER_DETAILES.size() != 0) {
+                    Util.printPauseInvoice(SalesCartActivity.this,SESSION._ORDER_DETAILES);
                     Order s = new Order(SESSION._ORDERS);
                     s.setOrders(SESSION._ORDER_DETAILES);
                     if (SESSION._SALES == null)
@@ -1553,7 +1554,6 @@ public class SalesCartActivity extends AppCompatActivity {
                     clearCart();
                     Toast.makeText(SalesCartActivity.this, getString(R.string.deal_number) + " " + SESSION.TEMP_NUMBER, Toast.LENGTH_SHORT).show();
                 }
-                Log.d("SeeeSisnSale",SESSION._SALES.toString());
             }
         });
         //invoice Button region

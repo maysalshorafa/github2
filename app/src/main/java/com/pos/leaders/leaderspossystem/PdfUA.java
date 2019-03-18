@@ -32,6 +32,7 @@ import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.Product;
@@ -78,62 +79,6 @@ public class PdfUA {
     static double aReportDetailsForThirdCurrency=0;
     static double aReportDetailsForForthCurrency=0;
     static double aReportAmount = 0;
-    /**   public static void  createZReportPdf(Context context, long id, long from, long to, boolean isCopy, double totalZReportAmount) throws IOException, DocumentException {
-     Document document = new Document();
-
-     String status ="-Source-";
-     if(isCopy){
-     status="-Copy-";
-     }
-     String fileName = "randompdf.pdf";
-     final String APPLICATION_PACKAGE_NAME = context.getPackageName();
-     File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
-     path.mkdirs();
-     File file = new File(path, fileName);
-     if(file.exists()){
-     PrintWriter writer = new PrintWriter(file);
-     writer.print("");
-     writer.close();
-     }
-     PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
-     document.open();
-     BaseFont urName = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
-     Font urFontName = new Font(urName, 30);
-     BaseFont urName1 = BaseFont.createFont("assets/Rubik-Light.ttf", "Identity-H",true,BaseFont.EMBEDDED);
-     Font font = new Font(urName1, 24);
-
-     PdfPTable headingTable = new PdfPTable(1);
-     PdfPTable posTable = new PdfPTable(1);
-     posTable.setWidthPercentage(115f);
-
-     PdfPTable table = new PdfPTable(4);
-     createZReport(table,context,id,from,to,urFontName); // fill ZReport info
-     //heading table
-     headingTable.deleteBodyRows();
-     headingTable.setRunDirection(0);
-     insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, urFontName);
-     insertCell(headingTable, status , Element.ALIGN_CENTER, 1, urFontName);
-     insertCell(headingTable, DateConverter.dateToString(zReport.getCreatedAt()) , Element.ALIGN_CENTER, 1, urFontName);
-     insertCell(headingTable, context.getString(R.string.cashiers) + user.getFullName() , Element.ALIGN_CENTER, 1, urFontName);
-     insertCell(headingTable,  String.format("%06d", zReport.getCashPaymentId()) , Element.ALIGN_CENTER, 1, urFontName);
-     insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, urFontName);
-     document.add(headingTable);
-     //end
-
-
-     document.add(table);
-
-     if(SETTINGS.enableCurrencies)// add space between two table
-     {
-     document.add(currencyTable);//add currency table
-     }
-     posTable.deleteBodyRows();
-     posTable.setRunDirection(0);
-     insertCell(posTable, context.getString(R.string.pos_sales)+" "+Util.makePrice(totalZReportAmount), Element.ALIGN_LEFT, 1, font);
-     document.add(posTable);
-
-     document.close();
-     }**/
     public static void  printUserReport(Context context, List<ScheduleWorkers>scheduleWorkersArrayList,long userId,Date from ,Date to) throws IOException, DocumentException {
         EmployeeDBAdapter userDBAdapter = new EmployeeDBAdapter(context);
         userDBAdapter.open();
@@ -207,9 +152,6 @@ public class PdfUA {
         document.close();
         //end :)
     }
-
-
-
     public static void createZReport( Context context,ZReport zReport,boolean source) throws IOException, DocumentException {
         Document document = new Document();
         String fileName = "zreport.pdf";
@@ -383,10 +325,6 @@ public class PdfUA {
 
 
     }
-
-
-
-
     public static void getCountForZReport(Context context, ZReport z) {
         aReportAmount=0;
         opiningReportList=new ArrayList<>();
@@ -524,7 +462,6 @@ public class PdfUA {
         checkCount+=receiptInvoiceAmountCheck;
 
     }
-
     public static void createUserReport(Context context ,PdfPTable table , List<ScheduleWorkers>scheduleWorkersList) throws IOException, DocumentException {
         Date date , startAt=null , endAt =null;
         table.setRunDirection(0);
@@ -580,7 +517,6 @@ public class PdfUA {
 
 
     }
-
     public static void insertCell(PdfPTable table, String text, int align, int colspan, Font font){
         //create a new cell with the specified Text and Font
         PdfPCell cell = new PdfPCell(new Phrase(text.trim(), font));
@@ -598,7 +534,6 @@ public class PdfUA {
         table.addCell(cell);
 
     }
-
     public static void  printCustomerWalletReport(Context context, String res) throws IOException, DocumentException, JSONException {
         JSONObject jsonObject = new JSONObject(res);
         String documentsData = jsonObject.getString("documentsData");
@@ -753,10 +688,6 @@ public class PdfUA {
         document.add(orderDetailsTable);
         document.close();
     }
-
-
-
-
     public static void  printClosingReport(Context context, String res) throws IOException, DocumentException, JSONException {
         JSONObject jsonObject = new JSONObject(res);
         // create file , document region
@@ -1082,6 +1013,8 @@ public class PdfUA {
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.user_name)+":  " + SESSION._EMPLOYEE.getEmployeeName(), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.sales_man_report), Element.ALIGN_CENTER, 1, font);
+
         Font urFontName = new Font(urName, 24);
         BaseFont urName1 = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font urFontName1 = new Font(urName1, 22);
@@ -1089,16 +1022,71 @@ public class PdfUA {
         table.deleteBodyRows();
         table.setRunDirection(0);
         //insert column headings;
-        insertCell(table, context.getString(R.string.sale_id), Element.ALIGN_CENTER, 1, urFontName1);
-        insertCell(table, context.getString(R.string.sale_type), Element.ALIGN_CENTER, 1, urFontName1);
-        insertCell(table, context.getString(R.string.amount), Element.ALIGN_CENTER, 1, urFontName1);
-        insertCell(table, context.getString(R.string.date), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.sale_id), Element.ALIGN_RIGHT, 1, urFontName1);
+        insertCell(table, context.getString(R.string.sale_type), Element.ALIGN_RIGHT, 1, urFontName1);
+        insertCell(table, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, urFontName1);
+        insertCell(table, context.getString(R.string.date), Element.ALIGN_RIGHT, 1, urFontName1);
         for (int i=0;i<customerAssistantList.size();i++){
            // date= new Date(String.valueOf(customerAssistantList.get(i).getCreatedAt()));
-            insertCell(table, "  " +customerAssistantList.get(i).getOrderId(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
-            insertCell(table,customerAssistantList.get(i).getSalesCase(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
-            insertCell(table,"  "+customerAssistantList.get(i).getAmount(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
-            insertCell(table, "  " +String.valueOf(customerAssistantList.get(i).getCreatedAt()), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table, "  " +customerAssistantList.get(i).getOrderId(), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
+            insertCell(table,customerAssistantList.get(i).getSalesCase(), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
+            insertCell(table,"  "+customerAssistantList.get(i).getAmount(), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
+            insertCell(table, "  " +String.valueOf(customerAssistantList.get(i).getCreatedAt()), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
+
+        }
+        //add table to document
+        document.add(headingTable);
+        document.add(table);
+        document.close();
+    }
+
+    public static void createPauseInvoice(Context context  , List<OrderDetails>orderDetailsList) throws IOException, DocumentException {
+        // create file , document region
+        Document document = new Document();
+        String fileName = "pauseInvoice.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+        if(file.exists()){
+            PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
+            writer.print("");
+            writer.close();
+        }
+
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();        //end region
+        //end region
+        Date date;
+        BaseFont urName = BaseFont.createFont("assets/carmelitregular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 30);
+        PdfPTable headingTable = new PdfPTable(1);
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.user_name)+":  " + SESSION._EMPLOYEE.getEmployeeName(), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.pause_invoice), Element.ALIGN_CENTER, 1, font);
+
+        Font urFontName = new Font(urName, 24);
+        BaseFont urName1 = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font urFontName1 = new Font(urName1, 22);
+        PdfPTable table = new PdfPTable(5);
+        table.deleteBodyRows();
+        table.setRunDirection(0);
+        //insert column headings;
+        insertCell(table, context.getString(R.string.product), Element.ALIGN_RIGHT, 1, urFontName1);
+        insertCell(table, context.getString(R.string.qty), Element.ALIGN_RIGHT, 1, urFontName1);
+        insertCell(table, context.getString(R.string.price), Element.ALIGN_RIGHT, 1, urFontName1);
+        insertCell(table, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, urFontName1);
+        insertCell(table, "%" , Element.ALIGN_RIGHT, 1, urFontName1);
+
+        for (int i=0;i<orderDetailsList.size();i++){
+            insertCell(table, orderDetailsList.get(i).getProduct().getDisplayName(), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
+            insertCell(table, orderDetailsList.get(i).getQuantity()+"", Element.ALIGN_RIGHT, 1, urFontName); // insert date value
+            insertCell(table,"  "+ orderDetailsList.get(i).getUnitPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
 
         }
         //add table to document
