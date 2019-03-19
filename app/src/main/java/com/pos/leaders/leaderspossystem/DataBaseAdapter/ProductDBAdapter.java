@@ -511,12 +511,11 @@ public class ProductDBAdapter {
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
             cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
-                    hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+ hint+"%'"
-                    +" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
+                    hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+ hint+"%' OR "+PRODUCTS_COLUMN_DISPLAY_NAME+" like '%"+ hint+"%'"+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
         }else {
             cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
                     hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+
-                    hint+"%'" +" and " + PRODUCTS_COLUMN_BRANCH_ID +
+                    hint+"%' OR "+PRODUCTS_COLUMN_DISPLAY_NAME+" like '%"+ hint+"%'"+" and " + PRODUCTS_COLUMN_BRANCH_ID +
                     " = "+ SETTINGS.branchId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
         }
 

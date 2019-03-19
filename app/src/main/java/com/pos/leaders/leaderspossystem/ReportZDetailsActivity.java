@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
@@ -28,6 +30,9 @@ import com.sun.pdfview.PDFPage;
 import net.sf.andpdf.nio.ByteBuffer;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,11 +111,8 @@ public class ReportZDetailsActivity extends Activity {
                     p = pt.createZReport(zReport, true);
                 } else {
                     p = pt.createZReport(zReport, false);
+                }
 
-                    pt = new PrintTools(ReportZDetailsActivity.this);
-
-                }}
-            /**
             if (isCopy) {
 
                 PdfUA pdfUA = new PdfUA();
@@ -171,7 +173,8 @@ public class ReportZDetailsActivity extends Activity {
                 }
                 //p= bitmapList.get(bitmapList.size());
 
-            }**/
+            }
+        }
 
         // p=pt.createXReport(id,from, SESSION._EMPLOYEE,new java.util.Date()); // testing xReport
         ((ImageView)findViewById(R.id.reportZDetails_ivInvoice)).setImageBitmap(p);
@@ -185,9 +188,14 @@ public class ReportZDetailsActivity extends Activity {
         btPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                pt.PrintReport(p);
+                if(x==true) {
+                    pt.PrintReport(p);
+                    onBackPressed();
+                }else {
+                    print(ReportZDetailsActivity.this,bitmapList);
+                    onBackPressed();
+                }
 
-                onBackPressed();
             }
         });
     }
