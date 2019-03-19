@@ -15,7 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.ChecksActivity;
+import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
+import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
 import com.pos.leaders.leaderspossystem.R;
 
 import org.json.JSONException;
@@ -120,6 +122,39 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
                 }
 
 
+            }
+        });
+        holder.creditReceipt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent;
+                if(SETTINGS.creditCardEnable) {
+                    if (SETTINGS.pinpadEnable) {//pinpad is active
+                        intent=new Intent(getContext(),PinpadActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("creditReceipt", "creditsReceipt");
+                        try {
+                            intent.putExtra("_Price",Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total"))));
+                            intent.putExtra("_custmer", "");
+                            intent.putExtra("invoice",invoicesList.get(position).toString());
+                            v.getContext().startActivity(intent);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else {
+                        intent=new Intent(getContext(),MainCreditCardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("creditReceipt", "creditsReceipt");
+                        try {
+                            intent.putExtra("_Price",Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total"))));
+                            intent.putExtra("_custmer", "");
+                            intent.putExtra("invoice",invoicesList.get(position).toString());
+                            v.getContext().startActivity(intent);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
             }
         });
         try {

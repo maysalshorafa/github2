@@ -25,17 +25,23 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.DocumentType;
+import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.SalesCartActivity;
+import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
+import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.ksoap2.serialization.SoapObject;
 
 import java.util.regex.Pattern;
@@ -64,8 +70,9 @@ public class MainCreditCardActivity extends AppCompatActivity {
     //1:normal
     int creditType = CreditCardTransactionType.NORMAL;
     int numberOfPayments = 1;
-
-
+    boolean creditReceipt=false;
+    JSONObject invoiceJson=new JSONObject();
+    BoInvoice invoice ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +106,26 @@ public class MainCreditCardActivity extends AppCompatActivity {
         //check extras
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            totalPrice = (double) extras.get(LEADERS_POS_CREDIT_CARD_TOTAL_PRICE);
-            tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
+            if(extras.containsKey("creditReceipt")){
+                creditReceipt=true;
+                totalPrice = (double) extras.get("_Price");
+                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
+                try {
+                    invoiceJson=new JSONObject(extras.getString("invoice"));
+                    JSONObject docJson = invoiceJson.getJSONObject("documentsData");
+                    docJson.remove("@type");
+                    docJson.put("type","Invoice");
+                    invoiceJson.remove("documentsData");
+                    invoiceJson.put("documentsData",docJson);
+                    invoice=new BoInvoice(DocumentType.INVOICE,docJson,invoiceJson.getString("docNum"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }else {
+                creditReceipt=false;
+                totalPrice = (double) extras.get(LEADERS_POS_CREDIT_CARD_TOTAL_PRICE);
+                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
+            }
         } else {
             finish();
         }
@@ -345,16 +370,23 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 creditCardPayment.setTransactionId(soap.getProperty("TransactionID").toString());
 
                 //soap.getProperty("MerchantNote").toString().equals("anyType{}");
+                if(creditReceipt){
+                    SESSION._TEMP_CREDITCARD_PAYMNET = creditCardPayment;
+                    DocumentControl.sendDoc(MainCreditCardActivity.this,invoice, CONSTANT.CREDIT_CARD,totalPrice);
 
-                Intent i = new Intent();
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY, answer);
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote, soap.getProperty("MerchantNote").toString());
-                i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote, soap.getProperty("ClientNote").toString());
-                i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
-                SESSION._TEMP_CREDITCARD_PAYMNET = creditCardPayment;
-                Log.i(LOG_TAG, creditCardPayment.toString());
-                setResult(RESULT_OK, i);
-                finish();
+                }
+                else {
+                    Intent i = new Intent();
+                    i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY, answer);
+                    i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote, soap.getProperty("MerchantNote").toString());
+                    i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote, soap.getProperty("ClientNote").toString());
+                    i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
+                    SESSION._TEMP_CREDITCARD_PAYMNET = creditCardPayment;
+                    Log.i(LOG_TAG, creditCardPayment.toString());
+                    setResult(RESULT_OK, i);
+                    finish();
+                }
+
 
 
             } catch (CreditCardResultException e) {

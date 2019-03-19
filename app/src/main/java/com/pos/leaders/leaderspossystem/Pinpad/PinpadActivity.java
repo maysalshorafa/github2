@@ -21,12 +21,19 @@ import com.credix.pinpad.jni.PinPadAPI;
 import com.credix.pinpad.jni.PinPadResponse;
 import com.credix.pinpad.jni.PinPadSession;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.pos.leaders.leaderspossystem.DocumentType;
+import com.pos.leaders.leaderspossystem.Models.BoInvoice;
+import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Pinpad.Credix.NumberOfPaymentException;
 import com.pos.leaders.leaderspossystem.Pinpad.Credix.ResponseCode;
 import com.pos.leaders.leaderspossystem.Pinpad.Credix.SendRequestType;
 import com.pos.leaders.leaderspossystem.Pinpad.Credix.TransactionCode;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.SalesCartActivity;
+import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
+import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
+import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -56,7 +63,9 @@ public class PinpadActivity extends AppCompatActivity {
 
     public static final int PAYMENTS_MAX_NUMBER = 36;
     public static final int PAYMENTS_MIN_NUMBER = 1;
-
+    boolean creditReceipt=false;
+    JSONObject invoiceJson=new JSONObject();
+    BoInvoice invoice ;
 
 
     @Override
@@ -76,9 +85,27 @@ public class PinpadActivity extends AppCompatActivity {
         //check extras
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            totalPrice = (double) extras.get(LEADERS_POS_PIN_PAD_TOTAL_PRICE);
-            tvTotalPrice.append(" " + Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
-        } else {
+            if (extras.containsKey("creditReceipt")) {
+                creditReceipt = true;
+                totalPrice = (double) extras.get("_Price");
+                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
+                try {
+                    invoiceJson = new JSONObject(extras.getString("invoice"));
+                    JSONObject docJson = invoiceJson.getJSONObject("documentsData");
+                    docJson.remove("@type");
+                    docJson.put("type", "Invoice");
+                    invoiceJson.remove("documentsData");
+                    invoiceJson.put("documentsData", docJson);
+                    invoice = new BoInvoice(DocumentType.INVOICE, docJson, invoiceJson.getString("docNum"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                creditReceipt=false;
+                totalPrice = (double) extras.get(LEADERS_POS_PIN_PAD_TOTAL_PRICE);
+                tvTotalPrice.append(" " + Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
+            }
+        }else {
             finish();
         }
 
@@ -166,11 +193,46 @@ public class PinpadActivity extends AppCompatActivity {
             jo = jsonObject.getJSONObject("data");
         } catch (JSONException e) {/*ignore*/}
 
-        Intent i = new Intent();
-        i.putExtra(RESULT_INTENT_CODE_PIN_PAD_ACTIVITY_FULL_RESPONSE, jo.toString());
-        i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
-        setResult(RESULT_OK, i);
-        finish();
+        if(creditReceipt){
+
+            CreditCardPayment ccp = new CreditCardPayment();
+            try {
+                JSONObject tr = jsonObject.getJSONObject("transaction");
+
+                ccp.setAmount(tr.getDouble("amount"));
+                ccp.setAnswer(jo.toString());
+                ccp.setTransactionId(tr.getString("uid"));
+                ccp.setCreditCardCompanyName(tr.getString("cardBrand"));
+                ccp.setLast4Digits(tr.getString("cardNumber"));
+                ccp.setCardholder(tr.getString("cardHolderName"));
+                ccp.setPaymentsNumber(0);
+                ccp.setTransactionType(CreditCardTransactionType.NORMAL);
+
+                if (tr.getInt("numberOfPayments") > 0) {
+                    ccp.setPaymentsNumber(tr.getInt("numberOfPayments") + 1);
+                    ccp.setFirstPaymentAmount(tr.getDouble("firstPaymentAmount"));
+                    ccp.setOtherPaymentAmount(tr.getDouble("paymentAmount"));
+                    ccp.setTransactionType(CreditCardTransactionType.PAYMENTS);
+                }
+
+                if (!tr.getString("transactionType2").equals("CHARGE")) {
+                    ccp.setTransactionType(CreditCardTransactionType.CREDIT);
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            SESSION._TEMP_CREDITCARD_PAYMNET=ccp;
+            DocumentControl.sendDoc(PinpadActivity.this,invoice, CONSTANT.CREDIT_CARD,totalPrice);
+
+        }else {
+            Intent i = new Intent();
+            i.putExtra(RESULT_INTENT_CODE_PIN_PAD_ACTIVITY_FULL_RESPONSE, jo.toString());
+            i.putExtra(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, totalPrice);
+            setResult(RESULT_OK, i);
+            finish();
+        }
     }
 
     private void failResponse(String message) {

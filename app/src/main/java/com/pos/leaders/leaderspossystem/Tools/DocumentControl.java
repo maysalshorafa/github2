@@ -400,15 +400,10 @@ public class DocumentControl {
                 JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
                 newJsonObject.put("paymentDetails",jsonArray);
             }
-          /*  if(paymentWay.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
-                CreditCardPayment creditCardPayment
-                //get credit payment detail by order id
-                CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(context);
-                creditCardPaymentDBAdapter.open();
-                creditCardPaymentList = creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
-                JSONArray jsonArray = new JSONArray(creditCardPaymentList.toString());
+           if(paymentWays.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
+                JSONArray jsonArray = new JSONArray(SESSION._TEMP_CREDITCARD_PAYMNET.toString());
                 newJsonObject.put("paymentDetails",jsonArray);
-            }**/
+            }
             if(paymentWays.equalsIgnoreCase(CONSTANT.CHECKS)){
 
                 //get check payment detail by order id
