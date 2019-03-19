@@ -257,6 +257,7 @@ public class ChecksActivity extends AppCompatActivity {
                     }
 
                 } else if (getTotalPid() > totalPrice) {
+					double t =getTotalPid();
 					if(extras.containsKey("checksReceipt")){
 						double d = getTotalPid() - checkList.get(checkList.size() - 1).getAmount();
 						double needAmount = totalPrice - d;
@@ -280,7 +281,7 @@ public class ChecksActivity extends AppCompatActivity {
 							finalCheckList.add(_check);
 						}
 						SESSION._CHECKS_HOLDER = finalCheckList;
-						DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,totalPrice);
+						DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,t);
 					}else {
 						double d = getTotalPid() - checkList.get(checkList.size() - 1).getAmount();
 						double needAmount = totalPrice - d;
