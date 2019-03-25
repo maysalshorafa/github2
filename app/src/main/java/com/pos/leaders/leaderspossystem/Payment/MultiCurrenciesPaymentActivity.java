@@ -73,7 +73,17 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         btCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (excess <= 0) {
+                if (excess <= 0 && totalPrice>0) {
+                    Log.d("PaymentTables",paymentTables.toString());
+                    Intent i = new Intent();
+                    i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE, paymentTables.toString());
+                    i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
+                    setResult(RESULT_OK, i);
+                    finish();
+                }
+                if(excess<=0 && totalPrice<0){
+                    paymentTables.add(new PaymentTable(Double.parseDouble(Util.makePrice(totalPrice)),0, 0, "", new CurrencyType(1l, defaultCurrency + ""),1));
+                    insertNewRow(totalPrice*-1, spCurrency.getSelectedItem().toString(),getCurrencyRate(spCurrency.getSelectedItem().toString()));
                     Log.d("PaymentTables",paymentTables.toString());
                     Intent i = new Intent();
                     i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE, paymentTables.toString());

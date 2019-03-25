@@ -394,7 +394,7 @@ public class ClosingReportActivity extends AppCompatActivity {
             expectedCheck=(check_plus+check_minus)+checkReceipt;
             expectedCredit=creditCard_plus+creditCard_minus;
             Log.d("teeest",sheqle_plus+"  "+sheqle_minus +"  "+cash_minus);
-            expectedShekel=sheqle_plus-sheqle_minus+expectedOpiningShekel+cashReceipt+cash_minus;
+            expectedShekel=sheqle_plus-sheqle_minus+expectedOpiningShekel+cashReceipt;
             expectedUsd=usd_plus-usd_minus+expectedOpiningUsd;
             expectedEur=eur_plus-eur_minus+expectedOpiningEur;
             expectedGbp=gbp_plus-gbp_minus+expectedOpiningGbp;

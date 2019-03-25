@@ -484,8 +484,6 @@ public class Util {
 
                 case CONSTANT.CASH:
                         cash_plus += p.getAmount();
-                    if(p.getAmount()<0)
-                        cash_minus+=p.getAmount();
                     break;
                 case CONSTANT.CREDIT_CARD:
                         creditCard_plus += p.getAmount();
@@ -517,7 +515,6 @@ public class Util {
                         break;
                 }
             }
-            sheqle_plus+=cash_minus;
 
 
             for (CurrencyReturns cp : currencyReturnList) {
@@ -1071,9 +1068,6 @@ public class Util {
 
                 case CONSTANT.CASH:
                         cash_plus += p.getAmount();
-                    if(p.getAmount()<0) {
-                        cash_minus += p.getAmount();
-                    }
                     break;
                 case CONSTANT.CREDIT_CARD:
 
@@ -1109,8 +1103,6 @@ public class Util {
                         break;
                 }
             }
-            sheqle_plus+=cash_minus;
-
             Log.d("Sheekel",sheqle_plus+"");
 
 

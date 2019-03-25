@@ -3950,14 +3950,23 @@ public class SalesCartActivity extends AppCompatActivity {
 
                     SESSION._ORDERS.setOrderId(saleIDforCash);
                     SESSION._ORDERS.setNumberDiscount(order.getNumberDiscount());
+                    if(saleTotalPrice<0){
+                        currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,0,"ILS");
+
+                    }else {
                     for (int i = 0 ;i<paymentTableArrayList.size();i++){
                         currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,paymentTableArrayList.get(i).getTendered(),paymentTableArrayList.get(i).getCurrency().getType());
                     }
-
+                    }
+                    if(saleTotalPrice<0){
+                        cashPaymentDBAdapter.insertEntry(saleIDforCash, 0,0, new Timestamp(System.currentTimeMillis()),1,1);
+                    }
+                    else {
                     for (int i = 0; i < jsonArray.length() - 1; i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()),getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")),jsonObject.getDouble("actualCurrencyRate"));
 
+                    }
                     }
                     cashPaymentDBAdapter.close();
                     // Club with point and amount
@@ -4031,7 +4040,12 @@ public class SalesCartActivity extends AppCompatActivity {
                     paymentDBAdapter.close();
                     Order order1 = new Order(SESSION._ORDERS);
                     order1.setPayment(payment);
-                    currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1);
+                    if(saleTotalPrice<0){
+                        currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, saleTotalPrice*-1, order1);
+
+                    }else {
+                        currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1);
+                    }
                     currencyReturnsCustomDialogActivity.show();
 
                     return;
