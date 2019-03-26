@@ -682,15 +682,97 @@ public class InvoiceImg {
         Block b_payment = new Block("\u200e" + context.getString(R.string.payment) + newLineL + sale.getPayment().getPaymentWay().toString(), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.332));
         Block b_total = new Block(context.getString(R.string.total) + "\n" + Util.makePrice(sale.getTotalPrice()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
         Block b_given = new Block(context.getString(R.string.given) + "\n" + Util.makePrice(sale.getTotalPaidAmount()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
-        double calcReturned = (sale.getTotalPaidAmount() - sale.getTotalPrice());
-        Block b_returned = new Block(context.getString(R.string.returned) + "\n" + Util.makePrice(calcReturned), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        double calcReturned = 0;
+        if (sale.getTotalPrice() < 0 && sale.getTotalPaidAmount() >= 0) {
+            calcReturned = (sale.getTotalPrice() + sale.getTotalPaidAmount());
+        } else {
+            calcReturned = (sale.getTotalPaidAmount() - sale.getTotalPrice());
+            if (calcReturned < 0) {
+                calcReturned = 0;
+            }
+        }
+        Block b_returned = new Block("\u200E" + context.getString(R.string.returned) + "\n" + Util.makePrice(calcReturned), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        blocks.add(lineR.Left());
+        blocks.add(paidByText.Bold().Left());
+        blocks.add(paidBy.Bold().Left());
+        blocks.add(clear.Left());
         blocks.add(b_returned.Left());
         blocks.add(b_given.Left());
         blocks.add(b_total.Left());
         blocks.add(b_payment.Left());
 
         blocks.add(lineR.Left());
+        if(SETTINGS.enableCurrencies) {
+            double shekelPaid =0,shekelReturn =0 ,usdPaid=0 , usdReturn=0,GbpPaid=0,GbpReturn=0,EurPaid=0, EurReturn=0;
+            Block currencyDetails = new Block("\u200E" + context.getString(R.string.currency), 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+            Block currencyText = new Block("\u200E" + "", 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
 
+            Block currencyType = new Block("\u200E" + context.getString(R.string.type) + newLineL, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block currencyAmount = new Block("\u200E" + context.getString(R.string.given) + newLineL, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block currencyReturned = new Block("\u200E" + context.getString(R.string.returned) + newLineL, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
+
+            CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(context);
+            currencyOperationDBAdapter.open();
+            List<CurrencyOperation> currencyOperationList = currencyOperationDBAdapter.getCurrencyOperationByOrderID(sale.getOrderId());
+            CurrencyReturnsDBAdapter currencyReturnDBAdapter = new CurrencyReturnsDBAdapter(context);
+            currencyReturnDBAdapter.open();
+            List<CurrencyReturns> currencyReturnsList=currencyReturnDBAdapter.getCurencyReturnBySaleID(sale.getOrderId());
+            for (int i = 0; i < currencyOperationList.size(); i++) {
+                if(currencyOperationList.get(i).getCurrency_type().equals("ILS")){
+                    shekelPaid+=currencyOperationList.get(i).getAmount();
+                }else if(currencyOperationList.get(i).getCurrency_type().equals("USD")){
+                    usdPaid+=currencyOperationList.get(i).getAmount();
+                }  else if(currencyOperationList.get(i).getCurrency_type().equals("GBP")){
+                    GbpPaid+=currencyOperationList.get(i).getAmount();
+                }else  if(currencyOperationList.get(i).getCurrency_type().equals("EUR")){
+                    EurPaid+=currencyOperationList.get(i).getAmount();
+                }
+
+            }
+            for (int i = 0; i < currencyReturnsList.size(); i++) {
+                if(currencyReturnsList.get(i).getCurrency_type()==0){
+                    shekelReturn+=currencyReturnsList.get(i).getAmount();
+                }else if(currencyReturnsList.get(i).getCurrency_type()==1){
+                    usdReturn+=currencyReturnsList.get(i).getAmount();
+                }  else if(currencyReturnsList.get(i).getCurrency_type()==2){
+                    GbpReturn+=currencyReturnsList.get(i).getAmount();
+                }else  if(currencyReturnsList.get(i).getCurrency_type()==3){
+                    EurReturn+=currencyReturnsList.get(i).getAmount();
+                }
+
+            }
+            if(shekelPaid>0||shekelReturn>0){
+                currencyType.text += context.getString(R.string.shekel) + newLineL;
+                currencyAmount.text += shekelPaid + newLineL;
+                currencyReturned.text+=shekelReturn+newLineL;
+            }
+            if(usdPaid>0||usdReturn>0){
+                currencyType.text += context.getString(R.string.usd) + newLineL;
+                currencyAmount.text += usdPaid + newLineL;
+                currencyReturned.text+=usdReturn+newLineL;
+            }
+            if(GbpPaid>0||GbpReturn>0){
+                currencyType.text += context.getString(R.string.gbp) + newLineL;
+                currencyAmount.text += GbpPaid + newLineL;
+                currencyReturned.text+=GbpReturn+newLineL;
+            }
+            if(EurPaid>0||EurReturn>0){
+                currencyType.text += context.getString(R.string.eur) + newLineL;
+                currencyAmount.text += EurPaid + newLineL;
+                currencyReturned.text+=EurReturn+newLineL;
+            }
+            if(shekelReturn==0&&usdReturn==0&&GbpReturn==0&&EurReturn==0){
+
+            }
+            blocks.add(currencyText.Bold().Left());
+            blocks.add(currencyDetails.Bold().Left());
+            blocks.add(clear.Left());
+            blocks.add(currencyReturned.Left());
+            blocks.add(currencyText.Left());
+            blocks.add(currencyAmount.Left());
+            blocks.add(currencyType.Left());
+            blocks.add(lineR.Left());
+        }
         if (checks != null) {
             Block b_checks_number = new Block("\u200e" + context.getString(R.string.checks), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
             Block b_checks_date = new Block(context.getString(R.string.date), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
@@ -707,23 +789,23 @@ public class InvoiceImg {
             blocks.add(lineR.Left());
         }
         Block cashier = new Block("\u200e" + context.getString(R.string.cashier)+ " " , 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
-        Block cashierName = new Block("\u200E" +  sale.getUser().getFullName(), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+        Block cashierName = new Block("\u200E" +  SESSION._EMPLOYEE.getFullName(), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
 
         cashier.Left();
         cashierName.Left();
         blocks.add(cashierName);
         blocks.add(cashier);
-
         Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getCreatedAt()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
-
-        Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
-        blocks.add(bCopyDate.Left());
-
+        if (isCopy) {
+            Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            blocks.add(bCopyDate.Left());
+        }
+        Block thanks = new Block(SETTINGS.returnNote, 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        blocks.add(thanks.Left());
 
         return make(blocks);
     }
-
     public Bitmap replacmentNote(Order sale, boolean isCopy) {
         int count=0;
         Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
