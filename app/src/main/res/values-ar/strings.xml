@@ -603,6 +603,8 @@
     <string name="view_credit_invoice_doc">عرض وصول الارجاع</string>
     <string name="checks_amount_more_than_amount_need">المبلغ الحالي اكثر من المبلغ المطلوب</string>
     <string name="cancel_invoice_id">رقم البيعه الملغاه</string>
+    <string name="order_details">OrderDetails</string>
+    <string name="order">Order</string>
 
 
 </resources>

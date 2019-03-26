@@ -84,6 +84,8 @@
     <string name="failed_to_add_new_category">Fail On Add New Category Please Try Again!</string>
     <string name="update_category">Update Category</string>
     <string name="please_insert_category_name_with_out_spaces">Please Insert Category Name WithOut Spaces.</string>
+    <string name="order_details">OrderDetails</string>
+    <string name="order">Order</string>
 
 
     <!--Splash Screen-->

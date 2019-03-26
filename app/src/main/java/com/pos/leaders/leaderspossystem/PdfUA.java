@@ -987,7 +987,6 @@ public class PdfUA {
 
     }
     public static void createSalesManReport(Context context  , List<CustomerAssistant>customerAssistantList) throws IOException, DocumentException {
-        // create file , document region
         Document document = new Document();
         String fileName = "salesmanreport.pdf";
         final String APPLICATION_PACKAGE_NAME = context.getPackageName();
@@ -1003,18 +1002,19 @@ public class PdfUA {
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
         document.open();        //end region
         //end region
-        Date date;
-        BaseFont urName = BaseFont.createFont("assets/carmelitregular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 30);
+        Font dateFont = new Font(urName, 24);
+        //heading table
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
         headingTable.setRunDirection(0);
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, context.getString(R.string.user_name)+":  " + SESSION._EMPLOYEE.getEmployeeName(), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.sales_man_report), Element.ALIGN_CENTER, 1, font);
-
         Font urFontName = new Font(urName, 24);
         BaseFont urName1 = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font urFontName1 = new Font(urName1, 22);
@@ -1022,21 +1022,24 @@ public class PdfUA {
         table.deleteBodyRows();
         table.setRunDirection(0);
         //insert column headings;
-        insertCell(table, context.getString(R.string.sale_id), Element.ALIGN_RIGHT, 1, urFontName1);
-        insertCell(table, context.getString(R.string.sale_type), Element.ALIGN_RIGHT, 1, urFontName1);
-        insertCell(table, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, urFontName1);
-        insertCell(table, context.getString(R.string.date), Element.ALIGN_RIGHT, 1, urFontName1);
+        insertCell(table, context.getString(R.string.sale_id), Element.ALIGN_LEFT, 1, urFontName1);
+        insertCell(table, context.getString(R.string.type), Element.ALIGN_LEFT, 1, urFontName1);
+        insertCell(table, context.getString(R.string.amount), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.date), Element.ALIGN_LEFT, 1, urFontName1);
         for (int i=0;i<customerAssistantList.size();i++){
-           // date= new Date(String.valueOf(customerAssistantList.get(i).getCreatedAt()));
-            insertCell(table, "  " +customerAssistantList.get(i).getOrderId(), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
-            insertCell(table,customerAssistantList.get(i).getSalesCase(), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
-            insertCell(table,"  "+customerAssistantList.get(i).getAmount(), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
-            insertCell(table, "  " +String.valueOf(customerAssistantList.get(i).getCreatedAt()), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
+            insertCell(table,""+customerAssistantList.get(i).getOrderId(), Element.ALIGN_LEFT, 1, urFontName); // insert date value
+            if(customerAssistantList.get(i).getSalesCase().equals("ORDER_DETAILS")) {
+                insertCell(table, context.getString(R.string.order_details), Element.ALIGN_LEFT, 1, urFontName); // insert date value
+            }else {
+                insertCell(table, context.getString(R.string.order), Element.ALIGN_LEFT, 1, urFontName); // insert date value
+            }
+            insertCell(table,Util.makePrice(customerAssistantList.get(i).getAmount()), Element.ALIGN_LEFT, 1, urFontName); // insert date value
+            insertCell(table, DateConverter.toDate(customerAssistantList.get(i).getCreatedAt()), Element.ALIGN_LEFT, 1, urFontName); // insert date value
 
         }
         //add table to document
         document.add(headingTable);
-        document.add(table);
+      document.add(table);
         document.close();
     }
 
@@ -1058,7 +1061,7 @@ public class PdfUA {
         document.open();        //end region
         //end region
         Date date;
-        BaseFont urName = BaseFont.createFont("assets/carmelitregular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 30);
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
@@ -1066,7 +1069,7 @@ public class PdfUA {
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, context.getString(R.string.user_name)+":  " + SESSION._EMPLOYEE.getEmployeeName(), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.user_name)+":  " + SESSION._EMPLOYEE.getFirstName(), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.pause_invoice), Element.ALIGN_CENTER, 1, font);
 
         Font urFontName = new Font(urName, 24);
@@ -1085,8 +1088,8 @@ public class PdfUA {
         for (int i=0;i<orderDetailsList.size();i++){
             insertCell(table, orderDetailsList.get(i).getProduct().getDisplayName(), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
             insertCell(table, orderDetailsList.get(i).getQuantity()+"", Element.ALIGN_RIGHT, 1, urFontName); // insert date value
-            insertCell(table,"  "+ orderDetailsList.get(i).getUnitPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
-            insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table,"  "+ orderDetailsList.get(i).getUnitPrice(), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
+            insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
 
         }
         //add table to document

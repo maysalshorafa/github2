@@ -621,6 +621,8 @@
     <string name="reference_invoice">עבור חשבונית מס</string>
     <string name="receipt_numbers">קבלה מספר</string>
     <string name="cancel_invoice_id"> ביטול חשבונית</string>
+    <string name="order_details">OrderDetails</string>
+    <string name="order">Order</string>
 
 
 </resources>
