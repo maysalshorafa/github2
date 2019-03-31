@@ -2185,8 +2185,6 @@ public class SalesCartActivity extends AppCompatActivity {
              }
          }
          //str = extras.getString("orderJson");
-         }else {
-         clearCart();
      }
 
     }

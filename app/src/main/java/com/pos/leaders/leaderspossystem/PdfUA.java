@@ -1005,7 +1005,6 @@ public class PdfUA {
 
         BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 30);
-        Font dateFont = new Font(urName, 24);
         //heading table
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
@@ -1015,26 +1014,23 @@ public class PdfUA {
         insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.sales_man_report), Element.ALIGN_CENTER, 1, font);
-        Font urFontName = new Font(urName, 24);
-        BaseFont urName1 = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
-        Font urFontName1 = new Font(urName1, 22);
-        PdfPTable table = new PdfPTable(4);
+        insertCell(headingTable, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+        Font urFontName = new Font(urName, 22);
+        PdfPTable table = new PdfPTable(new float[] { 2,2, 2});
         table.deleteBodyRows();
         table.setRunDirection(0);
         //insert column headings;
-        insertCell(table, context.getString(R.string.sale_id), Element.ALIGN_LEFT, 1, urFontName1);
-        insertCell(table, context.getString(R.string.type), Element.ALIGN_LEFT, 1, urFontName1);
-        insertCell(table, context.getString(R.string.amount), Element.ALIGN_CENTER, 1, urFontName1);
-        insertCell(table, context.getString(R.string.date), Element.ALIGN_LEFT, 1, urFontName1);
+        insertCellSalesMan(table, context.getString(R.string.type), Element.ALIGN_CENTER, 1, urFontName);
+        insertCellSalesMan(table, context.getString(R.string.amount), Element.ALIGN_CENTER, 1, urFontName);
+        insertCellSalesMan(table, context.getString(R.string.date), Element.ALIGN_CENTER, 1, urFontName);
         for (int i=0;i<customerAssistantList.size();i++){
-            insertCell(table,""+customerAssistantList.get(i).getOrderId(), Element.ALIGN_LEFT, 1, urFontName); // insert date value
             if(customerAssistantList.get(i).getSalesCase().equals("ORDER_DETAILS")) {
-                insertCell(table, context.getString(R.string.order_details), Element.ALIGN_LEFT, 1, urFontName); // insert date value
+                insertCellSalesMan(table, context.getString(R.string.order_details), Element.ALIGN_CENTER, 1, urFontName); // insert date value
             }else {
-                insertCell(table, context.getString(R.string.order), Element.ALIGN_LEFT, 1, urFontName); // insert date value
+                insertCellSalesMan(table, context.getString(R.string.order), Element.ALIGN_CENTER, 1, urFontName); // insert date value
             }
-            insertCell(table,Util.makePrice(customerAssistantList.get(i).getAmount()), Element.ALIGN_LEFT, 1, urFontName); // insert date value
-            insertCell(table, DateConverter.toDate(customerAssistantList.get(i).getCreatedAt()), Element.ALIGN_LEFT, 1, urFontName); // insert date value
+            insertCellSalesMan(table,Util.makePrice(customerAssistantList.get(i).getAmount()), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCellSalesMan(table, DateConverter.toDate(customerAssistantList.get(i).getCreatedAt()), Element.ALIGN_CENTER, 1, urFontName); // insert date value
 
         }
         //add table to document
@@ -1044,6 +1040,8 @@ public class PdfUA {
     }
 
     public static void createPauseInvoice(Context context  , List<OrderDetails>orderDetailsList) throws IOException, DocumentException {
+        double totalPrice =0.0;
+        int count=0;
         // create file , document region
         Document document = new Document();
         String fileName = "pauseInvoice.pdf";
@@ -1071,31 +1069,55 @@ public class PdfUA {
         insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.user_name)+":  " + SESSION._EMPLOYEE.getFirstName(), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.pause_invoice), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 4, font);
 
-        Font urFontName = new Font(urName, 24);
-        BaseFont urName1 = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName1 = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font urFontName1 = new Font(urName1, 22);
-        PdfPTable table = new PdfPTable(5);
+        PdfPTable table = new PdfPTable(new float[] {3,2,2,2,2});
+        Font urFontName = new Font(urName1, 24);
+
         table.deleteBodyRows();
         table.setRunDirection(0);
         //insert column headings;
-        insertCell(table, context.getString(R.string.product), Element.ALIGN_RIGHT, 1, urFontName1);
-        insertCell(table, context.getString(R.string.qty), Element.ALIGN_RIGHT, 1, urFontName1);
-        insertCell(table, context.getString(R.string.price), Element.ALIGN_RIGHT, 1, urFontName1);
-        insertCell(table, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, urFontName1);
-        insertCell(table, "%" , Element.ALIGN_RIGHT, 1, urFontName1);
+        insertCell(table, context.getString(R.string.product), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.qty), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.price), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.total), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, "%" , Element.ALIGN_CENTER, 1, urFontName1);
 
         for (int i=0;i<orderDetailsList.size();i++){
-            insertCell(table, orderDetailsList.get(i).getProduct().getDisplayName(), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
-            insertCell(table, orderDetailsList.get(i).getQuantity()+"", Element.ALIGN_RIGHT, 1, urFontName); // insert date value
-            insertCell(table,"  "+ orderDetailsList.get(i).getUnitPrice(), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
-            insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_RIGHT, 1, urFontName); // insert date value
-
+            insertCell(table, orderDetailsList.get(i).getProduct().getDisplayName(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table, orderDetailsList.get(i).getQuantity()+"", Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table,"  "+ orderDetailsList.get(i).getUnitPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table, "  " + orderDetailsList.get(i).getDiscount(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            totalPrice+=orderDetailsList.get(i).getItemTotalPrice();
+            count+=orderDetailsList.get(i).getQuantity();
         }
+        insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 5, font);
+        insertCell(table, context.getString(R.string.product_quantity)+" : "+count  , Element.ALIGN_CENTER, 5, font);
+        insertCell(table, context.getString(R.string.total_price)+" : "+totalPrice  , Element.ALIGN_CENTER, 5, font);
         //add table to document
         document.add(headingTable);
         document.add(table);
         document.close();
     }
+    public static void insertCellSalesMan(PdfPTable table, String text, int align, int colspan, Font font){
+        //create a new cell with the specified Text and Font
+        PdfPCell cell = new PdfPCell(new Phrase(text.trim(), font));
+        // cell.setBorder(Rectangle.NO_BORDER);
 
+        //set the cell alignment
+        cell.setHorizontalAlignment(align);
+        //set the cell column span in case you want to merge two or more cells
+        cell.setColspan(colspan);
+        cell.setPadding(4);
+        //in case there is no text and you wan to create an empty row
+        if(text.trim().equalsIgnoreCase("")){
+            cell.setMinimumHeight(14f);
+        }
+        //add the call to the table
+        table.addCell(cell);
+
+    }
 }
