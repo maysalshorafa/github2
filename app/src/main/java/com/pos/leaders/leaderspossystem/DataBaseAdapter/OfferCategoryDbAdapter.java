@@ -115,10 +115,7 @@ public class OfferCategoryDbAdapter {
                 productIdList=tempOfferCategoryList.get(i).getProductsIdList();
 
             for (int a=0;a<productIdList.size();a++){
-
                 if(String.valueOf(productIdList.get(a).replaceAll("\\s+","")).equals(String.valueOf(productId))){
-                 //   Log.d("tessst",Long.parseLong(productIdList.get(a)) + "   "+String.valueOf(productId));
-
                     offerCategoryList.add(tempOfferCategoryList.get(i));
                 }
             }

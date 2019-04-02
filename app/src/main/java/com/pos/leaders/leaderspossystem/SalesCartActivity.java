@@ -2662,6 +2662,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(SalesCartActivity.this);
                 offerCategoryDbAdapter.open();
                 List<OfferCategory>offerCategoryList=offerCategoryDbAdapter.getOfferCategoryByProductId(p.getProductId());
+                Log.d("offerCategoryListTest",offerCategoryList.toString());
                 if(offerCategoryList.size()>0){
                     SESSION._ORDER_DETAILES.get(i).setOfferCategory(offerCategoryList.get(offerCategoryList.size()-1).getOfferCategoryId());
 
@@ -2696,6 +2697,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 o.setOfferCategory(offerCategoryList.get(offerCategoryList.size()-1).getOfferCategoryId());
 
             }
+            Log.d("offerCategoryListTest1",offerCategoryList.toString());
             SESSION._ORDER_DETAILES.add(o);
 
         }

@@ -210,6 +210,8 @@ public class OfferController {
 
                             productCount += orderDetails.getQuantity();
                             offer.conditionList.add(orderDetails);
+                            Log.i("orderDetailsCount", productCount+"");
+
                         }
                     }
                 }
@@ -229,17 +231,20 @@ public class OfferController {
                     });
 
                     Collections.reverse(tempCondition);
+                    Log.d("tempCondition",tempCondition.toString());
                     //reset offer condition list
                     offer.conditionList = new ArrayList<>();
                     // select first highest quantity
                     int targetQuantity = 0;
                     while (targetQuantity < quantity) {
+                        Log.d("CountTarget", targetQuantity+"");
 
                         OrderDetails od = tempCondition.remove(0);
 
                         if (targetQuantity + od.getQuantity() > quantity) {
                             //must split this order details
                             List<OrderDetails> spitedOrderDetails = splitOrderDetailsToPriceForProductOffer(od, quantity - targetQuantity,value);
+                            Log.d("CountTarget1", spitedOrderDetails.toString()+"");
 
                             //reset on the main orders list
                             ods.remove(od);
@@ -252,10 +257,11 @@ public class OfferController {
                             // spitedOrderDetails.get(1).setUnitPrice(0);
                             ods.add(spitedOrderDetails.get(1));
 
-                            //rejoin the two item to the first of the tem list
+                            /*rejoin the two item to the first of the tem list
                             tempCondition.add(0, spitedOrderDetails.get(1));
 
-                            tempCondition.add(0, cond);
+                            tempCondition.add(0, cond);*/
+                            Log.d("odss",ods.toString());
 
                             continue;
                         }
