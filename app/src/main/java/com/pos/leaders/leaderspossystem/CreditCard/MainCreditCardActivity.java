@@ -73,6 +73,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
     boolean creditReceipt=false;
     JSONObject invoiceJson=new JSONObject();
     BoInvoice invoice ;
+    String cardNo , expireDate , ccv ,idNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,8 +144,45 @@ public class MainCreditCardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 /*byPhoneMode = !byPhoneMode;
-                ByPhoneMode();*/
-            }
+                ByPhoneMode();
+                final Dialog creditByPhoneDialog = new Dialog(MainCreditCardActivity.this);
+                creditByPhoneDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                creditByPhoneDialog.show();
+                creditByPhoneDialog.setContentView(R.layout.credit_card_by_phone);
+                final EditText cardNoEt = (EditText)creditByPhoneDialog.findViewById(R.id.EtCreditCardByPhoneCreditCardNo);
+                final EditText expireDateEt =(EditText)creditByPhoneDialog.findViewById(R.id.EtCreditCardByPhoneCreditCardExpiredDate);
+                final EditText ccvEt =(EditText)creditByPhoneDialog.findViewById(R.id.EtCreditCardByPhoneCreditCcv);
+                final EditText identificationNo =(EditText)creditByPhoneDialog.findViewById(R.id.EtCreditCardByPhoneCreditCardId);
+                Button done = (Button)creditByPhoneDialog.findViewById(R.id.btn_done);
+                Button cancel = (Button)creditByPhoneDialog.findViewById(R.id.btn_cancel);
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        creditByPhoneDialog.dismiss();
+                    }
+                });
+                done.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                      cardNo=cardNoEt.getText().toString();
+                       expireDate=expireDateEt.getText().toString();
+                        expireDate.replace("/", "");
+
+                        ccv=ccvEt.getText().toString();
+                        idNo=identificationNo.getText().toString();
+                        if(cardNo.isEmpty()){
+                            //input is empty
+                            creditByPhoneDialog.dismiss();
+                            Toast.makeText(MainCreditCardActivity.this, getString(R.string.transfer_credit_card), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String s = cardNo+expireDate+ccv+idNo;
+                        doTransaction(s,1,1);
+                    }
+                });*/
+
+
+                }
         });
 
         btCancel.setOnClickListener(new View.OnClickListener() {
