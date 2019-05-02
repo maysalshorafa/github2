@@ -1069,7 +1069,7 @@ public class SyncMessage extends Service {
                     updateInventory = objectMapper.readValue(msgData, Inventory.class);
                     InventoryDbAdapter updateInventoryDBAdapter = new InventoryDbAdapter(this);
                     updateInventoryDBAdapter.open();
-                    rID = updateInventoryDBAdapter.updateEntryBo(updateInventory);
+                 //   rID = updateInventoryDBAdapter.updateEntryBo(updateInventory);
                     updateInventoryDBAdapter.close();
                     break;
                 case MessageType.DELETE_INVENTORY:
