@@ -2649,6 +2649,7 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     private void addToCart(Product p) throws JSONException {
+        OrderDetails newOrderDetails = null;
         boolean isMatch = false;
 
         //test if cart have this order before insert to cart and order have'nt discount
@@ -2667,6 +2668,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     SESSION._ORDER_DETAILES.get(i).setOfferCategory(offerCategoryList.get(offerCategoryList.size()-1).getOfferCategoryId());
 
                 }
+                newOrderDetails=SESSION._ORDER_DETAILES.get(i);
                 isMatch = true;
                 break;
             }
@@ -2699,6 +2701,7 @@ public class SalesCartActivity extends AppCompatActivity {
             }
             Log.d("offerCategoryListTest1",offerCategoryList.toString());
             SESSION._ORDER_DETAILES.add(o);
+            newOrderDetails=o;
 
         }
 
@@ -4539,8 +4542,16 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     public OrderDetails calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
+        Log.d("validOffer",validOffer.toString());
+        for(int i=0;i<validOffer.size();i++){
+            if(orderDetails.getProduct().getOfferId()==validOffer.get(i).getOfferId()){
+                //execute offer
+              orderDetails=  OfferController.execute(validOffer.get(i),orderDetails,this,SESSION._ORDER_DETAILES);
+
+            }
+        }
         //getOfferCategoryForProduct
-        OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(SalesCartActivity.this);
+    /**    OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(SalesCartActivity.this);
         offerCategoryDbAdapter.open();
         List<OfferCategory>offerCategoryList=offerCategoryDbAdapter.getOfferCategoryByProductId(orderDetails.getProductId());
         //test if offerCategory be in active offer
@@ -4554,7 +4565,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     if(Long.parseLong((String) offerCategoryListInOffer.get(a))==offerCategoryList.get(b).getOfferCategoryId()){
                         OrderDetails o=orderDetails;
                         if (OfferController.check(offer, o)) {
-                            o= OfferController.execute(offer, o,this);
+                            o= OfferController.execute(offer, o,this,SESSION._ORDER_DETAILES);
                             return o;
                         }
                     }

@@ -8,6 +8,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +27,6 @@ import java.util.Map;
 public class OfferController {
 
     public static List<Offer> activeOffers = new ArrayList<>();
-
 
     public static boolean executeCategoryOffers(List<OrderDetails> ods,List<Offer> offers) throws JSONException, IOException {
 
@@ -489,7 +489,19 @@ public class OfferController {
         return (orderDetails.getQuantity() / rules.getInt(Rules.quantity.getValue())) > 0;
     }
 
-    public static OrderDetails execute(Offer offer, OrderDetails orderDetails,Context context) throws JSONException {
+    public static OrderDetails execute(Offer offer, OrderDetails orderDetails, Context context, List<OrderDetails>orderDetailsList) throws JSONException {
+        List<OrderDetails>newOrderDetails=new ArrayList<>();
+        List<Integer>newOrderDetailsPosition=new ArrayList<>();
+
+        int qty =orderDetails.getQuantity();
+        for(int i=0;i<orderDetailsList.size();i++){
+            if(String.valueOf(orderDetails.getProduct().getOfferId()).equals(String.valueOf(orderDetailsList.get(i).getProduct().getOfferId()))&&orderDetails.getProduct().getProductId()!=orderDetailsList.get(i).getProduct().getProductId()){
+                newOrderDetails.add(orderDetailsList.get(i));
+                qty+=orderDetailsList.get(i).getQuantity();
+                newOrderDetailsPosition.add(i);
+            }
+        }
+
 
         JSONObject action = offer.getDataAsJsonObject().getJSONObject(Action.ACTION.getValue());
         JSONObject rules = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue());
@@ -497,13 +509,14 @@ public class OfferController {
         int quantity = rules.getInt(Rules.quantity.getValue());
         orderDetails.offer = offer;
         if (actionName.equalsIgnoreCase(Action.GET_GIFT_PRODUCT.getValue())) {
-                if (orderDetails.getQuantity() >= quantity + 1) {
-                    int productGroup = orderDetails.getQuantity() / (quantity + 1);
+                if (qty >= quantity+1) {
+                    int productGroup =qty / (quantity + 1);
 
                     double totalPriceBeforeDiscount = orderDetails.getQuantity() * orderDetails.getUnitPrice();
                     double discount = (1 - (((orderDetails.getQuantity() - productGroup) * orderDetails.getUnitPrice()) / totalPriceBeforeDiscount)) * 100;
 
                     orderDetails.setDiscount(discount);
+                    orderDetails.setOfferId(offer.getOfferId());
                 } else {
                     orderDetails.setDiscount(0);
                     orderDetails.offer = null;
@@ -511,15 +524,38 @@ public class OfferController {
             } else if (actionName.equalsIgnoreCase(Action.PRICE_FOR_PRODUCT.getValue())) {
                 double value = action.getDouble(Action.VALUE.getValue());
                 orderDetails.setDiscount(0);
-                if (orderDetails.getQuantity() >= quantity) {
 
-                    int productGroup = orderDetails.getQuantity() / quantity;
-                    int productCountWithOutProductIntoOffer = orderDetails.getQuantity() - (productGroup * quantity);
-                    double discount = (1 -
+            if (qty >= quantity) {
+                    int productGroup = qty / quantity;
+                    int productCountWithOutProductIntoOffer = qty - (productGroup * quantity);
+                double discount =0;
+                if(newOrderDetails.size()==0) {
+                     discount = (1 -
                             (((productGroup * value) + (productCountWithOutProductIntoOffer * orderDetails.getUnitPrice()))
                                     / (orderDetails.getUnitPrice() * orderDetails.getQuantity()))) * 100;
-
                     orderDetails.setDiscount(discount);
+                    orderDetails.setOfferId(offer.getOfferId());
+
+                }
+                else {
+                    double totalSum=0;
+                    for(int i=0;i<newOrderDetails.size();i++){
+                        totalSum+=(newOrderDetails.get(i).getUnitPrice() * newOrderDetails.get(i).getQuantity());
+
+                    }
+                    totalSum+=orderDetails.getUnitPrice()*orderDetails.getQuantity();
+                    discount = (1 -
+                            (((productGroup * value) + (productCountWithOutProductIntoOffer * orderDetails.getUnitPrice()))
+                                    / totalSum)) * 100;
+                    orderDetails.setDiscount(discount);
+                    for(int i=0 ;i<newOrderDetailsPosition.size();i++){
+                        SESSION._ORDER_DETAILES.get(newOrderDetailsPosition.get(i)).setDiscount(discount);
+                        SESSION._ORDER_DETAILES.get(newOrderDetailsPosition.get(i)).setOfferId(offer.getOfferId());
+                    }
+
+
+                }
+
                 } else {
                     orderDetails.setDiscount(0);
                     orderDetails.offer = null;
