@@ -164,5 +164,8 @@ public interface MessageType{
     String UPDATE_X_REPORT = "UpdateXReport";
     String DELETE_X_REPORT = "DeleteXReport";
 
+    String ADD_INVENTORY = "AddInventory";
+    String UPDATE_INVENTORY = "UpdateInventory";
+    String DELETE_INVENTORY = "DeleteInventory";
 
 }

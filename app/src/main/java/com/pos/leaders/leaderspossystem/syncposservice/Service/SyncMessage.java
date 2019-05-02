@@ -37,6 +37,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
@@ -64,6 +65,7 @@ import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasu
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDynamicVariable;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
 import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Models.Inventory;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OfferCategory;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
@@ -1052,6 +1054,33 @@ public class SyncMessage extends Service {
                     }
                     deleteOfferCategoryDBAdapter.close();
                     break;
+                //region Inventory
+                case MessageType.ADD_INVENTORY:
+                    Inventory inventory = null;
+                    inventory = objectMapper.readValue(msgData, Inventory.class);
+
+                    InventoryDbAdapter inventoryDbAdapter = new InventoryDbAdapter(this);
+                    inventoryDbAdapter.open();
+                    rID = inventoryDbAdapter.insertEntry(inventory);
+                    inventoryDbAdapter.close();
+                    break;
+                case MessageType.UPDATE_INVENTORY:
+                    Inventory updateInventory = null;
+                    updateInventory = objectMapper.readValue(msgData, Inventory.class);
+                    InventoryDbAdapter updateInventoryDBAdapter = new InventoryDbAdapter(this);
+                    updateInventoryDBAdapter.open();
+                    rID = updateInventoryDBAdapter.updateEntryBo(updateInventory);
+                    updateInventoryDBAdapter.close();
+                    break;
+                case MessageType.DELETE_INVENTORY:
+                    Inventory deleteInventory = null;
+                    deleteInventory = objectMapper.readValue(msgData, Inventory.class);
+                    InventoryDbAdapter deleteInventoryDBAdapter = new InventoryDbAdapter(this);
+                    deleteInventoryDBAdapter.open();
+                    rID = deleteInventoryDBAdapter.deleteEntryBo(deleteInventory);
+                    deleteInventoryDBAdapter.close();
+                    break;
+                //endregion Category
             }
         } else {
             //todo: does not have message type
