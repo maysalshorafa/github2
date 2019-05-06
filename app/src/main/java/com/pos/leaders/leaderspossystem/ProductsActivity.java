@@ -54,20 +54,20 @@ public class ProductsActivity  extends AppCompatActivity  {
     Button btSave,btnCancel;
     EditText etName,etBarcode,etDescription,etPrice,etCostPrice,etDisplayName,etSku,etStockQuantity,etProductWeight;
     Switch swWithTax,swManageStock;
-	static ListView lvDepartment;
+    static ListView lvDepartment;
     Map<String,Long> departmentMap=new HashMap<String,Long>();
 
 
-	String selectedProduct="";
+    String selectedProduct="";
     String selectedDepartment="";
     int with_pos=1;
     int with_point_system=1;
 
-	View previouslySelectedProductItem = null;
+    View previouslySelectedProductItem = null;
     View previouslySelectedItem = null;
 
-	ProductCatalogGridViewAdapter adapter;
-	private Product editableProduct , lastProduct;
+    ProductCatalogGridViewAdapter adapter;
+    private Product editableProduct , lastProduct;
     long check;
     long depID;
     boolean withTax , manageStock = true;
@@ -97,7 +97,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         lvDepartment =(ListView)findViewById(R.id.LVDepartment);
 
         btSave=(Button)findViewById(R.id.productActivity_btnSave);
-		btnCancel=(Button)findViewById(R.id.productActivity_btnCancel);
+        btnCancel=(Button)findViewById(R.id.productActivity_btnCancel);
         etName=(EditText)findViewById(R.id.ETName);
         etBarcode=(EditText)findViewById(R.id.ETBarCode);
         etDescription=(EditText)findViewById(R.id.ETDescription);
@@ -125,12 +125,12 @@ public class ProductsActivity  extends AppCompatActivity  {
         productDBAdapter.open();
         final List<ProductUnit>productUnit = new ArrayList<ProductUnit>();
         productUnit.add(ProductUnit.QUANTITY);
-      //  productUnit.add(ProductUnit.LENGTH);
-      //  productUnit.add(ProductUnit.WEIGHT);
+        productUnit.add(ProductUnit.BARCODEWITHWEIGHT);
+        productUnit.add(ProductUnit.BARCODEWITHPRICE);
         final List<String>productUnitString = new ArrayList<String>();
         productUnitString.add(ProductUnit.QUANTITY.getValue());
-      //  productUnitString.add(ProductUnit.LENGTH.getValue());
-       // productUnitString.add(ProductUnit.WEIGHT.getValue());
+        productUnitString.add(ProductUnit.BARCODEWITHWEIGHT.getValue());
+        productUnitString.add(ProductUnit.BARCODEWITHPRICE.getValue());
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, productUnitString);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -165,7 +165,7 @@ public class ProductsActivity  extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 if(addEditProduct())
-                setNewProduct();
+                    setNewProduct();
             }
         });
 
@@ -179,10 +179,10 @@ public class ProductsActivity  extends AppCompatActivity  {
                     departmentDBAdapter.close();
                     productDBAdapter.close();}
                 catch (Exception ex){}
-               /** Intent intent = new Intent(ProductsActivity.this, ProductCatalogActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent); **/
-            onBackPressed();
+                /** Intent intent = new Intent(ProductsActivity.this, ProductCatalogActivity.class);
+                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                 startActivity(intent); **/
+                onBackPressed();
             }
         });
 
@@ -204,11 +204,11 @@ public class ProductsActivity  extends AppCompatActivity  {
             departmentMap.put(d.getName(),d.getCategoryId());
         }
 /**
-        LAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,departmentsName);
-        lvDepartment.setAdapter(LAdapter);
-        lvDepartment.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        lvDepartment.setItemChecked(1,true);
-**/
+ LAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,departmentsName);
+ lvDepartment.setAdapter(LAdapter);
+ lvDepartment.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+ lvDepartment.setItemChecked(1,true);
+ **/
 
         lvDepartment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -246,10 +246,14 @@ public class ProductsActivity  extends AppCompatActivity  {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 unit = productUnit.get(position);
-                if(unit.getValue().equalsIgnoreCase(ProductUnit.WEIGHT.getValue())){
+                if(unit.getValue().equalsIgnoreCase(ProductUnit.BARCODEWITHWEIGHT.getValue())){
                     llWeight.setVisibility(View.VISIBLE);
                 }else {
                     llWeight.setVisibility(View.GONE);
+                }
+                if(unit.getValue().equalsIgnoreCase(ProductUnit.BARCODEWITHPRICE.getValue())){
+                    llWeight.setVisibility(View.GONE);
+
                 }
             }
 
@@ -284,7 +288,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                     swWithTax.setChecked(editableProduct.isWithTax());
                     if(editableProduct.getUnit().getValue().equals(ProductUnit.WEIGHT.getValue())){
                         llWeight.setVisibility(View.VISIBLE);
-                    etProductWeight.setText(editableProduct.getWeight()+"");
+                        etProductWeight.setText(editableProduct.getWeight()+"");
                     }else {
                         llWeight.setVisibility(View.GONE);
                     }
@@ -348,13 +352,13 @@ public class ProductsActivity  extends AppCompatActivity  {
             }
             if(editableProduct==null){
                 if(lastProduct!=null){
-                if(Util.isInteger(lastProduct.getProductCode())){
-                    int a = Integer.parseInt(lastProduct.getProductCode())+1;
-                    etName.setText(a+"");
-                }else {
-                    etName.setText(lastProduct.getProductCode().concat("1"));
-                }
-            }}
+                    if(Util.isInteger(lastProduct.getProductCode())){
+                        int a = Integer.parseInt(lastProduct.getProductCode())+1;
+                        etName.setText(a+"");
+                    }else {
+                        etName.setText(lastProduct.getProductCode().concat("1"));
+                    }
+                }}
         }
 
     }
@@ -514,69 +518,69 @@ public class ProductsActivity  extends AppCompatActivity  {
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_weight), Toast.LENGTH_LONG).show();
                 etProductWeight.setBackgroundResource(R.drawable.backtext);
             }else {
-            if (etSku.getText().toString().equals("")) {
-                etSku.setText(etBarcode.getText().toString());
-            }
-            if(!etPrice.getText().toString().equals("")){
-                price=Double.parseDouble(etPrice.getText().toString());
-            }else {
-                price=editableProduct.getPrice();
-            }
-            if(!etCostPrice.getText().toString().equals("")){
-                costPrice=Double.parseDouble(etCostPrice.getText().toString());
-            }
-            else {
-                costPrice=editableProduct.getCostPrice();
-            }
-            if (etStockQuantity.getText().toString().equals("")) {
-                stockQuantity = 0;
-            }else{
-                stockQuantity = Integer.parseInt(etStockQuantity.getText().toString());
-            }
-            if(llWeight.getVisibility()==View.VISIBLE&&!(etProductWeight.getText().toString().equals(""))){
-                weight=Double.parseDouble(etProductWeight.getText().toString());
-            }
-            //// TODO: 27/10/2016 edit product
-
-            if(depID==0){
-                Toast.makeText(ProductsActivity.this,R.string.please_insert_category_name,Toast.LENGTH_LONG).show();
-            }else {
-                editableProduct.setCategoryId(depID);
-                editableProduct.setProductCode(etName.getText().toString());
-                editableProduct.setDisplayName(etDisplayName.getText().toString());
-                editableProduct.setBarCode(etBarcode.getText().toString());
-                editableProduct.setSku(etSku.getText().toString());
-                editableProduct.setDescription(etDescription.getText().toString());
-                editableProduct.setStockQuantity(stockQuantity);
-                editableProduct.setPrice(price);
-                editableProduct.setCostPrice(costPrice);
-                editableProduct.setWithTax(withTax);
-                editableProduct.setManageStock(manageStock);
-                editableProduct.setInStock(stockQuantity>0);
-                editableProduct.setUnit(unit);
-                editableProduct.setCurrencyType(currencyId);
-                editableProduct.setBranchId(branchId);
-
-                if(llWeight.getVisibility()==View.VISIBLE) {
-                    editableProduct.setWeight(weight);
+                if (etSku.getText().toString().equals("")) {
+                    etSku.setText(etBarcode.getText().toString());
                 }
-                try {
-                    productDBAdapter.updateEntry(editableProduct);
-                    Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.success_to_update_product), Toast.LENGTH_SHORT);
-                    onBackPressed();
-                    return true;
-                } catch (Exception ex) {
-                    Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.error_to_update_product), Toast.LENGTH_SHORT);
+                if(!etPrice.getText().toString().equals("")){
+                    price=Double.parseDouble(etPrice.getText().toString());
+                }else {
+                    price=editableProduct.getPrice();
                 }
-            }
+                if(!etCostPrice.getText().toString().equals("")){
+                    costPrice=Double.parseDouble(etCostPrice.getText().toString());
+                }
+                else {
+                    costPrice=editableProduct.getCostPrice();
+                }
+                if (etStockQuantity.getText().toString().equals("")) {
+                    stockQuantity = 0;
+                }else{
+                    stockQuantity = Integer.parseInt(etStockQuantity.getText().toString());
+                }
+                if(llWeight.getVisibility()==View.VISIBLE&&!(etProductWeight.getText().toString().equals(""))){
+                    weight=Double.parseDouble(etProductWeight.getText().toString());
+                }
+                //// TODO: 27/10/2016 edit product
 
-            //setNewProduct();
-        }
+                if(depID==0){
+                    Toast.makeText(ProductsActivity.this,R.string.please_insert_category_name,Toast.LENGTH_LONG).show();
+                }else {
+                    editableProduct.setCategoryId(depID);
+                    editableProduct.setProductCode(etName.getText().toString());
+                    editableProduct.setDisplayName(etDisplayName.getText().toString());
+                    editableProduct.setBarCode(etBarcode.getText().toString());
+                    editableProduct.setSku(etSku.getText().toString());
+                    editableProduct.setDescription(etDescription.getText().toString());
+                    editableProduct.setStockQuantity(stockQuantity);
+                    editableProduct.setPrice(price);
+                    editableProduct.setCostPrice(costPrice);
+                    editableProduct.setWithTax(withTax);
+                    editableProduct.setManageStock(manageStock);
+                    editableProduct.setInStock(stockQuantity>0);
+                    editableProduct.setUnit(unit);
+                    editableProduct.setCurrencyType(currencyId);
+                    editableProduct.setBranchId(branchId);
+
+                    if(llWeight.getVisibility()==View.VISIBLE) {
+                        editableProduct.setWeight(weight);
+                    }
+                    try {
+                        productDBAdapter.updateEntry(editableProduct);
+                        Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.success_to_update_product), Toast.LENGTH_SHORT);
+                        onBackPressed();
+                        return true;
+                    } catch (Exception ex) {
+                        Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.error_to_update_product), Toast.LENGTH_SHORT);
+                    }
+                }
+
+                //setNewProduct();
+            }
         }
         return false;
     }
 
-	private void setNewProduct() {
+    private void setNewProduct() {
         etName.setBackgroundResource(R.drawable.catalogproduct_item_bg);
         etBarcode.setBackgroundResource(R.drawable.catalogproduct_item_bg);
         etPrice.setBackgroundResource(R.drawable.catalogproduct_item_bg);
@@ -602,7 +606,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         etProductWeight.setText("");
     }
 
-	private void selectItemDepartments(View v) {
+    private void selectItemDepartments(View v) {
         if (previouslySelectedItem != null)
             previouslySelectedItem.setBackgroundColor(getResources().getColor(R.color.transparent));
         previouslySelectedItem = v;

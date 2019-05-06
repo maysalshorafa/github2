@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.CreditCard;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,6 +34,7 @@ import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.SalesCartActivity;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
+import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -63,7 +65,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
     EditText etPaymentsNumber;
     Spinner spCreditType;
 
-    boolean advanceMode = false, byPhoneMode = false;
+    boolean advanceMode = false, byPhoneMode = false,advanceModeForPhone=false;
     double totalPrice = 0;
 
     //page 9 on Arkom documents
@@ -73,7 +75,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
     boolean creditReceipt=false;
     JSONObject invoiceJson=new JSONObject();
     BoInvoice invoice ;
-    String cardNo , expireDate , ccv ,idNo;
+    int NumOfFixedPayments=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,43 +145,144 @@ public class MainCreditCardActivity extends AppCompatActivity {
         btByPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*byPhoneMode = !byPhoneMode;
-                ByPhoneMode();
                 final Dialog creditByPhoneDialog = new Dialog(MainCreditCardActivity.this);
-                creditByPhoneDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                creditByPhoneDialog.show();
-                creditByPhoneDialog.setContentView(R.layout.credit_card_by_phone);
-                final EditText cardNoEt = (EditText)creditByPhoneDialog.findViewById(R.id.EtCreditCardByPhoneCreditCardNo);
-                final EditText expireDateEt =(EditText)creditByPhoneDialog.findViewById(R.id.EtCreditCardByPhoneCreditCardExpiredDate);
-                final EditText ccvEt =(EditText)creditByPhoneDialog.findViewById(R.id.EtCreditCardByPhoneCreditCcv);
-                final EditText identificationNo =(EditText)creditByPhoneDialog.findViewById(R.id.EtCreditCardByPhoneCreditCardId);
-                Button done = (Button)creditByPhoneDialog.findViewById(R.id.btn_done);
-                Button cancel = (Button)creditByPhoneDialog.findViewById(R.id.btn_cancel);
+                 creditByPhoneDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                 creditByPhoneDialog.show();
+                 creditByPhoneDialog.setContentView(R.layout.credit_card_by_phone);
+                 final EditText cardNoEt = (EditText)creditByPhoneDialog.findViewById(R.id.EtCreditCardByPhoneCreditCardNo);
+                 final EditText expireDateEt =(EditText)creditByPhoneDialog.findViewById(R.id.EtCreditCardByPhoneCreditCardExpiredDate);
+                 final EditText ccvEt =(EditText)creditByPhoneDialog.findViewById(R.id.EtCreditCardByPhoneCreditCcv);
+                 final EditText identificationNo =(EditText)creditByPhoneDialog.findViewById(R.id.EtCreditCardByPhoneCreditCardId);
+                final EditText numberOfPaymentsEt =(EditText)creditByPhoneDialog.findViewById(R.id.EtNumberOfPayments);
+                final LinearLayout  llAdvanceByPhone   = (LinearLayout) creditByPhoneDialog.findViewById(R.id.MainCreditCardActivityByPhone_llAdvance);
+               final Spinner spCreditTypeByPhone= (Spinner) creditByPhoneDialog.findViewById(R.id.MainCreditCardActivityByPhone_spPaymentType);
+
+
+                        Button done = (Button)creditByPhoneDialog.findViewById(R.id.btn_done);
+                 Button cancel = (Button)creditByPhoneDialog.findViewById(R.id.btn_cancel);
+                Button advanced = (Button)creditByPhoneDialog.findViewById(R.id.btn_advancedByPhone);
+
                 cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                creditByPhoneDialog.dismiss();
+                }
+                });
+                advanced.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        creditByPhoneDialog.dismiss();
+                        llAdvanceByPhone.setVisibility(View.VISIBLE);
+                        advanceModeForPhone=true;
                     }
                 });
                 done.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                      cardNo=cardNoEt.getText().toString();
-                       expireDate=expireDateEt.getText().toString();
-                        expireDate.replace("/", "");
-
-                        ccv=ccvEt.getText().toString();
-                        idNo=identificationNo.getText().toString();
-                        if(cardNo.isEmpty()){
-                            //input is empty
-                            creditByPhoneDialog.dismiss();
-                            Toast.makeText(MainCreditCardActivity.this, getString(R.string.transfer_credit_card), Toast.LENGTH_SHORT).show();
+                        long CCNum;
+                        String CCV, CE, ID;
+                        try {
+                            CCNum = Long.parseLong(cardNoEt.getText().toString());
+                            CCV = (ccvEt.getText().toString());
+                            CE = (expireDateEt.getText().toString());
+                            ID = (identificationNo.getText().toString());
+                        } catch (Exception e) {
+                            Toast.makeText(MainCreditCardActivity.this, getBaseContext().getString(R.string.error), Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        String s = cardNo+expireDate+ccv+idNo;
-                        doTransaction(s,1,1);
-                    }
-                });*/
+                        //get last 4 digits form card number
+                        long last4Digits = CCNum % 10000;
+
+                        String Year, Month;
+                        //check valid card expired
+                        if (CE.length() == 3) {
+                            Year = CE.substring(1, 3);
+                            Month = CE.substring(0, 1);
+                        } else if (CE.length() == 4) {
+                            Year = CE.substring(2, 4);
+                            Month = CE.substring(0, 2);
+
+                        } else {
+                            Toast.makeText(MainCreditCardActivity.this, getBaseContext().getString(R.string.valid_expired_card), Toast.LENGTH_SHORT).show();
+                            return;
+                            //// TODO: 11/04/2017 Card expired
+                        }
+
+                        if (Integer.parseInt(Year) > DateConverter.getYearWithTowChars()) {
+                            //its valid
+                        } else if (Integer.parseInt(Year) == DateConverter.getYearWithTowChars()) {
+                            if (Integer.parseInt(Month) >= DateConverter.getCurrentMonth()) {
+                                //its valid
+                            }
+                        } else {
+                            Toast.makeText(MainCreditCardActivity.this, getBaseContext().getString(R.string.expired_card), Toast.LENGTH_SHORT).show();
+                        }
+
+                        if (ID.length() != 9) {
+                            Toast.makeText(MainCreditCardActivity.this, getBaseContext().getString(R.string.valid_ID), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if (CCV.length() != 3) {
+                            Toast.makeText(MainCreditCardActivity.this, getBaseContext().getString(R.string.valid_CCV), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+
+                        final String _CreditCardNumber = (CCNum + ""), CardExpiry = CE, CVV2 = CCV, IDNumber = ID, ApprovalCode = "";
+
+                        final double TransSum = totalPrice;
+                        if (advanceModeForPhone) {
+                            advanceModeForPhone=false;
+                            String pn = numberOfPaymentsEt.getText().toString();
+                            //trying to case input
+                            int ipn;
+                            try {
+                                ipn = Integer.parseInt(pn);
+                            } catch (NumberFormatException nfe) {
+                                Toast.makeText(MainCreditCardActivity.this, getString(R.string.invalid_payments_number), Toast.LENGTH_LONG).show();
+                                creditByPhoneDialog.dismiss();
+                                return;
+                            }
+                            //check valid number
+                            if (ipn > 1 && ipn < 37) {
+                                numberOfPayments = ipn;
+                                int ccT = spCreditTypeByPhone.getSelectedItemPosition();
+
+                                if (ccT == 0)
+                                    creditType = CreditCardTransactionType.PAYMENTS;//תשלומים
+                                else if (ccT == 1)
+                                    creditType = CreditCardTransactionType.CREDIT;//קרדיט/קרדיט בתשלומים קבועים
+
+                                NumOfFixedPayments = numberOfPayments;
+                            } else {
+                                //out of maximum payment number
+                                Toast.makeText(MainCreditCardActivity.this, getString(R.string.invalid_payments_number), Toast.LENGTH_LONG).show();
+                                creditByPhoneDialog.dismiss();
+                                return;
+                            }
+                        }
+
+
+                        new AsyncTask<SoapObject, Void, SoapObject>() {
+                            @Override
+                            protected void onPostExecute(SoapObject aVoid) {
+                                creditByPhoneDialog.dismiss();
+                                returnTo(aVoid);
+                                super.onPostExecute(aVoid);
+                            }
+                            @Override
+                            protected SoapObject doInBackground(SoapObject... params) {
+                                SoapObject soap = Arkom.ByPhone(_CreditCardNumber, CardExpiry, TransSum, CVV2, IDNumber, ApprovalCode, NumOfFixedPayments, creditType);
+                                // TODO: 11/04/2017 Return to UI main thread this three value on activity result
+                                //Log.e("Answer", soap.getProperty("Answer").toString());
+                                //Log.e("MerchantNote", soap.getProperty("MerchantNote").toString());
+                                //Log.e("ClientNote", soap.getProperty("ClientNote").toString());
+
+                                //
+
+                                return soap;
+                            }
+                        }.execute();
+                    }});
 
 
                 }
@@ -254,7 +357,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                         numberOfPayments = ipn;
                         int ccT = spCreditType.getSelectedItemPosition();
 
-                        if (ccT == 0)
+                            if (ccT == 0)
                             creditType = CreditCardTransactionType.PAYMENTS;//תשלומים
                         else if (ccT == 1)
                             creditType = CreditCardTransactionType.CREDIT;//קרדיט/קרדיט בתשלומים קבועים

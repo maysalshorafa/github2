@@ -2735,7 +2735,19 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     private void enterKeyPressed(String barcodeScanned) throws JSONException {
-        Product product = productDBAdapter.getProductByBarCode(barcodeScanned);
+        Product product = new Product();
+        char firstChar = barcodeScanned.charAt(0);
+        if(firstChar=='2'){
+            String productNum = barcodeScanned.substring(1,7);
+            Double newPrice = Double.parseDouble(barcodeScanned.substring(7))/1000;
+            product = productDBAdapter.getProductByBarCode(productNum);
+            if(product!=null){
+                product.setPrice(newPrice);
+            }
+        } else {
+
+            product = productDBAdapter.getProductByBarCode(barcodeScanned);
+        }
         final Intent intent = new Intent(SalesCartActivity.this, ProductsActivity.class);
         intent.putExtra("barcode", barcodeScanned);
         if (product != null) {

@@ -283,6 +283,7 @@ public class Arkom {
         double totalPrice = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", sumPrice));
         double fixedPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", totalPrice / numberOfPay));
         double firstPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", totalPrice - (fixedPayment * (numberOfPay - 1))));
+//                SoapObject soap = Arkom.PassCard(cardNumber, paymentsNumber, totalPrice, "", creditType);
 
         try{
                 SoapObject soap=CCTransaction(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID,cardNumber,"",totalPrice,

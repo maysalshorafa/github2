@@ -136,8 +136,34 @@
         android:text="@string/id"
         android:textColor="#fff"
         android:textSize="20dp" />
+        </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+
+        android:id="@+id/MainCreditCardActivityByPhone_llAdvance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/EtNumberOfPayments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number" />
+
+        <Spinner
+            android:id="@+id/MainCreditCardActivityByPhone_spPaymentType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/credit_card_type"
+            android:paddingLeft="5dp"
+            android:prompt="@string/credit_type" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -160,6 +186,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/cancel"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/btn_advancedByPhone"
+            style="@style/AppTheme.bt_yellow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/advance"
             android:textSize="18dp"
             android:textStyle="bold" />
     </LinearLayout>
