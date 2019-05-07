@@ -2564,7 +2564,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
             }
         }
-        try {
+      /**  try {
             if (OfferController.executeCategoryOffers(SESSION._ORDER_DETAILES, validOffer)) {
                 //refreshCart();
             }
@@ -2572,7 +2572,7 @@ public class SalesCartActivity extends AppCompatActivity {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }**/
 
         for (OrderDetails o : SESSION._ORDER_DETAILES) {
             String currencyType="";

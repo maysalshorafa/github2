@@ -14,7 +14,8 @@
         android:weightSum="2"
         tools:layout_editor_absoluteY="8dp"
         tools:layout_editor_absoluteX="8dp"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:visibility="gone">
 
         <TextView
             android:text="@string/category_name"
@@ -108,7 +109,7 @@
 
     </LinearLayout>
     <GridView
-        android:id="@+id/category_offer_product"
+        android:id="@+id/category_offer_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"

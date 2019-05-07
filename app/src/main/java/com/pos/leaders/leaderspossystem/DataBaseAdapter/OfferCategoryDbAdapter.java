@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.OfferCategory;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
@@ -178,6 +179,22 @@ public class OfferCategoryDbAdapter {
             return 0;
         }
     }
+    public List<OfferCategory> getAllCategoryOffer() {
+        List<OfferCategory> departmentList = new ArrayList<OfferCategory>();
+        Cursor cursor=null;
+        if(SETTINGS.enableAllBranch) {
+            cursor  = db.rawQuery("select * from " + OFFER_CATEGORY_TABLE_NAME + " where " + OFFER_CATEGORY_COLUMN_HIDE + "=0 order by id desc", null);
+        }else {
+            cursor  = db.rawQuery("select * from " + OFFER_CATEGORY_TABLE_NAME + " where " + OFFER_CATEGORY_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + OFFER_CATEGORY_COLUMN_HIDE + "=0 order by id desc", null);
+        }
+        cursor.moveToFirst();
 
+        while (!cursor.isAfterLast()) {
+            departmentList.add(createOfferCategoryObject(cursor));
+            cursor.moveToNext();
+        }
+
+        return departmentList;
+    }
 
 }

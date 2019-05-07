@@ -23,8 +23,10 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Category;
+import com.pos.leaders.leaderspossystem.Models.OfferCategory;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Tools.CategoryGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.OfferCategoryGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -46,6 +48,8 @@ public class CategoryOfferActivity extends AppCompatActivity {
     Product product =new Product();
     List<Product>productList = new ArrayList<>();
     Spinner SpProductBranch;
+    GridView offerCategoryGridView;
+    List<OfferCategory>offerCategoryList =new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +65,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
         addCategoryProduct = (Button)findViewById(R.id.addCategoryProduct);
         addProduct=(Button)findViewById(R.id.addProduct);
         SpProductBranch = (Spinner)findViewById(R.id.SpCategoryBranch);
+        offerCategoryGridView =(GridView)findViewById(R.id.category_offer_list);
         final List<String> productBranch = new ArrayList<String>();
         productBranch.add(getString(R.string.all));
         productBranch.add(getString(R.string.pos_branch));
@@ -92,11 +97,15 @@ public class CategoryOfferActivity extends AppCompatActivity {
         cancelAddCategoryOffer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+            onBackPressed();
             }
         });
-
-
+        OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(CategoryOfferActivity.this);
+        offerCategoryDbAdapter.open();
+        offerCategoryList=offerCategoryDbAdapter.getAllCategoryOffer();
+        Log.d("offerCategoryList",offerCategoryList.toString());
+        OfferCategoryGridViewAdapter offerCategoryGridViewAdapter = new OfferCategoryGridViewAdapter(getApplicationContext(),offerCategoryList);
+        offerCategoryGridView.setAdapter(offerCategoryGridViewAdapter);
     }
 
     private void addProductFromCategory() {
