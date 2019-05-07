@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
@@ -216,7 +215,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     }
 
     private void insertNewRow(double val, String currency,double currencyRate) {
-        if(val>0&&val<=10000){
+     //   if(val>0&&val<=10000){
             if(excess<=0)
                 return;
             //get currency rate
@@ -227,10 +226,10 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         paymentTables.add(paymentTables.size() - 1, new PaymentTable(beforeChangeExcess, val, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, currency + ""),actualCurrencyRate));
         updateLastRow();
             lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-        }
+      /*  }
         else {
             Toast.makeText(MultiCurrenciesPaymentActivity.this,getString(R.string.please_insert_correct_value_in_multi_currency_activity),Toast.LENGTH_LONG).show();
-        }
+        }*/
     }
 
     private void setExcess() {

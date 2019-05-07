@@ -2185,8 +2185,10 @@ public class SalesCartActivity extends AppCompatActivity {
              }
          }
          //str = extras.getString("orderJson");
+     }else {
+         SESSION._Rest();
+         clearCart();
      }
-
     }
 
     //region fragment Touch Pad
