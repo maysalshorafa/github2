@@ -14,9 +14,21 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
+        <com.pos.leaders.leaderspossystem.Elements.CustomEditText
+            android:id="@+id/categoryOfferName"
+            style="@style/AppTheme.EditText_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:ems="10"
+            android:hint="@string/category_offer_name"
+            android:padding="16dp"
+            android:textColor="@color/black" />
 
         <com.pos.leaders.leaderspossystem.Elements.CustomEditText
-            android:id="@+id/categoryName"
+            android:id="@+id/categoryNameSearch"
             style="@style/AppTheme.EditText_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,7 +39,8 @@
             android:ems="10"
             android:padding="16dp"
             android:textColor="@color/black"
-            android:hint="@string/category_name"/>
+            android:hint="@string/category_name"
+            app:drawableLeftCompat="@drawable/ic_icons_leaders_search"/>
 
 
 

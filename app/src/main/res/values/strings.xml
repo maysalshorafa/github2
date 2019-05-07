@@ -212,6 +212,7 @@
     <string name="without_tax">Without Tax</string>
     <string name="weight">Weight</string>
     <string name="category_name">Category Name</string>
+    <string name="category_offer_name">Category Offer Name</string>
     <string name="success_to_update_product">Product has been updated!</string>
 
     <string name="error_to_update_product">Failed to update this product.</string>

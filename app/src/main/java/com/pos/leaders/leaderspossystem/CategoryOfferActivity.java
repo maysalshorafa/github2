@@ -2,16 +2,21 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.Dialog;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
@@ -35,8 +40,12 @@ public class CategoryOfferActivity extends AppCompatActivity {
      Category category =new Category();
     List<Category>categoryList = new ArrayList<>();
     List<Product>filter_productList = new ArrayList<>();
+    List<Product>final_filter_productList = new ArrayList<>();
+    List<Category>final_filter_categoryList = new ArrayList<>();
+     EditText productName ;
     Product product =new Product();
     List<Product>productList = new ArrayList<>();
+    Spinner SpProductBranch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +60,13 @@ public class CategoryOfferActivity extends AppCompatActivity {
         cancelAddCategoryOffer = (Button)findViewById(R.id.cancelAddCategoryOffer);
         addCategoryProduct = (Button)findViewById(R.id.addCategoryProduct);
         addProduct=(Button)findViewById(R.id.addProduct);
+        SpProductBranch = (Spinner)findViewById(R.id.SpCategoryBranch);
+        final List<String> productBranch = new ArrayList<String>();
+        productBranch.add(getString(R.string.all));
+        productBranch.add(getString(R.string.pos_branch));
+        final ArrayAdapter<String> dataAdapterBranch = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, productBranch);
+        dataAdapterBranch.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        SpProductBranch.setAdapter(dataAdapterBranch);
         addCategoryProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +96,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
     private void addProductFromCategory() {
@@ -87,7 +104,9 @@ public class CategoryOfferActivity extends AppCompatActivity {
         addProductFromCategoryDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         addProductFromCategoryDialog.show();
         addProductFromCategoryDialog.setContentView(R.layout.add_category_offer_product_from_category);
-       final EditText categoryName = (EditText) addProductFromCategoryDialog.findViewById(R.id.categoryName);
+       final EditText categoryOfferName = (EditText) addProductFromCategoryDialog.findViewById(R.id.categoryOfferName);
+        final EditText categoryNameSearch = (EditText) addProductFromCategoryDialog.findViewById(R.id.categoryNameSearch);
+
         final GridView gvCategory = (GridView) addProductFromCategoryDialog.findViewById(R.id.gvCategory);
         gvCategory.setNumColumns(3);
        Button btn_cancel = (Button) addProductFromCategoryDialog.findViewById(R.id.btn_cancel);
@@ -99,7 +118,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
                 addProductFromCategoryDialog.dismiss();
             }
         });
-        CategoryDBAdapter  categoryDBAdapter = new CategoryDBAdapter(this);
+        final CategoryDBAdapter  categoryDBAdapter = new CategoryDBAdapter(this);
         categoryDBAdapter.open();
 
         filter_categoryList = categoryDBAdapter.getAllDepartments();
@@ -122,7 +141,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(categoryName.getText().toString().equals("")){
+                if(categoryOfferName.getText().toString().equals("")){
                     Toast.makeText(CategoryOfferActivity.this,"please insert category offer name",Toast.LENGTH_LONG).show();
                 }else {
                 addProductFromCategoryDialog.dismiss();
@@ -140,7 +159,65 @@ public class CategoryOfferActivity extends AppCompatActivity {
                 }
                 OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(CategoryOfferActivity.this);
                 offerCategoryDbAdapter.open();
-                offerCategoryDbAdapter.insertEntry(categoryName.getText().toString(), SESSION._EMPLOYEE.getEmployeeId(),productIdList, SETTINGS.branchId);
+                    int branchId=0;
+                    if(SpProductBranch.getSelectedItem().toString().equals(getString(R.string.all))){
+                        branchId=0;
+                    }else {
+                        branchId= SETTINGS.branchId;
+
+                    }
+                offerCategoryDbAdapter.insertEntry(categoryOfferName.getText().toString(), SESSION._EMPLOYEE.getEmployeeId(),productIdList, branchId);
+                }
+
+            }
+        });
+        categoryNameSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                String word = categoryNameSearch.getText().toString();
+                if (!word.equals("")) {
+                    // Database query can be a time consuming task ..
+                    // so its safe to call database query in another thread
+                    // Handler, will handle this stuff
+                    new AsyncTask<String, Void, Void>() {
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                        }
+
+                        @Override
+                        protected Void doInBackground(String... params) {
+                            try {
+                                Thread.sleep(200);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            final_filter_categoryList = categoryDBAdapter.getAllDepartmentByHint(params[0]);
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            CategoryGridViewAdapter adapter = new CategoryGridViewAdapter(getApplicationContext(), final_filter_categoryList);
+                            gvCategory.setAdapter(adapter);
+                        }
+                    }.execute(word);
+                } else {
+                    final_filter_categoryList = filter_categoryList;
+                    CategoryGridViewAdapter adapter = new CategoryGridViewAdapter(getApplicationContext(), final_filter_categoryList);
+                    gvCategory.setAdapter(adapter);
                 }
 
             }
@@ -148,10 +225,21 @@ public class CategoryOfferActivity extends AppCompatActivity {
 
     }
     private void addProductFromProductDialog() {
+        final_filter_productList =new ArrayList<>();
+        filter_productList=new ArrayList<>();
         final Dialog addProductFromProductDialog = new Dialog(CategoryOfferActivity.this);
         addProductFromProductDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         addProductFromProductDialog.show();
         addProductFromProductDialog.setContentView(R.layout.add_category_offer_product_from_product_catalog);
+       productName = (EditText) addProductFromProductDialog.findViewById(R.id.productName);
+        /**productName.setFocusable(true);
+        productName.requestFocus();
+        productName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                productName.setFocusable(true);
+            }
+        });*/
         final EditText categoryName = (EditText) addProductFromProductDialog.findViewById(R.id.categoryName);
         final GridView gvProduct = (GridView) addProductFromProductDialog.findViewById(R.id.gvProduct);
         gvProduct.setNumColumns(3);
@@ -164,7 +252,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
                 addProductFromProductDialog.dismiss();
             }
         });
-        ProductDBAdapter  productDBAdapter = new ProductDBAdapter(this);
+        final ProductDBAdapter  productDBAdapter = new ProductDBAdapter(this);
         productDBAdapter.open();
 
         filter_productList = productDBAdapter.getAllProducts();
@@ -188,7 +276,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(categoryName.getText().toString().equals("")){
-                    Toast.makeText(CategoryOfferActivity.this,"please insert category offer name",Toast.LENGTH_LONG).show();
+                    Toast.makeText(CategoryOfferActivity.this,"please insert category offer name First then select Product",Toast.LENGTH_LONG).show();
                 }else {
                     addProductFromProductDialog.dismiss();
                     Log.d("testProductList",productList.toString());
@@ -199,14 +287,85 @@ public class CategoryOfferActivity extends AppCompatActivity {
                         productIdList.add(String.valueOf(productList.get(i).getProductId()));
 
                     }
+                    int branchId=0;
+                    if(SpProductBranch.getSelectedItem().toString().equals(getString(R.string.all))){
+                        branchId=0;
+                    }else {
+                        branchId= SETTINGS.branchId;
 
+                    }
                     OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(CategoryOfferActivity.this);
                     offerCategoryDbAdapter.open();
-                    offerCategoryDbAdapter.insertEntry(categoryName.getText().toString(), SESSION._EMPLOYEE.getEmployeeId(),productIdList, SETTINGS.branchId);
+                    offerCategoryDbAdapter.insertEntry(categoryName.getText().toString(), SESSION._EMPLOYEE.getEmployeeId(),productIdList, branchId);
                 }
 
             }
         });
+        productName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                String word = productName.getText().toString();
+                String newBarCode="";
+
+                if (word.contains("\r\n")) {
+                    newBarCode =word.replace("\r\n", "");
+                } else if (word.contains("\r")) {
+                    newBarCode = word.replace("\r", "");
+                } else if (word.contains("\n")) {
+                    newBarCode =word.replace("\n", "");
+                }else {
+                    newBarCode=word;
+                }
+                if (!newBarCode.equals("")) {
+                    // Database query can be a time consuming task ..
+                    // so its safe to call database query in another thread
+                    // Handler, will handle this stuff
+                    new AsyncTask<String, Void, Void>() {
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                        }
+
+                        @Override
+                        protected Void doInBackground(String... params) {
+                            try {
+                                Thread.sleep(200);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            final_filter_productList = productDBAdapter.getAllProductsByHint(params[0], 0, 80);
+
+                            Log.d("filter_productList",final_filter_productList.toString()+"teeest "+params[0]);
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), final_filter_productList);
+                            gvProduct.setAdapter(adapter);
+                        }
+                    }.execute(word);
+                } else {
+                    final_filter_productList = filter_productList;
+                    ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), final_filter_productList);
+                    gvProduct.setAdapter(adapter);
+                }
+
+            }
+        });
+
 
     }
 
