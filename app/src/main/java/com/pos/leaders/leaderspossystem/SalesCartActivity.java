@@ -94,6 +94,7 @@ import com.pos.leaders.leaderspossystem.Models.OrderDocumentStatus;
 import com.pos.leaders.leaderspossystem.Models.OrderDocuments;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Models.ProductUnit;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Offers.OfferController;
 import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
@@ -2146,6 +2147,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
      if (extras != null) {
+         if (extras.containsKey("orderJson")) {
          if(!extras.getString("orderJson").equals("")){
              try {
                  orderDocumentFlag=true;
@@ -2183,13 +2185,23 @@ public class SalesCartActivity extends AppCompatActivity {
              } catch (JSONException e) {
                  e.printStackTrace();
              }
-         }
-         //str = extras.getString("orderJson");
+         }}
+        /* else  if (extras.containsKey("FROM_ACTIVITY")) {
+
+             if (!extras.get("FROM_ACTIVITY").equals("")) {
+                 SESSION._Rest();
+                 clearCart();
+             }
+             //str = extras.getString("orderJson");
+         }*/
      }else {
+
+        if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
+            CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
          SESSION._Rest();
          clearCart();
      }
-    }
+    }}
 
     //region fragment Touch Pad
 
@@ -2659,7 +2671,9 @@ public class SalesCartActivity extends AppCompatActivity {
             OrderDetails o = SESSION._ORDER_DETAILES.get(i);
             //Log.d("ORDER_DETAILS", o.toString());
             //Log.d("Product", p.toString());
-            if (o.getProduct().equals(p) && o.getProduct().getProductId() != -1&&!o.giftProduct&&o.scannable) {
+            if(p.getProductId()!=-1){
+                if(p.getUnit().equals(ProductUnit.QUANTITY)){
+                    if (o.getProduct().equals(p) && o.getProduct().getProductId() != -1&&!o.giftProduct&&o.scannable) {
                 SESSION._ORDER_DETAILES.get(i).setCount(SESSION._ORDER_DETAILES.get(i).getQuantity() + 1);
                 //getOfferCategoryForProduct
                 OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(SalesCartActivity.this);
@@ -2673,6 +2687,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 newOrderDetails=SESSION._ORDER_DETAILES.get(i);
                 isMatch = true;
                 break;
+            }
+        }
             }
         }
         if (!isMatch) {
@@ -3776,11 +3792,9 @@ public class SalesCartActivity extends AppCompatActivity {
                 cashPaymentDBAdapter.insertEntry(saleIDforCash, saleTotalPrice, 0, new Timestamp(System.currentTimeMillis()),1,1);
 
                 paymentDBAdapter.close();
-                if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
-                    printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
-                    CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
+                printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
+                currencyReturnsCustomDialogActivity.show();
 
-                }
                 saleDBAdapter.close();
                 return;
             }
