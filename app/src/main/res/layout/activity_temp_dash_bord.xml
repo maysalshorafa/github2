@@ -15,7 +15,6 @@
         android:orientation="horizontal"
         android:layout_weight="1"
         android:weightSum="4"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"  >
 
@@ -25,7 +24,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             ibutton:button_icon="@drawable/shopping_cart_icon"
-            ibutton:button_text="@string/main_screen"/>
+            ibutton:button_text="@string/main_screen"
+            />
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/dashboard_btAreport"
@@ -58,7 +58,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:layout_weight="1"
@@ -115,7 +114,6 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
         android:layout_weight="1"
         android:orientation="horizontal"
         android:weightSum="4">
@@ -159,3 +157,5 @@
 
 
 </LinearLayout>
+
+

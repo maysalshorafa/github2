@@ -577,6 +577,7 @@ public class OfferController {
                                 (productOutTheCollection * orderDetails.getUnitPrice())) /
                                 (orderDetails.getQuantity() * orderDetails.getUnitPrice()))) * 100;
                         orderDetails.setDiscount(discount);
+                        orderDetails.setOfferId(offer.getOfferId());
                     }
 
                 } else {
@@ -590,6 +591,7 @@ public class OfferController {
                                 (productOutTheCollection * orderDetails.getUnitPrice())) /
                                 (orderDetails.getQuantity() * orderDetails.getUnitPrice()))) * 100;
                         orderDetails.setDiscount(discount);
+                        orderDetails.setOfferId(offer.getOfferId());
                     }
 
                 }
