@@ -499,6 +499,10 @@ public class OfferController {
                 newOrderDetails.add(orderDetailsList.get(i));
                 qty+=orderDetailsList.get(i).getQuantity();
                 newOrderDetailsPosition.add(i);
+            }else if(String.valueOf(orderDetails.getProduct().getOfferId()).equals(String.valueOf(orderDetailsList.get(i).getProduct().getOfferId()))&&orderDetails.getProduct().getProductId()==orderDetailsList.get(i).getProduct().getProductId()&&orderDetailsList.get(i).getProduct().getBarCode().charAt(0)=='2'){
+                newOrderDetails.add(orderDetailsList.get(i));
+                qty+=orderDetailsList.get(i).getQuantity();
+                newOrderDetailsPosition.add(i);
             }
         }
 

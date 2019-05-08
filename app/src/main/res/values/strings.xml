@@ -617,6 +617,7 @@
     <string name="title_activity_pinpad">Pin-Pad Activity</string>
     <string name="multi_currencies_payment_activity">MultiCurrenciesPaymentActivity</string>
     <string name="create_offer_activity">CreateOfferActivity</string>
+    <string name="create_offer_category_activity">CreateCategoryOfferActivity</string>
     <string name="management_offer_activity">ManagementOfferActivity</string>
     <string name="invoice_management_activity">Invoice ManagementActivity</string>
     <string name="closing_report_activity">Closing Report Activity</string>
