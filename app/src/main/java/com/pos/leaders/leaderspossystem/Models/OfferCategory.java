@@ -15,17 +15,19 @@ public class OfferCategory {
 
     private long byEmployee;
     private int branchId;
+    private boolean hide ;
 
     public OfferCategory() {
     }
 
-    public OfferCategory(long offerCategoryId, String name, Timestamp createdAt,  List<String> productsIdList, long byEmployee,int branchId) {
+    public OfferCategory(long offerCategoryId, String name, Timestamp createdAt,  List<String> productsIdList, long byEmployee,int branchId,boolean hide) {
         this.offerCategoryId = offerCategoryId;
         this.name = name;
         this.createdAt = createdAt;
         this.productsIdList = productsIdList;
         this.byEmployee = byEmployee;
         this.branchId=branchId;
+        this.hide=hide;
     }
 
     public long getOfferCategoryId() {
@@ -86,6 +88,7 @@ public class OfferCategory {
                 ", productsIdList='" + productsIdList + '\'' +
                 ", byEmployee=" + byEmployee +
                 ", branchId=" + branchId +
+                        ", hide=" + hide +
                 '}';
     }
 }

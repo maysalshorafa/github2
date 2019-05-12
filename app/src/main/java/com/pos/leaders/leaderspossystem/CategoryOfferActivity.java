@@ -1,6 +1,9 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
@@ -27,6 +31,7 @@ import com.pos.leaders.leaderspossystem.Models.OfferCategory;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Tools.CategoryGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.OfferCategoryGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.OfferCategoryProductGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -50,6 +55,9 @@ public class CategoryOfferActivity extends AppCompatActivity {
     Spinner SpProductBranch;
     GridView offerCategoryGridView;
     List<OfferCategory>offerCategoryList =new ArrayList<>();
+    boolean editFlag = false;
+    ArrayList<String>productIdListForEdit=new ArrayList<String>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +68,6 @@ public class CategoryOfferActivity extends AppCompatActivity {
         setContentView(R.layout.activity_category_offer);
         TitleBar.setTitleBar(this);
         categoryOfferName = (EditText)findViewById(R.id.etCategoryOfferName);
-        saveCategory = (Button)findViewById(R.id.addNewCategoryOffer);
         cancelAddCategoryOffer = (Button)findViewById(R.id.cancelAddCategoryOffer);
         addCategoryProduct = (Button)findViewById(R.id.addCategoryProduct);
         addProduct=(Button)findViewById(R.id.addProduct);
@@ -83,16 +90,10 @@ public class CategoryOfferActivity extends AppCompatActivity {
         addProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProductFromProductDialog();
+                addProductFromProductDialog(false);
             }
         });
 
-        saveCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         cancelAddCategoryOffer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,12 +101,140 @@ public class CategoryOfferActivity extends AppCompatActivity {
             onBackPressed();
             }
         });
-        OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(CategoryOfferActivity.this);
+        final OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(CategoryOfferActivity.this);
         offerCategoryDbAdapter.open();
         offerCategoryList=offerCategoryDbAdapter.getAllCategoryOffer();
         Log.d("offerCategoryList",offerCategoryList.toString());
-        OfferCategoryGridViewAdapter offerCategoryGridViewAdapter = new OfferCategoryGridViewAdapter(getApplicationContext(),offerCategoryList);
+        final OfferCategoryGridViewAdapter offerCategoryGridViewAdapter = new OfferCategoryGridViewAdapter(getApplicationContext(),offerCategoryList);
         offerCategoryGridView.setAdapter(offerCategoryGridViewAdapter);
+        offerCategoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
+                final String[] items = {
+                        getString(R.string.view),
+                        getString(R.string.edit),
+                        getString(R.string.delete)};
+                AlertDialog.Builder builder = new AlertDialog.Builder(CategoryOfferActivity.this);
+                builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        Intent intent;
+                        switch (item) {
+                            case 0:
+                                final Dialog viewCategoryOfferProduct = new Dialog(CategoryOfferActivity.this);
+                                viewCategoryOfferProduct.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                viewCategoryOfferProduct.show();
+                                viewCategoryOfferProduct.setContentView(R.layout.category_offer_products);
+                                final EditText categoryOfferName = (EditText) viewCategoryOfferProduct.findViewById(R.id.categoryOfferName);
+                                final GridView gvCategory = (GridView) viewCategoryOfferProduct.findViewById(R.id.gvCategory);
+                                gvCategory.setNumColumns(3);
+                                Button btn_cancel = (Button) viewCategoryOfferProduct.findViewById(R.id.btn_cancel);
+                                Button btn_add = (Button) viewCategoryOfferProduct.findViewById(R.id.btn_add);
+                                categoryOfferName.setText(offerCategoryList.get(position).getName());
+                                OfferCategoryProductGridViewAdapter offerCategoryProductGridViewAdapter = new OfferCategoryProductGridViewAdapter(CategoryOfferActivity.this,offerCategoryList.get(position).getProductsIdList());
+                                gvCategory.setAdapter(offerCategoryProductGridViewAdapter);
+                                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        viewCategoryOfferProduct.dismiss();
+                                    }
+                                });
+                                btn_add.setVisibility(View.GONE);
+                                break;
+                            case 1:
+                                List<String> newCategoryOfferProductListEdit = new ArrayList<String>();
+                                final Dialog editCategoryOfferProduct = new Dialog(CategoryOfferActivity.this);
+                                editCategoryOfferProduct.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                editCategoryOfferProduct.show();
+                                editCategoryOfferProduct.setContentView(R.layout.category_offer_products);
+                                final EditText editCategoryOfferName = (EditText) editCategoryOfferProduct.findViewById(R.id.categoryOfferName);
+                                final GridView gvEditCategory = (GridView) editCategoryOfferProduct.findViewById(R.id.gvCategory);
+                                gvEditCategory.setNumColumns(3);
+                                Button btn_cancel_edit = (Button) editCategoryOfferProduct.findViewById(R.id.btn_cancel);
+                                Button btn_edit = (Button) editCategoryOfferProduct.findViewById(R.id.btn_add);
+                                editCategoryOfferName.setText(offerCategoryList.get(position).getName());
+                                TextView addProductToCategoryOffer = (TextView)editCategoryOfferProduct.findViewById(R.id.addProductToCategoryOffer);
+                                final OfferCategoryProductGridViewAdapter offerCategoryProductGridViewAdapterEdit = new OfferCategoryProductGridViewAdapter(CategoryOfferActivity.this,offerCategoryList.get(position).getProductsIdList());
+                                gvEditCategory.setAdapter(offerCategoryProductGridViewAdapterEdit);
+                                final List<String> list = new ArrayList<String>(offerCategoryList.get(position).getProductsIdList());
+                                Log.d("testProduct",list.toString());
+
+                                gvEditCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                                        String s =list.get(position);
+                                        Log.d("testProduct11",s+ "   "+list.toString());
+                                        for (int i = 0; i <list.size(); i++) {
+                                            if(s.equals(list.get(i))){
+                                              list.remove(i);
+                                                Log.d("testProduct12",list.toString());
+
+                                            }
+                                        }
+
+                                        final OfferCategoryProductGridViewAdapter offerCategoryProductGridViewAdapterEdit1 = new OfferCategoryProductGridViewAdapter(CategoryOfferActivity.this,list);
+                                        gvEditCategory.setAdapter(offerCategoryProductGridViewAdapterEdit1);
+
+                                    }
+                                });
+                                addProductToCategoryOffer.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                     addProductFromProductDialog(true);
+                                    }
+                                });
+                                btn_cancel_edit.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        editCategoryOfferProduct.dismiss();
+                                    }
+                                });
+                                btn_edit.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String categoryName = editCategoryOfferName.getText().toString();
+                                        if(categoryName.equals("")){
+                                            Toast.makeText(CategoryOfferActivity.this,"Please insert offer category name",Toast.LENGTH_LONG).show();
+                                        }else {
+                                        OfferCategory offerCategory = offerCategoryList.get(position);
+                                        offerCategory.setName(categoryName);
+                                            list.addAll(productIdListForEdit);
+                                            Log.d("lissst",list.toString());
+                                            offerCategory.setProductsIdList(list);
+                                            offerCategoryDbAdapter.updateEntry(offerCategory);
+                                        editCategoryOfferProduct.dismiss();
+                                    }
+                                    }
+                                });
+
+                                break;
+                            case 2:
+                                new AlertDialog.Builder(CategoryOfferActivity.this)
+                                        .setMessage(getString(R.string.delete))
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                offerCategoryDbAdapter.deleteEntry(offerCategoryList.get(position).getOfferCategoryId());
+                                                offerCategoryList.remove(offerCategoryList.get(position));
+                                                offerCategoryGridView.setAdapter(offerCategoryGridViewAdapter);
+                                                offerCategoryGridViewAdapter.notifyDataSetChanged();
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // do nothing
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                                break;
+                    }
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
     }
 
     private void addProductFromCategory() {
@@ -233,7 +362,8 @@ public class CategoryOfferActivity extends AppCompatActivity {
         });
 
     }
-    private void addProductFromProductDialog() {
+    private void addProductFromProductDialog(final boolean editOrAdd) {
+
         final_filter_productList =new ArrayList<>();
         filter_productList=new ArrayList<>();
         final Dialog addProductFromProductDialog = new Dialog(CategoryOfferActivity.this);
@@ -250,6 +380,9 @@ public class CategoryOfferActivity extends AppCompatActivity {
             }
         });*/
         final EditText categoryName = (EditText) addProductFromProductDialog.findViewById(R.id.categoryName);
+        if(editOrAdd){
+            categoryName.setVisibility(View.GONE);
+        }
         final GridView gvProduct = (GridView) addProductFromProductDialog.findViewById(R.id.gvProduct);
         gvProduct.setNumColumns(3);
         Button btn_cancel_add_product = (Button) addProductFromProductDialog.findViewById(R.id.btn_cancel_add_product);
@@ -283,7 +416,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
         btn_add_product.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(!editOrAdd){
                 if(categoryName.getText().toString().equals("")){
                     Toast.makeText(CategoryOfferActivity.this,"please insert category offer name First then select Product",Toast.LENGTH_LONG).show();
                 }else {
@@ -306,6 +439,14 @@ public class CategoryOfferActivity extends AppCompatActivity {
                     OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(CategoryOfferActivity.this);
                     offerCategoryDbAdapter.open();
                     offerCategoryDbAdapter.insertEntry(categoryName.getText().toString(), SESSION._EMPLOYEE.getEmployeeId(),productIdList, branchId);
+                }
+                }else {
+                    for (int i=0;i<productList.size();i++){
+                        productIdListForEdit.add(String.valueOf(productList.get(i).getProductId()));
+
+                    }
+                    addProductFromProductDialog.dismiss();
+
                 }
 
             }

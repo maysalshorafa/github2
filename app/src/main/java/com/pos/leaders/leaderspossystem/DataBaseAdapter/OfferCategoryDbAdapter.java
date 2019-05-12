@@ -67,7 +67,7 @@ public class OfferCategoryDbAdapter {
 
 
     public long insertEntry(String name, long byUser, List<String> productIdList, int branchId) {
-            OfferCategory offerCategory = new OfferCategory(Util.idHealth(this.db, OFFER_CATEGORY_TABLE_NAME, OFFER_CATEGORY_COLUMN_ID), name, new Timestamp(System.currentTimeMillis()), productIdList, byUser,branchId);
+            OfferCategory offerCategory = new OfferCategory(Util.idHealth(this.db, OFFER_CATEGORY_TABLE_NAME, OFFER_CATEGORY_COLUMN_ID), name, new Timestamp(System.currentTimeMillis()), productIdList, byUser,branchId,false);
 
         sendToBroker(MessageType.ADD_OFFER_CATEGORY, offerCategory, this.context);
 
@@ -130,11 +130,10 @@ public class OfferCategoryDbAdapter {
         return new OfferCategory(Long.parseLong(cursor.getString(cursor.getColumnIndex(OFFER_CATEGORY_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(OFFER_CATEGORY_COLUMN_NAME)),
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(OFFER_CATEGORY_COLUMN_CREATINGDATE))),result,
-                cursor.getLong(cursor.getColumnIndex(OFFER_CATEGORY_COLUMN_BYUSER)),cursor.getInt(cursor.getColumnIndex(OFFER_CATEGORY_COLUMN_BRANCH_ID)));
+                cursor.getLong(cursor.getColumnIndex(OFFER_CATEGORY_COLUMN_BYUSER)),cursor.getInt(cursor.getColumnIndex(OFFER_CATEGORY_COLUMN_BRANCH_ID)),
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(OFFER_CATEGORY_COLUMN_HIDE))));
     }
     public long updateEntryBo(OfferCategory offerCategory) {
-        OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(context);
-        offerCategoryDbAdapter.open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(OFFER_CATEGORY_COLUMN_ID, offerCategory.getOfferCategoryId());
@@ -146,9 +145,6 @@ public class OfferCategoryDbAdapter {
         try {
             String where = OFFER_CATEGORY_COLUMN_ID + " = ?";
             db.update(OFFER_CATEGORY_TABLE_NAME, val, where, new String[]{offerCategory.getOfferCategoryId() + ""});
-            OfferCategory p=offerCategoryDbAdapter.getOfferById(offerCategory.getOfferCategoryId());
-            Log.d("Update Object",p.toString());
-            offerCategoryDbAdapter.close();
             return 1;
         } catch (SQLException ex) {
             return 0;
@@ -196,5 +192,41 @@ public class OfferCategoryDbAdapter {
 
         return departmentList;
     }
+    public int deleteEntry(long id) {
+        OfferCategoryDbAdapter offerCategoryDbAdapter=new OfferCategoryDbAdapter(context);
+        offerCategoryDbAdapter.open();
+        // Define the updated row content.
+        ContentValues updatedValues = new ContentValues();
+        // Assign values for each row.
+        updatedValues.put(OFFER_CATEGORY_COLUMN_HIDE, 1);
 
+        String where = OFFER_CATEGORY_COLUMN_ID + " = ?";
+        try {
+            db.update(OFFER_CATEGORY_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+            OfferCategory offerCategory = offerCategoryDbAdapter.getOfferById(id);
+            sendToBroker(MessageType.DELETE_OFFER_CATEGORY, offerCategory, this.context);
+            return 1;
+        } catch (SQLException ex) {
+            Log.e("OfferCategory DB delete", "enable hide Entry at " + OFFER_CATEGORY_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+    }
+    public void updateEntry(OfferCategory offerCategory) {
+        OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(context);
+        offerCategoryDbAdapter.open();
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(OFFER_CATEGORY_COLUMN_ID, offerCategory.getOfferCategoryId());
+        val.put(OFFER_CATEGORY_COLUMN_NAME, offerCategory.getName());
+        val.put(OFFER_CATEGORY_COLUMN_BYUSER, offerCategory.getByEmployee());
+        val.put(OFFER_CATEGORY_COLUMN_CREATINGDATE, String.valueOf(offerCategory.getCreatedAt()));
+        val.put(OFFER_CATEGORY_COLUMN_BRANCH_ID, offerCategory.getBranchId());
+        val.put(OFFER_CATEGORY_COLUMN_PRODUCT_ID_LIST, String.valueOf(offerCategory.getProductsIdList()));
+        String where = OFFER_CATEGORY_COLUMN_ID + " = ?";
+        db.update(OFFER_CATEGORY_TABLE_NAME, val, where, new String[]{offerCategory.getOfferCategoryId() + ""});
+        OfferCategory d=offerCategoryDbAdapter.getOfferById(offerCategory.getOfferCategoryId());
+        Log.d("Update object",d.toString());
+        sendToBroker(MessageType.UPDATE_OFFER_CATEGORY, d, this.context);
+        offerCategoryDbAdapter.close();
+    }
 }

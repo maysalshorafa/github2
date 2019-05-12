@@ -130,20 +130,7 @@
         tools:layout_editor_absoluteX="32dp"
         tools:layout_editor_absoluteY="576dp">
 
-        <Button
-            android:id="@+id/addNewCategoryOffer"
-            style="@style/AppTheme.bt_green"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/save"
-            android:textColor="#fff"
-            android:textSize="20dp" />
+
 
         <Button
 

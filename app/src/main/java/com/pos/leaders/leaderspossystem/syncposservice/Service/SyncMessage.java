@@ -1619,7 +1619,7 @@ public class SyncMessage extends Service {
                 JSONObject newOfferCategoryJson = new JSONObject(jsonObject.getString(MessageKey.Data));
                 newOfferCategoryJson.remove("createdAt");
                 offerCategory=objectMapper.readValue(newOfferCategoryJson.toString(), OfferCategory.class);
-                res = messageTransmit.authPut(ApiURL.Product, newOfferCategoryJson.toString(), token,offerCategory.getOfferCategoryId());
+                res = messageTransmit.authPut(ApiURL.OfferCategory, newOfferCategoryJson.toString(), token,offerCategory.getOfferCategoryId());
                 break;
             case MessageType.DELETE_OFFER_CATEGORY:
                 JSONObject newDeleteOfferCategoryJson = new JSONObject(jsonObject.getString(MessageKey.Data));
