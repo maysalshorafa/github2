@@ -41,7 +41,18 @@
             android:padding="16dp"
             android:textColor="@color/black"
             app:drawableLeftCompat="@drawable/ic_icons_leaders_search"/>
-
+        <GridView
+            android:id="@+id/gvFilterProductInCategory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:columnWidth="90dp"
+            android:horizontalSpacing="30dp"
+            android:numColumns="4"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="20dp"
+            android:verticalSpacing="30dp" />
 
         <GridView
             android:id="@+id/gvProduct"

@@ -30,6 +30,7 @@ import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.OfferCategory;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Tools.CategoryGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.FilterCategoryOfferProductDialog;
 import com.pos.leaders.leaderspossystem.Tools.OfferCategoryGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.OfferCategoryProductGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
@@ -52,12 +53,15 @@ public class CategoryOfferActivity extends AppCompatActivity {
      EditText productName ;
     Product product =new Product();
     List<Product>productList = new ArrayList<>();
+    List<String>productListName = new ArrayList<>();
+
     Spinner SpProductBranch;
     GridView offerCategoryGridView;
     List<OfferCategory>offerCategoryList =new ArrayList<>();
     boolean editFlag = false;
     ArrayList<String>productIdListForEdit=new ArrayList<String>();
-
+     GridView gvFilterProduct;
+    FilterCategoryOfferProductDialog filterCategoryOfferProductDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -385,6 +389,9 @@ public class CategoryOfferActivity extends AppCompatActivity {
         }
         final GridView gvProduct = (GridView) addProductFromProductDialog.findViewById(R.id.gvProduct);
         gvProduct.setNumColumns(3);
+      gvFilterProduct = (GridView) addProductFromProductDialog.findViewById(R.id.gvFilterProductInCategory);
+        gvFilterProduct.setNumColumns(3);
+        gvFilterProduct.setVisibility(View.GONE);
         Button btn_cancel_add_product = (Button) addProductFromProductDialog.findViewById(R.id.btn_cancel_add_product);
         Button btn_add_product = (Button) addProductFromProductDialog.findViewById(R.id.btn_add_product);
 
@@ -406,11 +413,21 @@ public class CategoryOfferActivity extends AppCompatActivity {
                 product=filter_productList.get(position);
                 Log.d("testProduct",product.toString());
                 productList.add(product);
-                for (int i = 0; i < gvProduct.getChildCount(); i++) {
-                    if(position == i ){
-                        gvProduct.getChildAt(i).setBackgroundColor(Color.BLACK);
-                    }
-                }
+                productListName.add(product.getDisplayName());
+                 filterCategoryOfferProductDialog = new FilterCategoryOfferProductDialog(CategoryOfferActivity.this,R.layout.grid_view_filter_category_offer_product,productListName);
+                gvFilterProduct.setVisibility(View.VISIBLE);
+                gvFilterProduct.setAdapter(filterCategoryOfferProductDialog);
+            }
+        });
+        gvFilterProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                productList.remove(position);
+                productListName.remove(position);
+                filterCategoryOfferProductDialog.remove(position);
+                filterCategoryOfferProductDialog = new FilterCategoryOfferProductDialog(CategoryOfferActivity.this, R.layout.list_adapter_row_checks, productListName);
+                gvFilterProduct.setAdapter(filterCategoryOfferProductDialog);
+                filterCategoryOfferProductDialog.notifyDataSetChanged();
             }
         });
         btn_add_product.setOnClickListener(new View.OnClickListener() {
@@ -518,5 +535,6 @@ public class CategoryOfferActivity extends AppCompatActivity {
 
 
     }
+
 
 }
