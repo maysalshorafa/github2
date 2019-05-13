@@ -328,7 +328,7 @@ public class DbHelper extends SQLiteOpenHelper {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        BufferDbEmail.sendLogFile();
+                        BufferDbEmail.sendLogFileBufferDb();
                         SETTINGS.BufferEmail=true;
                     }
                     break;
@@ -336,13 +336,23 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(OrderDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[0]);
                     db.execSQL(OrderDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[1]);
                     db.execSQL(OrderDBAdapter.DATABASE_UPDATE_FROM_V2_TO_V3[2]);
-                    BufferDbEmail.sendLogFile();
+                    BufferDbEmail.sendLogFileBufferDb();
                     break;
                 case 4:
                     db.execSQL(IdsCounterDBAdapter.addColumn("x_report"));
                     db.execSQL(XReportDBAdapter.DATABASE_CREATE);
                     db.execSQL(ProductDBAdapter.addColumnInteger("currencyType"));
+                    db.execSQL(ProductDBAdapter.addColumnInteger("branchId"));
+                    db.execSQL(ProductDBAdapter.addColumnInteger("offerId"));
                     db.execSQL(OfferCategoryDbAdapter.DATABASE_CREATE);
+                    db.execSQL(CategoryDBAdapter.addColumnInteger("branchId"));
+                    db.execSQL(ClubAdapter.addColumnInteger("branchId"));
+                    db.execSQL(CustomerDBAdapter.addColumnInteger("branchId"));
+                    db.execSQL(EmployeeDBAdapter.addColumnInteger("branchId"));
+                    db.execSQL(OrderDetailsDBAdapter.addColumnLong("offerId"));
+                    db.execSQL(SettingsDBAdapter.addColumnInteger("branchId"));
+
+
                     break;
                 
 

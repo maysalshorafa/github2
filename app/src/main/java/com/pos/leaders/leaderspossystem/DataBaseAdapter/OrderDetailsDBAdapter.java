@@ -171,4 +171,5 @@ public class OrderDetailsDBAdapter {
 				+ " add column " + columnName + " INTEGER  DEFAULT '' ;";
 		return dbc;
 	}
+
 }

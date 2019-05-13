@@ -274,4 +274,9 @@ public class CategoryDBAdapter {
         // Category Name available
         return true;
     }
+    public static String addColumnInteger(String columnName) {
+        String dbc = "ALTER TABLE " + CATEGORY_TABLE_NAME
+                + " add column " + columnName + " INTEGER  DEFAULT 0 ;";
+        return dbc;
+    }
 }

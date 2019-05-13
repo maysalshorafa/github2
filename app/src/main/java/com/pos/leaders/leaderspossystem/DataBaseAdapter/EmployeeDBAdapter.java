@@ -372,4 +372,9 @@ public class EmployeeDBAdapter {
         cursor.close();
         return employee;
     }
+    public static String addColumnInteger(String columnName) {
+        String dbc = "ALTER TABLE " + EMPLOYEE_TABLE_NAME
+                + " add column " + columnName + " INTEGER  DEFAULT 0 ;";
+        return dbc;
+    }
 }

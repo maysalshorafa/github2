@@ -293,6 +293,10 @@ public class ClubAdapter {
 
         return club;
     }
-
+    public static String addColumnInteger(String columnName) {
+        String dbc = "ALTER TABLE " + Group_TABLE_NAME
+                + " add column " + columnName + " INTEGER  DEFAULT 0 ;";
+        return dbc;
+    }
 }
 

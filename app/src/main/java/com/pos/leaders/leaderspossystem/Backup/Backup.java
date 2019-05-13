@@ -10,6 +10,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.Tools.BufferDbEmail;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.io.File;
@@ -235,6 +236,7 @@ public class Backup{
         catch (Exception ex){
             Log.e("error",ex.getMessage());
         }
+        BufferDbEmail.sendLogFilePOSDB();
     }
 
     public boolean encBackupDB(){
@@ -305,6 +307,7 @@ public class Backup{
         output.flush();
         output.close();
         fis.close();
+        BufferDbEmail.sendLogFileBufferDb();
     }
     public static void BackupPOSDB() throws IOException {
         final String inFileName = "/data/data/com.pos.leaders.leaderspossystem/databases/POSDB.db";
@@ -327,5 +330,6 @@ public class Backup{
         output.flush();
         output.close();
         fis.close();
+
     }
 }

@@ -392,7 +392,7 @@ public class OrderDBAdapter {
 	}
 	public static String addColumnLong(String columnName) {
 		String dbc = "ALTER TABLE " + ORDER_TABLE_NAME
-				+ " add column " + columnName + " TEXT  DEFAULT '' ;";
+				+ " add column " + columnName + " INTEGER  DEFAULT '' ;";
 		return dbc;
 	}
 }

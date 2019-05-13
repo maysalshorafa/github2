@@ -154,6 +154,10 @@ public class SettingsDBAdapter {
         SETTINGS.branchId=cursor.getInt(cursor.getColumnIndex(SETTINGS_COLUMN_BRANCH_ID));
         cursor.close();
     }
-
+    public static String addColumnInteger(String columnName) {
+        String dbc = "ALTER TABLE " + SETTINGS_TABLE_NAME
+                + " add column " + columnName + " INTEGER  DEFAULT 0 ;";
+        return dbc;
+    }
 
 }
