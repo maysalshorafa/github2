@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,6 +22,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -64,8 +66,11 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 
@@ -74,7 +79,7 @@ import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
  * Editing by KARAM on 10/04/2017.
  */
 public class OrdersManagementActivity extends AppCompatActivity {
-
+    private static final int DIALOG_FROM_DATE = 825;
     int loadItemOffset = 0;
     int countLoad = 60;
     boolean userScrolled = false;
@@ -99,6 +104,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
     public static Context context = null;
     List<Object>list=new ArrayList<Object>();
     Spinner searchSpinner;
+    final Calendar myCalendar = Calendar.getInstance();
 
     private final static int DAY_MINUS_ONE_SECOND = 86399999;
     @Override
@@ -116,6 +122,19 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
         etSearch = (EditText) findViewById(R.id.etSearch);
         searchSpinner=(Spinner)findViewById(R.id.searchSpinner);
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+
+        };
         final ArrayList<Integer> idForSearchType = new ArrayList<Integer>();
         final ArrayList<String> hintForSearchType = new ArrayList<String>();
         hintForSearchType.add(getString(R.string.customer));
@@ -477,7 +496,23 @@ public class OrdersManagementActivity extends AppCompatActivity {
                 }
             }
         });
+        searchSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("teeest",searchSpinner.getSelectedItem().toString());
+                etSearch.setText("");
+              if(searchSpinner.getSelectedItem().toString().equals("Date")){
+                new DatePickerDialog(OrdersManagementActivity.this, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
 
+           }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
         etSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -613,6 +648,11 @@ public class OrdersManagementActivity extends AppCompatActivity {
         }
         return newInvoiceList;
     }
+    private void updateLabel() {
+        String myFormat = "MM/dd/yy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        etSearch.setText(sdf.format(myCalendar.getTime()));
+    }
 
 
 }
@@ -708,4 +748,5 @@ class StartInvoiceAndCreditInvoiceConnection extends AsyncTask<String,Void,Strin
 
         //endregion
     }
+
 }
