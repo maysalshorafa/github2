@@ -352,7 +352,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(EmployeeDBAdapter.addColumnInteger("branchId"));
                     db.execSQL(OrderDetailsDBAdapter.addColumnLong("offerId"));
                     db.execSQL(SettingsDBAdapter.addColumnInteger("branchId"));
-
+                    ClearSync clearSync2 = new ClearSync(context);
+                    clearSync2.execute(context);
 
                     break;
                 

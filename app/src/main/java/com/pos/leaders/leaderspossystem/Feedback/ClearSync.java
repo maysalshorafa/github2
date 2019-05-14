@@ -87,8 +87,8 @@ public class ClearSync extends AsyncTask<Context, Void, String> {
             }
 
             JSONObject notificationJson = new JSONObject();
-            notificationJson.put("oldVersion", 1);
-            notificationJson.put("newVersion", 2);
+            notificationJson.put("oldVersion", 2);
+            notificationJson.put("newVersion", 3);
             notificationJson.put("companyName", SETTINGS.companyName);
             notificationJson.put("companyId", SETTINGS.companyID);
             notificationJson.put("deviceId", SESSION.POS_ID_NUMBER);
