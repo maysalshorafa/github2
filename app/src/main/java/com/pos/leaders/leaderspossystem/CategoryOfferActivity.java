@@ -54,6 +54,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
     Product product =new Product();
     List<Product>productList = new ArrayList<>();
     List<String>productListName = new ArrayList<>();
+    boolean flagProduct=false;
 
     Spinner SpProductBranch;
     GridView offerCategoryGridView;
@@ -410,10 +411,19 @@ public class CategoryOfferActivity extends AppCompatActivity {
         gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                flagProduct=false;
                 product=filter_productList.get(position);
                 Log.d("testProduct",product.toString());
+                for(int i=0;i<productList.size();i++){
+                    if(product.getProductId()==productList.get(i).getProductId()){
+                        flagProduct=true;
+                    }
+                }
+                if(!flagProduct){
                 productList.add(product);
-                productListName.add(product.getDisplayName());
+                    productListName.add(product.getDisplayName());
+
+                }
                  filterCategoryOfferProductDialog = new FilterCategoryOfferProductDialog(CategoryOfferActivity.this,R.layout.grid_view_filter_category_offer_product,productListName);
                 gvFilterProduct.setVisibility(View.VISIBLE);
                 gvFilterProduct.setAdapter(filterCategoryOfferProductDialog);
