@@ -873,7 +873,7 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImages(data,context);
+                    pdfLoadImagesOpiningReport(data,context);
 
                 }
                 catch(Exception ignored)
