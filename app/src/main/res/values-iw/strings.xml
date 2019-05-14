@@ -623,6 +623,7 @@
     <string name="cancel_invoice_id"> ביטול חשבונית</string>
     <string name="order_details">OrderDetails</string>
     <string name="order">Order</string>
+    <string name="start">החל</string>
 
 
 </resources>

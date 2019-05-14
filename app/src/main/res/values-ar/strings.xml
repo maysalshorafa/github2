@@ -605,6 +605,7 @@
     <string name="cancel_invoice_id">رقم البيعه الملغاه</string>
     <string name="order_details">OrderDetails</string>
     <string name="order">Order</string>
+    <string name="start">ابدا</string>
 
 
 </resources>
