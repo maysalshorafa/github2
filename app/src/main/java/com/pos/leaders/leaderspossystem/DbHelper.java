@@ -344,6 +344,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(ProductDBAdapter.addColumnInteger("currencyType"));
                     db.execSQL(ProductDBAdapter.addColumnInteger("branchId"));
                     db.execSQL(ProductDBAdapter.addColumnInteger("offerId"));
+                    db.execSQL(IdsCounterDBAdapter.addColumn("OfferCategory"));
                     db.execSQL(OfferCategoryDbAdapter.DATABASE_CREATE);
                     db.execSQL(CategoryDBAdapter.addColumnInteger("branchId"));
                     db.execSQL(ClubAdapter.addColumnInteger("branchId"));
