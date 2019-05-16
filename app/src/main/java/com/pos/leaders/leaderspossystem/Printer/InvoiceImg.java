@@ -261,10 +261,11 @@ public class InvoiceImg {
             unitPrice.text += Util.makePrice(o.getUnitPrice()) + "\n";
             price.text +=  Util.makePrice(o.getItemTotalPrice()) + "\n";
             discount.text += String.format(new Locale("en"), "%.2f", o.getDiscount()) + "\n";
-            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity());
-            saleTotalPrice += o.getItemTotalPrice();
+            SaleOriginalityPrice += (o.getItemTotalPrice() );
+            saleTotalPrice += o.getUnitPrice();
         }
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);
+        Log.d("testTotalSaved",totalSaved+"");
         blocks.add(discount.Left());
         blocks.add(price.Left());
         blocks.add(unitPrice.Left());
@@ -461,11 +462,11 @@ public class InvoiceImg {
             Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
             blocks.add(bCopyDate.Left());
         }
-        if ((int) totalSaved != 0) {
+    //    if ((int) totalSaved != 0) {
             String s = context.getString(R.string.ins);
             Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" + String.format(new Locale("en"), "%.2f %s", SESSION._ORDERS.totalSaved, s), 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
             blocks.add(totSaved.Bold().Left());
-        }
+     //   }
 
         Block thanks = new Block(SETTINGS.returnNote, 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(thanks.Left());

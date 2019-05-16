@@ -93,6 +93,20 @@ public class PosInvoiceDBAdapter {
         }
 
     }
+    public List<PosInvoice> getPosInvoice(long zReportId){
+        List<PosInvoice> posInvoices = new ArrayList<PosInvoice>();
+
+        Cursor cursor = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where "+POS_INVOICE_COLUMN_LAST_Z_REPORT+" = "+zReportId+ " and " + POS_INVOICE_COLUMN_TYPE +  " = "+"'"+DocumentType.INVOICE.getValue() +"'", null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            posInvoices.add(makePosInvoice(cursor));
+            cursor.moveToNext();
+        }
+
+        return posInvoices;
+    }
+
     public List<PosInvoice> getPosInvoiceList(long zReportId,String status){
         List<PosInvoice> posInvoices = new ArrayList<PosInvoice>();
 

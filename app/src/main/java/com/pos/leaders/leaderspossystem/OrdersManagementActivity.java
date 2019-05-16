@@ -499,9 +499,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
         searchSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("teeest",searchSpinner.getSelectedItem().toString());
                 etSearch.setText("");
-              if(searchSpinner.getSelectedItem().toString().equals("Date")){
+              if(searchSpinner.getSelectedItem().toString().equals(getString(R.string.date))){
                 new DatePickerDialog(OrdersManagementActivity.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
@@ -556,6 +555,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                             orderDBAdapter.open();
+                            Log.d("teeest",params[0]);
                             filterOrderList = orderDBAdapter.search(params[0], loadItemOffset,countLoad,type);
                         //    filterBoInvoice = searchInInvoiceList(params[0]);
 
@@ -649,9 +649,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
         return newInvoiceList;
     }
     private void updateLabel() {
-        String myFormat = "MM/dd/yy"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        etSearch.setText(sdf.format(myCalendar.getTime()));
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        etSearch.setText(String.format(new Locale("en"),format.format(myCalendar.getTime())));
     }
 
 

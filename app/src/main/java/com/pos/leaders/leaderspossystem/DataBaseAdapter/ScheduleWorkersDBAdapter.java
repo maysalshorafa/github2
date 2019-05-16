@@ -63,12 +63,12 @@ public class ScheduleWorkersDBAdapter {
     //insert region
     // normal insert region with start time
     public long insertEntry(long userId) {
-        ScheduleWorkers scheduleWorkers = new ScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(),  new Date().getTime(),0);
+        ScheduleWorkers scheduleWorkers = new ScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(),  new Date().getTime(),new Date().getTime());
         sendToBroker(MessageType.ADD_SCHEDULE_WORKERS, scheduleWorkers, this.context);
         try {
             return insertEntry(scheduleWorkers);
         } catch (SQLException ex) {
-            Log.e(SCHEDULEWORKERS_TABLE_NAME +" DB insert", "inserting Entry at " + SCHEDULEWORKERS_TABLE_NAME + ": " + ex.getMessage());
+            Log.e(SCHEDULEWORKERS_TABLE_NAME, "inserting Entry at " + SCHEDULEWORKERS_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
 
@@ -76,12 +76,12 @@ public class ScheduleWorkersDBAdapter {
     // end
     // insert exit time and last row have start and exit time first step insert new row with exit time then send it
     public long insertEntryExitTime(long userId) {
-        ScheduleWorkers scheduleWorkers = new ScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(),  0,new Date().getTime());
+        ScheduleWorkers scheduleWorkers = new ScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(), new Date().getTime(),new Date().getTime());
         sendToBroker(MessageType.ADD_SCHEDULE_WORKERS, scheduleWorkers, this.context);
         try {
             return insertEntry(scheduleWorkers);
         } catch (SQLException ex) {
-            Log.e(SCHEDULEWORKERS_TABLE_NAME +" DB insert", "inserting Entry at " + SCHEDULEWORKERS_TABLE_NAME + ": " + ex.getMessage());
+            Log.e(SCHEDULEWORKERS_TABLE_NAME , "inserting Entry at " + SCHEDULEWORKERS_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
 

@@ -30,7 +30,6 @@ import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
-import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
@@ -564,7 +563,7 @@ public class Util {
         if(zReportDBAdapter.getProfilesCount()==0){
             PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
             posInvoiceDBAdapter.open();
-            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(-1, InvoiceStatus.UNPAID.getValue());
+            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoice(-1);
             for (int i= 0 ;i<posInvoiceList.size();i++){
                 invoiceAmount+=posInvoiceList.get(i).getAmount();
             }
@@ -585,7 +584,7 @@ public class Util {
             }
             PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
             posInvoiceDBAdapter.open();
-            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(zReport1.getzReportId(), InvoiceStatus.UNPAID.getValue());
+            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoice(zReport1.getzReportId());
             for (int i= 0 ;i<posInvoiceList.size();i++){
                 invoiceAmount+=posInvoiceList.get(i).getAmount();
             }
@@ -1153,7 +1152,7 @@ public class Util {
         if(zReportDBAdapter.getProfilesCount()==0){
             PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
             posInvoiceDBAdapter.open();
-            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(-1, InvoiceStatus.UNPAID.getValue());
+            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoice(-1);
             for (int i= 0 ;i<posInvoiceList.size();i++){
                 invoiceAmount+=posInvoiceList.get(i).getAmount();
             }
@@ -1174,7 +1173,7 @@ public class Util {
             }
             PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
             posInvoiceDBAdapter.open();
-            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(zReport1.getzReportId(), InvoiceStatus.UNPAID.getValue());
+            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoice(zReport1.getzReportId());
             for (int i= 0 ;i<posInvoiceList.size();i++){
                 invoiceAmount+=posInvoiceList.get(i).getAmount();
             }

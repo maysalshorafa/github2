@@ -162,18 +162,15 @@ public class CategoryOfferActivity extends AppCompatActivity {
                                 final OfferCategoryProductGridViewAdapter offerCategoryProductGridViewAdapterEdit = new OfferCategoryProductGridViewAdapter(CategoryOfferActivity.this,offerCategoryList.get(position).getProductsIdList());
                                 gvEditCategory.setAdapter(offerCategoryProductGridViewAdapterEdit);
                                 final List<String> list = new ArrayList<String>(offerCategoryList.get(position).getProductsIdList());
-                                Log.d("testProduct",list.toString());
 
                                 gvEditCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
                                         String s =list.get(position);
-                                        Log.d("testProduct11",s+ "   "+list.toString());
                                         for (int i = 0; i <list.size(); i++) {
                                             if(s.equals(list.get(i))){
                                               list.remove(i);
-                                                Log.d("testProduct12",list.toString());
 
                                             }
                                         }
@@ -204,9 +201,21 @@ public class CategoryOfferActivity extends AppCompatActivity {
                                         }else {
                                         OfferCategory offerCategory = offerCategoryList.get(position);
                                         offerCategory.setName(categoryName);
+                                            List<String>test=new ArrayList<String>();
+                                            List<Long>test1=new ArrayList<Long>();
                                             list.addAll(productIdListForEdit);
-                                            Log.d("lissst",list.toString());
-                                            offerCategory.setProductsIdList(list);
+
+                                            for (int a=0;a<list.size();a++){
+                                                test1.add(Long.parseLong(list.get(a).trim()));
+                                            }
+
+                                            for (int i=0;i<test1.size();i++){
+                                                test.add(String.valueOf(test1.get(i)).replaceAll("\\s+",""));
+
+                                            }
+                                            Log.d("lissst",test.toString());
+
+                                            offerCategory.setProductsIdList(test);
                                             offerCategoryDbAdapter.updateEntry(offerCategory);
                                         editCategoryOfferProduct.dismiss();
                                     }
@@ -271,7 +280,6 @@ public class CategoryOfferActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 category=filter_categoryList.get(position);
-                Log.d("testCategory",category.toString());
                 categoryList.add(category);
                 for (int i = 0; i < gvCategory.getChildCount(); i++) {
                     if(position == i ){
@@ -288,7 +296,6 @@ public class CategoryOfferActivity extends AppCompatActivity {
                     Toast.makeText(CategoryOfferActivity.this,"please insert category offer name",Toast.LENGTH_LONG).show();
                 }else {
                 addProductFromCategoryDialog.dismiss();
-                Log.d("testCategory",categoryList.toString());
                 ArrayList<String>productIdList=new ArrayList<String>();
                 ArrayList<Product>products=new ArrayList<Product>();
 
@@ -371,6 +378,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
 
         final_filter_productList =new ArrayList<>();
         filter_productList=new ArrayList<>();
+        productListName=new ArrayList<>();
         final Dialog addProductFromProductDialog = new Dialog(CategoryOfferActivity.this);
         addProductFromProductDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         addProductFromProductDialog.show();
@@ -411,9 +419,9 @@ public class CategoryOfferActivity extends AppCompatActivity {
         gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                productName.setText("");
                 flagProduct=false;
                 product=filter_productList.get(position);
-                Log.d("testProduct",product.toString());
                 for(int i=0;i<productList.size();i++){
                     if(product.getProductId()==productList.get(i).getProductId()){
                         flagProduct=true;
@@ -432,6 +440,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
         gvFilterProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
                 productList.remove(position);
                 productListName.remove(position);
                 filterCategoryOfferProductDialog.remove(position);
@@ -448,12 +457,11 @@ public class CategoryOfferActivity extends AppCompatActivity {
                     Toast.makeText(CategoryOfferActivity.this,"please insert category offer name First then select Product",Toast.LENGTH_LONG).show();
                 }else {
                     addProductFromProductDialog.dismiss();
-                    Log.d("testProductList",productList.toString());
                     ArrayList<String>productIdList=new ArrayList<String>();
                     ArrayList<Product>products=new ArrayList<Product>();
 
                     for (int i=0;i<productList.size();i++){
-                        productIdList.add(String.valueOf(productList.get(i).getProductId()));
+                        productIdList.add(String.valueOf(productList.get(i).getProductId()).replaceAll("\\s+",""));
 
                     }
                     int branchId=0;
@@ -469,7 +477,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
                 }
                 }else {
                     for (int i=0;i<productList.size();i++){
-                        productIdListForEdit.add(String.valueOf(productList.get(i).getProductId()));
+                        productIdListForEdit.add(String.valueOf(productList.get(i).getProductId()).replaceAll("\\s+",""));
 
                     }
                     addProductFromProductDialog.dismiss();
@@ -523,7 +531,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
                             }
                             final_filter_productList = productDBAdapter.getAllProductsByHint(params[0], 0, 80);
 
-                            Log.d("filter_productList",final_filter_productList.toString()+"teeest "+params[0]);
+
                             return null;
                         }
 

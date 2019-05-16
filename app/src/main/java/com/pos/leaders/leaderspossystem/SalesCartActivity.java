@@ -1450,18 +1450,22 @@ public class SalesCartActivity extends AppCompatActivity {
         btnCash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String s =(tvTotalSaved.getText().toString());
+
+                if (s != null && s.length() > 0 && s.charAt(s.length() - 1) == '₪') {
+                    s = s.substring(0, s.length() - 1);
+                }
                 if (SESSION._ORDER_DETAILES.size() > 0) {
                     if (SETTINGS.enableCurrencies) {
                         //Intent intent = new Intent(SalesCartActivity.this, CashActivity.class);
-                        String s =(tvTotalSaved.getText().toString());
-                        if (s != null && s.length() > 0 && s.charAt(s.length() - 1) == '₪') {
-                            s = s.substring(0, s.length() - 1);
-                        }
                         SESSION._ORDERS.totalSaved=Double.parseDouble(s);
+                        Log.d("testTotalSaved",s+"");
                         Intent intent = new Intent(SalesCartActivity.this, MultiCurrenciesPaymentActivity.class);
                         intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, Double.parseDouble(Util.makePrice(saleTotalPrice)));
                         startActivityForResult(intent, REQUEST_MULTI_CURRENCY_ACTIVITY_CODE);
                     } else {
+                        SESSION._ORDERS.totalSaved=Double.parseDouble(s);
+                        Log.d("testTotalSaved",s+"");
                         Intent intent = new Intent(SalesCartActivity.this, OldCashActivity.class);
                         intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, Double.parseDouble(Util.makePrice(saleTotalPrice)));
                         startActivityForResult(intent, REQUEST_CASH_ACTIVITY_CODE);
@@ -2953,7 +2957,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
                     pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER), CONSTANT.PRINTER_PAGE_WIDTH);
                 }   else  {
-                pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null), CONSTANT.PRINTER_PAGE_WIDTH);
+                    pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null), CONSTANT.PRINTER_PAGE_WIDTH);
                 }
                 return null;
             }
@@ -3249,6 +3253,7 @@ public class SalesCartActivity extends AppCompatActivity {
     public void printAndOpenCashBox(String mainAns, final String mainMer, final String mainCli, int source) {
         switch (SETTINGS.printer) {
             case BTP880:
+
                 printAndOpenCashBoxBTP880(mainAns, mainMer, mainCli);
                 break;
             case HPRT_TP805:

@@ -35,8 +35,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
@@ -82,8 +80,6 @@ import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.Models.XReport;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
-import com.pos.leaders.leaderspossystem.Offers.ResourceType;
-import com.pos.leaders.leaderspossystem.Offers.Rules;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
@@ -533,7 +529,7 @@ public class SyncMessage extends Service {
                     offerDBAdapter.open();
                     rID = offerDBAdapter.insertEntry(offer);
                     offerDBAdapter.close();
-                    if (offer.getResourceType() == ResourceType.MULTIPRODUCT) {
+                 /*   if (offer.getResourceType() == ResourceType.MULTIPRODUCT) {
                         JSONArray skus = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue()).getJSONArray(Rules.product_sku.getValue());
                         if (skus.length() > 0) {
                             //creating new group
@@ -569,7 +565,7 @@ public class SyncMessage extends Service {
                             groupsCategoryDbAdapter.close();
 
                         }
-                    }
+                    }*/
 
                     break;
                 case MessageType.UPDATE_OFFER:

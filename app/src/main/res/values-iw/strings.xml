@@ -623,6 +623,12 @@
     <string name="cancel_invoice_id"> ביטול חשבונית</string>
     <string name="order_details">OrderDetails</string>
     <string name="order">Order</string>
+    <string name="pause_invoice">חשבון עסקה</string>
+    <string name="categorys_offer">קבוצת מבצע</string>
+    <string name="category_product">הוספת מחלקה</string>
+    <string name="category_offer_name">הוסף שם לקבוצת מבצע</string>
+
+
 
 
 </resources>
