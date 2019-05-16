@@ -236,7 +236,6 @@ public class Backup{
         catch (Exception ex){
             Log.e("error",ex.getMessage());
         }
-        BufferDbEmail.sendLogFilePOSDB();
     }
 
     public boolean encBackupDB(){
@@ -330,6 +329,7 @@ public class Backup{
         output.flush();
         output.close();
         fis.close();
+        BufferDbEmail.sendLogFilePOSDB();
 
     }
 }

@@ -2,8 +2,8 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -86,6 +86,7 @@ public class BackupActivity extends AppCompatActivity {
                 backup.encBackupDB();
                 try {
                     backup.BackupBufferDB();
+                    backup.BackupPOSDB();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
