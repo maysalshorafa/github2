@@ -2,11 +2,15 @@ package com.pos.leaders.leaderspossystem.CreditCard;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -41,6 +45,8 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.sunmi.aidl.MSCardService;
+import com.sunmi.aidl.callback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,7 +64,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
     public static final String LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote = "LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote";
     private static String etCCValue2;
 
-    Button btCancel, btDone, btByPhone, btAdvance, btClear;
+    Button btCancel,btStart, btDone, btByPhone, btAdvance, btClear;
     LinearLayout llAdvance, llByPhone;
     TextView tvTotalPrice, tvCCValue, tvMessage;
     static EditText etCCValue;
@@ -77,6 +83,20 @@ public class MainCreditCardActivity extends AppCompatActivity {
     BoInvoice invoice ;
     int NumOfFixedPayments=1;
 
+    private MSCardService sendservice;
+    ServiceConnection serviceConnection;
+    msCardReaderCallBack msCardReaderCallback=new msCardReaderCallBack();
+    @Override
+    protected void onDestroy() {
+        unbindService(serviceConnection);
+        try {
+            TitleBar.removeTitleBard();
+        } catch (IllegalArgumentException iae) {
+
+        }
+        super.onDestroy();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,8 +108,29 @@ public class MainCreditCardActivity extends AppCompatActivity {
         //set custom title bar
         TitleBar.setTitleBar(this);
 
+        Intent intent = new Intent();
+        intent.setPackage("com.sunmi.mscardservice");
+        intent.setAction("com.sunmi.mainservice.MainService");
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                sendservice = MSCardService.Stub.asInterface(service);
+            }
+            @Override
+            public void onServiceDisconnected(ComponentName name) {}
+        };
+
+        try {
+            bindService(intent, serviceConnection, BIND_AUTO_CREATE);
+        } catch (Exception e) {
+            Log.e("Sunmi MSC ", e.getMessage());
+        }
+
+
+
         //init views
         btDone      = (Button) findViewById(R.id.MainCreditCardActivity_btDone);
+        btStart      = (Button) findViewById(R.id.MainCreditCardActivity_btStart);
         btAdvance   = (Button) findViewById(R.id.MainCreditCardActivity_btAdvance);
         btByPhone   = (Button) findViewById(R.id.MainCreditCardActivity_btByPhone);
         btCancel    = (Button) findViewById(R.id.MainCreditCardActivity_btCancel);
@@ -302,6 +343,15 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 //btDone.setClickable(false);
             }
         });
+        btStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //start lisinning to mscard
+                new Thread(sendable).start();
+                if(btDone.isClickable())
+                    btDone.setClickable(false);
+            }
+        });
 
         btDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -339,7 +389,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 //Log.e("Card Number", validCCNUM);
                 final String CCNum = validCCNUM;
 
-
+                Log.i(LOG_TAG, CCNum);
                 if (advanceMode) {
                     String pn = etPaymentsNumber.getText().toString();
                     //trying to case input
@@ -362,7 +412,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                         else if (ccT == 1)
                             creditType = CreditCardTransactionType.CREDIT;//קרדיט/קרדיט בתשלומים קבועים
 
-                        doTransaction(creditCardNumber, numberOfPayments, creditType);
+                        doTransaction(CCNum, numberOfPayments, creditType);
 
                     } else {
                         //out of maximum payment number
@@ -372,7 +422,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                     }
                 } else {
                     //normal mode with 1 payment number and normal credit type
-                    doTransaction(creditCardNumber, 1, 1);
+                    doTransaction(CCNum, 1, 1);
                 }
 
                 dialog_connection.dismiss();
@@ -561,5 +611,44 @@ public class MainCreditCardActivity extends AppCompatActivity {
        // btClear.callOnClick();
        // this.setResult(RESULT_CANCELED,new Intent());
         //finish();
+    }
+
+
+    Runnable sendable = new Runnable() {
+
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+            try {
+                sendservice.readRawMSCard(20000, msCardReaderCallback);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+    class msCardReaderCallBack extends callback.Stub {
+
+        @Override
+        public void MSCardInfo(final boolean isSuccess, final byte[] m1, final byte[] m2, final byte[] m3)
+                throws RemoteException {
+            runOnUiThread(new Runnable() {
+
+                @SuppressWarnings("deprecation")
+                @Override
+                public void run() {
+                    try {
+                        etCCValue.setText(  new String(m2, "US-ASCII").split("\0")[0]);
+                        Log.e("Card Numbers", new String(m1, "US-ASCII").split("\0")[0]
+                                + new String(m2, "US-ASCII").split("\0")[0]
+                                + new String(m3, "US-ASCII").split("\0")[0] );
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if(!btDone.isClickable())
+                        btDone.setClickable(true);
+                }
+            });
+        }
+
     }
 }

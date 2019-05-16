@@ -700,6 +700,7 @@
     <string name="customer_ledger">CustomerLedger</string>
     <string name="receipt_numbers">Receipt Numbers</string>
     <string name="reference_invoice">ReferenceInvoice</string>
+    <string name="start">Start</string>
 
 
 </resources>
