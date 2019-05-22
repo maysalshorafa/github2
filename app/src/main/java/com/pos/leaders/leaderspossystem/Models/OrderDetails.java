@@ -36,7 +36,8 @@ public class OrderDetails {
 
 	@JsonIgnore
 	public boolean giftProduct = false;
-
+	@JsonIgnore
+	public int position = 0;
 	@JsonIgnore
 	public boolean scannable = true;
 
@@ -202,8 +203,8 @@ public class OrderDetails {
 		return quantity;
 	}
 
-	public void setQuantity() {
-		this.quantity = this.quantity+1;
+	public void setQuantity(int x) {
+		this.quantity = x;
 	}
 
 	public double getUserOffer() {
@@ -335,6 +336,8 @@ public class OrderDetails {
 				", \"discount\":" + discount +
 				", \"name\":" + "\""+product.getProductCode() +"\""+
 				", \"scannable\":" + "\""+scannable +"\""+
+                        ", \"giftProduct\":" + "\""+giftProduct +"\""+
+                ", \"position\":" + "\""+position +"\""+
 				", \"sku\":"+"\""+product.getSku()  +"\""+
 				", \"orderKey\":" + "\""+orderKey +"\""+
 				", \"offerCategory\":" + "\""+offerCategory +"\""+

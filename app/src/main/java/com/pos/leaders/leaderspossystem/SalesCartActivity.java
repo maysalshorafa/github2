@@ -1116,9 +1116,19 @@ public class SalesCartActivity extends AppCompatActivity {
                                         if (!(_count.equals("")))
                                             pid = Integer.parseInt(cashETCash.getText().toString());
                                         int indexOfItem = SESSION._ORDER_DETAILES.indexOf(selectedOrderOnCart);
-                                        SESSION._ORDER_DETAILES.get(indexOfItem).setCount(pid);
-                                        orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity() + "");
-                                        orderTotalPrice.setText(selectedOrderOnCart.getPaidAmount() * selectedOrderOnCart.getQuantity() + getString(R.string.ins));
+                                        if( SESSION._ORDER_DETAILES.get(indexOfItem).getProduct().getOfferId()==0) {
+                                            SESSION._ORDER_DETAILES.get(indexOfItem).setCount(pid);
+                                            orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity() + "");
+                                            orderTotalPrice.setText(selectedOrderOnCart.getPaidAmount() * selectedOrderOnCart.getQuantity() + getString(R.string.ins));
+                                        }else {
+                                            for (int i=0;i<pid-1;i++){
+                                                try {
+                                                    addToCart(SESSION._ORDER_DETAILES.get(indexOfItem).getProduct());
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }
                                         calculateTotalPrice();
 
                                         cashDialog.cancel();
@@ -1602,7 +1612,12 @@ public class SalesCartActivity extends AppCompatActivity {
                                             protected void onPostExecute(Void aVoid) {
                                                 try {
                                                     if(invoiceJsonObject.getString("status").equals("200")) {
+                                                        String s =(tvTotalSaved.getText().toString());
 
+                                                        if (s != null && s.length() > 0 && s.charAt(s.length() - 1) == '₪') {
+                                                            s = s.substring(0, s.length() - 1);
+                                                        }
+                                                        SESSION._ORDERS.totalSaved=Double.parseDouble(s);
                                                         print(invoiceImg.Invoice(SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, invoiceNum, customerGeneralLedger));
                                                         clearCart();
 
@@ -2677,7 +2692,7 @@ public class SalesCartActivity extends AppCompatActivity {
             //Log.d("Product", p.toString());
             if(p.getProductId()!=-1){
                 if(p.getUnit().equals(ProductUnit.QUANTITY)){
-                    if (o.getProduct().equals(p) && o.getProduct().getProductId() != -1&&!o.giftProduct&&o.scannable) {
+                    if (o.getProduct().equals(p) && o.getProduct().getProductId() != -1&&!o.giftProduct&&o.scannable&&o.getProduct().getOfferId()==0) {
                 SESSION._ORDER_DETAILES.get(i).setCount(SESSION._ORDER_DETAILES.get(i).getQuantity() + 1);
                 //getOfferCategoryForProduct
                 OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(SalesCartActivity.this);
@@ -2734,8 +2749,15 @@ public class SalesCartActivity extends AppCompatActivity {
 
     private void increaseItemOnCart(int index) {
         OrderDetails orderDetails = SESSION._ORDER_DETAILES.get(index);
-        SESSION._ORDER_DETAILES.get(index).increaseCount();
-
+        if(orderDetails.getProduct().getOfferId()==0) {
+            SESSION._ORDER_DETAILES.get(index).increaseCount();
+        }else {
+            try {
+                addToCart(orderDetails.getProduct());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         if(!orderDetails.scannable||orderDetails.giftProduct)
             restCategoryOffers();
         restCategoryOffers();
@@ -2744,11 +2766,15 @@ public class SalesCartActivity extends AppCompatActivity {
 
     private void decreaseItemOnCart(int index) {
         OrderDetails orderDetails = SESSION._ORDER_DETAILES.get(index);
-        SESSION._ORDER_DETAILES.get(index).decreaseCount();
-
-        if(!orderDetails.scannable||orderDetails.giftProduct)
+        if(orderDetails.getProduct().getOfferId()==0) {
+            SESSION._ORDER_DETAILES.get(index).decreaseCount();
+        }
+        else {
+            removeFromCart(index);
+        }
+       /* if(!orderDetails.scannable||orderDetails.giftProduct)
             restCategoryOffers();
-        restCategoryOffers();
+        restCategoryOffers();*/
         calculateTotalPrice();
     }
 

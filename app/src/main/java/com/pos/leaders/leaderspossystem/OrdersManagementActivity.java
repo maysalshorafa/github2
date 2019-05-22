@@ -105,6 +105,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
     List<Object>list=new ArrayList<Object>();
     Spinner searchSpinner;
     final Calendar myCalendar = Calendar.getInstance();
+    final List<Object>objectList = new ArrayList<Object>();
 
     private final static int DAY_MINUS_ONE_SECOND = 86399999;
     @Override
@@ -137,16 +138,20 @@ public class OrdersManagementActivity extends AppCompatActivity {
         };
         final ArrayList<Integer> idForSearchType = new ArrayList<Integer>();
         final ArrayList<String> hintForSearchType = new ArrayList<String>();
+        hintForSearchType.add(getString(R.string.all));
         hintForSearchType.add(getString(R.string.customer));
         hintForSearchType.add(getString(R.string.sale_id));
         hintForSearchType.add(getString(R.string.date));
         hintForSearchType.add(getString(R.string.price));
         hintForSearchType.add(getString(R.string.type));
+        hintForSearchType.add(getString(R.string.invoice));
         idForSearchType.add(0);
         idForSearchType.add(1);
         idForSearchType.add(2);
         idForSearchType.add(3);
         idForSearchType.add(4);
+        idForSearchType.add(5);
+        idForSearchType.add(6);
 
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, hintForSearchType);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -163,13 +168,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
         paymentDBAdapter = new PaymentDBAdapter(this);
 
         orderDBAdapter.open();
-        StartInvoiceAndCreditInvoiceConnection startInvoiceConnection = new StartInvoiceAndCreditInvoiceConnection();
-        startInvoiceConnection.execute("1");
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         _saleList = orderDBAdapter.lazyLoad(loadItemOffset, countLoad);
 
         orderDBAdapter.close();
@@ -197,10 +196,17 @@ public class OrdersManagementActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvOrders, false);
         lvOrders.addHeaderView(header, null, false);
-        final List<Object>objectList = new ArrayList<Object>();
         objectList.addAll(_saleList);
-        objectList.addAll(invoiceList);
-            adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, objectList);
+        StartInvoiceAndCreditInvoiceConnection startInvoiceConnection = new StartInvoiceAndCreditInvoiceConnection();
+        startInvoiceConnection.execute("1");
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+      objectList.addAll(invoiceList);
+
+        adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, objectList);
 
         lvOrders.setAdapter(adapter);
 
@@ -506,6 +512,14 @@ public class OrdersManagementActivity extends AppCompatActivity {
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
 
            }
+                if(searchSpinner.getSelectedItem().toString().equals(getString(R.string.invoice))){
+                  objectList.addAll(invoiceList);
+                    Log.d("testinvoiceList",invoiceList.toString());
+                    adapter = new SaleManagementListViewAdapter(OrdersManagementActivity.this, R.layout.list_adapter_row_sales_management, objectList);
+
+                    lvOrders.setAdapter(adapter);
+
+                }
             }
 
             @Override
@@ -556,7 +570,10 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             }
                             orderDBAdapter.open();
                             Log.d("teeest",params[0]);
+                            if(type!= getString(R.string.invoice)){
                             filterOrderList = orderDBAdapter.search(params[0], loadItemOffset,countLoad,type);
+                            }
+
                         //    filterBoInvoice = searchInInvoiceList(params[0]);
 
                             return null;
@@ -611,11 +628,17 @@ public class OrdersManagementActivity extends AppCompatActivity {
             protected Void doInBackground(Void... params) {
                 final String type = searchSpinner.getSelectedItem().toString();
                 orderDBAdapter.open();
+
                 if (!searchWord.equals("")) {
-                    _saleList.addAll(orderDBAdapter.search(searchWord, loadItemOffset, countLoad,type));
-                } else {
+
+
+                        _saleList.addAll(orderDBAdapter.search(searchWord, loadItemOffset, countLoad, type));
+                    }
+
+                else {
                     searchWord = "";
                     _saleList.addAll(orderDBAdapter.lazyLoad(loadItemOffset, countLoad));
+
                 }
                 orderDBAdapter.close();
                 return null;
@@ -686,17 +709,20 @@ class StartInvoiceAndCreditInvoiceConnection extends AsyncTask<String,Void,Strin
                 try {
                     JSONArray jsonArray = new JSONArray(msgData);
 
-                    for (int i = 0; i < jsonArray.length() ; i++) {
+                    for (int i = 0; i < jsonArray.length()-1 ; i++) {
                         msgData = jsonArray.getJSONObject(i).toString();
                         JSONObject msgDataJson =new JSONObject(msgData);
-                        Log.d("tttt",msgDataJson.getString("type"));
                         if(msgDataJson.getString("type").equals("INVOICE")){
-                        invoice = new BoInvoice(DocumentType.INVOICE,msgDataJson.getJSONObject("documentsData"),msgDataJson.getString("docNum"));
+                            invoice = new BoInvoice(DocumentType.INVOICE,msgDataJson.getJSONObject("documentsData"),msgDataJson.getString("docNum"));
+                            OrdersManagementActivity.invoiceList.add(invoice);
+
 
                         }else  if(msgDataJson.getString("type").equals("CREDIT_INVOICE")){
                             invoice = new BoInvoice(DocumentType.CREDIT_INVOICE,msgDataJson.getJSONObject("documentsData"),msgDataJson.getString("docNum"));
+                            OrdersManagementActivity.invoiceList.add(invoice);
+
                         }
-                        OrdersManagementActivity.invoiceList.add(invoice);
+
                     }
                     Log.d("objictListTEst",  OrdersManagementActivity.invoiceList.toString()+"");
 

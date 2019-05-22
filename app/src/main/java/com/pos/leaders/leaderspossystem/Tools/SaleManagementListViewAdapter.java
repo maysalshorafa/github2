@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,8 +77,10 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 	//	Order order = (Order)salesList.get(position);
+
 		if(salesList.get(position)instanceof Order){
-		double price;
+
+			double price;
 		Order order = (Order)salesList.get(position);
 		price = order.getTotalPrice();
 		holder.tvID.setText(order.getOrderId() + "");
@@ -120,38 +123,42 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			convertView.setBackground(context.getResources().getDrawable(R.color.sale_bg));
 		}
 		}else {
+			try {
             holder.cancelingOrderId.setText("");
             double price;
-				BoInvoice boInvoice = (BoInvoice)salesList.get(position);;
-				JSONObject doc = boInvoice.getDocumentsData();
-				holder.tvID.setText(boInvoice.getDocNum() );
-				try {
-					if(boInvoice.getType().equals(DocumentType.INVOICE)) {
-						holder.tvStatus.setText("IN");
-					}else {
-						holder.tvStatus.setText("CIN");
-					}
-					price = doc.getDouble("total");
-					holder.tvDiscount.setText(doc.getDouble("cartDiscount")+"");
-					SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-					Date date = DateConverter.stringToDate(doc.getString("date"));
+				Log.d("teeest",position+"  " +salesList.get(position).toString());
+				Log.d("teeest",salesList.get(position).toString());
 
-					holder.tvDate.setText(DateConverter.geDate(date));
-					holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
-					JSONObject customerJson= doc.getJSONObject("customer");
-					holder.tvCustomerName.setText(customerJson.get("firstName")+" "+customerJson.get("lastName"));
-					int count =0;
-					JSONArray jsonArray = doc.getJSONArray("cartDetailsList");
-					for (int c = 0;c<jsonArray.length();c++){
-						JSONObject j = jsonArray.getJSONObject(c);
-						count+=j.getInt("quantity");
-					}
-				//	holder.tvNumberOfItems.setText(count+"");
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				holder.FL.setVisibility(View.GONE);
+				BoInvoice boInvoice = (BoInvoice)salesList.get(position);;
+		JSONObject doc = boInvoice.getDocumentsData();
+		holder.tvID.setText(boInvoice.getDocNum() );
+
+			if(boInvoice.getType().equals(DocumentType.INVOICE)) {
+				holder.tvStatus.setText("IN");
+			}else {
+				holder.tvStatus.setText("CIN");
+			}
+			price = doc.getDouble("total");
+			holder.tvDiscount.setText(doc.getDouble("cartDiscount")+"");
+			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+			Date date = DateConverter.stringToDate(doc.getString("date"));
+
+			holder.tvDate.setText(DateConverter.geDate(date));
+			holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
+			JSONObject customerJson= doc.getJSONObject("customer");
+			holder.tvCustomerName.setText(customerJson.get("firstName")+" "+customerJson.get("lastName"));
+			int count =0;
+			JSONArray jsonArray = doc.getJSONArray("cartDetailsList");
+			for (int c = 0;c<jsonArray.length();c++){
+				JSONObject j = jsonArray.getJSONObject(c);
+				count+=j.getInt("quantity");
+			}
+			//	holder.tvNumberOfItems.setText(count+"");
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
+		holder.FL.setVisibility(View.GONE);
+	}
 
 		return convertView;
 	}

@@ -502,9 +502,9 @@ public class DocumentControl {
                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
                                 posInvoiceDBAdapter.open();
                                 if(paymentWays.equals(CASH)) {
-                                    posInvoiceDBAdapter.insertEntry(Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))),-1,DocumentType.RECEIPT.getValue(),"",invoiceNum,CONSTANT.CASH);
+                                    posInvoiceDBAdapter.insertEntry(totalPaid,-1,DocumentType.RECEIPT.getValue(),"",invoiceNum,CONSTANT.CASH);
                                 }else {
-                                    posInvoiceDBAdapter.insertEntry(Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))),-1,DocumentType.RECEIPT.getValue(),"",invoiceNum,CONSTANT.CHECKS);
+                                    posInvoiceDBAdapter.insertEntry(totalPaid,-1,DocumentType.RECEIPT.getValue(),"",invoiceNum,CONSTANT.CHECKS);
 
                                 }
                                 e.printStackTrace();

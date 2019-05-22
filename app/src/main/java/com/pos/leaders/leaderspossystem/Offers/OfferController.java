@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 
@@ -492,10 +493,11 @@ public class OfferController {
     public static OrderDetails execute(Offer offer, OrderDetails orderDetails, Context context, List<OrderDetails>orderDetailsList) throws JSONException {
         List<OrderDetails>newOrderDetails=new ArrayList<>();
         List<Integer>newOrderDetailsPosition=new ArrayList<>();
+        int qty =0;
 
-        int qty =orderDetails.getQuantity();
         for(int i=0;i<orderDetailsList.size();i++){
-            if(String.valueOf(orderDetails.getProduct().getOfferId()).equals(String.valueOf(orderDetailsList.get(i).getProduct().getOfferId()))&&orderDetails.getProduct().getProductId()!=orderDetailsList.get(i).getProduct().getProductId()){
+            if(String.valueOf(orderDetails.getProduct().getOfferId()).equals(String.valueOf(orderDetailsList.get(i).getProduct().getOfferId()))){
+                orderDetailsList.get(i).position=i;
                 newOrderDetails.add(orderDetailsList.get(i));
                 qty+=orderDetailsList.get(i).getQuantity();
                 newOrderDetailsPosition.add(i);
@@ -511,24 +513,186 @@ public class OfferController {
         JSONObject rules = offer.getDataAsJsonObject().getJSONObject(Rules.RULES.getValue());
         String actionName = action.getString(Action.NAME.getValue());
         int quantity = rules.getInt(Rules.quantity.getValue());
+
         orderDetails.offer = offer;
         if (actionName.equalsIgnoreCase(Action.GET_GIFT_PRODUCT.getValue())) {
+            orderDetails.setDiscount(0);
+            int giftOfferCount= (int) action.getDouble(Action.VALUE.getValue());
+
+            if (qty >= quantity+giftOfferCount) {
+                int productGroup = qty / (quantity+giftOfferCount);
+                Log.d("newOrderDetails",""+productGroup+" "+qty+" "+giftOfferCount);
+
+                Collections.sort(newOrderDetails, new Comparator<OrderDetails>() {
+                    @Override
+                    public int compare(OrderDetails t1, OrderDetails t2) {
+                        return Double.compare(t1.getUnitPrice(), t2.getUnitPrice());
+                    }
+                });
+                for(int a=0;a<SESSION._ORDER_DETAILES.size();a++){
+                    if(SESSION._ORDER_DETAILES.get(a).getDiscount()==100&&SESSION._ORDER_DETAILES.get(a).getProduct().getOfferId()==offer.getOfferId()){
+                        SESSION._ORDER_DETAILES.get(a).setDiscount(0);
+                    }
+                }
+                if(productGroup>1){
+                    if(giftOfferCount==1){
+                for(int i=0;i<productGroup;i++){
+                    SESSION._ORDER_DETAILES.get(newOrderDetails.get(i).position).setDiscount(100);
+                    SESSION._ORDER_DETAILES.get(newOrderDetails.get(i).position).setOfferId(offer.getOfferId());
+
+                }}else {
+                        for(int i=0;i<productGroup*giftOfferCount;i++){
+                            SESSION._ORDER_DETAILES.get(newOrderDetails.get(i).position).setDiscount(100);
+                            SESSION._ORDER_DETAILES.get(newOrderDetails.get(i).position).setOfferId(offer.getOfferId());
+
+                        }
+                    }
+                }else {
+                    Log.d("newOrderDetails",newOrderDetails.toString()+""+productGroup);
+
+                    for(int i=0;i<giftOfferCount;i++){
+                        SESSION._ORDER_DETAILES.get(newOrderDetails.get(i).position).setDiscount(100);
+                        SESSION._ORDER_DETAILES.get(newOrderDetails.get(i).position).setOfferId(offer.getOfferId());
+
+                    }
+                }
+
+            }
+            /**
                 if (qty >= quantity+1) {
-                    int productGroup =qty / (quantity + 1);
+                    if(newOrderDetails.size()==0){
 
+                    int productGroup = (int) (qty / (quantity + action.getDouble(Action.VALUE.getValue())));
+                        int x= (int) action.getDouble(Action.VALUE.getValue());
+                        if(productGroup<1){
+                            productGroup=1;
+                            x= (int) (x-((quantity + action.getDouble(Action.VALUE.getValue()))-qty));
+                            Log.d("xxx",x+"");
+                        }
                     double totalPriceBeforeDiscount = orderDetails.getQuantity() * orderDetails.getUnitPrice();
-                    double discount = (1 - (((orderDetails.getQuantity() - productGroup) * orderDetails.getUnitPrice()) / totalPriceBeforeDiscount)) * 100;
-
+                    double discount = (1 - (((orderDetails.getQuantity() - productGroup*x) * orderDetails.getUnitPrice()) / totalPriceBeforeDiscount)) * 100;
                     orderDetails.setDiscount(discount);
+
                     orderDetails.setOfferId(offer.getOfferId());
+                    }else {
+                        int x= (int) action.getDouble(Action.VALUE.getValue());
+
+                        Log.d("newOrderDetails",newOrderDetails.toString());
+
+
+
+                        int productGroup = (int) (qty / (quantity + x));
+                        if(productGroup<1){
+                            productGroup=1;
+                            x= (int) (x-((quantity + action.getDouble(Action.VALUE.getValue()))-qty));
+                            Log.d("xxx",x+"");
+                        }
+                        double totalSum=0;
+                        for(int i=0;i<newOrderDetails.size();i++){
+                            totalSum+=(newOrderDetails.get(i).getUnitPrice() * newOrderDetails.get(i).getQuantity());
+
+                        }
+                        totalSum+=orderDetails.getUnitPrice()*orderDetails.getQuantity();
+                        Log.d("totalSum",totalSum+"");
+                        newOrderDetails.add(orderDetails);
+                        Collections.sort(newOrderDetails, new Comparator<OrderDetails>() {
+                            @Override
+                            public int compare(OrderDetails t1, OrderDetails t2) {
+                                return Double.compare(t1.getUnitPrice(), t2.getUnitPrice());
+                            }
+                        });
+                        Log.d("newOrderDetails",newOrderDetails.toString()+"");
+
+                        double giftPrice=0;
+                        List<OrderDetails>newList=new ArrayList<>();
+                        int giftCount=0;
+                        for(int i=0;i<x;i++){
+                            if(giftCount==x){
+                                break;
+                            }
+                            if(newOrderDetails.get(i).getQuantity()>=x){
+                              //  newOrderDetails.get(i).setQuantity();)
+                                newList.add(newOrderDetails.get(i));
+                                giftPrice+=newOrderDetails.get(i).getUnitPrice()*(x-giftCount);
+                                giftCount+=newOrderDetails.get(i).getQuantity();
+
+                                break;
+                            }else {
+                                newList.add(newOrderDetails.get(i));
+                                giftPrice+=newOrderDetails.get(i).getUnitPrice()*(newOrderDetails.get(i).getQuantity());
+                                giftCount+=newOrderDetails.get(i).getQuantity();
+
+                            }
+
+                        }
+                        Log.d("newList",newList.toString()+"");
+                        Log.d("newListPrice",giftPrice+"  "+"giftCount: "+giftCount);
+                      double discount=0;
+                        int countGift= (int)x;
+                        for (int b=0;b<newList.size();b++){
+                        for(int a= 0;a<SESSION._ORDER_DETAILES.size();a++){
+
+                                Log.d("orderDetaiels",SESSION._ORDER_DETAILES.get(a).toString()+"");
+                                Log.d("neworderDetaielsmmmm",newOrderDetails.get(b).toString().toString()+"");
+
+                                if(countGift==0){
+                                    break;
+                                }
+                                else{
+                                    if(newList.get(b).getQuantity()>x){
+                                        Log.d("countGiftdddd",countGift+"");
+
+                                        if(countGift<x){
+                                        discount= (1 - (((newList.get(b).getQuantity() - productGroup * countGift) * newList.get(b).getUnitPrice()) / (newList.get(b).getQuantity()*newList.get(b).getUnitPrice()))) * 100;
+                                        // double discount =((totalSum- giftPrice) / totalSum) * 100;
+                                        Log.d("discount", discount + " " + "total Sum" + totalSum);
+                                        if(SESSION._ORDER_DETAILES.get(a).getProduct().getProductId()==newList.get(b).getProductId()) {
+                                            SESSION._ORDER_DETAILES.get(a).setDiscount(discount);
+                                            SESSION._ORDER_DETAILES.get(a).setOfferId(offer.getOfferId());
+                                            --countGift;
+
+                                        }
+
+                                    }else {
+                                    discount= (1 - (((newList.get(b).getQuantity() - productGroup *x) * newList.get(b).getUnitPrice()) / (newList.get(b).getQuantity()*newList.get(b).getUnitPrice()))) * 100;
+
+                                    // double discount =((totalSum- giftPrice) / totalSum) * 100;
+                                //    Log.d("discount", discount + " " + "total Sum" + totalSum);
+                                    if(SESSION._ORDER_DETAILES.get(a).getProduct().getProductId()==newList.get(b).getProductId()) {
+                                        SESSION._ORDER_DETAILES.get(a).setDiscount(discount);
+                                        SESSION._ORDER_DETAILES.get(a).setOfferId(offer.getOfferId());
+                                    }
+                                }
+                                }else if(newList.get(b).getQuantity()<x) {
+                                    discount = (1 - (((newList.get(b).getQuantity() ) * newList.get(b).getUnitPrice()) / (newList.get(b).getQuantity()*newList.get(b).getUnitPrice()))) * 100;
+                                    if(SESSION._ORDER_DETAILES.get(a).getProduct().getProductId()==newList.get(b).getProductId()){
+                                        SESSION._ORDER_DETAILES.get(a).setDiscount(100);
+                                        SESSION._ORDER_DETAILES.get(a).setOfferId(offer.getOfferId());
+                                      countGift--;
+                                        Log.d("discount", 100 + " " + "total Sum" + totalSum+" "+countGift);
+                                    }
+                                }else  if(newList.get(b).getQuantity()==x)
+                                    {
+                                     discount = (1 - (((newList.get(b).getQuantity() - productGroup * x) * newList.get(b).getUnitPrice()) / totalSum)) * 100;
+                                    if(SESSION._ORDER_DETAILES.get(a).getProduct().getProductId()==newList.get(b).getProductId()){
+                                        SESSION._ORDER_DETAILES.get(a).setDiscount(discount);
+                                        SESSION._ORDER_DETAILES.get(a).setOfferId(offer.getOfferId());
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    }
+
                 } else {
                     orderDetails.setDiscount(0);
                     orderDetails.offer = null;
-                }
+                }**/
             } else if (actionName.equalsIgnoreCase(Action.PRICE_FOR_PRODUCT.getValue())) {
                 double value = action.getDouble(Action.VALUE.getValue());
                 orderDetails.setDiscount(0);
-
+                Log.d("testQty",qty+"  "+quantity);
             if (qty >= quantity) {
                     int productGroup = qty / quantity;
                     int productCountWithOutProductIntoOffer = qty - (productGroup * quantity);
@@ -542,12 +706,13 @@ public class OfferController {
 
                 }
                 else {
+                    Log.d("newOrderDetails",newOrderDetails.toString());
                     double totalSum=0;
                     for(int i=0;i<newOrderDetails.size();i++){
                         totalSum+=(newOrderDetails.get(i).getUnitPrice() * newOrderDetails.get(i).getQuantity());
 
                     }
-                    totalSum+=orderDetails.getUnitPrice()*orderDetails.getQuantity();
+                   // totalSum+=orderDetails.getUnitPrice()*orderDetails.getQuantity();
                     discount = (1 -
                             (((productGroup * value) + (productCountWithOutProductIntoOffer * orderDetails.getUnitPrice()))
                                     / totalSum)) * 100;
@@ -603,5 +768,23 @@ public class OfferController {
             }
 
         return orderDetails;
+    }
+    public static <T extends Comparable<T>> int findMinIndex(final List<T> xs) {
+        int minIndex;
+        if (xs.isEmpty()) {
+            minIndex = -1;
+        } else {
+            final ListIterator<T> itr = xs.listIterator();
+            T min = itr.next(); // first element as the current minimum
+            minIndex = itr.previousIndex();
+            while (itr.hasNext()) {
+                final T curr = itr.next();
+                if (curr.compareTo(min) < 0) {
+                    min = curr;
+                    minIndex = itr.previousIndex();
+                }
+            }
+        }
+        return minIndex;
     }
 }

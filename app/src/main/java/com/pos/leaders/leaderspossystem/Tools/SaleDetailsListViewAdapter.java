@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.R;
 
@@ -140,7 +142,10 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
                         }
                     }
                     if(status){
-                        offerNames.add(orderList.get(position).getOffer().getName() + " _ " + action.getString("name"));
+                        OfferDBAdapter offerDBAdapter = new OfferDBAdapter(context);
+                        offerDBAdapter.open();
+                        Offer offer = offerDBAdapter.getOfferById(orderList.get(position).getProduct().getOfferId());
+                        offerNames.add(offer.getName() + " _ " + offer.getActionName());
                         offerDiscount.add(orderList.get(position).getDiscount());
                     }
                     holder.tvOriginalPrice.setText(Util.makePrice(orderList.get(position).getUnitPrice() * orderList.get(position).getQuantity()));
@@ -160,14 +165,12 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
             @Override
             public void onClick(View v) {
                 a=1;
-                String offersName = "";
-                for (int i=0; i<offerNames.size();i++){
-                    offersName+=a+" ) "+(offerNames.get(i) +"  "+Util.makePrice(offerDiscount.get(i)) + " %" + "\n");
-                    a=a+1;
-                }
+                OfferDBAdapter offerDBAdapter = new OfferDBAdapter(context);
+                offerDBAdapter.open();
+                Offer offer = offerDBAdapter.getOfferById(orderList.get(position).getProduct().getOfferId());
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(finalConvertView.getRootView().getContext());
                 alertDialogBuilder .setTitle(getContext().getString(R.string.offer_name));
-                alertDialogBuilder.setMessage(offersName);
+                alertDialogBuilder.setMessage(offer.getName());
                 alertDialogBuilder.setPositiveButton("Ok",
                         new DialogInterface.OnClickListener() {
 

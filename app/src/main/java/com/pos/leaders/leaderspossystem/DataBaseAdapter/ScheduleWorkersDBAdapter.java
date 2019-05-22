@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.Models.BoScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -63,12 +64,13 @@ public class ScheduleWorkersDBAdapter {
     //insert region
     // normal insert region with start time
     public long insertEntry(long userId) {
-        ScheduleWorkers scheduleWorkers = new ScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(),  new Date().getTime(),new Date().getTime());
-        sendToBroker(MessageType.ADD_SCHEDULE_WORKERS, scheduleWorkers, this.context);
+        ScheduleWorkers scheduleWorkers = new ScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(),  new Date().getTime(),0);
+            BoScheduleWorkers boScheduleWorkers =new BoScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(),  new Date().getTime());
+        sendToBroker(MessageType.ADD_SCHEDULE_WORKERS, boScheduleWorkers, this.context);
         try {
             return insertEntry(scheduleWorkers);
         } catch (SQLException ex) {
-            Log.e(SCHEDULEWORKERS_TABLE_NAME, "inserting Entry at " + SCHEDULEWORKERS_TABLE_NAME + ": " + ex.getMessage());
+            Log.e(SCHEDULEWORKERS_TABLE_NAME +" DB insert", "inserting Entry at " + SCHEDULEWORKERS_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
 
@@ -76,12 +78,13 @@ public class ScheduleWorkersDBAdapter {
     // end
     // insert exit time and last row have start and exit time first step insert new row with exit time then send it
     public long insertEntryExitTime(long userId) {
-        ScheduleWorkers scheduleWorkers = new ScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(), new Date().getTime(),new Date().getTime());
-        sendToBroker(MessageType.ADD_SCHEDULE_WORKERS, scheduleWorkers, this.context);
+        ScheduleWorkers scheduleWorkers = new ScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(),  0,new Date().getTime());
+        BoScheduleWorkers boScheduleWorkers =new BoScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(),  new Date().getTime());
+        sendToBroker(MessageType.ADD_SCHEDULE_WORKERS, boScheduleWorkers, this.context);
         try {
             return insertEntry(scheduleWorkers);
         } catch (SQLException ex) {
-            Log.e(SCHEDULEWORKERS_TABLE_NAME , "inserting Entry at " + SCHEDULEWORKERS_TABLE_NAME + ": " + ex.getMessage());
+            Log.e(SCHEDULEWORKERS_TABLE_NAME +" DB insert", "inserting Entry at " + SCHEDULEWORKERS_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
 
@@ -190,7 +193,7 @@ public class ScheduleWorkersDBAdapter {
         List<ScheduleWorkers> scheduleWorkersList=getAllScheduleWorkers();
         for (ScheduleWorkers item:scheduleWorkersList) {
             if(item.getUserId()==userId && item.getExitTime()<=to.getTime() )
-				userScheduleWorkerstList.add(item);
+                userScheduleWorkerstList.add(item);
         }
         return userScheduleWorkerstList;
     }
@@ -216,7 +219,7 @@ public class ScheduleWorkersDBAdapter {
         }
         return scheduleWorkers;
     }
-//get last row in table
+    //get last row in table
     public ScheduleWorkers getLastScheduleWorkersByUserID(long userId) {
         ScheduleWorkers scheduleWorkers=null;
         Cursor cursor =  db.rawQuery( "select * from "+SCHEDULEWORKERS_TABLE_NAME +" where "+SCHEDULEWORKERS_COLUMN_USERID+" = "+ userId+ " order by id desc", null );
@@ -228,10 +231,10 @@ public class ScheduleWorkersDBAdapter {
         }
         cursor.moveToFirst();
         scheduleWorkers=  new ScheduleWorkers(Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_ID))),
-                    Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_USERID))),
-                    cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_DATE)),
-                    cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_STARTTIME)),
-                    cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_EXITTIME)));
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_USERID))),
+                cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_DATE)),
+                cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_STARTTIME)),
+                cursor.getLong(cursor.getColumnIndex(SCHEDULEWORKERS_COLUMN_EXITTIME)));
 
         cursor.close();
         return scheduleWorkers;
