@@ -419,9 +419,9 @@ public class CategoryOfferActivity extends AppCompatActivity {
         gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                productName.setText("");
                 flagProduct=false;
-                product=filter_productList.get(position);
+                product=final_filter_productList.get(position);
+                Log.d("testProduct",final_filter_productList.toString());
                 for(int i=0;i<productList.size();i++){
                     if(product.getProductId()==productList.get(i).getProductId()){
                         flagProduct=true;
@@ -435,6 +435,8 @@ public class CategoryOfferActivity extends AppCompatActivity {
                  filterCategoryOfferProductDialog = new FilterCategoryOfferProductDialog(CategoryOfferActivity.this,R.layout.grid_view_filter_category_offer_product,productListName);
                 gvFilterProduct.setVisibility(View.VISIBLE);
                 gvFilterProduct.setAdapter(filterCategoryOfferProductDialog);
+                  productName.setText("");
+
             }
         });
         gvFilterProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {

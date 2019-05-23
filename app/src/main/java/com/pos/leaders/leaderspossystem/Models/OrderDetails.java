@@ -49,7 +49,6 @@ public class OrderDetails {
 
 	@JsonIgnore
 	private int objectID = 0;
-    private double priceAfterOffer;
     private long offerId;
 
 	@JsonIgnore
@@ -97,7 +96,7 @@ public class OrderDetails {
 		initObjectID();
 	}
 
-	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id , String key,double priceAfterOffer , long offerId) {
+	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id , String key , long offerId) {
 		this.orderDetailsId = orderDetailsId;
 		this.productId = productId;
 		this.quantity = quantity;
@@ -108,7 +107,6 @@ public class OrderDetails {
 		this.discount = discount;
 		this.customer_assistance_id = customer_assistance_id;
 		this.orderKey =key;
-        this.priceAfterOffer=priceAfterOffer;
         this.offerId=offerId;
 		initObjectID();
 	}
@@ -155,7 +153,7 @@ public class OrderDetails {
 	}
 
 	public OrderDetails(OrderDetails o) {
-		this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id(),o.getOrderKey(),o.getPriceAfterOffer(),o.getOfferId());
+		this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id(),o.getOrderKey(),o.getOfferId());
 		this.product = o.getProduct();
 	}
 
@@ -170,14 +168,6 @@ public class OrderDetails {
 
 	//region Getters
 
-
-    public double getPriceAfterOffer() {
-        return priceAfterOffer;
-    }
-
-    public void setPriceAfterOffer(double priceAfterOffer) {
-        this.priceAfterOffer = priceAfterOffer;
-    }
 
     public long getOfferId() {
         return offerId;

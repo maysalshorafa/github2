@@ -91,8 +91,8 @@ public class OrderDetailsDBAdapter {
         }
 	}
 
-	public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID , String orderDetailsKey,double priceAfterProduct,long offerId) {
-		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey,priceAfterProduct,offerId);
+	public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID , String orderDetailsKey,long offerId) {
+		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey,offerId);
 		sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
 
 		try {
@@ -103,8 +103,8 @@ public class OrderDetailsDBAdapter {
 			return 0;
 		}
 	}
-	public long insertEntryFromInvoice(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID  , String orderDetailsKey,double priceAfterProduct,long offerId) {
-		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey,priceAfterProduct,offerId);
+	public long insertEntryFromInvoice(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID  , String orderDetailsKey,long offerId) {
+		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey,offerId);
 		// sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
 
 		try {
@@ -153,7 +153,6 @@ public class OrderDetailsDBAdapter {
 				cursor.getDouble(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_DISCOUNT)),
 				cursor.getLong(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID)),
 				cursor.getString(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_KEY)),
-				Double.parseDouble(cursor.getString(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_PRICE_AFTER_DISCOUNT))),
 				Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_ORDER_ID))));
 	}
 	public static String addColumnReal(String columnName) {

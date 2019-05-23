@@ -287,7 +287,7 @@ public class OrderDBAdapter {
 					hint + "%' "+" and " +" id like '%"+SESSION.POS_ID_NUMBER+"%'"+
 					" order by id desc limit " + from + "," + count, null);
 		}else if(type.equals(context.getString(R.string.all))){
-			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_ID + " like '% "+" and " +" id like '%"+SESSION.POS_ID_NUMBER+"%"+
+			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " +" id like '%"+SESSION.POS_ID_NUMBER+"%'"+
 					" order by id desc limit " + from + "," + count, null);
 		}
 
