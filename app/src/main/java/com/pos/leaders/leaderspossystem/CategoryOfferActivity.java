@@ -379,6 +379,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
         final_filter_productList =new ArrayList<>();
         filter_productList=new ArrayList<>();
         productListName=new ArrayList<>();
+        productList=new ArrayList<>();
         final Dialog addProductFromProductDialog = new Dialog(CategoryOfferActivity.this);
         addProductFromProductDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         addProductFromProductDialog.show();
@@ -419,9 +420,15 @@ public class CategoryOfferActivity extends AppCompatActivity {
         gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                Log.d("testProduct",productList.toString());
                 flagProduct=false;
+                if(final_filter_productList.size()>0){
                 product=final_filter_productList.get(position);
-                Log.d("testProduct",final_filter_productList.toString());
+                }
+                else {
+                    product=filter_productList.get(position);
+
+                }
                 for(int i=0;i<productList.size();i++){
                     if(product.getProductId()==productList.get(i).getProductId()){
                         flagProduct=true;
