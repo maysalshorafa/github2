@@ -460,9 +460,10 @@ public class Arkom {
         String last4Digits = creditCardNumber.substring(creditCardNumber.length() - 4, creditCardNumber.length());
         double fixedPayment=transSum/numOfFixedPayments;
         try {
+            double firstPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", transSum - (fixedPayment * (numOfFixedPayments - 1))));
             SoapObject soapObject = Arkom.CCTransaction(SETTINGS.ccNumber, SETTINGS.ccPassword, TransactionID,
                     creditCardNumber, cardExpiry, transSum, 0, last4Digits, cvv2,
-                    idNumber, 1, "ILS", CreditType, approvalCode, fixedPayment,
+                    idNumber, 1, "ILS", CreditType, approvalCode, firstPayment,
                     fixedPayment, numOfFixedPayments, "", 0, "", "", "");
             PutTransactionAcknowledge(SETTINGS.ccNumber, SETTINGS.ccPassword, TransactionID);
             return soapObject;

@@ -121,7 +121,7 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
             finish();
         }
 
-        calcTotalInserted();
+        calcTotalInserted(false);
 
 
         btnDone.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +140,12 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
                 }
                 setResult(RESULT_OK, i);
                 finish();
+            }
+        });
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               calcTotalInserted(true);
             }
         });
     }
@@ -197,7 +203,7 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
                 incDecOnView(tvC1000, inc);
                 break;
         }
-        calcTotalInserted();
+        calcTotalInserted(false);
     }
 
     private void incDecOnView(TextView tv, boolean inc) {
@@ -214,7 +220,7 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
         }
     }
 
-    private void calcTotalInserted() {
+    private void calcTotalInserted(boolean onClick) {
         totalPid = 0;
         totalPid += (Integer.parseInt(tvB20.getText().toString()) * 20.0);
         totalPid += (Integer.parseInt(tvB50.getText().toString()) * 50.0);
@@ -226,6 +232,11 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
         totalPid += (Integer.parseInt(tvC200.getText().toString()) * 2.0);
         totalPid += (Integer.parseInt(tvC500.getText().toString()) * 5.0);
         totalPid += (Integer.parseInt(tvC1000.getText().toString()) * 10.0);
+        if(onClick){
+            totalPid+=totalPrice;
+            deltaPrice = (float) (totalPid - (float) totalPrice);
+            btnDone.performClick();
+        }
         tvTotalInserted.setText(totalPid + " " + getResources().getText(R.string.ins));
 
         deltaPrice = (float) (totalPid - (float) totalPrice);

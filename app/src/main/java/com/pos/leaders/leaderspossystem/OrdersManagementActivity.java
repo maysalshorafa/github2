@@ -105,7 +105,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
     List<Object>list=new ArrayList<Object>();
     Spinner searchSpinner;
     final Calendar myCalendar = Calendar.getInstance();
-    final List<Object>objectList = new ArrayList<Object>();
+    List<Object>objectList = new ArrayList<Object>();
 
     private final static int DAY_MINUS_ONE_SECOND = 86399999;
     @Override
@@ -197,15 +197,6 @@ public class OrdersManagementActivity extends AppCompatActivity {
         ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvOrders, false);
         lvOrders.addHeaderView(header, null, false);
         objectList.addAll(_saleList);
-        StartInvoiceAndCreditInvoiceConnection startInvoiceConnection = new StartInvoiceAndCreditInvoiceConnection();
-        startInvoiceConnection.execute("1");
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-      objectList.addAll(invoiceList);
-
         adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, objectList);
 
         lvOrders.setAdapter(adapter);
@@ -224,7 +215,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     userScrolled = false;
                     loadItemOffset+=countLoad;
                     LoadMore();
-                    Log.i("loadmore", "load");
+                    Log.i("loadmore",loadItemOffset+"");
                 }
             }
         });
@@ -234,205 +225,213 @@ public class OrdersManagementActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 Log.d("testInvoice",objectList.get(position-1).toString()+"");
                 if(objectList.get(position-1) instanceof  Order){
-                final Order sale = (Order) objectList.get(position-1);
+                    final Order sale = (Order) objectList.get(position-1);
                     CustomerDBAdapter customerDBAdapter = new CustomerDBAdapter(OrdersManagementActivity.this);
                     customerDBAdapter.open();
-                    Customer customer =customerDBAdapter.getCustomerByID(sale.getCustomerId());
+                    Customer customer=null;
+                    if(sale.getCustomerId()==0){
+                        customer= customerDBAdapter.getCustomerByName("guest");
+                    }else {
+                        customer =customerDBAdapter.getCustomerByID(sale.getCustomerId());
+                    }
                     sale.setCustomer(customer);
                     OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(OrdersManagementActivity.this);
-                orderDBAdapter.open();
-                orders = orderDBAdapter.getOrderBySaleID(sale.getOrderId());
-                orderDBAdapter.close();
-                ProductDBAdapter productDBAdapter = new ProductDBAdapter(OrdersManagementActivity.this);
-                productDBAdapter.open();
-                for (OrderDetails o : orders) {
-                    if (o.getProductId() != -1) {
-                        o.setProduct(productDBAdapter.getProductByID(o.getProductId()));
-                    } else {
-                        o.setProduct(new Product(-1, getApplicationContext().getResources().getString(R.string.general),getApplicationContext().getResources().getString(R.string.general), o.getUnitPrice(), SESSION._EMPLOYEE.getEmployeeId()));
-                    }
-                }
-                productDBAdapter.close();
-
-                PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(OrdersManagementActivity.this);
-                paymentDBAdapter.open();
-                final List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(sale.getOrderId());
-
-                sale.setPayment(payments.get(0));
-
-                paymentDBAdapter.close();
-
-                checks = new ArrayList<Check>();
-
-                for (Payment p : payments) {
-                    switch (p.getPaymentWay()) {
-                        case CONSTANT.CHECKS:
-                            ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(OrdersManagementActivity.this);
-                            checksDBAdapter.open();
-                            checks.addAll(checksDBAdapter.getPaymentBySaleID(sale.getOrderId()));
-                            checksDBAdapter.close();
-                            break;
-                        case CONSTANT.CASH:
-                            break;
-                        case CONSTANT.CREDIT_CARD:
-                            break;
-                    }
-                }
-                LinearLayout fr = (LinearLayout) view.findViewById(R.id.listSaleManagement_FLMore);
-                if (previousView == null) {
-                    fr.setVisibility(View.VISIBLE);
-                    previousView = view;
-                } else {
-                    fr.setVisibility(View.VISIBLE);
-                    previousView.findViewById(R.id.listSaleManagement_FLMore).setVisibility(View.GONE);
-                    previousView.setBackgroundColor(getResources().getColor(R.color.transparent));
-                    previousView = view;
-                }
-                final InvoiceImg invoiceImg = new InvoiceImg(OrdersManagementActivity.this);
-
-
-                sale.setOrders(orders);
-                sale.setUser(SESSION._EMPLOYEE);
-                //region Print Button
-                final Button print = (Button) view.findViewById(R.id.listSaleManagement_BTView);
-                print.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //send customerName copy from the in voice
-                        new AlertDialog.Builder(OrdersManagementActivity.this)
-                                .setTitle(getString(R.string.copyinvoice))
-                                .setMessage(getString(R.string.print_copy_invoice))
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        if (checks.size() > 0){
-                                            try {
-                                                Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                                                SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, checks);
-                                                startActivity(i);
-                                            }catch (Exception e){
-                                                Log.d("exception",sale.toString());
-
-                                                Log.d("exception",sale.toString());
-                                                sendLogFile();
-
-                                            }
-
-                                            // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._EMPLOYEE, checks));
-                                        }
-                                        else{
-                                            try {
-                                                Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                                                SETTINGS.copyInvoiceBitMap =invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, null);
-                                                startActivity(i);
-                                            }catch (Exception e){
-                                                Log.d("exception",sale.toString());
-                                                Log.d("exception",e.toString());
-                                                sendLogFile();
-                                            }
-
-                                         // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._EMPLOYEE, null));
-
-                                        }
-                                    }
-                                })
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // do nothing
-                                    }
-                                })
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
-                    }
-                });
-                //endregion Print Button
-
-                //region Replacement Note Button
-
-                Button btnRN = (Button) view.findViewById(R.id.listSaleManagement_BTReturn);
-                btnRN.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
-                        saleDBAdapter.open();
-                        sale.setReplacementNote(sale.getReplacementNote() + 1);
-                        saleDBAdapter.updateEntry(sale);
-                        saleDBAdapter.close();
-                        try {
-                            Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                            SETTINGS.copyInvoiceBitMap =invoiceImg.replacmentNote(sale,false);
-                            startActivity(i);
-                        }catch (Exception e){
-                            Log.d("exception",sale.toString());
-                            Log.d("exception",e.toString());
-                            sendLogFile();
+                    orderDBAdapter.open();
+                    orders = orderDBAdapter.getOrderBySaleID(sale.getOrderId());
+                    orderDBAdapter.close();
+                    ProductDBAdapter productDBAdapter = new ProductDBAdapter(OrdersManagementActivity.this);
+                    productDBAdapter.open();
+                    for (OrderDetails o : orders) {
+                        if (o.getProductId() != -1) {
+                            o.setProduct(productDBAdapter.getProductByID(o.getProductId()));
+                        } else {
+                            o.setProduct(new Product(-1, getApplicationContext().getResources().getString(R.string.general),getApplicationContext().getResources().getString(R.string.general), o.getUnitPrice(), SESSION._EMPLOYEE.getEmployeeId()));
                         }
                     }
-                });
-                //endregion Replacement Note Button
+                    productDBAdapter.close();
 
-                //region Cancellation ORDER Button
+                    PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(OrdersManagementActivity.this);
+                    paymentDBAdapter.open();
+                    final List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(sale.getOrderId());
 
-                Button btnCan = (Button) view.findViewById(R.id.listSaleManagement_BTCancel);
+
+                    sale.setPayment(payments.get(0));
+
+                    paymentDBAdapter.close();
+
+                    checks = new ArrayList<Check>();
+
+                    for (Payment p : payments) {
+                        switch (p.getPaymentWay()) {
+                            case CONSTANT.CHECKS:
+                                ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(OrdersManagementActivity.this);
+                                checksDBAdapter.open();
+                                checks.addAll(checksDBAdapter.getPaymentBySaleID(sale.getOrderId()));
+                                checksDBAdapter.close();
+                                break;
+                            case CONSTANT.CASH:
+                                break;
+                            case CONSTANT.CREDIT_CARD:
+                                break;
+                        }
+                    }
+                    LinearLayout fr = (LinearLayout) view.findViewById(R.id.listSaleManagement_FLMore);
+                    if (previousView == null) {
+                        fr.setVisibility(View.VISIBLE);
+                        previousView = view;
+                    } else {
+                        fr.setVisibility(View.VISIBLE);
+                        previousView.findViewById(R.id.listSaleManagement_FLMore).setVisibility(View.GONE);
+                        previousView.setBackgroundColor(getResources().getColor(R.color.transparent));
+                        previousView = view;
+                    }
+                    final InvoiceImg invoiceImg = new InvoiceImg(OrdersManagementActivity.this);
+
+
+                    sale.setOrders(orders);
+                    sale.setUser(SESSION._EMPLOYEE);
+                    //region Print Button
+                    final Button print = (Button) view.findViewById(R.id.listSaleManagement_BTView);
+                    print.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //send customerName copy from the in voice
+                            new AlertDialog.Builder(OrdersManagementActivity.this)
+                                    .setTitle(getString(R.string.copyinvoice))
+                                    .setMessage(getString(R.string.print_copy_invoice))
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            if (checks.size() > 0){
+                                                try {
+                                                    Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                                    SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, checks);
+                                                    startActivity(i);
+                                                }catch (Exception e){
+                                                    Log.d("exception",sale.toString());
+
+                                                    Log.d("exception",sale.toString());
+                                                    sendLogFile();
+
+                                                }
+
+                                                // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._EMPLOYEE, checks));
+                                            }
+                                            else{
+                                                try {
+                                                    Customer customer1 =sale.getCustomer();
+                                                    Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                                    SETTINGS.copyInvoiceBitMap =invoiceImg.copyInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, null);
+                                                    startActivity(i);
+                                                }catch (Exception e){
+                                                    Log.d("exception",sale.toString());
+                                                    Log.d("exception",e.toString());
+                                                    e.printStackTrace();
+                                                    sendLogFile();
+                                                }
+
+                                                // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._EMPLOYEE, null));
+
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // do nothing
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                        }
+                    });
+                    //endregion Print Button
+
+                    //region Replacement Note Button
+
+                    Button btnRN = (Button) view.findViewById(R.id.listSaleManagement_BTReturn);
+                    btnRN.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
+                            saleDBAdapter.open();
+                            sale.setReplacementNote(sale.getReplacementNote() + 1);
+                            saleDBAdapter.updateEntry(sale);
+                            saleDBAdapter.close();
+                            try {
+                                Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                SETTINGS.copyInvoiceBitMap =invoiceImg.replacmentNote(sale,false);
+                                startActivity(i);
+                            }catch (Exception e){
+                                Log.d("exception",sale.toString());
+                                Log.d("exception",e.toString());
+                                sendLogFile();
+                            }
+                        }
+                    });
+                    //endregion Replacement Note Button
+
+                    //region Cancellation ORDER Button
+
+                    Button btnCan = (Button) view.findViewById(R.id.listSaleManagement_BTCancel);
                     if(sale.getCancellingOrderId()>0){
                         btnCan.setVisibility(View.GONE);
                     }else {
                         btnCan.setVisibility(View.VISIBLE);
                     }
 
-                btnCan.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
-                        saleDBAdapter.open();
-                        sale.setPayment(new Payment(payments.get(0)));
-                        long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(),sale.getCartDiscount(),sale.getNumberDiscount(),sale.getOrderId());
-                        Order order = saleDBAdapter.getOrderById(sID);
-                        sale.setCancellingOrderId(sID);
-                        saleDBAdapter.updateEntry(sale);
-                        PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(OrdersManagementActivity.this);
-                        paymentDBAdapter1.open();
-                        paymentDBAdapter1.insertEntry(sale.getPayment().getPaymentWay(), sale.getTotalPrice() * -1, sID,order.getOrderKey());
-                        paymentDBAdapter1.close();
-                        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(OrdersManagementActivity.this);
-                        cashPaymentDBAdapter.open();
-                        cashPaymentDBAdapter.insertEntry(sID,sale.getTotalPrice() * -1,0,new Timestamp(System.currentTimeMillis()),1,1);
-                        CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(OrdersManagementActivity.this);
-                        currencyOperationDBAdapter.open();
-                        CurrencyReturnsDBAdapter currencyReturnsDBAdapter =new CurrencyReturnsDBAdapter(OrdersManagementActivity.this);
-                        currencyReturnsDBAdapter.open();
-                        if(SETTINGS.enableCurrencies){
-                            currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),sID,CONSTANT.DEBIT,sale.getTotalPaidAmount() * -1,"ILS");
-                            currencyReturnsDBAdapter.insertEntry(sale.getOrderId(),(sale.getTotalPaidAmount()-sale.getTotalPrice())*-1,new Timestamp(System.currentTimeMillis()),0);
-                        }
-                        if (checks.size() > 0)
-                        try {
-                            Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                            SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(sale,false,checks);
-                            startActivity(i);
-                        }catch (Exception e){
-                            Log.d("exception",sale.toString());
-                            Log.d("exception",e.toString());
-                            sendLogFile();
-                        }
-                        else
-                        try {
-                            Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                            SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(sale,false,null);
-                            startActivity(i);
-                        }catch (Exception e){
-                            Log.d("exception",sale.toString());
-                            Log.d("exception",e.toString());
-                            sendLogFile();
-                        }
+                    btnCan.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
+                            saleDBAdapter.open();
+                            sale.setPayment(new Payment(payments.get(0)));
+                            long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(),sale.getCartDiscount(),sale.getNumberDiscount(),sale.getOrderId());
+                            Order order = saleDBAdapter.getOrderById(sID);
+                            sale.setCancellingOrderId(sID);
+                            saleDBAdapter.updateEntry(sale);
+                            PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(OrdersManagementActivity.this);
+                            paymentDBAdapter1.open();
+                            paymentDBAdapter1.insertEntry(sale.getPayment().getPaymentWay(), sale.getTotalPrice() * -1, sID,order.getOrderKey());
+                            paymentDBAdapter1.close();
+                            CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(OrdersManagementActivity.this);
+                            cashPaymentDBAdapter.open();
+                            cashPaymentDBAdapter.insertEntry(sID,sale.getTotalPrice() * -1,0,new Timestamp(System.currentTimeMillis()),1,1);
+                            CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(OrdersManagementActivity.this);
+                            currencyOperationDBAdapter.open();
+                            CurrencyReturnsDBAdapter currencyReturnsDBAdapter =new CurrencyReturnsDBAdapter(OrdersManagementActivity.this);
+                            currencyReturnsDBAdapter.open();
+                            if(SETTINGS.enableCurrencies){
+                                currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),sID,CONSTANT.DEBIT,sale.getTotalPaidAmount() * -1,"ILS");
+                                currencyReturnsDBAdapter.insertEntry(sale.getOrderId(),(sale.getTotalPaidAmount()-sale.getTotalPrice())*-1,new Timestamp(System.currentTimeMillis()),0);
+                            }
+                            if (checks.size() > 0)
+                                try {
+                                    Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                    SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(sale,false,checks);
+                                    startActivity(i);
+                                }catch (Exception e){
+                                    Log.d("exception",sale.toString());
+                                    Log.d("exception",e.toString());
+                                    sendLogFile();
+                                }
+                            else
+                                try {
+                                    Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                    SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(sale,false,null);
+                                    startActivity(i);
+                                }catch (Exception e){
+                                    Log.d("exception",sale.toString());
+                                    Log.d("exception",e.toString());
+                                    sendLogFile();
+                                }
 
 
-                        //// TODO: 19/01/2017 cancel this sale and print return note and mony back by the payment way
-                    }
-                });
-                //endregion Cancellation ORDER Button
+                            //// TODO: 19/01/2017 cancel this sale and print return note and mony back by the payment way
+                        }
+                    });
+                    //endregion Cancellation ORDER Button
 
-                previousView.setBackgroundColor(getResources().getColor(R.color.list_background_color));
+                    previousView.setBackgroundColor(getResources().getColor(R.color.list_background_color));
                 }else {
                     LinearLayout fr = (LinearLayout) view.findViewById(R.id.listSaleManagement_FLMore);
                     if (previousView == null) {
@@ -506,14 +505,22 @@ public class OrdersManagementActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 etSearch.setText("");
-              if(searchSpinner.getSelectedItem().toString().equals(getString(R.string.date))){
-                new DatePickerDialog(OrdersManagementActivity.this, date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                if(searchSpinner.getSelectedItem().toString().equals(getString(R.string.date))){
+                    new DatePickerDialog(OrdersManagementActivity.this, date, myCalendar
+                            .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                            myCalendar.get(Calendar.DAY_OF_MONTH)).show();
 
-           }
+                }
                 if(searchSpinner.getSelectedItem().toString().equals(getString(R.string.invoice))){
-                  objectList.addAll(invoiceList);
+                    StartInvoiceAndCreditInvoiceConnection startInvoiceConnection = new StartInvoiceAndCreditInvoiceConnection();
+                    startInvoiceConnection.execute("1");
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    objectList=new ArrayList<>();
+                    objectList.addAll(invoiceList);
                     Log.d("testinvoiceList",invoiceList.toString());
                     adapter = new SaleManagementListViewAdapter(OrdersManagementActivity.this, R.layout.list_adapter_row_sales_management, objectList);
 
@@ -571,10 +578,10 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             orderDBAdapter.open();
                             Log.d("teeest",params[0]);
                             if(type!= getString(R.string.invoice)){
-                            filterOrderList = orderDBAdapter.search(params[0], loadItemOffset,countLoad,type);
+                                filterOrderList = orderDBAdapter.search(params[0], loadItemOffset,countLoad,type);
                             }
 
-                        //    filterBoInvoice = searchInInvoiceList(params[0]);
+                            //    filterBoInvoice = searchInInvoiceList(params[0]);
 
                             return null;
                         }
@@ -584,7 +591,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             super.onPostExecute(aVoid);
                             Log.d("filterOrderList",filterOrderList.toString());
                             list.addAll(filterOrderList);
-                     //       list.addAll(filterBoInvoice);
+                            //       list.addAll(filterBoInvoice);
                             SaleManagementListViewAdapter adapter = new SaleManagementListViewAdapter(OrdersManagementActivity.this, R.layout.list_adapter_row_sales_management, list);
                             lvOrders.setAdapter(adapter);
                         }
@@ -632,8 +639,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
                 if (!searchWord.equals("")) {
 
 
-                        _saleList.addAll(orderDBAdapter.search(searchWord, loadItemOffset, countLoad, type));
-                    }
+                    _saleList.addAll(orderDBAdapter.search(searchWord, loadItemOffset, countLoad, type));
+                }
 
                 else {
                     searchWord = "";
@@ -775,3 +782,4 @@ class StartInvoiceAndCreditInvoiceConnection extends AsyncTask<String,Void,Strin
     }
 
 }
+
