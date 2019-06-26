@@ -3,6 +3,8 @@ package com.pos.leaders.leaderspossystem;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -17,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
+import com.pos.leaders.leaderspossystem.Models.PosSetting;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -309,6 +313,21 @@ public class SetUpManagement extends AppCompatActivity {
                     }
                 }
                 editor.apply();
+                //    public PosSetting( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType, String posVersionNo, String posDbVersionNo, int branchId) {
+
+                PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(SetUpManagement.this);
+                posSettingDbAdapter.open();
+                PackageInfo pInfo = null;
+                try {
+                    pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                String verCode = pInfo.versionName;
+
+                PosSetting posSetting = new PosSetting(currencyEnable,creditCardEnable,pinpadEnable,customerMeasurementEnable,noOfPoint,printerType,pInfo.versionName,String.valueOf(DbHelper.DATABASE_VERSION),branchId);
+               posSettingDbAdapter.updateEntry(posSetting);
+                posSettingDbAdapter.close();
                 Toast.makeText(SetUpManagement.this, R.string.success_edit_POS_setting, Toast.LENGTH_LONG).show();
                 Intent i = new Intent(getApplicationContext(), LogInActivity.class);
                 startActivity(i);

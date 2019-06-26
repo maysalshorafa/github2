@@ -41,6 +41,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
@@ -73,6 +74,7 @@ import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Permission.EmployeesPermissions;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
+import com.pos.leaders.leaderspossystem.Models.PosSetting;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.SumPoint;
@@ -1077,6 +1079,24 @@ public class SyncMessage extends Service {
                     deleteInventoryDBAdapter.close();
                     break;
                 //endregion Category
+                //region Inventory
+                case MessageType.ADD_POS_SETTING:
+                    PosSetting posSetting = null;
+                    posSetting = objectMapper.readValue(msgData, PosSetting.class);
+
+                    PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(this);
+                    posSettingDbAdapter.open();
+                    rID = posSettingDbAdapter.insertEntry(posSetting);
+                    posSettingDbAdapter.close();
+                    break;
+                case MessageType.UPDATE_POS_SETTING:
+                    PosSetting updatePosSetting = null;
+                    updatePosSetting = objectMapper.readValue(msgData, PosSetting.class);
+                    PosSettingDbAdapter updatePosSettingDBAdapter = new PosSettingDbAdapter(this);
+                    updatePosSettingDBAdapter.open();
+                  rID = updatePosSettingDBAdapter.updateEntryBo(updatePosSetting);
+                    updatePosSettingDBAdapter.close();
+                    break;
             }
         } else {
             //todo: does not have message type
@@ -1117,7 +1137,15 @@ public class SyncMessage extends Service {
         Log.w("DO_SYNC", bm.getCommand());
 
         switch (msgType) {
-
+                //region Pos Setting
+            case MessageType.ADD_POS_SETTING:
+                res = messageTransmit.authPost(ApiURL.PosSetting, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_POS_SETTING:
+                PosSetting posSetting =null;
+                posSetting=objectMapper.readValue(msgData, PosSetting.class);
+                res = messageTransmit.authPut(ApiURL.PosSetting, jsonObject.getString(MessageKey.Data), token,posSetting.getPosSettingId());
+                break;
             //region A REPORT
             case MessageType.ADD_OPINING_REPORT:
                 res = messageTransmit.authPost(ApiURL.OpiningReport, jsonObject.getString(MessageKey.Data), token);

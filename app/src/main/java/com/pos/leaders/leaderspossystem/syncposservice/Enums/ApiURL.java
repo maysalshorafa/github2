@@ -8,6 +8,7 @@ public interface ApiURL {
     String InitConnection = "initConnection";
     String Authentication = "authentication";
 
+    String PosSetting = "PosSetting";
     String Product = "Product";
     String Club = "Club";
     String City = "City";

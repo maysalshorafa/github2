@@ -104,6 +104,17 @@ public class DateConverter {
         }
         return "";
     }
+    public static String toDateWithShortYear(Date date){
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yy", Locale.ENGLISH);
+            String d = dateFormat.format(date);
+            return d;
+        }
+        catch (Exception e){
+
+        }
+        return "";
+    }
     public static String toDate(long timestamp) {
         Date date = new Date(timestamp);
         return new SimpleDateFormat("yyyy-MM-dd").format(date);

@@ -168,4 +168,8 @@ public interface MessageType{
     String UPDATE_INVENTORY = "UpdateInventory";
     String DELETE_INVENTORY = "DeleteInventory";
 
+    String ADD_POS_SETTING = "AddPosSetting";
+    String UPDATE_POS_SETTING = "UpdatePosSetting";
+    String DELETE_POS_SETTING = "DeletePosSetting";
+
 }

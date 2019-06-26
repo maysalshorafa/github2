@@ -151,6 +151,73 @@
                 </TextView>
             </LinearLayout>
     -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="120dp"
+                    android:layout_height="62dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/from"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/salesMan_ETFrom"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bubble"
+                    android:paddingLeft="5dp"
+
+
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="62dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/to"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/salesMan_ETTo"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bubble" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
         <com.pos.leaders.leaderspossystem.Elements.CustomEditText
             android:id="@+id/etSearch"
             style="@style/AppTheme.EditText_input"

@@ -2,9 +2,15 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -13,13 +19,22 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.sun.pdfview.PDFFile;
+import com.sun.pdfview.PDFPage;
 
+import net.sf.andpdf.nio.ByteBuffer;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +54,8 @@ public class MonthZReportView extends AppCompatActivity {
     private static final int DIALOG_TO_DATE = 324;
     private final static int DAY_MINUS_ONE_SECOND = 86399999;
     ImageView imageView ;
+    public static ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
+    Bitmap newBitmap =null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +111,7 @@ public class MonthZReportView extends AppCompatActivity {
         btPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pt.PrintReport(p);
+                pt.PrintReport(newBitmap);
                 onBackPressed();
             }
         });
@@ -149,9 +166,33 @@ public class MonthZReportView extends AppCompatActivity {
             totalSales=invoiceReceiptAmount+invoiceAmount+creditInvoiceAmount;
 
         zReport=new ZReport(0,new Timestamp(System.currentTimeMillis()),zReportList.get(0).getByUser(),0,0,totalAmount,totalSales,cashTotal,checkTotal,creditTotal,totalPosSales,zReportList.get(0).getTax(),invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount);
+            PdfUA pdfUA = new PdfUA();
+
+            try {
+                pdfUA.createMonthZReport(MonthZReportView.this,zReport,from,to);
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try
+            {
+                File path = new File( Environment.getExternalStorageDirectory(), getApplicationContext().getPackageName());
+                File file = new File(path,"mounthzreport.pdf");
+                RandomAccessFile f = new RandomAccessFile(file, "r");
+                byte[] data = new byte[(int)f.length()];
+                f.readFully(data);
+
+                pdfLoadImages(data);
+
+                Log.d("errrrr",bitmapList.size()+"");
+
+            }
+            catch(Exception ignored)
+            {
+                Log.d("errrrr",ignored.toString());
+            }
         pt=new PrintTools(MonthZReportView.this);
-            p=pt.createMonthZReport(zReport,false,from,to);
-       imageView.setImageBitmap(p);
         }else {
             imageView.setVisibility(View.INVISIBLE);
         }
@@ -198,5 +239,109 @@ public class MonthZReportView extends AppCompatActivity {
             setDate();
         }
     };
+    private void pdfLoadImages(final byte[] data)
+    {
+        bitmapList=new ArrayList<>();
+        try
+        {
+            // run async
+            new AsyncTask<Void, Void, String>()
+            {
+                // create and show a progress dialog
+                ProgressDialog progressDialog = ProgressDialog.show(MonthZReportView.this, "", "Opening...");
+
+                @Override
+                protected void onPostExecute(String html)
+                {
+                    Log.d("bitmapsize2222",bitmapList.size()+"");
+                    newBitmap= combineImageIntoOne(bitmapList);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    imageView.setImageBitmap(newBitmap);
+
+                    //after async close progress dialog
+                    progressDialog.dismiss();
+                    //load the html in the webview
+                    //  wv.loadDataWithBaseURL("", html, "text/html","UTF-8", "");
+                }
+
+                @Override
+                protected String doInBackground(Void... params)
+                {
+                    try
+                    {
+                        //create pdf document object from bytes
+                        ByteBuffer bb = ByteBuffer.NEW(data);
+                        PDFFile pdf = new PDFFile(bb);
+                        //Get the first page from the pdf doc
+                        PDFPage PDFpage = pdf.getPage(1, true);
+                        //create a scaling value according to the WebView Width
+                        final float scale = 800 / PDFpage.getWidth() * 0.80f;
+                        //convert the page into a bitmap with a scaling value
+                        Bitmap page = PDFpage.getImage((int)(PDFpage.getWidth() * scale), (int)(PDFpage.getHeight() * scale), null, true, true);
+                        //save the bitmap to a byte array
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        stream.reset();
+                        //convert the byte array to a base64 string
+                        String base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                        //create the html + add the first image to the html
+                        String html = "<!DOCTYPE html><html><body bgcolor=\"#ffffff\"><img src=\"data:image/png;base64," + base64 + "\" hspace=328 vspace=4><br>";                        //loop though the rest of the pages and repeat the above
+                        for(int i = 1; i <= pdf.getNumPages(); i++)
+                        {
+                            PDFpage = pdf.getPage(i, true);
+                            page = PDFpage.getImage((int)(PDFpage.getWidth() * scale), (int)(PDFpage.getHeight() * scale), null, true, true);
+                            page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            bitmapList.add(page);
+                            byteArray = stream.toByteArray();
+                            stream.reset();
+                            base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                            html += "<img src=\"data:image/png;base64,"+base64+"\" hspace=10 vspace=10><br>";
+                        }
+                        stream.close();
+                        html += "</body></html>";
+                        Log.d("mmmmmmm",bitmapList.size()+"");
+
+                        return html;
+                    }
+                    catch (Exception e)
+                    {
+                        Log.d("error", e.toString());
+                    }
+                    return null;
+                }
+            }.execute();
+            System.gc();// run GC
+        }
+        catch (Exception e)
+        {
+            Log.d("error", e.toString());
+        }
+    }
+    private Bitmap combineImageIntoOne(ArrayList<Bitmap> bitmap) {
+        int w = 0, h = 0;
+        for (int i = 0; i < bitmap.size(); i++) {
+            if (i < bitmap.size() - 1) {
+                w = bitmap.get(i).getWidth() > bitmap.get(i + 1).getWidth() ? bitmap.get(i).getWidth() : bitmap.get(i + 1).getWidth();
+            }
+            h += bitmap.get(i).getHeight();
+        }
+
+        Bitmap temp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(temp);
+        int top = 0;
+        for (int i = 0; i < bitmap.size(); i++) {
+            Log.d("HTML", "Combine: "+i+"/"+bitmap.size()+1);
+
+            top = (i == 0 ? 0 : top+bitmap.get(i).getHeight());
+            canvas.drawBitmap(bitmap.get(i), 0f, top, null);
+        }
+        return temp;
+    }
+
 
 }

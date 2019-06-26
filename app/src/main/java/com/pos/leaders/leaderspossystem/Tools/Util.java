@@ -72,7 +72,6 @@ import POSSDK.POSSDK;
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImages;
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesClosingReport;
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesOpiningReport;
-import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesZReport;
 
 
 /**
@@ -1244,7 +1243,7 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    bitmapList = pdfLoadImagesZReport(data,context);
+                    pdfLoadImages(data,context);
                     Log.d("tesrr11",bitmapList.size()+"");
 
                 }

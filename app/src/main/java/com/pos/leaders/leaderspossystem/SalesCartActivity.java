@@ -313,6 +313,7 @@ public class SalesCartActivity extends AppCompatActivity {
     JSONObject invoiceJsonObject =new JSONObject();
     static Context context;
     List<Offer>validOffer = new ArrayList<>();
+    CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(SalesCartActivity.this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -330,6 +331,7 @@ public class SalesCartActivity extends AppCompatActivity {
             intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, SETTINGS.BO_SERVER_URL);
             startService(intent);
         }
+        currencyDBAdapter.open();
         context=SalesCartActivity.this;
         customerName_EditText = (EditText) findViewById(R.id.customer_textView);
         //getValid Offer
@@ -2621,8 +2623,7 @@ public class SalesCartActivity extends AppCompatActivity {
             if(o.getProduct().getCurrencyType()==3) {
                 currencyType="EUR";
             }
-            CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(SalesCartActivity.this);
-            currencyDBAdapter.open();
+
             Currency currency = currencyDBAdapter.getCurrencyByCode(currencyType);
             saleTotalPrice += o.getItemTotalPrice()*currency.getRate();
             SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity()*currency.getRate());

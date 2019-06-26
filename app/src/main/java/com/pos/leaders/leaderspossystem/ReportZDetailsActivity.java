@@ -2,8 +2,9 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -52,6 +53,8 @@ public class ReportZDetailsActivity extends Activity {
     boolean x= false;
     ZReport zReport ;
     public static ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
+    Bitmap newBitmap =null;
+    boolean fromDashBoard=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +70,7 @@ public class ReportZDetailsActivity extends Activity {
         zReportDBAdapter.open();
         btCancel = (Button) findViewById(R.id.reportZDetails_btCancel);
         btPrint = (Button) findViewById(R.id.reportZDetails_btPrint);
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         if (extras != null) {
             x= getIntent().getExtras().getBoolean(ReportsManagementActivity.COM_LEADPOS_XREPORT_FLAG);
             if (x==true) {
@@ -82,39 +85,53 @@ public class ReportZDetailsActivity extends Activity {
                 to = (long) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_TO);
                 totalZReportAmount = (double) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT);
                 amount = (double) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT);
+
             }
             if (extras.containsKey(ZReportActivity.COM_LEADPOS_ZREPORT_HISTORY)) {
                 goBack = extras.getBoolean(ZReportActivity.COM_LEADPOS_ZREPORT_HISTORY, false);
                 isCopy = true;
 
             }
+            if (extras.containsKey(ZReportActivity.COM_LEADPOS_ZREPORT_FROM_DASH_BOARD)) {
+                fromDashBoard= (boolean)extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_FROM_DASH_BOARD);
+                Log.d("tttttttttt",fromDashBoard+"");
+
+            }
         }
         XReportDBAdapter xReportDBAdapter = new XReportDBAdapter(ReportZDetailsActivity.this);
         xReportDBAdapter.open();
-
+        pt = new PrintTools(ReportZDetailsActivity.this);
         if (x==true) {
+
             XReport xReport = xReportDBAdapter.getByID(id);
-            pt = new PrintTools(ReportZDetailsActivity.this);
-            if (isCopy) {
-                p = pt.createXReport(xReport, true);
-            } else {
-                p = pt.createXReport(xReport, false);
+            PdfUA pdfUA = new PdfUA();
+
+            try {
+                pdfUA.createXReport(ReportZDetailsActivity.this,xReport);
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try
+            {
+                File path = new File( Environment.getExternalStorageDirectory(), getApplicationContext().getPackageName());
+                File file = new File(path,"xreport.pdf");
+                RandomAccessFile f = new RandomAccessFile(file, "r");
+                byte[] data = new byte[(int)f.length()];
+                f.readFully(data);
+                pdfLoadImages(data);
+                Log.d("bitmapsize",bitmapList.size()+"");
+            }
+            catch(Exception ignored)
+            {
 
             }
+
         } else {
-
-         //    zReport = zReportDBAdapter.getByID(id);
-                ZReport zReport = zReportDBAdapter.getByID(id);
-
-                pt = new PrintTools(ReportZDetailsActivity.this);
-                if (isCopy) {
-                    p = pt.createZReport(zReport, true);
-                } else {
-                    p = pt.createZReport(zReport, false);
-                }
+            ZReport zReport = zReportDBAdapter.getByID(id);
 
             if (isCopy) {
-
                 PdfUA pdfUA = new PdfUA();
 
                 try {
@@ -131,21 +148,17 @@ public class ReportZDetailsActivity extends Activity {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImagesZReport(data,ReportZDetailsActivity.this);
+                    pdfLoadImages(data);
                     Log.d("bitmapsize",bitmapList.size()+"");
-
-
                 }
                 catch(Exception ignored)
                 {
 
                 }
 
-          //   p= bitmapList.get(bitmapList.size());
 
             }else {
-
-                PdfUA pdfUA = new PdfUA();
+              PdfUA pdfUA = new PdfUA();
 
                 try {
                     pdfUA.createZReport(ReportZDetailsActivity.this,zReport,true);
@@ -162,11 +175,11 @@ public class ReportZDetailsActivity extends Activity {
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
 
-                  pdfLoadImagesZReport(data,ReportZDetailsActivity.this);
+                    pdfLoadImages(data);
+
                     Log.d("errrrr",bitmapList.size()+"");
 
-
-                }
+                                    }
                 catch(Exception ignored)
                 {
                 Log.d("errrrr",ignored.toString());
@@ -174,10 +187,10 @@ public class ReportZDetailsActivity extends Activity {
                 //p= bitmapList.get(bitmapList.size());
 
             }
+
         }
 
         // p=pt.createXReport(id,from, SESSION._EMPLOYEE,new java.util.Date()); // testing xReport
-        ((ImageView)findViewById(R.id.reportZDetails_ivInvoice)).setImageBitmap(p);
 
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,11 +202,19 @@ public class ReportZDetailsActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(x==true) {
-                    pt.PrintReport(p);
+                    pt.PrintReport(newBitmap);
                     onBackPressed();
                 }else {
-                    print(ReportZDetailsActivity.this,bitmapList);
-                    onBackPressed();
+                    if(fromDashBoard){
+                        pt.PrintReport(newBitmap);
+                       finish();
+                        Intent intent = new Intent(ReportZDetailsActivity.this,LogInActivity.class);
+                        startActivity(intent);
+                    }else {
+                        pt.PrintReport(newBitmap);
+                        onBackPressed();
+                    }
+
                 }
 
             }
@@ -224,45 +245,40 @@ public class ReportZDetailsActivity extends Activity {
     }
 
 
-    private void printAndOpenCashBox() {
-
-    }
-    public static void print(Context context, ArrayList<Bitmap> bitmapList){
-        PrintTools pt=new PrintTools(context);
-        for (int i= 1;i<bitmapList.size(); i++) {
-            Log.d("bitmapsize",bitmapList.size()+"");
-            pt.PrintReport(bitmapList.get(i));
-
-        }
-
-    }
-    public static void pdfLoadImagesZReport(final byte[] data, final Context context) {
+    private void pdfLoadImages(final byte[] data)
+    {
         bitmapList=new ArrayList<>();
-
-        try {
+        try
+        {
             // run async
-            new AsyncTask<Void, Void, String>() {
-                Bitmap page;
-                Context a =context;
-
+            new AsyncTask<Void, Void, String>()
+            {
                 // create and show a progress dialog
-
-                ProgressDialog progressDialog = ProgressDialog.show(a, "", "Opening...");
+                ProgressDialog progressDialog = ProgressDialog.show(ReportZDetailsActivity.this, "", "Opening...");
 
                 @Override
-                protected void onPostExecute(String html) {
-                    for (int i=0;i<bitmapList.size();i++) {
-                        p = bitmapList.get(i);
+                protected void onPostExecute(String html)
+                {
+                    Log.d("bitmapsize2222",bitmapList.size()+"");
+                    newBitmap= combineImageIntoOne(bitmapList);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+                    ((ImageView)findViewById(R.id.reportZDetails_ivInvoice)).setImageBitmap(newBitmap);
 
-                    //  print(context,bitmapList);
                     //after async close progress dialog
-                 progressDialog.dismiss();
+                    progressDialog.dismiss();
+                    //load the html in the webview
+                  //  wv.loadDataWithBaseURL("", html, "text/html","UTF-8", "");
                 }
 
                 @Override
-                protected String doInBackground(Void... params) {
-                    try {
+                protected String doInBackground(Void... params)
+                {
+                    try
+                    {
                         //create pdf document object from bytes
                         ByteBuffer bb = ByteBuffer.NEW(data);
                         PDFFile pdf = new PDFFile(bb);
@@ -271,7 +287,7 @@ public class ReportZDetailsActivity extends Activity {
                         //create a scaling value according to the WebView Width
                         final float scale = 800 / PDFpage.getWidth() * 0.80f;
                         //convert the page into a bitmap with a scaling value
-                        page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
+                        Bitmap page = PDFpage.getImage((int)(PDFpage.getWidth() * scale), (int)(PDFpage.getHeight() * scale), null, true, true);
                         //save the bitmap to a byte array
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         page.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -280,38 +296,57 @@ public class ReportZDetailsActivity extends Activity {
                         //convert the byte array to a base64 string
                         String base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
                         //create the html + add the first image to the html
-                        String html = "<!DOCTYPE html><html><body bgcolor=\"#ffffff\"><img src=\"data:image/png;base64," + base64 + "\" hspace=328 vspace=4><br>";
-                        //loop though the rest of the pages and repeat the above
-                        for (int i = 0; i <= pdf.getNumPages(); i++) {
+                        String html = "<!DOCTYPE html><html><body bgcolor=\"#ffffff\"><img src=\"data:image/png;base64," + base64 + "\" hspace=328 vspace=4><br>";                        //loop though the rest of the pages and repeat the above
+                        for(int i = 1; i <= pdf.getNumPages(); i++)
+                        {
                             PDFpage = pdf.getPage(i, true);
-                            page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
+                            page = PDFpage.getImage((int)(PDFpage.getWidth() * scale), (int)(PDFpage.getHeight() * scale), null, true, true);
                             page.compress(Bitmap.CompressFormat.PNG, 100, stream);
                             bitmapList.add(page);
-
                             byteArray = stream.toByteArray();
                             stream.reset();
                             base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
-                            html += "<img src=\"data:image/png;base64," + base64 + "\" hspace=10 vspace=10><br>";
-
+                            html += "<img src=\"data:image/png;base64,"+base64+"\" hspace=10 vspace=10><br>";
                         }
-                        Log.d("tesrr22",bitmapList.size()+"");
-
-
                         stream.close();
                         html += "</body></html>";
+                        Log.d("mmmmmmm",bitmapList.size()+"");
+
                         return html;
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         Log.d("error", e.toString());
                     }
                     return null;
                 }
             }.execute();
             System.gc();// run GC
-        } catch (Exception e) {
-            Log.d("errrr",e.toString()+"");
         }
-      //  Log.d("errrrr",bitmapList.size()+"");
+        catch (Exception e)
+        {
+            Log.d("error", e.toString());
+        }
+    }
+    private Bitmap combineImageIntoOne(ArrayList<Bitmap> bitmap) {
+        int w = 0, h = 0;
+        for (int i = 0; i < bitmap.size(); i++) {
+            if (i < bitmap.size() - 1) {
+                w = bitmap.get(i).getWidth() > bitmap.get(i + 1).getWidth() ? bitmap.get(i).getWidth() : bitmap.get(i + 1).getWidth();
+            }
+            h += bitmap.get(i).getHeight();
+        }
 
+        Bitmap temp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(temp);
+        int top = 0;
+        for (int i = 0; i < bitmap.size(); i++) {
+            Log.d("HTML", "Combine: "+i+"/"+bitmap.size()+1);
+
+            top = (i == 0 ? 0 : top+bitmap.get(i).getHeight());
+            canvas.drawBitmap(bitmap.get(i), 0f, top, null);
+        }
+        return temp;
     }
 
 }

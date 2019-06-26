@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Base64;
@@ -61,6 +62,8 @@ public class DocumentControl {
     public static Locale locale = new Locale("en");
     static String invoiceNum;
     static JSONObject receiptJsonObject = new JSONObject();
+    static Bitmap newBitmap =null;
+
     public static void pdfLoadImages(final byte[] data, final Context context) {
 
         final ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
@@ -136,6 +139,7 @@ public class DocumentControl {
     public static void pdfLoadImagesOpiningReport(final byte[] data, final Context context) {
 
         final ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
+        newBitmap=null;
         try {
             // run async
             new AsyncTask<Void, Void, String>() {
@@ -148,7 +152,17 @@ public class DocumentControl {
 
                 @Override
                 protected void onPostExecute(String html) {
-                    print(context,bitmapList);
+
+                   PrintTools pt=new PrintTools(context);
+                    if(bitmapList.size()>=3){
+
+                    newBitmap= combineImageIntoOne(bitmapList);
+                        pt.PrintReport(newBitmap);
+
+                    }else {
+                        print(context,bitmapList);
+                    }
+
                     //after async close progress dialog
                     progressDialog.dismiss();
                 }
@@ -201,84 +215,6 @@ public class DocumentControl {
             e.printStackTrace();
         }
     }
-    public static ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
-    public static   Bitmap page1;
-    public static List<Bitmap> pdfLoadImagesZReport(final byte[] data, final Context context) {
-
-
-
-        try {
-            // run async
-            new AsyncTask<Void, Void, String>() {
-                Bitmap page;
-                Context a =context;
-
-                // create and show a progress dialog
-
-                ProgressDialog progressDialog = ProgressDialog.show(a, "", "Opening...");
-
-                @Override
-                protected void onPostExecute(String html) {
-                    print(context,bitmapList);
-                    //after async close progress dialog
-                    progressDialog.dismiss();
-                }
-
-                @Override
-                protected String doInBackground(Void... params) {
-                    try {
-                        //create pdf document object from bytes
-                        ByteBuffer bb = ByteBuffer.NEW(data);
-                        PDFFile pdf = new PDFFile(bb);
-                        //Get the first page from the pdf doc
-                        PDFPage PDFpage = pdf.getPage(1, true);
-                        //create a scaling value according to the WebView Width
-                        final float scale = 800 / PDFpage.getWidth() * 0.80f;
-                        //convert the page into a bitmap with a scaling value
-                        page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
-                        //save the bitmap to a byte array
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        page.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        byte[] byteArray = stream.toByteArray();
-                        stream.reset();
-                        //convert the byte array to a base64 string
-                        String base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
-                        //create the html + add the first image to the html
-                        String html = "<!DOCTYPE html><html><body bgcolor=\"#ffffff\"><img src=\"data:image/png;base64," + base64 + "\" hspace=328 vspace=4><br>";
-                        //loop though the rest of the pages and repeat the above
-                        for (int i = 0; i <= pdf.getNumPages(); i++) {
-                            PDFpage = pdf.getPage(i, true);
-                            page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
-                            page.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                            bitmapList.add(page);
-                            Log.d("tesrr22",bitmapList.size()+"");
-                            page1=page;
-
-                            byteArray = stream.toByteArray();
-                            stream.reset();
-                            base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
-                            html += "<img src=\"data:image/png;base64," + base64 + "\" hspace=10 vspace=10><br>";
-
-                        }
-
-                        stream.close();
-                        html += "</body></html>";
-                        return html;
-                    } catch (Exception e) {
-                        Log.d("error", e.toString());
-                    }
-                    return null;
-                }
-            }.execute();
-            System.gc();// run GC
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Log.d("tesrr33",bitmapList.size()+"");
-
-        return bitmapList;
-    }
-
     static int r =0;
     public static int pdfLoadImagesClosingReport(final byte[] data, final Context context) {
 
@@ -564,4 +500,24 @@ public class DocumentControl {
 
 
 
+    }
+    private static Bitmap combineImageIntoOne(ArrayList<Bitmap> bitmap) {
+        int w = 0, h = 0;
+        for (int i = 0; i < bitmap.size(); i++) {
+            if (i < bitmap.size() - 1) {
+                w = bitmap.get(i).getWidth() > bitmap.get(i + 1).getWidth() ? bitmap.get(i).getWidth() : bitmap.get(i + 1).getWidth();
+            }
+            h += bitmap.get(i).getHeight();
+        }
+
+        Bitmap temp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(temp);
+        int top = 0;
+        for (int i = 0; i < bitmap.size(); i++) {
+            Log.d("HTML", "Combine: "+i+"/"+bitmap.size()+1);
+
+            top = (i == 0 ? 0 : top+bitmap.get(i).getHeight());
+            canvas.drawBitmap(bitmap.get(i), 0f, top, null);
+        }
+        return temp;
     }}

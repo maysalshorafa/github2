@@ -25,6 +25,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAd
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
@@ -37,6 +38,7 @@ import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
+import com.pos.leaders.leaderspossystem.Models.XReport;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
@@ -72,6 +74,9 @@ public class PdfUA {
     public static ZReport zReport;
     static  int invoiceReceiptCount=0 ,invoiceCount=0 , CreditInvoiceCount=0 , ShekelCount=0 ,UsdCount=0 , EurCount=0,GbpCount=0 ,checkCount=0 , creditCardCount=0 ,receiptInvoiceAmountCheck=0 , cashCount=0,receiptInvoiceAmount=0;
     static  double cashAmount=0;
+    static  int xInvoiceReceiptCount=0 ,xInvoiceCount=0 , xCreditInvoiceCount=0 , xShekelCount=0 ,xUsdCount=0 , xEurCount=0,xGbpCount=0 ,xCheckCount=0 , xCreditCardCount=0 ,xReceiptInvoiceAmountCheck=0 , xCashCount=0,xReceiptInvoiceAmount=0;
+    static  double xCashAmount=0;
+
     static List<List<Check>> checkList = new ArrayList<>();
     static List<OpiningReport> opiningReportList=new ArrayList<>();
     static double aReportDetailsForFirstCurrency=0;
@@ -170,7 +175,7 @@ public class PdfUA {
         //end region
         getCountForZReport(context,zReport);
         BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
-        Font font = new Font(urName, 30);
+        Font font = new Font(urName, 24);
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
         headingTable.setRunDirection(0);
@@ -182,129 +187,130 @@ public class PdfUA {
             insertCell(headingTable, context.getString(R.string.copy_invoice), Element.ALIGN_CENTER, 1, font);
         }
         insertCell(headingTable, context.getString(R.string.date) +":  "+zReport.getCreatedAt(), Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, context.getString(R.string.user_name)+":  " + zReport.getByUser(), Element.ALIGN_CENTER, 1, font);
+        EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
+        employeeDBAdapter.open();
+        insertCell(headingTable, context.getString(R.string.user_name)+":  " +employeeDBAdapter.getEmployeesName( zReport.getByUser()), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.z_number) + " " +zReport.getzReportId(), Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable,"----------------------------------------------", Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable,"----------------------------", Element.ALIGN_CENTER, 1, font);
 
 
 
-        PdfPTable dataTable = new PdfPTable(3);
+        PdfPTable dataTable = new PdfPTable(4);
         dataTable.deleteBodyRows();
         dataTable.setRunDirection(0);
-        insertCell(dataTable, context.getString(R.string.details), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.details), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, zReport.getInvoiceReceiptAmount() + " ", Element.ALIGN_RIGHT,1, font);
         insertCell(dataTable,invoiceReceiptCount + " ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, zReport.getInvoiceReceiptAmount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,invoiceCount + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, zReport.getInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,invoiceCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT,2, font);
 
-        insertCell(dataTable, context.getString(R.string.credit_invoice), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,creditCardCount + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, zReport.getCreditInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,creditCardCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, context.getString(R.string.total_sales), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,  "~", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, zReport.getTotalSales() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,  "~", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.total_sales), Element.ALIGN_RIGHT, 2, font);
 
+        insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
-        insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,cashCount + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, cashAmount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,cashCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT,2, font);
 
         ///// shekel region
-        insertCell(dataTable, context.getString(R.string.shekel), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,ShekelCount+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, Util.makePrice(zReport.getShekelAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,"----------------------------------------------", Element.ALIGN_CENTER, 3, font);
+        insertCell(dataTable,ShekelCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.shekel), Element.ALIGN_RIGHT, 2, font);
 
         ///// usd region
-        insertCell(dataTable, context.getString(R.string.usd), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,UsdCount+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, Util.makePrice(zReport.getUsdAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,"----------------------------------------------", Element.ALIGN_CENTER, 3, font);
+        insertCell(dataTable,UsdCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.usd), Element.ALIGN_RIGHT, 2, font);
 
         ///// eur region
-        insertCell(dataTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,EurCount+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, Util.makePrice(zReport.getEurAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,"----------------------------------------------", Element.ALIGN_CENTER, 3, font);
+        insertCell(dataTable,EurCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 2, font);
         ///// Gbp region
-        insertCell(dataTable, context.getString(R.string.gbp), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,GbpCount+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, Util.makePrice(zReport.getGbpAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,"----------------------------------------------", Element.ALIGN_CENTER, 3, font);
+        insertCell(dataTable,GbpCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.gbp), Element.ALIGN_RIGHT, 2, font);
         ///// CreditCard region
-        insertCell(dataTable, context.getString(R.string.credit_card), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,creditCardCount+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, Util.makePrice(zReport.getCreditTotal()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,"----------------------------------------------", Element.ALIGN_CENTER, 3, font);
+        insertCell(dataTable,creditCardCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.credit_card), Element.ALIGN_RIGHT, 2, font);
+        insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+
         ///check region
-        insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,checkCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
+
         insertCell(dataTable, Util.makePrice(zReport.getCheckTotal()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,"----------------------------------------------", Element.ALIGN_CENTER, 3, font);
+        insertCell(dataTable,checkCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
         if(checkList.size()>0){
-            insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 1, font);
-            insertCell(dataTable, context.getString(R.string.date), Element.ALIGN_RIGHT, 1, font);
+            insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
             insertCell(dataTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
+            insertCell(dataTable, context.getString(R.string.date), Element.ALIGN_RIGHT, 1, font);
+            insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
             for(int i=0;i<checkList.size();i++){
                 List<Check>list = checkList.get(i);
 
                 for (int f =0;f<list.size();f++){
-
-                    insertCell(dataTable, list.get(f).getCheckNum()+" ", Element.ALIGN_RIGHT, 1, font);
-                    insertCell(dataTable, list.get(f).getCreatedAt()+" ", Element.ALIGN_RIGHT, 1, font);
                     insertCell(dataTable, list.get(f).getAmount()+" ", Element.ALIGN_RIGHT, 1, font);
+                    insertCell(dataTable, DateConverter.toDate(list.get(f).getCreatedAt())+" ", Element.ALIGN_RIGHT, 2, font);
+                    insertCell(dataTable, list.get(f).getCheckNum()+" ", Element.ALIGN_RIGHT, 1, font);
                 }
             }
-            insertCell(dataTable,"----------------------------------------------", Element.ALIGN_CENTER, 3, font);
+            insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
         }
-        insertCell(dataTable, context.getString(R.string.total_amount), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, "~", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, zReport.getTotalAmount()+" ", Element.ALIGN_RIGHT, 1, font);
-        
-        insertCell(dataTable,"----------------------------------------------", Element.ALIGN_CENTER, 3, font);
+        insertCell(dataTable, "~", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.total_amount), Element.ALIGN_RIGHT, 2, font);
+
 
 
         ////
         PdfPTable opiningReportTable = new PdfPTable(4);
         opiningReportTable.deleteBodyRows();
         opiningReportTable.setRunDirection(0);
+        insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+
         insertCell(opiningReportTable, context.getString(R.string.opening_report), Element.ALIGN_RIGHT, 4, font);
-        insertCell(opiningReportTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
-        insertCell(opiningReportTable, aReportAmount +" ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(opiningReportTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
         insertCell(opiningReportTable, opiningReportList.size()+" " , Element.ALIGN_RIGHT, 1, font);
-        insertCell(opiningReportTable,"----------------------------------------------", Element.ALIGN_CENTER, 4, font);
+        insertCell(opiningReportTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
+        insertCell(opiningReportTable, aReportAmount +" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(opiningReportTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
+        insertCell(opiningReportTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
         PdfPTable opiningReportDetailsTable = new PdfPTable(2);
         opiningReportDetailsTable.deleteBodyRows();
         opiningReportDetailsTable.setRunDirection(0);
         if(SETTINGS.enableCurrencies) {
-            insertCell(opiningReportDetailsTable, context.getString(R.string.type), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
-            insertCell(opiningReportDetailsTable, context.getString(R.string.shekel), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.type), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, aReportDetailsForFirstCurrency + " ", Element.ALIGN_RIGHT, 1, font);
-            insertCell(opiningReportDetailsTable, context.getString(R.string.usd), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.shekel), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, aReportDetailsForSecondCurrency + " ", Element.ALIGN_RIGHT, 1, font);
-            insertCell(opiningReportDetailsTable, context.getString(R.string.gbp), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.usd), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, aReportDetailsForThirdCurrency + " ", Element.ALIGN_RIGHT, 1, font);
-            insertCell(opiningReportDetailsTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.gbp), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, aReportDetailsForForthCurrency + " ", Element.ALIGN_RIGHT, 1, font);
-            insertCell(opiningReportDetailsTable, "----------------------------------------------", Element.ALIGN_CENTER, 2, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, "----------------------------", Element.ALIGN_CENTER, 2, font);
         }
         PdfPTable posSalesTable = new PdfPTable(2);
         posSalesTable.deleteBodyRows();
@@ -1073,30 +1079,30 @@ public class PdfUA {
 
         BaseFont urName1 = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font urFontName1 = new Font(urName1, 22);
-        PdfPTable table = new PdfPTable(new float[] {3,2,2,2,2});
+        PdfPTable table = new PdfPTable(7);
         Font urFontName = new Font(urName1, 24);
 
         table.deleteBodyRows();
         table.setRunDirection(0);
         //insert column headings;
-        insertCell(table, context.getString(R.string.product), Element.ALIGN_CENTER, 1, urFontName1);
-        insertCell(table, context.getString(R.string.qty), Element.ALIGN_CENTER, 1, urFontName1);
-        insertCell(table, context.getString(R.string.price), Element.ALIGN_CENTER, 1, urFontName1);
-        insertCell(table, context.getString(R.string.total), Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(table, "%" , Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.total), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.price), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.qty), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.product), Element.ALIGN_CENTER, 3, urFontName1);
 
         for (int i=0;i<orderDetailsList.size();i++){
-            insertCell(table, orderDetailsList.get(i).getProduct().getDisplayName(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
-            insertCell(table, orderDetailsList.get(i).getQuantity()+"", Element.ALIGN_CENTER, 1, urFontName); // insert date value
-            insertCell(table,"  "+ orderDetailsList.get(i).getUnitPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
-            insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
             insertCell(table, "  " + orderDetailsList.get(i).getDiscount(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table,"  "+ orderDetailsList.get(i).getUnitPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table, orderDetailsList.get(i).getQuantity()+"", Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table, orderDetailsList.get(i).getProduct().getDisplayName(), Element.ALIGN_CENTER, 3, urFontName); // insert date value
             totalPrice+=orderDetailsList.get(i).getItemTotalPrice();
             count+=orderDetailsList.get(i).getQuantity();
         }
-        insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 5, font);
-        insertCell(table, context.getString(R.string.product_quantity)+" : "+count  , Element.ALIGN_CENTER, 5, font);
-        insertCell(table, context.getString(R.string.total_price)+" : "+totalPrice  , Element.ALIGN_CENTER, 5, font);
+        insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 7, font);
+        insertCell(table, context.getString(R.string.product_quantity)+" : "+count  , Element.ALIGN_CENTER, 7, font);
+        insertCell(table, context.getString(R.string.total_price)+" : "+totalPrice  , Element.ALIGN_CENTER, 7, font);
         //add table to document
         document.add(headingTable);
         document.add(table);
@@ -1118,6 +1124,479 @@ public class PdfUA {
         }
         //add the call to the table
         table.addCell(cell);
+
+    }
+    public static void createXReport(Context context, XReport xReport) throws IOException, DocumentException {
+        Document document = new Document();
+        String fileName = "xreport.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+        if(file.exists()){
+            PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
+            writer.print("");
+            writer.close();
+        }
+
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();        //end region
+        //end region
+        getCountForXReport(context,xReport);
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 24);
+        PdfPTable headingTable = new PdfPTable(1);
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.date) +":  "+xReport.getCreatedAt(), Element.ALIGN_CENTER, 1, font);
+        EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
+        employeeDBAdapter.open();
+        insertCell(headingTable, context.getString(R.string.user_name)+":  " +employeeDBAdapter.getEmployeesName( xReport.getByUser()), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.x_report) + " " +xReport.getxReportId(), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable,"----------------------------", Element.ALIGN_CENTER, 1, font);
+
+
+
+        PdfPTable dataTable = new PdfPTable(4);
+        dataTable.deleteBodyRows();
+        dataTable.setRunDirection(0);
+        insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.details), Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(dataTable, xReport.getInvoiceReceiptAmount() + " ", Element.ALIGN_RIGHT,1, font);
+        insertCell(dataTable,invoiceReceiptCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(dataTable, xReport.getInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,invoiceCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT,2, font);
+
+        insertCell(dataTable, xReport.getCreditInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,creditCardCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(dataTable, xReport.getTotalSales() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,  "~", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.total_sales), Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+
+        insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(dataTable, cashAmount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,cashCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT,2, font);
+
+        ///// shekel region
+        insertCell(dataTable, Util.makePrice(xReport.getShekelAmount()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,ShekelCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.shekel), Element.ALIGN_RIGHT, 2, font);
+
+        ///// usd region
+        insertCell(dataTable, Util.makePrice(xReport.getUsdAmount()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,UsdCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.usd), Element.ALIGN_RIGHT, 2, font);
+
+        ///// eur region
+        insertCell(dataTable, Util.makePrice(xReport.getEurAmount()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,EurCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 2, font);
+        ///// Gbp region
+        insertCell(dataTable, Util.makePrice(xReport.getGbpAmount()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,GbpCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.gbp), Element.ALIGN_RIGHT, 2, font);
+        ///// CreditCard region
+        insertCell(dataTable, Util.makePrice(xReport.getCreditTotal()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,creditCardCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.credit_card), Element.ALIGN_RIGHT, 2, font);
+        insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+
+        ///check region
+        insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(dataTable, Util.makePrice(xReport.getCheckTotal()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,checkCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
+        if(checkList.size()>0){
+            insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+            insertCell(dataTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
+            insertCell(dataTable, context.getString(R.string.date), Element.ALIGN_RIGHT, 1, font);
+            insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
+            for(int i=0;i<checkList.size();i++){
+                List<Check>list = checkList.get(i);
+
+                for (int f =0;f<list.size();f++){
+                    insertCell(dataTable, list.get(f).getAmount()+" ", Element.ALIGN_RIGHT, 1, font);
+                    insertCell(dataTable, DateConverter.toDate(list.get(f).getCreatedAt())+" ", Element.ALIGN_RIGHT, 2, font);
+                    insertCell(dataTable, list.get(f).getCheckNum()+" ", Element.ALIGN_RIGHT, 1, font);
+                }
+            }
+            insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+
+        }
+        insertCell(dataTable, xReport.getTotalAmount()+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, "~", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.total_amount), Element.ALIGN_RIGHT, 2, font);
+
+
+
+        ////
+        PdfPTable opiningReportTable = new PdfPTable(4);
+        opiningReportTable.deleteBodyRows();
+        opiningReportTable.setRunDirection(0);
+        insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+
+        insertCell(opiningReportTable, context.getString(R.string.opening_report), Element.ALIGN_RIGHT, 4, font);
+        insertCell(opiningReportTable, opiningReportList.size()+" " , Element.ALIGN_RIGHT, 1, font);
+        insertCell(opiningReportTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
+        insertCell(opiningReportTable, aReportAmount +" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(opiningReportTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
+        insertCell(opiningReportTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+
+        PdfPTable opiningReportDetailsTable = new PdfPTable(2);
+        opiningReportDetailsTable.deleteBodyRows();
+        opiningReportDetailsTable.setRunDirection(0);
+        if(SETTINGS.enableCurrencies) {
+            insertCell(opiningReportDetailsTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.type), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, aReportDetailsForFirstCurrency + " ", Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.shekel), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, aReportDetailsForSecondCurrency + " ", Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.usd), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, aReportDetailsForThirdCurrency + " ", Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.gbp), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, aReportDetailsForForthCurrency + " ", Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, "----------------------------", Element.ALIGN_CENTER, 2, font);
+        }
+        PdfPTable posSalesTable = new PdfPTable(2);
+        posSalesTable.deleteBodyRows();
+        posSalesTable.setRunDirection(0);
+        insertCell(posSalesTable, context.getString(R.string.pos_sales), Element.ALIGN_RIGHT, 1, font);
+        insertCell(posSalesTable,xReport.getTotalPosSales() +" ", Element.ALIGN_RIGHT, 1, font);
+        //add table to document
+        document.add(headingTable);
+        document.add(dataTable);
+        document.add(opiningReportTable);
+        if(SETTINGS.enableCurrencies){
+            document.add(opiningReportDetailsTable);
+
+        }
+        document.add(posSalesTable);
+        document.close();
+        //end :)
+
+
+    }
+    public static void getCountForXReport(Context context, XReport x) {
+        aReportAmount=0;
+        opiningReportList=new ArrayList<>();
+        aReportDetailsForFirstCurrency=0;
+        aReportDetailsForSecondCurrency=0;
+        aReportDetailsForThirdCurrency=0;
+        aReportDetailsForForthCurrency=0;
+
+        OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(context);
+        opiningReportDBAdapter.open();
+        opiningReportList = opiningReportDBAdapter.getListByLastZReport(x.getxReportId()-1);
+        for (int i=0;i<opiningReportList.size();i++){
+            aReportAmount+=opiningReportList.get(i).getAmount();
+        }
+        if (SETTINGS.enableCurrencies) {
+            OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
+            aReportDetailsDBAdapter.open();
+            for (int a=0 ;a<opiningReportList.size();a++) {
+                //aReportAmount+=opiningReportList.get(a).getAmount();
+                OpiningReport opiningReport = opiningReportList.get(a);
+                aReportDetailsForFirstCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, opiningReport.getOpiningReportId());
+                aReportDetailsForSecondCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, opiningReport.getOpiningReportId());
+                aReportDetailsForThirdCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, opiningReport.getOpiningReportId());
+                aReportDetailsForForthCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, opiningReport.getOpiningReportId());
+            }
+
+        }
+        checkList=new ArrayList<>();
+        cashAmount=0;
+        invoiceReceiptCount=0 ;invoiceCount=0; CreditInvoiceCount=0 ; ShekelCount=0 ;UsdCount=0 ;EurCount=0; GbpCount=0 ;checkCount=0 ; creditCardCount=0 ;receiptInvoiceAmountCheck=0 ; cashCount=0;receiptInvoiceAmount=0;
+        OrderDBAdapter orderDb = new OrderDBAdapter(context);
+        orderDb.open();
+        XReportDBAdapter xReportDBAdapter = new XReportDBAdapter(context);
+        xReportDBAdapter.open();
+        invoiceReceiptCount = orderDb.getBetween(x.getStartOrderId(),x.getEndOrderId()).size();
+        if(xReportDBAdapter.getProfilesCount()==0){
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(-1, InvoiceStatus.UNPAID.getValue());
+            invoiceCount+=posInvoiceList.size();
+
+            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.CREDIT_INVOICE.getValue(),CONSTANT.CASH);
+            CreditInvoiceCount+=posCreditInvoiceList.size();
+
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
+            receiptInvoiceAmountCheck+=posReceiptList.size();
+
+        }else {
+            XReport xReport1=null;
+            try {
+                xReport1 = xReportDBAdapter.getLastRow();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(xReport1.getxReportId(), InvoiceStatus.UNPAID.getValue());
+            invoiceCount+=posInvoiceList.size();
+
+            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(xReport1.getxReportId(), DocumentType.CREDIT_INVOICE.getValue(),CONSTANT.CASH);
+            CreditInvoiceCount+=posCreditInvoiceList.size();
+
+            List<PosInvoice>posReceiptListCheck = posInvoiceDBAdapter.getPosInvoiceListByType(xReport1.getxReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
+            receiptInvoiceAmountCheck+=posReceiptListCheck.size();
+        }
+        List<Long>orderIds= new ArrayList<>();
+        List<Payment> payments = paymentList(orderDb.getBetween(x.getStartOrderId(),x.getEndOrderId()),context);
+        for (Payment p : payments) {
+            int i = 0;
+            switch (p.getPaymentWay()) {
+
+                case CONSTANT.CASH:
+                    cashCount+=1;
+                    cashAmount+=p.getAmount();
+                    break;
+                case CONSTANT.CREDIT_CARD:
+                    creditCardCount+=1;
+                    break;
+                case CONSTANT.CHECKS:
+                    checkCount+=1;
+                    orderIds.add(p.getOrderId());
+                    break;
+            }
+        }
+        if(orderIds.size()>0){
+            for (int id = 0;id<orderIds.size();id++){
+                ChecksDBAdapter checkDb= new ChecksDBAdapter(context);
+                checkDb.open();
+                List<Check> c = checkDb.getPaymentBySaleID(orderIds.get(id));
+                checkList.add(c);
+            }
+        }
+        //with Currency
+        if (SETTINGS.enableCurrencies) {
+            List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(orderDb.getBetween(x.getStartOrderId(),x.getEndOrderId()),context);
+            for (CurrencyOperation cp : currencyOperationList) {
+                switch (cp.getCurrency_type()) {
+                    case "ILS":
+                        ShekelCount+=1;
+                        break;
+                    case "USD":
+                        UsdCount+=1;
+                        break;
+                    case "EUR":
+                        EurCount+=1;
+
+                        break;
+                    case "GBP":
+                        GbpCount+=1;
+                        break;
+                }
+            }
+
+        }
+        if(xReportDBAdapter.getProfilesCount()==0){
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
+            receiptInvoiceAmount+=posReceiptList.size();
+
+        }else {
+            XReport xReport1=null;
+            try {
+                xReport1 = xReportDBAdapter.getLastRow();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(xReport1.getxReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
+            receiptInvoiceAmount+=posReceiptList.size();
+
+        }
+        ShekelCount+=receiptInvoiceAmount;
+        checkCount+=receiptInvoiceAmountCheck;
+
+    }
+    public static void createMonthZReport( Context context,ZReport zReport,Date from ,Date to) throws IOException, DocumentException {
+        Document document = new Document();
+        String fileName = "mounthzreport.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+        if(file.exists()){
+            PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
+            writer.print("");
+            writer.close();
+        }
+
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();        //end region
+        //end region
+        getCountForZReport(context,zReport);
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 24);
+        PdfPTable headingTable = new PdfPTable(1);
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.from) +":  "+DateConverter.toDate(from), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.to) +":  "+DateConverter.toDate(to), Element.ALIGN_CENTER, 1, font);
+        EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
+        employeeDBAdapter.open();
+        insertCell(headingTable, context.getString(R.string.user_name)+":  " +employeeDBAdapter.getEmployeesName( zReport.getByUser()), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable,"----------------------------", Element.ALIGN_CENTER, 1, font);
+
+        PdfPTable dataTable = new PdfPTable(4);
+        dataTable.deleteBodyRows();
+        dataTable.setRunDirection(0);
+        insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.details), Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(dataTable, zReport.getInvoiceReceiptAmount() + " ", Element.ALIGN_RIGHT,1, font);
+        insertCell(dataTable,invoiceReceiptCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(dataTable, zReport.getInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,invoiceCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT,2, font);
+
+        insertCell(dataTable, zReport.getCreditInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,creditCardCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(dataTable, zReport.getTotalSales() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,  "~", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.total_sales), Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+
+        insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(dataTable, cashAmount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,cashCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT,2, font);
+
+        ///// shekel region
+        insertCell(dataTable, Util.makePrice(zReport.getShekelAmount()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,ShekelCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.shekel), Element.ALIGN_RIGHT, 2, font);
+
+        ///// usd region
+        insertCell(dataTable, Util.makePrice(zReport.getUsdAmount()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,UsdCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.usd), Element.ALIGN_RIGHT, 2, font);
+
+        ///// eur region
+        insertCell(dataTable, Util.makePrice(zReport.getEurAmount()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,EurCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 2, font);
+        ///// Gbp region
+        insertCell(dataTable, Util.makePrice(zReport.getGbpAmount()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,GbpCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.gbp), Element.ALIGN_RIGHT, 2, font);
+        ///// CreditCard region
+        insertCell(dataTable, Util.makePrice(zReport.getCreditTotal()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,creditCardCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.credit_card), Element.ALIGN_RIGHT, 2, font);
+        insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+
+        ///check region
+        insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(dataTable, Util.makePrice(zReport.getCheckTotal()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,checkCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
+        if(checkList.size()>0){
+            insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+            insertCell(dataTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
+            insertCell(dataTable, context.getString(R.string.date), Element.ALIGN_RIGHT, 1, font);
+            insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
+            for(int i=0;i<checkList.size();i++){
+                List<Check>list = checkList.get(i);
+
+                for (int f =0;f<list.size();f++){
+                    insertCell(dataTable, Util.makePrice(list.get(f).getAmount())+" ", Element.ALIGN_RIGHT, 1, font);
+                    insertCell(dataTable, DateConverter.toDate(list.get(f).getCreatedAt())+" ", Element.ALIGN_RIGHT, 2, font);
+                    insertCell(dataTable, list.get(f).getCheckNum()+" ", Element.ALIGN_RIGHT, 1, font);
+                }
+            }
+            insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+
+        }
+        insertCell(dataTable, Util.makePrice(zReport.getTotalAmount())+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, "~", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.total_amount), Element.ALIGN_RIGHT, 2, font);
+
+
+
+        ////
+        PdfPTable opiningReportTable = new PdfPTable(4);
+        opiningReportTable.deleteBodyRows();
+        opiningReportTable.setRunDirection(0);
+        insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+
+        insertCell(opiningReportTable, context.getString(R.string.opening_report), Element.ALIGN_RIGHT, 4, font);
+        insertCell(opiningReportTable, opiningReportList.size()+" " , Element.ALIGN_RIGHT, 1, font);
+        insertCell(opiningReportTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
+        insertCell(opiningReportTable, aReportAmount +" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(opiningReportTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
+        insertCell(opiningReportTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+
+        PdfPTable opiningReportDetailsTable = new PdfPTable(2);
+        opiningReportDetailsTable.deleteBodyRows();
+        opiningReportDetailsTable.setRunDirection(0);
+        if(SETTINGS.enableCurrencies) {
+            insertCell(opiningReportDetailsTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.type), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, aReportDetailsForFirstCurrency + " ", Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.shekel), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, aReportDetailsForSecondCurrency + " ", Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.usd), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, aReportDetailsForThirdCurrency + " ", Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.gbp), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, aReportDetailsForForthCurrency + " ", Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, "----------------------------", Element.ALIGN_CENTER, 2, font);
+        }
+        PdfPTable posSalesTable = new PdfPTable(2);
+        posSalesTable.deleteBodyRows();
+        posSalesTable.setRunDirection(0);
+        insertCell(posSalesTable, context.getString(R.string.pos_sales), Element.ALIGN_RIGHT, 1, font);
+        insertCell(posSalesTable,Util.makePrice(zReport.getTotalPosSales()) +" ", Element.ALIGN_RIGHT, 1, font);
+        //add table to document
+        document.add(headingTable);
+        document.add(dataTable);
+        document.add(opiningReportTable);
+        if(SETTINGS.enableCurrencies){
+            document.add(opiningReportDetailsTable);
+
+        }
+        document.add(posSalesTable);
+        document.close();
+        //end :)
+
 
     }
 }

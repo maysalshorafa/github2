@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,12 +9,15 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -52,7 +56,6 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
-import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Settings.SettingsActivity;
 import com.pos.leaders.leaderspossystem.SettingsTab.SettingsTab;
@@ -64,8 +67,13 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
+import com.sun.pdfview.PDFFile;
+import com.sun.pdfview.PDFPage;
 import com.sunmi.aidl.MSCardService;
 
+import net.sf.andpdf.nio.ByteBuffer;
+
+import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +104,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
     long aReportId;
     double totalZReportAmount =0;
     boolean PRINTER_STATE=false;
+    boolean fromDashBoard=false;
+
+    public static ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
+    Bitmap newBitmap =null;
 
     ServiceConnection serviceConnection;
     @Override
@@ -276,6 +288,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                             .setMessage(getString(R.string.create_z_report_message))
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
+                                                    fromDashBoard=true;
+
                                                     OpiningReport opiningReport = Util.getLastAReport(getApplicationContext());
                                                     ClosingReportDBAdapter closingReportDBAdapter =new ClosingReportDBAdapter(getApplicationContext());
                                                     closingReportDBAdapter.open();
@@ -305,10 +319,6 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                         ZReport zReport= Util.insertZReport(z,getApplicationContext());
                                                         btZReport.setEnabled(false);
                                                         if(zReport!=null){
-                                                            Bitmap bitmap;
-                                                            PrintTools printTools = new PrintTools(DashBord.this);
-                                                            bitmap=printTools.createZReport(zReport,false);
-                                                            printTools.PrintReport(bitmap);
                                                             if (needAReport()) {
                                                                 btAReport.setEnabled(true);
                                                                 btZReport.setEnabled(false);
@@ -321,14 +331,17 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                                 } else
                                                                     btZReport.setEnabled(true);
                                                                 salesCart.setEnabled(true);
-                                                            }                                                        /**    Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
+                                                            }
+                                                            Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
                                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
                                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
                                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
                                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
                                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,amount);
-                                                             finish();
-                                                             startActivity(i);**/
+                                                            i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FROM_DASH_BOARD,true);
+
+                                                          //  finish();
+                                                             startActivity(i);
 
                                                         }
                                                     }else {
@@ -399,10 +412,6 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                         ZReport zReport= Util.insertZReport(z,getApplicationContext());
                                         btZReport.setEnabled(false);
                                         if(zReport!=null){
-                                            Bitmap bitmap;
-                                            PrintTools printTools = new PrintTools(DashBord.this);
-                                            bitmap=printTools.createZReport(zReport,false);
-                                            printTools.PrintReport(bitmap);
                                             if (needAReport()) {
                                                 btAReport.setEnabled(true);
                                                 btZReport.setEnabled(false);
@@ -415,14 +424,16 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                 } else
                                                     btZReport.setEnabled(true);
                                                 salesCart.setEnabled(true);
-                                            }                                                  /** Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
+                                            }
+                                            Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,amount);
-                                             finish();
-                                             startActivity(i);**/
+                                            i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FROM_DASH_BOARD,true);
+                                            finish();
+                                             startActivity(i);
                                         }
 
                                     }else {
@@ -1130,6 +1141,107 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    private void pdfLoadImages(final byte[] data)
+    {
+        bitmapList=new ArrayList<>();
+        try
+        {
+            // run async
+            new AsyncTask<Void, Void, String>()
+            {
+                // create and show a progress dialog
+                ProgressDialog progressDialog = ProgressDialog.show(DashBord.this, "", "Opening...");
+
+                @Override
+                protected void onPostExecute(String html)
+                {
+                    Log.d("bitmapsize2222",bitmapList.size()+"");
+                    newBitmap= combineImageIntoOne(bitmapList);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    //after async close progress dialog
+                    progressDialog.dismiss();
+                    //load the html in the webview
+                    //  wv.loadDataWithBaseURL("", html, "text/html","UTF-8", "");
+                }
+
+                @Override
+                protected String doInBackground(Void... params)
+                {
+                    try
+                    {
+                        //create pdf document object from bytes
+                        ByteBuffer bb = ByteBuffer.NEW(data);
+                        PDFFile pdf = new PDFFile(bb);
+                        //Get the first page from the pdf doc
+                        PDFPage PDFpage = pdf.getPage(1, true);
+                        //create a scaling value according to the WebView Width
+                        final float scale = 800 / PDFpage.getWidth() * 0.80f;
+                        //convert the page into a bitmap with a scaling value
+                        Bitmap page = PDFpage.getImage((int)(PDFpage.getWidth() * scale), (int)(PDFpage.getHeight() * scale), null, true, true);
+                        //save the bitmap to a byte array
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        stream.reset();
+                        //convert the byte array to a base64 string
+                        String base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                        //create the html + add the first image to the html
+                        String html = "<!DOCTYPE html><html><body bgcolor=\"#ffffff\"><img src=\"data:image/png;base64," + base64 + "\" hspace=328 vspace=4><br>";                        //loop though the rest of the pages and repeat the above
+                        for(int i = 1; i <= pdf.getNumPages(); i++)
+                        {
+                            PDFpage = pdf.getPage(i, true);
+                            page = PDFpage.getImage((int)(PDFpage.getWidth() * scale), (int)(PDFpage.getHeight() * scale), null, true, true);
+                            page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            bitmapList.add(page);
+                            byteArray = stream.toByteArray();
+                            stream.reset();
+                            base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                            html += "<img src=\"data:image/png;base64,"+base64+"\" hspace=10 vspace=10><br>";
+                        }
+                        stream.close();
+                        html += "</body></html>";
+                        Log.d("mmmmmmm",bitmapList.size()+"");
+
+                        return html;
+                    }
+                    catch (Exception e)
+                    {
+                        Log.d("error", e.toString());
+                    }
+                    return null;
+                }
+            }.execute();
+            System.gc();// run GC
+        }
+        catch (Exception e)
+        {
+            Log.d("error", e.toString());
+        }
+    }
+    private Bitmap combineImageIntoOne(ArrayList<Bitmap> bitmap) {
+        int w = 0, h = 0;
+        for (int i = 0; i < bitmap.size(); i++) {
+            if (i < bitmap.size() - 1) {
+                w = bitmap.get(i).getWidth() > bitmap.get(i + 1).getWidth() ? bitmap.get(i).getWidth() : bitmap.get(i + 1).getWidth();
+            }
+            h += bitmap.get(i).getHeight();
+        }
+
+        Bitmap temp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(temp);
+        int top = 0;
+        for (int i = 0; i < bitmap.size(); i++) {
+            Log.d("HTML", "Combine: "+i+"/"+bitmap.size()+1);
+
+            top = (i == 0 ? 0 : top+bitmap.get(i).getHeight());
+            canvas.drawBitmap(bitmap.get(i), 0f, top, null);
+        }
+        return temp;
     }
 }
 

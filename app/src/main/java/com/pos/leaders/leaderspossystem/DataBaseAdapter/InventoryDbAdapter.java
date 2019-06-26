@@ -10,9 +10,6 @@ import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Inventory;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
-/**
- * Created by Win8.1 on 5/2/2019.
- */
 
 public class InventoryDbAdapter {
     public static final String INVENTORY_TABLE_NAME = "Inventory";

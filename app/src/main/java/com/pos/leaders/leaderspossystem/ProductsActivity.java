@@ -353,7 +353,7 @@ public class ProductsActivity  extends AppCompatActivity  {
             if(editableProduct==null){
                 if(lastProduct!=null){
                     if(Util.isInteger(lastProduct.getProductCode())){
-                        int a = Integer.parseInt(lastProduct.getProductCode())+1;
+                        long a = Long.parseLong(lastProduct.getProductCode())+1;
                         etName.setText(a+"");
                     }else {
                         etName.setText(lastProduct.getProductCode().concat("1"));
