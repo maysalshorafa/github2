@@ -501,6 +501,10 @@
     <string name="delete_product_message"> Are you want to delete this product?</string>
     <string name="create_z_report_message"> Are you want to Create Z Report?</string>
     <string name="create_z_report">Create Z Report</string>
+    <string name="success_adding_new_provider">Success, adding new Provider.</string>
+    <string name="can_not_add_provider_please_try_again">Can`t add provider please try again.</string>
+    <string name="success_edit_provider">Success, editing new Provider.</string>
+    <string name="can_not_edit_provider_please_try_again">Can`t edit Provider please try again.</string>
 
     <!--club string-->
     <string name="_description">description</string>

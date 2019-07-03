@@ -1599,4 +1599,70 @@ public class PdfUA {
 
 
     }
+    public static void createNormalInvoice(Context context  , List<OrderDetails>orderDetailsList) throws IOException, DocumentException {
+        double totalPrice =0.0;
+        int count=0;
+        // create file , document region
+        Document document = new Document();
+        String fileName = "normalInvoice.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+        if(file.exists()){
+            PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
+            writer.print("");
+            writer.close();
+        }
+
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();        //end region
+        //end region
+        Date date;
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 30);
+        PdfPTable headingTable = new PdfPTable(1);
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.user_name)+":  " + SESSION._EMPLOYEE.getFirstName(), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.pause_invoice), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+
+        BaseFont urName1 = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font urFontName1 = new Font(urName1, 22);
+        PdfPTable table = new PdfPTable(7);
+        Font urFontName = new Font(urName1, 24);
+
+        table.deleteBodyRows();
+        table.setRunDirection(0);
+        //insert column headings;
+        insertCell(table, "%", Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.total), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.price), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.qty), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.product), Element.ALIGN_CENTER, 3, urFontName1);
+
+        for (int i=0;i<orderDetailsList.size();i++){
+            insertCell(table, "  " + orderDetailsList.get(i).getDiscount(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table,"  "+ orderDetailsList.get(i).getUnitPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table, orderDetailsList.get(i).getQuantity()+"", Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            if (orderDetailsList.get(i).getProduct().getDisplayName().equals("General"))
+                orderDetailsList.get(i).getProduct().setProductCode(context.getString(R.string.general));
+            insertCell(table, orderDetailsList.get(i).getProduct().getDisplayName(), Element.ALIGN_CENTER, 3, urFontName); // insert date value
+            totalPrice+=orderDetailsList.get(i).getItemTotalPrice();
+            count+=orderDetailsList.get(i).getQuantity();
+        }
+        insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 7, font);
+        insertCell(table, context.getString(R.string.product_quantity)+" : "+count  , Element.ALIGN_CENTER, 7, font);
+        insertCell(table, context.getString(R.string.total_price)+" : "+totalPrice  , Element.ALIGN_CENTER, 7, font);
+        //add table to document
+        document.add(headingTable);
+        document.add(table);
+        document.close();
+    }
+
 }

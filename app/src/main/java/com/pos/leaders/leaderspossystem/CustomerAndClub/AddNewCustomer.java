@@ -294,7 +294,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                             etCustomerLastName.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_last_name), Toast.LENGTH_LONG).show();
                         } else if (etPhoneNo.getText().toString().equals("")) {
-                            etCustomerLastName.setBackgroundResource(R.drawable.backtext);
+                            etPhoneNo.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
                         } else {
                             try {

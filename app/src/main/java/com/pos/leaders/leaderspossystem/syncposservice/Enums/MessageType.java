@@ -92,6 +92,10 @@ public interface MessageType{
     String UPDATE_CUSTOMER = "UpdateCustomer";
     String DELETE_CUSTOMER = "DeleteCustomer";
 
+    String ADD_PROVIDER = "AddProvider";
+    String UPDATE_PROVIDER = "UpdateProvider";
+    String DELETE_PROVIDER = "DeleteProvider";
+
     String ADD_PRODUCT = "AddProduct";
     String UPDATE_PRODUCT = "UpdateProduct";
     String DELETE_PRODUCT = "DeleteProduct";

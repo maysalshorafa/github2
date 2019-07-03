@@ -222,10 +222,10 @@
             android:name=".ViewCreditInvoiceActivity"
             android:label="@string/view_credit_invoice_management_activity" />
         <activity android:name=".MonthZReportView" />
-        <activity android:name=".CategoryOfferActivity"
-            android:label="@string/create_offer_category_activity"
-
-        />
+        <activity
+            android:name=".CategoryOfferActivity"
+            android:label="@string/create_offer_category_activity" />
+        <activity android:name=".AddNewProvider"></activity>
     </application>
 
 </manifest>
