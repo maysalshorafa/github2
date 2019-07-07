@@ -47,6 +47,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProviderDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule11DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule1DBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Rule3DbAdapter;
@@ -175,7 +176,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (8 , 'settings');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (9 , 'user club');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (10 , 'sales man');");
-        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (11 , 'offers');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (11 , 'inventoryManagement');");
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(1,1,1);");
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(2,2,1);");
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(3,2,3);");
@@ -192,6 +193,7 @@ public class DbHelper extends SQLiteOpenHelper {
          db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(12,2,3.2,2.3);");
          db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(13,2,2.3,2.3);");**/
         db.execSQL(PosSettingDbAdapter.DATABASE_CREATE);
+        db.execSQL(ProviderDbAdapter.DATABASE_CREATE);
 
 
         // Currency Statment
@@ -332,7 +334,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(IdsCounterDBAdapter.addColumn(GroupsResourceDbAdapter.GROUPS_RESOURCES_TABLE_NAME));
                     db.execSQL(IdsCounterDBAdapter.addColumn(CategoryDBAdapter.CATEGORY_TABLE_NAME));
                     db.execSQL("update " + IdsCounterDBAdapter.IDS_COUNTER_TABLE_NAME + " set " + CategoryDBAdapter.CATEGORY_TABLE_NAME + "=departments;");
-                    db.execSQL("insert into " + PermissionsDBAdapter.PERMISSIONS_TABLE_NAME + "  values (11 , 'offers');");
+                    db.execSQL("insert into " + PermissionsDBAdapter.PERMISSIONS_TABLE_NAME + "  values (11 , 'inventoryManagement');");
                     db.execSQL("insert into " + EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME + " values(12,2,11);");
                     db.execSQL(CurrencyOperationDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[0]);
                     db.execSQL(CurrencyOperationDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[1]);
@@ -404,6 +406,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
                     break;
                 case 5:
+                    db.execSQL(ProviderDbAdapter.DATABASE_CREATE);
                     db.execSQL(PosSettingDbAdapter.DATABASE_CREATE);
                     SharedPreferences cSharedPreferences = context.getSharedPreferences("POS_Management", MODE_PRIVATE);
                     boolean creditCardEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, false);

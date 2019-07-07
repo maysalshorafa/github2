@@ -35,7 +35,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
     public static final String COM_LEADPOS_XREPORT_TOTAL_AMOUNT = "COM_LEADPOS_XREPORT_TOTAL_AMOUNT";
     public static final String COM_LEADPOS_XREPORT_AMOUNT = "COM_LEADPOS_XREPORT_AMOUNT";
 
-    Button btnZ, btnZView,btnX, btnOrder,btnExFiles ,btnSalesMan , btnInvoice , btnClosingReport , btnMonthZReportView;
+    Button btnZ, btnZView,btnX, btnOrder,btnExFiles ,btnSalesMan , btnInvoice , btnClosingReport , btnMonthZReportView,btnOffers;
 
     ZReportDBAdapter zReportDBAdapter;
     OrderDBAdapter saleDBAdapter;
@@ -75,6 +75,8 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         btnMonthZReportView = (Button)findViewById(R.id.reportManagementActivity_btnMonthZReportView);
         zReportDBAdapter = new ZReportDBAdapter(this);
         saleDBAdapter = new OrderDBAdapter(this);
+        btnOffers = (Button)findViewById(R.id.reportManagementActivity_btnOffers);
+
 
         //endregion init
 
@@ -321,6 +323,13 @@ public class ReportsManagementActivity  extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ReportsManagementActivity.this, ClosingReportActivity.class);
+                startActivity(intent);
+            }
+        });
+        btnOffers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ReportsManagementActivity.this, OfferManagementActivity.class);
                 startActivity(intent);
             }
         });

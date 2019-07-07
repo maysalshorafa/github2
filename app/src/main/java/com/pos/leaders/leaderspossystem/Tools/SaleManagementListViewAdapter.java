@@ -101,9 +101,8 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		else {
 			holder.cancelingOrderId.setText("");
 		}
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-		holder.tvDate.setText(String.format(new Locale("en"),format.format(order.getCreatedAt())));
-
+			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+			holder.tvDate.setText(String.format(new Locale("en"),format.format(order.getCreatedAt())));
 		holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
 
 		holder.tvStatus.setText("INRC");

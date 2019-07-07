@@ -39,6 +39,21 @@
             android:textSize="24sp"
             android:textStyle="normal|bold" />
 
+        <Button
+            android:id="@+id/reportManagementActivity_btnOffers"
+            style="@style/AppTheme.dashboard_bt"
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:layout_margin="16dp"
+            android:padding="16dp"
+
+            android:textColor="@color/white"
+
+            android:text="@string/offers"
+
+            android:textSize="24sp"
+            android:textStyle="normal|bold" />
+
     </LinearLayout>
 
     <LinearLayout

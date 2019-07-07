@@ -143,12 +143,12 @@
             ibutton:button_text="@string/settings" />
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
-            android:id="@+id/dashboard_btOffer"
+            android:id="@+id/dashboard_btInventory"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            ibutton:button_icon="@drawable/offer"
-            ibutton:button_text="@string/offers"/>
+            ibutton:button_icon="@drawable/home"
+            ibutton:button_text="@string/inventory"/>
 
 
 

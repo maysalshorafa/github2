@@ -32,6 +32,7 @@ public class Permissions {
 	public static final String PERMISSIONS_SETTINGS = "settings";
 	public static final String PERMISSIONS_USER_CLUB = "user club";
 	public static final String PERMISSIONS_SALES_MAN = "sales man";
+	public static final String PERMISSIONS_INVENTORY= "inventoryManagement";
 
 	public static final String[] PERMISSIONS_NAMES = new String[]{PERMISSIONS_MAIN_SCREEN, PERMISSIONS_REPORT, PERMISSIONS_PRODUCT, PERMISSIONS_CATEGORY,
 			PERMISSIONS_USER, PERMISSIONS_SCHEDULE_WORKERS, PERMISSIONS_BACK_UP, PERMISSIONS_SETTINGS, PERMISSIONS_USER_CLUB, PERMISSIONS_SALES_MAN};

@@ -20,7 +20,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.CustomerAndClub.CustmerManagementActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CityDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProviderDbAdapter;
@@ -53,7 +52,7 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
     String gender = "";
     long providerId;
     ImageView advanceFeature;
-    TextView advance ,tvCustomerBalance;
+    TextView advance , tvProviderBalance;
     LinearLayout ProviderBalance ;
     public static Context context = null;
     @Override
@@ -61,7 +60,7 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_add_new_coustmer);
+        setContentView(R.layout.activity_add_new_provider);
         TitleBar.setTitleBar(this);
         init();
         context=this;
@@ -70,11 +69,11 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
         if (bundle != null) {
             permissions_name = getIntent().getIntegerArrayListExtra("permissions_name");
         }
-        if(CustmerManagementActivity.Customer_Management_Edit==10){
+        if(ProviderManagementActivity.Provider_Management_Edit==10){
             btAddProvider.setText(R.string.edit);
-            CustmerManagementActivity.Customer_Management_Edit=0;
+            ProviderManagementActivity.Provider_Management_Edit=0;
         }
-        if(CustmerManagementActivity.Customer_Management_View==9){
+        if(ProviderManagementActivity.Provider_Management_View==9){
             btAddProvider.setVisibility(View.GONE);
             etProviderFirstName.setEnabled(false);
             etProviderLastName.setEnabled(false);
@@ -89,7 +88,7 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
             etProviderCode.setEnabled(false);
             etProviderId.setEnabled(false);
             ProviderBalance.setVisibility(View.VISIBLE);
-            CustmerManagementActivity.Customer_Management_View=0;
+            ProviderManagementActivity.Provider_Management_View=0;
         }
         if (bundle != null) {
             providerId = (long) bundle.get("id");
@@ -107,7 +106,7 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
             etProviderCode.setText(provider.getProviderCode());
             etProviderId.setText(provider.getProviderIdentity());
             btAddProvider.setText(getResources().getText(R.string.edit));
-            tvCustomerBalance.setText(provider.getBalance()+"");
+            tvProviderBalance.setText(provider.getBalance()+"");
 
             if(secondProviderInformation.getVisibility()== View.VISIBLE) {
                 if (provider.getGender().equalsIgnoreCase(getString(R.string.male))) {
@@ -129,7 +128,11 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             onBackPressed();            }
+                Intent intent = new Intent(
+                        AddNewProvider.this,ProviderManagementActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
         });
         advanceFeature.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,8 +147,6 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
             @Override
             public void onClick(View v) {
                 String _providerName = etProviderFirstName.getText().toString();
-                Intent intent;
-                String customerTypeText = "";
                 if (provider == null) {
                     if (!_providerName.equals("")) {
                         if (secondProviderInformation.getVisibility() == View.VISIBLE) {
@@ -176,7 +177,7 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
                         } else if (etPhoneNo.getText().toString().equals("")) {
                             etPhoneNo.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
-                        } else if (!providerDbAdapter.availableCustomerPhoneNo(etPhoneNo.getText().toString())) {
+                        } else if (!providerDbAdapter.availableProviderPhoneNo(etPhoneNo.getText().toString())) {
                             etPhoneNo.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
                         } else {
@@ -274,31 +275,32 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
         cityDbAdapter.open();
         ClubAdapter groupAdapter = new ClubAdapter(AddNewProvider.this);
         groupAdapter.open();
-        secondProviderInformation = (LinearLayout) findViewById(R.id.secondCustomerInformation);
-        etProviderFirstName = (EditText) findViewById(R.id.etCustomerFirstName);
-        etProviderLastName = (EditText) findViewById(R.id.etCustomerLastName);
-        etStreet = (EditText) findViewById(R.id.etCustomerStreet);
-        radioGender = (RadioGroup) findViewById(R.id.customerGender);
+        secondProviderInformation = (LinearLayout) findViewById(R.id.secondProviderInformation);
+        etProviderFirstName = (EditText) findViewById(R.id.etProviderFirstName);
+        etProviderLastName = (EditText) findViewById(R.id.etProviderLastName);
+        etStreet = (EditText) findViewById(R.id.etProviderStreet);
+        radioGender = (RadioGroup) findViewById(R.id.providerGender);
         maleRadioButton = (RadioButton) findViewById(R.id.male);
         femaleRadioButton = (RadioButton) findViewById(R.id.female);
-        etJob = (EditText) findViewById(R.id.etCustomerJob);
-        etEmail = (EditText) findViewById(R.id.etCustomerEmail);
-        etPhoneNo = (EditText) findViewById(R.id.etCustomerPhoneNumber);
-        etCountry = (EditText) findViewById(R.id.etCustomerCountry);
-        etCountryCode = (EditText) findViewById(R.id.etCustomerCountryCode);
+        etJob = (EditText) findViewById(R.id.etProviderJob);
+        etEmail = (EditText) findViewById(R.id.etProviderEmail);
+        etPhoneNo = (EditText) findViewById(R.id.etProviderPhoneNumber);
+        etCountry = (EditText) findViewById(R.id.etProviderCountry);
+        etCountryCode = (EditText) findViewById(R.id.etProviderCountryCode);
         etHouseNumber = (EditText) findViewById(R.id.etHouseNumber);
-        etPostalCode = (EditText) findViewById(R.id.etCustomerPostalCode);
-        etProviderCode = (EditText) findViewById(R.id.etCustomerCode);
-        etProviderId = (EditText) findViewById(R.id.etCustomerId);
-        btAddProvider = (Button) findViewById(R.id.add_Custmer);
-        btCancel = (Button) findViewById(R.id.addCustmer_BTCancel);
+        etPostalCode = (EditText) findViewById(R.id.etProviderPostalCode);
+        etProviderCode = (EditText) findViewById(R.id.etProviderCode);
+        etProviderId = (EditText) findViewById(R.id.etProviderId);
+        btAddProvider = (Button) findViewById(R.id.add_Provider);
+        btCancel = (Button) findViewById(R.id.addProvider_BTCancel);
         advanceFeature = (ImageView) findViewById(R.id.advanceFeature);
         advance = (TextView) findViewById(R.id.advance);
         providerDbAdapter = new ProviderDbAdapter(this);
         providerDbAdapter.open();
-        selectCitySpinner = (Spinner) findViewById(R.id.customerCitySpinner);
-        selectClubSpinner = (Spinner) findViewById(R.id.customerClubSpinner);
-        tvCustomerBalance = (TextView) findViewById(R.id.addNewCustomerBalanceValue);
+        selectCitySpinner = (Spinner) findViewById(R.id.providerCitySpinner);
+        selectClubSpinner = (Spinner) findViewById(R.id.providerClubSpinner);
+        ProviderBalance = (LinearLayout)findViewById(R.id.providerBalance);
+        tvProviderBalance = (TextView) findViewById(R.id.addNewproviderBalanceValue);
         selectCitySpinner.setOnItemSelectedListener(this);
         final List<String> city = new ArrayList<String>();
         cityList = cityDbAdapter.getAllCity();
@@ -320,11 +322,11 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
 
 
         // attaching data adapter to spinner
-        providerBranch = (Spinner) findViewById(R.id.customerBranch);
-        final List<String> customerBranchList = new ArrayList<String>();
-        customerBranchList.add(getString(R.string.all));
-        customerBranchList.add(getString(R.string.pos_branch));
-        final ArrayAdapter<String> branchDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, customerBranchList);
+        providerBranch = (Spinner) findViewById(R.id.providerBranch);
+        final List<String> providerBranchList = new ArrayList<String>();
+        providerBranchList.add(getString(R.string.all));
+        providerBranchList.add(getString(R.string.pos_branch));
+        final ArrayAdapter<String> branchDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, providerBranchList);
         branchDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         providerBranch.setAdapter(branchDataAdapter);
 

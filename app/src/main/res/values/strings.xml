@@ -86,6 +86,11 @@
     <string name="please_insert_category_name_with_out_spaces">Please Insert Category Name WithOut Spaces.</string>
     <string name="order_details">OrderDetails</string>
     <string name="order">Order</string>
+    <string name="provider">Provider</string>
+    <string name="inventory_in">Inventory In</string>
+    <string name="inventory_out">Inventory Out</string>
+    <string name="view_provider">View Provider</string>
+    <string name="add_new_provider">Add New Provider</string>
 
 
     <!--Splash Screen-->
@@ -117,7 +122,7 @@
     <string name="reports">Reports</string>
     <string name="setting">Setting</string>
     <string name="backup">Backup</string>
-
+    <string name="inventory">Inventory</string>
     <!--Main Activity-->
     <string name="open">Open</string>
     <string name="close">Close</string>
@@ -412,6 +417,8 @@
     <!--customer String -->
     <string name="customer_name">Customer Name</string>
     <string name="customer_id">Customer ID</string>
+    <string name="provider_id">Provider ID</string>
+
     <string name="gender">Gender</string>
     <string name="street">Street</string>
     <string name="country">Country</string>
@@ -422,6 +429,8 @@
     <string name="edit_max_customer_credit">Edit max customer credit</string>
     <string name="job">Job</string>
     <string name="customer_code_in_another_programme">Customer Code In Another Programme</string>
+    <string name="provider_code_in_another_programme">Provider Code In Another Programme</string>
+
     <string name="email">Email</string>
     <string name="phone">Phone</string>
     <string name="address">Address</string>
@@ -452,8 +461,12 @@
     <string name="back_up">BackUp</string>
     <string name="hours_of_work">Hours Of Work</string>
     <string name="customer_club">Customer Club</string>
+    <string name="provider_club">Provider Club</string>
+
     <string name="customer">Customer</string>
     <string name="customer_code">Customer Code</string>
+    <string name="provider_code">Provider Code</string>
+
     <string name="club">Club</string>
     <string name="general_customer">General Customer</string>
     <string name="please_set_password">Please set password.</string>

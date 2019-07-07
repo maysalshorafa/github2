@@ -83,7 +83,7 @@ import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE
 
 public class DashBord extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private boolean enableBackButton = true;
-    IButton salesCart, report, product, category, closingReport, customerClub, logOut, offers, settings , schedule_workers;
+    IButton salesCart, report, product, category, closingReport, customerClub, logOut, inventoryManagement, settings , schedule_workers;
     IButton users;
     IButton btZReport, btAReport;
     OpiningReportDBAdapter aReportDBAdapter;
@@ -207,7 +207,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         report = (IButton) findViewById(R.id.report);
         product = (IButton) findViewById(R.id.product);
         category = (IButton) findViewById(R.id.department);
-        offers = (IButton) findViewById(R.id.dashboard_btOffer);
+        inventoryManagement = (IButton) findViewById(R.id.dashboard_btInventory);
         users = (IButton) findViewById(R.id.users);
         schedule_workers = (IButton) findViewById(R.id.schedule_workers);
         closingReport = (IButton) findViewById(R.id.closingReport);
@@ -543,10 +543,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 startActivity(i);
             }
         });
-        offers.setOnClickListener(new View.OnClickListener() {
+        inventoryManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                i = new Intent(getApplicationContext(), OfferManagementActivity.class);
+                i = new Intent(getApplicationContext(), InventoryManagementActivity.class);
                 startActivity(i);
             }
         });
@@ -579,7 +579,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         report.setEnabled(false);
         product.setEnabled(false);
         schedule_workers.setEnabled(false);
-        offers.setEnabled(false);
+        inventoryManagement.setEnabled(false);
         users.setEnabled(false);
         closingReport.setEnabled(false);
         category.setEnabled(false);
@@ -626,8 +626,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 case Permissions.PERMISSIONS_SCHEDULE_WORKERS:
                     schedule_workers.setEnabled(true);
                     break;
-                case Permissions.PERMISSIONS_OFFERS:
-                    offers.setEnabled(true);
+                case Permissions.PERMISSIONS_INVENTORY:
+                    inventoryManagement.setEnabled(true);
                     break;
                 case Permissions.PERMISSIONS_SETTINGS:
                     settings.setEnabled(true);
