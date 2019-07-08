@@ -3303,6 +3303,10 @@ public class SalesCartActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        for(OrderDetails o :SESSION._ORDER_DETAILES){
+            o.getProduct().setStockQuantity(o.getProduct().getStockQuantity()-o.getQuantity());
+            productDBAdapter.updateProductQty(o.getProduct());
+        }
         if (Long.valueOf(SESSION._ORDERS.getCustomerId()) == 0) {
             if (SESSION._ORDERS.getCustomer_name() == null) {
 

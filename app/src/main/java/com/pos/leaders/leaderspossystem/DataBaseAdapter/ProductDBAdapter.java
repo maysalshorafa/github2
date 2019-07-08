@@ -558,4 +558,18 @@ public class ProductDBAdapter {
                 + " add column " + columnName + " INTEGER default 0.0;";
         return dbc;
     }
+    public void updateProductQty(Product product) {
+        ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
+        productDBAdapter.open();
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(PRODUCTS_COLUMN_STOCK_QUANTITY, product.getStockQuantity());
+        String where = PRODUCTS_COLUMN_ID + " = ?";
+        db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getProductId() + ""});
+        Product p=productDBAdapter.getProductByID(product.getProductId());
+        Log.d("Update Object",p.toString());
+        sendToBroker(MessageType.UPDATE_PRODUCT, p, this.context);
+        productDBAdapter.close();
+    }
+
 }
