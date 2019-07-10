@@ -33,7 +33,7 @@ public class InventoryManagementActivity extends AppCompatActivity {
         provider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(InventoryManagementActivity.this);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(InventoryManagementActivity.this);
                 builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
                 builder.setItems(itemsWithProvider, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
@@ -49,10 +49,20 @@ public class InventoryManagementActivity extends AppCompatActivity {
                                 break;
 
                         }
+                        AlertDialog alert = builder.create();
+                        alert.show();
                     }
                 });
-                AlertDialog alert = builder.create();
-                alert.show();
+
+                inventoryIn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                                Intent intent= new Intent(InventoryManagementActivity.this, InInventoryDoc.class);
+                                        startActivity(intent);
+
+                            }
+                        });
+
             }
         });
 

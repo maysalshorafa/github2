@@ -91,6 +91,7 @@
     <string name="inventory_out">Inventory Out</string>
     <string name="view_provider">View Provider</string>
     <string name="add_new_provider">Add New Provider</string>
+    <string name="please_choose_your_provider">Please Choose Your Provider</string>
 
 
     <!--Splash Screen-->

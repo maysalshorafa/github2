@@ -227,7 +227,8 @@
             android:label="@string/create_offer_category_activity" />
         <activity android:name=".AddNewProvider" />
         <activity android:name=".InventoryManagementActivity" />
-        <activity android:name=".ProviderManagementActivity"></activity>
+        <activity android:name=".ProviderManagementActivity" />
+        <activity android:name=".InInventoryDoc"></activity>
     </application>
 
 </manifest>
