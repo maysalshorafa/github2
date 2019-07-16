@@ -43,6 +43,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProviderDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
@@ -76,6 +77,7 @@ import com.pos.leaders.leaderspossystem.Models.Permission.EmployeesPermissions;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.PosSetting;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Models.Provider;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.SumPoint;
 import com.pos.leaders.leaderspossystem.Models.UsedPoint;
@@ -732,6 +734,34 @@ public class SyncMessage extends Service {
                     deleteCustomerDBAdapter.open();
                     rID = deleteCustomerDBAdapter.deleteEntryBo(deleteCustomer);
                     deleteCustomerDBAdapter.close();
+                    break;
+                //endregion CUSTOMER
+                //region CUSTOMER
+                case MessageType.ADD_PROVIDER:
+                    Provider provider = null;
+                    provider = objectMapper.readValue(msgData, Provider.class);
+
+                    ProviderDbAdapter providerDbAdapter = new ProviderDbAdapter(this);
+                    providerDbAdapter.open();
+                    rID = providerDbAdapter.insertEntry(provider);
+                    providerDbAdapter.close();
+
+                    break;
+                case MessageType.UPDATE_PROVIDER:
+                    Provider upDateProvider = null;
+                    upDateProvider = objectMapper.readValue(msgData, Provider.class);
+                    ProviderDbAdapter updateProviderDbAdapter = new ProviderDbAdapter(this);
+                    updateProviderDbAdapter.open();
+                    rID = updateProviderDbAdapter.updateEntryBo(upDateProvider);
+                    updateProviderDbAdapter.close();
+                    break;
+                case MessageType.DELETE_PROVIDER:
+                    Provider deleteProvider = null;
+                    deleteProvider = objectMapper.readValue(msgData, Provider.class);
+                    ProviderDbAdapter deleteProviderDbAdapter = new ProviderDbAdapter(this);
+                    deleteProviderDbAdapter.open();
+                    rID = deleteProviderDbAdapter.deleteEntryBo(deleteProvider);
+                    deleteProviderDbAdapter.close();
                     break;
                 //endregion CUSTOMER
 
@@ -1426,6 +1456,18 @@ public class SyncMessage extends Service {
             case MessageType.DELETE_CUSTOMER:
                 JSONObject newDeleteCustomerJson = new JSONObject(jsonObject.getString(MessageKey.Data));
                 res = messageTransmit.authDelete(ApiURL.Customer, newDeleteCustomerJson.getString("customerId"), token);
+                break;
+            case MessageType.ADD_PROVIDER:
+                res = messageTransmit.authPost(ApiURL.PROVIDER, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_PROVIDER:
+                Provider provider=null;
+                provider=objectMapper.readValue(msgData, Provider.class);
+                res = messageTransmit.authPut(ApiURL.PROVIDER, jsonObject.getString(MessageKey.Data), token,provider.getProviderId());
+                break;
+            case MessageType.DELETE_PROVIDER:
+                JSONObject newDeleteProviderJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authDelete(ApiURL.PROVIDER, newDeleteProviderJson.getString("providerId"), token);
                 break;
 
 

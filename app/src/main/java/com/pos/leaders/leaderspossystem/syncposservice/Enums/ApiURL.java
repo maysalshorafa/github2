@@ -54,6 +54,8 @@ public interface ApiURL {
     String ClosingReport="ClosingReport";
     String ClosingReportDetails="ClosingReportDetails";
     String XReport = "XReport";
+    String INVENTORY="Inventory";
+    String PROVIDER="Provider";
 
 
 }

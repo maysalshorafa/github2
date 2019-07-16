@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -57,6 +58,7 @@ import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -1663,6 +1665,93 @@ public class PdfUA {
         document.add(headingTable);
         document.add(table);
         document.close();
+    }
+    public static void  printInventoryReport(Context context, String res,String source) throws IOException, DocumentException, JSONException {
+        ProductDBAdapter productDBAdapter =new ProductDBAdapter(context);
+        productDBAdapter.open();
+        JSONObject jsonObject = new JSONObject(res);
+        JSONObject documentsData = jsonObject.getJSONObject("documentsData");;
+        JSONObject customerInfo = new JSONObject(documentsData.getJSONObject("provider").toString());
+        JSONObject userInfo = new JSONObject(documentsData.getJSONObject("user").toString());
+
+        // create file , document region
+        Document document = new Document();
+        String fileName = "inventoryReport.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+        if(file.exists()){
+            PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
+            writer.print("");
+            writer.close();
+        }
+
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();        //end region
+        //end region
+
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 30);
+        Font dateFont = new Font(urName, 24);
+        //heading table
+        PdfPTable headingTable = new PdfPTable(1);
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+        EmployeeDBAdapter employeeDBAdapter =new EmployeeDBAdapter(context);
+        employeeDBAdapter.open();
+        Employee employee = employeeDBAdapter.getEmployeeByID(userInfo.getLong("employeeId"));
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        if(employee!=null) {
+            insertCell(headingTable, context.getString(R.string.cashiers) + employee.getFullName(), Element.ALIGN_CENTER, 1, font);
+        }
+        insertCell(headingTable, context.getString(R.string.provider)+":"+customerInfo.getString("firstName")+customerInfo.getString("lastName"), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
+
+
+        if(source=="inInventory"){
+            insertCell(headingTable,  context.getString(R.string.inventory_in) , Element.ALIGN_CENTER, 1, font);
+            insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
+
+        }else {
+            insertCell(headingTable,  context.getString(R.string.inventory_out) , Element.ALIGN_CENTER, 1, font);
+            insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
+
+        }
+        insertCell(headingTable,  context.getString(R.string.inventory_doc) +" : "+jsonObject.getString("docNum") , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
+        PdfPTable orderDetailsTable = new PdfPTable(5);
+        orderDetailsTable.setRunDirection(0);
+        orderDetailsTable.setWidthPercentage(108f);
+
+        JSONObject itemJson = documentsData.getJSONObject("productsIdWithQuantityList");
+        HashMap<String, Object> productHashMap = new Gson().fromJson(itemJson.toString(), HashMap.class);
+        insertCell(orderDetailsTable, context.getString(R.string.product), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(orderDetailsTable,context.getString(R.string.qty), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(orderDetailsTable, context.getString(R.string.price), Element.ALIGN_LEFT, 1, dateFont);
+
+        for (int a = 0 ; a<itemJson.length();a++) {
+            int qty = (int) productHashMap.values().toArray()[0];
+
+            Product product= productDBAdapter.getProductByID((Long) productHashMap.keySet().toArray()[0]);
+            if(product==null){
+                insertCell(orderDetailsTable, context.getString(R.string.general_product), Element.ALIGN_LEFT, 1, dateFont);
+            }else {
+                insertCell(orderDetailsTable, product.getDisplayName(), Element.ALIGN_LEFT, 1, dateFont);
+            }
+            insertCell(orderDetailsTable, ""+qty, Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(orderDetailsTable,Util.makePrice(product.getCostPrice()), Element.ALIGN_LEFT, 1, dateFont);
+        }
+        insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 5, font);
+
+        //end
+
+        //add table to document
+        document.add(headingTable);
+        document.add(orderDetailsTable);
+        document.close();
+        //end :)
     }
 
 }

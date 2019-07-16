@@ -7,22 +7,31 @@ package com.pos.leaders.leaderspossystem.Models;
 public class Inventory {
     private long id;
     private String name;
-    private long inventory_id;
+    private long inventoryId;
     private String productsIdWithQuantityList;
     private int branchId;
     private int hide;
 
+
     public Inventory() {
     }
 
-    public Inventory(long id, String name, long inventory_id, String productsIdWithQuantityList, int branchId, int hide) {
+    public Inventory(long id, String name, long inventoryId, String productsIdWithQuantityList, int branchId, int hide) {
         this.id = id;
         this.name = name;
-        this.inventory_id = inventory_id;
+        this.inventoryId = inventoryId;
         this.productsIdWithQuantityList = productsIdWithQuantityList;
         this.branchId = branchId;
         this.hide = hide;
     }
+    public Inventory(String name, long inventoryId, String productsIdWithQuantityList, int branchId, int hide) {
+        this.name = name;
+        this.inventoryId = inventoryId;
+        this.productsIdWithQuantityList = productsIdWithQuantityList;
+        this.branchId = branchId;
+        this.hide = hide;
+    }
+
 
     public long getId() {
         return id;
@@ -40,12 +49,12 @@ public class Inventory {
         this.name = name;
     }
 
-    public long getInventory_id() {
-        return inventory_id;
+    public long getInventoryId() {
+        return inventoryId;
     }
 
-    public void setInventory_id(long inventory_id) {
-        this.inventory_id = inventory_id;
+    public void setInventoryId(long inventoryId) {
+        this.inventoryId = inventoryId;
     }
 
     public String getProductsIdWithQuantityList() {
@@ -77,7 +86,7 @@ public class Inventory {
         return "Inventory{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", inventory_id=" + inventory_id +
+                ", inventoryId=" + inventoryId +
                 ", productsIdWithQuantityList='" + productsIdWithQuantityList + '\'' +
                 ", branchId=" + branchId +
                 ", hide=" + hide +

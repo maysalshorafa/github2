@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -213,6 +214,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
                 @Override
                 protected Void doInBackground(Void... params) {
                     updateSettings(token);
+                    updateInventory(token);
                     return null;
                 }
 
@@ -271,6 +273,62 @@ class StartConnection extends AsyncTask<String,Void,String> {
                         (float) respnse.getDouble(MessageKey.tax), respnse.getString(MessageKey.returnNote), respnse.getInt(MessageKey.endOfReturnNote),
                         respnse.getString(MessageKey.CCUN), respnse.getString(MessageKey.CCPW),respnse.getInt(MessageKey.branchId));
                 settingsDBAdapter.close();
+             /**   if (i == 1) {
+                    Util.isFirstLaunch(SetupNewPOSOnlineActivity.context, true);
+                    //finish();
+                } else {
+                    Log.e("setup",jsonObject.getString(MessageKey.responseType));
+                    //Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again), Toast.LENGTH_SHORT).show();
+                }*/
+            }
+            else {
+                Log.e("setup",jsonObject.getString(MessageKey.responseType));
+                //Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again)+": ", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+    private void updateInventory(String token) {
+
+        MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+        try {
+            String res = messageTransmit.authGet(ApiURL.INVENTORY+"/forPos", token);
+            Log.e("CCC", res);
+            JSONObject jsonObject;
+            try {
+                jsonObject = new JSONObject(res);
+            }
+            catch (JSONException e){
+                JSONArray jsonArray = new JSONArray(res);
+                jsonObject = jsonArray.getJSONObject(0);
+            }
+            if(jsonObject.getString(MessageKey.status).equals("200")) {
+                //03-11 16:18:47.482 20608-20721/com.pos.leaders.leaderspossystem E/CCC: {"logTag":"CompanyCredentials Resource","status":"200","responseType":"All objects are successfully returned","responseBody":[{"companyName":"LeadTest","companyID":1,"tax":17.0,"returnNote":"thanks","endOfReturnNote":14,"ccun":"null","ccpw":"null"},{"companyName":"LeadTest","companyID":2,"tax":17.0,"returnNote":"thanks","endOfReturnNote":14,"ccun":"null","ccpw":"null"}]}
+
+                JSONObject respnse;
+
+                try {
+                    respnse = jsonObject.getJSONObject(MessageKey.responseBody);
+                }
+                catch (JSONException e){
+                    JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.responseBody);
+                    respnse = jsonArray.getJSONObject(0);
+                }
+
+                InventoryDbAdapter inventoryDbAdapter = new InventoryDbAdapter(SetupNewPOSOnlineActivity.context);
+                inventoryDbAdapter.open();
+                int hide =0;
+                if( respnse.getBoolean("hide")){
+                    hide=0;
+                }else {
+                    hide=1;
+                }
+                long i = inventoryDbAdapter.insertEntry(respnse.getString("name"), respnse.getLong("inventoryId"), respnse.getString("productsIdWithQuantityList"),
+                        respnse.getInt("branchId"), hide);
+                inventoryDbAdapter.close();
                 if (i == 1) {
                     Util.isFirstLaunch(SetupNewPOSOnlineActivity.context, true);
                     //finish();
@@ -289,5 +347,6 @@ class StartConnection extends AsyncTask<String,Void,String> {
         }
 
     }
+
 }
 

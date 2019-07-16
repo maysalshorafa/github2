@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem.DataBaseAdapter;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -17,12 +18,12 @@ public class InventoryDbAdapter {
     protected static final String INVENTORY_COLUMN_NAME = "name";
     protected static final String INVENTORY_COLUMN_INVENTORY_ID = "inventory_id";
     protected static final String INVENTORY_COLUMN_PRODUCTS_ID_WITH_QUANTITY_LIST = "productsIdWithQuantityList";
-    protected static final String INVENTORY_COLUMN_BRANCH_ID = "branch_id";
+    protected static final String INVENTORY_COLUMN_BRANCH_ID = "branchId";
     protected static final String INVENTORY_COLUMN_HIDE = "hide";
 
     public static final String DATABASE_CREATE = "CREATE TABLE Inventory ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "`name` TEXT NOT NULL , `inventory_id` INTEGER, " +
-            "`productsIdWithQuantityList` TEXT NOT NULL, `productsIdWithQuantityList` TEXT NOT NULL,`branchId` INTEGER DEFAULT 0 , `hide` INTEGER DEFAULT 0)";
+            "`productsIdWithQuantityList` TEXT NOT NULL,`branchId` INTEGER DEFAULT 0 , `hide` INTEGER DEFAULT 0)";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -62,7 +63,7 @@ public class InventoryDbAdapter {
 
         val.put(INVENTORY_COLUMN_BRANCH_ID, inventory.getId());
         val.put(INVENTORY_COLUMN_NAME, inventory.getName());
-        val.put(INVENTORY_COLUMN_INVENTORY_ID, inventory.getInventory_id());
+        val.put(INVENTORY_COLUMN_INVENTORY_ID, inventory.getInventoryId());
         val.put(INVENTORY_COLUMN_PRODUCTS_ID_WITH_QUANTITY_LIST, inventory.getProductsIdWithQuantityList());
         val.put(INVENTORY_COLUMN_BRANCH_ID,inventory.getBranchId());
         val.put(INVENTORY_COLUMN_HIDE,inventory.getHide());
@@ -82,7 +83,7 @@ public class InventoryDbAdapter {
 
         String where = INVENTORY_COLUMN_INVENTORY_ID + " = ?";
         try {
-            db.update(INVENTORY_TABLE_NAME, updatedValues, where, new String[]{inventory.getInventory_id() + ""});
+            db.update(INVENTORY_TABLE_NAME, updatedValues, where, new String[]{inventory.getInventoryId() + ""});
             return 1;
         } catch (SQLException ex) {
             Log.e("Inventory DB delete", "enable hide Entry at " + INVENTORY_TABLE_NAME + ": " + ex.getMessage());
@@ -111,4 +112,42 @@ public class InventoryDbAdapter {
             return 0;
         }
     }*/
+ public Inventory getLastRow() throws Exception {
+     Inventory inventory = null;
+     Cursor cursor = db.rawQuery("select * from " + INVENTORY_TABLE_NAME , null);
+     if (cursor.getCount() < 1) // zReport Not Exist
+     {
+         cursor.close();
+         throw new Exception("there is no rows on inventory  Table");
+     }
+     cursor.moveToFirst();
+     inventory = makeInventory(cursor);
+     cursor.close();
+
+     return inventory;
+ }
+
+    private Inventory makeInventory(Cursor cursor) {
+        //    public Inventory(long id, String name, long inventory_id, String productsIdWithQuantityList, int branchId, int hide) {
+
+        try {
+                Inventory d =new Inventory(Long.parseLong(cursor.getString(cursor.getColumnIndex(INVENTORY_COLUMN_ID))),
+                        cursor.getString(cursor.getColumnIndex(INVENTORY_COLUMN_NAME)),
+                        Long.parseLong(cursor.getString(cursor.getColumnIndex(INVENTORY_COLUMN_INVENTORY_ID))),
+                        cursor.getString(cursor.getColumnIndex(INVENTORY_COLUMN_PRODUCTS_ID_WITH_QUANTITY_LIST)),Integer.parseInt(cursor.getString(cursor.getColumnIndex(INVENTORY_COLUMN_BRANCH_ID))),
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndex(INVENTORY_COLUMN_HIDE))));
+
+                return d;
+            } catch (Exception ex) {
+                Inventory d = new Inventory(Long.parseLong(cursor.getString(cursor.getColumnIndex(INVENTORY_COLUMN_ID))),
+                        cursor.getString(cursor.getColumnIndex(INVENTORY_COLUMN_NAME)),
+                        Long.parseLong(cursor.getString(cursor.getColumnIndex(INVENTORY_COLUMN_INVENTORY_ID))),
+                        cursor.getString(cursor.getColumnIndex(INVENTORY_COLUMN_PRODUCTS_ID_WITH_QUANTITY_LIST)),Integer.parseInt(cursor.getString(cursor.getColumnIndex(INVENTORY_COLUMN_BRANCH_ID))),
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndex(INVENTORY_COLUMN_HIDE))));
+
+                return d;
+            }
+
+    }
+
 }

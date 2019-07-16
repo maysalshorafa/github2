@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.R;
 
@@ -52,17 +54,19 @@ public class InventoryProductDetailsListViewAdapter extends ArrayAdapter impleme
         if (convertView == null) {
             holder = new InventoryProductDetailsListViewAdapter.ViewHolder();
             convertView = inflater.inflate(resource, null);
-            holder.tvName = (TextView) convertView.findViewById(R.id.rowSaleDetails_TVProductName);
-            holder.tvPrice = (TextView) convertView.findViewById(R.id.rowSaleDetails_TVPrice);
-            holder.tvCount = (TextView) convertView.findViewById(R.id.rowSaleDetails_TVCount);
-            holder.tvTotal = (TextView) convertView.findViewById(R.id.rowSaleDetails_TVTotalPrice);
+            holder.tvName = (TextView) convertView.findViewById(R.id.rowInventoryDetails_TVProductName);
+            holder.tvPrice = (TextView) convertView.findViewById(R.id.rowInventoryDetails_TVPrice);
+            holder.tvCount = (TextView) convertView.findViewById(R.id.rowInventoryDetails_TVCount);
+            holder.tvTotal = (TextView) convertView.findViewById(R.id.rowInventoryDetails_TVTotalPrice);
+            holder.llMethods = (LinearLayout) convertView.findViewById(R.id.rowInventoryDetails_LLMethods);
+
             convertView.setTag(holder);
         } else {
             holder = (InventoryProductDetailsListViewAdapter.ViewHolder) convertView.getTag();
         }
         int count;
         double price;
-        price = productList.get(position).getCostPrice();
+        price = productList.get(position).getCostPrice()*productList.get(position).getStockQuantity();;
         count = productList.get(position).getStockQuantity();
         holder.tvName.setText(_Substring(productList.get(position).getDisplayName()));
         String currencyType="";
@@ -78,9 +82,22 @@ public class InventoryProductDetailsListViewAdapter extends ArrayAdapter impleme
         if(productList.get(position).getCurrencyType()==3) {
             currencyType=context.getString(R.string.eur);
         }
-        holder.tvPrice.setText(String.format(new Locale("en"), "%.2f", productList.get(position).getCostPrice()) + " " + currencyType);
+        ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
+        productDBAdapter.open();
+        Product p = productDBAdapter.getProductByID(productList.get(position).getProductId());
+        holder.tvPrice.setText(String.format(new Locale("en"), "%.2f", p.getCostPrice())+ " " + currencyType);
         holder.tvCount.setText(count + "");
         holder.tvTotal.setText(String.format(new Locale("en"), "%.2f", (price )) + " " + currencyType);
+        if (selected == position && selected != -1) {
+            holder.llMethods.setVisibility(View.VISIBLE);
+
+            convertView.setBackgroundColor(context.getResources().getColor(R.color.list_background_color));
+        } else {
+            holder.llMethods.setVisibility(View.GONE);
+
+
+            convertView.setBackgroundColor(context.getResources().getColor(R.color.white));
+        }
         return convertView;
     }
 
@@ -105,6 +122,6 @@ public class InventoryProductDetailsListViewAdapter extends ArrayAdapter impleme
         private TextView tvCount;
         private TextView tvPrice;
         private TextView tvTotal;
-
+        private LinearLayout llMethods;
     }
 }

@@ -49,23 +49,23 @@ public class InventoryManagementActivity extends AppCompatActivity {
                                 break;
 
                         }
-                        AlertDialog alert = builder.create();
-                        alert.show();
+
                     }
                 });
+                AlertDialog alert = builder.create();
+                alert.show();
 
-                inventoryIn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                                Intent intent= new Intent(InventoryManagementActivity.this, InInventoryDoc.class);
-                                        startActivity(intent);
-
-                            }
-                        });
 
             }
         });
 
+        inventoryIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(InventoryManagementActivity.this, InInventoryDoc.class);
+                startActivity(intent);
 
+            }
+        });
     }
 }

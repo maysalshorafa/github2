@@ -84,7 +84,7 @@ public class ProviderDbAdapter {
     public long insertEntry(String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, int cityId, String houseNumber, String postalCode, String country, String countryCode,double balance,String providerCode,String providerIdentity,int branchId) throws JSONException {
         Provider provider = new Provider(Util.idHealth(this.db, PROVIDER_TABLE_NAME, PROVIDER_COLUMN_ID), firstName, lastName, gender, email, job, phoneNumber, street, false, cityId, houseNumber, postalCode, country, countryCode,balance,providerCode,providerIdentity,branchId);
 
-        sendToBroker(MessageType.ADD_PROVIDER,provider,context);
+                sendToBroker(MessageType.ADD_PROVIDER,provider,context);
 
         try {
             long insertResult = insertEntry(provider);

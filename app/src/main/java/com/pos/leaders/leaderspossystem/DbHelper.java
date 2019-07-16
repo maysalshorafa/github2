@@ -33,6 +33,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAda
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
@@ -194,6 +195,7 @@ public class DbHelper extends SQLiteOpenHelper {
          db.execSQL("insert into "+Rule1DBAdapter.RULE1_TABLE_NAME+" values(13,2,2.3,2.3);");**/
         db.execSQL(PosSettingDbAdapter.DATABASE_CREATE);
         db.execSQL(ProviderDbAdapter.DATABASE_CREATE);
+        db.execSQL(InventoryDbAdapter.DATABASE_CREATE);
 
 
         // Currency Statment
@@ -408,6 +410,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 case 5:
                     db.execSQL(ProviderDbAdapter.DATABASE_CREATE);
                     db.execSQL(PosSettingDbAdapter.DATABASE_CREATE);
+                    db.execSQL(InventoryDbAdapter.DATABASE_CREATE);
                     SharedPreferences cSharedPreferences = context.getSharedPreferences("POS_Management", MODE_PRIVATE);
                     boolean creditCardEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, false);
                     boolean pinPadEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD, false);
