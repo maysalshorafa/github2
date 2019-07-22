@@ -28,13 +28,19 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductInventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.BoInventory;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.CreditInvoiceDocument;
 import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.Inventory;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Models.ProductInventory;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CreditInvoiceProductCatalogGridViewAdapter;
@@ -47,6 +53,7 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 
 import org.json.JSONArray;
@@ -58,9 +65,11 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImages;
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 public class CreateCreditInvoiceActivity extends AppCompatActivity {
 
@@ -83,7 +92,8 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
     final String SAMPLE_FILE = "creditinvoice.pdf";
     JSONArray newCartDetails = new JSONArray();
     JSONObject jsonObject = new JSONObject();
-
+    ProductInventoryDbAdapter productInventoryDbAdapter;
+    InventoryDbAdapter inventoryDbAdapter ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +112,10 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
         etSearch = (EditText)findViewById(R.id.etSearch);
         chooseCustomer = (ImageView)findViewById(R.id.chooseCustomer);
         customerName = (TextView)findViewById(R.id.customerName);
+        productInventoryDbAdapter=new ProductInventoryDbAdapter(CreateCreditInvoiceActivity.this);
+        productInventoryDbAdapter.open();
+        inventoryDbAdapter=new InventoryDbAdapter(CreateCreditInvoiceActivity.this);
+        inventoryDbAdapter.open();
         chooseCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -310,6 +324,20 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                      //   if(jsonObject.get("status").equals("200")){
                                     try {
                                         if(jsonObject.get("status").equals("200")){
+                                            for(OrderDetails o :SESSION._ORDER_DETAILES){
+                                                ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(o.getProduct().getProductId());
+                                                productInventoryDbAdapter.updateEntry(o.getProduct().getProductId(),productInventory.getQty()-o.getQuantity());
+                                                HashMap<String,Integer> productHashMap=new HashMap<String, Integer>();
+                                                productHashMap.put(String.valueOf(o.getProduct().getProductId()),o.getProduct().getStockQuantity());
+                                                Inventory in=null;
+                                                try {
+                                                    in = inventoryDbAdapter.getLastRow();
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                                BoInventory inventory = new BoInventory(in.getName(),in.getInventoryId(),productHashMap,in.getBranchId(),in.getHide());
+                                                sendToBroker(MessageType.UPDATE_INVENTORY, inventory, CreateCreditInvoiceActivity.this);
+                                            }
                                                 try
                                             {
                                                 File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());

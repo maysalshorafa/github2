@@ -1672,7 +1672,7 @@ public class PdfUA {
         JSONObject jsonObject = new JSONObject(res);
         JSONObject documentsData = jsonObject.getJSONObject("documentsData");;
         JSONObject customerInfo = new JSONObject(documentsData.getJSONObject("provider").toString());
-        JSONObject userInfo = new JSONObject(documentsData.getJSONObject("user").toString());
+      //  JSONObject userInfo = new JSONObject(documentsData.getJSONObject("user").toString());
 
         // create file , document region
         Document document = new Document();
@@ -1700,7 +1700,7 @@ public class PdfUA {
         headingTable.setRunDirection(0);
         EmployeeDBAdapter employeeDBAdapter =new EmployeeDBAdapter(context);
         employeeDBAdapter.open();
-        Employee employee = employeeDBAdapter.getEmployeeByID(userInfo.getLong("employeeId"));
+        Employee employee = employeeDBAdapter.getEmployeeByID(documentsData.getLong("byEmployee"));
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         if(employee!=null) {
@@ -1721,29 +1721,29 @@ public class PdfUA {
         }
         insertCell(headingTable,  context.getString(R.string.inventory_doc) +" : "+jsonObject.getString("docNum") , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
-        PdfPTable orderDetailsTable = new PdfPTable(5);
+        PdfPTable orderDetailsTable = new PdfPTable(3);
         orderDetailsTable.setRunDirection(0);
         orderDetailsTable.setWidthPercentage(108f);
 
         JSONObject itemJson = documentsData.getJSONObject("productsIdWithQuantityList");
-        HashMap<String, Object> productHashMap = new Gson().fromJson(itemJson.toString(), HashMap.class);
+        HashMap<String, Long> productHashMap = new Gson().fromJson(itemJson.toString(), HashMap.class);
         insertCell(orderDetailsTable, context.getString(R.string.product), Element.ALIGN_LEFT, 1, dateFont);
         insertCell(orderDetailsTable,context.getString(R.string.qty), Element.ALIGN_LEFT, 1, dateFont);
         insertCell(orderDetailsTable, context.getString(R.string.price), Element.ALIGN_LEFT, 1, dateFont);
 
         for (int a = 0 ; a<itemJson.length();a++) {
-            int qty = (int) productHashMap.values().toArray()[0];
+            double qty = (double) productHashMap.values().toArray()[a];
 
-            Product product= productDBAdapter.getProductByID((Long) productHashMap.keySet().toArray()[0]);
+            Product product= productDBAdapter.getProductByID(Long.parseLong((String) productHashMap.keySet().toArray()[a]) );
             if(product==null){
                 insertCell(orderDetailsTable, context.getString(R.string.general_product), Element.ALIGN_LEFT, 1, dateFont);
             }else {
                 insertCell(orderDetailsTable, product.getDisplayName(), Element.ALIGN_LEFT, 1, dateFont);
             }
             insertCell(orderDetailsTable, ""+qty, Element.ALIGN_LEFT, 1, dateFont);
-            insertCell(orderDetailsTable,Util.makePrice(product.getCostPrice()), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(orderDetailsTable,Util.makePrice(product.getCostPrice()*qty), Element.ALIGN_LEFT, 1, dateFont);
         }
-        insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 5, font);
+        insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 3, font);
 
         //end
 

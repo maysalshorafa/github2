@@ -62,6 +62,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBA
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
@@ -69,11 +70,13 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductInventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.BoInventory;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Check;
@@ -85,6 +88,7 @@ import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Models.Documents;
 import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Models.Inventory;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OfferCategory;
@@ -94,6 +98,7 @@ import com.pos.leaders.leaderspossystem.Models.OrderDocumentStatus;
 import com.pos.leaders.leaderspossystem.Models.OrderDocuments;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Models.ProductInventory;
 import com.pos.leaders.leaderspossystem.Models.ProductUnit;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Offers.OfferController;
@@ -119,6 +124,7 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
@@ -143,6 +149,7 @@ import POSSDK.POSSDK;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CASH;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CHECKS;
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CREDIT_CARD;
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by Karam on 21/11/2016.
@@ -314,6 +321,8 @@ public class SalesCartActivity extends AppCompatActivity {
     static Context context;
     List<Offer>validOffer = new ArrayList<>();
     CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(SalesCartActivity.this);
+    ProductInventoryDbAdapter productInventoryDbAdapter;
+    InventoryDbAdapter inventoryDbAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -393,7 +402,10 @@ public class SalesCartActivity extends AppCompatActivity {
         llCartDiscount = (LinearLayout) findViewById(R.id.saleCart_llCartDiscount);
         tvCartDiscountValue = (TextView) findViewById(R.id.saleCart_llCartDiscountValue);
         tvTotalPriceBeforeCartDiscount = (TextView) findViewById(R.id.saleCart_tvTotalPriceBeforeCartDiscount);
-
+        productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
+        productInventoryDbAdapter.open();
+        inventoryDbAdapter =new InventoryDbAdapter(SalesCartActivity.this);
+        inventoryDbAdapter.open();
         //fragmentTouchPad = (FrameLayout) findViewById(R.id.mainActivity_fragmentTochPad);
 
         //region  Init cash drawer
@@ -1614,6 +1626,20 @@ public class SalesCartActivity extends AppCompatActivity {
                                             protected void onPostExecute(Void aVoid) {
                                                 try {
                                                     if(invoiceJsonObject.getString("status").equals("200")) {
+                                                        for(OrderDetails o :SESSION._ORDER_DETAILES){
+                                                            ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(o.getProduct().getProductId());
+                                                            productInventoryDbAdapter.updateEntry(o.getProduct().getProductId(),productInventory.getQty()-o.getQuantity());
+                                                            HashMap<String,Integer>productHashMap=new HashMap<String, Integer>();
+                                                            productHashMap.put(String.valueOf(o.getProduct().getProductId()),o.getProduct().getStockQuantity());
+                                                            Inventory in=null;
+                                                            try {
+                                                                in = inventoryDbAdapter.getLastRow();
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                            BoInventory inventory = new BoInventory(in.getName(),in.getInventoryId(),productHashMap,in.getBranchId(),in.getHide());
+                                                            sendToBroker(MessageType.UPDATE_INVENTORY, inventory, SalesCartActivity.this);
+                                                        }
                                                         String s =(tvTotalSaved.getText().toString());
 
                                                         if (s != null && s.length() > 0 && s.charAt(s.length() - 1) == '₪') {
@@ -3304,8 +3330,18 @@ public class SalesCartActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         for(OrderDetails o :SESSION._ORDER_DETAILES){
-            o.getProduct().setStockQuantity(o.getProduct().getStockQuantity()-o.getQuantity());
-            productDBAdapter.updateProductQty(o.getProduct());
+            ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(o.getProduct().getProductId());
+            productInventoryDbAdapter.updateEntry(o.getProduct().getProductId(),productInventory.getQty()-o.getQuantity());
+            HashMap<String,Integer>productHashMap=new HashMap<String, Integer>();
+            productHashMap.put(String.valueOf(o.getProduct().getProductId()),o.getProduct().getStockQuantity());
+            Inventory in=null;
+            try {
+                in = inventoryDbAdapter.getLastRow();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            BoInventory inventory = new BoInventory(in.getName(),in.getInventoryId(),productHashMap,in.getBranchId(),in.getHide());
+            sendToBroker(MessageType.UPDATE_INVENTORY, inventory, this.context);
         }
         if (Long.valueOf(SESSION._ORDERS.getCustomerId()) == 0) {
             if (SESSION._ORDERS.getCustomer_name() == null) {

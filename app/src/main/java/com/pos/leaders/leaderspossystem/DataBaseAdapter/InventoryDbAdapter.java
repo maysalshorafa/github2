@@ -8,8 +8,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.Models.BoInventory;
 import com.pos.leaders.leaderspossystem.Models.Inventory;
+import com.pos.leaders.leaderspossystem.Models.ProductInventory;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class InventoryDbAdapter {
@@ -61,7 +66,7 @@ public class InventoryDbAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(INVENTORY_COLUMN_BRANCH_ID, inventory.getId());
+        val.put(INVENTORY_COLUMN_ID, inventory.getId());
         val.put(INVENTORY_COLUMN_NAME, inventory.getName());
         val.put(INVENTORY_COLUMN_INVENTORY_ID, inventory.getInventoryId());
         val.put(INVENTORY_COLUMN_PRODUCTS_ID_WITH_QUANTITY_LIST, inventory.getProductsIdWithQuantityList());
@@ -91,27 +96,36 @@ public class InventoryDbAdapter {
         }
     }
 
- /*   public long updateEntryBo(Inventory inventory) {
-        InventoryDbAdapter departmentDBAdapter = new CategoryDBAdapter(context);
-        departmentDBAdapter.open();
+    public long updateEntryBo(BoInventory inventory) {
+        InventoryDbAdapter inventoryDbAdapter = new InventoryDbAdapter(context);
+        inventoryDbAdapter.open();
+        ProductInventoryDbAdapter productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
+        productInventoryDbAdapter.open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(CATEGORY_COLUMN_NAME, department.getName());
-        val.put(CATEGORY_COLUMN_BYUSER, department.getByUser());
-        val.put(CATEGORY_COLUMN_DISENABLED, department.isHide());
-        val.put(CATEGORY_COLUMN_BRANCH_ID,department.getBranchId());
-
+        val.put(INVENTORY_COLUMN_ID, inventory.getId());
+        val.put(INVENTORY_COLUMN_NAME, inventory.getName());
+        val.put(INVENTORY_COLUMN_INVENTORY_ID, inventory.getInventoryId());
+        val.put(INVENTORY_COLUMN_PRODUCTS_ID_WITH_QUANTITY_LIST, inventory.getProductsIdWithQuantityList().toString());
+        val.put(INVENTORY_COLUMN_BRANCH_ID,inventory.getBranchId());
+        val.put(INVENTORY_COLUMN_HIDE,inventory.getHide());
+        HashMap<String,Integer> productHashMap=inventory.getProductsIdWithQuantityList();
+        for (int i=0;i<productHashMap.size();i++){
+            Map.Entry<String, Integer> entry = productHashMap.entrySet().iterator().next();
+            String key = entry.getKey();
+            Integer value = entry.getValue();
+           ProductInventory productInventory= productInventoryDbAdapter.getProductInventoryByID(Long.parseLong(key));
+            productInventoryDbAdapter.updateEntry(Long.parseLong(key),value);
+            productInventoryDbAdapter.close();
+        }
         try {
-            String where = CATEGORY_COLUMN_ID + " = ?";
-            db.update(CATEGORY_TABLE_NAME, val, where, new String[]{department.getCategoryId() + ""});
-            Category d=departmentDBAdapter.getDepartmentByID(department.getCategoryId());
-            Log.d("Update object",d.toString());
-            departmentDBAdapter.close();
+            String where = INVENTORY_COLUMN_ID + " = ?";
+            db.update(INVENTORY_TABLE_NAME, val, where, new String[]{inventory.getId() + ""});
             return 1;
         } catch (SQLException ex) {
             return 0;
         }
-    }*/
+    }
  public Inventory getLastRow() throws Exception {
      Inventory inventory = null;
      Cursor cursor = db.rawQuery("select * from " + INVENTORY_TABLE_NAME , null);

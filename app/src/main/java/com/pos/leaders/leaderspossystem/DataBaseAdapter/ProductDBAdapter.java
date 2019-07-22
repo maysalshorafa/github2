@@ -60,6 +60,7 @@ public class ProductDBAdapter {
     protected static final String PRODUCTS_COLUMN_CURRENCY_TYPE = "currencyType";
     protected static final String PRODUCTS_COLUMN_BRANCH_ID = "branchId";
     protected static final String PRODUCTS_COLUMN_OFFER_ID = "offerId";
+    protected static final String PRODUCTS_COLUMN_LAST_COST_PRICE_INVENTORY = "lastCostPriceInventory";
 
 
 
@@ -73,7 +74,7 @@ public class ProductDBAdapter {
             "`" +PRODUCTS_COLUMN_CREATINGDATE + "` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
             "`" + PRODUCTS_COLUMN_DISENABLED + "` INTEGER DEFAULT 0, `" + PRODUCTS_COLUMN_CATEGORYID + "` INTEGER NOT NULL, " +
             "`" + PRODUCTS_COLUMN_BYUSER + "` INTEGER NOT NULL, `" + PRODUCTS_COLUMN_STATUS + "` TEXT NOT NULL DEFAULT 'PUBLISHED' , " +
-            "`" + PRODUCTS_COLUMN_with_pos + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_with_point_system + "` INTEGER NOT NULL DEFAULT 1 ,`"+PRODUCTS_COLUMN_UNIT + "` TEXT NOT NULL DEFAULT 'quantity' , `"+ PRODUCTS_COLUMN_CURRENCY_TYPE + "` INTEGER NOT NULL DEFAULT 0, '"+PRODUCTS_COLUMN_BRANCH_ID+"' INTEGER NOT NULL DEFAULT 0 , '" +PRODUCTS_COLUMN_WEIGHT+"' REAL DEFAULT 0.0, '" +PRODUCTS_COLUMN_OFFER_ID+"' INTEGER NOT NULL DEFAULT 0 )";
+            "`" + PRODUCTS_COLUMN_with_pos + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_with_point_system + "` INTEGER NOT NULL DEFAULT 1 ,`"+PRODUCTS_COLUMN_UNIT + "` TEXT NOT NULL DEFAULT 'quantity' , `"+ PRODUCTS_COLUMN_CURRENCY_TYPE + "` INTEGER NOT NULL DEFAULT 0, '"+PRODUCTS_COLUMN_BRANCH_ID+"' INTEGER NOT NULL DEFAULT 0 , '" +PRODUCTS_COLUMN_WEIGHT+"' REAL DEFAULT 0.0, '" +PRODUCTS_COLUMN_OFFER_ID+PRODUCTS_COLUMN_LAST_COST_PRICE_INVENTORY+"' REAL DEFAULT 0.0, '" +"' INTEGER NOT NULL DEFAULT 0 )";
 
 
     public static final String DATABASE_UPDATE_FROM_V1_TO_V2[] = {"alter table products rename to product_v1;", DATABASE_CREATE + "; ",
@@ -108,9 +109,9 @@ public class ProductDBAdapter {
     public long insertEntry(String name, String barCode, String description, double price, double costPrice,
                             boolean withTax, long categoryId, long byUser , int pos, int point_system,
 
-                            String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock, ProductUnit unit,double weight,int currencyType,int branchId,long offerId) {
+                            String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock, ProductUnit unit,double weight,int currencyType,int branchId,long offerId,double lastCostPrice) {
         Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price,
-                costPrice, withTax,  new Timestamp(System.currentTimeMillis()), categoryId, byUser, pos, point_system, sku, status, displayName, regularPrice, stockQuantity, manageStock, inStock,unit,weight,currencyType,branchId,offerId);
+                costPrice, withTax,  new Timestamp(System.currentTimeMillis()), categoryId, byUser, pos, point_system, sku, status, displayName, regularPrice, stockQuantity, manageStock, inStock,unit,weight,currencyType,branchId,offerId,lastCostPrice);
 
 
         long id = insertEntry(p);
@@ -175,6 +176,11 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_CURRENCY_TYPE,p.getCurrencyType());
         val.put(PRODUCTS_COLUMN_BRANCH_ID,p.getBranchId());
         val.put(PRODUCTS_COLUMN_OFFER_ID,p.getOfferId());
+        val.put(PRODUCTS_COLUMN_LAST_COST_PRICE_INVENTORY,p.getLastCostPriceInventory());
+
+        ProductInventoryDbAdapter productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
+        productInventoryDbAdapter.open();
+        productInventoryDbAdapter.insertEntry(p.getProductId(),p.getStockQuantity(),"inventory_in",p.getByEmployee(),p.getBranchId(),Integer.parseInt(String.valueOf(p.isHide())));
         try {
             return db.insert(PRODUCTS_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -307,6 +313,7 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_CURRENCY_TYPE,product.getCurrencyType());
         val.put(PRODUCTS_COLUMN_BRANCH_ID,product.getBranchId());
         val.put(PRODUCTS_COLUMN_OFFER_ID,product.getOfferId());
+        val.put(PRODUCTS_COLUMN_LAST_COST_PRICE_INVENTORY,product.getLastCostPriceInventory());
 
         String where = PRODUCTS_COLUMN_ID + " = ?";
         db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getProductId() + ""});
@@ -341,6 +348,8 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_CURRENCY_TYPE,product.getCurrencyType());
         val.put(PRODUCTS_COLUMN_BRANCH_ID,product.getBranchId());
         val.put(PRODUCTS_COLUMN_OFFER_ID,product.getOfferId());
+        val.put(PRODUCTS_COLUMN_LAST_COST_PRICE_INVENTORY,product.getLastCostPriceInventory());
+
         try {
             String where = PRODUCTS_COLUMN_ID + " = ?";
             db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getProductId() + ""});
@@ -465,7 +474,8 @@ public class ProductDBAdapter {
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_MANAGE_STOCK))),
 
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_IN_STOCK))), ProductUnit.valueOf(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_UNIT)).toUpperCase()),Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHT))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CURRENCY_TYPE))), Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BRANCH_ID))), Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_OFFER_ID))));
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CURRENCY_TYPE))), Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BRANCH_ID))), Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_OFFER_ID))),
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_REGULAR_PRICE))));
 
         if(p.getDescription()==null){
             p.setDescription("");
@@ -556,6 +566,12 @@ public class ProductDBAdapter {
     public static String addColumnInteger(String columnName) {
         String dbc = "ALTER TABLE " + PRODUCTS_TABLE_NAME
                 + " add column " + columnName + " INTEGER default 0.0;";
+        return dbc;
+    }
+
+    public static String addColumnReal(String columnName) {
+        String dbc = "ALTER TABLE " + PRODUCTS_TABLE_NAME
+                + " add column " + columnName + " REAL default 0.0;";
         return dbc;
     }
     public void updateProductQty(Product product) {

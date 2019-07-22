@@ -76,7 +76,7 @@
 
             <Button
 
-                android:id="@+id/saveInventory"
+                android:id="@+id/printInventory"
                 style="@style/AppTheme.bt_green"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/save"
+                android:text="@string/print"
                 android:textColor="#fff"
                 android:textSize="20dp" />
 

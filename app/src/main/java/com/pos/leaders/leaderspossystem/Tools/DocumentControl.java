@@ -502,7 +502,7 @@ public class DocumentControl {
 
     }
     private static Bitmap combineImageIntoOne(ArrayList<Bitmap> bitmap) {
-        int w = 0, h = 0;
+   int w = 0, h = 0;
         for (int i = 0; i < bitmap.size(); i++) {
             if (i < bitmap.size() - 1) {
                 w = bitmap.get(i).getWidth() > bitmap.get(i + 1).getWidth() ? bitmap.get(i).getWidth() : bitmap.get(i + 1).getWidth();
@@ -510,13 +510,13 @@ public class DocumentControl {
             h += bitmap.get(i).getHeight();
         }
 
-        Bitmap temp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+       Bitmap temp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(temp);
         int top = 0;
-        for (int i = 0; i < bitmap.size(); i++) {
+        for (int i = 1; i <= bitmap.size()-1; i++) {
             Log.d("HTML", "Combine: "+i+"/"+bitmap.size()+1);
 
-            top = (i == 0 ? 0 : top+bitmap.get(i).getHeight());
+            top = top+bitmap.get(i).getHeight();
             canvas.drawBitmap(bitmap.get(i), 0f, top, null);
         }
         return temp;

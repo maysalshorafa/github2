@@ -49,6 +49,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.LogInActivity;
+import com.pos.leaders.leaderspossystem.Models.BoInventory;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.City;
@@ -1097,7 +1098,8 @@ public class SyncMessage extends Service {
                     updateInventory = objectMapper.readValue(msgData, Inventory.class);
                     InventoryDbAdapter updateInventoryDBAdapter = new InventoryDbAdapter(this);
                     updateInventoryDBAdapter.open();
-                 //   rID = updateInventoryDBAdapter.updateEntryBo(updateInventory);
+                    BoInventory boInventory =objectMapper.readValue(msgData, BoInventory.class);
+                    rID = updateInventoryDBAdapter.updateEntryBo(boInventory);
                     updateInventoryDBAdapter.close();
                     break;
                 case MessageType.DELETE_INVENTORY:
@@ -1692,7 +1694,18 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.OfferCategory, newDeleteOfferCategoryJson.getString("offerCategoryId"), token);
                 break;
 
-            //endregion ClosingReport
+            //region Inventory REPORT
+            case MessageType.ADD_INVENTORY:
+                res = messageTransmit.authPost(ApiURL.INVENTORY, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.UPDATE_INVENTORY:
+                Inventory inventory=null;
+                inventory=objectMapper.readValue(msgData, Inventory.class);
+                res = messageTransmit.authPut(ApiURL.INVENTORY, jsonObject.getString(MessageKey.Data), token,inventory.getId());
+                break;
+            case MessageType.DELETE_INVENTORY:
+                res = messageTransmit.authDelete(ApiURL.INVENTORY, jsonObject.getString(MessageKey.Data), token);
+                break;
 
         }
         Log.e("response message", res);

@@ -25,7 +25,6 @@ public class InventoryManagementActivity extends AppCompatActivity {
         TitleBar.setTitleBar(this);
         provider = (Button)findViewById(R.id.inventoryManagementActivityProviderBtn);
         inventoryIn=(Button)findViewById(R.id.inventoryManagementActivityBtnInDoc);
-        inventoryOut=(Button)findViewById(R.id.inventoryManagementActivityBtnOutDoc);
         final String[] itemsWithProvider = {
                 getString(R.string.view_provider),
                 getString(R.string.add_new_provider),

@@ -2,8 +2,11 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,13 +32,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductInventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProviderDbAdapter;
+import com.pos.leaders.leaderspossystem.Models.BoInventory;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.InInventory;
 import com.pos.leaders.leaderspossystem.Models.Inventory;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Models.ProductInventory;
 import com.pos.leaders.leaderspossystem.Models.Provider;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
+import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.InventoryProductDetailsListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ProviderCatalogGridViewAdapter;
@@ -44,16 +51,21 @@ import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 public class InInventoryDoc extends AppCompatActivity {
     TextView providerName;
@@ -75,11 +87,13 @@ public class InInventoryDoc extends AppCompatActivity {
     Product selectedOrderOnCart = null;
     InventoryProductDetailsListViewAdapter adapter1;
     Inventory inventory;
-    JSONObject invoiceJsonObject;
+    JSONObject invoiceJsonObject=new JSONObject();
     String invoiceNum;
     boolean caseInventory=false;
     HashMap<String,Integer>productHashMap=new HashMap<String, Integer>();
     Context context;
+    final String SAMPLE_FILE = "inventoryReport.pdf";
+    ProductInventoryDbAdapter productInventoryDbAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +107,14 @@ public class InInventoryDoc extends AppCompatActivity {
         providerName = (TextView)findViewById(R.id.providerName);
         inventoryIn=(Button)findViewById(R.id.addProductToInventory);
         inventoryOut=(Button)findViewById(R.id.outProductFromInventory);
-        btnSave=(Button)findViewById(R.id.saveInventory);
+        btnSave=(Button)findViewById(R.id.printInventory);
         gvProduct =(GridView)findViewById(R.id.inOutInventoryGvProducts);
         finalProductListView=(ListView)findViewById(R.id.inOutInventoryFinalProductListView);
         filter_productList=new ArrayList<>();
         finalListViewProduct=new ArrayList<>();
+        productHashMap=new HashMap<>();
+        productInventoryDbAdapter=new ProductInventoryDbAdapter(context);
+        productInventoryDbAdapter.open();
         final ProductDBAdapter productDBAdapter = new ProductDBAdapter(this);
         productDBAdapter.open();
         filter_productList = productDBAdapter.getAllProducts();
@@ -107,103 +124,41 @@ public class InInventoryDoc extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(inventory!=null&&provider!=null){
-                final InvoiceImg invoiceImg1 = new InvoiceImg(getApplicationContext());
-                new AsyncTask<Void, Void, Void>(){
-                    @Override
-                    protected void onPreExecute() {
-                        super.onPreExecute();
-                    }
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        try {
-                            if(invoiceJsonObject.getString("status").equals("200")) {
-                                PdfUA pdfUA = new PdfUA();
-                                JSONObject r = invoiceJsonObject.getJSONObject(MessageKey.responseBody);
-
-                                try {
-                                    if(caseInventory){
-                                        pdfUA.printInventoryReport(context,r.toString(),"outInventory");
-                                    }else {
-                                        pdfUA.printInventoryReport(context, r.toString(), "inInventory");
-                                    }
-                                } catch (DocumentException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                try {
+                    if(invoiceJsonObject.getString("status").equals("200")) {
+                         try {
+                                    try {
+                                        Thread.sleep(3000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
                             }
-                            else {
+                            File path = new File(Environment.getExternalStorageDirectory(), context.getPackageName());
+                            File file = new File(path, SAMPLE_FILE);
+                            RandomAccessFile f = new RandomAccessFile(file, "r");
+                            byte[] data = new byte[(int) f.length()];
+                            f.readFully(data);
+                            DocumentControl.pdfLoadImagesOpiningReport(data, context);
+                             try {
+                                 Thread.sleep(3000);
+                             } catch (InterruptedException e) {
+                                 e.printStackTrace();
+                             }
+                            finalListViewProduct=new ArrayList<Product>();
+                            adapter1= new InventoryProductDetailsListViewAdapter(getApplicationContext(),R.layout.list_adapter_row_nventory_product_details,finalListViewProduct);
+                            finalProductListView.setAdapter(adapter1);
+                            inventoryOut.setBackgroundResource(R.drawable.bt_dark_pressed);
+                            inventoryIn.setBackgroundResource(R.drawable.bt_dark_pressed);
+                            provider = null;
+                            providerName.setText("");
 
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        } catch (Exception ignored) {
+
                         }
-
                     }
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
-                        JSONObject providerData = new JSONObject();
-                        try {
-                            ObjectMapper mapper = new ObjectMapper();
-                            providerData.put("providerId", provider.getProviderId());
-                            Log.d("productHashMap",productHashMap.toString());
-                            InInventory documents;
-                            if(!caseInventory) {
-                                documents = new InInventory("InInventory", new Timestamp(System.currentTimeMillis()), inventory.getInventoryId(), productHashMap, SESSION._EMPLOYEE.getEmployeeId());
-
-                            }
-                            else {
-                                documents = new InInventory("OutInventory", new Timestamp(System.currentTimeMillis()), inventory.getInventoryId(), productHashMap, SESSION._EMPLOYEE.getEmployeeId());
-
-                            }
-                            String doc = mapper.writeValueAsString(documents);
-                            Log.d("doc",doc.toString());
-
-                            JSONObject docJson= new JSONObject(doc);
-                            String type = docJson.getString("type");
-                            docJson.remove("type");
-                            docJson.put("@type",type);
-                            docJson.put("provider",providerData);
-                            Log.d("Document vale", docJson.toString());
-                            BoInvoice invoice;
-                            if(caseInventory) {
-                                 invoice = new BoInvoice(DocumentType.OUT_INVENTORY,docJson,"");
-                            }else {
-                                 invoice = new BoInvoice(DocumentType.IN_INVENTORY,docJson,"");
-
-                            }
-                            Log.d("Invoice log",invoice.toString());
-                            String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
-                            JSONObject jsonObject = new JSONObject(res);
-                            String msgData = jsonObject.getString(MessageKey.responseBody);
-                            invoiceJsonObject=jsonObject;
-                            JSONObject msgDataJson = new JSONObject(msgData);
-                            JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
-                            invoiceNum = msgDataJson.getString("docNum");
-                            Log.d("Invoice log res", res+"");
-                            Log.d("Invoice Num", invoiceNum);
-
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    }
-                }.execute();}
-                else {
-                    Toast.makeText(InInventoryDoc.this, "Please determine your provider and if process in or out .", Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-
-        }
+            }
 
         });
         gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -224,21 +179,110 @@ public class InInventoryDoc extends AppCompatActivity {
         inventoryIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for(int i= 0 ;i<finalListViewProduct.size();i++){
-                    productHashMap.put(String.valueOf(finalListViewProduct.get(i).getProductId()),finalListViewProduct.get(i).getStockQuantity());
-                }
-            InventoryDbAdapter inventoryDbAdapter =new InventoryDbAdapter(InInventoryDoc.this);
+                InventoryDbAdapter inventoryDbAdapter =new InventoryDbAdapter(InInventoryDoc.this);
                 inventoryDbAdapter.open();
                 Inventory in=null;
                 try {
-                     in = inventoryDbAdapter.getLastRow();
+                    in = inventoryDbAdapter.getLastRow();
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+                for(int i= 0 ;i<finalListViewProduct.size();i++){
+                    productHashMap.put(String.valueOf(finalListViewProduct.get(i).getProductId()),finalListViewProduct.get(i).getStockQuantity());
                 }
                  inventory = new Inventory(in.getName(),in.getInventoryId(),in.getProductsIdWithQuantityList(),in.getBranchId(),in.getHide());
                 caseInventory=false;
                 inventoryIn.setBackgroundResource(R.drawable.bt_normal);
                 inventoryOut.setBackgroundResource(R.drawable.bt_dark_pressed);
+                if(provider!=null){
+                    final Inventory finalIn = in;
+                    new AsyncTask<Void, Void, Void>(){
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                        }
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            try {
+                                if(invoiceJsonObject.getString("status").equals("200")) {
+                                    for(int i= 0 ;i<finalListViewProduct.size();i++){
+                                        ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(finalListViewProduct.get(i).getProductId());
+                                        productInventoryDbAdapter.updateEntry(finalListViewProduct.get(i).getProductId(),productInventory.getQty()+finalListViewProduct.get(i).getStockQuantity());
+                                        BoInventory inventory = new BoInventory(finalIn.getName(), finalIn.getInventoryId(),productHashMap, finalIn.getBranchId(), finalIn.getHide());
+                                        sendToBroker(MessageType.UPDATE_INVENTORY, inventory, InInventoryDoc.this);
+                                    }
+                                    PdfUA pdfUA = new PdfUA();
+                                    JSONObject r = invoiceJsonObject.getJSONObject(MessageKey.responseBody);
+
+                                    try {
+                                            pdfUA.printInventoryReport(context, r.toString(), "inInventory");
+                                    } catch (DocumentException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                else {
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                            JSONObject providerData = new JSONObject();
+                            try {
+                                ObjectMapper mapper = new ObjectMapper();
+                                providerData.put("providerId", provider.getProviderId());
+                                Log.d("productHashMap",productHashMap.toString());
+                                InInventory documents = new InInventory("InInventory", new Timestamp(System.currentTimeMillis()), inventory.getInventoryId(), productHashMap, SESSION._EMPLOYEE.getEmployeeId());
+                                String doc = mapper.writeValueAsString(documents);
+                                Log.d("doc",doc.toString());
+
+                                JSONObject docJson= new JSONObject(doc);
+                                String type = docJson.getString("type");
+                                docJson.remove("type");
+                                docJson.put("@type",type);
+                                docJson.put("provider",providerData);
+                                Log.d("Document vale", docJson.toString());
+                                BoInvoice invoice;
+                                if(caseInventory) {
+                                    invoice = new BoInvoice(DocumentType.OUT_INVENTORY,docJson,"");
+                                }else {
+                                    invoice = new BoInvoice(DocumentType.IN_INVENTORY,docJson,"");
+
+                                }
+                                Log.d("Invoice log",invoice.toString());
+                                String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
+                                JSONObject jsonObject = new JSONObject(res);
+                                String msgData = jsonObject.getString(MessageKey.responseBody);
+                                invoiceJsonObject=jsonObject;
+                                JSONObject msgDataJson = new JSONObject(msgData);
+                                JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
+                                invoiceNum = msgDataJson.getString("docNum");
+                                Log.d("Invoice log res", res+"");
+                                Log.d("Invoice Num", invoiceNum);
+
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+                    }.execute();}
+                else {
+                    Toast.makeText(InInventoryDoc.this, "Please determine your provider .", Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -260,6 +304,100 @@ public class InInventoryDoc extends AppCompatActivity {
                 caseInventory=true;
                 inventoryIn.setBackgroundResource(R.drawable.bt_dark_pressed);
                 inventoryOut.setBackgroundResource(R.drawable.bt_normal);
+                if(provider!=null){
+                    final InvoiceImg invoiceImg1 = new InvoiceImg(getApplicationContext());
+                    final Inventory finalIn = in;
+                    new AsyncTask<Void, Void, Void>(){
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                        }
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            try {
+                                if(invoiceJsonObject.getString("status").equals("200")) {
+                                    for(int i= 0 ;i<finalListViewProduct.size();i++){
+                                        ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(finalListViewProduct.get(i).getProductId());
+                                        productInventoryDbAdapter.updateEntry(finalListViewProduct.get(i).getProductId(),productInventory.getQty()+finalListViewProduct.get(i).getStockQuantity());
+                                        BoInventory inventory = new BoInventory(finalIn.getName(), finalIn.getInventoryId(),productHashMap, finalIn.getBranchId(), finalIn.getHide());
+                                        sendToBroker(MessageType.UPDATE_INVENTORY, inventory, InInventoryDoc.this);
+                                    }
+                                    PdfUA pdfUA = new PdfUA();
+                                    JSONObject r = invoiceJsonObject.getJSONObject(MessageKey.responseBody);
+
+                                    try {
+                                            pdfUA.printInventoryReport(context,r.toString(),"outInventory");
+
+                                    } catch (DocumentException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                else {
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                            JSONObject providerData = new JSONObject();
+                            try {
+                                ObjectMapper mapper = new ObjectMapper();
+                                providerData.put("providerId", provider.getProviderId());
+                                Log.d("productHashMap",productHashMap.toString());
+                                InInventory documents;
+                                    documents = new InInventory("OutInventory", new Timestamp(System.currentTimeMillis()), inventory.getInventoryId(), productHashMap, SESSION._EMPLOYEE.getEmployeeId());
+
+
+                                String doc = mapper.writeValueAsString(documents);
+                                Log.d("doc",doc.toString());
+
+                                JSONObject docJson= new JSONObject(doc);
+                                String type = docJson.getString("type");
+                                docJson.remove("type");
+                                docJson.put("@type",type);
+                                docJson.put("provider",providerData);
+                                Log.d("Document vale", docJson.toString());
+                                BoInvoice invoice;
+                                if(caseInventory) {
+                                    invoice = new BoInvoice(DocumentType.OUT_INVENTORY,docJson,"");
+                                }else {
+                                    invoice = new BoInvoice(DocumentType.IN_INVENTORY,docJson,"");
+
+                                }
+                                Log.d("Invoice log",invoice.toString());
+                                String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
+                                JSONObject jsonObject = new JSONObject(res);
+                                String msgData = jsonObject.getString(MessageKey.responseBody);
+                                invoiceJsonObject=jsonObject;
+                                JSONObject msgDataJson = new JSONObject(msgData);
+                                JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
+                                invoiceNum = msgDataJson.getString("docNum");
+                                Log.d("Invoice log res", res+"");
+                                Log.d("Invoice Num", invoiceNum);
+
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+                    }.execute();}
+                else {
+                    Toast.makeText(InInventoryDoc.this, "Please determine your provider.", Toast.LENGTH_LONG).show();
+                }
 
 
             }
@@ -519,4 +657,25 @@ public class InInventoryDoc extends AppCompatActivity {
             selectedOrderOnCart = null;
         }
     }
+    private Bitmap combineImageIntoOne(ArrayList<Bitmap> bitmap) {
+        int w = 0, h = 0;
+        for (int i = 0; i < bitmap.size(); i++) {
+            if (i < bitmap.size() - 1) {
+                w = bitmap.get(i).getWidth() > bitmap.get(i + 1).getWidth() ? bitmap.get(i).getWidth() : bitmap.get(i + 1).getWidth();
+            }
+            h += bitmap.get(i).getHeight();
+        }
+
+        Bitmap temp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(temp);
+        int top = 0;
+        for (int i = 0; i < bitmap.size(); i++) {
+            Log.d("HTML", "Combine: "+i+"/"+bitmap.size()+1);
+
+            top = (i == 0 ? 0 : top+bitmap.get(i).getHeight());
+            canvas.drawBitmap(bitmap.get(i), 0f, top, null);
+        }
+        return temp;
+    }
+
 }
