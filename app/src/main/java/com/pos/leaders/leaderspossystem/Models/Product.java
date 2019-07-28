@@ -434,6 +434,7 @@ public class Product {
                 ", branchId=" + branchId+
 
                 ", offerId=" + offerId+
+                        ", lastCostPriceInventory=" + lastCostPriceInventory +
                 '}';
     }
 

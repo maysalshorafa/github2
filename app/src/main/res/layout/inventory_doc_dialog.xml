@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="ltr">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/background_dark"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="8dp">
+
+        <EditText
+            android:id="@+id/inventoryDocDialog_EtCount"
+            android:layout_width="match_parent"
+
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/catalogproduct_item_bg"
+            android:inputType="numberDecimal"
+            android:textAlignment="center"
+            />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="8dp">
+
+        <EditText
+            android:id="@+id/inventoryDocDialog_EtPrice"
+            android:layout_width="match_parent"
+
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/catalogproduct_item_bg"
+            android:inputType="numberDecimal"
+            android:textAlignment="center"
+            />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:layout_margin="12dp"
+        >
+
+        <Button
+            android:id="@+id/inventoryDocDialog_BtOk"
+            style="@style/AppTheme.bt_green"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@android:string/ok"
+            android:textColor="#fff"
+            android:textSize="20dp" />
+
+        <Button
+
+            android:id="@+id/inventoryDocDialog_BTCancel"
+            style="@style/AppTheme.bt_dangers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@android:string/cancel"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

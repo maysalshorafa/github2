@@ -12,6 +12,8 @@ public class ProductInventory {
     private long byEmployee;
     private int hide;
     private int branchId;
+    private String name;
+    private  double price;
 
     public long getProductInventoryId() {
         return productInventoryId;
@@ -69,10 +71,26 @@ public class ProductInventory {
         this.branchId = branchId;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     public ProductInventory() {
     }
 
-    public ProductInventory(long productInventoryId, long productId, int qty, String operation, long byEmployee, int hide, int branchId) {
+    public ProductInventory(long productInventoryId, long productId, int qty, String operation, long byEmployee, int hide, int branchId, String name, double price) {
         this.productInventoryId = productInventoryId;
         this.productId = productId;
         this.qty = qty;
@@ -80,6 +98,8 @@ public class ProductInventory {
         this.byEmployee = byEmployee;
         this.hide = hide;
         this.branchId = branchId;
+        this.name = name;
+        this.price = price;
     }
 
     @Override
@@ -92,7 +112,8 @@ public class ProductInventory {
                 ", byEmployee=" + byEmployee +
                 ", hide=" + hide +
                 ", branchId=" + branchId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
                 '}';
     }
-
 }

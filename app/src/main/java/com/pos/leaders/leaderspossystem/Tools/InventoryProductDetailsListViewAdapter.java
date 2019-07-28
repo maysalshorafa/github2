@@ -8,8 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductInventoryDbAdapter;
+import com.pos.leaders.leaderspossystem.Models.ProductInventory;
 import com.pos.leaders.leaderspossystem.R;
 
 import java.util.List;
@@ -23,7 +23,7 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class InventoryProductDetailsListViewAdapter extends ArrayAdapter implements View.OnClickListener {
     private static final int MINCHARNUMBER = 50;
-    private List<Product> productList;
+    private List<ProductInventory> productList;
     private int resource;
     private LayoutInflater inflater;
     private Context context;
@@ -40,7 +40,7 @@ public class InventoryProductDetailsListViewAdapter extends ArrayAdapter impleme
      *                 instantiating views.
      * @param objects  The objects to represent in the ListView.
      */
-    public InventoryProductDetailsListViewAdapter(Context context, int resource, List<Product> objects) {
+    public InventoryProductDetailsListViewAdapter(Context context, int resource, List<ProductInventory> objects) {
         super(context, resource, objects);
         this.context = context;
         productList = objects;
@@ -66,28 +66,15 @@ public class InventoryProductDetailsListViewAdapter extends ArrayAdapter impleme
         }
         int count;
         double price;
-        price = productList.get(position).getCostPrice()*productList.get(position).getStockQuantity();;
-        count = productList.get(position).getStockQuantity();
-        holder.tvName.setText(_Substring(productList.get(position).getDisplayName()));
+        price = productList.get(position).getPrice()*productList.get(position).getQty();;
+        count = productList.get(position).getQty();
+        holder.tvName.setText(_Substring(productList.get(position).getName()));
         String currencyType="";
-        if(productList.get(position).getCurrencyType()==0) {
-            currencyType=context.getString(R.string.ins);
-        }
-        if(productList.get(position).getCurrencyType()==1) {
-            currencyType=context.getString(R.string.dolor_sign);
-        }
-        if(productList.get(position).getCurrencyType()==2) {
-            currencyType=context.getString(R.string.gbp);
-        }
-        if(productList.get(position).getCurrencyType()==3) {
-            currencyType=context.getString(R.string.eur);
-        }
-        ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
-        productDBAdapter.open();
-        Product p = productDBAdapter.getProductByID(productList.get(position).getProductId());
-        holder.tvPrice.setText(String.format(new Locale("en"), "%.2f", p.getCostPrice())+ " " + currencyType);
-        holder.tvCount.setText(count + "");
-        holder.tvTotal.setText(String.format(new Locale("en"), "%.2f", (price )) + " " + currencyType);
+        ProductInventoryDbAdapter productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
+        productInventoryDbAdapter.open();
+        holder.tvPrice.setText(String.format(new Locale("en"), "%.2f", productList.get(position).getPrice())+ " " );
+        holder.tvCount.setText(1+ "");
+        holder.tvTotal.setText(String.format(new Locale("en"), "%.2f", (price )) + " " );
         if (selected == position && selected != -1) {
             holder.llMethods.setVisibility(View.VISIBLE);
 

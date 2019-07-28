@@ -324,20 +324,22 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                      //   if(jsonObject.get("status").equals("200")){
                                     try {
                                         if(jsonObject.get("status").equals("200")){
+                                            HashMap<String,Integer>productHashMap=new HashMap<String, Integer>();
                                             for(OrderDetails o :SESSION._ORDER_DETAILES){
-                                                ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(o.getProduct().getProductId());
-                                                productInventoryDbAdapter.updateEntry(o.getProduct().getProductId(),productInventory.getQty()-o.getQuantity());
-                                                HashMap<String,Integer> productHashMap=new HashMap<String, Integer>();
-                                                productHashMap.put(String.valueOf(o.getProduct().getProductId()),o.getProduct().getStockQuantity());
-                                                Inventory in=null;
-                                                try {
-                                                    in = inventoryDbAdapter.getLastRow();
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
+                                                if(o.getProduct().getProductId()!=-1) {
+                                                    ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(o.getProduct().getProductId());
+                                                    productInventoryDbAdapter.updateEntry(o.getProduct().getProductId(), productInventory.getQty() - o.getQuantity());
+                                                    productHashMap.put(String.valueOf(o.getProduct().getProductId()),productInventory.getQty()-o.getQuantity());
                                                 }
-                                                BoInventory inventory = new BoInventory(in.getName(),in.getInventoryId(),productHashMap,in.getBranchId(),in.getHide());
-                                                sendToBroker(MessageType.UPDATE_INVENTORY, inventory, CreateCreditInvoiceActivity.this);
                                             }
+                                            Inventory in=null;
+                                            try {
+                                                in = inventoryDbAdapter.getLastRow();
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            BoInventory inventory = new BoInventory(in.getName(),in.getInventoryId(),productHashMap,in.getBranchId(),in.getHide());
+                                            sendToBroker(MessageType.UPDATE_INVENTORY, inventory, CreateCreditInvoiceActivity.this);
                                                 try
                                             {
                                                 File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());

@@ -159,6 +159,7 @@
 
     <string name="count">Count</string>
     <string name="multi_count">Please set product count.</string>
+    <string name="multi_count_price">Please set product count and Price.</string>
 
     <string name="by_card">By Card</string>
     <string name="by_phone">By Phone</string>
@@ -214,6 +215,7 @@
     <string name="barcode">Barcode</string>
     <string name="description">Description</string>
     <string name="cost_price">Cost Price</string>
+    <string name="inventory_price">Inventory Price</string>
     <string name="with_tax">With Tax</string>
     <string name="without_tax">Without Tax</string>
     <string name="weight">Weight</string>

@@ -1671,7 +1671,10 @@ public class PdfUA {
         productDBAdapter.open();
         JSONObject jsonObject = new JSONObject(res);
         JSONObject documentsData = jsonObject.getJSONObject("documentsData");;
-        JSONObject customerInfo = new JSONObject(documentsData.getJSONObject("provider").toString());
+        JSONObject customerInfo=null;
+        if(source=="inInventory") {
+            customerInfo = new JSONObject(documentsData.getJSONObject("provider").toString());
+        }
       //  JSONObject userInfo = new JSONObject(documentsData.getJSONObject("user").toString());
 
         // create file , document region
@@ -1706,7 +1709,9 @@ public class PdfUA {
         if(employee!=null) {
             insertCell(headingTable, context.getString(R.string.cashiers) + employee.getFullName(), Element.ALIGN_CENTER, 1, font);
         }
-        insertCell(headingTable, context.getString(R.string.provider)+":"+customerInfo.getString("firstName")+customerInfo.getString("lastName"), Element.ALIGN_LEFT, 1, dateFont);
+        if(customerInfo!=null) {
+            insertCell(headingTable, context.getString(R.string.provider) + ":" + customerInfo.getString("firstName") + customerInfo.getString("lastName"), Element.ALIGN_LEFT, 1, dateFont);
+        }
         insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
 
 

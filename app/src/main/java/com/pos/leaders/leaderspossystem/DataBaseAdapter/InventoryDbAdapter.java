@@ -59,7 +59,7 @@ public class InventoryDbAdapter {
         try {
             return insertEntry(inventory);
         } catch (SQLException ex) {
-            Log.e("InventoryDB insert", "inserting Entry at " + INVENTORY_COLUMN_NAME + ": " + ex.getMessage());
+            Log.d("InventoryDB", "inserting Entry at " + INVENTORY_COLUMN_NAME + ": " + ex.getMessage());
             return -1;
         }}
     public long insertEntry(Inventory inventory) {

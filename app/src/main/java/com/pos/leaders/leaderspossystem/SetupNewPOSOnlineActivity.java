@@ -320,16 +320,11 @@ class StartConnection extends AsyncTask<String,Void,String> {
 
                 InventoryDbAdapter inventoryDbAdapter = new InventoryDbAdapter(SetupNewPOSOnlineActivity.context);
                 inventoryDbAdapter.open();
-                int hide =0;
-                if( respnse.getBoolean("hide")){
-                    hide=0;
-                }else {
-                    hide=1;
-                }
                 long i = inventoryDbAdapter.insertEntry(respnse.getString("name"), respnse.getLong("inventoryId"), respnse.getString("productsIdWithQuantityList"),
-                        respnse.getInt("branchId"), hide);
+                        respnse.getInt("branchId"), 0);
                 inventoryDbAdapter.close();
-                if (i == 1) {
+
+                if (i>= 1) {
                     Util.isFirstLaunch(SetupNewPOSOnlineActivity.context, true);
                     //finish();
                 } else {

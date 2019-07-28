@@ -54,7 +54,8 @@ public class ProviderDbAdapter {
     // TODO: Create public field for each column in your table.
     // SQL Statement to create a new database.
     public static final String DATABASE_CREATE = "CREATE TABLE Provider ( `id` INTEGER PRIMARY KEY AUTOINCREMENT , " + "`firstName` TEXT NOT NULL," + " `lastName` TEXT NOT NULL," + " `gender` TEXT," + "`email` TEXT," + " `job` TEXT , " +
-            "`phoneNumber` TEXT," + " `street` TEXT ," + "`hide` INTEGER DEFAULT 0 ,`cityId` INTEGER," + " `clubId` INTEGER DEFAULT 0,`houseNumber` TEXT," + "`postalCode` TEXT," + " 'country' TEXT," + " 'countryCode' TEXT,"+   " 'providerCode' TEXT,"+   "`providerType` TEXT," +  "`providerIdentity` TEXT a," +" 'balance' Double DEFAULT 0," +" 'branchId' INTEGER DEFAULT 0)";
+            "`phoneNumber` TEXT," + " `street` TEXT ," + "`hide` INTEGER DEFAULT 0 ,`cityId` INTEGER," + " `clubId` INTEGER DEFAULT 0,`houseNumber` TEXT," + "`postalCode` TEXT," + " `country` TEXT," + " `countryCode` TEXT,"+   " `providerCode` TEXT,"+   "`providerIdentity` TEXT a,"
+            +" `balance` Double DEFAULT 0," +" `branchId` INTEGER DEFAULT 0)";
 
     public SQLiteDatabase db;
     // Context of the application using the database.
@@ -302,7 +303,7 @@ public class ProviderDbAdapter {
                     cursor.getString(cursor.getColumnIndex(PROVIDER_COLUMN_POSTAL_CODE)),
                     cursor.getString(cursor.getColumnIndex(PROVIDER_COLUMN_COUNTRY)),
                     cursor.getString(cursor.getColumnIndex(PROVIDER_COLUMN_COUNTRY_CODE)),
-                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(PROVIDER_COLUMN_BALANCE))),
+                    0,
                     cursor.getString(cursor.getColumnIndex(PROVIDER_CODE)), cursor.getString(cursor.getColumnIndex(PROVIDER_IDENTITY)),
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(PROVIDER_BRANCH_ID)))));
             cursor.moveToNext();

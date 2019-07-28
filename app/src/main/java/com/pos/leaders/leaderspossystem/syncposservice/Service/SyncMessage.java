@@ -1094,8 +1094,6 @@ public class SyncMessage extends Service {
                     inventoryDbAdapter.close();
                     break;
                 case MessageType.UPDATE_INVENTORY:
-                    Inventory updateInventory = null;
-                    updateInventory = objectMapper.readValue(msgData, Inventory.class);
                     InventoryDbAdapter updateInventoryDBAdapter = new InventoryDbAdapter(this);
                     updateInventoryDBAdapter.open();
                     BoInventory boInventory =objectMapper.readValue(msgData, BoInventory.class);
@@ -1699,9 +1697,9 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.INVENTORY, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.UPDATE_INVENTORY:
-                Inventory inventory=null;
-                inventory=objectMapper.readValue(msgData, Inventory.class);
-                res = messageTransmit.authPut(ApiURL.INVENTORY, jsonObject.getString(MessageKey.Data), token,inventory.getId());
+                BoInventory inventory=null;
+                inventory=objectMapper.readValue(msgData, BoInventory.class);
+                res = messageTransmit.authPut(ApiURL.INVENTORY, jsonObject.getString(MessageKey.Data), token,inventory.getInventoryId());
                 break;
             case MessageType.DELETE_INVENTORY:
                 res = messageTransmit.authDelete(ApiURL.INVENTORY, jsonObject.getString(MessageKey.Data), token);

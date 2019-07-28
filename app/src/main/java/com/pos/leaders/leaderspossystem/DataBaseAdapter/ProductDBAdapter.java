@@ -74,7 +74,11 @@ public class ProductDBAdapter {
             "`" +PRODUCTS_COLUMN_CREATINGDATE + "` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
             "`" + PRODUCTS_COLUMN_DISENABLED + "` INTEGER DEFAULT 0, `" + PRODUCTS_COLUMN_CATEGORYID + "` INTEGER NOT NULL, " +
             "`" + PRODUCTS_COLUMN_BYUSER + "` INTEGER NOT NULL, `" + PRODUCTS_COLUMN_STATUS + "` TEXT NOT NULL DEFAULT 'PUBLISHED' , " +
-            "`" + PRODUCTS_COLUMN_with_pos + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_with_point_system + "` INTEGER NOT NULL DEFAULT 1 ,`"+PRODUCTS_COLUMN_UNIT + "` TEXT NOT NULL DEFAULT 'quantity' , `"+ PRODUCTS_COLUMN_CURRENCY_TYPE + "` INTEGER NOT NULL DEFAULT 0, '"+PRODUCTS_COLUMN_BRANCH_ID+"' INTEGER NOT NULL DEFAULT 0 , '" +PRODUCTS_COLUMN_WEIGHT+"' REAL DEFAULT 0.0, '" +PRODUCTS_COLUMN_OFFER_ID+PRODUCTS_COLUMN_LAST_COST_PRICE_INVENTORY+"' REAL DEFAULT 0.0, '" +"' INTEGER NOT NULL DEFAULT 0 )";
+            "`" + PRODUCTS_COLUMN_with_pos + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_with_point_system + "` INTEGER NOT NULL DEFAULT 1 ,`"+
+            PRODUCTS_COLUMN_UNIT + "` TEXT NOT NULL DEFAULT 'quantity' , `"+ PRODUCTS_COLUMN_CURRENCY_TYPE
+            + "` INTEGER NOT NULL DEFAULT 0, '"+PRODUCTS_COLUMN_BRANCH_ID+"' INTEGER NOT NULL DEFAULT 0 , '" +
+            PRODUCTS_COLUMN_WEIGHT+"' REAL DEFAULT 0.0, '" +PRODUCTS_COLUMN_LAST_COST_PRICE_INVENTORY+"' REAL DEFAULT 0.0, '"
+            +PRODUCTS_COLUMN_OFFER_ID +"' INTEGER NOT NULL DEFAULT 0 )";
 
 
     public static final String DATABASE_UPDATE_FROM_V1_TO_V2[] = {"alter table products rename to product_v1;", DATABASE_CREATE + "; ",
@@ -180,7 +184,13 @@ public class ProductDBAdapter {
 
         ProductInventoryDbAdapter productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
         productInventoryDbAdapter.open();
-        productInventoryDbAdapter.insertEntry(p.getProductId(),p.getStockQuantity(),"inventory_in",p.getByEmployee(),p.getBranchId(),Integer.parseInt(String.valueOf(p.isHide())));
+
+        if(String.valueOf(p.isHide()).equals("false")){
+            productInventoryDbAdapter.insertEntry(p.getProductId(),p.getStockQuantity(),"inventory_in",p.getByEmployee(),p.getBranchId(),0,p.getDisplayName(),p.getLastCostPriceInventory());
+        }else {
+            productInventoryDbAdapter.insertEntry(p.getProductId(),p.getStockQuantity(),"inventory_in",p.getByEmployee(),p.getBranchId(),1,p.getDisplayName(),p.getLastCostPriceInventory());
+
+        }
         try {
             return db.insert(PRODUCTS_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -289,6 +299,7 @@ public class ProductDBAdapter {
     }
 
     public void updateEntry(Product product) {
+
         ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
         productDBAdapter.open();
         ContentValues val = new ContentValues();
@@ -580,6 +591,19 @@ public class ProductDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(PRODUCTS_COLUMN_STOCK_QUANTITY, product.getStockQuantity());
+        String where = PRODUCTS_COLUMN_ID + " = ?";
+        db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getProductId() + ""});
+        Product p=productDBAdapter.getProductByID(product.getProductId());
+        Log.d("Update Object",p.toString());
+        sendToBroker(MessageType.UPDATE_PRODUCT, p, this.context);
+        productDBAdapter.close();
+    }
+    public void updateProductPrice(Product product) {
+        ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
+        productDBAdapter.open();
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(PRODUCTS_COLUMN_LAST_COST_PRICE_INVENTORY, product.getLastCostPriceInventory());
         String where = PRODUCTS_COLUMN_ID + " = ?";
         db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getProductId() + ""});
         Product p=productDBAdapter.getProductByID(product.getProductId());

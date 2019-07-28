@@ -1625,21 +1625,24 @@ public class SalesCartActivity extends AppCompatActivity {
                                             @Override
                                             protected void onPostExecute(Void aVoid) {
                                                 try {
+                                                    HashMap<String,Integer>productHashMap=new HashMap<String, Integer>();
                                                     if(invoiceJsonObject.getString("status").equals("200")) {
+                                                        Log.d("testOrder",SESSION._ORDER_DETAILES.toString());
                                                         for(OrderDetails o :SESSION._ORDER_DETAILES){
-                                                            ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(o.getProduct().getProductId());
-                                                            productInventoryDbAdapter.updateEntry(o.getProduct().getProductId(),productInventory.getQty()-o.getQuantity());
-                                                            HashMap<String,Integer>productHashMap=new HashMap<String, Integer>();
-                                                            productHashMap.put(String.valueOf(o.getProduct().getProductId()),o.getProduct().getStockQuantity());
-                                                            Inventory in=null;
-                                                            try {
-                                                                in = inventoryDbAdapter.getLastRow();
-                                                            } catch (Exception e) {
-                                                                e.printStackTrace();
+                                                            if(o.getProduct().getProductId()!=-1) {
+                                                                ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(o.getProduct().getProductId());
+                                                                productInventoryDbAdapter.updateEntry(o.getProduct().getProductId(), productInventory.getQty() - o.getQuantity());
+                                                                productHashMap.put(String.valueOf(o.getProduct().getProductId()),productInventory.getQty()-o.getQuantity());
                                                             }
-                                                            BoInventory inventory = new BoInventory(in.getName(),in.getInventoryId(),productHashMap,in.getBranchId(),in.getHide());
-                                                            sendToBroker(MessageType.UPDATE_INVENTORY, inventory, SalesCartActivity.this);
                                                         }
+                                                        Inventory in=null;
+                                                        try {
+                                                            in = inventoryDbAdapter.getLastRow();
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        BoInventory inventory = new BoInventory(in.getName(),in.getInventoryId(),productHashMap,in.getBranchId(),in.getHide());
+                                                        sendToBroker(MessageType.UPDATE_INVENTORY, inventory, SalesCartActivity.this);
                                                         String s =(tvTotalSaved.getText().toString());
 
                                                         if (s != null && s.length() > 0 && s.charAt(s.length() - 1) == '₪') {
@@ -2766,6 +2769,7 @@ public class SalesCartActivity extends AppCompatActivity {
             Log.d("offerCategoryListTest1",offerCategoryList.toString());
             SESSION._ORDER_DETAILES.add(o);
             newOrderDetails=o;
+            Log.d("teee",SESSION._ORDER_DETAILES.toString());
 
         }
 
@@ -2787,7 +2791,6 @@ public class SalesCartActivity extends AppCompatActivity {
         }
         if(!orderDetails.scannable||orderDetails.giftProduct)
             restCategoryOffers();
-        restCategoryOffers();
         calculateTotalPrice();
     }
 
@@ -3329,20 +3332,23 @@ public class SalesCartActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Inventory in=null;
+        HashMap<String,Integer>productHashMap=new HashMap<String, Integer>();
         for(OrderDetails o :SESSION._ORDER_DETAILES){
             ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(o.getProduct().getProductId());
+            if(o.getProduct().getProductId()!=-1){
+                Log.d("ttttt",productInventory.getQty()+ "   "+o.getQuantity());
             productInventoryDbAdapter.updateEntry(o.getProduct().getProductId(),productInventory.getQty()-o.getQuantity());
-            HashMap<String,Integer>productHashMap=new HashMap<String, Integer>();
-            productHashMap.put(String.valueOf(o.getProduct().getProductId()),o.getProduct().getStockQuantity());
-            Inventory in=null;
-            try {
-                in = inventoryDbAdapter.getLastRow();
-            } catch (Exception e) {
-                e.printStackTrace();
+            productHashMap.put(String.valueOf(o.getProduct().getProductId()),productInventory.getQty()-o.getQuantity());
             }
-            BoInventory inventory = new BoInventory(in.getName(),in.getInventoryId(),productHashMap,in.getBranchId(),in.getHide());
-            sendToBroker(MessageType.UPDATE_INVENTORY, inventory, this.context);
         }
+        try {
+            in = inventoryDbAdapter.getLastRow();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        BoInventory inventory = new BoInventory(in.getName(),in.getInventoryId(),productHashMap,in.getBranchId(),in.getHide());
+        sendToBroker(MessageType.UPDATE_INVENTORY, inventory, this.context);
         if (Long.valueOf(SESSION._ORDERS.getCustomerId()) == 0) {
             if (SESSION._ORDERS.getCustomer_name() == null) {
 

@@ -52,7 +52,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     List<String> departmentsName;
     Spinner productUnitSp , SpProductCurrency , SpProductBranch;
     Button btSave,btnCancel;
-    EditText etName,etBarcode,etDescription,etPrice,etCostPrice,etDisplayName,etSku,etStockQuantity,etProductWeight;
+    EditText etName,etBarcode,etDescription,etPrice,etCostPrice,etInventoryCostPrice,etDisplayName,etSku,etStockQuantity,etProductWeight;
     Switch swWithTax,swManageStock;
     static ListView lvDepartment;
     Map<String,Long> departmentMap=new HashMap<String,Long>();
@@ -103,6 +103,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         etDescription=(EditText)findViewById(R.id.ETDescription);
         etPrice=(EditText)findViewById(R.id.ETPrice);
         etCostPrice=(EditText)findViewById(R.id.ETCostPrice);
+        etInventoryCostPrice=(EditText)findViewById(R.id.ETInventoryCostPrice);
 
         etDisplayName = (EditText) findViewById(R.id.ETDDisplayName);
         etSku = (EditText) findViewById(R.id.ETSku);
@@ -283,6 +284,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                     etSku.setText(editableProduct.getSku());
                     etDescription.setText(editableProduct.getDescription());
                     etCostPrice.setText(editableProduct.getCostPrice() + "");
+                    etInventoryCostPrice.setText(editableProduct.getLastCostPriceInventory() + "");
                     etPrice.setText(editableProduct.getPrice() + "");
                     etStockQuantity.setText(editableProduct.getStockQuantity() + "");
                     swWithTax.setChecked(editableProduct.isWithTax());
@@ -331,6 +333,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                         etBarcode.setEnabled(false);
                         etDescription.setEnabled(false);
                         etCostPrice.setEnabled(false);
+                        etInventoryCostPrice.setEnabled(false);
                         etPrice.setEnabled(false);
                         etDisplayName.setEnabled(false);
                         etStockQuantity.setEnabled(false);
@@ -364,7 +367,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     }
 
     private boolean addEditProduct() {
-        double price=0 , costPrice=0 , weight=0;
+        double price=0 , costPrice=0 , weight=0 , inventoryCostPrice=0;
         int stockQuantity = 0;
         String tempBarcode = etBarcode.getText().toString();
         String newBarCode="";
@@ -442,12 +445,15 @@ public class ProductsActivity  extends AppCompatActivity  {
                         if(!etCostPrice.getText().toString().equals("")){
                             costPrice=Double.parseDouble(etCostPrice.getText().toString());
                         }
+                        if(!etInventoryCostPrice.getText().toString().equals("")){
+                            inventoryCostPrice=Double.parseDouble(etInventoryCostPrice.getText().toString());
+                        }
                         if(!etProductWeight.getText().toString().equals("")){
                             weight=Double.parseDouble(etProductWeight.getText().toString());
                         }
                         check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
                                 etDescription.getText().toString(), price, costPrice, withTax, depID, SESSION._EMPLOYEE.getEmployeeId(), with_pos, with_point_system,
-                                etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit,weight,currencyId,branchId,0,0);
+                                etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit,weight,currencyId,branchId,0,inventoryCostPrice);
 
 
                         if (check > 0) {
@@ -532,6 +538,12 @@ public class ProductsActivity  extends AppCompatActivity  {
                 else {
                     costPrice=editableProduct.getCostPrice();
                 }
+                if(!etInventoryCostPrice.getText().toString().equals("")){
+                    inventoryCostPrice=Double.parseDouble(etInventoryCostPrice.getText().toString());
+                }
+                else {
+                    inventoryCostPrice=editableProduct.getLastCostPriceInventory();
+                }
                 if (etStockQuantity.getText().toString().equals("")) {
                     stockQuantity = 0;
                 }else{
@@ -554,6 +566,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                     editableProduct.setStockQuantity(stockQuantity);
                     editableProduct.setPrice(price);
                     editableProduct.setCostPrice(costPrice);
+                    editableProduct.setLastCostPriceInventory(inventoryCostPrice);
                     editableProduct.setWithTax(withTax);
                     editableProduct.setManageStock(manageStock);
                     editableProduct.setInStock(stockQuantity>0);
@@ -600,6 +613,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         etPrice.setText("");
         etStockQuantity.setText("");
         etCostPrice.setText("");
+        etInventoryCostPrice.setText("");
         swWithTax.setChecked(false);
         swManageStock.setChecked(false);
         editableProduct = null;
