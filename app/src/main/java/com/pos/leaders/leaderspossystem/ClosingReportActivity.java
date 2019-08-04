@@ -12,8 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
@@ -23,7 +25,9 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.ClosingReport;
+import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
@@ -207,7 +211,12 @@ public class ClosingReportActivity extends AppCompatActivity {
             orderDb.open();
             ClosingReportDBAdapter closingReportDBAdapter = new ClosingReportDBAdapter(getApplicationContext());
             closingReportDBAdapter.open();
-
+            CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(getApplicationContext());
+            cashPaymentDBAdapter.open();
+            ChecksDBAdapter checksDBAdapter =new ChecksDBAdapter(getApplicationContext());
+            checksDBAdapter.open();
+            CreditCardPaymentDBAdapter creditCardPaymentDBAdapter =new CreditCardPaymentDBAdapter(getApplicationContext());
+            creditCardPaymentDBAdapter.open();
             ClosingReport closingReport = null;
             closingReport = closingReportDBAdapter.getLastRow();
             ZReportDBAdapter zReportDBAdapter1 = new ZReportDBAdapter(ClosingReportActivity.this);
@@ -236,8 +245,24 @@ public class ClosingReportActivity extends AppCompatActivity {
             double check_plus = 0, check_minus = 0;
             double creditCard_plus = 0, creditCard_minus = 0;
             for (Payment p : payments) {
-                int i = 0;
-                switch (p.getPaymentWay()) {
+                long orderId = p.getOrderId();
+                List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(orderId);
+                if (p.getAmount()<0){
+                    cash_minus+=p.getAmount();
+                }
+                for(int i=0;i<cashPaymentList.size();i++){
+                    cash_plus+=cashPaymentList.get(i).getAmount();
+                }
+                List<Check>checkList=checksDBAdapter.getPaymentBySaleID(orderId);
+                for(int i=0;i<checkList.size();i++){
+                    check_plus+=checkList.get(i).getAmount();
+                }
+                List<CreditCardPayment>creditCardPayments=creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
+                for(int i=0;i<creditCardPayments.size();i++){
+                    creditCard_plus+=creditCardPayments.get(i).getAmount();
+                }
+
+              /*  switch (p.getPaymentWay()) {
 
                     case CONSTANT.CASH:
                         if (p.getAmount() > 0)
@@ -257,7 +282,7 @@ public class ClosingReportActivity extends AppCompatActivity {
                         else
                             check_minus += p.getAmount();
                         break;
-                }
+                }*/
                 expectedTotal+=p.getAmount();
             }
 

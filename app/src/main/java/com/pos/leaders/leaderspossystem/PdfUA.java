@@ -20,6 +20,8 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
@@ -29,6 +31,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.Employee;
@@ -400,22 +404,41 @@ public class PdfUA {
         }
         List<Long>orderIds= new ArrayList<>();
         List<Payment> payments = paymentList(orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()),context);
+        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
+        cashPaymentDBAdapter.open();
+        ChecksDBAdapter checksDBAdapter =new ChecksDBAdapter(context);
+        checksDBAdapter.open();
+        CreditCardPaymentDBAdapter creditCardPaymentDBAdapter =new CreditCardPaymentDBAdapter(context);
+        creditCardPaymentDBAdapter.open();
         for (Payment p : payments) {
-            int i = 0;
+            long orderId = p.getOrderId();
+            List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(orderId);
+            for(int i=0;i<cashPaymentList.size();i++){
+                cashCount+=1;
+                cashAmount+=p.getAmount();
+            }
+            List<Check>checkList=checksDBAdapter.getPaymentBySaleID(orderId);
+            for(int i=0;i<checkList.size();i++){
+                checkCount+=1;
+            }
+            List<CreditCardPayment>creditCardPayments=creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
+            for(int i=0;i<creditCardPayments.size();i++){
+                creditCardCount+=1;            }
+            /*int i = 0;
             switch (p.getPaymentWay()) {
 
                 case CONSTANT.CASH:
-                    cashCount+=1;
+                  cashCount+=1;
                     cashAmount+=p.getAmount();
                     break;
                 case CONSTANT.CREDIT_CARD:
-                    creditCardCount+=1;
+                 creditCardCount+=1;
                     break;
                 case CONSTANT.CHECKS:
-                    checkCount+=1;
+                  checkCount+=1;
                     orderIds.add(p.getOrderId());
                     break;
-            }
+            }*/
         }
         if(orderIds.size()>0){
             for (int id = 0;id<orderIds.size();id++){
@@ -1364,22 +1387,41 @@ public class PdfUA {
         }
         List<Long>orderIds= new ArrayList<>();
         List<Payment> payments = paymentList(orderDb.getBetween(x.getStartOrderId(),x.getEndOrderId()),context);
+        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
+        cashPaymentDBAdapter.open();
+        ChecksDBAdapter checksDBAdapter =new ChecksDBAdapter(context);
+        checksDBAdapter.open();
+        CreditCardPaymentDBAdapter creditCardPaymentDBAdapter =new CreditCardPaymentDBAdapter(context);
+        creditCardPaymentDBAdapter.open();
         for (Payment p : payments) {
-            int i = 0;
+            long orderId = p.getOrderId();
+            List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(orderId);
+            for(int i=0;i<cashPaymentList.size();i++){
+                cashCount+=1;
+                cashAmount+=p.getAmount();
+            }
+            List<Check>checkList=checksDBAdapter.getPaymentBySaleID(orderId);
+            for(int i=0;i<checkList.size();i++){
+                checkCount+=1;
+            }
+            List<CreditCardPayment>creditCardPayments=creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
+            for(int i=0;i<creditCardPayments.size();i++){
+                creditCardCount+=1;            }
+            /*int i = 0;
             switch (p.getPaymentWay()) {
 
                 case CONSTANT.CASH:
-                    cashCount+=1;
+                  cashCount+=1;
                     cashAmount+=p.getAmount();
                     break;
                 case CONSTANT.CREDIT_CARD:
-                    creditCardCount+=1;
+                 creditCardCount+=1;
                     break;
                 case CONSTANT.CHECKS:
-                    checkCount+=1;
+                  checkCount+=1;
                     orderIds.add(p.getOrderId());
                     break;
-            }
+            }*/
         }
         if(orderIds.size()>0){
             for (int id = 0;id<orderIds.size();id++){

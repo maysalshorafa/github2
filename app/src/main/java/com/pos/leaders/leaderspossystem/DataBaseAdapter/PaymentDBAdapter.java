@@ -26,12 +26,11 @@ public class PaymentDBAdapter {
 	protected static final String PAYMENT_TABLE_NAME = "payment";
 	// Column Names
 	protected static final String PAYMENT_COLUMN_ID = "id";
-	protected static final String PAYMENT_COLUMN_PAYMENTWAY = "paymentWay";
 	protected static final String PAYMENT_COLUMN_ORDERID = "orderId";
 	protected static final String PAYMENT_COLUMN_AMOUNT = "amount";
 	protected static final String PAYMENT_COLUMN_KEY = "key";
 
-	public static final String DATABASE_CREATE = "CREATE TABLE `payment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `paymentWay` TEXT NOT NULL, `amount` REAL NOT NULL,`orderId` INTEGER ,`key` TEXT, FOREIGN KEY(`orderId`) REFERENCES `_Order.id`)";
+	public static final String DATABASE_CREATE = "CREATE TABLE `payment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `amount` REAL NOT NULL,`orderId` INTEGER ,`key` TEXT, FOREIGN KEY(`orderId`) REFERENCES `_Order.id`)";
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
 	// Context of the application using the database.
@@ -57,8 +56,8 @@ public class PaymentDBAdapter {
 		return db;
 	}
 
-	public long insertEntry(String paymentWay,double amount, long saleId, String orderDetailsKey) {
-		Payment payment = new Payment(Util.idHealth(this.db, PAYMENT_TABLE_NAME, PAYMENT_COLUMN_ID), paymentWay, amount, saleId,orderDetailsKey);
+	public long insertEntry(double amount, long saleId, String orderDetailsKey) {
+		Payment payment = new Payment(Util.idHealth(this.db, PAYMENT_TABLE_NAME, PAYMENT_COLUMN_ID), amount, saleId,orderDetailsKey);
 		sendToBroker(MessageType.ADD_PAYMENT, payment, this.context);
 
 		try {
@@ -68,8 +67,8 @@ public class PaymentDBAdapter {
 			return -1;
 		}
 	}
-	public long receiptInsertEntry(String paymentWay,double amount, long saleId) {
-		Payment payment = new Payment(Util.idHealth(this.db, PAYMENT_TABLE_NAME, PAYMENT_COLUMN_ID), paymentWay, amount, saleId);
+	public long receiptInsertEntry(double amount, long saleId) {
+		Payment payment = new Payment(Util.idHealth(this.db, PAYMENT_TABLE_NAME, PAYMENT_COLUMN_ID), amount, saleId);
 
 		try {
 			return insertEntry(payment);
@@ -85,9 +84,6 @@ public class PaymentDBAdapter {
 		//Assign values for each row.
 
 		val.put(PAYMENT_COLUMN_ID, payment.getPaymentId());
-
-
-		val.put(PAYMENT_COLUMN_PAYMENTWAY, payment.getPaymentWay());
 		val.put(PAYMENT_COLUMN_AMOUNT,payment.getAmount() );
 		val.put(PAYMENT_COLUMN_ORDERID, payment.getOrderId());
 		val.put(PAYMENT_COLUMN_KEY,payment.getOrderKey());
@@ -138,7 +134,6 @@ public class PaymentDBAdapter {
 
     private Payment make(Cursor cursor){
         return new Payment(Long.parseLong(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_ID))),
-                cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_PAYMENTWAY)),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_AMOUNT))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_ORDERID))),cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_KEY)));
     }

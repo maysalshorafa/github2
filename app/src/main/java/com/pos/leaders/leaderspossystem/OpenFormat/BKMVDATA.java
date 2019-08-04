@@ -3,25 +3,22 @@ package com.pos.leaders.leaderspossystem.OpenFormat;
 import android.content.Context;
 import android.util.Log;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Accounting;
-import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.OldCustomer;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
-import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -176,7 +173,7 @@ public class BKMVDATA {
                 cB100++;
                 Date sdo = new Date(_sale.getCreatedAt().getTime());
 
-                switch (payment.getPaymentWay()) {
+            /*    switch (payment.getPaymentWay()) {
                     case CONSTANT.CASH:
                         paymentType = "1";
                         str += ("D120" + String.format(Util.locale, "%09d", counter) + SETTINGS.companyID + s + String.format(Util.locale, "%020d", payment.getOrderId()) + String.format(Util.locale, "%04d", payment.getOrderId()) +
@@ -213,7 +210,7 @@ public class BKMVDATA {
                         zTotal++;
                         ++b100;
                         break;
-                }
+                }*/
 
                 str += CreateB100(++counter, SETTINGS.companyID, cB100, 1, sdo, accountingGeneralCustomer.getKey(), (short) 1, payment.getAmount()) + "\r\n";
                 str += CreateB100(++counter, SETTINGS.companyID, cB100, 2, sdo, accountingSalesRevenue.getKey(), (short) 2, withoutTax) + "\r\n";

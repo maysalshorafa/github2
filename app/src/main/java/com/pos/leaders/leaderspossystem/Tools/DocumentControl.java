@@ -325,9 +325,9 @@ public class DocumentControl {
             newInvoice=new BoInvoice(DocumentType.INVOICE,DocData,invoice.getDocNum());
             Payment payment=null;
             if(paymentWays.equals(CASH)) {
-                 payment = new Payment(0, CASH, totalPaid, 0);
+                 payment = new Payment(0,  totalPaid, 0);
             }else {
-                 payment = new Payment(0, CHECKS, totalPaid, 0);
+                 payment = new Payment(0, totalPaid, 0);
             }
             final JSONObject newJsonObject = new JSONObject(payment.toString());
             if(paymentWays.equalsIgnoreCase(CONSTANT.CASH)){

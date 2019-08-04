@@ -322,7 +322,8 @@ public class InvoiceImg {
         Block paidBy = new Block("\u200E" + context.getString(R.string.paid_by), 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block paidByText = new Block("\u200E" + "", 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
 
-        String strPaymentWay = sale.getPayment().getPaymentWay().toString();
+        String strPaymentWay = "";
+             /**   sale.getPayment().getPaymentWay().toString();
         switch (sale.getPayment().getPaymentWay().toString()) {
             case CONSTANT.CASH:
                 strPaymentWay = context.getString(R.string.cash);
@@ -333,7 +334,7 @@ public class InvoiceImg {
             case CONSTANT.CREDIT_CARD:
                 strPaymentWay = context.getString(R.string.credit_card);
                 break;
-        }
+        }**/
         Block b_payment = new Block("\u200e" + context.getString(R.string.payment) + newLineL + strPaymentWay, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
         Block b_total = new Block("\u200E" + context.getString(R.string.total) + "\n" + Util.makePrice(sale.getTotalPrice()), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
         Block b_given = new Block("\u200E" + context.getString(R.string.given) + "\n" + Util.makePrice(sale.getTotalPaidAmount()), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
@@ -568,7 +569,8 @@ public class InvoiceImg {
         Block paidBy = new Block("\u200E" + context.getString(R.string.paid_by), 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block paidByText = new Block("\u200E" + "", 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
 
-        String strPaymentWay = sale.getPayment().getPaymentWay().toString();
+        String strPaymentWay = "";
+        /*sale.getPayment().getPaymentWay().toString();
         switch (sale.getPayment().getPaymentWay().toString()) {
             case CONSTANT.CASH:
                 strPaymentWay = context.getString(R.string.cash);
@@ -579,7 +581,7 @@ public class InvoiceImg {
             case CONSTANT.CREDIT_CARD:
                 strPaymentWay = context.getString(R.string.credit_card);
                 break;
-        }
+        }*/
         Block b_payment = new Block("\u200e" + context.getString(R.string.payment) + newLineL + strPaymentWay, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
         Block b_total = new Block("\u200E" + context.getString(R.string.total) + "\n" + Util.makePrice(sale.getTotalPrice()), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
         Block b_given = new Block("\u200E" + context.getString(R.string.given) + "\n" + Util.makePrice(sale.getTotalPaidAmount()), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
@@ -791,7 +793,7 @@ public class InvoiceImg {
         blocks.add(paidBy.Bold().Left());
         blocks.add(clear.Left());
         //pid and price
-        Block b_payment = new Block("\u200e" + context.getString(R.string.payment) + newLineL + sale.getPayment().getPaymentWay().toString(), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
+        Block b_payment = new Block("\u200e" + context.getString(R.string.payment) + newLineL + "", 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
         Block b_total = new Block(context.getString(R.string.total) + "\n" + Util.makePrice(sale.getTotalPrice()), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
         Block b_given = new Block(context.getString(R.string.given) + "\n" + Util.makePrice(sale.getTotalPaidAmount()), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
         double calcReturned = (sale.getTotalPaidAmount() - sale.getTotalPrice());
@@ -925,7 +927,7 @@ public class InvoiceImg {
         blocks.add(paidBy.Bold().Left());
         blocks.add(clear.Left());
         //pid and price
-        Block b_payment = new Block("\u200e" + context.getString(R.string.payment) + newLineL + sale.getPayment().getPaymentWay().toString(), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.332));
+        Block b_payment = new Block("\u200e" + context.getString(R.string.payment) + newLineL + "", 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.332));
         Block b_total = new Block(context.getString(R.string.total) + "\n" + Util.makePrice(sale.getTotalPrice()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
         Block b_given = new Block(context.getString(R.string.given) + "\n" + Util.makePrice(sale.getTotalPaidAmount()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
         double calcReturned = 0;
@@ -1645,7 +1647,7 @@ public class InvoiceImg {
 
         //pid and price
 
-        Block b_payment = new Block("\u200e" + context.getString(R.string.payment) + newLineL + order.getPayment().getPaymentWay().toString(), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
+        Block b_payment = new Block("\u200e" + context.getString(R.string.payment) + newLineL + "", 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
         Block b_total = new Block(context.getString(R.string.total) + "\n" + Util.makePrice(order.getTotalPrice()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
         Block b_given = new Block(context.getString(R.string.given) + "\n" + Util.makePrice(order.getTotalPaidAmount()), 32.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
         double calcReturned = (order.getTotalPaidAmount() - order.getTotalPrice());

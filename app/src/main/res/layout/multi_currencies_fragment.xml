@@ -19,19 +19,38 @@
             android:hint="@string/amount"
             android:textSize="20sp" />
 
-        <Spinner
-            android:id="@+id/multiCurrenciesFragment_currenciesSpinner"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:clipToPadding="true"
-            android:dropDownWidth="match_parent"
-            android:gravity="bottom"
-            android:overlapAnchor="false"
-            android:popupBackground="@drawable/shadow" />
+            android:orientation="vertical">
 
+            <Spinner
+                android:id="@+id/multiCurrenciesFragment_currenciesSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:clipToPadding="true"
+                android:dropDownWidth="match_parent"
+                android:gravity="bottom"
+                android:overlapAnchor="false"
+                android:popupBackground="@drawable/shadow" />
+
+            <Spinner
+                android:id="@+id/multiCurrenciesFragment_paymentWaySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:clipToPadding="true"
+                android:dropDownWidth="match_parent"
+                android:gravity="bottom"
+                android:overlapAnchor="false"
+                android:popupBackground="@drawable/shadow" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

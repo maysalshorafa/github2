@@ -11,6 +11,8 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
@@ -20,6 +22,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
@@ -642,9 +646,28 @@ public class BitmapInvoice {
                 receiptInvoiceAmountCheck+=posReceiptListCheck.size();
         }
         List<Long>orderIds= new ArrayList<>();
+        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
+        cashPaymentDBAdapter.open();
+        ChecksDBAdapter checksDBAdapter =new ChecksDBAdapter(context);
+        checksDBAdapter.open();
+        CreditCardPaymentDBAdapter creditCardPaymentDBAdapter =new CreditCardPaymentDBAdapter(context);
+        creditCardPaymentDBAdapter.open();
         List<Payment> payments = paymentList(orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()),context);
         for (Payment p : payments) {
-            int i = 0;
+            long orderId = p.getOrderId();
+            List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(orderId);
+            for(int i=0;i<cashPaymentList.size();i++){
+                cashCount+=1;
+                cashAmount+=p.getAmount();
+            }
+            List<Check>checkList=checksDBAdapter.getPaymentBySaleID(orderId);
+            for(int i=0;i<checkList.size();i++){
+                checkCount+=1;
+            }
+            List<CreditCardPayment>creditCardPayments=creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
+            for(int i=0;i<creditCardPayments.size();i++){
+                creditCardCount+=1;            }
+            /*int i = 0;
             switch (p.getPaymentWay()) {
 
                 case CONSTANT.CASH:
@@ -658,7 +681,7 @@ public class BitmapInvoice {
                   checkCount+=1;
                     orderIds.add(p.getOrderId());
                     break;
-            }
+            }*/
         }
         if(orderIds.size()>0){
             for (int id = 0;id<orderIds.size();id++){

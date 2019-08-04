@@ -30,10 +30,10 @@ public class MultiCurrenciesFragment extends Fragment {
     Button bt1 , bt2 , bt3 , bt4 , bt5 , bt6 ,bt7, bt8 , bt9  , btClear , btConfirmation , btDot , bt0 ;
     ImageButton btCE;
     TextView amount;
-    Spinner currencySpinner;
+    Spinner currencySpinner , paymentMethodSpinner;
     List<Currency> currenciesList;
     private List<CurrencyType> currencyTypesList = null;
-    List<String> currenciesNames;
+    List<String> currenciesNames,paymentMethod;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v= inflater.inflate(R.layout.multi_currencies_fragment, container, false);
@@ -53,6 +53,7 @@ public class MultiCurrenciesFragment extends Fragment {
         btConfirmation=(Button)v.findViewById(R.id.multiCurrenciesFragment_btAddPayment);
         amount=(TextView)v.findViewById(R.id.multiCurrenciesFragment_amount);
         currencySpinner=(Spinner)v.findViewById(R.id.multiCurrenciesFragment_currenciesSpinner);
+        paymentMethodSpinner=(Spinner)v.findViewById(R.id.multiCurrenciesFragment_paymentWaySpinner);
         //Getting default currencies name and values
         CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(getContext());
         currencyTypeDBAdapter.open();
@@ -62,17 +63,25 @@ public class MultiCurrenciesFragment extends Fragment {
         currencyDBAdapter.open();
         currenciesList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
         currenciesNames = new ArrayList<String>();
+        paymentMethod=new ArrayList<>();
         for (int i = 0; i < currencyTypesList.size(); i++) {
             currenciesNames.add(currencyTypesList.get(i).getType());
         }
-
+        paymentMethod.add(0,PaymentMethod.CASH);
+        paymentMethod.add(1,PaymentMethod.CHECK);
+        paymentMethod.add(2,PaymentMethod.CREDIT_CARD);
+        paymentMethod.add(3,PaymentMethod.PIN_PAD);
         // Creating adapter for spinner
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, currenciesNames);
+        final ArrayAdapter<String> dataAdapter1 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, paymentMethod);
 
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dataAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         // attaching data adapter to spinner
         currencySpinner.setAdapter(dataAdapter);
+        paymentMethodSpinner.setAdapter(dataAdapter1);
         bt9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

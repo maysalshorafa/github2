@@ -18,7 +18,6 @@ import java.util.Locale;
 
 public class Payment {
 	private long paymentId;
-	private String paymentWay;
 	private long orderId;
 	private double amount;
 	private boolean hide;
@@ -32,23 +31,21 @@ public class Payment {
 	private List<CurrencyReturns> currencyReturns = new ArrayList<>();
 
 	// Constructors
-	public Payment(long paymentId, String paymentWay, double amount, long orderId) {
+	public Payment(long paymentId, double amount, long orderId) {
 		this.paymentId = paymentId;
-		this.paymentWay = paymentWay;
 		this.amount = amount;
 		this.orderId = orderId;
 	}
 
-	public Payment(long paymentId, String paymentWay, double amount, long orderId,String key) {
+	public Payment(long paymentId, double amount, long orderId,String key) {
 		this.paymentId = paymentId;
-		this.paymentWay = paymentWay;
 		this.amount = amount;
 		this.orderId = orderId;
 		this.orderKey =key;
 	}
 
 	public Payment(Payment p) {
-		this(p.getPaymentId(), p.getPaymentWay(), p.getAmount(), p.getOrderId(),p.getOrderKey());
+		this(p.getPaymentId(), p.getAmount(), p.getOrderId(),p.getOrderKey());
 	}
 
 	public Payment() {
@@ -64,9 +61,6 @@ public class Payment {
 		return paymentId;
 	}
 
-	public String getPaymentWay() {
-		return paymentWay;
-	}
 
 	public long getOrderId() {
 		return orderId;
@@ -121,9 +115,6 @@ public class Payment {
 		this.paymentId = paymentId;
 	}
 
-	public void setPaymentWay(String paymentWay) {
-		this.paymentWay = paymentWay;
-	}
 
 	public void setOrderId(long orderId) {
 		this.orderId = orderId;
@@ -139,8 +130,7 @@ public class Payment {
 	@Override
 	public String toString() {
 		return "{" +"\"@type\":" + "\"Payment\""+
-				",\"paymentId\":" +paymentId +
-				",\"paymentWay\":" + paymentWay  +
+				",\"paymentId\":" +paymentId   +
 				",\"amount\":" + amount +
 				",\"orderId\":" + orderId +
 				",\"orderKey\":" + orderKey +

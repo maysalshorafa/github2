@@ -15,6 +15,8 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.itextpdf.text.DocumentException;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
@@ -27,6 +29,9 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DocumentType;
+import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
@@ -472,13 +477,35 @@ public class Util {
         zReportDBAdapter.open();
         OrderDBAdapter orderDBAdapter = new OrderDBAdapter(context);
         orderDBAdapter.open();
+        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
+        cashPaymentDBAdapter.open();
+        ChecksDBAdapter checksDBAdapter =new ChecksDBAdapter(context);
+        checksDBAdapter.open();
+        CreditCardPaymentDBAdapter creditCardPaymentDBAdapter =new CreditCardPaymentDBAdapter(context);
+        creditCardPaymentDBAdapter.open();
         List<Order> sales = orderDBAdapter.getBetween(zReport.getStartOrderId(),zReport.getEndOrderId());
         List<CurrencyReturns> currencyReturnList = returnPaymentList(sales,context);
         List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(sales,context);
         List<Payment> payments = paymentList(sales,context);
         for (Payment p : payments) {
-            int i = 0;
-            switch (p.getPaymentWay()) {
+
+            long orderId = p.getOrderId();
+            List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(orderId);
+            if (p.getAmount()<0){
+                cash_minus+=p.getAmount();
+            }
+            for(int i=0;i<cashPaymentList.size();i++){
+                cash_plus+=cashPaymentList.get(i).getAmount();
+            }
+            List<Check>checkList=checksDBAdapter.getPaymentBySaleID(orderId);
+            for(int i=0;i<checkList.size();i++){
+                check_plus+=checkList.get(i).getAmount();
+            }
+            List<CreditCardPayment>creditCardPayments=creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
+            for(int i=0;i<creditCardPayments.size();i++){
+                creditCard_plus+=creditCardPayments.get(i).getAmount();
+            }
+            /**switch (p.getPaymentWay()) {
 
                 case CONSTANT.CASH:
                         cash_plus += p.getAmount();
@@ -489,7 +516,7 @@ public class Util {
                 case CONSTANT.CHECKS:
                         check_plus += p.getAmount();
                     break;
-            }
+            }**/
         }
 
 //with Currency
@@ -1056,12 +1083,34 @@ public class Util {
         zReportDBAdapter.open();
         OrderDBAdapter orderDBAdapter = new OrderDBAdapter(context);
         orderDBAdapter.open();
+        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
+        cashPaymentDBAdapter.open();
+        ChecksDBAdapter checksDBAdapter =new ChecksDBAdapter(context);
+        checksDBAdapter.open();
+        CreditCardPaymentDBAdapter creditCardPaymentDBAdapter =new CreditCardPaymentDBAdapter(context);
+        creditCardPaymentDBAdapter.open();
         List<Order> sales = orderDBAdapter.getBetween(xReport.getStartOrderId(),xReport.getEndOrderId());
         List<CurrencyReturns> currencyReturnList = returnPaymentList(sales,context);
         List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(sales,context);
         List<Payment> payments = paymentList(sales,context);
         for (Payment p : payments) {
-            int i = 0;
+            long orderId = p.getOrderId();
+            List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(orderId);
+            if (p.getAmount()<0){
+                cash_minus+=p.getAmount();
+            }
+            for(int i=0;i<cashPaymentList.size();i++){
+                cash_plus+=cashPaymentList.get(i).getAmount();
+            }
+            List<Check>checkList=checksDBAdapter.getPaymentBySaleID(orderId);
+            for(int i=0;i<checkList.size();i++){
+                check_plus+=checkList.get(i).getAmount();
+            }
+            List<CreditCardPayment>creditCardPayments=creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
+            for(int i=0;i<creditCardPayments.size();i++){
+                creditCard_plus+=creditCardPayments.get(i).getAmount();
+            }
+          /*
             switch (p.getPaymentWay()) {
 
                 case CONSTANT.CASH:
@@ -1076,7 +1125,7 @@ public class Util {
                         check_plus += p.getAmount();
 
                     break;
-            }
+            }*/
         }
 
 //with Currency

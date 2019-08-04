@@ -337,28 +337,13 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/mainActivity_btnCreditCard"
+                        android:id="@+id/mainActivity_btnPayment"
                         style="@style/AppTheme.bt_dark"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="@string/credit_card" />
+                        android:text="@string/payment" />
 
-                    <Button
-                        android:id="@+id/mainActivity_btnOtherWays"
-                        style="@style/AppTheme.bt_dark"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="@string/other_ways" />
-
-                    <Button
-                        android:id="@+id/mainActivity_btnCash"
-                        style="@style/AppTheme.bt_dark"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="@string/cash" />
                 </LinearLayout>
 
                 <LinearLayout

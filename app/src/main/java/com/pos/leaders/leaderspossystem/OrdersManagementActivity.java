@@ -262,8 +262,12 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     checks = new ArrayList<Check>();
 
                     for (Payment p : payments) {
-                        switch (p.getPaymentWay()) {
-                            case CONSTANT.CHECKS:
+                     //  switch (p.getPaymentWay()) {
+                            ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(OrdersManagementActivity.this);
+                            checksDBAdapter.open();
+                            checks.addAll(checksDBAdapter.getPaymentBySaleID(sale.getOrderId()));
+                            checksDBAdapter.close();
+                         /*   case CONSTANT.CHECKS:
                                 ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(OrdersManagementActivity.this);
                                 checksDBAdapter.open();
                                 checks.addAll(checksDBAdapter.getPaymentBySaleID(sale.getOrderId()));
@@ -272,8 +276,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             case CONSTANT.CASH:
                                 break;
                             case CONSTANT.CREDIT_CARD:
-                                break;
-                        }
+                                break;*/
+                       // }
                     }
                     LinearLayout fr = (LinearLayout) view.findViewById(R.id.listSaleManagement_FLMore);
                     if (previousView == null) {
@@ -391,7 +395,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             saleDBAdapter.updateEntry(sale);
                             PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(OrdersManagementActivity.this);
                             paymentDBAdapter1.open();
-                            paymentDBAdapter1.insertEntry(sale.getPayment().getPaymentWay(), sale.getTotalPrice() * -1, sID,order.getOrderKey());
+                            paymentDBAdapter1.insertEntry( sale.getTotalPrice() * -1, sID,order.getOrderKey());
                             paymentDBAdapter1.close();
                             CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(OrdersManagementActivity.this);
                             cashPaymentDBAdapter.open();

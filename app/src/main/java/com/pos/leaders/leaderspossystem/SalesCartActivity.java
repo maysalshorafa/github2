@@ -49,7 +49,6 @@ import android.widget.Toast;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
-import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
@@ -146,9 +145,6 @@ import POSAPI.POSInterfaceAPI;
 import POSAPI.POSUSBAPI;
 import POSSDK.POSSDK;
 
-import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CASH;
-import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CHECKS;
-import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CREDIT_CARD;
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
@@ -158,8 +154,8 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 public class SalesCartActivity extends AppCompatActivity {
     private static final int REQUEST_CASH_ACTIVITY_WITH_CURRENCY_CODE = 590;
     private static final int REQUEST_CASH_ACTIVITY_CODE = 600;
-    private static final int REQUEST_CHECKS_ACTIVITY_CODE = 753;
-    private static final int REQUEST_CREDIT_CARD_ACTIVITY_CODE = 801;
+    public static final int REQUEST_CHECKS_ACTIVITY_CODE = 753;
+    public static final int REQUEST_CREDIT_CARD_ACTIVITY_CODE = 801;
     private static final int REQUEST_PIN_PAD_ACTIVITY_CODE = 907;
     private static final int REQUEST_MULTI_CURRENCY_ACTIVITY_CODE = 444;
     private static final int REQUEST_CREDIT_ACTIVITY_CODE = 500;
@@ -176,7 +172,7 @@ public class SalesCartActivity extends AppCompatActivity {
     //ImageButton    btnLastSales;
     Button btnPercentProduct, btnPauseSale, btnResumeSale;
     ImageButton search_person;
-    Button btnCash, btnCreditCard, btnOtherWays , createInvoice;
+    Button btnPayment, createInvoice;
     TextView tvTotalPrice;
     TextView tvTotalSaved;
     TextView salesSaleMan;
@@ -375,10 +371,10 @@ public class SalesCartActivity extends AppCompatActivity {
         //  btnLastSales = (ImageButton) findViewById(R.id.mainActivity_BTNLastSales);
         btnCancel = (ImageView) findViewById(R.id.mainActivity_btnCancel);
         lvOrder = (ListView) findViewById(R.id.mainScreen_LVOrder);
-
-        btnCash = (Button) findViewById(R.id.mainActivity_btnCash);
+        btnPayment = (Button) findViewById(R.id.mainActivity_btnPayment);
+        /*btnCash = (Button) findViewById(R.id.mainActivity_btnCash);
         btnOtherWays = (Button) findViewById(R.id.mainActivity_btnOtherWays);
-        btnCreditCard = (Button) findViewById(R.id.mainActivity_btnCreditCard);
+        btnCreditCard = (Button) findViewById(R.id.mainActivity_btnCreditCard);*/
         tvTotalPrice = (TextView) findViewById(R.id.mainActivity_tvTotalPrice);
         tvTotalSaved = (TextView) findViewById(R.id.mainActivity_tvTotalSaved);
 
@@ -1471,7 +1467,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
         //region Cash
 
-        btnCash.setOnClickListener(new View.OnClickListener() {
+     /**   btnCash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String s =(tvTotalSaved.getText().toString());
@@ -1496,6 +1492,25 @@ public class SalesCartActivity extends AppCompatActivity {
                     }
                 }
             }
+        });**/
+        btnPayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String s =(tvTotalSaved.getText().toString());
+
+                if (s != null && s.length() > 0 && s.charAt(s.length() - 1) == '₪') {
+                    s = s.substring(0, s.length() - 1);
+                }
+                if (SESSION._ORDER_DETAILES.size() > 0) {
+                        //Intent intent = new Intent(SalesCartActivity.this, CashActivity.class);
+                        SESSION._ORDERS.totalSaved=Double.parseDouble(s);
+                        Log.d("testTotalSaved",s+"");
+                        Intent intent = new Intent(SalesCartActivity.this, MultiCurrenciesPaymentActivity.class);
+                        intent.putExtra(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, Double.parseDouble(Util.makePrice(saleTotalPrice)));
+                        startActivityForResult(intent, REQUEST_MULTI_CURRENCY_ACTIVITY_CODE);
+
+                }
+            }
         });
 
 
@@ -1504,7 +1519,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
         //region Credit Card
 
-        btnCreditCard.setOnClickListener(new View.OnClickListener() {
+       /* btnCreditCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String s =(tvTotalSaved.getText().toString());
@@ -1527,14 +1542,14 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 }
             }
-        });
+        });*/
 
         //endregion
 
 
         //region Other Way
 
-        btnOtherWays.setOnClickListener(new View.OnClickListener() {
+    /*    btnOtherWays.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String s =(tvTotalSaved.getText().toString());
@@ -1552,7 +1567,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     startActivityForResult(intent, REQUEST_CHECKS_ACTIVITY_CODE);
                 }
             }
-        });
+        });*/
 
         //endregion Other Way
 
@@ -3005,12 +3020,13 @@ public class SalesCartActivity extends AppCompatActivity {
                     Bitmap client = invoiceImg.pinPadInvoice(SESSION._ORDERS, false, clientNote);
                     pos.imageStandardModeRasterPrint(client, CONSTANT.PRINTER_PAGE_WIDTH);
 
-                } else if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
+                }
+                /**else if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
                     pos.imageStandardModeRasterPrint(invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainMer), CONSTANT.PRINTER_PAGE_WIDTH);
                     pos.systemFeedLine(2);
                     pos.systemCutPaper(66, 0);
                     pos.imageStandardModeRasterPrint(invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainCli), CONSTANT.PRINTER_PAGE_WIDTH);
-                } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
+                } */else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
                     pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER), CONSTANT.PRINTER_PAGE_WIDTH);
                 }   else  {
                     pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null), CONSTANT.PRINTER_PAGE_WIDTH);
@@ -3105,7 +3121,7 @@ public class SalesCartActivity extends AppCompatActivity {
                             HPRTPrinterHelper.PrintBitmap(client, b, b, 300);
 
 
-                        } else if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
+                        } /*else if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
                             Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainMer);
 
                             HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
@@ -3117,7 +3133,7 @@ public class SalesCartActivity extends AppCompatActivity {
                             }
                             Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainCli);
                             HPRTPrinterHelper.PrintBitmap(bitmap2, b, b, 300);
-                        } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
+                        } */else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
                             Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER);
                             HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
                         }  else {
@@ -3192,7 +3208,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     Bitmap client = invoiceImg.pinPadInvoice(SESSION._ORDERS, false, clientNote);
                     AidlUtil.getInstance().printBitmap(client);
 
-                } else if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
+                }/* else if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
                     Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainMer);
 
                     AidlUtil.getInstance().printBitmap(bitmap);
@@ -3206,7 +3222,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainCli);
                     AidlUtil.getInstance().printBitmap(bitmap2);
                     //Thread.sleep(100);
-                } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
+                }*/ else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
                     Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER);
                     AidlUtil.getInstance().printBitmap(bitmap);
                 } else  {
@@ -3283,13 +3299,13 @@ public class SalesCartActivity extends AppCompatActivity {
                     byte b = 0;
                     try {
                         //// TODO: 13/06/2018 adding pinpad support
-                        if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
+                     /*   if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
                             Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainMer);
                             printSMS230(bitmap);
                             //cut
                             Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainCli);
                             printSMS230(bitmap2);
-                        } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
+                        } else */if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
                             Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER);
                             printSMS230(bitmap);
                         } else {
@@ -3468,11 +3484,11 @@ public class SalesCartActivity extends AppCompatActivity {
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(SalesCartActivity.this);
                 paymentDBAdapter.open();
 
-                long paymentID = paymentDBAdapter.insertEntry(CREDIT_CARD, saleTotalPrice, saleID,order.getOrderKey());
+                long paymentID = paymentDBAdapter.insertEntry( saleTotalPrice, saleID,order.getOrderKey());
 
                 paymentDBAdapter.close();
 
-                Payment payment = new Payment(paymentID, CREDIT_CARD, saleTotalPrice, saleID);
+                Payment payment = new Payment(paymentID,  saleTotalPrice, saleID);
                 SESSION._ORDERS.setPayment(payment);
 
 
@@ -3619,11 +3635,11 @@ public class SalesCartActivity extends AppCompatActivity {
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(SalesCartActivity.this);
                 paymentDBAdapter.open();
 
-                long paymentID = paymentDBAdapter.insertEntry(CREDIT_CARD, saleTotalPrice, saleID,order.getOrderKey());
+                long paymentID = paymentDBAdapter.insertEntry(saleTotalPrice, saleID,order.getOrderKey());
 
                 paymentDBAdapter.close();
 
-                Payment payment = new Payment(paymentID, CREDIT_CARD, saleTotalPrice, saleID);
+                Payment payment = new Payment(paymentID, saleTotalPrice, saleID);
                 SESSION._ORDERS.setPayment(payment);
                 //endregion
                     printAndOpenCashBox("PINPAD", jsonObject.toString(), "", REQUEST_PIN_PAD_ACTIVITY_CODE);
@@ -3738,11 +3754,11 @@ public class SalesCartActivity extends AppCompatActivity {
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
                 paymentDBAdapter.open();
 
-                long paymentID = paymentDBAdapter.insertEntry(CHECKS, saleTotalPrice, saleID, order.getOrderKey());
+                long paymentID = paymentDBAdapter.insertEntry( saleTotalPrice, saleID, order.getOrderKey());
 
                 paymentDBAdapter.close();
 
-                Payment payment = new Payment(paymentID, CHECKS, saleTotalPrice, saleID);
+                Payment payment = new Payment(paymentID,saleTotalPrice, saleID);
                 SESSION._ORDERS.setPayment(payment);
 
                 ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(this);
@@ -3862,9 +3878,9 @@ public class SalesCartActivity extends AppCompatActivity {
                 custmerAssetDB.close();
                 // End ORDER_DETAILS And CustomerAssistant Region
                 // Payment Region
-                long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash,order.getOrderKey());
+                long paymentID = paymentDBAdapter.insertEntry( saleTotalPrice, saleIDforCash,order.getOrderKey());
 
-                Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
+                Payment payment = new Payment(paymentID,saleTotalPrice, saleIDforCash);
                 SESSION._ORDERS.setPayment(payment);
                 SESSION._ORDERS.setCreatedAt(new Timestamp(System.currentTimeMillis()));
                 cashPaymentDBAdapter.insertEntry(saleIDforCash, saleTotalPrice, 0, new Timestamp(System.currentTimeMillis()),1,1);
@@ -3990,9 +4006,9 @@ public class SalesCartActivity extends AppCompatActivity {
                 // End ORDER_DETAILS And CustomerAssistant Region
 
                 // Payment Region
-                long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash,order.getOrderKey());
+                long paymentID = paymentDBAdapter.insertEntry( saleTotalPrice, saleIDforCash,order.getOrderKey());
 
-                Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
+                Payment payment = new Payment(paymentID,  saleTotalPrice, saleIDforCash);
 
                 SESSION._ORDERS.setPayment(payment);
 
@@ -4067,14 +4083,34 @@ public class SalesCartActivity extends AppCompatActivity {
                         currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,paymentTableArrayList.get(i).getTendered(),paymentTableArrayList.get(i).getCurrency().getType());
                     }
                     }
+                    long paymentID = paymentDBAdapter.insertEntry(saleTotalPrice, saleIDforCash,order.getOrderKey());
+
                     if(saleTotalPrice<0){
                         cashPaymentDBAdapter.insertEntry(saleIDforCash, 0,0, new Timestamp(System.currentTimeMillis()),1,1);
                     }
                     else {
                     for (int i = 0; i < jsonArray.length() - 1; i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()),getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")),jsonObject.getDouble("actualCurrencyRate"));
+                        if(jsonObject.getString("paymentMethod").equals(CONSTANT.CASH)) {
+                            cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()), getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")), jsonObject.getDouble("actualCurrencyRate"));
+                        }else if(jsonObject.getString("paymentMethod").equals(CONSTANT.CREDIT_CARD)){
+                            CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
+                            creditCardPaymentDBAdapter.open();
+                            CreditCardPayment ccp = SESSION._TEMP_CREDITCARD_PAYMNET;
+                            creditCardPaymentDBAdapter.insertEntry(saleIDforCash, ccp.getAmount(), ccp.getCreditCardCompanyName(), ccp.getTransactionType(), ccp.getLast4Digits(), ccp.getTransactionId(), ccp.getAnswer(), ccp.getPaymentsNumber()
+                                    , ccp.getFirstPaymentAmount(), ccp.getOtherPaymentAmount(), ccp.getCreditCardCompanyName());
 
+                            creditCardPaymentDBAdapter.close();
+                        }
+                    }
+                    if(SESSION._CHECKS_HOLDER.size()>0){
+
+                        ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(this);
+                        checksDBAdapter.open();
+                        for (Check check : SESSION._CHECKS_HOLDER) {
+                            checksDBAdapter.insertEntry(check.getCheckNum(), check.getBankNum(), check.getBranchNum(), check.getAccountNum(), check.getAmount(), check.getCreatedAt(), saleIDforCash);
+                        }
+                        checksDBAdapter.close();
                     }
                     }
                     cashPaymentDBAdapter.close();
@@ -4140,9 +4176,8 @@ public class SalesCartActivity extends AppCompatActivity {
                     // End ORDER_DETAILS And CustomerAssistant Region
 
                     // Payment Region
-                    long paymentID = paymentDBAdapter.insertEntry(CASH, saleTotalPrice, saleIDforCash,order.getOrderKey());
 
-                    Payment payment = new Payment(paymentID, CASH, saleTotalPrice, saleIDforCash);
+                    Payment payment = new Payment(0, saleTotalPrice, saleIDforCash);
 
                     SESSION._ORDERS.setPayment(payment);
 
