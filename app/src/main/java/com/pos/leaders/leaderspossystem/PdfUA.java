@@ -22,6 +22,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
@@ -34,10 +36,12 @@ import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
+import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.PosInvoice;
@@ -1643,12 +1647,20 @@ public class PdfUA {
 
 
     }
-    public static void createNormalInvoice(Context context  , List<OrderDetails>orderDetailsList) throws IOException, DocumentException {
+    public static void createNormalInvoice(Context context  , List<OrderDetails>orderDetailsList, Order order,boolean isCopy) throws IOException, DocumentException {
+        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
+        cashPaymentDBAdapter.open();
+        ChecksDBAdapter checksDBAdapter =new ChecksDBAdapter(context);
+        checksDBAdapter.open();
+        CreditCardPaymentDBAdapter creditCardPaymentDBAdapter =new CreditCardPaymentDBAdapter(context);
+        creditCardPaymentDBAdapter.open();
         double totalPrice =0.0;
         int count=0;
+        String customerName="";
         // create file , document region
         Document document = new Document();
         String fileName = "normalInvoice.pdf";
+
         final String APPLICATION_PACKAGE_NAME = context.getPackageName();
         File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
         path.mkdirs();
@@ -1671,13 +1683,28 @@ public class PdfUA {
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, context.getString(R.string.user_name)+":  " + SESSION._EMPLOYEE.getFirstName(), Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, context.getString(R.string.pause_invoice), Element.ALIGN_CENTER, 1, font);
+        if (order.getCustomer_name() == null) {
+            customerName = context.getString(R.string.general_customer);
+        } else if (order.getCustomer_name().equals("")) {
+            customerName = context.getString(R.string.general_customer);
+        } else {
+            customerName = order.getCustomer_name();
+        }
+        insertCell(headingTable, context.getString(R.string.customer_name)+":  " + customerName, Element.ALIGN_CENTER, 1, font);
+        if(isCopy) {
+            insertCell(headingTable, context.getString(R.string.copyinvoice), Element.ALIGN_CENTER, 1, font);
+        }else {
+            insertCell(headingTable, context.getString(R.string.source_invoice), Element.ALIGN_CENTER, 1, font);
+        }
+        insertCell(headingTable, context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", SESSION._ORDERS.getOrderId()), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 4, font);
 
         BaseFont urName1 = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font urFontName1 = new Font(urName1, 22);
         PdfPTable table = new PdfPTable(7);
+        PdfPTable currencyTable = new PdfPTable(3);
+        PdfPTable paidByTable = new PdfPTable(4);
+
         Font urFontName = new Font(urName1, 24);
 
         table.deleteBodyRows();
@@ -1701,8 +1728,117 @@ public class PdfUA {
             count+=orderDetailsList.get(i).getQuantity();
         }
         insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 7, font);
-        insertCell(table, context.getString(R.string.product_quantity)+" : "+count  , Element.ALIGN_CENTER, 7, font);
-        insertCell(table, context.getString(R.string.total_price)+" : "+totalPrice  , Element.ALIGN_CENTER, 7, font);
+        insertCell(table, context.getString(R.string.product_quantity)+" : "+count  , Element.ALIGN_CENTER, 4, font);
+        insertCell(table,Util.makePrice(count)  , Element.ALIGN_CENTER, 3, font);
+
+        insertCell(table, context.getString(R.string.total_price)+totalPrice  , Element.ALIGN_CENTER, 4, font);
+        insertCell(table,Util.makePrice(totalPrice)  , Element.ALIGN_CENTER, 3, font);
+
+        insertCell(table, context.getString(R.string.tax)+" : "+Util.makePrice(SETTINGS.tax) , Element.ALIGN_CENTER, 7, font);
+        double noTax = order.getTotalPrice() / (1 + (SETTINGS.tax / 100));
+        insertCell(table, context.getString(R.string.price_before_tax)+" : " , Element.ALIGN_CENTER, 4, font);
+        insertCell(table, Util.makePrice(noTax) , Element.ALIGN_CENTER, 3, font);
+        insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 7, font);
+
+        insertCell(paidByTable,context.getString(R.string.returned), Element.ALIGN_CENTER, 1, font);
+        insertCell(paidByTable,context.getString(R.string.given), Element.ALIGN_CENTER, 1, font);
+        insertCell(paidByTable,context.getString(R.string.total), Element.ALIGN_CENTER, 1, font);
+        insertCell(paidByTable,context.getString(R.string.payment), Element.ALIGN_CENTER, 1, font);
+        double cash_plus = 0;
+        double check_plus = 0;
+        double creditCard_plus = 0;
+            List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(order.getOrderId());
+            for(int i=0;i<cashPaymentList.size();i++){
+                cash_plus+=cashPaymentList.get(i).getAmount();
+            }
+            List<Check>checkList=checksDBAdapter.getPaymentBySaleID(order.getOrderId());
+            for(int i=0;i<checkList.size();i++){
+                check_plus+=checkList.get(i).getAmount();
+            }
+            List<CreditCardPayment>creditCardPayments=creditCardPaymentDBAdapter.getPaymentByOrderID(order.getOrderId());
+            for(int i=0;i<creditCardPayments.size();i++){
+                creditCard_plus+=creditCardPayments.get(i).getAmount();
+            }
+        if(cashPaymentList.size()>0){
+            insertCell(paidByTable,Util.makePrice(order.getTotalPrice()-cash_plus), Element.ALIGN_CENTER, 1, font);
+            insertCell(paidByTable,Util.makePrice(cash_plus), Element.ALIGN_CENTER, 1, font);
+            insertCell(paidByTable,Util.makePrice(order.getTotalPrice()), Element.ALIGN_CENTER, 1, font);
+            insertCell(paidByTable,CONSTANT.CASH, Element.ALIGN_CENTER, 1, font);
+        }
+        if(checkList.size()>0){
+            insertCell(paidByTable,Util.makePrice(order.getTotalPrice()-check_plus), Element.ALIGN_CENTER, 1, font);
+            insertCell(paidByTable,Util.makePrice(check_plus), Element.ALIGN_CENTER, 1, font);
+            insertCell(paidByTable,Util.makePrice(order.getTotalPrice()), Element.ALIGN_CENTER, 1, font);
+            insertCell(paidByTable,CONSTANT.CASH, Element.ALIGN_CENTER, 1, font);
+        }
+        if(creditCardPayments.size()>0){
+            insertCell(paidByTable,Util.makePrice(order.getTotalPrice()-creditCard_plus), Element.ALIGN_CENTER, 1, font);
+            insertCell(paidByTable,Util.makePrice(creditCard_plus), Element.ALIGN_CENTER, 1, font);
+            insertCell(paidByTable,Util.makePrice(order.getTotalPrice()), Element.ALIGN_CENTER, 1, font);
+            insertCell(paidByTable,CONSTANT.CASH, Element.ALIGN_CENTER, 1, font);
+        }
+        insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+
+        if(SETTINGS.enableCurrencies) {
+            insertCell(currencyTable, context.getString(R.string.currency), Element.ALIGN_CENTER, 3, font);
+            insertCell(currencyTable, context.getString(R.string.returned), Element.ALIGN_CENTER, 1, font);
+            insertCell(currencyTable, context.getString(R.string.given), Element.ALIGN_CENTER, 1, font);
+            insertCell(currencyTable, context.getString(R.string.type), Element.ALIGN_CENTER, 1, font);
+            double shekelPaid = 0, shekelReturn = 0, usdPaid = 0, usdReturn = 0, GbpPaid = 0, GbpReturn = 0, EurPaid = 0, EurReturn = 0;
+            CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(context);
+            currencyOperationDBAdapter.open();
+            List<CurrencyOperation> currencyOperationList = currencyOperationDBAdapter.getCurrencyOperationByOrderID(order.getOrderId());
+            CurrencyReturnsDBAdapter currencyReturnDBAdapter = new CurrencyReturnsDBAdapter(context);
+            currencyReturnDBAdapter.open();
+            List<CurrencyReturns> currencyReturnsList = currencyReturnDBAdapter.getCurencyReturnBySaleID(order.getOrderId());
+            for (int i = 0; i < currencyOperationList.size(); i++) {
+                if (currencyOperationList.get(i).getCurrency_type().equals("ILS")) {
+                    shekelPaid += currencyOperationList.get(i).getAmount();
+                } else if (currencyOperationList.get(i).getCurrency_type().equals("USD")) {
+                    usdPaid += currencyOperationList.get(i).getAmount();
+                } else if (currencyOperationList.get(i).getCurrency_type().equals("GBP")) {
+                    GbpPaid += currencyOperationList.get(i).getAmount();
+                } else if (currencyOperationList.get(i).getCurrency_type().equals("EUR")) {
+                    EurPaid += currencyOperationList.get(i).getAmount();
+                }
+
+            }
+            for (int i = 0; i < currencyReturnsList.size(); i++) {
+                if (currencyReturnsList.get(i).getCurrency_type() == 0) {
+                    shekelReturn += currencyReturnsList.get(i).getAmount();
+                } else if (currencyReturnsList.get(i).getCurrency_type() == 1) {
+                    usdReturn += currencyReturnsList.get(i).getAmount();
+                } else if (currencyReturnsList.get(i).getCurrency_type() == 2) {
+                    GbpReturn += currencyReturnsList.get(i).getAmount();
+                } else if (currencyReturnsList.get(i).getCurrency_type() == 3) {
+                    EurReturn += currencyReturnsList.get(i).getAmount();
+                }
+
+            }
+            if (shekelPaid > 0 || shekelReturn > 0) {
+                insertCell(currencyTable, Util.makePrice(shekelReturn), Element.ALIGN_CENTER, 1, font);
+                insertCell(currencyTable,  Util.makePrice(shekelPaid), Element.ALIGN_CENTER, 1, font);
+                insertCell(currencyTable, context.getString(R.string.shekel), Element.ALIGN_CENTER, 1, font);
+            }
+            if (usdPaid > 0 || usdReturn > 0) {
+                insertCell(currencyTable, Util.makePrice(usdReturn), Element.ALIGN_CENTER, 1, font);
+                insertCell(currencyTable,  Util.makePrice(usdPaid), Element.ALIGN_CENTER, 1, font);
+                insertCell(currencyTable, context.getString(R.string.usd), Element.ALIGN_CENTER, 1, font);
+            }
+            if (GbpPaid > 0 || GbpReturn > 0) {
+                insertCell(currencyTable, Util.makePrice(GbpReturn), Element.ALIGN_CENTER, 1, font);
+                insertCell(currencyTable,  Util.makePrice(GbpPaid), Element.ALIGN_CENTER, 1, font);
+                insertCell(currencyTable, context.getString(R.string.gbp), Element.ALIGN_CENTER, 1, font);
+            }
+            if (EurPaid > 0 || EurReturn > 0) {
+                insertCell(currencyTable, Util.makePrice(EurReturn), Element.ALIGN_CENTER, 1, font);
+                insertCell(currencyTable,  Util.makePrice(EurPaid), Element.ALIGN_CENTER, 1, font);
+                insertCell(currencyTable, context.getString(R.string.eur), Element.ALIGN_CENTER, 1, font);
+            }
+            insertCell(currencyTable, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 3, font);
+
+        }
+
         //add table to document
         document.add(headingTable);
         document.add(table);
