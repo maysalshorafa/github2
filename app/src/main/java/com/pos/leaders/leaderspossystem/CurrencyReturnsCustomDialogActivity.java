@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -42,6 +41,9 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
     private double excess = 0;
     Currency rCurrency;
     private Order sale;
+    private  String firstCredit="";
+    private String secondCredit="" ;
+    private String thirdCredit="";
     public static boolean REQUEST_CURRENCY_RETURN_ACTIVITY_CODE = true;
 
 
@@ -59,11 +61,14 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
         this.c = c;
     }
 
-    public CurrencyReturnsCustomDialogActivity(Activity a, double excess, Order sale) {
+    public CurrencyReturnsCustomDialogActivity(Activity a, double excess, Order sale,String firstCredit,String secondCredit ,String thirdCredit) {
         super(a);
         this.c = a;
         this.excess = excess;
         this.sale = sale;
+        this.firstCredit=firstCredit;
+        this.secondCredit=secondCredit;
+       this.thirdCredit=thirdCredit;
     }
 
     @Override
@@ -92,7 +97,15 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
                     REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=true;
                     currencyReturnsDBAdapter.close();
                     SESSION._ORDERS=sale;
-                    PrinterTools.printAndOpenCashBox("", "", "", 600,getContext(),c);
+                    if (firstCredit != "" && secondCredit != "" && thirdCredit != "") {
+                        PrinterTools.printAndOpenCashBox(firstCredit, secondCredit,thirdCredit, 600,getContext(),c);
+
+                    }else {
+                        PrinterTools.printAndOpenCashBox("", "", "", 600,getContext(),c);
+
+                    }
+
+
                 }
                 cancel();
             }

@@ -9,14 +9,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -48,6 +51,7 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
@@ -126,12 +130,19 @@ import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
+import com.sun.pdfview.PDFFile;
+import com.sun.pdfview.PDFPage;
+
+import net.sf.andpdf.nio.ByteBuffer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -319,6 +330,8 @@ public class SalesCartActivity extends AppCompatActivity {
     CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(SalesCartActivity.this);
     ProductInventoryDbAdapter productInventoryDbAdapter;
     InventoryDbAdapter inventoryDbAdapter;
+    public static ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
+    Bitmap newBitmap =null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -3080,6 +3093,33 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 @Override
                 protected Void doInBackground(Void... params) {
+                    byte b = 0;
+                    PdfUA pdfUA = new PdfUA();
+
+                    try {
+                        pdfUA.createNormalInvoice(SalesCartActivity.this,SESSION._ORDER_DETAILES,SESSION._ORDERS,false);
+                    } catch (DocumentException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try
+                    {
+                        File path = new File( Environment.getExternalStorageDirectory(), getApplicationContext().getPackageName());
+                        File file = new File(path,"zreport.pdf");
+                        RandomAccessFile f = new RandomAccessFile(file, "r");
+                        byte[] data = new byte[(int)f.length()];
+                        f.readFully(data);
+                        pdfLoadImages(data);
+                        Log.d("bitmapsize",bitmapList.size()+"");
+
+                        HPRTPrinterHelper.PrintBitmap(newBitmap, b, b, 300);
+                    }
+                    catch(Exception ignored)
+                    {
+
+                    }
+                    /*
                     InvoiceImg invoiceImg = new InvoiceImg(SalesCartActivity.this);
                     byte b = 0;
                     try {
@@ -3133,7 +3173,7 @@ public class SalesCartActivity extends AppCompatActivity {
                             }
                             Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainCli);
                             HPRTPrinterHelper.PrintBitmap(bitmap2, b, b, 300);
-                        } */else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
+                        } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
                             Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER);
                             HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
                         }  else {
@@ -3142,7 +3182,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
+                    }*/
                     return null;
                 }
             }.execute();
@@ -3812,7 +3852,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 Order order = saleDBAdapter.getOrderById(saleIDforCash);
                 SESSION._ORDERS.setOrderId(saleIDforCash);
 
-                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess, new Order(SESSION._ORDERS));
+                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess, new Order(SESSION._ORDERS),"","","");
 
 
                 /// Club with point and amount
@@ -3933,7 +3973,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
                 Order order = saleDBAdapter.getOrderById(saleIDforCash);
                 SESSION._ORDERS.setOrderId(saleIDforCash);
-                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess, new Order(SESSION._ORDERS));
+                currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess, new Order(SESSION._ORDERS),"","","");
 
                 if (firstCurrencyAmount > 0) {
                     //         cashPaymentDBAdapter.insertEntry(saleIDforCash, firstCurrencyAmount, firstCurrencyId, new Timestamp(System.currentTimeMillis()));
@@ -4025,7 +4065,8 @@ public class SalesCartActivity extends AppCompatActivity {
         }
         //endregion
         if (requestCode == REQUEST_MULTI_CURRENCY_ACTIVITY_CODE) {
-            if (resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
+                    boolean trueCreditCard=false;
                 if(orderDocumentFlag){
                     try {
                         updateOrderDocumentStatus();
@@ -4094,6 +4135,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         if(jsonObject.getString("paymentMethod").equals(CONSTANT.CASH)) {
                             cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()), getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")), jsonObject.getDouble("actualCurrencyRate"));
                         }else if(jsonObject.getString("paymentMethod").equals(CONSTANT.CREDIT_CARD)){
+                            trueCreditCard=true;
                             CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
                             creditCardPaymentDBAdapter.open();
                             CreditCardPayment ccp = SESSION._TEMP_CREDITCARD_PAYMNET;
@@ -4185,10 +4227,19 @@ public class SalesCartActivity extends AppCompatActivity {
                     Order order1 = new Order(SESSION._ORDERS);
                     order1.setPayment(payment);
                     if(saleTotalPrice<0){
-                        currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, saleTotalPrice*-1, order1);
+                        currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, saleTotalPrice*-1, order1,"","","");
 
                     }else {
-                        currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1);
+                        if(!trueCreditCard) {
+                            currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1,"","","");
+                        }
+                        else {
+                            currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1,CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY,
+                                    data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote),
+                                    data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
+
+
+                        }
                     }
                     currencyReturnsCustomDialogActivity.show();
 
@@ -4739,6 +4790,107 @@ public class SalesCartActivity extends AppCompatActivity {
     private void print(Bitmap bitmap) {
         PrintTools printTools = new PrintTools(this);
         printTools.PrintReport(bitmap);
+    }
+    private void pdfLoadImages(final byte[] data)
+    {
+        bitmapList=new ArrayList<>();
+        try
+        {
+            // run async
+            new AsyncTask<Void, Void, String>()
+            {
+                // create and show a progress dialog
+                ProgressDialog progressDialog = ProgressDialog.show(SalesCartActivity.this, "", "Opening...");
+
+                @Override
+                protected void onPostExecute(String html)
+                {
+                    Log.d("bitmapsize2222",bitmapList.size()+"");
+                    newBitmap= combineImageIntoOne(bitmapList);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    //after async close progress dialog
+                    progressDialog.dismiss();
+                    //load the html in the webview
+                    //  wv.loadDataWithBaseURL("", html, "text/html","UTF-8", "");
+                }
+
+                @Override
+                protected String doInBackground(Void... params)
+                {
+                    try
+                    {
+                        //create pdf document object from bytes
+                        ByteBuffer bb = ByteBuffer.NEW(data);
+                        PDFFile pdf = new PDFFile(bb);
+                        //Get the first page from the pdf doc
+                        PDFPage PDFpage = pdf.getPage(1, true);
+                        //create a scaling value according to the WebView Width
+                        final float scale = 800 / PDFpage.getWidth() * 0.80f;
+                        //convert the page into a bitmap with a scaling value
+                        Bitmap page = PDFpage.getImage((int)(PDFpage.getWidth() * scale), (int)(PDFpage.getHeight() * scale), null, true, true);
+                        //save the bitmap to a byte array
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        stream.reset();
+                        //convert the byte array to a base64 string
+                        String base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                        //create the html + add the first image to the html
+                        String html = "<!DOCTYPE html><html><body bgcolor=\"#ffffff\"><img src=\"data:image/png;base64," + base64 + "\" hspace=328 vspace=4><br>";                        //loop though the rest of the pages and repeat the above
+                        for(int i = 1; i <= pdf.getNumPages(); i++)
+                        {
+                            PDFpage = pdf.getPage(i, true);
+                            page = PDFpage.getImage((int)(PDFpage.getWidth() * scale), (int)(PDFpage.getHeight() * scale), null, true, true);
+                            page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            bitmapList.add(page);
+                            byteArray = stream.toByteArray();
+                            stream.reset();
+                            base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                            html += "<img src=\"data:image/png;base64,"+base64+"\" hspace=10 vspace=10><br>";
+                        }
+                        stream.close();
+                        html += "</body></html>";
+                        Log.d("mmmmmmm",bitmapList.size()+"");
+
+                        return html;
+                    }
+                    catch (Exception e)
+                    {
+                        Log.d("error", e.toString());
+                    }
+                    return null;
+                }
+            }.execute();
+            System.gc();// run GC
+        }
+        catch (Exception e)
+        {
+            Log.d("error", e.toString());
+        }
+    }
+    private Bitmap combineImageIntoOne(ArrayList<Bitmap> bitmap) {
+        int w = 0, h = 0;
+        for (int i = 0; i < bitmap.size(); i++) {
+            if (i < bitmap.size() - 1) {
+                w = bitmap.get(i).getWidth() > bitmap.get(i + 1).getWidth() ? bitmap.get(i).getWidth() : bitmap.get(i + 1).getWidth();
+            }
+            h += bitmap.get(i).getHeight();
+        }
+
+        Bitmap temp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(temp);
+        int top = 0;
+        for (int i = 0; i < bitmap.size(); i++) {
+            Log.d("HTML", "Combine: "+i+"/"+bitmap.size()+1);
+
+            top = (i == 0 ? 0 : top+bitmap.get(i).getHeight());
+            canvas.drawBitmap(bitmap.get(i), 0f, top, null);
+        }
+        return temp;
     }
 }
 class StartGetCustomerGeneralLedgerConnection extends AsyncTask<String,Void,String> {

@@ -1704,11 +1704,18 @@ public class PdfUA {
         PdfPTable table = new PdfPTable(7);
         PdfPTable currencyTable = new PdfPTable(3);
         PdfPTable paidByTable = new PdfPTable(4);
+        PdfPTable checkTable = new PdfPTable(3);
 
         Font urFontName = new Font(urName1, 24);
 
         table.deleteBodyRows();
         table.setRunDirection(0);
+        currencyTable.deleteBodyRows();
+        currencyTable.setRunDirection(0);
+        paidByTable.deleteBodyRows();
+        paidByTable.setRunDirection(0);
+        checkTable.deleteBodyRows();
+        checkTable.setRunDirection(0);
         //insert column headings;
         insertCell(table, "%", Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(table, context.getString(R.string.total), Element.ALIGN_CENTER, 1, urFontName1);
@@ -1740,6 +1747,7 @@ public class PdfUA {
         insertCell(table, Util.makePrice(noTax) , Element.ALIGN_CENTER, 3, font);
         insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 7, font);
 
+        insertCell(paidByTable,context.getString(R.string.paid_by), Element.ALIGN_CENTER, 4, font);
         insertCell(paidByTable,context.getString(R.string.returned), Element.ALIGN_CENTER, 1, font);
         insertCell(paidByTable,context.getString(R.string.given), Element.ALIGN_CENTER, 1, font);
         insertCell(paidByTable,context.getString(R.string.total), Element.ALIGN_CENTER, 1, font);
@@ -1838,10 +1846,28 @@ public class PdfUA {
             insertCell(currencyTable, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 3, font);
 
         }
+        if(checkList!=null){
+            insertCell(checkTable, context.getString(R.string.amount), Element.ALIGN_CENTER, 1, font);
+            insertCell(checkTable, context.getString(R.string.date), Element.ALIGN_CENTER, 1, font);
+            insertCell(checkTable, context.getString(R.string.checks), Element.ALIGN_CENTER, 1, font);
+            for(int i=0;i<checkList.size();i++){
+                insertCell(checkTable,Util.makePrice(checkList.get(i).getAmount()), Element.ALIGN_CENTER, 1, font);
+                insertCell(checkTable, DateConverter.toDate(new Date(checkList.get(i).getCreatedAt().getTime())), Element.ALIGN_CENTER, 1, font);
+                insertCell(checkTable, checkList.get(i).getCheckNum()+"", Element.ALIGN_CENTER, 1, font);
+            }
+
+        }
 
         //add table to document
         document.add(headingTable);
         document.add(table);
+        document.add(paidByTable);
+        document.add(currencyTable);
+        if(checkList!=null)
+        {
+            document.add(checkTable);
+        }
+
         document.close();
     }
     public static void  printInventoryReport(Context context, String res,String source) throws IOException, DocumentException, JSONException {
