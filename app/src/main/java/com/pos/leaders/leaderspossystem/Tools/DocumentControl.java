@@ -52,7 +52,6 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CASH;
-import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CHECKS;
 
 /**
  * Created by Win8.1 on 10/8/2018.
@@ -154,14 +153,13 @@ public class DocumentControl {
                 protected void onPostExecute(String html) {
 
                    PrintTools pt=new PrintTools(context);
-                    if(bitmapList.size()>=3){
-
-                    newBitmap= combineImageIntoOne(bitmapList);
-                        pt.PrintReport(newBitmap);
+                    if(bitmapList.size()>1) {
+                        newBitmap = combineImageIntoOne(bitmapList);
 
                     }else {
-                        print(context,bitmapList);
+                        newBitmap=bitmapList.get(0);
                     }
+                    pt.PrintReport(newBitmap);
 
                     //after async close progress dialog
                     progressDialog.dismiss();
@@ -502,7 +500,7 @@ public class DocumentControl {
 
     }
     private static Bitmap combineImageIntoOne(ArrayList<Bitmap> bitmap) {
-   int w = 0, h = 0;
+        int w = 0, h = 0;
         for (int i = 0; i < bitmap.size(); i++) {
             if (i < bitmap.size() - 1) {
                 w = bitmap.get(i).getWidth() > bitmap.get(i + 1).getWidth() ? bitmap.get(i).getWidth() : bitmap.get(i + 1).getWidth();
@@ -510,13 +508,13 @@ public class DocumentControl {
             h += bitmap.get(i).getHeight();
         }
 
-       Bitmap temp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Bitmap temp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(temp);
         int top = 0;
-        for (int i = 1; i <= bitmap.size()-1; i++) {
+        for (int i = 0; i < bitmap.size(); i++) {
             Log.d("HTML", "Combine: "+i+"/"+bitmap.size()+1);
 
-            top = top+bitmap.get(i).getHeight();
+            top = (i == 0 ? 0 : top+bitmap.get(i).getHeight());
             canvas.drawBitmap(bitmap.get(i), 0f, top, null);
         }
         return temp;

@@ -6,15 +6,30 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.AsyncTask;
+import android.os.Environment;
+import android.util.Base64;
 import android.util.Log;
 
+import com.itextpdf.text.DocumentException;
+import com.pos.leaders.leaderspossystem.PdfUA;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.sun.pdfview.PDFFile;
+import com.sun.pdfview.PDFPage;
+
+import net.sf.andpdf.nio.ByteBuffer;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
 
 import HPRTAndroidSDK.HPRTPrinterHelper;
 import POSAPI.POSInterfaceAPI;
@@ -77,10 +92,35 @@ public class PrinterTools {
 
             @Override
             protected Void doInBackground(Void... params) {
+                PdfUA pdfUA = new PdfUA();
+
+                try {
+                    pdfUA.createNormalInvoice(context,SESSION._ORDER_DETAILES,SESSION._ORDERS,false,mainMer);
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try
+                {
+                    File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                    File file = new File(path,"normalInvoice.pdf");
+                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                    byte[] data = new byte[(int)f.length()];
+                    f.readFully(data);
+                    Log.d("bitmapsize",context.toString()+"");
+
+                    pdfLoadImages(data,context);
+                }
+                catch(Exception ignored)
+                {
+
+                }
                 InvoiceImg invoiceImg = new InvoiceImg(context);
                 Log.d("payyyyy",SESSION._ORDERS.getPayment().toString());
+                pos.imageStandardModeRasterPrint(newBitmap, CONSTANT.PRINTER_PAGE_WIDTH);
 
-                pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null), CONSTANT.PRINTER_PAGE_WIDTH);
+              //  pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null), CONSTANT.PRINTER_PAGE_WIDTH);
 
                 return null;
             }
@@ -93,11 +133,33 @@ public class PrinterTools {
             dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
 
             dialog.show();
-            InvoiceImg invoiceImg = new InvoiceImg(context);
-            byte b = 0;
+            PdfUA pdfUA = new PdfUA();
+
             try {
-                    Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null);
-                    AidlUtil.getInstance().printBitmap(bitmap);
+                pdfUA.createNormalInvoice(context,SESSION._ORDER_DETAILES,SESSION._ORDERS,false,mainMer);
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try
+            {
+                File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                File file = new File(path,"normalInvoice.pdf");
+                RandomAccessFile f = new RandomAccessFile(file, "r");
+                byte[] data = new byte[(int)f.length()];
+                f.readFully(data);
+                Log.d("bitmapsize",context.toString()+"");
+
+                pdfLoadImages(data,context);
+            }
+            catch(Exception ignored)
+            {
+
+            }
+            try {
+                    Bitmap bitmap = newBitmap;
+                 AidlUtil.getInstance().printBitmap(bitmap);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -146,12 +208,6 @@ public class PrinterTools {
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     try {
-                        HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
                         HPRTPrinterHelper.OpenCashdrawer(0);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -167,24 +223,157 @@ public class PrinterTools {
                         }
                     }
 
+
                     dialog.cancel();
                     activity.finish();
                 }
 
                 @Override
                 protected Void doInBackground(Void... params) {
+
+                    PdfUA pdfUA = new PdfUA();
+
+                    try {
+                        pdfUA.createNormalInvoice(context,SESSION._ORDER_DETAILES,SESSION._ORDERS,false,mainMer);
+                    } catch (DocumentException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try
+                    {
+                        File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                        File file = new File(path,"normalInvoice.pdf");
+                        RandomAccessFile f = new RandomAccessFile(file, "r");
+                        byte[] data = new byte[(int)f.length()];
+                        f.readFully(data);
+                        Log.d("bitmapsize",context.toString()+"");
+
+                        pdfLoadImages(data,context);
+
+                    }
+                    catch(Exception ignored)
+                    {
+
+                    }
                     InvoiceImg invoiceImg = new InvoiceImg(context);
                     byte b = 0;
                     try {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null);
-                            HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
+                        Bitmap bitmap =newBitmap;
+                        HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
 
                     } catch (Exception e) {
-                        e.printStackTrace();
                     }
                     return null;
                 }
             }.execute();
+    }
+    public static ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
+    static Bitmap newBitmap =null;
+    private static void pdfLoadImages(final byte[] data, final Context context)
+    {
+        bitmapList=new ArrayList<>();
+        try
+        {
+            // run async
+            new AsyncTask<Void, Void, String>()
+            {
+                PrintTools pt=new PrintTools(context);
+                // create and show a progress dialog
+            //    ProgressDialog progressDialog = ProgressDialog.show(context, "", "Opening...");
+
+                @Override
+                protected void onPostExecute(String html)
+                {
+                    Log.d("bitmapsize2222",bitmapList.size()+"");
+                    if(bitmapList.size()>=1) {
+                        newBitmap = combineImageIntoOne(bitmapList);
+
+                    }else {
+                        newBitmap=bitmapList.get(0);
+                    }
+           pt.PrintReport(newBitmap);
+                    //after async close progress dialog
+                  //  progressDialog.dismiss();
+                    //load the html in the webview
+                    //  wv.loadDataWithBaseURL("", html, "text/html","UTF-8", "");
+                }
+
+                @Override
+                protected String doInBackground(Void... params)
+                {
+                    try
+                    {
+                        //create pdf document object from bytes
+                        ByteBuffer bb = ByteBuffer.NEW(data);
+                        PDFFile pdf = new PDFFile(bb);
+                        //Get the first page from the pdf doc
+                        PDFPage PDFpage = pdf.getPage(1, true);
+                        //create a scaling value according to the WebView Width
+                        final float scale = 800 / PDFpage.getWidth() * 0.80f;
+                        //convert the page into a bitmap with a scaling value
+                        Bitmap page = PDFpage.getImage((int)(PDFpage.getWidth() * scale), (int)(PDFpage.getHeight() * scale), null, true, true);
+                        //save the bitmap to a byte array
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        stream.reset();
+                        //convert the byte array to a base64 string
+                        String base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                        //create the html + add the first image to the html
+                        String html = "<!DOCTYPE html><html><body bgcolor=\"#ffffff\"><img src=\"data:image/png;base64," + base64 + "\" hspace=328 vspace=4><br>";                        //loop though the rest of the pages and repeat the above
+                        for(int i = 1; i <= pdf.getNumPages(); i++)
+                        {
+
+                            PDFpage = pdf.getPage(i, true);
+                            page = PDFpage.getImage((int)(PDFpage.getWidth() * scale), (int)(PDFpage.getHeight() * scale), null, true, true);
+                            page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            bitmapList.add(page);
+
+                            byteArray = stream.toByteArray();
+                            stream.reset();
+                            base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                            html += "<img src=\"data:image/png;base64,"+base64+"\" hspace=10 vspace=10><br>";
+                        }
+                        stream.close();
+                        html += "</body></html>";
+
+                        return html;
+                    }
+                    catch (Exception e)
+                    {
+                        Log.d("error1", e.toString());
+                    }
+                    return null;
+                }
+            }.execute();
+            System.gc();// run GC
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Log.d("error", e.toString());
+        }
+    }
+    private static Bitmap combineImageIntoOne(ArrayList<Bitmap> bitmap) {
+        int w = 0, h = 0;
+        for (int i = 0; i < bitmap.size(); i++) {
+            if (i < bitmap.size() - 1) {
+                w = bitmap.get(i).getWidth() > bitmap.get(i + 1).getWidth() ? bitmap.get(i).getWidth() : bitmap.get(i + 1).getWidth();
+            }
+            h += bitmap.get(i).getHeight();
+        }
+
+        Bitmap temp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(temp);
+        int top = 0;
+        for (int i = 0; i < bitmap.size(); i++) {
+            Log.d("HTML", "Combine: "+i+"/"+bitmap.size()+1);
+
+            top = (i == 0 ? 0 : top+bitmap.get(i).getHeight());
+            canvas.drawBitmap(bitmap.get(i), 0f, top, null);
+        }
+        return temp;
     }
     private static void printAndOpenCashBoxSM_S230I(String mainAns, final String mainMer, final String mainCli, final Context context, final Activity activity) {
         if (true) {
@@ -211,9 +400,32 @@ public class PrinterTools {
                     byte b = 0;
                     try {
                         //// TODO: 13/06/2018 adding pinpad support
+                        PdfUA pdfUA = new PdfUA();
 
+                        try {
+                            pdfUA.createNormalInvoice(context,SESSION._ORDER_DETAILES,SESSION._ORDERS,false,mainMer);
+                        } catch (DocumentException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try
+                        {
+                            File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                            File file = new File(path,"normalInvoice.pdf");
+                            RandomAccessFile f = new RandomAccessFile(file, "r");
+                            byte[] data = new byte[(int)f.length()];
+                            f.readFully(data);
+                            Log.d("bitmapsize",context.toString()+"");
+
+                            pdfLoadImages(data,context);
+                        }
+                        catch(Exception ignored)
+                        {
+
+                        }
                             Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null);
-                            printSMS230(bitmap,context);
+                           printSMS230(newBitmap,context);
 
                     } catch (Exception e) {
                         e.printStackTrace();

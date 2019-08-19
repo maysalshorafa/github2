@@ -3097,7 +3097,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     PdfUA pdfUA = new PdfUA();
 
                     try {
-                        pdfUA.createNormalInvoice(SalesCartActivity.this,SESSION._ORDER_DETAILES,SESSION._ORDERS,false);
+                        pdfUA.createNormalInvoice(SalesCartActivity.this,SESSION._ORDER_DETAILES,SESSION._ORDERS,false,mainMer);
                     } catch (DocumentException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -4131,10 +4131,12 @@ public class SalesCartActivity extends AppCompatActivity {
                     }
                     else {
                     for (int i = 0; i < jsonArray.length() - 1; i++) {
+
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        if(jsonObject.getString("paymentMethod").equals(CONSTANT.CASH)) {
+                        if(jsonObject.getString("paymentMethod").equalsIgnoreCase(CONSTANT.CASH)) {
+
                             cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()), getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")), jsonObject.getDouble("actualCurrencyRate"));
-                        }else if(jsonObject.getString("paymentMethod").equals(CONSTANT.CREDIT_CARD)){
+                        }else if(jsonObject.getString("paymentMethod").equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
                             trueCreditCard=true;
                             CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
                             creditCardPaymentDBAdapter.open();
