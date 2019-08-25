@@ -40,6 +40,7 @@ public class Product {
     private int branchId;
     private long offerId;
     private double lastCostPriceInventory;
+    private boolean withSerialNumber;
 
     @JsonIgnore
     private List<Integer> offersIDs = new ArrayList<Integer>();
@@ -80,7 +81,7 @@ public class Product {
 
 
 
-    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax,Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight,int currencyType,int branchId,long offerId,double lastCostPriceInventory) {
+    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax,Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight,int currencyType,int branchId,long offerId,double lastCostPriceInventory,boolean withSerialNumber) {
         this.productId = productId;
         this.productCode = productCode;
         this.barCode = barCode;
@@ -107,9 +108,10 @@ public class Product {
         this.branchId=branchId;
         this.offerId=offerId;
         this.lastCostPriceInventory=lastCostPriceInventory;
+        this.withSerialNumber=withSerialNumber;
     }
 
-    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight,int currencyType,int branchId,long offerId,double lastCostPriceInventory) {
+    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight,int currencyType,int branchId,long offerId,double lastCostPriceInventory,boolean withSerialNumber) {
 
         this.productId = productId;
         this.productCode =productCode;
@@ -136,6 +138,7 @@ public class Product {
         this.branchId=branchId;
         this.offerId=offerId;
         this.lastCostPriceInventory=lastCostPriceInventory;
+        this.withSerialNumber=withSerialNumber;
     }
 
     public Product(long productId, String productCode,String displayName, double price, long byEmployee) {
@@ -186,7 +189,7 @@ public class Product {
                 product.getPrice(), product.getCostPrice(), product.isWithTax(),
                 product.getCreatedAt(), product.isHide(), product.getCategoryId(), product.getByEmployee(),
                 product.getWithPos(), product.getWithPointSystem(), product.getSku(), product.getStatus(), product.getDisplayName(),
-                product.getRegularPrice(), product.getStockQuantity(), product.isManageStock(), product.isInStock(),product.getUnit(),product.getWeight(),product.getCurrencyType(),product.getBranchId(),product.getOfferId(),product.getLastCostPriceInventory());
+                product.getRegularPrice(), product.getStockQuantity(), product.isManageStock(), product.isInStock(),product.getUnit(),product.getWeight(),product.getCurrencyType(),product.getBranchId(),product.getOfferId(),product.getLastCostPriceInventory(),product.isWithSerialNumber());
 
     }
 
@@ -197,6 +200,14 @@ public class Product {
 
     // region Getters
 
+
+    public boolean isWithSerialNumber() {
+        return withSerialNumber;
+    }
+
+    public void setWithSerialNumber(boolean withSerialNumber) {
+        this.withSerialNumber = withSerialNumber;
+    }
 
     public long getOfferId() {
         return offerId;
@@ -435,6 +446,7 @@ public class Product {
 
                 ", offerId=" + offerId+
                         ", lastCostPriceInventory=" + lastCostPriceInventory +
+                        ", withSerialNumber=" + withSerialNumber +
                 '}';
     }
 

@@ -157,7 +157,7 @@ public class PrinterTools {
             {
 
             }
-            try {
+         try {
                     Bitmap bitmap = newBitmap;
                  AidlUtil.getInstance().printBitmap(bitmap);
 
@@ -256,7 +256,7 @@ public class PrinterTools {
                     {
 
                     }
-                    InvoiceImg invoiceImg = new InvoiceImg(context);
+                  InvoiceImg invoiceImg = new InvoiceImg(context);
                     byte b = 0;
                     try {
                         Bitmap bitmap =newBitmap;
@@ -286,13 +286,13 @@ public class PrinterTools {
                 protected void onPostExecute(String html)
                 {
                     Log.d("bitmapsize2222",bitmapList.size()+"");
-                    if(bitmapList.size()>=1) {
+                    if(bitmapList.size()>1) {
                         newBitmap = combineImageIntoOne(bitmapList);
 
                     }else {
                         newBitmap=bitmapList.get(0);
                     }
-           pt.PrintReport(newBitmap);
+       //    pt.PrintReport(newBitmap);
                     //after async close progress dialog
                   //  progressDialog.dismiss();
                     //load the html in the webview

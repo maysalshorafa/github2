@@ -86,7 +86,6 @@ import com.pos.leaders.leaderspossystem.Models.ValueOfPoint;
 import com.pos.leaders.leaderspossystem.Models.XReport;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
-import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
@@ -1261,36 +1260,44 @@ public class SyncMessage extends Service {
             //region PAYMENT
             case MessageType.ADD_PAYMENT:
                 JSONObject newJsonObject = new JSONObject(jsonObject.getString(MessageKey.Data));
-                String paymentWay = newJsonObject.getString("paymentWay");
+                Log.d("ppppppppp",newJsonObject.toString());
+
+             //  String paymentWay = newJsonObject.getString("paymentWay");
                 long orderId = newJsonObject.getLong("orderId");
                 List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
                 List<Payment> paymentList = new ArrayList<Payment>();
                 List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
                 List<Check> checkList = new ArrayList<Check>();
-                if(paymentWay.equalsIgnoreCase(CONSTANT.CASH)){
+               // if(paymentWay.equalsIgnoreCase(CONSTANT.CASH)){
                     //get cash payment detail by order id
                     CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(getApplicationContext());
                     cashPaymentDBAdapter.open();
                     cashPaymentList = cashPaymentDBAdapter.getPaymentBySaleID(orderId);
+                if(cashPaymentList.size()>0){
                     JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
                     newJsonObject.put("paymentDetails",jsonArray);
                 }
-                if(paymentWay.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
+             //   }
+                //if(paymentWay.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
                     //get credit payment detail by order id
                     CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(getApplicationContext());
                     creditCardPaymentDBAdapter.open();
+                if(creditCardPaymentList.size()>0) {
                     creditCardPaymentList = creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
                     JSONArray jsonArray = new JSONArray(creditCardPaymentList.toString());
-                    newJsonObject.put("paymentDetails",jsonArray);
+                    newJsonObject.put("paymentDetails", jsonArray);
                 }
-                if(paymentWay.equalsIgnoreCase(CONSTANT.CHECKS)){
+            //    }
+            //    if(paymentWay.equalsIgnoreCase(CONSTANT.CHECKS)){
                     //get check payment detail by order id
                     ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(getApplicationContext());
                     checksDBAdapter.open();
+                if(checkList.size()>0) {
                     checkList = checksDBAdapter.getPaymentBySaleID(orderId);
                     JSONArray jsonArray = new JSONArray(checkList.toString());
-                    newJsonObject.put("paymentDetails",jsonArray);
+                    newJsonObject.put("paymentDetails", jsonArray);
                 }
+              //  }
                 Log.d("ppppppppp",newJsonObject.toString());
                 res = messageTransmit.authPost(ApiURL.Payment, newJsonObject.toString(), token);
 

@@ -332,6 +332,8 @@ public class SalesCartActivity extends AppCompatActivity {
     InventoryDbAdapter inventoryDbAdapter;
     public static ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
     Bitmap newBitmap =null;
+    boolean isWithSerialNo=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -2742,7 +2744,6 @@ public class SalesCartActivity extends AppCompatActivity {
     private void addToCart(Product p) throws JSONException {
         OrderDetails newOrderDetails = null;
         boolean isMatch = false;
-
         //test if cart have this order before insert to cart and order have'nt discount
         for (int i = 0; i < SESSION._ORDER_DETAILES.size(); i++) {
             OrderDetails o = SESSION._ORDER_DETAILES.get(i);
@@ -2785,7 +2786,7 @@ public class SalesCartActivity extends AppCompatActivity {
             CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(SalesCartActivity.this);
             currencyDBAdapter.open();
             Currency currency = currencyDBAdapter.getCurrencyByCode(currencyType);
-            OrderDetails o = new OrderDetails(1, 0, p, p.getPrice() , p.getPrice(), 0);
+            final OrderDetails o = new OrderDetails(1, 0, p, p.getPrice() , p.getPrice(), 0);
             //getOfferCategoryForProduct
             OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(SalesCartActivity.this);
             offerCategoryDbAdapter.open();
@@ -2795,7 +2796,44 @@ public class SalesCartActivity extends AppCompatActivity {
 
             }
             Log.d("offerCategoryListTest1",offerCategoryList.toString());
-            SESSION._ORDER_DETAILES.add(o);
+
+            if(!o.getProduct().isWithSerialNumber()){
+
+                final Dialog productSerialNumberDialog = new Dialog(SalesCartActivity.this);
+                productSerialNumberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                productSerialNumberDialog.show();
+                productSerialNumberDialog.setContentView(R.layout.product_serial_number);
+                productSerialNumberDialog.show();
+               final EditText serialNumber = (EditText) productSerialNumberDialog.findViewById(R.id.productSerialNumberDialog_EtSerialNumber);
+            //   Button btn_cancel = (Button) productSerialNumberDialog.findViewById(R.id.btn_cancel);
+                Button btn_done = (Button) productSerialNumberDialog.findViewById(R.id.productSerialNumberDialog_BTOk);
+
+                /*btn_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        productSerialNumberDialog.dismiss();
+                    }
+                });
+*/
+               btn_done.setOnClickListener(new View.OnClickListener() {
+
+                            @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+                            public void onClick(View arg0) {
+                                long productSerialNumber=0;
+                                if (serialNumber.getText().toString().matches("")) {
+                                    productSerialNumber=0;
+                                }else if(Long.parseLong(serialNumber.getText().toString())>0){
+                                productSerialNumber=Long.parseLong(serialNumber.getText().toString());
+                                }
+                                o.setProductSerialNumber(productSerialNumber);
+                                productSerialNumberDialog.dismiss();
+                                isWithSerialNo=false;
+                            }
+                        });
+
+            }
+
+                SESSION._ORDER_DETAILES.add(o);
             newOrderDetails=o;
             Log.d("teee",SESSION._ORDER_DETAILES.toString());
 
@@ -3106,7 +3144,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     try
                     {
                         File path = new File( Environment.getExternalStorageDirectory(), getApplicationContext().getPackageName());
-                        File file = new File(path,"zreport.pdf");
+                        File file = new File(path,"normalInvoice.pdf");
                         RandomAccessFile f = new RandomAccessFile(file, "r");
                         byte[] data = new byte[(int)f.length()];
                         f.readFully(data);
@@ -3491,7 +3529,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
@@ -3642,7 +3680,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
                 }
@@ -3764,7 +3802,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
@@ -3888,7 +3926,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
@@ -4016,7 +4054,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId());
+                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber());
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
@@ -4190,7 +4228,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     // insert order region
 
                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                        long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId());
+                        long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber());
                         orderId.add(orderid);
                         //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                     }

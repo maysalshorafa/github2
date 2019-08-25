@@ -50,6 +50,15 @@ public class OrderDetails {
 	@JsonIgnore
 	private int objectID = 0;
     private long offerId;
+	private long productSerialNumber;
+
+	public long getProductSerialNumber() {
+		return productSerialNumber;
+	}
+
+	public void setProductSerialNumber(long productSerialNumber) {
+		this.productSerialNumber = productSerialNumber;
+	}
 
 	@JsonIgnore
 	private void initObjectID(){
@@ -96,7 +105,7 @@ public class OrderDetails {
 		initObjectID();
 	}
 
-	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id , String key , long offerId) {
+	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id , String key , long offerId,long productSerialNumber) {
 		this.orderDetailsId = orderDetailsId;
 		this.productId = productId;
 		this.quantity = quantity;
@@ -108,6 +117,7 @@ public class OrderDetails {
 		this.customer_assistance_id = customer_assistance_id;
 		this.orderKey =key;
         this.offerId=offerId;
+		this.productSerialNumber=productSerialNumber;
 		initObjectID();
 	}
 
@@ -153,7 +163,7 @@ public class OrderDetails {
 	}
 
 	public OrderDetails(OrderDetails o) {
-		this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id(),o.getOrderKey(),o.getOfferId());
+		this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id(),o.getOrderKey(),o.getOfferId(),o.getProductSerialNumber());
 		this.product = o.getProduct();
 	}
 
@@ -331,6 +341,7 @@ public class OrderDetails {
 				", \"sku\":"+"\""+product.getSku()  +"\""+
 				", \"orderKey\":" + "\""+orderKey +"\""+
 				", \"offerCategory\":" + "\""+offerCategory +"\""+
+				", \"productSerialNumber\":" + "\""+productSerialNumber +"\""+
 				'}';
 	}
 	public Offer getOffer() {

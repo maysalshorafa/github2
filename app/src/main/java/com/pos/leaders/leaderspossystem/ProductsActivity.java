@@ -53,7 +53,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     Spinner productUnitSp , SpProductCurrency , SpProductBranch;
     Button btSave,btnCancel;
     EditText etName,etBarcode,etDescription,etPrice,etCostPrice,etInventoryCostPrice,etDisplayName,etSku,etStockQuantity,etProductWeight;
-    Switch swWithTax,swManageStock;
+    Switch swWithTax,swManageStock ,swWithSerialNo;
     static ListView lvDepartment;
     Map<String,Long> departmentMap=new HashMap<String,Long>();
 
@@ -70,7 +70,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     private Product editableProduct , lastProduct;
     long check;
     long depID;
-    boolean withTax , manageStock = true;
+    boolean withTax , manageStock ,withSerialNo= true;
     ProductUnit unit ;
     LinearLayout llWeight;
     String currencyType="";
@@ -111,6 +111,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         swManageStock = (Switch) findViewById(R.id.SWManageStock);
 
         swWithTax=(Switch)findViewById(R.id.SWWithTax);
+        swWithSerialNo=(Switch)findViewById(R.id.SWWithSerialNo);
         productUnitSp = (Spinner)findViewById(R.id.SpProductUnit);
         SpProductCurrency = (Spinner)findViewById(R.id.SpProductCurrency);
         llWeight = (LinearLayout)findViewById(R.id.llWeight);
@@ -235,6 +236,18 @@ public class ProductsActivity  extends AppCompatActivity  {
 
             }
         });
+        swWithSerialNo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+
+                if(isChecked){
+                    withSerialNo=true; //edit here
+                }else{
+                    withSerialNo=false; //edit here
+                }
+
+            }
+        });
 
         swManageStock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -288,6 +301,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                     etPrice.setText(editableProduct.getPrice() + "");
                     etStockQuantity.setText(editableProduct.getStockQuantity() + "");
                     swWithTax.setChecked(editableProduct.isWithTax());
+                    swWithSerialNo.setChecked(editableProduct.isWithSerialNumber());
                     if(editableProduct.getUnit().getValue().equals(ProductUnit.WEIGHT.getValue())){
                         llWeight.setVisibility(View.VISIBLE);
                         etProductWeight.setText(editableProduct.getWeight()+"");
@@ -453,7 +467,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                         }
                         check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
                                 etDescription.getText().toString(), price, costPrice, withTax, depID, SESSION._EMPLOYEE.getEmployeeId(), with_pos, with_point_system,
-                                etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit,weight,currencyId,branchId,0,inventoryCostPrice);
+                                etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit,weight,currencyId,branchId,0,inventoryCostPrice,withSerialNo);
 
 
                         if (check > 0) {
@@ -615,6 +629,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         etCostPrice.setText("");
         etInventoryCostPrice.setText("");
         swWithTax.setChecked(false);
+        swWithSerialNo.setChecked(false);
         swManageStock.setChecked(false);
         editableProduct = null;
         etProductWeight.setText("");
