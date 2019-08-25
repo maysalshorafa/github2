@@ -4190,7 +4190,9 @@ public class SalesCartActivity extends AppCompatActivity {
                         ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(this);
                         checksDBAdapter.open();
                         for (Check check : SESSION._CHECKS_HOLDER) {
+                            if( check.getAmount()>0){
                             checksDBAdapter.insertEntry(check.getCheckNum(), check.getBankNum(), check.getBranchNum(), check.getAccountNum(), check.getAmount(), check.getCreatedAt(), saleIDforCash);
+                        }
                         }
                         checksDBAdapter.close();
                     }

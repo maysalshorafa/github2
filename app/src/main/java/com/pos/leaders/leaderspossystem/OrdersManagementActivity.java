@@ -106,7 +106,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
     Spinner searchSpinner;
     final Calendar myCalendar = Calendar.getInstance();
     List<Object>objectList = new ArrayList<Object>();
-
+    OrderDetailsDBAdapter orderDetailsDBAdapter;
     private final static int DAY_MINUS_ONE_SECOND = 86399999;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +123,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
         etSearch = (EditText) findViewById(R.id.etSearch);
         searchSpinner=(Spinner)findViewById(R.id.searchSpinner);
+        orderDetailsDBAdapter=new OrderDetailsDBAdapter(OrdersManagementActivity.this);
+        orderDetailsDBAdapter.open();
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -145,6 +147,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
         hintForSearchType.add(getString(R.string.price));
         hintForSearchType.add(getString(R.string.type));
         hintForSearchType.add(getString(R.string.invoice));
+        hintForSearchType.add(getString(R.string.serial_no));
+
         idForSearchType.add(0);
         idForSearchType.add(1);
         idForSearchType.add(2);
@@ -152,6 +156,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
         idForSearchType.add(4);
         idForSearchType.add(5);
         idForSearchType.add(6);
+        idForSearchType.add(7);
 
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, hintForSearchType);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -160,7 +165,6 @@ public class OrdersManagementActivity extends AppCompatActivity {
         etSearch.setHint("Search..");
         etSearch.setFocusable(true);
         etSearch.requestFocus();
-
 
         orderDBAdapter = new OrderDBAdapter(this);
 
@@ -193,6 +197,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
 				_saleList.add(s);
 			}
 		}*/
+
+
         LayoutInflater inflater = getLayoutInflater();
         ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvOrders, false);
         lvOrders.addHeaderView(header, null, false);
@@ -559,7 +565,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 list=new ArrayList<Object>();
                 filterOrderList = new ArrayList<Order>();
-                String word = etSearch.getText().toString();
+                final String word = etSearch.getText().toString();
                 if (!word.equals("")) {
                     // Database query can be a time consuming task ..
                     // so its safe to call database query in another thread
@@ -582,7 +588,22 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             orderDBAdapter.open();
                             Log.d("teeest",params[0]);
                             if(type!= getString(R.string.invoice)){
+                                List<Order>nerOrderWithSerialNo=new ArrayList<Order>();
+                                if(type.equals(getString(R.string.serial_no))){
+                                    nerOrderWithSerialNo = orderDBAdapter.search(params[0], loadItemOffset,countLoad,getString(R.string.all));
+                                    for (int i=0;i<nerOrderWithSerialNo.size();i++){
+                                        Order order = nerOrderWithSerialNo.get(i);
+                                        List<OrderDetails>orderDetailsList = orderDetailsDBAdapter.getOrderBySaleID(order.getOrderId());
+                                        for(int a=0;a<orderDetailsList.size();a++){
+                                            if(orderDetailsList.get(a).getProductSerialNumber()==Long.parseLong(word)){
+                                                filterOrderList.add(nerOrderWithSerialNo.get(i));
+                                            }
+                                        }
+                                    }
+
+                                }else {
                                 filterOrderList = orderDBAdapter.search(params[0], loadItemOffset,countLoad,type);
+                            }
                             }
 
                             //    filterBoInvoice = searchInInvoiceList(params[0]);
@@ -639,11 +660,9 @@ public class OrdersManagementActivity extends AppCompatActivity {
             protected Void doInBackground(Void... params) {
                 final String type = searchSpinner.getSelectedItem().toString();
                 orderDBAdapter.open();
-
                 if (!searchWord.equals("")) {
-
-
                     _saleList.addAll(orderDBAdapter.search(searchWord, loadItemOffset, countLoad, type));
+
                 }
 
                 else {

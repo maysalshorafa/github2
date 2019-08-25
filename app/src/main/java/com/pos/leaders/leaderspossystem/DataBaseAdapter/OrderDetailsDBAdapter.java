@@ -84,6 +84,8 @@ public class OrderDetailsDBAdapter {
         val.put(ORDER_DETAILES_COLUMN_DISCOUNT, o.getDiscount());
 		val.put(ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID,o.getCustomer_assistance_id());
 		val.put(ORDER_DETAILES_COLUMN_KEY,o.getOrderKey());
+		val.put(ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER,o.getProductSerialNumber());
+
 		try {
             return db.insert(ORDER_DETAILS_TABLE_NAME, null, val);
         } catch (SQLException ex) {

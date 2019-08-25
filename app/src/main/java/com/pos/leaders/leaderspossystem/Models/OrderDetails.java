@@ -334,11 +334,10 @@ public class OrderDetails {
 				", \"unitPrice\":" + unitPrice +
 				", \"paidAmount\":" + paidAmount +
 				", \"discount\":" + discount +
-				", \"name\":" + "\""+product.getProductCode() +"\""+
+
 				", \"scannable\":" + "\""+scannable +"\""+
                         ", \"giftProduct\":" + "\""+giftProduct +"\""+
                 ", \"position\":" + "\""+position +"\""+
-				", \"sku\":"+"\""+product.getSku()  +"\""+
 				", \"orderKey\":" + "\""+orderKey +"\""+
 				", \"offerCategory\":" + "\""+offerCategory +"\""+
 				", \"productSerialNumber\":" + "\""+productSerialNumber +"\""+
