@@ -2751,6 +2751,7 @@ public class SalesCartActivity extends AppCompatActivity {
             //Log.d("Product", p.toString());
             if(p.getProductId()!=-1){
                 if(p.getUnit().equals(ProductUnit.QUANTITY)){
+                    if(!o.getProduct().isWithSerialNumber()){
                     if (o.getProduct().equals(p) && o.getProduct().getProductId() != -1&&!o.giftProduct&&o.scannable&&o.getProduct().getOfferId()==0) {
                 SESSION._ORDER_DETAILES.get(i).setCount(SESSION._ORDER_DETAILES.get(i).getQuantity() + 1);
                 //getOfferCategoryForProduct
@@ -2766,6 +2767,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 isMatch = true;
                 break;
             }
+                    }
         }
             }
         }
@@ -2797,7 +2799,7 @@ public class SalesCartActivity extends AppCompatActivity {
             }
             Log.d("offerCategoryListTest1",offerCategoryList.toString());
 
-            if(!o.getProduct().isWithSerialNumber()){
+            if(o.getProduct().isWithSerialNumber()){
 
                 final Dialog productSerialNumberDialog = new Dialog(SalesCartActivity.this);
                 productSerialNumberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

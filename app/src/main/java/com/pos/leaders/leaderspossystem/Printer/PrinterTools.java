@@ -292,7 +292,12 @@ public class PrinterTools {
                     }else {
                         newBitmap=bitmapList.get(0);
                     }
-       //    pt.PrintReport(newBitmap);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    //    pt.PrintReport(newBitmap);
                     //after async close progress dialog
                   //  progressDialog.dismiss();
                     //load the html in the webview

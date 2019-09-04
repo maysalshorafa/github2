@@ -51,6 +51,7 @@ import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
+import com.pos.leaders.leaderspossystem.Printer.PrinterTools;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -542,10 +543,13 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                             }
                                             else{
                                                 try {
-                                                    Customer customer1 =sale.getCustomer();
+                                                    SESSION._ORDER_DETAILES=orders;
+                                                    SESSION._ORDERS=sale;
+                                                    PrinterTools.printAndOpenCashBox("", "", "", 600,OrdersManagementActivity.this,getParent());
+                                                    /**Customer customer1 =sale.getCustomer();
                                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
                                                     SETTINGS.copyInvoiceBitMap =invoiceImg.copyInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, null);
-                                                    startActivity(i);
+                                                    startActivity(i);**/
                                                 }catch (Exception e){
                                                     Log.d("exception",sale.toString());
                                                     Log.d("exception",e.toString());

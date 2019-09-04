@@ -898,7 +898,7 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImagesOpiningReport(data,context);
+                    pdfLoadImages(data,context);
 
                 }
                 catch(Exception ignored)

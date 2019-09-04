@@ -153,12 +153,7 @@ public class DocumentControl {
                 protected void onPostExecute(String html) {
 
                    PrintTools pt=new PrintTools(context);
-                    if(bitmapList.size()>1) {
-                        newBitmap = combineImageIntoOne(bitmapList);
-
-                    }else {
                         newBitmap=bitmapList.get(0);
-                    }
                     pt.PrintReport(newBitmap);
 
                     //after async close progress dialog

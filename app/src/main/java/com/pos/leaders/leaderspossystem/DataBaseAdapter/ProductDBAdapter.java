@@ -466,7 +466,14 @@ public class ProductDBAdapter {
         }else {
             withTaxStatus=false;
         }
+        int withSerialNo= cursor.getInt(cursor.getColumnIndex(PRODUCTS_COLUMN_WITH_SERIAL_NUMBER));
 
+        boolean withSerialNoValue=false ;
+        if(withSerialNo==1){
+            withSerialNoValue=true;
+        }else {
+            withSerialNoValue=false;
+        }
         Product p = new Product(
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_NAME)),
@@ -488,9 +495,10 @@ public class ProductDBAdapter {
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_MANAGE_STOCK))),
 
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_IN_STOCK))), ProductUnit.valueOf(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_UNIT)).toUpperCase()),Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHT))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CURRENCY_TYPE))), Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BRANCH_ID))), Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_OFFER_ID))),
-                Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_REGULAR_PRICE))),
-                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WITH_SERIAL_NUMBER))));
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CURRENCY_TYPE))), Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BRANCH_ID))),
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_OFFER_ID))),
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_LAST_COST_PRICE_INVENTORY))),
+                withSerialNoValue);
 
         if(p.getDescription()==null){
             p.setDescription("");

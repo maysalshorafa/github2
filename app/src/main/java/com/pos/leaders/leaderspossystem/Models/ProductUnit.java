@@ -6,7 +6,8 @@ package com.pos.leaders.leaderspossystem.Models;
 public enum ProductUnit {
     QUANTITY("QUANTITY"),
     WEIGHT("WEIGHT"),
-    LENGTH("LENGTH"),BARCODEWITHWEIGHT("BARCODEWITHWEIGHT")
+    LENGTH("LENGTH"),
+    BARCODEWITHWEIGHT("BARCODEWITHWEIGHT")
     ,BARCODEWITHPRICE("BARCODEWITHPRICE");
     private String value;
     public String getValue() {

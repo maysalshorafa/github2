@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -291,6 +292,8 @@ public class ProductsActivity  extends AppCompatActivity  {
             if (extras.containsKey("productID")) {
                 try {
                     editableProduct = productDBAdapter.getProductByID(extras.getLong("productID"));
+                    Log.d("editableProduct",editableProduct.toString());
+
                     etName.setText(editableProduct.getProductCode());
                     etDisplayName.setText(editableProduct.getDisplayName());
                     etBarcode.setText(editableProduct.getBarCode());
