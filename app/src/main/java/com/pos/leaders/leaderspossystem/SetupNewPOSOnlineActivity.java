@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +20,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
+import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -34,6 +38,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.UUID;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class SetupNewPOSOnlineActivity extends Activity {
     public final static String BO_CORE_ACCESS_AUTH = "BOCOREACCESSAUTH";
@@ -325,6 +331,24 @@ class StartConnection extends AsyncTask<String,Void,String> {
                 inventoryDbAdapter.close();
 
                 if (i>= 1) {
+                    SharedPreferences cSharedPreferences = SetupNewPOSOnlineActivity.context.getSharedPreferences("POS_Management", MODE_PRIVATE);
+                    boolean creditCardEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, false);
+                    boolean pinPadEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD, false);
+                    boolean currencyEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, false);
+                    boolean customerMeasurementEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, false);
+                    int floatP = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, "2"));
+                    String printerType = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, PrinterType.HPRT_TP805.name());
+                    int branchI = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, "0"));
+                    PackageInfo pInfo = null;
+                    try {
+                        pInfo = SetupNewPOSOnlineActivity.context.getPackageManager().getPackageInfo(SetupNewPOSOnlineActivity.context.getPackageName(), 0);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    String verCode = pInfo.versionName;
+                    PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(SetupNewPOSOnlineActivity.context);
+                    posSettingDbAdapter.open();
+                    posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,verCode, DbHelper.DATABASE_VERSION+"",branchI);
                     Util.isFirstLaunch(SetupNewPOSOnlineActivity.context, true);
                     //finish();
                 } else {

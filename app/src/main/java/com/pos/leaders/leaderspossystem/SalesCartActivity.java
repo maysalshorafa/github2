@@ -2807,16 +2807,16 @@ public class SalesCartActivity extends AppCompatActivity {
                 productSerialNumberDialog.setContentView(R.layout.product_serial_number);
                 productSerialNumberDialog.show();
                final EditText serialNumber = (EditText) productSerialNumberDialog.findViewById(R.id.productSerialNumberDialog_EtSerialNumber);
-            //   Button btn_cancel = (Button) productSerialNumberDialog.findViewById(R.id.btn_cancel);
+            ImageView btn_cancel = (ImageView) productSerialNumberDialog.findViewById(R.id.closeDialog);
                 Button btn_done = (Button) productSerialNumberDialog.findViewById(R.id.productSerialNumberDialog_BTOk);
 
-                /*btn_cancel.setOnClickListener(new View.OnClickListener() {
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         productSerialNumberDialog.dismiss();
                     }
                 });
-*/
+
                btn_done.setOnClickListener(new View.OnClickListener() {
 
                             @TargetApi(Build.VERSION_CODES.GINGERBREAD)

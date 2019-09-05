@@ -286,12 +286,7 @@ public class PrinterTools {
                 protected void onPostExecute(String html)
                 {
                     Log.d("bitmapsize2222",bitmapList.size()+"");
-                    if(bitmapList.size()>1) {
                         newBitmap = combineImageIntoOne(bitmapList);
-
-                    }else {
-                        newBitmap=bitmapList.get(0);
-                    }
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -368,16 +363,21 @@ public class PrinterTools {
             }
             h += bitmap.get(i).getHeight();
         }
+        Bitmap temp;
+        if(w==0||h==0){
+            temp=bitmapList.get(0);
+        }else {
+        temp= Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(temp);
+            int top = 0;
+            for (int i = 0; i < bitmap.size(); i++) {
+                Log.d("HTML", "Combine: "+i+"/"+bitmap.size()+1);
 
-        Bitmap temp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(temp);
-        int top = 0;
-        for (int i = 0; i < bitmap.size(); i++) {
-            Log.d("HTML", "Combine: "+i+"/"+bitmap.size()+1);
-
-            top = (i == 0 ? 0 : top+bitmap.get(i).getHeight());
-            canvas.drawBitmap(bitmap.get(i), 0f, top, null);
+                top = (i == 0 ? 0 : top+bitmap.get(i).getHeight());
+                canvas.drawBitmap(bitmap.get(i), 0f, top, null);
+            }
         }
+
         return temp;
     }
     private static void printAndOpenCashBoxSM_S230I(String mainAns, final String mainMer, final String mainCli, final Context context, final Activity activity) {

@@ -1,9 +1,6 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -65,8 +62,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Feedback.ClearSync;
 import com.pos.leaders.leaderspossystem.Tools.BufferDbEmail;
-import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -76,8 +73,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -252,45 +247,6 @@ public class DbHelper extends SQLiteOpenHelper {
         String dbc = IdsCounterDBAdapter.DATABASE_CREATE(tblNames);
         db.execSQL(dbc);
         db.execSQL(IdsCounterDBAdapter.INIT(tblNames));
-        SharedPreferences cSharedPreferences = context.getSharedPreferences("POS_Management", MODE_PRIVATE);
-        boolean creditCardEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, false);
-        boolean pinPadEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD, false);
-        boolean currencyEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, false);
-        boolean customerMeasurementEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, false);
-        int floatP = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, "2"));
-        String printerType = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, PrinterType.HPRT_TP805.name());
-        int branchI = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, "0"));
-        PackageInfo pInfo = null;
-        try {
-             pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        String verCode = pInfo.versionName;
-        int credit =0,currency =0,pinpad=0,customer=0;
-        if(creditCardEnable){
-        credit=1;
-        }else {
-            credit=0;
-        }
-        if(pinPadEnable){
-            pinpad=1;
-        }else {
-            pinpad=0;
-        }
-        if(currencyEnable){
-            currency=1;
-        }else {
-            currency=0;
-        }
-        if(customerMeasurementEnable){
-            customer=1;
-        }else {
-            customer=0;
-        }
-        db.execSQL("insert into "+PosSettingDbAdapter.POS_SETTING_TABLE_NAME+"  values ("+ currency+','+credit+','+pinpad+','+customer+','+floatP+','+"'"+printerType+"'"+ ','
-                +verCode+','+DATABASE_VERSION +',' +branchI + ");");
-
 
 //        db.execSQL("INSERT INTO products (id, name,barcode,description,price,costPrice,categoryId,byEmployee,status) VALUES (8, 'Test',10,'Test',10,10,1,1,1);");
     }
@@ -415,48 +371,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(InventoryDbAdapter.DATABASE_CREATE);
                     db.execSQL(ProductInventoryDbAdapter.DATABASE_CREATE);
                     db.execSQL(ProductDBAdapter.addColumnReal("lastCostPriceInventory"));
-
-                    SharedPreferences cSharedPreferences = context.getSharedPreferences("POS_Management", MODE_PRIVATE);
-                    boolean creditCardEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, false);
-                    boolean pinPadEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD, false);
-                    boolean currencyEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, false);
-                    boolean customerMeasurementEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, false);
-                    int floatP = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, "2"));
-                    String printerType = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, PrinterType.HPRT_TP805.name());
-                    int branchI = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, "0"));
-                    PackageInfo pInfo = null;
-                    try {
-                        pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    String verCode = pInfo.versionName;
-
-
-                    int credit =0,currency =0,pinpad=0,customer=0;
-                    if(creditCardEnable){
-                        credit=1;
-                    }else {
-                        credit=0;
-                    }
-                    if(pinPadEnable){
-                        pinpad=1;
-                    }else {
-                        pinpad=0;
-                    }
-                    if(currencyEnable){
-                        currency=1;
-                    }else {
-                        currency=0;
-                    }
-                    if(customerMeasurementEnable){
-                        customer=1;
-                    }else {
-                        customer=0;
-                    }
-                    db.execSQL("insert into "+PosSettingDbAdapter.POS_SETTING_TABLE_NAME+"  values ("+ currency+','+credit+','+pinpad+','+customer+','+floatP+','+"'"+printerType+"'"+ ','
-                            +verCode+','+DATABASE_VERSION +',' +branchI + ");");
-
+                    Util.addPosSetting(context);
                     break;
 
 

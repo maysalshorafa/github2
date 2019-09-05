@@ -40,7 +40,7 @@ public class PosSettingDbAdapter {
 
     public static final String DATABASE_CREATE = "CREATE TABLE PosSetting ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "`enableCurrency` INTEGER DEFAULT 0 , `enableCreditCard` INTEGER DEFAULT 0, " +
-            "`enablePinPad` INTEGER DEFAULT 0, `enableCustomerMeasurement` INTEGER DEFAULT 0,`noOfFloatPoint` INTEGER DEFAULT 0,`posVersionNo` TEXT NOT NULL,`posDbVersionNo` TEXT NOT NULL,`branchId` INTEGER DEFAULT 0 )";
+            "`enablePinPad` INTEGER DEFAULT 0, `enableCustomerMeasurement` INTEGER DEFAULT 0,`noOfFloatPoint` INTEGER DEFAULT 0,`posVersionNo` TEXT ,`posDbVersionNo` TEXT , `printerType` TEXT  ,`branchId` INTEGER DEFAULT 0 )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
