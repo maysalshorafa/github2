@@ -648,8 +648,8 @@ public class Util {
         PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(context);
         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
         CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(context);
-        paymentDBAdapter.open();
         for (Order s : sales) {
+            paymentDBAdapter.open();
             List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(s.getOrderId());
             /**
              if (SETTINGS.enableCurrencies) {
@@ -661,6 +661,9 @@ public class Util {
 
             pl.addAll(payments);
         }
+        paymentDBAdapter.close();
+
+
         paymentDBAdapter.close();
         return pl;
     }

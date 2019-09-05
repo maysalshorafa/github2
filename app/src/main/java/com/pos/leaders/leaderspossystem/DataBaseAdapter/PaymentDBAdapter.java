@@ -112,17 +112,25 @@ public class PaymentDBAdapter {
 
 	public List<Payment> getPaymentBySaleID(long saleID) {
 		List<Payment> salePaymentList = new ArrayList<Payment>();
+		try {
+			open();
+			Cursor cursor = db.rawQuery("select * from " + PAYMENT_TABLE_NAME +" where "+PAYMENT_COLUMN_ORDERID+"="+saleID + " and "+ " id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
+			cursor.moveToFirst();
 
-		Cursor cursor = db.rawQuery("select * from " + PAYMENT_TABLE_NAME +" where "+PAYMENT_COLUMN_ORDERID+"="+saleID + " and "+ " id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
-		cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				salePaymentList.add(make(cursor));
+				cursor.moveToNext();
+			}
+			cursor.close();
+			close();
 
-		while (!cursor.isAfterLast()) {
-			salePaymentList.add(make(cursor));
-			cursor.moveToNext();
+		} catch (Exception e) {
+
 		}
-
 		return salePaymentList;
+
 	}
+
 	public Payment getPaymentByID(long saleID) {
 	Payment payment = null;
 

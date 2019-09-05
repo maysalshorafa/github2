@@ -102,17 +102,23 @@ public class CurrencyOperationDBAdapter {
     }
     public List<CurrencyOperation> getCurrencyOperationByOrderID(long orderId) {
         List<CurrencyOperation> saleReturns = new ArrayList<CurrencyOperation>();
+        try {
+            open();
+            Cursor cursor = db.rawQuery("select * from " + CurrencyOperation_TABLE_NAME +" where "+CurrencyOperation_COLUMN_Operation_ID+"="+orderId, null);
+            cursor.moveToFirst();
 
-        Cursor cursor = db.rawQuery("select * from " + CurrencyOperation_TABLE_NAME +" where "+CurrencyOperation_COLUMN_Operation_ID+"="+orderId, null);
-        cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                saleReturns.add(make(cursor));
+                cursor.moveToNext();
+            }
+            close();
 
-        while (!cursor.isAfterLast()) {
-            saleReturns.add(make(cursor));
-            cursor.moveToNext();
+        } catch (Exception e) {
+
         }
-
         return saleReturns;
     }
+
     private CurrencyOperation make(Cursor cursor){
         return new CurrencyOperation(Long.parseLong(cursor.getString(cursor.getColumnIndex(CurrencyOperation_COLUMN_ID))),
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CurrencyOperation_COLUMN_CREATEDATE))),
