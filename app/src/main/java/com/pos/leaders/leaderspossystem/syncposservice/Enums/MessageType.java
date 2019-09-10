@@ -176,4 +176,8 @@ public interface MessageType{
     String UPDATE_POS_SETTING = "UpdatePosSetting";
     String DELETE_POS_SETTING = "DeletePosSetting";
 
+    String ADD_DEPOSIT_AND_PULL_REPORT = "AddDepositAndPullReport";
+    String UPDATE_DEPOSIT_AND_PULL_REPORT = "UpdateDepositAndPullReport";
+    String DELETE_DEPOSIT_AND_PULL_REPORT = "DeleteDepositAndPullReport";
+
 }
