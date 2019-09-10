@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.Models.DepositAndPullDetailsReport;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -14,22 +16,16 @@ import java.sql.Timestamp;
 
 public class DepositAndPullReportDetailsDbAdapter {
     // Table Name
-    public static final String DEPOSIT_AND_PULL_REPORT_TABLE_NAME = "depositAndPull";
+    public static final String DEPOSIT_AND_PULL_DETAILS_REPORT_TABLE_NAME = "depositAndPull";
     // Column Names
-    protected static final String DEPOSIT_AND_PULL_REPORT_DETAILS_COLUMN_ID = "id";
-    protected static final String DEPOSIT_AND_PULL_REPORT_COLUMN_ID = "id";
+    protected static final String DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_ID = "id";
+    protected static final String DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_DEPOSIT_AND_PULL_ID = "depositAndPullId";
+    protected static final String DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_AMOUNT = "amount";
+    protected static final String DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_CURRENCY_TYPE = "currency_type";
 
-    protected static final String DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE = "createDate";
-    protected static final String DEPOSIT_AND_PULL_REPORT_COLUMN_BY_USER = "byEmployee";
-    protected static final String DEPOSIT_AND_PULL_REPORT_COLUMN_AMOUNT = "amount";
-    protected static final String DEPOSIT_AND_PULL_REPORT_COLUMN_TYPE = "type";
-    protected static final String DEPOSIT_AND_PULL_REPORT_COLUMN_LASTZREPORTID = "lastZReportID";
-
-    public static final String DATABASE_CREATE = "CREATE TABLE "+ DEPOSIT_AND_PULL_REPORT_TABLE_NAME
-            +" ( `"+ DEPOSIT_AND_PULL_REPORT_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE +"` TIMESTAMP DEFAULT current_timestamp,  `"
-            + DEPOSIT_AND_PULL_REPORT_COLUMN_BY_USER +"` INTEGER, " +
-            " `"+ DEPOSIT_AND_PULL_REPORT_COLUMN_AMOUNT +"` REAL,  `"+ DEPOSIT_AND_PULL_REPORT_COLUMN_TYPE +"` TEXT , " +
-            DEPOSIT_AND_PULL_REPORT_COLUMN_LASTZREPORTID +"` INTEGER, " + ")";
+    public static final String DATABASE_CREATE = "CREATE TABLE "+ DEPOSIT_AND_PULL_DETAILS_REPORT_TABLE_NAME
+            +" ( `"+ DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_DEPOSIT_AND_PULL_ID +"` INTEGER , `"+
+            DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_AMOUNT +"` REAL,  `"+ DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_CURRENCY_TYPE +"` TEXT , " + ")";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -56,7 +52,7 @@ public class DepositAndPullReportDetailsDbAdapter {
     }
 
     public long insertEntry(Timestamp createDate, long byUser, double amount, String type, long lastZReportID) {
-        DepositAndPullReport depositAndPullReport = new DepositAndPullReport(Util.idHealth(this.db,DEPOSIT_AND_PULL_REPORT_TABLE_NAME, DEPOSIT_AND_PULL_REPORT_COLUMN_ID), createDate, byUser, amount,type,lastZReportID);
+        DepositAndPullDetailsReport depositAndPullReport = new DepositAndPullDetailsReport(Util.idHealth(this.db,DEPOSIT_AND_PULL_REPORT_TABLE_NAME, DEPOSIT_AND_PULL_REPORT_COLUMN_ID), createDate, byUser, amount,type,lastZReportID);
         sendToBroker(MessageType.ADD_DEPOSIT_AND_PULL_REPORT, depositAndPullReport, this.context);
         try {
             return insertEntry(depositAndPullReport);
