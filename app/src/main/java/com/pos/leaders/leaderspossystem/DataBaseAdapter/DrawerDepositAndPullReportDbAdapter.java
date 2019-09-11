@@ -191,6 +191,9 @@ public class DrawerDepositAndPullReportDbAdapter {
 
         Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + " where " + DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE + " between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')", null);
         cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            depositAndPullReportList.add(makeDepositAndPullReport(cursor));
             cursor.moveToNext();
         }
         return depositAndPullReportList;
