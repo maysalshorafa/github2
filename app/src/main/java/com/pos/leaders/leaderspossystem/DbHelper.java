@@ -25,6 +25,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepositAndPullReportDetailsDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.DrawerDepositAndPullReportDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupDbAdapter;
@@ -193,6 +195,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(ProviderDbAdapter.DATABASE_CREATE);
         db.execSQL(InventoryDbAdapter.DATABASE_CREATE);
         db.execSQL(ProductInventoryDbAdapter.DATABASE_CREATE);
+        db.execSQL(DrawerDepositAndPullReportDbAdapter.DATABASE_CREATE);
+        db.execSQL(DepositAndPullReportDetailsDbAdapter.DATABASE_CREATE);
 
 
         // Currency Statment

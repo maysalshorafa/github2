@@ -76,7 +76,22 @@
             android:textStyle="normal|bold" />
 
         <Button
-            android:id="@+id/reportManagementActivity_btnMonthZReportView"
+        android:id="@+id/reportManagementActivity_btnMonthZReportView"
+        style="@style/AppTheme.dashboard_bt"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+
+        android:layout_margin="16dp"
+
+        android:padding="16dp"
+        android:text="@string/month_z_report_view"
+        android:textColor="@color/white"
+
+
+        android:textSize="24sp"
+        android:textStyle="normal|bold" />
+        <Button
+            android:id="@+id/reportManagementActivity_btnPullReport"
             style="@style/AppTheme.dashboard_bt"
             android:layout_width="200dp"
             android:layout_height="150dp"
@@ -84,7 +99,7 @@
             android:layout_margin="16dp"
 
             android:padding="16dp"
-            android:text="@string/month_z_report_view"
+            android:text="@string/pull_report"
             android:textColor="@color/white"
 
 
@@ -142,6 +157,21 @@
             android:textSize="22sp"
             android:textStyle="normal|bold"
             android:visibility="gone" />
+        <Button
+            android:id="@+id/reportManagementActivity_btnDepositReport"
+            style="@style/AppTheme.dashboard_bt"
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+
+            android:layout_margin="16dp"
+
+            android:layout_marginRight="15dp"
+            android:padding="16dp"
+            android:text="@string/deposit_report"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="normal|bold"
+          />
 
     </LinearLayout>
 

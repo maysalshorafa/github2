@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/listViewItemDepositAndPullReport_tvID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline38"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="18sp"
+            />
+
+        <TextView
+            android:id="@+id/listViewItemDepositAndPullReport_tvUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/listViewItemDepositAndPullReport_tvAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            tools:layout_editor_absoluteX="318dp"
+            tools:layout_editor_absoluteY="160dp"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/listViewItemDepositAndPullReport_tvCreateDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            tools:layout_editor_absoluteX="512dp"
+            tools:layout_editor_absoluteY="401dp"
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/listViewItemDepositAndPullReport_tvType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            tools:layout_editor_absoluteX="512dp"
+            tools:layout_editor_absoluteY="401dp"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+</LinearLayout>

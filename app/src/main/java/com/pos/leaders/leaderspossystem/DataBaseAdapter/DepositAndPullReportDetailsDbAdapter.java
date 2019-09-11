@@ -1,14 +1,19 @@
 package com.pos.leaders.leaderspossystem.DataBaseAdapter;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.DepositAndPullDetailsReport;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by Win8.1 on 9/8/2019.
@@ -16,7 +21,7 @@ import java.sql.Timestamp;
 
 public class DepositAndPullReportDetailsDbAdapter {
     // Table Name
-    public static final String DEPOSIT_AND_PULL_DETAILS_REPORT_TABLE_NAME = "depositAndPull";
+    public static final String DEPOSIT_AND_PULL_DETAILS_REPORT_TABLE_NAME = "depositAndPullDetails";
     // Column Names
     protected static final String DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_ID = "id";
     protected static final String DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_DEPOSIT_AND_PULL_ID = "depositAndPullId";
@@ -25,7 +30,7 @@ public class DepositAndPullReportDetailsDbAdapter {
 
     public static final String DATABASE_CREATE = "CREATE TABLE "+ DEPOSIT_AND_PULL_DETAILS_REPORT_TABLE_NAME
             +" ( `"+ DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_DEPOSIT_AND_PULL_ID +"` INTEGER , `"+
-            DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_AMOUNT +"` REAL,  `"+ DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_CURRENCY_TYPE +"` TEXT , " + ")";
+            DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_AMOUNT +"` REAL,  `"+ DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_CURRENCY_TYPE +"` TEXT " + ")";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -38,7 +43,7 @@ public class DepositAndPullReportDetailsDbAdapter {
         this.dbHelper = new DbHelper(context);
     }
 
-    public DepositAndPullReportDetailsDbAdapter open() throws SQLException {
+    public DepositAndPullReportDetailsDbAdapter open() {
         this.db = dbHelper.getWritableDatabase();
         return this;
     }
@@ -51,111 +56,64 @@ public class DepositAndPullReportDetailsDbAdapter {
         return db;
     }
 
-    public long insertEntry(Timestamp createDate, long byUser, double amount, String type, long lastZReportID) {
-        DepositAndPullDetailsReport depositAndPullReport = new DepositAndPullDetailsReport(Util.idHealth(this.db,DEPOSIT_AND_PULL_REPORT_TABLE_NAME, DEPOSIT_AND_PULL_REPORT_COLUMN_ID), createDate, byUser, amount,type,lastZReportID);
-        sendToBroker(MessageType.ADD_DEPOSIT_AND_PULL_REPORT, depositAndPullReport, this.context);
-        try {
-            return insertEntry(depositAndPullReport);
-        } catch (SQLException ex) {
-            Log.e(" DB insert", "inserting Entry at " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + ": " + ex.getMessage());
-            return -1;
-        }
+    public long insertEntry(long depositAndPullId, double amount, String currencyType) {
+        DepositAndPullDetailsReport depositAndPullReport = new DepositAndPullDetailsReport(Util.idHealth(this.db,DEPOSIT_AND_PULL_DETAILS_REPORT_TABLE_NAME, DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_ID), depositAndPullId, amount,currencyType);
+        sendToBroker(MessageType.ADD_DEPOSIT_AND_PULL_DETAILS_REPORT, depositAndPullReport, this.context);
+        return insertEntry(depositAndPullReport);
 
     }
 
-    public long insertEntry(DepositAndPullReport depositAndPullReport) {
+    public long insertEntry(DepositAndPullDetailsReport depositAndPullReport) {
         ContentValues val = new ContentValues();
 
-        val.put(DEPOSIT_AND_PULL_REPORT_COLUMN_ID, depositAndPullReport.getDepositAndPullReportId());
-        val.put(DEPOSIT_AND_PULL_REPORT_COLUMN_BY_USER, depositAndPullReport.getByUserID());
-        val.put(DEPOSIT_AND_PULL_REPORT_COLUMN_AMOUNT, depositAndPullReport.getAmount());
-        val.put(DEPOSIT_AND_PULL_REPORT_COLUMN_AMOUNT, depositAndPullReport.getType());
-        val.put(DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE, String.valueOf(depositAndPullReport.getCreatedAt()));
-        val.put(DEPOSIT_AND_PULL_REPORT_COLUMN_LASTZREPORTID,depositAndPullReport.getLastZReportID());
-        try {
-            return db.insert(DEPOSIT_AND_PULL_REPORT_TABLE_NAME, null, val);
-        } catch (SQLException ex) {
-            Log.e(" DB insert", "inserting Entry at " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + ": " + ex.getMessage());
-            return -1;
-        }
+        val.put(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_ID, depositAndPullReport.getDepositAndPullDetailsId());
+        val.put(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_DEPOSIT_AND_PULL_ID, depositAndPullReport.getDepositAndPullId());
+        val.put(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_AMOUNT, depositAndPullReport.getAmount());
+        val.put(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_CURRENCY_TYPE,depositAndPullReport.getCurrencyType());
+        return db.insert(DEPOSIT_AND_PULL_DETAILS_REPORT_TABLE_NAME, null, val);
     }
 
-    public DepositAndPullReport getByLastZReport(long lastZReportID){
-        DepositAndPullReport depositAndPullReport;
-        Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + " where " + DEPOSIT_AND_PULL_REPORT_COLUMN_LASTZREPORTID + "='" + (lastZReportID ) + "'", null);
-        if (cursor.getCount() < 1) {
-            //cursor.close();
-            cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME,null);
-            //return null;
-        }
-        cursor.moveToFirst();
-        depositAndPullReport = makeDepositAndPullReport(cursor);
-        return depositAndPullReport;
-    }
-    public List<DepositAndPullReport> getListByLastZReport(long lastZReportID){
-        List<DepositAndPullReport> depositAndPullReportList = new ArrayList<DepositAndPullReport>();
-        Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + " where " + DEPOSIT_AND_PULL_REPORT_COLUMN_LASTZREPORTID + "='" + (lastZReportID ) + "'", null);
-        if (cursor.getCount() < 1) {
-            //cursor.close();
-            cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME,null);
-            //return null;
-        }
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            depositAndPullReportList.add(makeDepositAndPullReport(cursor));
-            cursor.moveToNext();
-        }
-
-        return depositAndPullReportList;
-    }
-    public List<DepositAndPullReport> getBetween(Date fromDate, Date toDate){
-        List<DepositAndPullReport> depositAndPullReportList = new ArrayList<DepositAndPullReport>();
-
-        Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + " where " + DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE + "<='" + toDate.getTime() + "' and " + DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE +
-                ">='" + fromDate.getTime() + "'" + " order by " + DEPOSIT_AND_PULL_REPORT_COLUMN_ID + " desc", null);
-        cursor.moveToFirst();
-
-        while (!cursor.isAfterLast()) {
-            depositAndPullReportList.add(makeDepositAndPullReport(cursor));
-            cursor.moveToNext();
-        }
-
-        return depositAndPullReportList;
-    }
-
-    public DepositAndPullReport getLastRow() throws Exception {
-        DepositAndPullReport depositAndPullReport = null;
-        Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + " where id like '%"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
-        if (cursor.getCount() < 1) // zReport Not Exist
+    public DepositAndPullDetailsReport getDepositAndPullDetailsReportByID(long id) {
+        DepositAndPullDetailsReport depositAndPullDetailsReport = null;
+        Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_DETAILS_REPORT_TABLE_NAME + " where id='" + id + "'", null);
+        if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();
-            throw new Exception("there is no rows on A Report Table");
+            return depositAndPullDetailsReport;
         }
         cursor.moveToFirst();
-        depositAndPullReport = makeDepositAndPullReport(cursor);
+        depositAndPullDetailsReport = new DepositAndPullDetailsReport(id,  cursor.getLong(cursor.getColumnIndex(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_DEPOSIT_AND_PULL_ID)),
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_AMOUNT))),
+                cursor.getString(cursor.getColumnIndex(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_CURRENCY_TYPE))
+                );
         cursor.close();
 
-        return depositAndPullReport;
+        return depositAndPullDetailsReport;
     }
-
-    private DepositAndPullReport makeDepositAndPullReport(Cursor c){
-        return new DepositAndPullReport(c.getLong(c.getColumnIndex(DEPOSIT_AND_PULL_REPORT_COLUMN_ID)),
-                Timestamp.valueOf(c.getString(c.getColumnIndex(DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE))),
-                c.getLong(c.getColumnIndex(DEPOSIT_AND_PULL_REPORT_COLUMN_BY_USER)),
-                c.getDouble(c.getColumnIndex(DEPOSIT_AND_PULL_REPORT_COLUMN_AMOUNT)),
-                c.getString(c.getColumnIndex(DEPOSIT_AND_PULL_REPORT_COLUMN_TYPE)),
-                c.getLong(c.getColumnIndex(DEPOSIT_AND_PULL_REPORT_COLUMN_LASTZREPORTID)));
-    }
-    public DepositAndPullReport getById(long id){
-        DepositAndPullReport depositAndPullReport;
-        Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + " where " + DEPOSIT_AND_PULL_REPORT_COLUMN_ID + "='" + (id ) + "'", null);
-        if (cursor.getCount() < 1) {
-            //cursor.close();
-            cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME,null);
-            //return null;
-        }
+    public List<DepositAndPullDetailsReport> getListDepositAndPullReportReport(long aReportId){
+        List<DepositAndPullDetailsReport> depositAndPullReportDetailsList =new ArrayList<DepositAndPullDetailsReport>();
+        Cursor cursor =  db.rawQuery( "select * from "+DEPOSIT_AND_PULL_DETAILS_REPORT_TABLE_NAME +" where "+ DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_DEPOSIT_AND_PULL_ID +" = "+aReportId, null );
         cursor.moveToFirst();
-        depositAndPullReport = makeDepositAndPullReport(cursor);
-        return depositAndPullReport;
+
+        while(!cursor.isAfterLast()){
+            depositAndPullReportDetailsList.add(makeDepositAndPullDetailsReportDetails(cursor));
+            cursor.moveToNext();
+        }
+
+        return depositAndPullReportDetailsList;
+    }
+    private DepositAndPullDetailsReport makeDepositAndPullDetailsReportDetails(Cursor cursor) {
+        try {
+            return new DepositAndPullDetailsReport( cursor.getLong(cursor.getColumnIndex(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_ID)),  cursor.getLong(cursor.getColumnIndex(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_DEPOSIT_AND_PULL_ID)),
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_AMOUNT))),
+                    cursor.getString(cursor.getColumnIndex(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_CURRENCY_TYPE))
+            );
+        } catch (Exception ex) {
+            return new DepositAndPullDetailsReport( cursor.getLong(cursor.getColumnIndex(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_ID)),  cursor.getLong(cursor.getColumnIndex(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_DEPOSIT_AND_PULL_ID)),
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_AMOUNT))),
+                    cursor.getString(cursor.getColumnIndex(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_CURRENCY_TYPE))
+            );
+        }
+
     }
 }

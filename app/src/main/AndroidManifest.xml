@@ -228,7 +228,8 @@
         <activity android:name=".AddNewProvider" />
         <activity android:name=".InventoryManagementActivity" />
         <activity android:name=".ProviderManagementActivity" />
-        <activity android:name=".InInventoryDoc"></activity>
+        <activity android:name=".InInventoryDoc" />
+        <activity android:name=".DepositAndPullReportView"></activity>
     </application>
 
 </manifest>

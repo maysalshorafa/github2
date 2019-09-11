@@ -36,10 +36,10 @@ public class DrawerDepositAndPullReportDbAdapter {
     protected static final String DEPOSIT_AND_PULL_REPORT_COLUMN_LASTZREPORTID = "lastZReportID";
 
     public static final String DATABASE_CREATE = "CREATE TABLE "+ DEPOSIT_AND_PULL_REPORT_TABLE_NAME
-            +" ( `"+ DEPOSIT_AND_PULL_REPORT_COLUMN_ID +"` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE +"` TIMESTAMP DEFAULT current_timestamp,  `"
+            + " ( `" + DEPOSIT_AND_PULL_REPORT_COLUMN_ID + "` INTEGER PRIMARY KEY AUTOINCREMENT, `"+ DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE +"` TIMESTAMP DEFAULT current_timestamp,  `"
             + DEPOSIT_AND_PULL_REPORT_COLUMN_BY_USER +"` INTEGER, " +
-            " `"+ DEPOSIT_AND_PULL_REPORT_COLUMN_AMOUNT +"` REAL,  `"+ DEPOSIT_AND_PULL_REPORT_COLUMN_TYPE +"` TEXT , " +
-            DEPOSIT_AND_PULL_REPORT_COLUMN_LASTZREPORTID +"` INTEGER, " + ")";
+            " `"+ DEPOSIT_AND_PULL_REPORT_COLUMN_AMOUNT +"` REAL,  `"+ DEPOSIT_AND_PULL_REPORT_COLUMN_TYPE +"` TEXT , `"+
+            DEPOSIT_AND_PULL_REPORT_COLUMN_LASTZREPORTID +"` INTEGER " + ")";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -83,7 +83,7 @@ public class DrawerDepositAndPullReportDbAdapter {
         val.put(DEPOSIT_AND_PULL_REPORT_COLUMN_ID, depositAndPullReport.getDepositAndPullReportId());
         val.put(DEPOSIT_AND_PULL_REPORT_COLUMN_BY_USER, depositAndPullReport.getByUserID());
         val.put(DEPOSIT_AND_PULL_REPORT_COLUMN_AMOUNT, depositAndPullReport.getAmount());
-        val.put(DEPOSIT_AND_PULL_REPORT_COLUMN_AMOUNT, depositAndPullReport.getType());
+        val.put(DEPOSIT_AND_PULL_REPORT_COLUMN_TYPE, depositAndPullReport.getType());
         val.put(DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE, String.valueOf(depositAndPullReport.getCreatedAt()));
         val.put(DEPOSIT_AND_PULL_REPORT_COLUMN_LASTZREPORTID,depositAndPullReport.getLastZReportID());
         try {
@@ -172,4 +172,28 @@ public class DrawerDepositAndPullReportDbAdapter {
         depositAndPullReport = makeDepositAndPullReport(cursor);
         return depositAndPullReport;
     }
+
+    public List<DepositAndPullReport> getAll() {
+        List<DepositAndPullReport> depositAndPullReportList = new ArrayList<DepositAndPullReport>();
+
+        Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME , null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            depositAndPullReportList.add(makeDepositAndPullReport(cursor));
+            cursor.moveToNext();
+        }
+
+        return depositAndPullReportList;
+    }
+    public List<DepositAndPullReport> getBetweenTwoDates(long from, long to){
+        List<DepositAndPullReport> depositAndPullReportList = new ArrayList<DepositAndPullReport>();
+
+        Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + " where " + DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE + " between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')", null);
+        cursor.moveToFirst();
+            cursor.moveToNext();
+        }
+        return depositAndPullReportList;
+    }
+
 }

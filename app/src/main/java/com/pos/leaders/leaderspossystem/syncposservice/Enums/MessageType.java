@@ -180,4 +180,8 @@ public interface MessageType{
     String UPDATE_DEPOSIT_AND_PULL_REPORT = "UpdateDepositAndPullReport";
     String DELETE_DEPOSIT_AND_PULL_REPORT = "DeleteDepositAndPullReport";
 
+    String ADD_DEPOSIT_AND_PULL_DETAILS_REPORT = "AddDepositAndPullDetailsReport";
+    String UPDATE_DEPOSIT_AND_PULL_DETAILS_REPORT = "UpdateDepositAndPullDetailsReport";
+    String DELETE_DEPOSIT_AND_PULL_DETAILS_REPORT = "DeleteDepositAndPullDetailsReport";
+
 }

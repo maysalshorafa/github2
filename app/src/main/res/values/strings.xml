@@ -92,7 +92,10 @@
     <string name="view_provider">View Provider</string>
     <string name="add_new_provider">Add New Provider</string>
     <string name="please_choose_your_provider">Please Choose Your Provider</string>
-
+    <string name="view_pull_report">View Pull Report</string>
+    <string name="add_pull_report">Add Pull Report</string>
+    <string name="view_deposit_report">View Deposit Report</string>
+    <string name="add_deposit_report">Add Deposit Report</string>
 
     <!--Splash Screen-->
 
@@ -451,6 +454,8 @@
     <string name="x_report">X REPORT</string>
     <string name="z_report">Z Report</string>
     <string name="month_z_report_view">Month Z Report</string>
+    <string name="pull_report">Pull Report</string>
+    <string name="deposit_report">Deposit Report</string>
 
     <!--online setup -->
     <string name="key">Key</string>

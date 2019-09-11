@@ -25,6 +25,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepositAndPullReportDetailsDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
@@ -39,6 +40,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
+import com.pos.leaders.leaderspossystem.Models.DepositAndPullReport;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
@@ -2000,5 +2002,82 @@ public class PdfUA {
         document.close();
         //end :)
     }
+    public static void  printDepositAndPullReport(Context context, DepositAndPullReport depositAndPullReport, final ArrayList<String> currencyTypeList, final ArrayList<Double>currencyAmount, String type) throws IOException, DocumentException, JSONException {
+        // create file , document region
+        Document document = new Document();
+        String fileName = "depositAndPullReport.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+        if(file.exists()){
+            PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
+            writer.print("");
+            writer.close();
+        }
+
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();        //end region
+        //end region
+
+        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 30);
+        Font dateFont = new Font(urName, 24);
+        //heading table
+        PdfPTable headingTable = new PdfPTable(1);
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+
+        PdfPTable dataTable = new PdfPTable(2);
+        dataTable.deleteBodyRows();
+        dataTable.setRunDirection(0);
+
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
+        if(type.equals("Pull")){
+            insertCell(headingTable, context.getString(R.string.pull_report) , Element.ALIGN_CENTER, 1, font);
+
+        }else {
+            insertCell(headingTable, context.getString(R.string.deposit_report) , Element.ALIGN_CENTER, 1, font);
+
+        }
+        insertCell(headingTable, context.getString(R.string.amount) +":"+ depositAndPullReport.getAmount()+"Shekel", Element.ALIGN_CENTER, 1, font);
+
+        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+        DepositAndPullReportDetailsDbAdapter depositAndPullReportDetailsDbAdapter = new DepositAndPullReportDetailsDbAdapter(context);
+        depositAndPullReportDetailsDbAdapter.open();
+        if(currencyAmount.size()>0) {
+            for (int i = 0; i < currencyAmount.size(); i++) {
+                if(currencyAmount.get(i)>0) {
+                    if(type.equals("Pull")){
+                    insertCell(dataTable, context.getString(R.string.pull_report) + " : " + currencyAmount.get(i) + "  " + currencyTypeList.get(i), Element.ALIGN_LEFT, 2, dateFont);
+                }
+                else {
+                        insertCell(dataTable, context.getString(R.string.deposit_report) + " : " + currencyAmount.get(i) + "  " + currencyTypeList.get(i), Element.ALIGN_LEFT, 2, dateFont);
+
+                    }
+                }
+            }}
+        else {
+            if(type.equals("Pull")) {
+                insertCell(dataTable, context.getString(R.string.pull_report) + " : " + depositAndPullReport.getAmount() + "  " + "Shekel", Element.ALIGN_LEFT, 2, dateFont);
+            }else {
+                insertCell(dataTable, context.getString(R.string.deposit_report) + " : " + depositAndPullReport.getAmount() + "  " + "Shekel", Element.ALIGN_LEFT, 2, dateFont);
+
+            }
+        }
+
+        //add table to document
+        document.add(headingTable);
+        document.add(dataTable);
+
+        document.close();
+
+        //en
+
+
+    }
+
 
 }

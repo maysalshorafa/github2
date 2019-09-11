@@ -40,6 +40,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
+import com.pos.leaders.leaderspossystem.Models.DepositAndPullReport;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
@@ -799,6 +800,56 @@ public class Util {
         }.execute();
 
     }
+    public static void pullAndDepositReport(final Context context, final DepositAndPullReport res, final ArrayList<String>currencyType, final ArrayList<Double>currencyAmount, final String type){
+
+        final String SAMPLE_FILE = "depositAndPullReport.pdf";
+        new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                try
+                {
+                    File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                    File file = new File(path,SAMPLE_FILE);
+                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                    byte[] data = new byte[(int)f.length()];
+                    f.readFully(data);
+                    pdfLoadImagesOpiningReport(data,context);
+
+                }
+                catch(Exception ignored)
+                {
+
+                }
+                //     print(invoiceImg.Invoice( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
+
+                //clearCart();
+
+            }
+            @Override
+            protected Void doInBackground(Void... voids) {
+                MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                try {
+                    PdfUA pdfUA = new PdfUA();
+
+                    try {
+                        pdfUA.printDepositAndPullReport(context,res,currencyType,currencyAmount,type);
+                    } catch (DocumentException e) {
+                        e.printStackTrace();
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
+
+    }
+
     public static void logInLogOutReport(final Context context, final JSONObject res){
         final String SAMPLE_FILE = "loginreport.pdf";
         new AsyncTask<Void, Void, Void>(){
