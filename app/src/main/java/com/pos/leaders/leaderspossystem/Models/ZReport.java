@@ -35,13 +35,15 @@ public class ZReport {
     private double eurAmount;
     private double gbpAmount;
     private double invoiceReceiptAmount;
+    private double pullReportAmount;
+    private double depositReportAmount;
     public ZReport() {
 
 
     }
 
     public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount,double shekelAmount,double usdAmount, double eurAmount,
-                   double gbpAmount, double invoiceReceiptAmount) {
+                   double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -61,6 +63,8 @@ public class ZReport {
         this.eurAmount=eurAmount;
         this.gbpAmount=gbpAmount;
         this.invoiceReceiptAmount=invoiceReceiptAmount;
+        this.pullReportAmount=pullReportAmount;
+        this.depositReportAmount=depositReportAmount;
     }
 
     public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount) {
@@ -286,6 +290,22 @@ public class ZReport {
         this.invoiceReceiptAmount = invoiceReceiptAmount;
     }
 
+    public double getPullReportAmount() {
+        return pullReportAmount;
+    }
+
+    public void setPullReportAmount(double pullReportAmount) {
+        this.pullReportAmount = pullReportAmount;
+    }
+
+    public double getDepositReportAmount() {
+        return depositReportAmount;
+    }
+
+    public void setDepositReportAmount(double depositReportAmount) {
+        this.depositReportAmount = depositReportAmount;
+    }
+
     //region OpenFormat
     public String BKMVDATA(int rowNumber,String pc,int totalRows){
 
@@ -321,6 +341,8 @@ public class ZReport {
                 ", eurAmount=" + eurAmount +
                 ", gbpAmount=" + gbpAmount +
                 ", invoiceReceiptAmount=" + invoiceReceiptAmount +
+                ", pullReportAmount=" + pullReportAmount +
+                ", depositReportAmount=" + depositReportAmount +
                 '}';
     }
 //endregion OpenFormat

@@ -639,7 +639,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                                 long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, "Pull", z.getzReportId());
 
                                             }else {
-                                                long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, "Pull", 0);
+                                                long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, "Pull", -1);
 
                                             }
                                             DepositAndPullReport pullReport = null;
@@ -963,7 +963,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                                 long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, "Deposit", z.getzReportId());
 
                                             }else {
-                                                long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, "Deposit", 0);
+                                                long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, "Deposit", -1);
 
                                             }                                            DepositAndPullReport pullReport = null;
                                             try {

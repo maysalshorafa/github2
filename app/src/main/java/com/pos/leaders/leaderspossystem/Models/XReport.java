@@ -35,13 +35,15 @@ public class XReport {
     private double eurAmount;
     private double gbpAmount;
     private double invoiceReceiptAmount;
+    private double pullReportAmount;
+    private double depositReportAmount;
     public XReport() {
 
 
     }
 
     public XReport(long xReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount,double shekelAmount,double usdAmount, double eurAmount,
-                   double gbpAmount, double invoiceReceiptAmount) {
+                   double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount) {
         this.xReportId = xReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -61,6 +63,8 @@ public class XReport {
         this.eurAmount=eurAmount;
         this.gbpAmount=gbpAmount;
         this.invoiceReceiptAmount=invoiceReceiptAmount;
+        this.pullReportAmount=pullReportAmount;
+        this.depositReportAmount=depositReportAmount;
     }
 
     public XReport(long xReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount) {
@@ -286,7 +290,21 @@ public class XReport {
     public void setInvoiceReceiptAmount(double invoiceReceiptAmount) {
         this.invoiceReceiptAmount = invoiceReceiptAmount;
     }
+    public double getPullReportAmount() {
+        return pullReportAmount;
+    }
 
+    public void setPullReportAmount(double pullReportAmount) {
+        this.pullReportAmount = pullReportAmount;
+    }
+
+    public double getDepositReportAmount() {
+        return depositReportAmount;
+    }
+
+    public void setDepositReportAmount(double depositReportAmount) {
+        this.depositReportAmount = depositReportAmount;
+    }
     //region OpenFormat
     public String BKMVDATA(int rowNumber,String pc,int totalRows){
 
@@ -322,6 +340,8 @@ public class XReport {
                 ", eurAmount=" + eurAmount +
                 ", gbpAmount=" + gbpAmount +
                 ", invoiceReceiptAmount=" + invoiceReceiptAmount +
+                        ", pullReportAmount=" + pullReportAmount +
+                ", depositReportAmount=" + depositReportAmount +
                 '}';
     }
 }

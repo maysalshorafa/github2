@@ -219,6 +219,8 @@ public class OrderDBAdapter {
 
 	public List<Order> getBetween(long from, long to){
 		List<Order> saleList = new ArrayList<Order>();
+		try {
+			open();
 		Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +" <= "+to+" and "+ ORDER_COLUMN_ID +" >= "+from+ " and id like '%"+SESSION.POS_ID_NUMBER+"%'",null);
 		//Cursor cursor = db.rawQuery("select * from "+ORDER_DETAILS_TABLE_NAME+" where "+ORDER_COLUMN_ORDERDATE+" <= "+to+" and "+ORDER_COLUMN_ORDERDATE +" >= "+from,null);
 		cursor.moveToFirst();
@@ -227,11 +229,17 @@ public class OrderDBAdapter {
 			saleList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
+			close();
 
+		} catch (Exception e) {
+
+		}
 		return saleList;
 	}
 	public List<Order> getBetweenTwoSalesForClosingReport(long from, long to){
 		List<Order> saleList = new ArrayList<Order>();
+		try {
+			open();
 		Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +" <= "+to+" and "+ ORDER_COLUMN_ID +" > "+from+" and id like '%"+SESSION.POS_ID_NUMBER+"%'",null);
 		//Cursor cursor = db.rawQuery("select * from "+ORDER_DETAILS_TABLE_NAME+" where "+ORDER_COLUMN_ORDERDATE+" <= "+to+" and "+ORDER_COLUMN_ORDERDATE +" >= "+from,null);
 		cursor.moveToFirst();
@@ -240,13 +248,18 @@ public class OrderDBAdapter {
 			saleList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
+			close();
 
+		} catch (Exception e) {
+
+		}
 		return saleList;
 	}
 
 	public List<Order> getBetweenTwoDates(long from, long to){
 		List<Order> orderList = new ArrayList<Order>();
-
+		try {
+			open();
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_ORDERDATE + " between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')", null);
 		cursor.moveToFirst();
 
@@ -255,6 +268,11 @@ public class OrderDBAdapter {
 				orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
+			close();
+
+		} catch (Exception e) {
+
+		}
 		return orderList;
 	}
 
@@ -262,7 +280,8 @@ public class OrderDBAdapter {
 	public List<Order> search(String hint,int from,int count,String type){
 		List<Order> orderList = new ArrayList<Order>();
 		Cursor cursor=null;
-
+		try {
+			open();
 		if(type.equals(context.getString(R.string.price))){
 
 			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_TOTALPRICE + " like '%" +
@@ -297,12 +316,18 @@ public class OrderDBAdapter {
 			orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
+			close();
+
+		} catch (Exception e) {
+
+		}
 		return orderList;
 	}
 
 	public List<Order> lazyLoad(int offset,int count){
 		List<Order> orderList = new ArrayList<Order>();
-
+		try {
+			open();
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " +" id like '%"+SESSION.POS_ID_NUMBER+"%'"+
 				" order by id desc limit " + offset + "," + count, null);
 		cursor.moveToFirst();
@@ -311,6 +336,11 @@ public class OrderDBAdapter {
 		while (!cursor.isAfterLast()) {
 			orderList.add(makeSale(cursor));
 			cursor.moveToNext();
+		}
+			close();
+
+		} catch (Exception e) {
+
 		}
 		return orderList;
 	}

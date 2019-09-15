@@ -19,6 +19,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.DrawerDepositAndPullReportDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
@@ -31,6 +32,7 @@ import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
+import com.pos.leaders.leaderspossystem.Models.DepositAndPullReport;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.OpiningReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
@@ -206,6 +208,8 @@ public class ClosingReportActivity extends AppCompatActivity {
         double gbp_plus = 0, gbp_minus = 0;
         double sheqle_plus = 0, sheqle_minus = 0;
         double aReportAmount = 0;
+        double pullReportAmount=0;
+        double depositReportAmount=0;
         try {
             OrderDBAdapter orderDb = new OrderDBAdapter(getApplicationContext());
             orderDb.open();
@@ -222,6 +226,7 @@ public class ClosingReportActivity extends AppCompatActivity {
             ZReportDBAdapter zReportDBAdapter1 = new ZReportDBAdapter(ClosingReportActivity.this);
             zReportDBAdapter1.open();
             Order order =orderDb.getLast();
+
             List<Order> orders;
             if(closingReport==null&&zReportDBAdapter1.getProfilesCount()>0){
                 ZReport zReport1 =zReportDBAdapter1.getLastRow();
@@ -361,6 +366,18 @@ public class ClosingReportActivity extends AppCompatActivity {
                         checkReceipt+=newPosInvoiceListCheck.get(i).getAmount();
 
                     }
+                    DrawerDepositAndPullReportDbAdapter drawerDepositAndPullReportDbAdapter=new DrawerDepositAndPullReportDbAdapter(ClosingReportActivity.this);
+                    drawerDepositAndPullReportDbAdapter.open();
+                    List<DepositAndPullReport>depositAndPullReportList=drawerDepositAndPullReportDbAdapter.getListByLastZReport(-1);
+                    for(int i=0;i<depositAndPullReportList.size();i++){
+                        if(depositAndPullReportList.get(i).getType().equals("Pull")){
+                            pullReportAmount+=depositAndPullReportList.get(i).getAmount();
+                        }
+                        else {
+                            depositReportAmount+=depositAndPullReportList.get(i).getAmount();
+
+                        }
+                    }
                 }else {
                     zReport=zReportDBAdapter.getLastRow();
                     List<PosInvoice>tempPosCashInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport.getzReportId(),DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
@@ -387,6 +404,18 @@ public class ClosingReportActivity extends AppCompatActivity {
                     for (int i=0;i<newPosInvoiceListCheck.size();i++) {
                         checkReceipt+=newPosInvoiceListCheck.get(i).getAmount();
 
+                    }
+                    DrawerDepositAndPullReportDbAdapter drawerDepositAndPullReportDbAdapter=new DrawerDepositAndPullReportDbAdapter(ClosingReportActivity.this);
+                    drawerDepositAndPullReportDbAdapter.open();
+                    List<DepositAndPullReport>depositAndPullReportList=drawerDepositAndPullReportDbAdapter.getListByLastZReport(zReport.getzReportId());
+                    for(int i=0;i<depositAndPullReportList.size();i++){
+                        if(depositAndPullReportList.get(i).getType().equals("Pull")){
+                            pullReportAmount+=depositAndPullReportList.get(i).getAmount();
+                        }
+                        else {
+                            depositReportAmount+=depositAndPullReportList.get(i).getAmount();
+
+                        }
                     }
                 }
 
@@ -419,7 +448,9 @@ public class ClosingReportActivity extends AppCompatActivity {
             expectedCheck=(check_plus+check_minus)+checkReceipt;
             expectedCredit=creditCard_plus+creditCard_minus;
             Log.d("teeest",sheqle_plus+"  "+sheqle_minus +"  "+cash_minus);
+            sheqle_plus+=depositReportAmount-pullReportAmount;
             expectedShekel=sheqle_plus-sheqle_minus+expectedOpiningShekel+cashReceipt;
+
             expectedUsd=usd_plus-usd_minus+expectedOpiningUsd;
             expectedEur=eur_plus-eur_minus+expectedOpiningEur;
             expectedGbp=gbp_plus-gbp_minus+expectedOpiningGbp;

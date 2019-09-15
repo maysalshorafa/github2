@@ -106,7 +106,8 @@ public class CurrencyReturnsDBAdapter {
 
     public List<CurrencyReturns> getCurencyReturnBySaleID(long saleID) {
         List<CurrencyReturns> saleReturns = new ArrayList<CurrencyReturns>();
-
+        try {
+            open();
         Cursor cursor = db.rawQuery("select * from " + CurrencyReturnsDBAdapterTabelName +" where "+CurrencyReturns_COLUMN_SALEID+"="+saleID, null);
         cursor.moveToFirst();
 
@@ -114,7 +115,11 @@ public class CurrencyReturnsDBAdapter {
             saleReturns.add(make(cursor));
             cursor.moveToNext();
         }
+            close();
 
+        } catch (Exception e) {
+
+        }
         return saleReturns;
     }
 

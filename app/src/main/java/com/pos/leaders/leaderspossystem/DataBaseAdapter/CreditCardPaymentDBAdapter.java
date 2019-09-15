@@ -158,7 +158,8 @@ public class CreditCardPaymentDBAdapter {
     }
     public List<CreditCardPayment> getPaymentByOrderID(long orderId) {
         List<CreditCardPayment> orderPaymentList = new ArrayList<CreditCardPayment>();
-
+        try {
+            open();
         Cursor cursor = db.rawQuery("select * from " + TABLE_NAME +" where "+ORDERID+"="+orderId, null);
         cursor.moveToFirst();
 
@@ -166,7 +167,11 @@ public class CreditCardPaymentDBAdapter {
             orderPaymentList.add(make(cursor));
             cursor.moveToNext();
         }
+            close();
 
+        } catch (Exception e) {
+
+        }
         return orderPaymentList;
     }
 

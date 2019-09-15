@@ -308,6 +308,18 @@ public class PdfUA {
         insertCell(opiningReportTable, aReportAmount +" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(opiningReportTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
         insertCell(opiningReportTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+        PdfPTable pullAndDepositAmount = new PdfPTable(4);
+        pullAndDepositAmount.deleteBodyRows();
+        pullAndDepositAmount.setRunDirection(0);
+
+        insertCell(pullAndDepositAmount, context.getString(R.string.pull_report), Element.ALIGN_RIGHT, 4, font);
+        insertCell(pullAndDepositAmount, zReport.getPullReportAmount() +" ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(pullAndDepositAmount, context.getString(R.string.amount), Element.ALIGN_RIGHT, 2, font);
+        insertCell(pullAndDepositAmount,"----------------------------", Element.ALIGN_CENTER, 4, font);
+        insertCell(pullAndDepositAmount, context.getString(R.string.deposit_report), Element.ALIGN_RIGHT, 4, font);
+        insertCell(pullAndDepositAmount, zReport.getDepositReportAmount() +" ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(pullAndDepositAmount, context.getString(R.string.amount), Element.ALIGN_RIGHT, 2, font);
+        insertCell(pullAndDepositAmount,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
         PdfPTable opiningReportDetailsTable = new PdfPTable(2);
         opiningReportDetailsTable.deleteBodyRows();
@@ -334,6 +346,7 @@ public class PdfUA {
         document.add(headingTable);
         document.add(dataTable);
         document.add(opiningReportTable);
+        document.add(pullAndDepositAmount);
         if(SETTINGS.enableCurrencies){
             document.add(opiningReportDetailsTable);
 

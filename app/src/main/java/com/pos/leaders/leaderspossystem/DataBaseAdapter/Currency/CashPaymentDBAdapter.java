@@ -103,7 +103,8 @@ public class CashPaymentDBAdapter {
 
     public List<CashPayment> getPaymentBySaleID(long orderId) {
         List<CashPayment> salePaymentList = new ArrayList<CashPayment>();
-
+        try {
+            open();
         Cursor cursor = db.rawQuery("select * from " + CashPAYMENT_TABLE_NAME +" where "+CashPAYMENT_COLUMN_OrderID+"="+orderId, null);
         cursor.moveToFirst();
 
@@ -111,7 +112,11 @@ public class CashPaymentDBAdapter {
             salePaymentList.add(make(cursor));
             cursor.moveToNext();
         }
+            close();
 
+        } catch (Exception e) {
+
+        }
         return salePaymentList;
     }
 

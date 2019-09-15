@@ -56,6 +56,9 @@ public interface ApiURL {
     String XReport = "XReport";
     String INVENTORY="Inventory";
     String PROVIDER="Provider";
+    String DepositAndPullReport="DepositAndPullReport";
+    String DepositAndPullDetailsReport="DepositAndPullDetailsReport";
+
 
 
 }

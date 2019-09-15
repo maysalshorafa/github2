@@ -1260,45 +1260,44 @@ public class SyncMessage extends Service {
             //region PAYMENT
             case MessageType.ADD_PAYMENT:
                 JSONObject newJsonObject = new JSONObject(jsonObject.getString(MessageKey.Data));
-                Log.d("ppppppppp",newJsonObject.toString());
+                Log.d("ppppppppp11",newJsonObject.toString());
 
-             //  String paymentWay = newJsonObject.getString("paymentWay");
                 long orderId = newJsonObject.getLong("orderId");
                 List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
-                List<Payment> paymentList = new ArrayList<Payment>();
+                List<String> jsonList = new ArrayList<>();
                 List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
                 List<Check> checkList = new ArrayList<Check>();
-               // if(paymentWay.equalsIgnoreCase(CONSTANT.CASH)){
-                    //get cash payment detail by order id
                     CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(getApplicationContext());
                     cashPaymentDBAdapter.open();
                     cashPaymentList = cashPaymentDBAdapter.getPaymentBySaleID(orderId);
                 if(cashPaymentList.size()>0){
-                    JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
-                    newJsonObject.put("paymentDetails",jsonArray);
-                }
-             //   }
-                //if(paymentWay.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
-                    //get credit payment detail by order id
+                    for(int i=0;i<cashPaymentList.size();i++){
+                        jsonList.add(cashPaymentList.get(i).toString());
+                    }
+        }
                     CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(getApplicationContext());
                     creditCardPaymentDBAdapter.open();
+                creditCardPaymentList = creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
                 if(creditCardPaymentList.size()>0) {
-                    creditCardPaymentList = creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
-                    JSONArray jsonArray = new JSONArray(creditCardPaymentList.toString());
-                    newJsonObject.put("paymentDetails", jsonArray);
+                    for(int i=0;i<creditCardPaymentList.size();i++){
+                        jsonList.add(creditCardPaymentList.get(i).toString());
+                    }
+
                 }
-            //    }
-            //    if(paymentWay.equalsIgnoreCase(CONSTANT.CHECKS)){
-                    //get check payment detail by order id
+
                     ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(getApplicationContext());
                     checksDBAdapter.open();
+                checkList = checksDBAdapter.getPaymentBySaleID(orderId);
                 if(checkList.size()>0) {
-                    checkList = checksDBAdapter.getPaymentBySaleID(orderId);
-                    JSONArray jsonArray = new JSONArray(checkList.toString());
-                    newJsonObject.put("paymentDetails", jsonArray);
+                    for(int i=0;i<checkList.size();i++){
+                        jsonList.add(checkList.get(i).toString());
+                    }
                 }
-              //  }
-                Log.d("ppppppppp",newJsonObject.toString());
+
+
+                JSONArray jsonArray = new JSONArray(jsonList.toString());
+                newJsonObject.put("paymentDetails", jsonArray);
+                Log.d("paymentJson",newJsonObject.toString());
                 res = messageTransmit.authPost(ApiURL.Payment, newJsonObject.toString(), token);
 
                 break;
@@ -1680,10 +1679,16 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authPost(ApiURL.ClosingReport, jsonObject.getString(MessageKey.Data), token);
                 break;
             case MessageType.ADD_CLOSING_REPORT_DETAILS:
-                Log.d("ClosingReportDetails",jsonObject.getString(MessageKey.Data));
+                Log.d("DepositAndPullReport",jsonObject.getString(MessageKey.Data));
                 res = messageTransmit.authPost(ApiURL.ClosingReportDetails, jsonObject.getString(MessageKey.Data), token);
                 break;
-
+            case MessageType.ADD_DEPOSIT_AND_PULL_REPORT:
+                res = messageTransmit.authPost(ApiURL.DepositAndPullReport, jsonObject.getString(MessageKey.Data), token);
+                break;
+            case MessageType.ADD_DEPOSIT_AND_PULL_DETAILS_REPORT:
+                Log.d("DepositAndPullDetails",jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authPost(ApiURL.DepositAndPullDetailsReport, jsonObject.getString(MessageKey.Data), token);
+                break;
             case MessageType.ADD_OFFER_CATEGORY:
                 res = messageTransmit.authPost(ApiURL.OfferCategory, jsonObject.getString(MessageKey.Data), token);
                 break;
@@ -1711,6 +1716,7 @@ public class SyncMessage extends Service {
             case MessageType.DELETE_INVENTORY:
                 res = messageTransmit.authDelete(ApiURL.INVENTORY, jsonObject.getString(MessageKey.Data), token);
                 break;
+
 
         }
         Log.e("response message", res);
