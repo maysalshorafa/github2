@@ -1561,7 +1561,7 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT,2, font);
 
         ///// shekel region
-        insertCell(dataTable, Util.makePrice(zReport.getShekelAmount()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, Util.makePrice(zReport.getShekelAmount()-aReportDetailsForFirstCurrency), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,ShekelCount+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.shekel), Element.ALIGN_RIGHT, 2, font);
 
@@ -1628,7 +1628,7 @@ public class PdfUA {
         insertCell(opiningReportTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
         insertCell(opiningReportTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
-        PdfPTable opiningReportDetailsTable = new PdfPTable(2);
+      /**  PdfPTable opiningReportDetailsTable = new PdfPTable(2);
         opiningReportDetailsTable.deleteBodyRows();
         opiningReportDetailsTable.setRunDirection(0);
         if(SETTINGS.enableCurrencies) {
@@ -1643,7 +1643,7 @@ public class PdfUA {
             insertCell(opiningReportDetailsTable, aReportDetailsForForthCurrency + " ", Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, "----------------------------", Element.ALIGN_CENTER, 2, font);
-        }
+        }*/
         PdfPTable posSalesTable = new PdfPTable(2);
         posSalesTable.deleteBodyRows();
         posSalesTable.setRunDirection(0);
@@ -1653,10 +1653,11 @@ public class PdfUA {
         document.add(headingTable);
         document.add(dataTable);
         document.add(opiningReportTable);
-        if(SETTINGS.enableCurrencies){
+      /*  if(SETTINGS.enableCurrencies){
             document.add(opiningReportDetailsTable);
 
         }
+ */
         document.add(posSalesTable);
         document.close();
         //end :)
@@ -1968,6 +1969,9 @@ public class PdfUA {
         }
         if(customerInfo!=null) {
             insertCell(headingTable, context.getString(R.string.provider) + ":" + customerInfo.getString("firstName") + customerInfo.getString("lastName"), Element.ALIGN_LEFT, 1, dateFont);
+        }else {
+            insertCell(headingTable, context.getString(R.string.provider) + ":" + context.getString(R.string.general), Element.ALIGN_LEFT, 1, dateFont);
+
         }
         insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
 

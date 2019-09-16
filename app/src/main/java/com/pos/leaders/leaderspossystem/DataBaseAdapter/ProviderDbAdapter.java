@@ -350,8 +350,8 @@ public class ProviderDbAdapter {
         return true;
     }
 
-    public boolean availableProviderPhoneNo(String customerPhone) {
-        Cursor cursor = db.query(PROVIDER_TABLE_NAME, null, PROVIDER_COLUMN_PHONE_NUMBER + "=?", new String[]{customerPhone}, null, null, null);
+    public boolean availableProviderId(String customerPhone) {
+        Cursor cursor = db.query(PROVIDER_TABLE_NAME, null, PROVIDER_IDENTITY + "=?", new String[]{customerPhone}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             return false;

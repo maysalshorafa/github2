@@ -193,7 +193,7 @@ public class InInventoryDoc extends AppCompatActivity {
                 caseInventory=false;
                 inventoryIn.setBackgroundResource(R.drawable.bt_normal);
                 inventoryOut.setBackgroundResource(R.drawable.bt_dark_pressed);
-                if(provider!=null){
+              //  if(provider!=null){
                     final Inventory finalIn = in;
                     new AsyncTask<Void, Void, Void>(){
                         @Override
@@ -238,7 +238,13 @@ public class InInventoryDoc extends AppCompatActivity {
                             JSONObject providerData = new JSONObject();
                             try {
                                 ObjectMapper mapper = new ObjectMapper();
-                                providerData.put("providerId", provider.getProviderId());
+                                if(provider==null){
+                                    providerData.put("providerId",0);
+
+                                }else {
+                                    providerData.put("providerId", provider.getProviderId());
+
+                                }
                                 Log.d("productHashMap",productHashMap.toString());
                                 InInventory documents = new InInventory("InInventory", new Timestamp(System.currentTimeMillis()), inventory.getInventoryId(), productHashMap, SESSION._EMPLOYEE.getEmployeeId());
                                 String doc = mapper.writeValueAsString(documents);
@@ -282,11 +288,11 @@ public class InInventoryDoc extends AppCompatActivity {
                             return null;
                         }
                     }.execute();}
-                else {
+              /*  else {
                     Toast.makeText(InInventoryDoc.this, "Please determine your provider .", Toast.LENGTH_LONG).show();
-                }
+                }*/
 
-            }
+
         });
         inventoryOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -306,7 +312,7 @@ public class InInventoryDoc extends AppCompatActivity {
                 caseInventory=true;
                 inventoryIn.setBackgroundResource(R.drawable.bt_dark_pressed);
                 inventoryOut.setBackgroundResource(R.drawable.bt_normal);
-                if(provider!=null){
+              //  if(provider!=null){
                     final InvoiceImg invoiceImg1 = new InvoiceImg(getApplicationContext());
                     final Inventory finalIn = in;
                     new AsyncTask<Void, Void, Void>(){
@@ -350,7 +356,13 @@ public class InInventoryDoc extends AppCompatActivity {
                             JSONObject providerData = new JSONObject();
                             try {
                                 ObjectMapper mapper = new ObjectMapper();
-                                providerData.put("providerId", provider.getProviderId());
+                                if(provider==null){
+                                    providerData.put("providerId",0);
+
+                                }else {
+                                    providerData.put("providerId", provider.getProviderId());
+
+                                }
                                 Log.d("productHashMap",productHashMap.toString());
                                 InInventory documents;
                                     documents = new InInventory("OutInventory", new Timestamp(System.currentTimeMillis()), inventory.getInventoryId(), productHashMap, SESSION._EMPLOYEE.getEmployeeId());
@@ -396,10 +408,11 @@ public class InInventoryDoc extends AppCompatActivity {
                             }
                             return null;
                         }
-                    }.execute();}
+                    }.execute();
+                /*}
                 else {
                     Toast.makeText(InInventoryDoc.this, "Please determine your provider.", Toast.LENGTH_LONG).show();
-                }
+                }*/
 
 
             }

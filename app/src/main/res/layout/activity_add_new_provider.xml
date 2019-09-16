@@ -31,10 +31,9 @@
 
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="111dp"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="15dp"
-                    android:layout_weight="1.7"
                     android:orientation="vertical"
                     android:weightSum="4">
 
@@ -63,14 +62,14 @@
                         android:textSize="20dp"
                         android:textStyle="bold" />
 
+
                     <TextView
-                        android:id="@+id/add_new_provider_textView10"
                         android:layout_width="wrap_content"
                         android:layout_height="70dp"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:padding="8dp"
-                        android:text="@string/phone_number"
+                        android:text="@string/provider_id"
                         android:textAlignment="textStart"
                         android:textColor="@color/black"
                         android:textSize="20dp"
@@ -121,14 +120,13 @@
                         android:padding="8dp" />
 
                     <EditText
-                        android:id="@+id/etProviderPhoneNumber"
+                        android:id="@+id/etProviderId"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="15dp"
                         android:layout_weight="1"
                         android:background="@drawable/bubble"
-                        android:hint="@string/phone_number"
-                        android:inputType="phone"
+                        android:hint="@string/provider_id"
                         android:padding="8dp" />
 
                     <Spinner
@@ -266,12 +264,13 @@
                             android:textSize="20dp"
                             android:textStyle="bold" />
                         <TextView
+                            android:id="@+id/add_new_provider_textView10"
                             android:layout_width="wrap_content"
                             android:layout_height="70dp"
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:padding="8dp"
-                            android:text="@string/provider_id"
+                            android:text="@string/phone_number"
                             android:textAlignment="textStart"
                             android:textColor="@color/black"
                             android:textSize="20dp"
@@ -369,16 +368,17 @@
                             android:background="@drawable/bubble"
                             android:hint="@string/provider_code_in_another_programme"
                             android:padding="8dp" />
+
                         <EditText
-                            android:id="@+id/etProviderId"
+                            android:id="@+id/etProviderPhoneNumber"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginTop="15dp"
                             android:layout_weight="1"
                             android:background="@drawable/bubble"
-                            android:hint="@string/provider_id"
+                            android:hint="@string/phone_number"
+                            android:inputType="phone"
                             android:padding="8dp" />
-
                     </LinearLayout>
 
 

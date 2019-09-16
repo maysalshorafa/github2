@@ -36,7 +36,7 @@ import java.util.List;
 
 public class AddNewProvider extends AppCompatActivity implements AdapterView.OnItemSelectedListener  {
 
-    String street="" , job="" , email="" , houseNo="" , postalCode="" , country="" , countryCode="",providerCode="",strProviderId="";
+    String street="" , job="" , email="" , houseNo="" , postalCode="" , country="" , countryCode="",providerCode="", strProviderPhone ="";
     int cityId=0,branchId=0;
     EditText etProviderFirstName, etProviderLastName, etStreet, etJob, etEmail, etPhoneNo, etHouseNumber, etPostalCode, etCountry, etCountryCode,etProviderCode,etProviderId;
     Button btAddProvider, btCancel;
@@ -163,7 +163,7 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
                             country = etCountry.getText().toString();
                             countryCode = etCountryCode.getText().toString();
                             providerCode = etProviderCode.getText().toString();
-                            strProviderId = etProviderId.getText().toString();
+                            strProviderPhone = etPhoneNo.getText().toString();
                             cityId = (int) selectCitySpinner.getSelectedItemId();
 
                         }
@@ -174,18 +174,18 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
                         } else if (etProviderLastName.getText().toString().equals("")) {
                             etProviderLastName.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_last_name), Toast.LENGTH_LONG).show();
-                        } else if (etPhoneNo.getText().toString().equals("")) {
-                            etPhoneNo.setBackgroundResource(R.drawable.backtext);
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
-                        } else if (!providerDbAdapter.availableProviderPhoneNo(etPhoneNo.getText().toString())) {
-                            etPhoneNo.setBackgroundResource(R.drawable.backtext);
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
+                        } else if (etProviderId.getText().toString().equals("")) {
+                            etProviderId.setBackgroundResource(R.drawable.backtext);
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_provider_id), Toast.LENGTH_LONG).show();
+                        } else if (!providerDbAdapter.availableProviderId(etPhoneNo.getText().toString())) {
+                            etProviderId.setBackgroundResource(R.drawable.backtext);
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_provider_id), Toast.LENGTH_LONG).show();
                         } else {
                             long i = 0;
                             try {
                                 i = providerDbAdapter.insertEntry(etProviderFirstName.getText().toString(),
                                         etProviderLastName.getText().toString(), gender, email, job, etPhoneNo.getText().toString(), street, cityId, houseNo, etPostalCode.getText().toString(),
-                                        country, countryCode, 0, providerCode, strProviderId, branchId);
+                                        country, countryCode, 0, providerCode, etProviderId.getText().toString(), branchId);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -214,7 +214,7 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
                             country = etCountry.getText().toString();
                             countryCode = etCountryCode.getText().toString();
                             providerCode = etProviderCode.getText().toString();
-                            strProviderId = etProviderId.getText().toString();
+                            strProviderPhone = etPhoneNo.getText().toString();
                             for (int i = 0; i < cityList.size(); i++) {
                                 City city = cityList.get(i);
                                 if (city.getName().equalsIgnoreCase(selectCitySpinner.getSelectedItem().toString())) {
@@ -228,14 +228,14 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
                             } else if (etProviderLastName.getText().toString().equals("")) {
                                 etProviderLastName.setBackgroundResource(R.drawable.backtext);
                                 Toast.makeText(getApplicationContext(), getString(R.string.please_insert_last_name), Toast.LENGTH_LONG).show();
-                            } else if (etPhoneNo.getText().toString().equals("")) {
-                                etPhoneNo.setBackgroundResource(R.drawable.backtext);
-                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
+                            } else if (etProviderId.getText().toString().equals("")) {
+                                etProviderId.setBackgroundResource(R.drawable.backtext);
+                                Toast.makeText(getApplicationContext(), getString(R.string.please_insert_provider_id), Toast.LENGTH_LONG).show();
                             } else {
                                 try {
                                     provider.setFirstName(etProviderFirstName.getText().toString());
                                     provider.setLastName(etProviderLastName.getText().toString());
-                                    provider.setPhoneNumber(etPhoneNo.getText().toString());
+                                    provider.setProviderIdentity(etProviderId.getText().toString());
                                     if (secondProviderInformation.getVisibility() == View.VISIBLE) {
                                         provider.setBranchId(branchId);
                                         provider.setJob(job);
@@ -246,7 +246,7 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
                                         provider.setCountry(country);
                                         provider.setCountryCode(countryCode);
                                         provider.setProviderCode(providerCode);
-                                        provider.setProviderIdentity(strProviderId);
+                                        provider.setPhoneNumber(strProviderPhone);
                                         provider.setGender(gender);
                                         provider.setCity(cityId);
                                     }
