@@ -145,6 +145,7 @@ public class MonthZReportView extends AppCompatActivity {
         zReportDBAdapter.open();
         zReportList=new ArrayList<>();
         zReportList = zReportDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime()+ DAY_MINUS_ONE_SECOND);
+        zReportList.remove(zReportList.get(0));
         if(zReportList.size()>0){
             imageView.setVisibility(View.VISIBLE);
             ZReport zReport = null;
