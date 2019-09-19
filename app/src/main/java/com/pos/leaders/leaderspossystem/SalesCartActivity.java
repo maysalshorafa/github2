@@ -4286,6 +4286,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         }
                     }
                     currencyReturnsCustomDialogActivity.show();
+                    clearCart();
 
                     return;
                 } catch (Exception e) {

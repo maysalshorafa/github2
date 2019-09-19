@@ -87,7 +87,6 @@ public class PrinterTools {
 
                 posInterfaceAPI.CloseDevice();
                 dialog.cancel();
-                activity.finish();
 
             }
 
@@ -160,7 +159,6 @@ public class PrinterTools {
 
 
             dialog.cancel();
-           activity.finish();
         } else {
             new android.support.v7.app.AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                     .setTitle(context.getString(R.string.printer))
@@ -206,7 +204,6 @@ public class PrinterTools {
 
 
                     dialog.cancel();
-                    activity.finish();
                 }
 
                 @Override
@@ -407,7 +404,6 @@ public class PrinterTools {
                     //feed paper
 
                     dialog.cancel();
-                    activity.finish();
                 }
 
                 @Override
