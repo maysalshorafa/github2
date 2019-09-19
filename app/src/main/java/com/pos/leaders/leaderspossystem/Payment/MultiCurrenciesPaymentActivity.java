@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.ChecksActivity;
 import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
@@ -28,6 +29,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.SalesCartActivity;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -251,7 +253,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             currencyRow=currency;
             Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ChecksActivity.class);
 
-            intent.putExtra("_Price", val);
+            intent.putExtra("_Price", val*currencyRate);
             intent.putExtra("_custmer", "general");
 
             startActivityForResult(intent, REQUEST_CHECKS_ACTIVITY_CODE);
@@ -261,9 +263,13 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             currentMethod= CONSTANT.CREDIT_CARD;
             valRow=val;
             currencyRow=currency;
-            Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, MainCreditCardActivity.class);
-            intent.putExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, val);
-            startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
+            if(SETTINGS.creditCardEnable) {
+                Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, MainCreditCardActivity.class);
+                intent.putExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, val * currencyRate);
+                startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
+            }else {
+                Toast.makeText(MultiCurrenciesPaymentActivity.this,R.string.please_enable_credit_card,Toast.LENGTH_LONG).show();
+            }
 
         }
       /*  }

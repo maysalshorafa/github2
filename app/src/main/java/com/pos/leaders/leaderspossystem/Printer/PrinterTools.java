@@ -18,6 +18,7 @@ import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
+import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.sun.pdfview.PDFFile;
@@ -118,7 +119,6 @@ public class PrinterTools {
                 }
                 InvoiceImg invoiceImg = new InvoiceImg(context);
                 Log.d("payyyyy",SESSION._ORDERS.getPayment().toString());
-                pos.imageStandardModeRasterPrint(newBitmap, CONSTANT.PRINTER_PAGE_WIDTH);
 
               //  pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null), CONSTANT.PRINTER_PAGE_WIDTH);
 
@@ -157,26 +157,7 @@ public class PrinterTools {
             {
 
             }
-         try {
-                    Bitmap bitmap = newBitmap;
-                 AidlUtil.getInstance().printBitmap(bitmap);
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                //cut
-                AidlUtil.getInstance().print3Line();
-                AidlUtil.getInstance().cut();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            try {
-                AidlUtil.getInstance().openCashBox();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
             dialog.cancel();
            activity.finish();
@@ -256,14 +237,7 @@ public class PrinterTools {
                     {
 
                     }
-                  InvoiceImg invoiceImg = new InvoiceImg(context);
-                    byte b = 0;
-                    try {
-                        Bitmap bitmap =newBitmap;
-                        HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
 
-                    } catch (Exception e) {
-                    }
                     return null;
                 }
             }.execute();
@@ -287,10 +261,47 @@ public class PrinterTools {
                 {
                     Log.d("bitmapsize2222",bitmapList.size()+"");
                         newBitmap = combineImageIntoOne(bitmapList);
+                    byte b = 0;
+                    if(SETTINGS.printer.equals(PrinterType.HPRT_TP805)){
                     try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
+                        Bitmap bitmap =newBitmap;
+                        HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
+
+                    } catch (Exception e) {
+                    }
+                    try {
+                        HPRTPrinterHelper.CutPaper(0,300);
+                    } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                    }else if(SETTINGS.printer.equals(PrinterType.SUNMI_T1)){
+                        try {
+                            Bitmap bitmap = newBitmap;
+                            AidlUtil.getInstance().printBitmap(bitmap);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            //cut
+                            AidlUtil.getInstance().print3Line();
+                            AidlUtil.getInstance().cut();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            AidlUtil.getInstance().openCashBox();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else if(SETTINGS.printer.equals(PrinterType.BTP880)){
+                        pos.imageStandardModeRasterPrint(newBitmap, CONSTANT.PRINTER_PAGE_WIDTH);
+
+                    }else if(SETTINGS.printer.equals(PrinterType.SM_S230I)){
+                        printSMS230(newBitmap,context);
+
                     }
                     //    pt.PrintReport(newBitmap);
                     //after async close progress dialog
@@ -430,7 +441,6 @@ public class PrinterTools {
 
                         }
                             Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null);
-                           printSMS230(newBitmap,context);
 
                     } catch (Exception e) {
                         e.printStackTrace();

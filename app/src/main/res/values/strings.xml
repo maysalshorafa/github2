@@ -300,9 +300,7 @@
     <string name="success_to_save_settings">Success to save settings.</string>
     <string name="fail_to_save_settings">Fail to save settings.</string>
     <string name="pref_title_social_recommendations" translatable="false">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations" translatable="false">Recommendations for people to contact
-        based on your message history
-    </string>
+    <string name="please_enable_credit_card">Please Enable Credit Card</string>
     <string name="fail_to_make_internet_connection">Fail to Make Internet Connection.</string>
 
 
@@ -645,15 +643,15 @@
     <string name="title_activity_category_activity">Category Activity</string>
     <string name="title_activity_products_activity">Products Activity</string>
     <string name="title_activity_pinpad">Pin-Pad Activity</string>
-    <string name="multi_currencies_payment_activity">MultiCurrenciesPaymentActivity</string>
+    <string name="multi_currencies_payment_activity">Multi Currencies Payment</string>
     <string name="create_offer_activity">CreateOfferActivity</string>
-    <string name="create_offer_category_activity">CreateCategoryOfferActivity</string>
-    <string name="management_offer_activity">ManagementOfferActivity</string>
-    <string name="invoice_management_activity">Invoice ManagementActivity</string>
+    <string name="create_offer_category_activity">Create Category Offer</string>
+    <string name="management_offer_activity">Management Offer</string>
+    <string name="invoice_management_activity">Invoice Management</string>
     <string name="closing_report_activity">Closing Report Activity</string>
-    <string name="order_document_management_activity">Order Document ManagementActivity</string>
-    <string name="create_credit_invoice_management_activity">Create Credit Invoice ManagementActivity</string>
-    <string name="view_credit_invoice_management_activity">View Credit Invoice ManagementActivity</string>
+    <string name="order_document_management_activity">Order Document Management</string>
+    <string name="create_credit_invoice_management_activity">Create Credit Invoice Management</string>
+    <string name="view_credit_invoice_management_activity">View Credit Invoice Management</string>
     <string name="currency_is_activated_in_pos">Currency is activated in POS</string>
     <string name="currency_is_not_activated_in_pos">Currency is not activated in POS</string>
     <string name="credit_card_is_activated_in_pos">Credit Card is activated in POS</string>
@@ -734,6 +732,10 @@
     <string name="serial_no">Serial Number</string>
     <string name="start">Start</string>
 
+    <string name="inventory_management_activity">Inventory Management</string>
+    <string name="provider_management_activity">Provider Management</string>
+    <string name="in_inventory_doc">In Inventory</string>
+    <string name="deposit_and_pull_reportView">Deposit And Pull Report View</string>
 
 </resources>
 

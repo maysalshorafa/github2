@@ -127,7 +127,8 @@
                         android:layout_weight="1"
                         android:background="@drawable/bubble"
                         android:hint="@string/provider_id"
-                        android:padding="8dp" />
+                        android:padding="8dp"
+                        android:inputType="numberDecimal"/>
 
                     <Spinner
                         android:id="@+id/providerClubSpinner"

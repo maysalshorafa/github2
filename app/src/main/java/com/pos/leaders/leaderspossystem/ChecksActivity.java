@@ -99,7 +99,7 @@ public class ChecksActivity extends AppCompatActivity {
         if (extras != null) {
             totalPrice = (double) extras.get("_Price");
 			customer_name =(String)extras.get("_custmer");
-            tv.setText(totalPrice + " " + getResources().getText(R.string.ins));
+            tv.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
 			tvCheckCustomer.setText(customer_name);
 			if(extras.containsKey("checksReceipt")){
 				try {

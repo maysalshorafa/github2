@@ -40,6 +40,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
+import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Models.DepositAndPullReport;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
@@ -71,6 +72,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static com.pos.leaders.leaderspossystem.Tools.Util.currencyOperationPaymentList;
@@ -1905,7 +1907,43 @@ public class PdfUA {
         }
         Paragraph p =new Paragraph();
 
+        PdfPTable endOfInvoice = new PdfPTable(2);
+        endOfInvoice.deleteBodyRows();
+        endOfInvoice.setRunDirection(0);
+        insertCell(endOfInvoice,context.getString(R.string.cashier)+":",Element.ALIGN_CENTER,1,urFontName);
 
+        insertCell(endOfInvoice,SESSION._EMPLOYEE.getEmployeeName(),Element.ALIGN_CENTER,1,urFontName);
+        insertCell(endOfInvoice, " ", Element.ALIGN_CENTER,2, urFontName);
+
+        if(order.getCustomer().getCustomerType().equals(CustomerType.CREDIT)) {
+            insertCell(endOfInvoice, context.getString(R.string.customer_ledger) + ":", Element.ALIGN_CENTER, 1, urFontName);
+
+            insertCell(endOfInvoice, SESSION._ORDERS.CustomerLedger+"", Element.ALIGN_CENTER,1, urFontName);
+        }
+        insertCell(endOfInvoice, " ", Element.ALIGN_CENTER,2, urFontName);
+
+        insertCell(endOfInvoice, context.getString(R.string.date) + ":", Element.ALIGN_CENTER, 1, urFontName);
+
+            insertCell(endOfInvoice,  DateConverter.DateToString(order.getCreatedAt())+"", Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(endOfInvoice, " ", Element.ALIGN_CENTER,2, urFontName);
+
+        if(isCopy) {
+              insertCell(endOfInvoice, context.getString(R.string.copy_date) + ":", Element.ALIGN_CENTER, 1, urFontName);
+
+            insertCell(endOfInvoice, DateConverter.currentDateTime() + "", Element.ALIGN_CENTER, 1, urFontName);
+            insertCell(endOfInvoice, " ", Element.ALIGN_CENTER,2, urFontName);
+
+        }
+
+        String s = context.getString(R.string.ins);
+        insertCell(endOfInvoice, context.getString(R.string.total_saved)+ " :", Element.ALIGN_CENTER, 1, urFontName);
+
+        insertCell(endOfInvoice,  String.format(new Locale("en"), "%.2f %s", SESSION._ORDERS.totalSaved, s), Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(endOfInvoice, " ", Element.ALIGN_CENTER,2, urFontName);
+
+        insertCell(endOfInvoice, SETTINGS.returnNote, Element.ALIGN_CENTER, 1, urFontName);
+
+        insertCell(endOfInvoice,  "", Element.ALIGN_CENTER, 1, urFontName);
         //add table to document
         document.add(headingTable);
         document.add(table);
@@ -1921,6 +1959,7 @@ public class PdfUA {
             p.add(str);
             document.add(p);
         }
+        document.add(endOfInvoice);
 
         document.close();
     }
@@ -1930,9 +1969,9 @@ public class PdfUA {
         JSONObject jsonObject = new JSONObject(res);
         JSONObject documentsData = jsonObject.getJSONObject("documentsData");;
         JSONObject customerInfo=null;
-        if(source=="inInventory") {
+   /*     if(source=="inInventory") {
             customerInfo = new JSONObject(documentsData.getJSONObject("provider").toString());
-        }
+        }*/
       //  JSONObject userInfo = new JSONObject(documentsData.getJSONObject("user").toString());
 
         // create file , document region

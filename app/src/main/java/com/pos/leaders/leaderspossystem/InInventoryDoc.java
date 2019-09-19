@@ -126,22 +126,12 @@ public class InInventoryDoc extends AppCompatActivity {
                 try {
                     if(invoiceJsonObject.getString("status").equals("200")) {
                          try {
-                                    try {
-                                        Thread.sleep(3000);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                            }
                             File path = new File(Environment.getExternalStorageDirectory(), context.getPackageName());
                             File file = new File(path, SAMPLE_FILE);
                             RandomAccessFile f = new RandomAccessFile(file, "r");
                             byte[] data = new byte[(int) f.length()];
                             f.readFully(data);
                             DocumentControl.pdfLoadImagesOpiningReport(data, context);
-                             try {
-                                 Thread.sleep(3000);
-                             } catch (InterruptedException e) {
-                                 e.printStackTrace();
-                             }
                             finalListViewProduct=new ArrayList<ProductInventory>();
                             adapter1= new InventoryProductDetailsListViewAdapter(getApplicationContext(),R.layout.list_adapter_row_nventory_product_details,finalListViewProduct);
                             finalProductListView.setAdapter(adapter1);
@@ -273,12 +263,6 @@ public class InInventoryDoc extends AppCompatActivity {
                                 invoiceNum = msgDataJson.getString("docNum");
                                 Log.d("Invoice log res", res+"");
                                 Log.d("Invoice Num", invoiceNum);
-
-                                try {
-                                    Thread.sleep(100);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
 
                             } catch (IOException e) {
                                 e.printStackTrace();

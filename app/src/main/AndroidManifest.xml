@@ -37,7 +37,8 @@
         <activity android:name=".HomeActivity" />
         <activity
             android:name=".SplashScreenActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -225,11 +226,16 @@
         <activity
             android:name=".CategoryOfferActivity"
             android:label="@string/create_offer_category_activity" />
-        <activity android:name=".AddNewProvider" />
-        <activity android:name=".InventoryManagementActivity" />
-        <activity android:name=".ProviderManagementActivity" />
-        <activity android:name=".InInventoryDoc" />
-        <activity android:name=".DepositAndPullReportView"></activity>
+        <activity android:name=".AddNewProvider"
+            android:label="@string/add_new_provider"/>
+        <activity android:name=".InventoryManagementActivity"
+            android:label="@string/inventory_management_activity"/>
+        <activity android:name=".ProviderManagementActivity"
+            android:label="@string/provider_management_activity"/>
+        <activity android:name=".InInventoryDoc"
+           android:label="@string/in_inventory_doc" />
+        <activity android:name=".DepositAndPullReportView"
+           android:label="@string/deposit_and_pull_reportView" ></activity>
     </application>
 
 </manifest>

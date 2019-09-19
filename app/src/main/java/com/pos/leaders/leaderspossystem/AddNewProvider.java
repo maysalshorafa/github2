@@ -177,7 +177,7 @@ public class AddNewProvider extends AppCompatActivity implements AdapterView.OnI
                         } else if (etProviderId.getText().toString().equals("")) {
                             etProviderId.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_provider_id), Toast.LENGTH_LONG).show();
-                        } else if (!providerDbAdapter.availableProviderId(etPhoneNo.getText().toString())) {
+                        } else if (!providerDbAdapter.availableProviderId(etProviderId.getText().toString())) {
                             etProviderId.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_provider_id), Toast.LENGTH_LONG).show();
                         } else {
