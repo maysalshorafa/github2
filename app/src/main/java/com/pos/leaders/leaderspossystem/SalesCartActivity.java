@@ -61,6 +61,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
@@ -156,6 +157,7 @@ import POSAPI.POSInterfaceAPI;
 import POSAPI.POSUSBAPI;
 import POSSDK.POSSDK;
 
+import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
@@ -183,7 +185,7 @@ public class SalesCartActivity extends AppCompatActivity {
     //ImageButton    btnLastSales;
     Button btnPercentProduct, btnPauseSale, btnResumeSale;
     ImageButton search_person;
-    Button btnPayment, createInvoice;
+    Button btnPayment, createInvoice , othersChoice;
     TextView tvTotalPrice;
     TextView tvTotalSaved;
     TextView salesSaleMan;
@@ -402,7 +404,9 @@ public class SalesCartActivity extends AppCompatActivity {
         salesSaleMan = (TextView) findViewById(R.id.salesSaleMan);
         customerBalance = (TextView) findViewById(R.id.customerBalance);
         createInvoice = (Button)findViewById(R.id.mainActivity_BTNInvoice);
-    //    payment_by_customer_credit = (TextView)findViewById(R.id.mainActivity_payment_by_customer_credit);
+        othersChoice = (Button)findViewById(R.id.mainActivity_btnOthers);
+
+        //    payment_by_customer_credit = (TextView)findViewById(R.id.mainActivity_payment_by_customer_credit);
         custmerAssetstIdList = new ArrayList<Long>();
         orderIdList = new ArrayList<OrderDetails>();
         orderId = new ArrayList<Long>();
@@ -567,6 +571,141 @@ public class SalesCartActivity extends AppCompatActivity {
             }
         });
 
+        othersChoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String[] items = {
+                        getString(R.string.cancel_invoice),
+                        getString(R.string.copyinvoice),getString(R.string.replacement_invoice)
+
+                };;
+                final OrderDBAdapter orderDBAdapter =new OrderDBAdapter(context);
+                orderDBAdapter.open();
+                final Order lastOrder=orderDBAdapter.getLast();
+                ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(SalesCartActivity.this);
+                checksDBAdapter.open();
+                final ArrayList<Check>checks=new ArrayList<Check>();
+                checks.addAll(checksDBAdapter.getPaymentBySaleID(lastOrder.getOrderId()));
+                checksDBAdapter.close();
+                AlertDialog.Builder builder = new AlertDialog.Builder(SalesCartActivity.this);
+                builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        Intent intent;
+                        switch (item) {
+                            case 0:
+
+                                long sID = orderDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), lastOrder.getReplacementNote(), true, lastOrder.getTotalPrice() * -1, lastOrder.getTotalPaidAmount() * -1, lastOrder.getCustomerId(), lastOrder.getCustomer_name(),lastOrder.getCartDiscount(),lastOrder.getNumberDiscount(),lastOrder.getOrderId());
+                                Order order = orderDBAdapter.getOrderById(sID);
+                                lastOrder.setCancellingOrderId(sID);
+                                orderDBAdapter.updateEntry(lastOrder);
+                                PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(SalesCartActivity.this);
+                                paymentDBAdapter1.open();
+                                paymentDBAdapter1.insertEntry( lastOrder.getTotalPrice() * -1, sID,order.getOrderKey());
+                                paymentDBAdapter1.close();
+                                CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(SalesCartActivity.this);
+                                cashPaymentDBAdapter.open();
+                                cashPaymentDBAdapter.insertEntry(sID,lastOrder.getTotalPrice() * -1,0,new Timestamp(System.currentTimeMillis()),1,1);
+                                CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(SalesCartActivity.this);
+                                currencyOperationDBAdapter.open();
+                                CurrencyReturnsDBAdapter currencyReturnsDBAdapter =new CurrencyReturnsDBAdapter(SalesCartActivity.this);
+                                currencyReturnsDBAdapter.open();
+                                if(SETTINGS.enableCurrencies){
+                                    currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),sID,CONSTANT.DEBIT,lastOrder.getTotalPaidAmount() * -1,"ILS",CONSTANT.CASH);
+                                    currencyReturnsDBAdapter.insertEntry(lastOrder.getOrderId(),(lastOrder.getTotalPaidAmount()-lastOrder.getTotalPrice())*-1,new Timestamp(System.currentTimeMillis()),0);
+                                }
+                                if (checks.size() > 0) {
+                                    try {
+                                        Intent i = new Intent(SalesCartActivity.this, SalesHistoryCopySales.class);
+                                        SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(sale, false, checks);
+                                        startActivity(i);
+                                    } catch (Exception e) {
+                                        Log.d("exception", lastOrder.toString());
+                                        Log.d("exception", e.toString());
+                                        sendLogFile();
+                                    }
+                                }else {
+                                    try {
+                                        Intent i = new Intent(SalesCartActivity.this, SalesHistoryCopySales.class);
+                                        SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(lastOrder, false, null);
+                                        startActivity(i);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Log.d("exception", lastOrder.toString());
+                                        Log.d("exception", e.toString());
+                                        sendLogFile();
+                                    }
+                                }
+                                break;
+                            case 1:
+                                /*OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(context);
+                                orderDetailsDBAdapter.open();
+                                List<OrderDetails>orderDetailsList=orderDetailsDBAdapter.getOrderBySaleID(lastOrder.getOrderId());
+                                if (checks.size() > 0){
+                                    try {
+                                        Intent i = new Intent(SalesCartActivity.this, SalesHistoryCopySales.class);
+                                        SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(lastOrder.getOrderId(), orderDetailsList, lastOrder, true, SESSION._EMPLOYEE, checks);
+                                        startActivity(i);
+                                    }catch (Exception e){
+                                        e.printStackTrace();
+                                        Log.d("exception",lastOrder.toString());
+
+                                        Log.d("exception",lastOrder.toString());
+                                        sendLogFile();
+
+                                    }
+
+                                    // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._EMPLOYEE, checks));
+                                }
+                                else{
+                                    try {
+                                        SESSION._TEMP_ORDER_DETAILES=orderDetailsList;
+                                        SESSION._TEMP_ORDERS=lastOrder;
+                                        SESSION._Rest();
+                                        PrinterTools.printAndOpenCashBox("", "", "", 600,SalesCartActivity.this,getParent());
+                                        /**Customer customer1 =sale.getCustomer();
+                                         Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                         SETTINGS.copyInvoiceBitMap =invoiceImg.copyInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, null);
+                                         startActivity(i);
+                                    }catch (Exception e){
+                                        e.printStackTrace();
+                                        Log.d("exception",lastOrder.toString());
+                                        Log.d("exception",e.toString());
+                                        e.printStackTrace();
+                                        sendLogFile();
+                                    }
+                                }*/
+                                break;
+                            case 2:
+                                OrderDBAdapter saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
+                                saleDBAdapter.open();
+                                lastOrder.setReplacementNote(lastOrder.getReplacementNote() + 1);
+                                saleDBAdapter.updateEntry(lastOrder);
+                                saleDBAdapter.close();
+                                try {
+                                    Intent i = new Intent(SalesCartActivity.this, SalesHistoryCopySales.class);
+                                    SETTINGS.copyInvoiceBitMap =invoiceImg.replacmentNote(lastOrder,false);
+                                    startActivity(i);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                    Log.d("exception",lastOrder.toString());
+                                    Log.d("exception",e.toString());
+                                    sendLogFile();
+                                }
+                                break;
+
+
+                        }
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+
+
+
+    }
+        });
         //endregion
 
         //region Products Catalog
@@ -1181,6 +1320,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 btnDiscount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (SESSION._ORDER_DETAILES.size() > 0) {
                         if(selectedOrderOnCart.getUnitPrice()<=0) {
                             //todo show message cant implement discount on credit item
                             return;
@@ -1465,6 +1605,7 @@ public class SalesCartActivity extends AppCompatActivity {
                             }
                         } else {
                             Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.please_add_item), Toast.LENGTH_SHORT);
+                        }
                         }
 
                     }
@@ -1974,7 +2115,7 @@ public class SalesCartActivity extends AppCompatActivity {
         btnPercentProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SESSION._ORDERS != null && SESSION._ORDER_DETAILES != null) {
+                if (SESSION._ORDERS != null && SESSION._ORDER_DETAILES != null&&SESSION._ORDER_DETAILES.size()>0) {
                     final Dialog discountDialog = new Dialog(SalesCartActivity.this);
                     discountDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     //discountDialog.setTitle(R.string.please_select_discount_offer);
@@ -2418,8 +2559,8 @@ public class SalesCartActivity extends AppCompatActivity {
         clubAmount = 0;
         Ppoint = 0;
         salesSaleMan.setText(getString(R.string.sales_man));
-        SESSION._ORDERS.cartDiscount = 0;
-        SESSION._ORDERS.setCartDiscount(0);
+       // SESSION._ORDERS.cartDiscount = 0;
+       // SESSION._ORDERS.setCartDiscount(0);
         SESSION._Rest();
         customerName_EditText.setText("");
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
@@ -2747,10 +2888,13 @@ public class SalesCartActivity extends AppCompatActivity {
         //test if cart have this order before insert to cart and order have'nt discount
         for (int i = 0; i < SESSION._ORDER_DETAILES.size(); i++) {
             OrderDetails o = SESSION._ORDER_DETAILES.get(i);
-            //Log.d("ORDER_DETAILS", o.toString());
+            Product p1=productDBAdapter.getProductByID(o.getProductId());
+            o.setProduct(p1);
+            Log.d("ORDER_DETAILS", o.toString());
             //Log.d("Product", p.toString());
             if(p.getProductId()!=-1){
                 if(p.getUnit().equals(ProductUnit.QUANTITY)){
+
                     if(!o.getProduct().isWithSerialNumber()){
                     if (o.getProduct().equals(p) && o.getProduct().getProductId() != -1&&!o.giftProduct&&o.scannable&&o.getProduct().getOfferId()==0) {
                 SESSION._ORDER_DETAILES.get(i).setCount(SESSION._ORDER_DETAILES.get(i).getQuantity() + 1);
@@ -4157,11 +4301,11 @@ public class SalesCartActivity extends AppCompatActivity {
                     SESSION._ORDERS.setOrderId(saleIDforCash);
                     SESSION._ORDERS.setNumberDiscount(order.getNumberDiscount());
                     if(saleTotalPrice<0){
-                        currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,0,"ILS");
+                        currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,0,"ILS",CONSTANT.CASH);
 
                     }else {
                     for (int i = 0 ;i<paymentTableArrayList.size();i++){
-                        currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,paymentTableArrayList.get(i).getTendered(),paymentTableArrayList.get(i).getCurrency().getType());
+                        currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,paymentTableArrayList.get(i).getTendered(),paymentTableArrayList.get(i).getPaymentMethod(),paymentTableArrayList.get(i).getCurrency().getType());
                     }
                     }
                     long paymentID = paymentDBAdapter.insertEntry(saleTotalPrice, saleIDforCash,order.getOrderKey());
@@ -4285,9 +4429,11 @@ public class SalesCartActivity extends AppCompatActivity {
 
                         }
                     }
+                    SESSION._TEMP_ORDER_DETAILES=SESSION._ORDER_DETAILES;
+                    SESSION._TEMP_ORDERS=SESSION._ORDERS;
                     currencyReturnsCustomDialogActivity.show();
+                    SESSION._Rest();
                     clearCart();
-
                     return;
                 } catch (Exception e) {
 

@@ -10,23 +10,31 @@ import java.sql.Timestamp;
 public class CurrencyOperation {
     private long currencyOperationId;
     private Timestamp createdAt;
-    private long operation_id;
-    private String operation_type;
+    private long operationId;
+    private String operationType;
     private double amount;
-    private String currency_type;
-
+    private String currencyType;
+    private String paymentWay;
     public CurrencyOperation() {
     }
 
-    public CurrencyOperation(long currencyOperationId, Timestamp createdAt, long operation_id, String operation_type, double amount, String currency_type) {
+    public CurrencyOperation(long currencyOperationId, Timestamp createdAt, long operation_id, String operation_type, double amount, String currency_type,String payment_way) {
         this.currencyOperationId = currencyOperationId;
         this.createdAt = createdAt;
-        this.operation_id = operation_id;
-        this.operation_type = operation_type;
+        this.operationId = operation_id;
+        this.operationType = operation_type;
         this.amount = amount;
-        this.currency_type = currency_type;
+        this.currencyType = currency_type;
+        this.paymentWay =payment_way;
     }
 
+    public String getPaymentWay() {
+        return paymentWay;
+    }
+
+    public void setPaymentWay(String paymentWay) {
+        this.paymentWay = paymentWay;
+    }
 
     public long getCurrencyOperationId() {
         return currencyOperationId;
@@ -44,20 +52,20 @@ public class CurrencyOperation {
         this.createdAt = createdAt;
     }
 
-    public long getOperation_id() {
-        return operation_id;
+    public long getOperationId() {
+        return operationId;
     }
 
-    public void setOperation_id(long operation_id) {
-        this.operation_id = operation_id;
+    public void setOperationId(long operationId) {
+        this.operationId = operationId;
     }
 
-    public String getOperation_type() {
-        return operation_type;
+    public String getOperationType() {
+        return operationType;
     }
 
-    public void setOperation_type(String operation_type) {
-        this.operation_type = operation_type;
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
     }
 
     public double getAmount() {
@@ -68,12 +76,12 @@ public class CurrencyOperation {
         this.amount = amount;
     }
 
-    public String getCurrency_type() {
-        return currency_type;
+    public String getCurrencyType() {
+        return currencyType;
     }
 
-    public void setCurrency_type(String currency_type) {
-        this.currency_type = currency_type;
+    public void setCurrencyType(String currencyType) {
+        this.currencyType = currencyType;
     }
 
     @Override
@@ -81,10 +89,11 @@ public class CurrencyOperation {
         return "CurrencyOperation{" +
                 "currencyOperationId=" + currencyOperationId +
                 ", createdAt=" + createdAt +
-                ", operation_id=" + operation_id +
-                ", operation_type='" + operation_type + '\'' +
+                ", operationId=" + operationId +
+                ", operationType='" + operationType + '\'' +
                 ", amount=" + amount +
-                ", currency_type='" + currency_type + '\'' +
+                ", currencyType='" + currencyType + '\'' +
+                ", paymentWay='" + paymentWay + '\'' +
                 '}';
     }
 }

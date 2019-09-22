@@ -79,7 +79,12 @@ public class InInventoryDoc extends AppCompatActivity {
     ListView finalProductListView;
     GridView gvProduct;
     List<ProductInventory>filter_productList=new ArrayList<>();
+    List<ProductInventory>searchFilter_productList=new ArrayList<>();
+
     List<ProductInventory>finalListViewProduct;
+    List<Product> productList = new ArrayList();
+    int productLoadItemOffset=0;
+    int productCountLoad=80;
     InventoryProductDetailsListViewAdapter adapter ;
     View selectedIteminCartList;
     TextView  orderCount, orderTotalPrice , orderPrice;
@@ -94,6 +99,7 @@ public class InInventoryDoc extends AppCompatActivity {
     final String SAMPLE_FILE = "inventoryReport.pdf";
     ProductInventoryDbAdapter productInventoryDbAdapter;
     ProductDBAdapter productDBAdapter;
+    EditText ETSearch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +115,7 @@ public class InInventoryDoc extends AppCompatActivity {
         btnSave=(Button)findViewById(R.id.printInventory);
         gvProduct =(GridView)findViewById(R.id.inOutInventoryGvProducts);
         finalProductListView=(ListView)findViewById(R.id.inOutInventoryFinalProductListView);
+        ETSearch=(EditText)findViewById(R.id.InInventory_ETSearch);
         filter_productList=new ArrayList<>();
         finalListViewProduct=new ArrayList<>();
         productHashMap=new HashMap<>();
@@ -398,6 +405,61 @@ public class InInventoryDoc extends AppCompatActivity {
                     Toast.makeText(InInventoryDoc.this, "Please determine your provider.", Toast.LENGTH_LONG).show();
                 }*/
 
+
+            }
+        });
+        ETSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                String word = ETSearch.getText().toString();
+                if (!word.equals("")) {
+                    // Database query can be a time consuming task ..
+                    // so its safe to call database query in another thread
+                    // Handler, will handle this stuff
+                    new AsyncTask<String, Void, Void>() {
+                        @Override
+                        protected void onPreExecute() {
+                            searchFilter_productList = new ArrayList<ProductInventory>();
+                            productList = new ArrayList();
+                            super.onPreExecute();
+                        }
+
+                        @Override
+                        protected Void doInBackground(String... params) {
+                            try {
+                                Thread.sleep(200);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            productList = productDBAdapter.getAllProductsByHint(params[0], productLoadItemOffset, productCountLoad);
+                            for(int i=0;i<productList.size();i++){
+                                searchFilter_productList.add(productInventoryDbAdapter.getProductInventoryByID(productList.get(i).getProductId()));
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            ProductInventoryCatalogGridViewAdapter adapter = new ProductInventoryCatalogGridViewAdapter(getApplicationContext(), searchFilter_productList);
+                            gvProduct.setAdapter(adapter);
+                        }
+                    }.execute(word);
+                } else {
+                    ProductInventoryCatalogGridViewAdapter adapter = new ProductInventoryCatalogGridViewAdapter(getApplicationContext(), filter_productList);
+                    gvProduct.setAdapter(adapter);
+                }
 
             }
         });

@@ -1,5 +1,5 @@
-CREATE TABLE "CashPayment" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `orderId` INTEGER, `amount` REAL, `currency_type` INTEGER,'lastUpdate' TEXT DEFAULT current_timestamp);
-CREATE TABLE "CurrencyReturns" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `orderId` INTEGER, `amount` REAL, 'lastUpdate' TEXT DEFAULT current_timestamp,`currency_type` INTEGER, FOREIGN KEY(`orderId`) REFERENCES `sales.id` );
+CREATE TABLE "CashPayment" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `orderId` INTEGER, `amount` REAL, `currencyType` INTEGER,'lastUpdate' TEXT DEFAULT current_timestamp);
+CREATE TABLE "CurrencyReturns" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `orderId` INTEGER, `amount` REAL, 'lastUpdate' TEXT DEFAULT current_timestamp,`currencyType` INTEGER, FOREIGN KEY(`orderId`) REFERENCES `sales.id` );
 CREATE TABLE CurrencyType ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `type` TEXT );
 CREATE TABLE Currencys ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT,`currencyCode` TEXT,`country`TEXT,`rate` INTEGER ,'lastUpdate' TEXT DEFAULT current_timestamp);
 CREATE TABLE "Rule11" ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `amount` INTEGER, `discountAmount` INTEGER, `contain` INTEGER, `club_contain` INTEGER );
@@ -12,7 +12,7 @@ CREATE TABLE a_report ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `lastUpdate` TEX
 CREATE TABLE `checks` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `checkNum` INTEGER, `bankNum` INTEGER, `branchNum` INTEGER , `accountNum` INTEGER, `amount` REAL, `_date` TEXT DEFAULT current_timestamp, `deleted` INTEGER DEFAULT 0 , `orderId` INTEGER, FOREIGN KEY(`orderId`) REFERENCES `sales.id`);
 CREATE TABLE City( id INTEGER PRIMARY KEY, name TEXT );
 CREATE TABLE club ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,`name` TEXT NOT NULL,'description' Text ,'type' INTEGER , 'percent' REAL DEFAULT 0 ,'amount' REAL DEFAULT 0, 'point' REAL DEFAULT 0 );
-CREATE TABLE currency_operation ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `lastUpdate` TEXT DEFAULT current_timestamp, `operation_id` INTEGER, operation_type TEXT,`amount` REAL, `currency_type` INTEGER );
+CREATE TABLE currency_operation ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `lastUpdate` TEXT DEFAULT current_timestamp, `operationId` INTEGER, operationType TEXT,`amount` REAL, `currencyType` INTEGER );
 CREATE TABLE "custmerAssest" ( `orderId` INTEGER, `customerAssistantID` INTEGER, `amount` INTEGER, `type` INTEGER DEFAULT 0, `salesCase` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT );
 CREATE TABLE `customer` ( `id` INTEGER, `name` TEXT NOT NULL, `birthday` TEXT NOT NULL, `gender` TEXT, `email` TEXT, `job` TEXT NOT NULL, `phoneNumber` TEXT, `address` TEXT NOT NULL, `hide` INTEGER DEFAULT 0, `city_id` INTEGER , `club_id` INTEGER , PRIMARY KEY(`id`) FOREIGN KEY(`city_id`) REFERENCES `city.id` FOREIGN KEY(`club_id`) REFERENCES `club.id` );
 CREATE TABLE departments ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL UNIQUE, `createdAt` TEXT NOT NULL DEFAULT current_timestamp, `byEmployee` INTEGER, `hide` INTEGER DEFAULT 0, FOREIGN KEY(`byEmployee`) REFERENCES `users.id` )

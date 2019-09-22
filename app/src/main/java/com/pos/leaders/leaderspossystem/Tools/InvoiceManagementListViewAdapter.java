@@ -87,7 +87,8 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
                 btnOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(etAmount.getText().toString()!=null){
+                        String checkStr = etAmount.getText().toString();
+                        if(!checkStr.matches("")){
                             try {
                                 if(Double.parseDouble(etAmount.getText().toString())>=Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total")))) {
                                     DocumentControl.sendDoc(getContext(), invoicesList.get(position), CONSTANT.CASH,Double.parseDouble(etAmount.getText().toString()));

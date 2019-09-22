@@ -323,19 +323,19 @@
                 android:background="@drawable/trans_bg_bottom_r"
                 android:orientation="vertical"
                 android:padding="8dp">
-                <Button
-                    android:id="@+id/mainActivity_BTNInvoice"
-                    style="@style/AppTheme.bt_dark"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/document" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="horizontal">
-
+                    <Button
+                        android:id="@+id/mainActivity_BTNInvoice"
+                        style="@style/AppTheme.bt_dark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/document" />
                     <Button
                         android:id="@+id/mainActivity_btnPayment"
                         style="@style/AppTheme.bt_dark"
@@ -343,6 +343,14 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="@string/payment" />
+                    <Button
+                        android:id="@+id/mainActivity_btnOthers"
+                        style="@style/AppTheme.bt_dark"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/other_ways" />
+
 
                 </LinearLayout>
 

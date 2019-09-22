@@ -14,6 +14,8 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
@@ -22,6 +24,7 @@ import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
@@ -374,13 +377,13 @@ public class InvoiceImg {
             currencyReturnDBAdapter.open();
            List<CurrencyReturns> currencyReturnsList=currencyReturnDBAdapter.getCurencyReturnBySaleID(sale.getOrderId());
             for (int i = 0; i < currencyOperationList.size(); i++) {
-                if(currencyOperationList.get(i).getCurrency_type().equals("ILS")){
+                if(currencyOperationList.get(i).getCurrencyType().equals("ILS")){
                     shekelPaid+=currencyOperationList.get(i).getAmount();
-                }else if(currencyOperationList.get(i).getCurrency_type().equals("USD")){
+                }else if(currencyOperationList.get(i).getCurrencyType().equals("USD")){
                     usdPaid+=currencyOperationList.get(i).getAmount();
-                }  else if(currencyOperationList.get(i).getCurrency_type().equals("GBP")){
+                }  else if(currencyOperationList.get(i).getCurrencyType().equals("GBP")){
                     GbpPaid+=currencyOperationList.get(i).getAmount();
-                }else  if(currencyOperationList.get(i).getCurrency_type().equals("EUR")){
+                }else  if(currencyOperationList.get(i).getCurrencyType().equals("EUR")){
                     EurPaid+=currencyOperationList.get(i).getAmount();
                 }
 
@@ -622,13 +625,13 @@ public class InvoiceImg {
             currencyReturnDBAdapter.open();
             List<CurrencyReturns> currencyReturnsList=currencyReturnDBAdapter.getCurencyReturnBySaleID(sale.getOrderId());
             for (int i = 0; i < currencyOperationList.size(); i++) {
-                if(currencyOperationList.get(i).getCurrency_type().equals("ILS")){
+                if(currencyOperationList.get(i).getCurrencyType().equals("ILS")){
                     shekelPaid+=currencyOperationList.get(i).getAmount();
-                }else if(currencyOperationList.get(i).getCurrency_type().equals("USD")){
+                }else if(currencyOperationList.get(i).getCurrencyType().equals("USD")){
                     usdPaid+=currencyOperationList.get(i).getAmount();
-                }  else if(currencyOperationList.get(i).getCurrency_type().equals("GBP")){
+                }  else if(currencyOperationList.get(i).getCurrencyType().equals("GBP")){
                     GbpPaid+=currencyOperationList.get(i).getAmount();
-                }else  if(currencyOperationList.get(i).getCurrency_type().equals("EUR")){
+                }else  if(currencyOperationList.get(i).getCurrencyType().equals("EUR")){
                     EurPaid+=currencyOperationList.get(i).getAmount();
                 }
 
@@ -859,6 +862,10 @@ public class InvoiceImg {
         return make(blocks);
     }
     public Bitmap cancelingInvoice(Order sale, Boolean isCopy, List<Check> checks) {
+        OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(context);
+        orderDetailsDBAdapter.open();
+        List<OrderDetails>orderDetailsList=orderDetailsDBAdapter.getOrderBySaleID(sale.getOrderId());
+
         Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
         Block lineR = new Block("\u200E" + line, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         int count =0;
@@ -878,7 +885,11 @@ public class InvoiceImg {
         Block price = new Block("\u200E" + context.getString(R.string.total) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.2));
         Block discount = new Block("\u200E" + "%" + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
 
-        for (OrderDetails o : sale.getOrders()) {
+        for (OrderDetails o : orderDetailsList) {
+            ProductDBAdapter productDBAdapter =new ProductDBAdapter(context);
+            productDBAdapter.open();
+            Product p= productDBAdapter.getProductByID(o.getProductId());
+            o.setProduct(p);
             count += o.getQuantity();
             if (o.getProduct().getDisplayName().equals("General"))
                 o.getProduct().setProductCode(context.getString(R.string.general));
@@ -967,13 +978,13 @@ public class InvoiceImg {
             currencyReturnDBAdapter.open();
             List<CurrencyReturns> currencyReturnsList=currencyReturnDBAdapter.getCurencyReturnBySaleID(sale.getOrderId());
             for (int i = 0; i < currencyOperationList.size(); i++) {
-                if(currencyOperationList.get(i).getCurrency_type().equals("ILS")){
+                if(currencyOperationList.get(i).getCurrencyType().equals("ILS")){
                     shekelPaid+=currencyOperationList.get(i).getAmount();
-                }else if(currencyOperationList.get(i).getCurrency_type().equals("USD")){
+                }else if(currencyOperationList.get(i).getCurrencyType().equals("USD")){
                     usdPaid+=currencyOperationList.get(i).getAmount();
-                }  else if(currencyOperationList.get(i).getCurrency_type().equals("GBP")){
+                }  else if(currencyOperationList.get(i).getCurrencyType().equals("GBP")){
                     GbpPaid+=currencyOperationList.get(i).getAmount();
-                }else  if(currencyOperationList.get(i).getCurrency_type().equals("EUR")){
+                }else  if(currencyOperationList.get(i).getCurrencyType().equals("EUR")){
                     EurPaid+=currencyOperationList.get(i).getAmount();
                 }
 
@@ -1072,8 +1083,14 @@ public class InvoiceImg {
         //Block unitPrice = new Block("\u200E" + context.getString(R.string.price) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
     //    Block price = new Block("\u200E" + context.getString(R.string.total) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.2));
       //  Block discount = new Block("\u200E" + "%" + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
-
-        for (OrderDetails o : sale.getOrders()) {
+        OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(context);
+        orderDetailsDBAdapter.open();
+        List<OrderDetails>orderDetailsList=orderDetailsDBAdapter.getOrderBySaleID(sale.getOrderId());
+        for (OrderDetails o :orderDetailsList) {
+            ProductDBAdapter productDBAdapter =new ProductDBAdapter(context);
+            productDBAdapter.open();
+            Product p= productDBAdapter.getProductByID(o.getProductId());
+            o.setProduct(p);
             count=o.getQuantity();
             if (o.getProduct().getDisplayName().equals("General"))
                 o.getProduct().setProductCode(context.getString(R.string.general));
@@ -1116,10 +1133,14 @@ public class InvoiceImg {
     //    blocks.add(addsTax.Left());
      //   blocks.add(clear.Left());
         blocks.add(lineR.Left());
-
+        Block cashierName;
         Block cashier = new Block("\u200e" + context.getString(R.string.cashier)+ " " , 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
-        Block cashierName = new Block("\u200E" +  sale.getUser().getFullName(), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+        if(sale.getUser()==null){
+             cashierName = new Block("\u200E" +  "master master", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
 
+        }else {
+             cashierName = new Block("\u200E" + sale.getUser().getFullName(), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+        }
         cashier.Left();
         cashierName.Left();
         blocks.add(cashierName);

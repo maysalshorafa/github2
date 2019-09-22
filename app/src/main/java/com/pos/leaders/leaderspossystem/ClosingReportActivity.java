@@ -296,7 +296,7 @@ public class ClosingReportActivity extends AppCompatActivity {
             if (SETTINGS.enableCurrencies) {
 
                 for (CurrencyOperation cp : currencyOperationList) {
-                    switch (cp.getCurrency_type()) {
+                    switch (cp.getCurrencyType()) {
                         case "ILS":
                                 sheqle_plus += cp.getAmount();
                             break;

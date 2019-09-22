@@ -3,7 +3,6 @@ package com.pos.leaders.leaderspossystem;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -100,10 +99,6 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
                     SESSION._ORDERS=sale;
                     if (firstCredit != "" && secondCredit != "" && thirdCredit != "") {
                         PrinterTools.printAndOpenCashBox(firstCredit, secondCredit,thirdCredit, 600,getContext(),c);
-                        Intent intent = new Intent(getContext(), SalesCartActivity.class);
-                       getContext().startActivity(intent);
-
-
 
                     }else {
                         PrinterTools.printAndOpenCashBox("", "", "", 600,getContext(),c);

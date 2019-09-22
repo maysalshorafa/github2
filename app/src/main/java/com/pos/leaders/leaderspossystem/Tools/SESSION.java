@@ -23,7 +23,12 @@ public class SESSION {
 	public static Employee _EMPLOYEE = null;
 	public static OrderDetails _ORDER;
 	public static List<OrderDetails> _ORDER_DETAILES;
+	public static List<OrderDetails> _TEMP_ORDER_DETAILES;
+
+
 	public static Order _ORDERS;
+	public static Order _TEMP_ORDERS;
+
 	public static ScheduleWorkers _SCHEDULEWORKERS;
 	public static EmployeesPermissions _USERPERMISSIONS;
 	public static CreditCardPayment _TEMP_CREDITCARD_PAYMNET;

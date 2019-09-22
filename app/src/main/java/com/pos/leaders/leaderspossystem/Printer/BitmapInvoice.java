@@ -695,7 +695,7 @@ public class BitmapInvoice {
         if (SETTINGS.enableCurrencies) {
             List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()),context);
             for (CurrencyOperation cp : currencyOperationList) {
-                switch (cp.getCurrency_type()) {
+                switch (cp.getCurrencyType()) {
                     case "ILS":
                         ShekelCount+=1;
                         break;

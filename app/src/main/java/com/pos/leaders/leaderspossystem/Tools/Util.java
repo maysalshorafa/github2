@@ -534,7 +534,7 @@ public class Util {
 
         if (SETTINGS.enableCurrencies) {
             for (CurrencyOperation cp : currencyOperationList) {
-                switch (cp.getCurrency_type()) {
+                switch (cp.getCurrencyType()) {
 
                     case "ILS":
                             sheqle_plus += cp.getAmount();
@@ -1224,7 +1224,7 @@ public class Util {
         if (SETTINGS.enableCurrencies) {
 
             for (CurrencyOperation cp : currencyOperationList) {
-                switch (cp.getCurrency_type()) {
+                switch (cp.getCurrencyType()) {
 
                     case "ILS":
                         sheqle_plus += cp.getAmount();

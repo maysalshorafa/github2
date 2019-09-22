@@ -474,7 +474,7 @@ public class PdfUA {
         if (SETTINGS.enableCurrencies) {
             List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()),context);
             for (CurrencyOperation cp : currencyOperationList) {
-                switch (cp.getCurrency_type()) {
+                switch (cp.getCurrencyType()) {
                     case "ILS":
                         ShekelCount+=1;
                         break;
@@ -1457,7 +1457,7 @@ public class PdfUA {
         if (SETTINGS.enableCurrencies) {
             List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(orderDb.getBetween(x.getStartOrderId(),x.getEndOrderId()),context);
             for (CurrencyOperation cp : currencyOperationList) {
-                switch (cp.getCurrency_type()) {
+                switch (cp.getCurrencyType()) {
                     case "ILS":
                         ShekelCount+=1;
                         break;
@@ -1667,6 +1667,8 @@ public class PdfUA {
 
     }
     public static void createNormalInvoice(Context context  , List<OrderDetails>orderDetailsList, Order order,boolean isCopy,String mainMer) throws IOException, DocumentException {
+        order=SESSION._TEMP_ORDERS;
+        orderDetailsList=SESSION._TEMP_ORDER_DETAILES;
         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
         cashPaymentDBAdapter.open();
         ChecksDBAdapter checksDBAdapter =new ChecksDBAdapter(context);
@@ -1717,7 +1719,8 @@ public class PdfUA {
         }else {
             insertCell(headingTable, context.getString(R.string.source_invoice), Element.ALIGN_CENTER, 1, urFontName1);
         }
-        insertCell(headingTable, context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", SESSION._ORDERS.getOrderId()), Element.ALIGN_CENTER, 1, urFontName1);
+Log.d("rrrrrrrrrrr",order.toString());
+        insertCell(headingTable, context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", order.getOrderId()), Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(headingTable, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 4, urFontName1);
 
 
@@ -1743,7 +1746,6 @@ public class PdfUA {
         insertCell(table, context.getString(R.string.price), Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(table, context.getString(R.string.qty), Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(table, context.getString(R.string.product), Element.ALIGN_CENTER, 3, urFontName1);
-
         for (int i=0;i<orderDetailsList.size();i++){
             insertCell(table, "  " + orderDetailsList.get(i).getProductSerialNumber(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
             insertCell(table, "  " + orderDetailsList.get(i).getDiscount(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
@@ -1762,6 +1764,12 @@ public class PdfUA {
 
         insertCell(table, context.getString(R.string.total_price)  , Element.ALIGN_CENTER, 4, urFontName);
         insertCell(table,Util.makePrice(totalPrice)  , Element.ALIGN_CENTER, 4, urFontName);
+
+        insertCell(table, context.getString(R.string.discount)  , Element.ALIGN_CENTER, 4, urFontName);
+        insertCell(table,Util.makePrice(order.cartDiscount)  , Element.ALIGN_CENTER, 4, urFontName);
+
+        insertCell(table, context.getString(R.string.price_before_discount)  , Element.ALIGN_CENTER, 4, urFontName);
+        insertCell(table,Util.makePrice(order.getTotalPrice()*100/(100-order.cartDiscount))  , Element.ALIGN_CENTER, 4, urFontName);
 
         insertCell(table, context.getString(R.string.tax)  , Element.ALIGN_CENTER, 4, urFontName);
         insertCell(table,Util.makePrice(SETTINGS.tax) , Element.ALIGN_CENTER, 4, urFontName);
@@ -1802,13 +1810,13 @@ public class PdfUA {
             insertCell(paidByTable,Util.makePrice(order.getTotalPrice()-check_plus), Element.ALIGN_CENTER, 1, urFontName);
             insertCell(paidByTable,Util.makePrice(check_plus), Element.ALIGN_CENTER, 1, font);
             insertCell(paidByTable,Util.makePrice(order.getTotalPrice()), Element.ALIGN_CENTER, 1, urFontName);
-            insertCell(paidByTable,CONSTANT.CASH, Element.ALIGN_CENTER, 1, font);
+            insertCell(paidByTable,CONSTANT.CHECKS, Element.ALIGN_CENTER, 1, font);
         }
         if(creditCardPayments.size()>0){
             insertCell(paidByTable,Util.makePrice(order.getTotalPrice()-creditCard_plus), Element.ALIGN_CENTER, 1, urFontName);
             insertCell(paidByTable,Util.makePrice(creditCard_plus), Element.ALIGN_CENTER, 1, urFontName);
             insertCell(paidByTable,Util.makePrice(order.getTotalPrice()), Element.ALIGN_CENTER, 1, urFontName);
-            insertCell(paidByTable,CONSTANT.CASH, Element.ALIGN_CENTER, 1, urFontName);
+            insertCell(paidByTable,CONSTANT.CREDIT_CARD, Element.ALIGN_CENTER, 1, urFontName);
         }
         insertCell(paidByTable, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 4, urFontName);
 
@@ -1825,14 +1833,17 @@ public class PdfUA {
             currencyReturnDBAdapter.open();
             List<CurrencyReturns> currencyReturnsList = currencyReturnDBAdapter.getCurencyReturnBySaleID(order.getOrderId());
             for (int i = 0; i < currencyOperationList.size(); i++) {
-                if (currencyOperationList.get(i).getCurrency_type().equals("ILS")) {
+                if (currencyOperationList.get(i).getPaymentWay().equalsIgnoreCase(CONSTANT.CASH)) {
+                if (currencyOperationList.get(i).getCurrencyType().equals("ILS") ) {
+
                     shekelPaid += currencyOperationList.get(i).getAmount();
-                } else if (currencyOperationList.get(i).getCurrency_type().equals("USD")) {
+                } else if (currencyOperationList.get(i).getCurrencyType().equals("USD")) {
                     usdPaid += currencyOperationList.get(i).getAmount();
-                } else if (currencyOperationList.get(i).getCurrency_type().equals("GBP")) {
+                } else if (currencyOperationList.get(i).getCurrencyType().equals("GBP")) {
                     GbpPaid += currencyOperationList.get(i).getAmount();
-                } else if (currencyOperationList.get(i).getCurrency_type().equals("EUR")) {
+                } else if (currencyOperationList.get(i).getCurrencyType().equals("EUR")) {
                     EurPaid += currencyOperationList.get(i).getAmount();
+                }
                 }
 
             }
@@ -1914,11 +1925,13 @@ public class PdfUA {
 
         insertCell(endOfInvoice,SESSION._EMPLOYEE.getEmployeeName(),Element.ALIGN_CENTER,1,urFontName);
         insertCell(endOfInvoice, " ", Element.ALIGN_CENTER,2, urFontName);
+        if(order.getCustomer()!=null) {
 
-        if(order.getCustomer().getCustomerType().equals(CustomerType.CREDIT)) {
-            insertCell(endOfInvoice, context.getString(R.string.customer_ledger) + ":", Element.ALIGN_CENTER, 1, urFontName);
+            if (order.getCustomer().getCustomerType().toString().equalsIgnoreCase(CustomerType.CREDIT.getValue())) {
+                insertCell(endOfInvoice, context.getString(R.string.customer_ledger) + ":", Element.ALIGN_CENTER, 1, urFontName);
 
-            insertCell(endOfInvoice, SESSION._ORDERS.CustomerLedger+"", Element.ALIGN_CENTER,1, urFontName);
+                insertCell(endOfInvoice, SESSION._ORDERS.CustomerLedger + "", Element.ALIGN_CENTER, 1, urFontName);
+            }
         }
         insertCell(endOfInvoice, " ", Element.ALIGN_CENTER,2, urFontName);
 
@@ -1938,7 +1951,7 @@ public class PdfUA {
         String s = context.getString(R.string.ins);
         insertCell(endOfInvoice, context.getString(R.string.total_saved)+ " :", Element.ALIGN_CENTER, 1, urFontName);
 
-        insertCell(endOfInvoice,  String.format(new Locale("en"), "%.2f %s", SESSION._ORDERS.totalSaved, s), Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(endOfInvoice,  String.format(new Locale("en"), "%.2f %s", order.totalSaved, s), Element.ALIGN_CENTER, 1, urFontName);
         insertCell(endOfInvoice, " ", Element.ALIGN_CENTER,2, urFontName);
 
         insertCell(endOfInvoice, SETTINGS.returnNote, Element.ALIGN_CENTER, 1, urFontName);
