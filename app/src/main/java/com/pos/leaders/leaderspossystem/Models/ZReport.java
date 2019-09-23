@@ -37,13 +37,14 @@ public class ZReport {
     private double invoiceReceiptAmount;
     private double pullReportAmount;
     private double depositReportAmount;
+    private String closeOpenReport;
     public ZReport() {
 
 
     }
 
     public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount,double shekelAmount,double usdAmount, double eurAmount,
-                   double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount) {
+                   double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,String closeOpenReport) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -65,6 +66,7 @@ public class ZReport {
         this.invoiceReceiptAmount=invoiceReceiptAmount;
         this.pullReportAmount=pullReportAmount;
         this.depositReportAmount=depositReportAmount;
+        this.closeOpenReport=closeOpenReport;
     }
 
     public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount) {
@@ -274,6 +276,14 @@ public class ZReport {
         this.eurAmount = eurAmount;
     }
 
+    public String getCloseOpenReport() {
+        return closeOpenReport;
+    }
+
+    public void setCloseOpenReport(String closeOpenReport) {
+        this.closeOpenReport = closeOpenReport;
+    }
+
     public double getGbpAmount() {
         return gbpAmount;
     }
@@ -343,6 +353,7 @@ public class ZReport {
                 ", invoiceReceiptAmount=" + invoiceReceiptAmount +
                 ", pullReportAmount=" + pullReportAmount +
                 ", depositReportAmount=" + depositReportAmount +
+                ", closeOpenReport=" + closeOpenReport +
                 '}';
     }
 //endregion OpenFormat
