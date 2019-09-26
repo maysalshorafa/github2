@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.Tools;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -85,6 +86,8 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        Log.d("testsaleDetailsListViewAdapter",orderList.get(position).toString());
+
         int count;
         double price;
         double discount = orderList.get(position).getDiscount();

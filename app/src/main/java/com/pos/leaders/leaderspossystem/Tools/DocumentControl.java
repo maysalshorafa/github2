@@ -422,10 +422,18 @@ public class DocumentControl {
                                 zReport = zReportDBAdapter.getLastRow();
                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
                                 posInvoiceDBAdapter.open();
-                                if(paymentWays.equals(CASH)) {
-                                    posInvoiceDBAdapter.insertEntry(totalPaid, zReport.getzReportId(), DocumentType.RECEIPT.getValue(), "", invoiceNum,CONSTANT.CASH);
-                                }else {
-                                    posInvoiceDBAdapter.insertEntry(totalPaid, zReport.getzReportId(), DocumentType.RECEIPT.getValue(), "", invoiceNum,CONSTANT.CHECKS);
+                                if (paymentWays.equals(CASH)) {
+                                    posInvoiceDBAdapter.insertEntry(totalPaid, zReport.getzReportId() - 1, DocumentType.RECEIPT.getValue(), "", invoiceNum, CONSTANT.CASH);
+                                } else {
+                                    posInvoiceDBAdapter.insertEntry(totalPaid, zReport.getzReportId() - 1, DocumentType.RECEIPT.getValue(), "", invoiceNum, CONSTANT.CHECKS);
+                                }
+                                if (paymentWays.equals(CASH)){
+                                    zReport.setShekelAmount(zReport.getShekelAmount() + totalPaid);
+                                zReport.setTotalAmount(zReport.getTotalAmount() + totalPaid);
+                                zReportDBAdapter.updateEntry(zReport);
+                            }else {
+                                    zReport.setCheckTotal(zReport.getCheckTotal()+totalPaid);
+                                    zReportDBAdapter.updateEntry(zReport);
                                 }
                             } catch (Exception e) {
                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
@@ -436,6 +444,15 @@ public class DocumentControl {
                                     posInvoiceDBAdapter.insertEntry(totalPaid,-1,DocumentType.RECEIPT.getValue(),"",invoiceNum,CONSTANT.CHECKS);
 
                                 }
+                                if (paymentWays.equals(CASH)){
+                                    zReport.setShekelAmount(zReport.getShekelAmount() + totalPaid);
+                                    zReport.setTotalAmount(zReport.getTotalAmount() + totalPaid);
+                                    zReportDBAdapter.updateEntry(zReport);
+                                }else {
+                                    zReport.setCheckTotal(zReport.getCheckTotal()+totalPaid);
+                                    zReportDBAdapter.updateEntry(zReport);
+                                }
+
                                 e.printStackTrace();
                             }
 

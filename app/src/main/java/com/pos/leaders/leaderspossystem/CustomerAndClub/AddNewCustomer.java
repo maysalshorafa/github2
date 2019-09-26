@@ -187,6 +187,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 Intent intent;
                 String customerTypeText="";
                 if (customer == null) {
+                    strCustomerId=etCustomerId.getText().toString();
                     if (!_customerName.equals("")) {
                         if(secondCustomerInformation.getVisibility()== View.VISIBLE){
                             if(customerBranch.getSelectedItem().toString().equals(getString(R.string.all))){
@@ -202,7 +203,6 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                             country=etCountry.getText().toString();
                             countryCode=etCountryCode.getText().toString();
                             customerCode=etCustomerCode.getText().toString();
-                            strCustomerId=etCustomerId.getText().toString();
                             cityId=  (int) selectCitySpinner.getSelectedItemId();
 
                         }
@@ -226,6 +226,9 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                         } else if (etCustomerLastName.getText().toString().equals("")) {
                             etCustomerLastName.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_last_name), Toast.LENGTH_LONG).show();
+                        } else if (etCustomerId.getText().toString().equals("")) {
+                            etCustomerId.setBackgroundResource(R.drawable.backtext);
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_customer_id), Toast.LENGTH_LONG).show();
                         } else if (etPhoneNo.getText().toString().equals("")) {
                             etPhoneNo.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
@@ -252,6 +255,8 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                 } else {
                     // Edit mode
                     if (_customerName != "") {
+                        strCustomerId=etCustomerId.getText().toString();
+
                         if(secondCustomerInformation.getVisibility()== View.VISIBLE){
                             if(customerBranch.getSelectedItem().toString().equals(getString(R.string.all))){
                                 branchId=0;
@@ -266,7 +271,6 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                             country=etCountry.getText().toString();
                             countryCode=etCountryCode.getText().toString();
                             customerCode=etCustomerCode.getText().toString();
-                            strCustomerId=etCustomerId.getText().toString();
                             for (int i = 0; i < cityList.size(); i++) {
                                 City city = cityList.get(i);
                                 if (city.getName().equalsIgnoreCase(selectCitySpinner.getSelectedItem().toString())) {
@@ -296,7 +300,10 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                         } else if (etPhoneNo.getText().toString().equals("")) {
                             etPhoneNo.setBackgroundResource(R.drawable.backtext);
                             Toast.makeText(getApplicationContext(), getString(R.string.please_insert_phone_no), Toast.LENGTH_LONG).show();
-                        } else {
+                        }else if (etCustomerId.getText().toString().equals("")) {
+                            etCustomerId.setBackgroundResource(R.drawable.backtext);
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_insert_customer_id), Toast.LENGTH_LONG).show();
+                        }  else {
                             try {
                                 customer.setFirstName(etCustomerFirstName.getText().toString());
                                 customer.setLastName(etCustomerLastName.getText().toString());

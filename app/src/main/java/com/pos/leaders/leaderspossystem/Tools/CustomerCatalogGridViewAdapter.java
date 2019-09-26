@@ -99,15 +99,15 @@ import java.util.List;
             }
 
             TextView tvCustmerName=(TextView)gridView.findViewById(R.id.custmerGridView_TVCustmerName);
-            TextView tvCustmerLastName=(TextView)gridView.findViewById(R.id.custmerGridView_TVCustmerLastName);
 
             //TextView tvFullName=(TextView)gridView.findViewById(R.id.custmerGridView_TVFullName);
             TextView tvPhoneNumber=(TextView)gridView.findViewById(R.id.custmerGridView_TVPhoneNumber);
+            TextView tvCustomerIdentity=(TextView)gridView.findViewById(R.id.custmerGridView_TVCustomerIdentity);
 
-            tvCustmerName.setText(customers.get(position).getFirstName());
+            tvCustmerName.setText(customers.get(position).getFullName());
             //   tvFullName.setText(customers.get(position).getFullName());
-            tvCustmerLastName.setText(customers.get(position).getLastName());
             tvPhoneNumber.setText(customers.get(position).getPhoneNumber());
+            tvCustomerIdentity.setText(customers.get(position).getCustomerIdentity());
 
             return gridView;
         }

@@ -30,7 +30,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepositAndPullReportDeta
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DrawerDepositAndPullReportDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.ClosingReport;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
@@ -120,12 +119,17 @@ public class ReportsManagementActivity  extends AppCompatActivity {
 
             try {
                 lastZReport = zReportDBAdapter.getLastRow();
+                if(lastZReport.getCloseOpenReport().equalsIgnoreCase("close")){
+                    btnZ.setEnabled(false);
+                }else {
+                    btnZ.setEnabled(true);
+                }
 
-                if (lastZReport.getEndOrderId() == lastSale.getOrderId()) {
+              /*  if (lastZReport.getEndOrderId()-1 == lastSale.getOrderId()) {
                     btnZ.setEnabled(false);
                 } else {
                     btnZ.setEnabled(true);
-                }
+                }*/
                 // dis enable X Report if no row insert in ZReport Table
                 if (lastZReport == null) {
                     btnX.setEnabled(false);
@@ -135,7 +139,6 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                 Log.e(ex.getLocalizedMessage(), ex.getMessage());
             }
         }
-        if(lastZReport==null) {btnX.setEnabled(false);}
         try {
             opiningReportDBAdapter.open();
             closingReportDBAdapter.open();
@@ -164,7 +167,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                 closingReportDBAdapter.open();
                                 ClosingReport closingReport = closingReportDBAdapter.getClosingReportByOpiningReportId(opiningReport.getOpiningReportId());
                                 if(closingReport!=null){
-                                ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(ReportsManagementActivity.this);
+                              /**  ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(ReportsManagementActivity.this);
                                 zReportDBAdapter.open();
                                 ZReport lastZReport = Util.getLastZReport(getApplicationContext());
 
@@ -185,15 +188,17 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                     z.setInvoiceReceiptAmount(amount);
                                     z.setTotalAmount(amount);
                                     z.setTotalSales(amount);
-                                    z.setTotalPosSales(totalZReportAmount);
-                                ZReport zReport= Util.insertZReport(z,getApplicationContext());
-                                Intent i = new Intent(ReportsManagementActivity.this, ReportZDetailsActivity.class);
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
-                                i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,amount);
+                                    z.setTotalPosSales(totalZReportAmount);*/
+                                ZReport zReport= Util.insertZReport(getApplicationContext());
+                                    Intent i = new Intent(ReportsManagementActivity.this, ReportZDetailsActivity.class);
+                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
+                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
+                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
+                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReport.getTotalSales());
+                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,zReport.getTotalAmount());
+                                    i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FROM_DASH_BOARD,true);
 
+                                    //  finish();
 
                                 startActivity(i);
                                 btnZ.setEnabled(false);
@@ -236,30 +241,13 @@ public class ReportsManagementActivity  extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (lastZReport!=null) {
-                    double totalXreportAmount = 0;
-                    XReportDBAdapter xReportDBAdapter = new XReportDBAdapter(ReportsManagementActivity.this);
-                    xReportDBAdapter.open();
-                    XReport x = new XReport(0, new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE, lastZReport.getEndOrderId() + 1, lastSale);
-                    x.setByUser(SESSION._EMPLOYEE.getEmployeeId());
-                    double amount = xReportDBAdapter.getXReportAmount(x.getStartOrderId(), x.getEndOrderId());
-                    try {
-                        totalXreportAmount = xReportDBAdapter.getLastRow().getTotalPosSales() + amount;
-                    } catch (Exception e) {
-                        totalXreportAmount = amount;
-
-                        e.printStackTrace();
-                    }
-                    x.setInvoiceReceiptAmount(amount);
-                    x.setTotalAmount(amount);
-                    x.setTotalSales(amount);
-                    x.setTotalPosSales(totalXreportAmount);
-                    XReport xReport = Util.insertXReport(x, getApplicationContext());
+                    XReport xReport = Util.insertXReport( getApplicationContext());
                     Intent i = new Intent(ReportsManagementActivity.this, ReportZDetailsActivity.class);
                     i.putExtra(COM_LEADPOS_XREPORT_ID, xReport.getxReportId());
                     i.putExtra(COM_LEADPOS_XREPORT_FORM, xReport.getStartOrderId());
                     i.putExtra(COM_LEADPOS_XREPORT_TO, xReport.getEndOrderId());
-                    i.putExtra(COM_LEADPOS_XREPORT_TOTAL_AMOUNT, totalXreportAmount);
-                    i.putExtra(COM_LEADPOS_XREPORT_AMOUNT, amount);
+                    i.putExtra(COM_LEADPOS_XREPORT_TOTAL_AMOUNT, xReport.getTotalSales());
+                    i.putExtra(COM_LEADPOS_XREPORT_AMOUNT, xReport.getTotalAmount());
                     i.putExtra(COM_LEADPOS_XREPORT_FLAG, true);
 
                     startActivity(i);
@@ -662,6 +650,12 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                             if (forthCurrencyInDefaultValue > 0) {
                                                 depositAndPullReportDetailsDbAdapter.insertEntry(pullReportId, forthCurrencyInDefaultValue, forthCurrency.getName());
                                             }
+                                            z.setPullReportAmount(z.getPullReportAmount()+pullReport.getAmount());
+                                            z.setShekelAmount(z.getShekelAmount()+firstCurrencyInDefaultValue);
+                                            z.setUsdAmount(z.getUsdAmount()+secondCurrencyInDefaultValue);
+                                            z.setGbpAmount(z.getGbpAmount()+thirdCurrencyInDefaultValue);
+                                            z.setEurAmount(z.getEurAmount()+forthCurrencyInDefaultValue);
+                                            zreportDbAdapter.updateEntry(z);
 
                                             pullReportDialog.cancel();
                                             pullReportDBAdapter.close();
@@ -989,6 +983,12 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                             pullReportDialog.cancel();
                                             pullReportDBAdapter.close();
                                             depositAndPullReportDetailsDbAdapter.close();
+                                            z.setDepositReportAmount(z.getDepositReportAmount()+pullReport.getAmount());
+                                            z.setShekelAmount(z.getShekelAmount()-firstCurrencyInDefaultValue);
+                                            z.setUsdAmount(z.getUsdAmount()-secondCurrencyInDefaultValue);
+                                            z.setGbpAmount(z.getGbpAmount()-thirdCurrencyInDefaultValue);
+                                            z.setEurAmount(z.getEurAmount()-forthCurrencyInDefaultValue);
+                                            zreportDbAdapter.updateEntry(z);
                                             final ArrayList<String> hintForCurrencyType = new ArrayList<String>();
                                             final ArrayList<Double> hintForCurrencyAmount = new ArrayList<Double>();
                                             hintForCurrencyType.add(fCurrency.getName());

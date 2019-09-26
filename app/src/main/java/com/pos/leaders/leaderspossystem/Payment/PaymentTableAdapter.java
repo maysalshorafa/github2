@@ -68,7 +68,9 @@ public class PaymentTableAdapter extends ArrayAdapter<PaymentTable> {
         final PaymentTable paymentTable = getItem(position);
 
         String sym = " " + currencySymbols.get(paymentTable.getCurrency().getType());
-        holder.tvDue.setText(Util.makePrice(paymentTable.getDue()) + sym);
+        String sym1 = " " + currencySymbols.get(paymentTable.getTempCurrency());
+
+        holder.tvDue.setText(Util.makePrice(paymentTable.getDue()) + sym1);
         if(!Double.isNaN(paymentTable.getTendered())) {
             holder.tvTendered.setText(Util.makePrice(paymentTable.getTendered()) + sym);
             holder.tvDelete.setVisibility(View.VISIBLE);

@@ -94,7 +94,7 @@ public class ZReportDBAdapter {
     }
     public long insertEntry(Timestamp creatingDate, long byUserID, long startSaleID, long endSaleID, double amount, double totalSales,double totalCashAmount , double totalCheckAmount , double totalCreditAmount,double totalPosSalesAmount,double amountWithTax,double invoiceAmount , double creditInvoiceAmount, double shekelAmount, double usdAmount , double eurAmount ,double gbpAmount,double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,String closeOpenReport){
         ZReport zReport = new ZReport(Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID),creatingDate, byUserID, startSaleID, endSaleID,amount,totalSales,totalCashAmount,totalCheckAmount,totalCreditAmount,totalPosSalesAmount,amountWithTax,invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,pullReportAmount,depositReportAmount,closeOpenReport);
-        sendToBroker(MessageType.ADD_Z_REPORT, zReport, this.context);
+
         try {
             return insertEntry(zReport);
         } catch (SQLException ex) {
@@ -106,7 +106,7 @@ public class ZReportDBAdapter {
     public long insertEntry(ZReport zReport) {
         ContentValues val = new ContentValues();
         //Assign values for each row.
-        val.put(Z_REPORT_COLUMN_ID, zReport.getzReportId());
+        val.put(Z_REPORT_COLUMN_ID, Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID));
         val.put(Z_REPORT_COLUMN_CREATEDATE, String.valueOf(zReport.getCreatedAt()));
         val.put(Z_REPORT_COLUMN_BYUSER, zReport.getByUser());
         val.put(Z_REPORT_COLUMN_STARTORDERID, zReport.getStartOrderId());
@@ -127,6 +127,8 @@ public class ZReportDBAdapter {
         val.put(Z_REPORT_COLUMN_PULL_REPORT_AMOUNT,zReport.getPullReportAmount());
         val.put(Z_REPORT_COLUMN_DEPOSIT_REPORT_AMOUNT,zReport.getDepositReportAmount());
         val.put(Z_REPORT_COLUMN_CLOSE_OPEN_REPORT,zReport.getCloseOpenReport());
+        Log.d("testZReport",zReport.toString());
+
 
         try {
             return db.insert(Z_REPORT_TABLE_NAME, null, val);
@@ -284,13 +286,34 @@ public class ZReportDBAdapter {
     }
     public void updateEntry(ZReport zReport) {
         ContentValues val = new ContentValues();
-        //Assign values for each row.
+        val.put(Z_REPORT_COLUMN_ID, zReport.getzReportId());
+        val.put(Z_REPORT_COLUMN_CREATEDATE, String.valueOf(zReport.getCreatedAt()));
+        val.put(Z_REPORT_COLUMN_BYUSER, zReport.getByUser());
+        val.put(Z_REPORT_COLUMN_STARTORDERID, zReport.getStartOrderId());
+        val.put(Z_REPORT_COLUMN_ENDORDERID, zReport.getEndOrderId());
         val.put(Z_REPORT_COLUMN_TOTAL_SALES_AMOUNT, zReport.getTotalSales());
         val.put(Z_REPORT_COLUMN_TOTAL_AMOUNT, zReport.getTotalAmount());
-        val.put(Z_REPORT_COLUMN_TOTAL_POS_SALES, zReport.getTotalPosSales());
+        val.put(Z_REPORT_COLUMN_CASH_AMOUNT,zReport.getCashTotal());
+        val.put(Z_REPORT_COLUMN_CHECK_AMOUNT,zReport.getCheckTotal());
+        val.put(Z_REPORT_COLUMN_CREDIT_AMOUNT,zReport.getCreditTotal());
+        val.put(Z_REPORT_COLUMN_TAX,zReport.getTax());
+        val.put(Z_REPORT_COLUMN_TOTAL_POS_SALES,zReport.getTotalPosSales());
+        val.put(Z_REPORT_COLUMN_INVOICE_AMOUNT,zReport.getInvoiceAmount());
+        val.put(Z_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT,zReport.getCreditInvoiceAmount());
+        val.put(Z_REPORT_COLUMN_SHEKEL_AMOUNT,zReport.getShekelAmount());
+        val.put(Z_REPORT_COLUMN_USD_AMOUNT,zReport.getUsdAmount());
+        val.put(Z_REPORT_COLUMN_EUR_AMOUNT,zReport.getEurAmount());
+        val.put(Z_REPORT_COLUMN_INVOICE_RECEIPT_AMOUNT,zReport.getInvoiceReceiptAmount());
+        val.put(Z_REPORT_COLUMN_PULL_REPORT_AMOUNT,zReport.getPullReportAmount());
+        val.put(Z_REPORT_COLUMN_DEPOSIT_REPORT_AMOUNT,zReport.getDepositReportAmount());
+        val.put(Z_REPORT_COLUMN_CLOSE_OPEN_REPORT,zReport.getCloseOpenReport());
+        Log.d("testZReport",zReport.toString());
 
         String where = Z_REPORT_COLUMN_ID + " = ?";
         db.update(Z_REPORT_TABLE_NAME, val, where, new String[]{zReport.getzReportId() + ""});
+        if(zReport.getCloseOpenReport().equalsIgnoreCase("close")){
+            sendToBroker(MessageType.ADD_Z_REPORT, zReport, this.context);
+        }
     }
     public List<ZReport> getBetweenTwoDates(long from, long to){
         List<ZReport> zReportList = new ArrayList<ZReport>();

@@ -25,6 +25,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepositAndPullReportDetailsDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
@@ -39,6 +40,7 @@ import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
+import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Models.DepositAndPullReport;
@@ -119,7 +121,7 @@ public class PdfUA {
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
         document.open();        //end region
 
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 30);
         Font dateFont = new Font(urName, 24);
         //heading table
@@ -189,7 +191,7 @@ public class PdfUA {
         document.open();        //end region
         //end region
         getCountForZReport(context,zReport);
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 24);
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
@@ -369,7 +371,8 @@ public class PdfUA {
 
         OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(context);
         opiningReportDBAdapter.open();
-        opiningReportList = opiningReportDBAdapter.getListByLastZReport(z.getzReportId()-1);
+        opiningReportList = opiningReportDBAdapter.getListByLastZReport(z.getzReportId());
+        Log.d("tttttttttttt",opiningReportList.toString());
         for (int i=0;i<opiningReportList.size();i++){
             aReportAmount+=opiningReportList.get(i).getAmount();
         }
@@ -520,9 +523,9 @@ public class PdfUA {
         table.setRunDirection(0);
         table.setWidthPercentage(118f);
         table.setWidths(new int[]{1, 1, 1,2});
-        BaseFont urName = BaseFont.createFont("assets/carmelitregular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font urFontName = new Font(urName, 24);
-        BaseFont urName1 = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName1 = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font urFontName1 = new Font(urName1, 22);
 
         //insert column headings;
@@ -610,7 +613,7 @@ public class PdfUA {
         document.open();        //end region
         //end region
 
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 30);
         Font dateFont = new Font(urName, 24);
         //heading table
@@ -671,7 +674,7 @@ public class PdfUA {
         document.open();        //end region
         //end region
 
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 30);
         Font dateFont = new Font(urName, 24);
         //heading table
@@ -760,7 +763,7 @@ public class PdfUA {
         document.open();        //end region
         //end region
 
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 30);
         Font dateFont = new Font(urName, 24);
         //heading table
@@ -946,7 +949,7 @@ public class PdfUA {
         document.open();        //end region
         //end region
 
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 30);
         Font dateFont = new Font(urName, 24);
         //heading table
@@ -1005,7 +1008,7 @@ public class PdfUA {
         document.open();        //end region
         //end region
 
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 30);
         Font dateFont = new Font(urName, 24);
         //heading table
@@ -1056,7 +1059,7 @@ public class PdfUA {
         document.open();        //end region
         //end region
 
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 30);
         //heading table
         PdfPTable headingTable = new PdfPTable(1);
@@ -1112,7 +1115,7 @@ public class PdfUA {
         document.open();        //end region
         //end region
         Date date;
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 30);
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
@@ -1124,7 +1127,7 @@ public class PdfUA {
         insertCell(headingTable, context.getString(R.string.pause_invoice), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 4, font);
 
-        BaseFont urName1 = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName1 = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font urFontName1 = new Font(urName1, 22);
         PdfPTable table = new PdfPTable(7);
         Font urFontName = new Font(urName1, 24);
@@ -1190,7 +1193,7 @@ public class PdfUA {
         document.open();        //end region
         //end region
         getCountForXReport(context,xReport);
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 24);
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
@@ -1515,7 +1518,7 @@ public class PdfUA {
         document.open();        //end region
         //end region
         getCountForZReport(context,zReport);
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 24);
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
@@ -1696,9 +1699,9 @@ public class PdfUA {
         document.open();        //end region
         //end region
         Date date;
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_bold.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 26);
-        BaseFont urName1 = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName1 = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font urFontName1 = new Font(urName1, 22);
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
@@ -1711,7 +1714,10 @@ public class PdfUA {
         } else if (order.getCustomer_name().equals("")) {
             customerName = context.getString(R.string.general_customer);
         } else {
-            customerName = order.getCustomer_name();
+            CustomerDBAdapter customerDBAdapter =new CustomerDBAdapter(context);
+            customerDBAdapter.open();
+            Customer customer = customerDBAdapter.getCustomerByID(order.getCustomerId());
+            customerName = customer.getFirstName()+" "+customer.getLastName();
         }
         insertCell(headingTable, context.getString(R.string.customer_name)+":  " + customerName, Element.ALIGN_CENTER, 1, urFontName1);
         if(isCopy) {
@@ -1719,7 +1725,6 @@ public class PdfUA {
         }else {
             insertCell(headingTable, context.getString(R.string.source_invoice), Element.ALIGN_CENTER, 1, urFontName1);
         }
-Log.d("rrrrrrrrrrr",order.toString());
         insertCell(headingTable, context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", order.getOrderId()), Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(headingTable, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 4, urFontName1);
 
@@ -2004,7 +2009,7 @@ Log.d("rrrrrrrrrrr",order.toString());
         document.open();        //end region
         //end region
 
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 30);
         Font dateFont = new Font(urName, 24);
         //heading table
@@ -2089,7 +2094,7 @@ Log.d("rrrrrrrrrrr",order.toString());
         document.open();        //end region
         //end region
 
-        BaseFont urName = BaseFont.createFont("assets/miriam_libre_regular.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 30);
         Font dateFont = new Font(urName, 24);
         //heading table

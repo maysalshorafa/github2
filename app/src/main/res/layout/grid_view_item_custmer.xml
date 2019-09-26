@@ -30,20 +30,7 @@ android:gravity="center"
 
     >
 </TextView>
-    <TextView
-        android:layout_gravity="center"
-        android:id="@+id/custmerGridView_TVCustmerLastName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
 
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:textAlignment="center"
-
-
-        >
-    </TextView>
 <TextView
     android:layout_gravity="center"
     android:id="@+id/custmerGridView_TVPhoneNumber"
@@ -55,8 +42,20 @@ android:gravity="center"
     android:textColor="@color/black"
     android:textAlignment="center"
 
-
     >
 </TextView>
+    <TextView
+        android:layout_gravity="center"
+        android:id="@+id/custmerGridView_TVCustomerIdentity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+
+        >
+    </TextView>
 
 </LinearLayout>

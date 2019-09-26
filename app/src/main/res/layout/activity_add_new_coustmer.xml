@@ -36,7 +36,7 @@
                     android:layout_marginTop="15dp"
                     android:layout_weight="1.7"
                     android:orientation="vertical"
-                    android:weightSum="4">
+                    android:weightSum="5">
 
                     <TextView
                         android:id="@+id/textView9"
@@ -75,6 +75,17 @@
                         android:textColor="@color/black"
                         android:textSize="20dp"
                         android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="70dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="@string/customer_id"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/add_new_customer_textView100"
@@ -98,7 +109,7 @@
                     android:background="#FFFFFF"
                     android:orientation="vertical"
                     android:padding="5dp"
-                    android:weightSum="4">
+                    android:weightSum="5">
 
                     <EditText
                         android:id="@+id/etCustomerFirstName"
@@ -130,7 +141,16 @@
                         android:hint="@string/phone_number"
                         android:inputType="phone"
                         android:padding="8dp" />
-
+                    <EditText
+                        android:id="@+id/etCustomerId"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bubble"
+                        android:hint="@string/customer_id"
+                        android:padding="8dp"
+                        android:inputType="numberDecimal"/>
                     <Spinner
                         android:id="@+id/customerClubSpinner"
                         android:layout_width="match_parent"
@@ -168,7 +188,7 @@
                         android:layout_marginTop="15dp"
                         android:layout_weight="1.7"
                         android:orientation="vertical"
-                        android:weightSum="9">
+                        android:weightSum="8">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -265,17 +285,6 @@
                             android:textColor="@color/black"
                             android:textSize="20dp"
                             android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="70dp"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:text="@string/customer_id"
-                            android:textAlignment="textStart"
-                            android:textColor="@color/black"
-                            android:textSize="20dp"
-                            android:textStyle="bold" />
 
 
                     </LinearLayout>
@@ -287,7 +296,7 @@
                         android:background="#FFFFFF"
                         android:orientation="vertical"
                         android:padding="5dp"
-                        android:weightSum="9">
+                        android:weightSum="8">
 
                         <EditText
                             android:id="@+id/etCustomerCountryCode"
@@ -369,15 +378,7 @@
                             android:background="@drawable/bubble"
                             android:hint="@string/customer_code_in_another_programme"
                             android:padding="8dp" />
-                        <EditText
-                            android:id="@+id/etCustomerId"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="15dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/bubble"
-                            android:hint="@string/customer_id"
-                            android:padding="8dp" />
+
 
                     </LinearLayout>
 

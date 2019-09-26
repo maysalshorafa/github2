@@ -295,7 +295,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                     closingReportDBAdapter.open();
                                                     ClosingReport closingReport1 = closingReportDBAdapter.getClosingReportByOpiningReportId(opiningReport.getOpiningReportId());
                                                     if(closingReport1!=null){
-                                                        ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(DashBord.this);
+                                                   /*     ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(DashBord.this);
                                                         zReportDBAdapter.open();
                                                         ZReport lastZReport = Util.getLastZReport(getApplicationContext());
                                                         if (lastZReport == null) {
@@ -315,8 +315,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                         z.setTotalAmount(amount);
                                                         z.setTotalSales(amount);
                                                         z.setInvoiceReceiptAmount(amount);
-                                                        z.setTotalPosSales(totalZReportAmount);
-                                                        ZReport zReport= Util.insertZReport(z,getApplicationContext());
+                                                        z.setTotalPosSales(totalZReportAmount);*/
+                                                        ZReport zReport= Util.insertZReport(getApplicationContext());
                                                         btZReport.setEnabled(false);
                                                         if(zReport!=null){
                                                             if (needAReport()) {
@@ -336,8 +336,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
                                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
                                                              i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
-                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
-                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,amount);
+                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReport.getTotalSales());
+                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,zReport.getTotalAmount());
                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FROM_DASH_BOARD,true);
 
                                                           //  finish();
@@ -388,7 +388,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                     closingReportDBAdapter.open();
                                     ClosingReport closingReport1 = closingReportDBAdapter.getClosingReportByOpiningReportId(opiningReport.getOpiningReportId());
                                     if(closingReport1!=null){
-                                        ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(DashBord.this);
+                                       /* ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(DashBord.this);
                                         zReportDBAdapter.open();
                                         ZReport lastZReport = Util.getLastZReport(getApplicationContext());
 
@@ -408,8 +408,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                         z.setInvoiceReceiptAmount(amount);
                                         z.setTotalSales(amount);
                                         z.setTotalAmount(amount);
-                                        z.setTotalPosSales(totalZReportAmount);
-                                        ZReport zReport= Util.insertZReport(z,getApplicationContext());
+                                        z.setTotalPosSales(totalZReportAmount);*/
+                                        ZReport zReport= Util.insertZReport(getApplicationContext());
                                         btZReport.setEnabled(false);
                                         if(zReport!=null){
                                             if (needAReport()) {
@@ -417,21 +417,23 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                 btZReport.setEnabled(false);
                                                 closingReport.setEnabled(false);
                                                 salesCart.setEnabled(false);
-                                            } else {
+                                            }
+
 
                                                 if (lastSale == null) {
                                                     // btZReport.setEnabled(false);
-                                                } else
+                                                } else {
                                                     btZReport.setEnabled(true);
-                                                salesCart.setEnabled(true);
-                                            }
+                                                    salesCart.setEnabled(true);
+                                                }
                                             Intent i = new Intent(DashBord.this, ReportZDetailsActivity.class);
-                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
-                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
-                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
-                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,totalZReportAmount);
-                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,amount);
+                                            i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
+                                            i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
+                                            i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
+                                            i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReport.getTotalSales());
+                                            i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,zReport.getTotalAmount());
                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FROM_DASH_BOARD,true);
+
                                             finish();
                                              startActivity(i);
                                         }
@@ -595,19 +597,34 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         for (Permissions p : permissions) {
             switch (p.getName()) {
                 case Permissions.PERMISSIONS_MAIN_SCREEN:
-                    if (needAReport()) {
+                    OpiningReportDBAdapter opiningReportDBAdapter=new OpiningReportDBAdapter(DashBord.this);
+                    opiningReportDBAdapter.open();
+                    ClosingReportDBAdapter closingReportDBAdapter=new ClosingReportDBAdapter(DashBord.this);
+                    closingReportDBAdapter.open();
+                    ClosingReport closingR=null;
+                    try {
+                        closingR=closingReportDBAdapter.getLastRow();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    OpiningReport opiningReport=null;
+                    try {
+                         opiningReport=opiningReportDBAdapter.getLastRow();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                   if(opiningReport==null) {
                         btAReport.setEnabled(true);
                         btZReport.setEnabled(false);
                         closingReport.setEnabled(false);
                         salesCart.setEnabled(false);
-                    } else {
+                    }else {
+                       needAReport();
+                   }
 
-                        if (lastSale == null) {
-                            // btZReport.setEnabled(false);
-                        } else
-                            btZReport.setEnabled(true);
-                        salesCart.setEnabled(true);
-                    }
+
 
                     break;
 
@@ -698,32 +715,42 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (aReport != null&&closingR==null) {
-            closingReport.setEnabled(true);
-            btAReport.setEnabled(false);
-        }
-        if (aReport != null && closingR != null) {
-            if (aReport.getOpiningReportId() == closingR.getOpiningReportId()) {
-                closingReport.setEnabled(false);
-                btAReport.setEnabled(true);
-            } else {
+        if (aReport != null&&closingR!=null) {
+            if (aReport.getOpiningReportId()!=closingR.getOpiningReportId()) {
                 closingReport.setEnabled(true);
                 btAReport.setEnabled(false);
-
+                btZReport.setEnabled(true);
+                salesCart.setEnabled(true);
+            }else  if (aReport.getOpiningReportId()==closingR.getOpiningReportId()&&zReport.getCloseOpenReport().equalsIgnoreCase("open")) {
+                closingReport.setEnabled(false);
+                btAReport.setEnabled(true);
+                btZReport.setEnabled(true);
+                salesCart.setEnabled(true);
+            }else  if (aReport.getOpiningReportId()==closingR.getOpiningReportId()&&zReport.getCloseOpenReport().equalsIgnoreCase("close")) {
+                closingReport.setEnabled(false);
+                btAReport.setEnabled(true);
+                btZReport.setEnabled(false);
+                salesCart.setEnabled(false);
             }
+            return true;
+        }else   if (aReport != null&&closingR==null) {
+                closingReport.setEnabled(true);
+                btAReport.setEnabled(false);
+                btZReport.setEnabled(true);
+                salesCart.setEnabled(true);
 
+            return true;
         }
 
-        if (aReport != null && zReport != null) {
+
+        /*if (aReport != null && zReport != null) {
             if (aReport.getLastZReportID() == zReport.getzReportId()) {
 
             } else {
                 return true;
             }
 
-        } else if (aReport == null) {
-            return true;
-        }
+        }*/
 
         return false;
     }
@@ -808,18 +835,61 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 @Override
                 public void onClick(View v) {
                     String str = et.getText().toString();
+                    ZReport zReport1 = null;
+                    ZReportDBAdapter zReportDBAdapter=new ZReportDBAdapter(DashBord.this);
+                    zReportDBAdapter.open();
+                    try {
+                        zReport1 = zReportDBAdapter.getLastRow();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     if (!str.equals("")) {
                         aReport.setAmount(Double.parseDouble(str));
                         OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
-                        long id = aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
-                        OpiningReport opiningReport = aReportDBAdapter.getById(id);
-                        aReportDBAdapter.close();
+
+                        ZReport zReport = null;
+                        OpiningReport opiningReport=null;
+                        try {
+                            zReport = zReportDBAdapter.getLastRow();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if(zReport==null){
+                            ZReport z = new ZReport();
+                            z.setCreatedAt( new Timestamp(System.currentTimeMillis()));
+                            z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
+                            z.setStartOrderId(0);
+                            z.setTotalAmount(aReport.getAmount());
+                            z.setShekelAmount(aReport.getAmount());
+                            z.setCloseOpenReport("open");
+                            zReportDBAdapter.insertEntry(z);
+
+
+
+                        }
+                        else if(zReport.getCloseOpenReport().equalsIgnoreCase("close")){
+                            ZReport z = new ZReport();
+                            z.setCreatedAt( new Timestamp(System.currentTimeMillis()));
+                            z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
+                            z.setStartOrderId(zReport.getEndOrderId()+1);
+                            z.setTotalAmount(aReport.getAmount());
+                            z.setShekelAmount(opiningReport.getAmount());
+                            z.setCloseOpenReport("open");
+                            zReportDBAdapter.insertEntry(z);
+                        }
+                        else if(zReport.getCloseOpenReport().equalsIgnoreCase("open")){
+                            zReport.setTotalAmount(zReport.getTotalAmount()+opiningReport.getAmount());
+                            zReport.setShekelAmount(zReport.getShekelAmount()+opiningReport.getAmount());
+                            zReportDBAdapter.updateEntry(zReport);
+                        }
                         final ArrayList<String> hintForCurrencyType = new ArrayList<String>();
                         final ArrayList<Double> hintForCurrencyAmount = new ArrayList<Double>();
+                        long id = aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
+                        opiningReport = aReportDBAdapter.getById(id);
                         Util.opiningReport(DashBord.this,opiningReport,hintForCurrencyType,hintForCurrencyAmount);
                         discountDialog.cancel();
-                        closingReport.setEnabled(true);
+                        EnableButtons();
                     }
                 }
             });
@@ -1068,15 +1138,82 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     String str = ETFirstCurrencyAmount.getText().toString();
                     if (!str.equals("")) {
                         aReportTotalAmount = firstCurrencyInDefaultValue * fCurrency.getRate() + secondCurrencyInDefaultValue * sCurrency.getRate() + thirdCurrencyInDefaultValue * tCurrency.getRate() + forthCurrencyInDefaultValue * forthCurrency.getRate();
-                        aReport.setAmount(aReportTotalAmount);
                         OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
-                        long id= aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(), aReport.getLastZReportID());
                         OpiningReport opiningReport = null;
+                        ZReport zReport1=null;
+
                         try {
+                            aReport.setAmount(aReportTotalAmount);
+
+                            long id = aReportDBAdapter.insertEntry(aReport.getCreatedAt(), aReport.getByUserID(), aReport.getAmount(), aReport.getLastOrderId(),aReport.getLastZReportID());
+                            opiningReport = aReportDBAdapter.getById(id);
                             aReportId = aReportDBAdapter.getLastRow().getOpiningReportId();
                             opiningReport= aReportDBAdapter.getById(aReportId);
-                            aReportDBAdapter.close();
+                            ZReportDBAdapter zReportDBAdapter=new ZReportDBAdapter(DashBord.this);
+                            zReportDBAdapter.open();
+                            ZReport zReport = null;
+                            try {
+                                zReport = zReportDBAdapter.getLastRow();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if(zReport==null){
+                                ZReport z = new ZReport();
+                                z.setCreatedAt( new Timestamp(System.currentTimeMillis()));
+                                z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
+                                z.setStartOrderId(0);
+                                z.setTotalAmount(aReportTotalAmount);
+                                z.setShekelAmount(firstCurrencyInDefaultValue);
+                                z.setUsdAmount(secondCurrencyInDefaultValue);
+                                z.setGbpAmount(thirdCurrencyInDefaultValue);
+                                z.setEurAmount(forthCurrencyInDefaultValue);
+                                z.setCloseOpenReport("open");
+                                zReportDBAdapter.insertEntry(z);
+                                try {
+                                    zReport1 = zReportDBAdapter.getLastRow();
+                                    opiningReport.setLastZReportID(zReport1.getzReportId());
+                                 long opiningReportid=   aReportDBAdapter.upDateEntry(opiningReport);
+                                    OpiningReport opiningReport1 =aReportDBAdapter.getById(opiningReportid);
+                                    Log.d("finelTestZreport",opiningReport1.toString());
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                            else if(zReport.getCloseOpenReport().equalsIgnoreCase("close")){
+                                ZReport z = new ZReport();
+                                z.setCreatedAt( new Timestamp(System.currentTimeMillis()));
+                                z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
+                                z.setStartOrderId(zReport.getEndOrderId()+1);
+                                z.setTotalAmount(aReport.getAmount());
+                                z.setShekelAmount(firstCurrencyInDefaultValue);
+                                z.setUsdAmount(secondCurrencyInDefaultValue);
+                                z.setGbpAmount(thirdCurrencyInDefaultValue);
+                                z.setEurAmount(forthCurrencyInDefaultValue);
+                                z.setCloseOpenReport("open");
+                                zReportDBAdapter.insertEntry(z);
+                                try {
+                                    zReport1 = zReportDBAdapter.getLastRow();
+                                    opiningReport.setLastZReportID(zReport1.getzReportId());
+                                    aReportDBAdapter.upDateEntry(opiningReport);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                            else if(zReport.getCloseOpenReport().equalsIgnoreCase("open")){
+                                zReport.setTotalAmount(zReport.getTotalAmount()+aReport.getAmount());
+                                zReport.setShekelAmount(zReport.getShekelAmount()+firstCurrencyInDefaultValue);
+                                zReport.setUsdAmount(zReport.getUsdAmount()+secondCurrencyInDefaultValue);
+                                zReport.setGbpAmount(zReport.getGbpAmount()+thirdCurrencyInDefaultValue);
+                                zReport.setEurAmount(zReport.getEurAmount()+forthCurrencyInDefaultValue);
+                                zReportDBAdapter.updateEntry(zReport);
+                                Log.d("finelTestZreport",zReport.toString());
+
+                            }
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -1092,7 +1229,6 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         if (forthCurrencyInDefaultValue > 0) {
                             aReportDetailsDBAdapter.insertEntry(aReportId, forthCurrencyInDefaultValue, forthCurrency.getId(), forthCurrencyInDefaultValue * forthCurrency.getRate());
                         }
-
                         aReportDialog.cancel();
                         aReportDBAdapter.close();
                         aReportDetailsDBAdapter.close();
@@ -1107,8 +1243,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         hintForCurrencyAmount.add(thirdCurrencyInDefaultValue);
                         hintForCurrencyAmount.add(forthCurrencyInDefaultValue);
                         Util.opiningReport(DashBord.this,opiningReport,hintForCurrencyType,hintForCurrencyAmount);
-                        closingReport.setEnabled(true);
-
+                       EnableButtons();
                     }
                 }
             });

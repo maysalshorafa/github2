@@ -101,26 +101,35 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
         log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Employee user = userDBAdapter.getEmployeesByPassword(passWord);
-                ScheduleWorkers scheduleWorkers = scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(user.getEmployeeId());
-                scheduleWorkersDBAdapter.updateEntry(user.getEmployeeId(),new Date());
-                long r=0,h=0,m=0,s=0;
-                r= DateConverter.getDateDiff(new Date(scheduleWorkers.getStartTime()),new Date(), TimeUnit.MILLISECONDS);
-                h=r/(1000*60*60);
-                m=((r-(h*1000*60*60))/(1000*60));
-                s=(r-(m*1000*60)-(h*1000*60*60))/(1000);
-                Toast.makeText(ScheduleWorkersActivity.this,getString(R.string.thanks)+user.getFullName() +getString(R.string.the_number_of_hours_you_work_is)+String.format("%02d:%02d:%02d",h,m,s),Toast.LENGTH_LONG).show();
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("user_name",user.getFullName());
-                    jsonObject.put("case","logOut");
-                    jsonObject.put("hours_of_work",String.format("%02d:%02d:%02d",h,m,s));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Util.logInLogOutReport(ScheduleWorkersActivity.this,jsonObject);
-              //  onBackPressed();
+                if(!userPassWord.getText().toString().equalsIgnoreCase("")) {
+                    Employee user = userDBAdapter.getEmployeesByPassword(passWord);
+                    if(user!=null) {
+                        ScheduleWorkers scheduleWorkers = scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(user.getEmployeeId());
+                        scheduleWorkersDBAdapter.updateEntry(user.getEmployeeId(), new Date());
+                        long r = 0, h = 0, m = 0, s = 0;
+                        r = DateConverter.getDateDiff(new Date(scheduleWorkers.getStartTime()), new Date(), TimeUnit.MILLISECONDS);
+                        h = r / (1000 * 60 * 60);
+                        m = ((r - (h * 1000 * 60 * 60)) / (1000 * 60));
+                        s = (r - (m * 1000 * 60) - (h * 1000 * 60 * 60)) / (1000);
+                        Toast.makeText(ScheduleWorkersActivity.this, getString(R.string.thanks) + user.getFullName() + getString(R.string.the_number_of_hours_you_work_is) + String.format("%02d:%02d:%02d", h, m, s), Toast.LENGTH_LONG).show();
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("user_name", user.getFullName());
+                            jsonObject.put("case", "logOut");
+                            jsonObject.put("hours_of_work", String.format("%02d:%02d:%02d", h, m, s));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Util.logInLogOutReport(ScheduleWorkersActivity.this, jsonObject);
+                        //  onBackPressed();
+                    }else {
+                        Toast.makeText(ScheduleWorkersActivity.this,getString(R.string.please_remember_your_password),Toast.LENGTH_LONG).show();
 
+                    }
+                }else {
+                    Toast.makeText(ScheduleWorkersActivity.this,getString(R.string.please_remember_your_password),Toast.LENGTH_LONG).show();
+
+                }
             }});
 
     }

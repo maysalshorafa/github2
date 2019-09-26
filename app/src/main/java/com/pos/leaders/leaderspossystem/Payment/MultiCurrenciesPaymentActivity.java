@@ -91,7 +91,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     finish();
                 }
                 if(excess<=0 && totalPrice<0){
-                    paymentTables.add(new PaymentTable(Double.parseDouble(Util.makePrice(totalPrice)),0, 0, "", new CurrencyType(1l, defaultCurrency + ""),1));
+                    paymentTables.add(new PaymentTable(spCurrency.getSelectedItem().toString(),Double.parseDouble(Util.makePrice(totalPrice)),0, 0, "", new CurrencyType(1l, defaultCurrency + ""),1));
                     insertNewRow(totalPrice*-1, spCurrency.getSelectedItem().toString(),getCurrencyRate(spCurrency.getSelectedItem().toString()),PaymentMethod.CASH);
                     Log.d("PaymentTables",paymentTables.toString());
                     Intent i = new Intent();
@@ -129,7 +129,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         });
 
         tvActualCurrencyRate=(TextView)findViewById(R.id.MultiCurrenciesPaymentActivity_tvActualCurrencyRate);
-        paymentTables.add(new PaymentTable(Double.parseDouble(Util.makePrice(totalPrice)), Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + ""),1));
+        paymentTables.add(new PaymentTable("₪",Double.parseDouble(Util.makePrice(totalPrice)), Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + ""),1));
 
         paymentTableAdapter = new PaymentTableAdapter(MultiCurrenciesPaymentActivity.this, R.layout.list_adapter_multi_currencies_payment, paymentTables);
 /**
@@ -213,7 +213,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         paymentTables.remove(position);
         ArrayList<PaymentTable> tempArray = new ArrayList<>(paymentTables);
         paymentTables.clear();
-        paymentTables.add(new PaymentTable(Double.parseDouble(Util.makePrice(totalPrice)), Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + ""),1));
+        paymentTables.add(new PaymentTable(spCurrency.getSelectedItem().toString(),Double.parseDouble(Util.makePrice(totalPrice)), Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + ""),1));
         excess = totalPrice/getCurrencyRate(tempArray.get(0).getCurrency().getType());
         totalPaid = 0;
         for(int i=0;i<tempArray.size()-1;i++) {
@@ -231,6 +231,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         lastPaymentTable.setDue(Double.parseDouble(Util.makePrice(excess)));
         lastPaymentTable.setCurrency(new CurrencyType(1l,spCurrency.getSelectedItem().toString()));
         lastPaymentTable.setTendered(Double.NaN);
+        lastPaymentTable.setTempCurrency(spCurrency.getSelectedItem().toString());
         paymentTableAdapter.notifyDataSetChanged();
     }
 
@@ -240,11 +241,11 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 return;
         if(paymentMethod.equals(PaymentMethod.CASH)) {
             //get currency rate
-            totalPaid += val * actualCurrencyRate;
+            totalPaid += val * currencyRate;
             double beforeChangeExcess = excess;
             setExcess();
             updateView();
-            paymentTables.add(paymentTables.size() - 1, new PaymentTable(beforeChangeExcess, val, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, currency + ""), actualCurrencyRate));
+            paymentTables.add(paymentTables.size() - 1, new PaymentTable(spCurrency.getSelectedItem().toString(),beforeChangeExcess, val, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, currency + ""), actualCurrencyRate));
             updateLastRow();
             lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         }else if(paymentMethod.equals(PaymentMethod.CHECK)) {
@@ -252,8 +253,8 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             valRow=val;
             currencyRow=currency;
             Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ChecksActivity.class);
-
-            intent.putExtra("_Price", val*currencyRate);
+            intent.putExtra("_CurrencyType", currencyType);
+            intent.putExtra("_Price", val);
             intent.putExtra("_custmer", "general");
 
             startActivityForResult(intent, REQUEST_CHECKS_ACTIVITY_CODE);
@@ -333,7 +334,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             paymentTables.clear();
             excess=totalPrice;
             totalPaid=0;
-            paymentTables.add(new PaymentTable(Double.parseDouble(Util.makePrice(totalPrice)), Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + ""),actualCurrencyRate));
+            paymentTables.add(new PaymentTable(spCurrency.getSelectedItem().toString(),Double.parseDouble(Util.makePrice(totalPrice)), Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + ""),actualCurrencyRate));
             setExcess();
             updateView();
             paymentTableAdapter.notifyDataSetChanged();
@@ -386,7 +387,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 double beforeChangeExcess = excess;
                 setExcess();
                 updateView();
-                paymentTables.add(paymentTables.size() - 1, new PaymentTable(beforeChangeExcess, valRow, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CHECK, new CurrencyType(1, currencyRow + ""), actualCurrencyRate));
+                paymentTables.add(paymentTables.size() - 1, new PaymentTable(spCurrency.getSelectedItem().toString(),beforeChangeExcess, valRow, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CHECK, new CurrencyType(1, currencyRow + ""), actualCurrencyRate));
                 updateLastRow();
                 lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
             }
@@ -398,7 +399,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 double beforeChangeExcess = excess;
                 setExcess();
                 updateView();
-                paymentTables.add(paymentTables.size() - 1, new PaymentTable(beforeChangeExcess, valRow, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CREDIT_CARD, new CurrencyType(1, currencyRow + ""), actualCurrencyRate));
+                paymentTables.add(paymentTables.size() - 1, new PaymentTable(spCurrency.getSelectedItem().toString(),beforeChangeExcess, valRow, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CREDIT_CARD, new CurrencyType(1, currencyRow + ""), actualCurrencyRate));
                 updateLastRow();
                 lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
             }

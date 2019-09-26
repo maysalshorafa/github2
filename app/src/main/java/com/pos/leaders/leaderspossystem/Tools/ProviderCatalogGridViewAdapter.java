@@ -95,15 +95,15 @@ public class ProviderCatalogGridViewAdapter extends BaseAdapter {
         }
 
         TextView tvCustmerName=(TextView)gridView.findViewById(R.id.custmerGridView_TVCustmerName);
-        TextView tvCustmerLastName=(TextView)gridView.findViewById(R.id.custmerGridView_TVCustmerLastName);
+        TextView tvCustomerIdentity=(TextView)gridView.findViewById(R.id.custmerGridView_TVCustomerIdentity);
 
         //TextView tvFullName=(TextView)gridView.findViewById(R.id.custmerGridView_TVFullName);
         TextView tvPhoneNumber=(TextView)gridView.findViewById(R.id.custmerGridView_TVPhoneNumber);
 
-        tvCustmerName.setText(providers.get(position).getFirstName());
+        tvCustmerName.setText(providers.get(position).getFullName());
         //   tvFullName.setText(providers.get(position).getFullName());
-        tvCustmerLastName.setText(providers.get(position).getLastName());
         tvPhoneNumber.setText(providers.get(position).getPhoneNumber());
+        tvCustomerIdentity.setText(providers.get(position).getProviderIdentity());
 
         return gridView;
     }

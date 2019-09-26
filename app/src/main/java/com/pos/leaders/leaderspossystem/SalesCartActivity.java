@@ -1912,11 +1912,20 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(SalesCartActivity.this);
                                                         posInvoiceDBAdapter.open();
                                                         posInvoiceDBAdapter.insertEntry(SESSION._ORDERS.getTotalPrice(),zReport.getzReportId(),DocumentType.INVOICE.getValue(),InvoiceStatus.UNPAID.getValue(),invoiceNum, CONSTANT.CASH);
+                                                        zReport.setInvoiceAmount(zReport.getInvoiceAmount()+SESSION._ORDERS.getTotalPrice());
+                                                        zReport.setTotalSales(zReport.getTotalSales()+SESSION._ORDERS.getTotalPrice());
+                                                        zReport.setTotalPosSales(zReport.getTotalPosSales()+SESSION._ORDERS.getTotalPrice());
+                                                        zReportDBAdapter.updateEntry(zReport);
+
                                                     } catch (Exception e) {
                                                         PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(SalesCartActivity.this);
                                                         posInvoiceDBAdapter.open();
                                                         posInvoiceDBAdapter.insertEntry(SESSION._ORDERS.getTotalPrice(),-1,DocumentType.INVOICE.getValue(),InvoiceStatus.UNPAID.getValue(),invoiceNum, CONSTANT.CASH);
-                                                        e.printStackTrace();
+                                                        zReport.setInvoiceAmount(zReport.getInvoiceAmount()+SESSION._ORDERS.getTotalPrice());
+                                                        zReport.setTotalSales(zReport.getTotalSales()+SESSION._ORDERS.getTotalPrice());
+                                                        zReport.setTotalPosSales(zReport.getTotalPosSales()+SESSION._ORDERS.getTotalPrice());
+                                                        zReportDBAdapter.updateEntry(zReport);
+                                                       e.printStackTrace();
                                                     }
 
                                                     try {
@@ -2563,6 +2572,7 @@ public class SalesCartActivity extends AppCompatActivity {
        // SESSION._ORDERS.setCartDiscount(0);
         SESSION._Rest();
         customerName_EditText.setText("");
+        Log.d("SESSION._ORDER_DETAILES", SESSION._ORDER_DETAILES.toString());
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
         custmerAssetstIdList = new ArrayList<Long>();
@@ -2883,6 +2893,7 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     private void addToCart(Product p) throws JSONException {
+        Log.d("testOrderDe",p.toString());
         OrderDetails newOrderDetails = null;
         boolean isMatch = false;
         //test if cart have this order before insert to cart and order have'nt discount
@@ -2893,6 +2904,8 @@ public class SalesCartActivity extends AppCompatActivity {
             Log.d("ORDER_DETAILS", o.toString());
             //Log.d("Product", p.toString());
             if(p.getProductId()!=-1){
+                Log.d("ORDER_DETAILS1", o.toString());
+
                 if(p.getUnit().equals(ProductUnit.QUANTITY)){
 
                     if(!o.getProduct().isWithSerialNumber()){
@@ -2913,6 +2926,7 @@ public class SalesCartActivity extends AppCompatActivity {
             }
                     }
         }
+
             }
         }
         if (!isMatch) {
@@ -4250,6 +4264,10 @@ public class SalesCartActivity extends AppCompatActivity {
         //endregion
         if (requestCode == REQUEST_MULTI_CURRENCY_ACTIVITY_CODE) {
                 if (resultCode == RESULT_OK) {
+                    SESSION._TEMP_ORDER_DETAILES=SESSION._ORDER_DETAILES;
+                    SESSION._TEMP_ORDERS=SESSION._ORDERS;
+                    ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
+                    zReportDBAdapter.open();
                     boolean trueCreditCard=false;
                 if(orderDocumentFlag){
                     try {
@@ -4262,6 +4280,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 JSONArray jsonArray = null;
                 try {
+                    ZReport zReport =zReportDBAdapter.getLastRow();
                     CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(this);
                     currencyOperationDBAdapter.open();
                     ArrayList<PaymentTable>paymentTableArrayList=new ArrayList<>();
@@ -4306,6 +4325,14 @@ public class SalesCartActivity extends AppCompatActivity {
                     }else {
                     for (int i = 0 ;i<paymentTableArrayList.size();i++){
                         currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,paymentTableArrayList.get(i).getTendered(),paymentTableArrayList.get(i).getPaymentMethod(),paymentTableArrayList.get(i).getCurrency().getType());
+                      if(paymentTableArrayList.get(i).getCurrency().getType().equalsIgnoreCase("USD")) {
+                            zReport.setUsdAmount(zReport.getUsdAmount() + paymentTableArrayList.get(i).getTendered());
+                        }else if(paymentTableArrayList.get(i).getCurrency().getType().equalsIgnoreCase("EUR")) {
+                            zReport.setEurAmount(zReport.getEurAmount() + paymentTableArrayList.get(i).getTendered());
+                        }
+                        else if(paymentTableArrayList.get(i).getCurrency().getType().equalsIgnoreCase("GBP")) {
+                            zReport.setGbpAmount(zReport.getGbpAmount() + paymentTableArrayList.get(i).getTendered());
+                        }
                     }
                     }
                     long paymentID = paymentDBAdapter.insertEntry(saleTotalPrice, saleIDforCash,order.getOrderKey());
@@ -4320,6 +4347,8 @@ public class SalesCartActivity extends AppCompatActivity {
                         if(jsonObject.getString("paymentMethod").equalsIgnoreCase(CONSTANT.CASH)) {
 
                             cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()), getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")), jsonObject.getDouble("actualCurrencyRate"));
+                        zReport.setShekelAmount(zReport.getShekelAmount()+ jsonObject.getDouble("tendered"));
+                            zReport.setCashTotal(zReport.getCashTotal()+jsonObject.getDouble("tendered"));
                         }else if(jsonObject.getString("paymentMethod").equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
                             trueCreditCard=true;
                             CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
@@ -4329,6 +4358,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                     , ccp.getFirstPaymentAmount(), ccp.getOtherPaymentAmount(), ccp.getCreditCardCompanyName());
 
                             creditCardPaymentDBAdapter.close();
+                            zReport.setCreditTotal(zReport.getCreditTotal()+ccp.getAmount());
                         }
                     }
                     if(SESSION._CHECKS_HOLDER.size()>0){
@@ -4338,11 +4368,13 @@ public class SalesCartActivity extends AppCompatActivity {
                         for (Check check : SESSION._CHECKS_HOLDER) {
                             if( check.getAmount()>0){
                             checksDBAdapter.insertEntry(check.getCheckNum(), check.getBankNum(), check.getBranchNum(), check.getAccountNum(), check.getAmount(), check.getCreatedAt(), saleIDforCash);
+                                zReport.setCheckTotal(zReport.getCheckTotal()+check.getAmount());
                         }
                         }
                         checksDBAdapter.close();
                     }
                     }
+                    zReportDBAdapter.updateEntry(zReport);
                     cashPaymentDBAdapter.close();
                     // Club with point and amount
                     if (clubType == 2) {
@@ -4429,9 +4461,10 @@ public class SalesCartActivity extends AppCompatActivity {
 
                         }
                     }
-                    SESSION._TEMP_ORDER_DETAILES=SESSION._ORDER_DETAILES;
-                    SESSION._TEMP_ORDERS=SESSION._ORDERS;
+
                     currencyReturnsCustomDialogActivity.show();
+                    Log.d("finelTestSalsCart",zReport.toString());
+
                     SESSION._Rest();
                     clearCart();
                     return;
@@ -4612,10 +4645,11 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 if (!word.equals("")) {
                     for (Customer c : AllCustmerList) {
-
+Log.d("testCustomer",c.toString());
                         if (c.getFirstName().toLowerCase().contains(word.toLowerCase()) ||
                                 c.getLastName().toLowerCase().contains(word.toLowerCase())||
-                                c.getPhoneNumber().toLowerCase().contains(word.toLowerCase())) {
+                                c.getPhoneNumber().toLowerCase().contains(word.toLowerCase())||
+                                String.valueOf(c.getCustomerIdentity()).contains(word.toLowerCase())) {
                             customerList.add(c);
 
                         }

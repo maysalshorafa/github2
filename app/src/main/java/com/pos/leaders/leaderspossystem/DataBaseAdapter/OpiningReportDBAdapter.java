@@ -96,6 +96,23 @@ public class OpiningReportDBAdapter {
             return -1;
         }
     }
+    public long upDateEntry(OpiningReport aReport) {
+        ContentValues val = new ContentValues();
+
+        val.put(OPINING_REPORT_COLUMN_ID, aReport.getOpiningReportId());
+        val.put(OPINING_REPORT_COLUMN_BYUSER, aReport.getByUserID());
+        val.put(OPINING_REPORT_COLUMN_AMOUNT, aReport.getAmount());
+        val.put(OPINING_REPORT_COLUMN_LASTSALEID, aReport.getLastOrderId());
+        val.put(OPINING_REPORT_COLUMN_LASTZREPORTID, aReport.getLastZReportID());
+        try {
+            String where = OPINING_REPORT_COLUMN_ID + " = ?";
+            db.update(OPINING_REPORT_TABLE_NAME, val, where, new String[]{aReport.getOpiningReportId() + ""});
+        } catch (SQLException ex) {
+            Log.e(" DB Update", "update Entry at " + OPINING_REPORT_TABLE_NAME + ": " + ex.getMessage());
+            return -1;
+        }
+        return 1;
+    }
 
     public OpiningReport getByLastZReport(long lastZReportID){
         OpiningReport aReport;

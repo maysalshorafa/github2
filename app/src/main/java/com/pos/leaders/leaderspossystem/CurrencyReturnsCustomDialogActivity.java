@@ -18,11 +18,12 @@ import android.widget.TextView;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.PrinterTools;
-import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -94,9 +95,26 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
                     currencyReturnsDBAdapter.open();
                     double returnCurrencyValue = Double.parseDouble(tvExcess.getText().toString());
                     currencyReturnsDBAdapter.insertEntry(sale.getOrderId(), returnCurrencyValue, new Timestamp(System.currentTimeMillis()), rCurrency.getId());
+                    ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(getContext());
+                    zReportDBAdapter.open();
+                    try {
+                        ZReport zReport =zReportDBAdapter.getLastRow();
+                        if(rCurrency.getId()==0) {
+                            zReport.setShekelAmount(zReport.getShekelAmount() - returnCurrencyValue);
+                        }else if (rCurrency.getId()==1){
+                            zReport.setUsdAmount(zReport.getUsdAmount()-returnCurrencyValue);
+                        }else if(rCurrency.getId()==2){
+                            zReport.setEurAmount(zReport.getEurAmount()-returnCurrencyValue);
+                        }else if(rCurrency.getId()==3){
+                            zReport.setGbpAmount(zReport.getGbpAmount()-returnCurrencyValue);
+                        }
+                        zReportDBAdapter.updateEntry(zReport);
+                        zReportDBAdapter.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=true;
                     currencyReturnsDBAdapter.close();
-                    SESSION._ORDERS=sale;
                     if (firstCredit != "" && secondCredit != "" && thirdCredit != "") {
                         PrinterTools.printAndOpenCashBox(firstCredit, secondCredit,thirdCredit, 600,getContext(),c);
 
@@ -107,6 +125,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
 
 
                 }
+
                 cancel();
             }
         });

@@ -272,7 +272,7 @@ public class ProductDBAdapter {
         try {
             db.update(PRODUCTS_TABLE_NAME, updatedValues, where, new String[]{id + ""});
             //delete all offers for this product
-            new OfferDBAdapter(context).deleteEntryByResourceId(id);
+          //  new OfferDBAdapter(context).deleteEntryByResourceId(id);
             Product product=productDBAdapter.getProductByID(id);
             sendToBroker(MessageType.DELETE_PRODUCT, product, this.context);
             return 1;
@@ -291,7 +291,7 @@ public class ProductDBAdapter {
         try {
             db.update(PRODUCTS_TABLE_NAME, updatedValues, where, new String[]{product.getProductId() + ""});
             //delete all offers for this product
-            new OfferDBAdapter(context).deleteEntryByResourceId(product.getProductId());
+           // new OfferDBAdapter(context).deleteEntryByResourceId(product.getProductId());
             return 1;
         } catch (SQLException ex) {
             Log.e("Product deleteEntry", "enable hide Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());

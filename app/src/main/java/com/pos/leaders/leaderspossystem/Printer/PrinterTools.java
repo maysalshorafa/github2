@@ -204,6 +204,7 @@ public class PrinterTools {
 
 
                     dialog.cancel();
+
                 }
 
                 @Override
