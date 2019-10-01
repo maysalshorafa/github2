@@ -13,7 +13,6 @@ import com.pos.leaders.leaderspossystem.Models.ProductInventory;
 import com.pos.leaders.leaderspossystem.R;
 
 import java.util.List;
-import java.util.Locale;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
@@ -55,26 +54,18 @@ public class InventoryProductDetailsListViewAdapter extends ArrayAdapter impleme
             holder = new InventoryProductDetailsListViewAdapter.ViewHolder();
             convertView = inflater.inflate(resource, null);
             holder.tvName = (TextView) convertView.findViewById(R.id.rowInventoryDetails_TVProductName);
-            holder.tvPrice = (TextView) convertView.findViewById(R.id.rowInventoryDetails_TVPrice);
             holder.tvCount = (TextView) convertView.findViewById(R.id.rowInventoryDetails_TVCount);
-            holder.tvTotal = (TextView) convertView.findViewById(R.id.rowInventoryDetails_TVTotalPrice);
             holder.llMethods = (LinearLayout) convertView.findViewById(R.id.rowInventoryDetails_LLMethods);
 
             convertView.setTag(holder);
         } else {
             holder = (InventoryProductDetailsListViewAdapter.ViewHolder) convertView.getTag();
         }
-        int count;
-        double price;
-        price = productList.get(position).getPrice()*productList.get(position).getQty();;
-        count = productList.get(position).getQty();
         holder.tvName.setText(_Substring(productList.get(position).getName()));
         String currencyType="";
         ProductInventoryDbAdapter productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
         productInventoryDbAdapter.open();
-        holder.tvPrice.setText(String.format(new Locale("en"), "%.2f", productList.get(position).getPrice())+ " " );
         holder.tvCount.setText(1+ "");
-        holder.tvTotal.setText(String.format(new Locale("en"), "%.2f", (price )) + " " );
         if (selected == position && selected != -1) {
             holder.llMethods.setVisibility(View.VISIBLE);
 
@@ -107,8 +98,6 @@ public class InventoryProductDetailsListViewAdapter extends ArrayAdapter impleme
     public class ViewHolder {
         private TextView tvName;
         private TextView tvCount;
-        private TextView tvPrice;
-        private TextView tvTotal;
         private LinearLayout llMethods;
     }
 }

@@ -87,7 +87,7 @@ public class InInventoryDoc extends AppCompatActivity {
     int productCountLoad=80;
     InventoryProductDetailsListViewAdapter adapter ;
     View selectedIteminCartList;
-    TextView  orderCount, orderTotalPrice , orderPrice;
+    TextView  orderCount;
     ProductInventory selectedOrderOnCart = null;
     InventoryProductDetailsListViewAdapter adapter1;
     Inventory inventory;
@@ -201,7 +201,7 @@ public class InInventoryDoc extends AppCompatActivity {
                         protected void onPostExecute(Void aVoid) {
                             try {
                                 if(invoiceJsonObject.getString("status").equals("200")) {
-                                    for(int i= 0 ;i<finalListViewProduct.size();i++){
+                                    /*for(int i= 0 ;i<finalListViewProduct.size();i++){
                                         ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(finalListViewProduct.get(i).getProductId());
                                         productInventoryDbAdapter.updateEntry(finalListViewProduct.get(i).getProductId(),productInventory.getQty());
                                         Product p=productDBAdapter.getProductByID(finalListViewProduct.get(i).getProductId());
@@ -209,7 +209,7 @@ public class InInventoryDoc extends AppCompatActivity {
                                         productDBAdapter.updateProductPrice(p);
                                     }
                                     BoInventory inventory = new BoInventory(finalIn.getName(), finalIn.getInventoryId(),productHashMap, finalIn.getBranchId(), finalIn.getHide());
-                                    sendToBroker(MessageType.UPDATE_INVENTORY, inventory, InInventoryDoc.this);
+                                    sendToBroker(MessageType.UPDATE_INVENTORY, inventory, InInventoryDoc.this);*/
                                     PdfUA pdfUA = new PdfUA();
                                     JSONObject r = invoiceJsonObject.getJSONObject(MessageKey.responseBody);
 
@@ -485,8 +485,6 @@ public class InInventoryDoc extends AppCompatActivity {
                 });
 
                 orderCount = (TextView) view.findViewById(R.id.rowInventoryDetails_TVCount);
-                orderTotalPrice = (TextView) view.findViewById(R.id.rowInventoryDetails_TVTotalPrice);
-                orderPrice = (TextView) view.findViewById(R.id.rowInventoryDetails_TVPrice);
                 Button btnPlusOne = (Button) view.findViewById(R.id.rowInventoryDetails_MethodsPlusOne);
                 btnPlusOne.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -502,7 +500,6 @@ public class InInventoryDoc extends AppCompatActivity {
                     public void onClick(View v) {
                         decreaseItemOnCart(position);
                         orderCount.setText(finalListViewProduct.get(position).getQty() + "");
-                        orderTotalPrice.setText(finalListViewProduct.get(position).getPrice() * finalListViewProduct.get(position).getQty() + getString(R.string.ins));
                     }
                 });
                 Button btnEdit = (Button) view.findViewById(R.id.rowInventoryDetails_MethodsEdit);
@@ -518,10 +515,8 @@ public class InInventoryDoc extends AppCompatActivity {
 
                                 final Button cashBTOk = (Button) cashDialog.findViewById(R.id.inventoryDocDialog_BtOk);
                                 final EditText cashETCash = (EditText) cashDialog.findViewById(R.id.inventoryDocDialog_EtCount);
-                                final EditText inventoryEtPrice = (EditText) cashDialog.findViewById(R.id.inventoryDocDialog_EtPrice);
 
                                 cashETCash.setHint(R.string.count);
-                                inventoryEtPrice.setHint(R.string.price);
 
                                 cashETCash.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                                     @Override
@@ -532,20 +527,11 @@ public class InInventoryDoc extends AppCompatActivity {
                                         return false;
                                     }
                                 });
-                                inventoryEtPrice.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                                    @Override
-                                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                                        if (actionId == EditorInfo.IME_ACTION_DONE) {
-                                            cashBTOk.callOnClick();
-                                        }
-                                        return false;
-                                    }
-                                });
+
                                 cashBTOk.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         String _count = cashETCash.getText().toString();
-                                        String priceStr = inventoryEtPrice.getText().toString();
                                         int pid = 1;
                                         double price=0;
                                         if (!(_count.equals(""))){
@@ -553,14 +539,6 @@ public class InInventoryDoc extends AppCompatActivity {
                                         int indexOfItem = finalListViewProduct.indexOf(selectedOrderOnCart);
                                             finalListViewProduct.get(indexOfItem).setQty(pid);
                                             orderCount.setText(finalListViewProduct.get(position).getQty() + "");
-                                            orderTotalPrice.setText(selectedOrderOnCart.getPrice() * selectedOrderOnCart.getQty() + getString(R.string.ins));
-                                        }
-                                        if (!(priceStr.equals(""))){
-                                            price = Double.parseDouble(inventoryEtPrice.getText().toString());
-                                            int indexOfItem = finalListViewProduct.indexOf(selectedOrderOnCart);
-                                            finalListViewProduct.get(indexOfItem).setPrice(price);
-                                            orderTotalPrice.setText(selectedOrderOnCart.getPrice() * selectedOrderOnCart.getQty() + getString(R.string.ins));
-                                            orderPrice.setText(selectedOrderOnCart.getPrice()+getString(R.string.ins));
                                         }
                                         cashDialog.cancel();
                                     }
@@ -589,13 +567,13 @@ public class InInventoryDoc extends AppCompatActivity {
 
     private void increaseItemOnCart(int index) {
          finalListViewProduct.get(index).setQty( finalListViewProduct.get(index).getQty()+1);
-        adapter1= new InventoryProductDetailsListViewAdapter(getApplicationContext(),R.layout.list_adapter_row_nventory_product_details,finalListViewProduct);
-        finalProductListView.setAdapter(adapter1);    }
+        orderCount.setText(finalListViewProduct.get(index).getQty() + "");
+    }
 
     private void decreaseItemOnCart(int index) {
         finalListViewProduct.get(index).setQty(finalListViewProduct.get(index).getQty()-1);
-        adapter1= new InventoryProductDetailsListViewAdapter(getApplicationContext(),R.layout.list_adapter_row_nventory_product_details,finalListViewProduct);
-        finalProductListView.setAdapter(adapter1);
+        orderCount.setText(finalListViewProduct.get(index).getQty() + "");
+
     }
     private void removeFromCart(int index) {
         finalListViewProduct.remove(index);

@@ -162,7 +162,7 @@
 
     <string name="count">Count</string>
     <string name="multi_count">Please set product count.</string>
-    <string name="multi_count_price">Please set product count and Price.</string>
+    <string name="multi_count_price">Please set product count.</string>
 
     <string name="by_card">By Card</string>
     <string name="by_phone">By Phone</string>
@@ -738,6 +738,8 @@
     <string name="provider_management_activity">Provider Management</string>
     <string name="in_inventory_doc">In Inventory</string>
     <string name="deposit_and_pull_reportView">Deposit And Pull Report View</string>
+    <string name="this_product_not_in_your_permission">This Product not found but Not on your Permission To Add Product !!</string>
+
 
 </resources>
 

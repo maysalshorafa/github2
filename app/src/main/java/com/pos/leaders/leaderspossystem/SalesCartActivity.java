@@ -66,6 +66,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBA
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
@@ -257,7 +258,7 @@ public class SalesCartActivity extends AppCompatActivity {
     double secondPrice = 0.0;
     boolean userScrolled = false;
     int productLoadItemOffset = 0;
-    int productCountLoad = 60;
+    int productCountLoad = 20;
     POSSDK pos;
     Button btn_cancel;
     LinearLayout ll;
@@ -364,10 +365,18 @@ public class SalesCartActivity extends AppCompatActivity {
         btAddProductShortLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(SalesCartActivity.this, ProductsActivity.class);
-                startActivity(i);
+
+                EmployeePermissionsDBAdapter employeeDBAdapter =new EmployeePermissionsDBAdapter(SalesCartActivity.this);
+                employeeDBAdapter.open();
+                List<Integer> employeePermition =employeeDBAdapter.getPermissions(SESSION._EMPLOYEE.getEmployeeId());
+                if(employeePermition.contains(3)){
+                    Intent a = new Intent(SalesCartActivity.this, ProductsActivity.class);
+                    startActivity(a);}
+
+
             }
         });
+
         //Getting default currencies name and values
         CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
         currencyTypeDBAdapter.open();
@@ -397,7 +406,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
         gvProducts = (GridView) findViewById(R.id.mainActivity_gvProducts);
         lvProducts = (ListView) findViewById(R.id.mainActivity_lvProducts);
-        lvProducts.setVisibility(View.GONE);
+        lvProducts.setVisibility(View.VISIBLE);
         //   lvcustmer.setVisibility(View.GONE);
         btnGrid = (ImageButton) findViewById(R.id.mainActivity_btnGrid);
         btnList = (ImageButton) findViewById(R.id.mainActivity_btnList);
@@ -517,8 +526,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 isGrid = true;
                 btnList.setImageDrawable(getResources().getDrawable(R.drawable.icon_listview));
                 btnGrid.setImageDrawable(getResources().getDrawable(R.drawable.icon_gridview_active));
-                lvProducts.setVisibility(View.GONE);
-                gvProducts.setVisibility(View.VISIBLE);
+                lvProducts.setVisibility(View.VISIBLE);
+                gvProducts.setVisibility(View.GONE);
             }
         });
 
@@ -528,8 +537,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 isGrid = false;
                 btnList.setImageDrawable(getResources().getDrawable(R.drawable.icon_listview_active));
                 btnGrid.setImageDrawable(getResources().getDrawable(R.drawable.icon_gridview));
-                lvProducts.setVisibility(View.VISIBLE);
-                gvProducts.setVisibility(View.GONE);
+                lvProducts.setVisibility(View.GONE);
+                gvProducts.setVisibility(View.VISIBLE);
             }
         });
         salesSaleMan.setOnClickListener(new View.OnClickListener() {
@@ -734,16 +743,18 @@ public class SalesCartActivity extends AppCompatActivity {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    userScrolled = true;
+                    // userScrolled = true;
                 }
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (userScrolled && firstVisibleItem + visibleItemCount == totalItemCount) {
+                if (firstVisibleItem + visibleItemCount ==totalItemCount&& totalItemCount!=0) {
 
-                    userScrolled = false;
-                    loadMoreProduct();
+                    if(!userScrolled)
+                    {
+                        userScrolled=true;
+                        loadMoreProduct();}
                 }
             }
         });
@@ -764,7 +775,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
             }
         });
-        productList = productDBAdapter.getTopProducts(0, 50);
+
+        productList = productDBAdapter.getTopProducts(0, 20);
         All_productsList = productList;
         productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(this, productList);
         gvProducts.setNumColumns(2);
@@ -965,7 +977,7 @@ public class SalesCartActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String word = etSearch.getText().toString();
                 if (!word.equals("")) {
-                    productCountLoad = 80;
+                    productCountLoad = 20;
                     productLoadItemOffset = 0;
                     // Database query can be a time consuming task ..
                     // so its safe to call database query in another thread
@@ -3039,6 +3051,7 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     private void enterKeyPressed(String barcodeScanned) throws JSONException {
+        Log.d("tttttt",barcodeScanned.toString());
         Product product = new Product();
         char firstChar = barcodeScanned.charAt(0);
         if(firstChar=='2'){
@@ -3057,28 +3070,52 @@ public class SalesCartActivity extends AppCompatActivity {
         if (product != null) {
             addToCart(product);
         } else {
-            new AlertDialog.Builder(SalesCartActivity.this)
-                    .setTitle("Add Product")
-                    .setMessage("Are you want to add this product?")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+            EmployeePermissionsDBAdapter employeeDBAdapter =new EmployeePermissionsDBAdapter(SalesCartActivity.this);
+            employeeDBAdapter.open();
+            List<Integer> employeePermition =employeeDBAdapter.getPermissions(SESSION._EMPLOYEE.getEmployeeId());
+            if(employeePermition.contains(3)){
+                new AlertDialog.Builder(SalesCartActivity.this)
+                        .setTitle("Add Product")
+                        .setMessage("Are you want to add this product?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
 
-                            startActivity(intent);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+            else {
+                new AlertDialog.Builder(SalesCartActivity.this)
+                        .setTitle("Add Product")
+                        .setMessage(context.getString(R.string.this_product_not_in_your_permission))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();            }
+
         }
-        barcodeScanned = "";
+        barcodeScanned="";
         etSearch.setText("");
     }
 
+
     private void loadMoreProduct() {
+
         productLoadItemOffset += productCountLoad;
         final int id = prseedButtonDepartments.getId();
         final String searchWord = etSearch.getText().toString();
@@ -3088,26 +3125,59 @@ public class SalesCartActivity extends AppCompatActivity {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
-                dialog.show();
+//                dialog.show();
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 All_productsList = productList;
-                ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), All_productsList);
-                lvProducts.setAdapter(adapter);
-                gvProducts.setAdapter(adapter);
+                if(productCatalogGridViewAdapter==null){
+                    productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), All_productsList);
+                    lvProducts.setAdapter(productCatalogGridViewAdapter);
+                    gvProducts.setAdapter(productCatalogGridViewAdapter);
+                }
                 dialog.cancel();
+                userScrolled=false;
             }
 
             @Override
             protected Void doInBackground(Void... params) {
                 if (!searchWord.equals("")) {
-                    productList.addAll(productDBAdapter.getAllProductsByHint(searchWord, productLoadItemOffset, productCountLoad));
+                    productList.addAll(productDBAdapter.getAllProductsByHint(searchWord, productList.size()-1, 20));
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            // Stuff that updates the UI
+                            productCatalogGridViewAdapter.notifyDataSetChanged();
+
+                        }
+                    });
                 } else if (id == 0) {
-                    productList.addAll(productDBAdapter.getTopProducts(productLoadItemOffset, productCountLoad));
+                    productList.addAll(productDBAdapter.getTopProducts( productList.size()-1, 20));
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            // Stuff that updates the UI
+                            productCatalogGridViewAdapter.notifyDataSetChanged();
+
+                        }
+                    });
                 } else {
-                    productList.addAll(productDBAdapter.getAllProductsByCategory(id, productLoadItemOffset, productCountLoad));
+                    productList.addAll(productDBAdapter.getAllProductsByCategory(id, productList.size()-1, 20));
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            // Stuff that updates the UI
+                            productCatalogGridViewAdapter.notifyDataSetChanged();
+
+                        }
+                    });
                 }
                 return null;
             }

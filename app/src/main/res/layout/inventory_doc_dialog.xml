@@ -32,26 +32,7 @@
 
 
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="8dp">
 
-        <EditText
-            android:id="@+id/inventoryDocDialog_EtPrice"
-            android:layout_width="match_parent"
-
-            android:layout_height="50dp"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/catalogproduct_item_bg"
-            android:inputType="numberDecimal"
-            android:textAlignment="center"
-            />
-
-
-    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

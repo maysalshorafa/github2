@@ -527,7 +527,9 @@
                 android:gravity="center"
                 android:horizontalSpacing="8dp"
                 android:verticalSpacing="8dp"
-                android:numColumns="2"/>
+                android:numColumns="2"
+                android:visibility="gone"
+                />
 
             <ListView
                 android:id="@+id/mainActivity_lvProducts"
@@ -541,7 +543,6 @@
                 android:gravity="center"
                 android:horizontalSpacing="8dp"
                 android:verticalSpacing="8dp"
-                android:visibility="gone"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="10.0sp"
                 />

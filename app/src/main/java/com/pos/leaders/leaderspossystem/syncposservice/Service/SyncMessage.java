@@ -33,6 +33,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.CustomerMeasurementDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementDynamicVariableDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerMeasurementAdapter.MeasurementsDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepositAndPullReportDetailsDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.DrawerDepositAndPullReportDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
@@ -65,6 +67,8 @@ import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.CustomerMeasurement;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementDynamicVariable;
 import com.pos.leaders.leaderspossystem.Models.CustomerMeasurement.MeasurementsDetails;
+import com.pos.leaders.leaderspossystem.Models.DepositAndPullDetailsReport;
+import com.pos.leaders.leaderspossystem.Models.DepositAndPullReport;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.Inventory;
 import com.pos.leaders.leaderspossystem.Models.Offer;
@@ -445,7 +449,29 @@ public class SyncMessage extends Service {
                 case MessageType.DELETE_OPINING_REPORT_DETAILS:
                     break;
                 //endregion A REPORT Details
+                case MessageType.ADD_DEPOSIT_AND_PULL_REPORT:
 
+                    DepositAndPullReport depositAndPullReport = null;
+                    depositAndPullReport = objectMapper.readValue(msgData, DepositAndPullReport.class);
+
+                    DrawerDepositAndPullReportDbAdapter drawerDepositAndPullReportDbAdapter = new DrawerDepositAndPullReportDbAdapter(this);
+                    drawerDepositAndPullReportDbAdapter.open();
+                    rID = drawerDepositAndPullReportDbAdapter.insertEntry(depositAndPullReport);
+                    drawerDepositAndPullReportDbAdapter.close();
+                    rID = 1;
+                    break;
+
+                case MessageType.ADD_DEPOSIT_AND_PULL_DETAILS_REPORT:
+
+                    DepositAndPullDetailsReport depositAndPullDetailsReport = null;
+                    depositAndPullDetailsReport = objectMapper.readValue(msgData, DepositAndPullDetailsReport.class);
+
+                    DepositAndPullReportDetailsDbAdapter depositAndPullReportDetailsDbAdapter = new DepositAndPullReportDetailsDbAdapter(this);
+                    depositAndPullReportDetailsDbAdapter.open();
+                    rID = depositAndPullReportDetailsDbAdapter.insertEntry(depositAndPullDetailsReport);
+                    depositAndPullReportDetailsDbAdapter.close();
+                    rID = 1;
+                    break;
 
                 //region CHECK
                 case MessageType.ADD_CHECK:
