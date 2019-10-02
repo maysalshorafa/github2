@@ -12,32 +12,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.DrawerDepositAndPullReportDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Check;
-import com.pos.leaders.leaderspossystem.Models.ClosingReport;
-import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
-import com.pos.leaders.leaderspossystem.Models.DepositAndPullReport;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
-import com.pos.leaders.leaderspossystem.Models.OpiningReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
-import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
@@ -210,8 +199,40 @@ public class ClosingReportActivity extends AppCompatActivity {
         double aReportAmount = 0;
         double pullReportAmount=0;
         double depositReportAmount=0;
+        ZReport lastZReport=null;
+
         try {
-            OrderDBAdapter orderDb = new OrderDBAdapter(getApplicationContext());
+            double totalZReportAmount=0;
+            ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(ClosingReportActivity.this);
+            zReportDBAdapter.open();
+             lastZReport = Util.getLastZReport(ClosingReportActivity.this);
+            if (lastZReport == null) {
+                lastZReport = new ZReport();
+                lastZReport.setEndOrderId(0);
+            }else {
+                OrderDBAdapter orderDBAdapter = new OrderDBAdapter(ClosingReportActivity.this);
+                orderDBAdapter.open();
+                Order order = orderDBAdapter.getLast();
+                lastZReport.setEndOrderId(order.getOrderId());
+            }
+
+            double amount = zReportDBAdapter.getZReportAmount(lastZReport.getStartOrderId(), lastZReport.getEndOrderId());
+            try {
+                ZReport zReport1 = zReportDBAdapter.getLastRow();
+                ZReport zReport =zReportDBAdapter.getByID(zReport1.getzReportId()-1);
+                totalZReportAmount=zReport.getTotalPosSales()+amount;
+            } catch (Exception e) {
+                totalZReportAmount=amount;
+                e.printStackTrace();
+            }
+            //sales Amount
+            lastZReport.setTotalAmount(amount);
+            lastZReport.setTotalSales(amount);
+            lastZReport.setInvoiceReceiptAmount(amount);
+            lastZReport.setTotalPosSales(totalZReportAmount);
+            zReportDBAdapter.close();
+
+           /* OrderDBAdapter orderDb = new OrderDBAdapter(getApplicationContext());
             orderDb.open();
             ClosingReportDBAdapter closingReportDBAdapter = new ClosingReportDBAdapter(getApplicationContext());
             closingReportDBAdapter.open();
@@ -287,13 +308,13 @@ public class ClosingReportActivity extends AppCompatActivity {
                         else
                             check_minus += p.getAmount();
                         break;
-                }*/
-                expectedTotal+=p.getAmount();
-            }
+                }
+                expectedTotal+=p.getAmount();*/
+
 
 
 //with Currency
-            if (SETTINGS.enableCurrencies) {
+          /*  if (SETTINGS.enableCurrencies) {
 
                 for (CurrencyOperation cp : currencyOperationList) {
                     switch (cp.getCurrencyType()) {
@@ -331,9 +352,9 @@ public class ClosingReportActivity extends AppCompatActivity {
                     }
                 }
 
-            }
+            }*/
             //calculate receipt Amount
-            ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(ClosingReportActivity.this);
+         /*   ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(ClosingReportActivity.this);
             zReportDBAdapter.open();
             PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(ClosingReportActivity.this);
             posInvoiceDBAdapter.open();
@@ -443,26 +464,19 @@ public class ClosingReportActivity extends AppCompatActivity {
 
                     }
                 }
-            }
+            }*/
             expectedTotal+=cashReceipt;
-            expectedCheck=(check_plus+check_minus)+checkReceipt;
-            expectedCredit=creditCard_plus+creditCard_minus;
-            Log.d("teeest",sheqle_plus+"  "+sheqle_minus +"  "+cash_minus);
-            sheqle_plus+=depositReportAmount-pullReportAmount;
-            expectedShekel=sheqle_plus-sheqle_minus+expectedOpiningShekel+cashReceipt;
+            expectedCheck=lastZReport.getCheckTotal();
+            expectedCredit=lastZReport.getCreditTotal();
+            expectedShekel=lastZReport.getShekelAmount();
 
-            expectedUsd=usd_plus-usd_minus+expectedOpiningUsd;
-            expectedEur=eur_plus-eur_minus+expectedOpiningEur;
-            expectedGbp=gbp_plus-gbp_minus+expectedOpiningGbp;
+            expectedUsd=lastZReport.getUsdAmount();
+            expectedEur=lastZReport.getEurAmount();
+            expectedGbp=lastZReport.getGbpAmount();
             checkExpectedValue.setText(Util.makePrice(expectedCheck));
             creditExpectedValue.setText(Util.makePrice(expectedCredit));
-            if(SETTINGS.enableCurrencies){
-                shekelExpectedValue.setText(Util.makePrice(expectedShekel));
-            }else {
-                expectedShekel=cash_plus+cash_minus+opiningReport.getAmount()-sheqle_plus;
-                shekelExpectedValue.setText(Util.makePrice(expectedShekel));
+        shekelExpectedValue.setText(Util.makePrice(expectedShekel));
 
-            }
             usdExpectedValue.setText(Util.makePrice(expectedUsd));
             eurAExpectedValue.setText(Util.makePrice(expectedEur));
             gbpExpectedValue.setText(Util.makePrice(expectedGbp));
@@ -473,7 +487,8 @@ public class ClosingReportActivity extends AppCompatActivity {
         }
 
 
-    }  private void calculateMethodAmount() throws Exception {
+    }
+    private void calculateMethodAmount() throws Exception {
       if(!checkActualValue.getText().toString().equals("")){
           actualCheck= Double.parseDouble(checkActualValue.getText().toString());
       }
