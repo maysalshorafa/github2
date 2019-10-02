@@ -11,7 +11,6 @@ import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductStatus;
 import com.pos.leaders.leaderspossystem.Models.ProductUnit;
-import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
@@ -213,9 +212,6 @@ public class ProductDBAdapter {
 
 
     public Product getProductByID(long id) {
-        if(id==-1){
-            return new Product(-1, context.getResources().getString(R.string.general));
-        }
         Product product = null;
         Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where id='" + id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist

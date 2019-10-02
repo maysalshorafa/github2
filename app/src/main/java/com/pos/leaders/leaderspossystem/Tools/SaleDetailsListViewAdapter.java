@@ -3,7 +3,6 @@ package com.pos.leaders.leaderspossystem.Tools;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,8 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.R;
 
 import org.json.JSONException;
@@ -86,25 +87,26 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        Log.d("testsaleDetailsListViewAdapter",orderList.get(position).toString());
-
         int count;
         double price;
         double discount = orderList.get(position).getDiscount();
         price = orderList.get(position).getPaidAmount();
         count = orderList.get(position).getQuantity();
-        holder.tvName.setText(_Substring(orderList.get(position).getProduct().getDisplayName()));
+        ProductDBAdapter productDBAdapter =new  ProductDBAdapter(context);
+        productDBAdapter.open();
+        Product product =productDBAdapter.getProductByID(orderList.get(position).getProductId());
+        holder.tvName.setText(_Substring(product.getDisplayName()));
         String currencyType="";
-        if(orderList.get(position).getProduct().getCurrencyType()==0) {
+        if(product.getCurrencyType()==0) {
             currencyType=context.getString(R.string.ins);
         }
-        if(orderList.get(position).getProduct().getCurrencyType()==1) {
+        if(product.getCurrencyType()==1) {
             currencyType=context.getString(R.string.dolor_sign);
         }
-        if(orderList.get(position).getProduct().getCurrencyType()==2) {
+        if(product.getCurrencyType()==2) {
             currencyType=context.getString(R.string.gbp);
         }
-        if(orderList.get(position).getProduct().getCurrencyType()==3) {
+        if(product.getCurrencyType()==3) {
             currencyType=context.getString(R.string.eur);
         }
         holder.tvPrice.setText(String.format(new Locale("en"), "%.2f", orderList.get(position).getUnitPrice()) + " " + currencyType);
