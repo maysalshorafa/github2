@@ -25,6 +25,7 @@ public class OrderDetails {
 	private double discount;
 	private String orderKey;
 	private long offerCategory;
+	private double paidAmountAfterTax;
 	@JsonIgnore
 	public double rowDiscount = 0;
 
@@ -105,7 +106,7 @@ public class OrderDetails {
 		initObjectID();
 	}
 
-	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id , String key , long offerId,long productSerialNumber) {
+	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id , String key , long offerId,long productSerialNumber ,double paidAmountAfterTax) {
 		this.orderDetailsId = orderDetailsId;
 		this.productId = productId;
 		this.quantity = quantity;
@@ -118,6 +119,7 @@ public class OrderDetails {
 		this.orderKey =key;
         this.offerId=offerId;
 		this.productSerialNumber=productSerialNumber;
+		this.paidAmountAfterTax=paidAmountAfterTax;
 		initObjectID();
 	}
 
@@ -163,7 +165,7 @@ public class OrderDetails {
 	}
 
 	public OrderDetails(OrderDetails o) {
-		this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id(),o.getOrderKey(),o.getOfferId(),o.getProductSerialNumber());
+		this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id(),o.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmountAfterTax());
 		this.product = o.getProduct();
 	}
 
@@ -179,7 +181,15 @@ public class OrderDetails {
 	//region Getters
 
 
-    public long getOfferId() {
+	public double getPaidAmountAfterTax() {
+		return paidAmountAfterTax;
+	}
+
+	public void setPaidAmountAfterTax(double paidAmountAfterTax) {
+		this.paidAmountAfterTax = paidAmountAfterTax;
+	}
+
+	public long getOfferId() {
         return offerId;
     }
 
@@ -341,6 +351,7 @@ public class OrderDetails {
 				", \"orderKey\":" + "\""+orderKey +"\""+
 				", \"offerCategory\":" + "\""+offerCategory +"\""+
 				", \"productSerialNumber\":" + "\""+productSerialNumber +"\""+
+				", \"paid_amount_amount_after_tax\":" + "\""+paidAmountAfterTax +"\""+
 				'}';
 	}
 	public Offer getOffer() {

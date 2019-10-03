@@ -419,7 +419,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:text="@string/with_tax"
+                            android:text="@string/without_tax"
                             android:textAlignment="textStart"
                             android:textColor="@color/black"
                             android:textSize="20dp"

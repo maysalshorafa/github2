@@ -1751,7 +1751,10 @@ public class PdfUA {
         insertCell(table, context.getString(R.string.price), Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(table, context.getString(R.string.qty), Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(table, context.getString(R.string.product), Element.ALIGN_CENTER, 3, urFontName1);
+
+        double price_before_tax=0;
         for (int i=0;i<orderDetailsList.size();i++){
+            price_before_tax+=orderDetailsList.get(i).getPaidAmountAfterTax();
             insertCell(table, "  " + orderDetailsList.get(i).getProductSerialNumber(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
             insertCell(table, "  " + orderDetailsList.get(i).getDiscount(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
             insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
@@ -1763,6 +1766,7 @@ public class PdfUA {
             totalPrice+=orderDetailsList.get(i).getItemTotalPrice();
             count+=orderDetailsList.get(i).getQuantity();
         }
+
         insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 8, urFontName);
         insertCell(table, context.getString(R.string.product_quantity)  , Element.ALIGN_CENTER, 4, urFontName);
         insertCell(table,Util.makePrice(count)  , Element.ALIGN_CENTER, 4, urFontName);
@@ -1779,7 +1783,7 @@ public class PdfUA {
         insertCell(table, context.getString(R.string.tax)  , Element.ALIGN_CENTER, 4, urFontName);
         insertCell(table,Util.makePrice(SETTINGS.tax) , Element.ALIGN_CENTER, 4, urFontName);
 
-        double noTax = order.getTotalPrice() / (1 + (SETTINGS.tax / 100));
+        double noTax =price_before_tax;
         insertCell(table, context.getString(R.string.price_before_tax)+" : " , Element.ALIGN_CENTER, 4, urFontName);
 
         insertCell(table, Util.makePrice(noTax) , Element.ALIGN_CENTER, 4, urFontName);

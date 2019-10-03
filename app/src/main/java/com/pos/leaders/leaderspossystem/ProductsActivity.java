@@ -71,7 +71,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     private Product editableProduct , lastProduct;
     long check;
     long depID;
-    boolean withTax , manageStock ,withSerialNo= true;
+    boolean withTax , manageStock ,withSerialNo= false;
     ProductUnit unit ;
     LinearLayout llWeight;
     String currencyType="";

@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -129,61 +130,108 @@ public class ReportZDetailsActivity extends Activity {
             }
 
         } else {
-            ZReport zReport = zReportDBAdapter.getByID(id);
+            final ZReport zReport = zReportDBAdapter.getByID(id);
 
             if (isCopy) {
-                PdfUA pdfUA = new PdfUA();
+                new AsyncTask<Void, Void, String>() {
+                    Bitmap page;
+                    Context a =ReportZDetailsActivity.this;
 
-                try {
-                    pdfUA.createZReport(ReportZDetailsActivity.this,zReport,false);
-                } catch (DocumentException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try
-                {
-                    File path = new File( Environment.getExternalStorageDirectory(), getApplicationContext().getPackageName());
-                    File file = new File(path,"zreport.pdf");
-                    RandomAccessFile f = new RandomAccessFile(file, "r");
-                    byte[] data = new byte[(int)f.length()];
-                    f.readFully(data);
-                    pdfLoadImages(data);
-                    Log.d("bitmapsize",bitmapList.size()+"");
-                }
-                catch(Exception ignored)
-                {
+                    // create and show a progress dialog
 
-                }
+                    ProgressDialog progressDialog = ProgressDialog.show(a, "", "Opening...");
+
+                    @Override
+                    protected void onPostExecute(String html) {
+                        try
+                        {
+                            File path = new File( Environment.getExternalStorageDirectory(), getApplicationContext().getPackageName());
+                            File file = new File(path,"zreport.pdf");
+                            RandomAccessFile f = new RandomAccessFile(file, "r");
+                            byte[] data = new byte[(int)f.length()];
+                            f.readFully(data);
+
+                            pdfLoadImages(data);
+
+                            Log.d("errrrr",bitmapList.size()+"");
+
+                        }
+                        catch(Exception ignored)
+                        {
+                            Log.d("errrrr",ignored.toString());
+                        }
+
+                        //after async close progress dialog
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    protected String doInBackground(Void... params) {
+                        PdfUA pdfUA = new PdfUA();
+
+                        try {
+                            pdfUA.createZReport(ReportZDetailsActivity.this,zReport,false);
+                        } catch (DocumentException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                }.execute();
 
 
             }else {
-              PdfUA pdfUA = new PdfUA();
+                new AsyncTask<Void, Void, String>() {
+                    Bitmap page;
+                    Context a =ReportZDetailsActivity.this;
 
-                try {
-                    pdfUA.createZReport(ReportZDetailsActivity.this,zReport,true);
-                } catch (DocumentException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try
-                {
-                    File path = new File( Environment.getExternalStorageDirectory(), getApplicationContext().getPackageName());
-                    File file = new File(path,"zreport.pdf");
-                    RandomAccessFile f = new RandomAccessFile(file, "r");
-                    byte[] data = new byte[(int)f.length()];
-                    f.readFully(data);
+                    // create and show a progress dialog
 
-                    pdfLoadImages(data);
+                    ProgressDialog progressDialog = ProgressDialog.show(a, "", "Opening...");
 
-                    Log.d("errrrr",bitmapList.size()+"");
+                    @Override
+                    protected void onPostExecute(String html) {
+                        try
+                        {
+                            File path = new File( Environment.getExternalStorageDirectory(), getApplicationContext().getPackageName());
+                            File file = new File(path,"zreport.pdf");
+                            RandomAccessFile f = new RandomAccessFile(file, "r");
+                            byte[] data = new byte[(int)f.length()];
+                            f.readFully(data);
 
-                                    }
-                catch(Exception ignored)
-                {
-                Log.d("errrrr",ignored.toString());
-                }
+                            pdfLoadImages(data);
+
+                            Log.d("errrrr",bitmapList.size()+"");
+
+                        }
+                        catch(Exception ignored)
+                        {
+                            Log.d("errrrr",ignored.toString());
+                        }
+
+                        //after async close progress dialog
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    protected String doInBackground(Void... params) {
+                        PdfUA pdfUA = new PdfUA();
+
+                        try {
+                            pdfUA.createZReport(ReportZDetailsActivity.this,zReport,true);
+                        } catch (DocumentException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                }.execute();
+
+
+
+
                 //p= bitmapList.get(bitmapList.size());
 
             }

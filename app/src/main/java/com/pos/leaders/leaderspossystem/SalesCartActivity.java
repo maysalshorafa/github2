@@ -3759,7 +3759,14 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber());
+                    long orderid=0;
+                    if(o.getProduct().isWithTax()){
+                         orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount());
+
+                    }else {
+                         orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)));
+
+                    }
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
@@ -3910,8 +3917,14 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber());
-                    orderId.add(orderid);
+                    long orderid=0;
+                    if(o.getProduct().isWithTax()){
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount());
+
+                    }else {
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)));
+
+                    }                    orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
                 }
                 // ORDER_DETAILS Sales man Region
@@ -4032,8 +4045,14 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber());
-                    orderId.add(orderid);
+                    long orderid=0;
+                    if(o.getProduct().isWithTax()){
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount());
+
+                    }else {
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)));
+
+                    }                    orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // ORDER_DETAILS Sales man Region
@@ -4156,8 +4175,14 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber());
-                    orderId.add(orderid);
+                    long orderid=0;
+                    if(o.getProduct().isWithTax()){
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount());
+
+                    }else {
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)));
+
+                    }                    orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // ORDER_DETAILS Sales man Region
@@ -4284,8 +4309,14 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                    long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber());
-                    orderId.add(orderid);
+                    long orderid=0;
+                    if(o.getProduct().isWithTax()){
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount());
+
+                    }else {
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)));
+
+                    }                    orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
                 // ORDER_DETAILS Sales man Region
@@ -4334,8 +4365,6 @@ public class SalesCartActivity extends AppCompatActivity {
         //endregion
         if (requestCode == REQUEST_MULTI_CURRENCY_ACTIVITY_CODE) {
                 if (resultCode == RESULT_OK) {
-                    SESSION._TEMP_ORDER_DETAILES=SESSION._ORDER_DETAILES;
-                    SESSION._TEMP_ORDERS=SESSION._ORDERS;
                     ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
                     zReportDBAdapter.open();
                     boolean trueCreditCard=false;
@@ -4478,9 +4507,24 @@ public class SalesCartActivity extends AppCompatActivity {
                     // insert order region
 
                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
-                        long orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber());
+                        long orderid=0;
+                        if(o.getProduct().isWithTax()){
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount());
+
+                        }else {
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)));
+
+                        }
                         orderId.add(orderid);
                         //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
+                    }
+                    for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
+                        if(SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
+                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(  SESSION._ORDER_DETAILES.get(i).getPaidAmount());
+
+                        }else {
+                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)));
+                        }
                     }
                     // ORDER_DETAILS Sales man Region
                     for (int i = 0; i < orderIdList.size(); i++) {
@@ -4516,6 +4560,8 @@ public class SalesCartActivity extends AppCompatActivity {
                     paymentDBAdapter.close();
                     Order order1 = new Order(SESSION._ORDERS);
                     order1.setPayment(payment);
+                    SESSION._TEMP_ORDER_DETAILES=SESSION._ORDER_DETAILES;
+                    SESSION._TEMP_ORDERS=SESSION._ORDERS;
                     if(saleTotalPrice<0){
                         currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, saleTotalPrice*-1, order1,"","","");
 
