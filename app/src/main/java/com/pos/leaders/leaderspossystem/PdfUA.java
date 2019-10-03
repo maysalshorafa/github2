@@ -25,7 +25,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapt
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.DepositAndPullReportDetailsDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
@@ -40,7 +39,6 @@ import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
-import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Models.DepositAndPullReport;
@@ -1714,10 +1712,12 @@ public class PdfUA {
         } else if (order.getCustomer_name().equals("")) {
             customerName = context.getString(R.string.general_customer);
         } else {
-            CustomerDBAdapter customerDBAdapter =new CustomerDBAdapter(context);
-            customerDBAdapter.open();
-            Customer customer = customerDBAdapter.getCustomerByID(order.getCustomerId());
-            customerName = customer.getFirstName()+" "+customer.getLastName();
+            if(order.getCustomer().getFirstName()!=null&&order.getCustomer().getLastName()!=null){
+            customerName = order.getCustomer().getFirstName()+" "+order.getCustomer().getLastName();
+            }else {
+                customerName = order.getCustomer_name();
+
+            }
         }
         insertCell(headingTable, context.getString(R.string.customer_name)+":  " + customerName, Element.ALIGN_CENTER, 1, urFontName1);
         if(isCopy) {

@@ -216,7 +216,6 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (3 , 'EUR');");
 
         db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Timestamp(System.currentTimeMillis())+"');");
-        db.execSQL("insert into "+ CategoryDBAdapter.CATEGORY_TABLE_NAME +" values(1, 'כללי','"+ new Timestamp(System.currentTimeMillis()) +"',1,0,0);");
 //        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'test1','test1','female','11/8/1994','example@gmail.com','coder','123',0,'1',1,1,'1',1,'1',0.0,0.0,0.0);");
 
 

@@ -607,6 +607,9 @@
     <string name="order">Order</string>
     <string name="start">ابدا</string>
     <string name="this_product_not_in_your_permission">هذا المنتج غير موجود لكن ليست من صلاحياتك اضافته !!</string>
+    <string name="inventory">المخزن</string>
+    <string name="serial_no">الرقم التسلسلي</string>
+    <string name="inventory_price">سعر الشراء الاخير</string>
 
 
 
