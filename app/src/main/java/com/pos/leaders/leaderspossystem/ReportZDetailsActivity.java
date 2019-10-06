@@ -302,7 +302,6 @@ public class ReportZDetailsActivity extends Activity {
             new AsyncTask<Void, Void, String>()
             {
                 // create and show a progress dialog
-                ProgressDialog progressDialog = ProgressDialog.show(ReportZDetailsActivity.this, "", "Opening...");
 
                 @Override
                 protected void onPostExecute(String html)
@@ -311,13 +310,15 @@ public class ReportZDetailsActivity extends Activity {
                     newBitmap= combineImageIntoOne(bitmapList);
                     try {
                         Thread.sleep(1000);
-                    } catch (InterruptedException e) {
+
+                    if(newBitmap!=null) {
+
+                        ((ImageView) findViewById(R.id.reportZDetails_ivInvoice)).setImageBitmap(newBitmap);
+                    }
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    ((ImageView)findViewById(R.id.reportZDetails_ivInvoice)).setImageBitmap(newBitmap);
-
                     //after async close progress dialog
-                    progressDialog.dismiss();
                     //load the html in the webview
                   //  wv.loadDataWithBaseURL("", html, "text/html","UTF-8", "");
                 }

@@ -578,7 +578,7 @@ public class PdfUA {
 
         //set the cell alignment
         cell.setHorizontalAlignment(align);
-        //set the cell column span in case you want to merge two or more cells
+        //set the cell column span in case you want to merge two or more cells+
         cell.setColspan(colspan);
         //in case there is no text and you wan to create an empty row
         if(text.trim().equalsIgnoreCase("")){
@@ -1745,9 +1745,8 @@ public class PdfUA {
         checkTable.deleteBodyRows();
         checkTable.setRunDirection(0);
         //insert column headings;
-        insertCell(table,"SNo", Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(table, "%", Element.ALIGN_CENTER, 1, urFontName1);
-        insertCell(table, context.getString(R.string.total), Element.ALIGN_CENTER, 1, urFontName1);
+        insertCell(table, context.getString(R.string.total), Element.ALIGN_CENTER, 2, urFontName1);
         insertCell(table, context.getString(R.string.price), Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(table, context.getString(R.string.qty), Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(table, context.getString(R.string.product), Element.ALIGN_CENTER, 3, urFontName1);
@@ -1755,9 +1754,8 @@ public class PdfUA {
         double price_before_tax=0;
         for (int i=0;i<orderDetailsList.size();i++){
             price_before_tax+=orderDetailsList.get(i).getPaidAmountAfterTax();
-            insertCell(table, "  " + orderDetailsList.get(i).getProductSerialNumber(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
             insertCell(table, "  " + orderDetailsList.get(i).getDiscount(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
-            insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_CENTER, 2, urFontName); // insert date value
             insertCell(table,"  "+ orderDetailsList.get(i).getUnitPrice(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
             insertCell(table, orderDetailsList.get(i).getQuantity()+"", Element.ALIGN_CENTER, 1, urFontName); // insert date value
             if (orderDetailsList.get(i).getProduct().getDisplayName().equals("General"))
@@ -1765,6 +1763,8 @@ public class PdfUA {
             insertCell(table, orderDetailsList.get(i).getProduct().getDisplayName(), Element.ALIGN_CENTER, 3, urFontName); // insert date value
             totalPrice+=orderDetailsList.get(i).getItemTotalPrice();
             count+=orderDetailsList.get(i).getQuantity();
+            insertCell(table, context.getString(R.string.serial_no)+" : "+ orderDetailsList.get(i).getProductSerialNumber(), Element.ALIGN_LEFT, 8, urFontName); // insert date value
+
         }
 
         insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 8, urFontName);
@@ -1780,13 +1780,13 @@ public class PdfUA {
         insertCell(table, context.getString(R.string.price_before_discount)  , Element.ALIGN_CENTER, 4, urFontName);
         insertCell(table,Util.makePrice(order.getTotalPrice()*100/(100-order.cartDiscount))  , Element.ALIGN_CENTER, 4, urFontName);
 
-        insertCell(table, context.getString(R.string.tax)  , Element.ALIGN_CENTER, 4, urFontName);
-        insertCell(table,Util.makePrice(SETTINGS.tax) , Element.ALIGN_CENTER, 4, urFontName);
+        insertCell(table, context.getString(R.string.tax) +" : " , Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(table,Util.makePrice(SETTINGS.tax) , Element.ALIGN_CENTER, 1, urFontName);
 
         double noTax =price_before_tax;
-        insertCell(table, context.getString(R.string.price_before_tax)+" : " , Element.ALIGN_CENTER, 4, urFontName);
+        insertCell(table, context.getString(R.string.price_before_tax)+" : " , Element.ALIGN_CENTER,4, urFontName);
 
-        insertCell(table, Util.makePrice(noTax) , Element.ALIGN_CENTER, 4, urFontName);
+        insertCell(table, Util.makePrice(noTax) , Element.ALIGN_CENTER, 2, urFontName);
         insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 8, urFontName);
 
         insertCell(paidByTable,context.getString(R.string.paid_by), Element.ALIGN_RIGHT, 4, urFontName);
