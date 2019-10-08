@@ -977,7 +977,7 @@ public class SalesCartActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String word = etSearch.getText().toString();
                 if (!word.equals("")) {
-                    productCountLoad = 20;
+                    productCountLoad = 80;
                     productLoadItemOffset = 0;
                     // Database query can be a time consuming task ..
                     // so its safe to call database query in another thread
@@ -991,22 +991,31 @@ public class SalesCartActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        protected Void doInBackground(String... params) {
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            productList = productDBAdapter.getAllProductsByHint(params[0], productLoadItemOffset, productCountLoad);
+                        protected Void doInBackground(final String... params) {
+
+                            runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    productList.addAll(productDBAdapter.getAllProductsByHint(params[0], productList.size()-1, 20));
+
+                                    // Stuff that updates the UI
+                                    productCatalogGridViewAdapter.notifyDataSetChanged();
+                                }
+                            });
+
                             return null;
                         }
 
                         @Override
                         protected void onPostExecute(Void aVoid) {
                             super.onPostExecute(aVoid);
-                            ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
-                            gvProducts.setAdapter(adapter);
-                            lvProducts.setAdapter(adapter);
+
+                            //if(productCatalogGridViewAdapter==null){
+                            productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
+                            lvProducts.setAdapter(productCatalogGridViewAdapter);
+                            gvProducts.setAdapter(productCatalogGridViewAdapter);
+                            //    }
                         }
                     }.execute(word);
                 } else {
@@ -1019,6 +1028,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
             }
         });
+
 
         //endregion
 

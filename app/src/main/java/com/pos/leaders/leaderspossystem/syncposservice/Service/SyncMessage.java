@@ -40,7 +40,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAda
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
@@ -49,7 +48,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProviderDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.LogInActivity;
 import com.pos.leaders.leaderspossystem.Models.BoInventory;
 import com.pos.leaders.leaderspossystem.Models.Category;
@@ -417,14 +415,14 @@ public class SyncMessage extends Service {
 
                 //region A REPORT
                 case MessageType.ADD_OPINING_REPORT:
-
+/*
                     OpiningReport aReport = null;
                     aReport = objectMapper.readValue(msgData, OpiningReport.class);
 
                     OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(this);
                     aReportDBAdapter.open();
                     rID = aReportDBAdapter.insertEntry(aReport);
-                    aReportDBAdapter.close();
+                    aReportDBAdapter.close();*/
                     rID = 1;
                     break;
                 case MessageType.UPDATE_OPINING_REPORT:
@@ -891,13 +889,13 @@ public class SyncMessage extends Service {
                 //region Z REPORT
                 case MessageType.ADD_Z_REPORT:
 
-                    ZReport zReport = null;
+                  /*  ZReport zReport = null;
                     zReport = objectMapper.readValue(msgData, ZReport.class);
 
                     ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(this);
                     zReportDBAdapter.open();
                     rID = zReportDBAdapter.insertEntry(zReport);
-                    zReportDBAdapter.close();
+                    zReportDBAdapter.close();*/
                     rID = 1;
 
                     break;

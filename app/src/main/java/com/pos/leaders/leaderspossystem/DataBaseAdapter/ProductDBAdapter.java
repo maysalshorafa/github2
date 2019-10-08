@@ -394,6 +394,8 @@ public class ProductDBAdapter {
 
 	public List<Product> getAllProductsByCategory(long categoryId){
 		List<Product> productsList =new ArrayList<Product>();
+        try {
+            open();
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
             cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +" = 0 order by id desc", null );
@@ -407,8 +409,14 @@ public class ProductDBAdapter {
             productsList.add(makeProduct(cursor));
             cursor.moveToNext();
 		}
+            close();
 
-		return productsList;
+        } catch (Exception e) {
+
+        }
+
+
+        return productsList;
 	}
 
     public List<Product> getAllProductsByCategory(long categoryId, int from , int count){

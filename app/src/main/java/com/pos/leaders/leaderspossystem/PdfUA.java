@@ -217,19 +217,19 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.details), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, zReport.getInvoiceReceiptAmount() + " ", Element.ALIGN_RIGHT,1, font);
+        insertCell(dataTable,  Util.makePrice(zReport.getInvoiceReceiptAmount()), Element.ALIGN_RIGHT,1, font);
         insertCell(dataTable,invoiceReceiptCount + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, zReport.getInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,  Util.makePrice(zReport.getInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,invoiceCount + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT,2, font);
 
-        insertCell(dataTable, zReport.getCreditInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, Util.makePrice( zReport.getCreditInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,creditCardCount + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, zReport.getTotalSales() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,  Util.makePrice(zReport.getTotalSales() ), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,  "~", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.total_sales), Element.ALIGN_RIGHT, 2, font);
 
@@ -239,7 +239,7 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, cashAmount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,  Util.makePrice(cashAmount ), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,cashCount + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT,2, font);
 
@@ -284,7 +284,7 @@ public class PdfUA {
                 List<Check>list = checkList.get(i);
 
                 for (int f =0;f<list.size();f++){
-                    insertCell(dataTable, list.get(f).getAmount()+" ", Element.ALIGN_RIGHT, 1, font);
+                    insertCell(dataTable,  Util.makePrice(list.get(f).getAmount()), Element.ALIGN_RIGHT, 1, font);
                     insertCell(dataTable, DateConverter.toDate(list.get(f).getCreatedAt())+" ", Element.ALIGN_RIGHT, 2, font);
                     insertCell(dataTable, list.get(f).getCheckNum()+" ", Element.ALIGN_RIGHT, 1, font);
                 }
@@ -292,7 +292,7 @@ public class PdfUA {
             insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
         }
-        insertCell(dataTable, zReport.getTotalAmount()+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,  Util.makePrice(zReport.getTotalAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, "~", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.total_amount), Element.ALIGN_RIGHT, 2, font);
 
@@ -307,7 +307,7 @@ public class PdfUA {
         insertCell(opiningReportTable, context.getString(R.string.opening_report), Element.ALIGN_RIGHT, 4, font);
         insertCell(opiningReportTable, opiningReportList.size()+" " , Element.ALIGN_RIGHT, 1, font);
         insertCell(opiningReportTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
-        insertCell(opiningReportTable, aReportAmount +" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(opiningReportTable,  Util.makePrice(aReportAmount), Element.ALIGN_RIGHT, 1, font);
         insertCell(opiningReportTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
         insertCell(opiningReportTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
         PdfPTable pullAndDepositAmount = new PdfPTable(4);
@@ -315,11 +315,11 @@ public class PdfUA {
         pullAndDepositAmount.setRunDirection(0);
 
         insertCell(pullAndDepositAmount, context.getString(R.string.pull_report), Element.ALIGN_RIGHT, 4, font);
-        insertCell(pullAndDepositAmount, zReport.getPullReportAmount() +" ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(pullAndDepositAmount,  Util.makePrice(zReport.getPullReportAmount()), Element.ALIGN_RIGHT, 2, font);
         insertCell(pullAndDepositAmount, context.getString(R.string.amount), Element.ALIGN_RIGHT, 2, font);
         insertCell(pullAndDepositAmount,"----------------------------", Element.ALIGN_CENTER, 4, font);
         insertCell(pullAndDepositAmount, context.getString(R.string.deposit_report), Element.ALIGN_RIGHT, 4, font);
-        insertCell(pullAndDepositAmount, zReport.getDepositReportAmount() +" ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(pullAndDepositAmount,  Util.makePrice(zReport.getDepositReportAmount()), Element.ALIGN_RIGHT, 2, font);
         insertCell(pullAndDepositAmount, context.getString(R.string.amount), Element.ALIGN_RIGHT, 2, font);
         insertCell(pullAndDepositAmount,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
@@ -329,13 +329,13 @@ public class PdfUA {
         if(SETTINGS.enableCurrencies) {
             insertCell(opiningReportDetailsTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, context.getString(R.string.type), Element.ALIGN_RIGHT, 1, font);
-            insertCell(opiningReportDetailsTable, aReportDetailsForFirstCurrency + " ", Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable, Util.makePrice( aReportDetailsForFirstCurrency ), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, context.getString(R.string.shekel), Element.ALIGN_RIGHT, 1, font);
-            insertCell(opiningReportDetailsTable, aReportDetailsForSecondCurrency + " ", Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable,  Util.makePrice(aReportDetailsForSecondCurrency ), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, context.getString(R.string.usd), Element.ALIGN_RIGHT, 1, font);
-            insertCell(opiningReportDetailsTable, aReportDetailsForThirdCurrency + " ", Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable,  Util.makePrice(aReportDetailsForThirdCurrency ), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, context.getString(R.string.gbp), Element.ALIGN_RIGHT, 1, font);
-            insertCell(opiningReportDetailsTable, aReportDetailsForForthCurrency + " ", Element.ALIGN_RIGHT, 1, font);
+            insertCell(opiningReportDetailsTable,  Util.makePrice(aReportDetailsForForthCurrency), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, "----------------------------", Element.ALIGN_CENTER, 2, font);
         }
@@ -343,7 +343,7 @@ public class PdfUA {
         posSalesTable.deleteBodyRows();
         posSalesTable.setRunDirection(0);
         insertCell(posSalesTable, context.getString(R.string.pos_sales), Element.ALIGN_RIGHT, 1, font);
-        insertCell(posSalesTable,zReport.getTotalPosSales() +" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(posSalesTable, Util.makePrice(zReport.getTotalPosSales()), Element.ALIGN_RIGHT, 1, font);
         //add table to document
         document.add(headingTable);
         document.add(dataTable);
@@ -1214,19 +1214,19 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.details), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, xReport.getInvoiceReceiptAmount() + " ", Element.ALIGN_RIGHT,1, font);
+        insertCell(dataTable, Util.makePrice(xReport.getInvoiceReceiptAmount()), Element.ALIGN_RIGHT,1, font);
         insertCell(dataTable,invoiceReceiptCount + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, xReport.getInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,  Util.makePrice(xReport.getInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,invoiceCount + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT,2, font);
 
-        insertCell(dataTable, xReport.getCreditInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, Util.makePrice( xReport.getCreditInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,creditCardCount + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, xReport.getTotalSales() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, Util.makePrice( xReport.getTotalSales() ), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,  "~", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.total_sales), Element.ALIGN_RIGHT, 2, font);
 
@@ -1236,7 +1236,7 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, cashAmount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,  Util.makePrice(cashAmount ), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,cashCount + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT,2, font);
 
@@ -1281,7 +1281,7 @@ public class PdfUA {
                 List<Check>list = checkList.get(i);
 
                 for (int f =0;f<list.size();f++){
-                    insertCell(dataTable, list.get(f).getAmount()+" ", Element.ALIGN_RIGHT, 1, font);
+                    insertCell(dataTable,  Util.makePrice(list.get(f).getAmount()), Element.ALIGN_RIGHT, 1, font);
                     insertCell(dataTable, DateConverter.toDate(list.get(f).getCreatedAt())+" ", Element.ALIGN_RIGHT, 2, font);
                     insertCell(dataTable, list.get(f).getCheckNum()+" ", Element.ALIGN_RIGHT, 1, font);
                 }
@@ -1289,7 +1289,7 @@ public class PdfUA {
             insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
         }
-        insertCell(dataTable, xReport.getTotalAmount()+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,  Util.makePrice(xReport.getTotalAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, "~", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.total_amount), Element.ALIGN_RIGHT, 2, font);
 
@@ -1304,7 +1304,7 @@ public class PdfUA {
         insertCell(opiningReportTable, context.getString(R.string.opening_report), Element.ALIGN_RIGHT, 4, font);
         insertCell(opiningReportTable, opiningReportList.size()+" " , Element.ALIGN_RIGHT, 1, font);
         insertCell(opiningReportTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
-        insertCell(opiningReportTable, aReportAmount +" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(opiningReportTable,  Util.makePrice(aReportAmount), Element.ALIGN_RIGHT, 1, font);
         insertCell(opiningReportTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
         insertCell(opiningReportTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
@@ -1328,7 +1328,7 @@ public class PdfUA {
         posSalesTable.deleteBodyRows();
         posSalesTable.setRunDirection(0);
         insertCell(posSalesTable, context.getString(R.string.pos_sales), Element.ALIGN_RIGHT, 1, font);
-        insertCell(posSalesTable,xReport.getTotalPosSales() +" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(posSalesTable, Util.makePrice(xReport.getTotalPosSales()), Element.ALIGN_RIGHT, 1, font);
         //add table to document
         document.add(headingTable);
         document.add(dataTable);
