@@ -100,6 +100,7 @@ public class InInventoryDoc extends AppCompatActivity {
     ProductInventoryDbAdapter productInventoryDbAdapter;
     ProductDBAdapter productDBAdapter;
     EditText ETSearch;
+    ProductInventoryCatalogGridViewAdapter finalAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,8 +125,8 @@ public class InInventoryDoc extends AppCompatActivity {
         productDBAdapter=new ProductDBAdapter(InInventoryDoc.this);
         productDBAdapter.open();
         filter_productList = productInventoryDbAdapter.getAllProducts();
-        ProductInventoryCatalogGridViewAdapter adapter = new ProductInventoryCatalogGridViewAdapter(this, filter_productList);
-        gvProduct.setAdapter(adapter);
+          finalAdapter = new ProductInventoryCatalogGridViewAdapter(this, filter_productList);
+        gvProduct.setAdapter(finalAdapter);
         context=this;
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -436,29 +437,37 @@ public class InInventoryDoc extends AppCompatActivity {
                         }
 
                         @Override
-                        protected Void doInBackground(String... params) {
-                            try {
-                                Thread.sleep(200);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            productList = productDBAdapter.getAllProductsByHint(params[0], productLoadItemOffset, productCountLoad);
-                            for(int i=0;i<productList.size();i++){
-                                searchFilter_productList.add(productInventoryDbAdapter.getProductInventoryByID(productList.get(i).getProductId()));
-                            }
+                        protected Void doInBackground(final String... params) {
+
+
+
+                            runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    productList.addAll(productDBAdapter.getAllProductsByHint(params[0], productList.size()-1, 20));
+                                    for(int i=0;i<productList.size();i++){
+                                        searchFilter_productList.add(productInventoryDbAdapter.getProductInventoryByID(productList.get(i).getProductId()));
+                                    }
+                                    finalAdapter.notifyDataSetChanged();
+
+                                    // Stuff that updates the UI
+                                }
+                            });
                             return null;
                         }
 
                         @Override
                         protected void onPostExecute(Void aVoid) {
                             super.onPostExecute(aVoid);
-                            ProductInventoryCatalogGridViewAdapter adapter = new ProductInventoryCatalogGridViewAdapter(getApplicationContext(), searchFilter_productList);
-                            gvProduct.setAdapter(adapter);
+                            finalAdapter = new ProductInventoryCatalogGridViewAdapter(getApplicationContext(), searchFilter_productList);
+                            gvProduct.setAdapter(finalAdapter);
                         }
                     }.execute(word);
                 } else {
-                    ProductInventoryCatalogGridViewAdapter adapter = new ProductInventoryCatalogGridViewAdapter(getApplicationContext(), filter_productList);
-                    gvProduct.setAdapter(adapter);
+                    searchFilter_productList=filter_productList;
+                    finalAdapter = new ProductInventoryCatalogGridViewAdapter(getApplicationContext(), searchFilter_productList);
+                    gvProduct.setAdapter(finalAdapter);
                 }
 
             }

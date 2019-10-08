@@ -584,11 +584,13 @@ public class SalesCartActivity extends AppCompatActivity {
         });
 
         othersChoice.setOnClickListener(new View.OnClickListener() {
+            int count=0;
             @Override
             public void onClick(View v) {
                 final String[] items = {
                         getString(R.string.cancel_invoice),
-                        getString(R.string.copyinvoice),getString(R.string.replacement_invoice)
+                        getString(R.string.copyinvoice),
+                        getString(R.string.replacement_invoice)
 
                 };;
                 final OrderDBAdapter orderDBAdapter =new OrderDBAdapter(context);
@@ -650,6 +652,43 @@ public class SalesCartActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 1:
+                               /* AlertDialog.Builder alertDialog = new AlertDialog.Builder(SalesCartActivity.this);
+                                alertDialog.setTitle(context.getString(R.string.copyinvoice));
+                                alertDialog.setMessage("Enter Count Of invoice ");
+
+                                final EditText input = new EditText(SalesCartActivity.this);
+                                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                        LinearLayout.LayoutParams.MATCH_PARENT);
+                                input.setLayoutParams(lp);
+                                alertDialog.setView(input);
+                                alertDialog.setPositiveButton(context.getText(R.string.done),
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                if (!input.getText().toString().equals("")) {
+                                                    count = Integer.parseInt(input.getText().toString());
+                                                    for(int i=0;i<count;i++){
+
+                                                    }
+                                                }
+                                            }
+                                        });
+
+                                alertDialog.setNegativeButton("NO",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                                alertDialog.show();
+                        }
+
+                    }));*/
+
+
+
+
                                 /*OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(context);
                                 orderDetailsDBAdapter.open();
                                 List<OrderDetails>orderDetailsList=orderDetailsDBAdapter.getOrderBySaleID(lastOrder.getOrderId());
@@ -3067,7 +3106,7 @@ public class SalesCartActivity extends AppCompatActivity {
         Log.d("tttttt",barcodeScanned.toString());
         Product product = new Product();
         char firstChar = barcodeScanned.charAt(0);
-        if(firstChar=='2'){
+        if(firstChar=='2'&&barcodeScanned.length()>6){
             String productNum = barcodeScanned.substring(1,7);
             Double newPrice = Double.parseDouble(barcodeScanned.substring(7))/1000;
             product = productDBAdapter.getProductByBarCode(productNum);
