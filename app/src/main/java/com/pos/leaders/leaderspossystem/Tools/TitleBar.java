@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.Time;
@@ -22,9 +23,12 @@ import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.os.Looper.getMainLooper;
 import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 
 
@@ -33,6 +37,7 @@ import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
  */
 
 public class TitleBar {
+
     private static android.support.v7.app.ActionBar actionBar;
     private static ImageView ivInternet;
     private static ImageView ivSync ;
@@ -76,9 +81,20 @@ public class TitleBar {
         // You customization
         final int actionBarColor = context.getResources().getColor(R.color.primaryColor);
         actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
-
         final TextView tvDate = (TextView) context.findViewById(R.id.titleBar_tvClock);
-        tvDate.setText(format.format(ca.getTime()));
+
+        final Handler someHandler = new Handler(getMainLooper());
+        someHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+//                tvDate.setText(format.format(ca.getTime()));
+                tvDate.setText(new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.US).format(new Date()));
+                someHandler.postDelayed(this, 1000);
+            }
+        }, 10);
+
+
+
 
         if (clock == null) {
             clock = new Clock(context);
@@ -228,6 +244,7 @@ public class TitleBar {
                 break;
         }
     }
+
 }
 
 class LoggingTask extends TimerTask{
@@ -237,3 +254,4 @@ class LoggingTask extends TimerTask{
         sendLogFile();
     }
 }
+

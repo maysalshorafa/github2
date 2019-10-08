@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -336,6 +337,7 @@ public class SalesCartActivity extends AppCompatActivity {
     public static ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
     Bitmap newBitmap =null;
     boolean isWithSerialNo=false;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -346,8 +348,9 @@ public class SalesCartActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main_temp);
 
-
         TitleBar.setTitleBar(this);
+
+
 
         if (!Util.isSyncServiceRunning(this)) {
             Intent intent = new Intent(SalesCartActivity.this, SyncMessage.class);
