@@ -4420,7 +4420,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         PaymentTable paymentTable= objectMapper.readValue(jsonObject.toString(), PaymentTable.class);
                         paymentTableArrayList.add(paymentTable);
                         TotalPaidAmount += jsonObject.getDouble("tendered") * getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
-                        change = Math.abs(jsonObject.getDouble("change")) * getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
+                        change = Math.abs(jsonObject.getDouble("change"));
                     }
 
 
