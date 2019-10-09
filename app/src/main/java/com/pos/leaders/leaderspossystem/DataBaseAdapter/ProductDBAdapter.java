@@ -213,6 +213,8 @@ public class ProductDBAdapter {
 
     public Product getProductByID(long id) {
         Product product = null;
+        try {
+            open();
         Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where id='" + id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
@@ -222,7 +224,11 @@ public class ProductDBAdapter {
         cursor.moveToFirst();
         product = makeProduct(cursor);
         cursor.close();
+            close();
 
+        } catch (Exception e) {
+
+        }
         return product;
     }
 
@@ -242,6 +248,8 @@ public class ProductDBAdapter {
 
     public Product getProductByBarCode(String barcode){
         Product product = null;
+        try {
+            open();
         Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where barcode='" + barcode + "' or sku='" + barcode + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
@@ -251,7 +259,11 @@ public class ProductDBAdapter {
         cursor.moveToFirst();
         product = makeProduct(cursor);
         cursor.close();
+        close();
 
+    } catch (Exception e) {
+
+    }
         return product;
     }
 
@@ -374,6 +386,8 @@ public class ProductDBAdapter {
 
     public List<Product> getAllProducts(){
         List<Product> productsList =new ArrayList<Product>();
+        try {
+            open();
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
              cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
@@ -388,7 +402,11 @@ public class ProductDBAdapter {
             productsList.add(makeProduct(cursor));
             cursor.moveToNext();
         }
+            close();
 
+        } catch (Exception e) {
+
+        }
         return productsList;
     }
 
@@ -421,6 +439,8 @@ public class ProductDBAdapter {
 
     public List<Product> getAllProductsByCategory(long categoryId, int from , int count){
         List<Product> productsList =new ArrayList<Product>();
+        try {
+            open();
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
             cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
@@ -434,13 +454,19 @@ public class ProductDBAdapter {
             productsList.add(makeProduct(cursor));
             cursor.moveToNext();
         }
+        close();
 
+    } catch (Exception e) {
+
+    }
         return productsList;
     }
 
     public List<Product> getTopProducts(int from ,int count){
         List<Product> productsList =new ArrayList<Product>();
         //SELECT * FROM table limit 100, 200
+        try {
+            open();
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
             Log.d("teeest1",SETTINGS.enableAllBranch+"   "+SETTINGS.branchId);
@@ -457,7 +483,11 @@ public class ProductDBAdapter {
             productsList.add(makeProduct(cursor));
             cursor.moveToNext();
         }
+            close();
 
+        } catch (Exception e) {
+
+        }
         return productsList;
     }
 
@@ -546,6 +576,8 @@ public class ProductDBAdapter {
 
     public List<Product> getAllProductsByHint(String hint , int from , int count ){
         List<Product> productsList =new ArrayList<Product>();
+        try {
+            open();
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
             cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
@@ -563,7 +595,11 @@ public class ProductDBAdapter {
             productsList.add(makeProduct(cursor));
             cursor.moveToNext();
         }
+            close();
 
+        } catch (Exception e) {
+
+        }
         return productsList;
     }
     // methode to test if barcode is UNIQUE
