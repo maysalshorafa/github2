@@ -92,13 +92,14 @@ public class ProductInventoryCatalogGridViewAdapter  extends BaseAdapter {
         TextView tvName=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVName);
         TextView tvPrice=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVPrice);
         TextView sku=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVBarCode);
-
+        TextView qty=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVQty);
         tvPrice.setText(products.get(position).getPrice() + " " + context.getString(R.string.ins));
         tvName.setText(_Substring(products.get(position).getName()));
         ProductDBAdapter productDBAdapter =new ProductDBAdapter(context);
         productDBAdapter.open();
         Product p=productDBAdapter.getProductByID(products.get(position).getProductId());
         sku.setText(p.getSku());
+        qty.setText(products.get(position).getQty()+"");
         return gridView;
     }
     private String _Substring(String str){
