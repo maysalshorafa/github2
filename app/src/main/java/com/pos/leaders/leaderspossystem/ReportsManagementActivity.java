@@ -245,11 +245,14 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                 if (lastZReport!=null) {
                     XReport xReport = Util.insertXReport( getApplicationContext());
                     Intent i = new Intent(ReportsManagementActivity.this, ReportZDetailsActivity.class);
-                    i.putExtra(COM_LEADPOS_XREPORT_ID, xReport.getxReportId());
-                    i.putExtra(COM_LEADPOS_XREPORT_FORM, xReport.getStartOrderId());
-                    i.putExtra(COM_LEADPOS_XREPORT_TO, xReport.getEndOrderId());
-                    i.putExtra(COM_LEADPOS_XREPORT_TOTAL_AMOUNT, xReport.getTotalSales());
-                    i.putExtra(COM_LEADPOS_XREPORT_AMOUNT, xReport.getTotalAmount());
+//                                                            /* i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
+//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
+//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
+//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReport.getTotalSales());
+//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,zReport.getTotalAmount());
+//                                                            i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FROM_DASH_BOARD,true);*/
+                    i.putExtra("ObjectXReport",xReport);
+
                     i.putExtra(COM_LEADPOS_XREPORT_FLAG, true);
 
                     startActivity(i);

@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.itextpdf.text.DocumentException;
@@ -88,6 +87,7 @@ public class ReportZDetailsActivity extends Activity {
     boolean isCopy=false;
     boolean x= false;
     ZReport zReport ;
+    XReport xReport;
     public static ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
     Bitmap newBitmap =null;
     boolean fromDashBoard=false;
@@ -154,11 +154,9 @@ public class ReportZDetailsActivity extends Activity {
         if (extras != null) {
             x= getIntent().getExtras().getBoolean(ReportsManagementActivity.COM_LEADPOS_XREPORT_FLAG);
             if (x==true) {
-                id = (long) extras.get(ReportsManagementActivity.COM_LEADPOS_XREPORT_ID);
-                from = (long) extras.get(ReportsManagementActivity.COM_LEADPOS_XREPORT_FORM);
-                to = (long) extras.get(ReportsManagementActivity.COM_LEADPOS_XREPORT_TO);
-                totalZReportAmount = (double) extras.get(ReportsManagementActivity.COM_LEADPOS_XREPORT_TOTAL_AMOUNT);
-                amount = (double) extras.get(ReportsManagementActivity.COM_LEADPOS_XREPORT_AMOUNT);
+                Intent i = getIntent();
+                xReport = (XReport) i.getSerializableExtra("ObjectXReport");
+                Log.d("zReportObject",xReport.toString());
             } else {
                /* id = (long) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_ID);
                 from = (long) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_FORM);
@@ -187,7 +185,44 @@ public class ReportZDetailsActivity extends Activity {
         pt = new PrintTools(ReportZDetailsActivity.this);
         if (x==true) {
 
-            XReport xReport = xReportDBAdapter.getByID(id);
+            getCountForXReport(ReportZDetailsActivity.this,xReport);
+
+            try {
+                invoiceReceiptCountText.setText(invoiceReceiptCount+"");
+                zReportTotalInvoiceReceipt.setText(Util.makePrice(xReport.getInvoiceReceiptAmount()));
+                invoiceCountText.setText(invoiceCount+"");
+                zReportInvoice.setText(Util.makePrice(xReport.getInvoiceAmount()));
+                creditInvoiceCount.setText(CreditInvoiceCount+"");
+                zReportCreditInvoice.setText(Util.makePrice(xReport.getCreditInvoiceAmount()));
+                zReportTotalSales.setText(Util.makePrice(xReport.getTotalSales()));
+                zReportCashPaymentCount.setText(cashCount+"");
+                zReportTotalCashPayment.setText(Util.makePrice(cashAmount));
+                zReportShekelCount.setText(ShekelCount+"");
+                zReportTotalShekel.setText(Util.makePrice(xReport.getShekelAmount()));
+                zReportUsdCount.setText(UsdCount+"");
+                zReportTotalUsd.setText(Util.makePrice(xReport.getUsdAmount()));
+                zReportEurCount.setText(EurCount+"");
+                zReportTotalEur.setText(Util.makePrice(xReport.getEurAmount()));
+                zReportGbpCount.setText(GbpCount+"");
+                zReportTotalGbp.setText(Util.makePrice(xReport.getGbpAmount()));
+                zReportCreditCardCount.setText(creditCardCount+"");
+                zReportTotalCreditCard.setText(Util.makePrice(xReport.getCreditTotal()));
+                zReportCheckCount.setText(checkCount+"");
+                zReportTotalCheck.setText(Util.makePrice(xReport.getCheckTotal()));
+                zReportTotalAmount.setText(Util.makePrice(xReport.getTotalAmount()));
+                zReportOpiningReportAmount.setText(Util.makePrice(aReportAmount));
+                zReportOpiningReportCount.setText(opiningReportList.size()+"");
+                zReportPullReportAmount.setText(Util.makePrice(xReport.getPullReportAmount()));
+                zReportDepositReportAmount.setText(Util.makePrice(xReport.getDepositReportAmount()));
+                zReportShekelAmount.setText(Util.makePrice(aReportDetailsForFirstCurrency));
+                zReportUsdAmount.setText(Util.makePrice(aReportDetailsForSecondCurrency));
+                zReportGbpAmount.setText(Util.makePrice(aReportDetailsForThirdCurrency));;
+                zReportEurAmount.setText(Util.makePrice(aReportDetailsForForthCurrency));;
+                zReportPosSales.setText(Util.makePrice(xReport.getTotalPosSales()));;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             PdfUA pdfUA = new PdfUA();
 
             try {
@@ -428,19 +463,6 @@ public class ReportZDetailsActivity extends Activity {
                 {
                     Log.d("bitmapsize2222",bitmapList.size()+"");
                     newBitmap= combineImageIntoOne(bitmapList);
-                    if(x==true){
-                    try {
-                        Thread.sleep(1000);
-
-                    if(newBitmap!=null) {
-                        ImageView imageView = (ImageView) findViewById(R.id.reportZDetails_ivInvoice);
-                        imageView.setVisibility(View.VISIBLE);
-                        imageView.setImageBitmap(newBitmap);
-                    }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    }
                     //after async close progress dialog
                     //load the html in the webview
                   //  wv.loadDataWithBaseURL("", html, "text/html","UTF-8", "");
@@ -669,5 +691,161 @@ public class ReportZDetailsActivity extends Activity {
         checkCount+=receiptInvoiceAmountCheck;
 
       return res;
+    }
+    public  void getCountForXReport(Context context, XReport x) {
+        aReportAmount=0;
+        opiningReportList=new ArrayList<>();
+        aReportDetailsForFirstCurrency=0;
+        aReportDetailsForSecondCurrency=0;
+        aReportDetailsForThirdCurrency=0;
+        aReportDetailsForForthCurrency=0;
+
+        OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(context);
+        opiningReportDBAdapter.open();
+        opiningReportList = opiningReportDBAdapter.getListByLastZReport(x.getxReportId()-1);
+        for (int i=0;i<opiningReportList.size();i++){
+            aReportAmount+=opiningReportList.get(i).getAmount();
+        }
+        if (SETTINGS.enableCurrencies) {
+            OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
+            aReportDetailsDBAdapter.open();
+            for (int a=0 ;a<opiningReportList.size();a++) {
+                //aReportAmount+=opiningReportList.get(a).getAmount();
+                OpiningReport opiningReport = opiningReportList.get(a);
+                aReportDetailsForFirstCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, opiningReport.getOpiningReportId());
+                aReportDetailsForSecondCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, opiningReport.getOpiningReportId());
+                aReportDetailsForThirdCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, opiningReport.getOpiningReportId());
+                aReportDetailsForForthCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, opiningReport.getOpiningReportId());
+            }
+
+        }
+        checkList=new ArrayList<>();
+        cashAmount=0;
+        invoiceReceiptCount=0 ;invoiceCount=0; CreditInvoiceCount=0 ; ShekelCount=0 ;UsdCount=0 ;EurCount=0; GbpCount=0 ;checkCount=0 ; creditCardCount=0 ;receiptInvoiceAmountCheck=0 ; cashCount=0;receiptInvoiceAmount=0;
+        OrderDBAdapter orderDb = new OrderDBAdapter(context);
+        orderDb.open();
+        XReportDBAdapter xReportDBAdapter = new XReportDBAdapter(context);
+        xReportDBAdapter.open();
+        invoiceReceiptCount = orderDb.getBetween(x.getStartOrderId(),x.getEndOrderId()).size();
+        if(xReportDBAdapter.getProfilesCount()==0){
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(-1, InvoiceStatus.UNPAID.getValue());
+            invoiceCount+=posInvoiceList.size();
+
+            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.CREDIT_INVOICE.getValue(),CONSTANT.CASH);
+            CreditInvoiceCount+=posCreditInvoiceList.size();
+
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
+            receiptInvoiceAmountCheck+=posReceiptList.size();
+
+        }else {
+            XReport xReport1=null;
+            try {
+                xReport1 = xReportDBAdapter.getLastRow();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(xReport1.getxReportId(), InvoiceStatus.UNPAID.getValue());
+            invoiceCount+=posInvoiceList.size();
+
+            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(xReport1.getxReportId(), DocumentType.CREDIT_INVOICE.getValue(),CONSTANT.CASH);
+            CreditInvoiceCount+=posCreditInvoiceList.size();
+
+            List<PosInvoice>posReceiptListCheck = posInvoiceDBAdapter.getPosInvoiceListByType(xReport1.getxReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
+            receiptInvoiceAmountCheck+=posReceiptListCheck.size();
+        }
+        List<Long>orderIds= new ArrayList<>();
+        List<Payment> payments = paymentList(orderDb.getBetween(x.getStartOrderId(),x.getEndOrderId()),context);
+        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
+        cashPaymentDBAdapter.open();
+        ChecksDBAdapter checksDBAdapter =new ChecksDBAdapter(context);
+        checksDBAdapter.open();
+        CreditCardPaymentDBAdapter creditCardPaymentDBAdapter =new CreditCardPaymentDBAdapter(context);
+        creditCardPaymentDBAdapter.open();
+        for (Payment p : payments) {
+            long orderId = p.getOrderId();
+            List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(orderId);
+            for(int i=0;i<cashPaymentList.size();i++){
+                cashCount+=1;
+                cashAmount+=p.getAmount();
+            }
+            List<Check>checkList=checksDBAdapter.getPaymentBySaleID(orderId);
+            for(int i=0;i<checkList.size();i++){
+                checkCount+=1;
+            }
+            List<CreditCardPayment>creditCardPayments=creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
+            for(int i=0;i<creditCardPayments.size();i++){
+                creditCardCount+=1;            }
+            /*int i = 0;
+            switch (p.getPaymentWay()) {
+
+                case CONSTANT.CASH:
+                  cashCount+=1;
+                    cashAmount+=p.getAmount();
+                    break;
+                case CONSTANT.CREDIT_CARD:
+                 creditCardCount+=1;
+                    break;
+                case CONSTANT.CHECKS:
+                  checkCount+=1;
+                    orderIds.add(p.getOrderId());
+                    break;
+            }*/
+        }
+        if(orderIds.size()>0){
+            for (int id = 0;id<orderIds.size();id++){
+                ChecksDBAdapter checkDb= new ChecksDBAdapter(context);
+                checkDb.open();
+                List<Check> c = checkDb.getPaymentBySaleID(orderIds.get(id));
+                checkList.add(c);
+            }
+        }
+        //with Currency
+        if (SETTINGS.enableCurrencies) {
+            List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(orderDb.getBetween(x.getStartOrderId(),x.getEndOrderId()),context);
+            for (CurrencyOperation cp : currencyOperationList) {
+                switch (cp.getCurrencyType()) {
+                    case "ILS":
+                        ShekelCount+=1;
+                        break;
+                    case "USD":
+                        UsdCount+=1;
+                        break;
+                    case "EUR":
+                        EurCount+=1;
+
+                        break;
+                    case "GBP":
+                        GbpCount+=1;
+                        break;
+                }
+            }
+
+        }
+        if(xReportDBAdapter.getProfilesCount()==0){
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
+            receiptInvoiceAmount+=posReceiptList.size();
+
+        }else {
+            XReport xReport1=null;
+            try {
+                xReport1 = xReportDBAdapter.getLastRow();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(xReport1.getxReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
+            receiptInvoiceAmount+=posReceiptList.size();
+
+        }
+        ShekelCount+=receiptInvoiceAmount;
+        checkCount+=receiptInvoiceAmountCheck;
+
     }
 }
