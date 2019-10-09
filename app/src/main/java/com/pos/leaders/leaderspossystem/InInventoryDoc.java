@@ -124,8 +124,9 @@ public class InInventoryDoc extends AppCompatActivity {
         productInventoryDbAdapter.open();
         productDBAdapter=new ProductDBAdapter(InInventoryDoc.this);
         productDBAdapter.open();
-        filter_productList = productInventoryDbAdapter.getAllProducts();
-          finalAdapter = new ProductInventoryCatalogGridViewAdapter(this, filter_productList);
+        searchFilter_productList = productInventoryDbAdapter.getAllProducts();
+        filter_productList=searchFilter_productList;
+          finalAdapter = new ProductInventoryCatalogGridViewAdapter(this, searchFilter_productList);
         gvProduct.setAdapter(finalAdapter);
         context=this;
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +163,7 @@ public class InInventoryDoc extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                    addToCart(filter_productList.get(position));
+                    addToCart(searchFilter_productList.get(position));
             }
         });
         chooseProvider.setOnClickListener(new View.OnClickListener() {
