@@ -6,6 +6,18 @@
     android:background="@color/white"
     android:orientation="vertical"
     android:padding="5dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:background="@color/white"
+        android:orientation="vertical"
+    >
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:id="@+id/reportZDetails_ivInvoice"/>
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
@@ -24,15 +36,14 @@
         <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:orientation="horizontal"
         android:padding="5dp"
         android:layout_weight="1"
-        android:weightSum="3">
+        android:weightSum="3"
+            android:background="@drawable/bubble">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
             android:orientation="vertical"
             android:padding="5dp"
             android:layout_weight="1"
@@ -43,7 +54,7 @@
                 android:text="@string/details"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="35dp"/>
+                android:textSize="30dp"/>
 
             <TextView
                 android:id="@+id/textView15"
@@ -81,18 +92,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
             android:orientation="vertical"
             android:padding="5dp"
             android:layout_weight="1"
             android:weightSum="5">
+
             <TextView
+                android:id="@+id/textView10"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/count"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="35dp"/>
+                android:text="@string/count"
+                android:textSize="30dp" />
 
             <TextView
                 android:id="@+id/invoiceReceiptCount"
@@ -124,7 +136,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
             android:orientation="vertical"
             android:padding="5dp"
             android:layout_weight="1"
@@ -135,7 +146,7 @@
                 android:text="@string/total"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="35dp"/>
+                android:textSize="30dp"/>
             <TextView
                 android:id="@+id/zReportTotalInvoiceReceipt"
                 android:layout_width="match_parent"
@@ -185,7 +196,7 @@
                         android:text="@string/currency"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:textSize="35dp"/>
+                        android:textSize="30dp"/>
 
                     <TextView
                         android:id="@+id/textView16"
@@ -248,7 +259,7 @@
                         android:text="@string/count"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:textSize="35dp"/>
+                        android:textSize="30dp"/>
 
                     <TextView
                         android:id="@+id/zReportCashPaymentCount"
@@ -305,7 +316,7 @@
                         android:text="@string/total"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:textSize="35dp"/>
+                        android:textSize="30dp"/>
                     <TextView
                         android:id="@+id/zReportTotalCashPayment"
                         android:layout_width="match_parent"
@@ -348,19 +359,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
                 android:orientation="horizontal"
                 android:padding="5dp"
                 android:layout_weight="1"
-                android:weightSum="3">
+                android:weightSum="3"
+                android:background="@drawable/bubble">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
                     android:orientation="vertical"
                     android:padding="5dp"
                     android:layout_weight="1"
-                    android:weightSum="3">
+                    android:weightSum="3"
+                    >
 
                     <TextView
                         android:id="@+id/textView27"
@@ -369,7 +380,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="@string/currency"
-                        android:textSize="35dp" />
+                        android:textSize="30dp" />
 
                     <TextView
                         android:id="@+id/textView17"
@@ -393,7 +404,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
                     android:orientation="vertical"
                     android:padding="5dp"
                     android:layout_weight="1"
@@ -404,7 +414,7 @@
                         android:text="@string/count"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:textSize="35dp"/>
+                        android:textSize="30dp"/>
 
                     <TextView
                         android:id="@+id/zReportCheckCount"
@@ -424,7 +434,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
                     android:orientation="vertical"
                     android:padding="5dp"
                     android:layout_weight="1"
@@ -435,7 +444,7 @@
                         android:text="@string/total"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:textSize="35dp"/>
+                        android:textSize="30dp"/>
                     <TextView
                         android:id="@+id/zReportTotalCheck"
                         android:layout_width="match_parent"
@@ -565,15 +574,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@drawable/bubble"
                 android:orientation="horizontal"
                 android:padding="5dp"
                 android:layout_weight="1"
-                android:weightSum="2">
+                android:weightSum="4">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
                     android:orientation="vertical"
                     android:padding="5dp"
                     android:layout_weight="1"
@@ -602,7 +610,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
                     android:orientation="vertical"
                     android:padding="5dp"
                     android:layout_weight="1"
@@ -623,7 +630,50 @@
 
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="5dp"
+                    android:layout_weight="1"
+                    android:weightSum="2">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textSize="35dp"/>
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+
+
+                </LinearLayout>
+                <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:layout_weight="1"
+                android:weightSum="2">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="35dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"/>
+
+
+            </LinearLayout>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -632,7 +682,7 @@
                 android:orientation="horizontal"
                 android:padding="5dp"
                 android:layout_weight="1"
-                android:weightSum="2">
+                android:weightSum="4">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -686,14 +736,60 @@
 
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="5dp"
+                    android:layout_weight="1"
+                    android:weightSum="2">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textSize="35dp"/>
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+
+
+                </LinearLayout>
+                <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:layout_weight="1"
+                android:weightSum="2">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="35dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"/>
+
+
+            </LinearLayout>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@drawable/bubble"
                 android:orientation="horizontal"
                 android:padding="5dp"
+                android:layout_margin="8dp"
                 android:layout_weight="1"
                 android:weightSum="2">
                 <LinearLayout
@@ -799,10 +895,17 @@
                 </LinearLayout>
 
             </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bubble"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:layout_weight="1"
+            android:weightSum="4">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
                 android:orientation="horizontal"
                 android:padding="5dp"
                 android:layout_weight="1"
@@ -822,9 +925,51 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:textSize="25dp" />
+</LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:layout_weight="1"
+                android:weightSum="2">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="35dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"/>
 
 
-            </LinearLayout>
+            </LinearLayout> <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:layout_weight="1"
+            android:weightSum="2">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="35dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"/>
+
+
+        </LinearLayout>
+        </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
@@ -861,3 +1006,4 @@
 
     </LinearLayout>
 </LinearLayout>
+    </LinearLayout>

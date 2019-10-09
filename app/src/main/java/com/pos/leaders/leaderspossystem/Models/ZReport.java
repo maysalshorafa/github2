@@ -3,13 +3,14 @@ package com.pos.leaders.leaderspossystem.Models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * Created by KARAM on 05/01/2017.
  */
 
-public class ZReport {
+public class ZReport implements Serializable {
     private long zReportId;
     private Timestamp createdAt;
     private long byUser;
