@@ -128,7 +128,10 @@ public class OpiningReportDBAdapter {
     }
     public  List<OpiningReport> getListByLastZReport(long lastZReportID){
         List<OpiningReport> aReports = new ArrayList<OpiningReport>();
-        Cursor cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME + " where " + OPINING_REPORT_COLUMN_LASTZREPORTID + "='" + (lastZReportID ) + "'", null);
+        try {
+            open();
+
+            Cursor cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME + " where " + OPINING_REPORT_COLUMN_LASTZREPORTID + "='" + (lastZReportID ) + "'", null);
         if (cursor.getCount() < 1) {
             //cursor.close();
             cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME,null);
@@ -139,12 +142,18 @@ public class OpiningReportDBAdapter {
             aReports.add(makeAReport(cursor));
             cursor.moveToNext();
         }
+            close();
+
+        } catch (Exception e) {
+
+        }
 
         return aReports;
     }
     public List<OpiningReport> getBetween(Date fromDate, Date toDate){
         List<OpiningReport> aReports = new ArrayList<OpiningReport>();
-
+        try {
+            open();
         Cursor cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME + " where " + OPINING_REPORT_COLUMN_CREATEDATE + "<='" + toDate.getTime() + "' and " + OPINING_REPORT_COLUMN_CREATEDATE +
                 ">='" + fromDate.getTime() + "'" + " order by " + OPINING_REPORT_COLUMN_ID + " desc", null);
         cursor.moveToFirst();
@@ -153,6 +162,11 @@ public class OpiningReportDBAdapter {
             aReports.add(makeAReport(cursor));
             cursor.moveToNext();
         }
+        close();
+
+    } catch (Exception e) {
+
+    }
 
         return aReports;
     }

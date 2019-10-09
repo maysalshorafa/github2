@@ -131,15 +131,14 @@ public class ZReportActivity extends AppCompatActivity {
         lvReports.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i=new Intent(ZReportActivity.this,ReportZDetailsActivity.class);
-                i.putExtra("permissions_name",str);
-
-                i.putExtra(COM_LEADPOS_ZREPORT_ID,zReportList.get(position-1).getzReportId());
-                i.putExtra(COM_LEADPOS_ZREPORT_FORM,zReportList.get(position-1).getStartOrderId());
-                i.putExtra(COM_LEADPOS_ZREPORT_TO,zReportList.get(position-1).getEndOrderId());
-                i.putExtra(COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReportList.get(position-1).getTotalPosSales());
-                i.putExtra(COM_LEADPOS_ZREPORT_AMOUNT,zReportList.get(position-1).getTotalAmount());
-
+                Intent i = new Intent(ZReportActivity.this, ReportZDetailsActivity.class);
+//                                                            /* i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
+//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
+//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
+//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReport.getTotalSales());
+//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,zReport.getTotalAmount());
+//                                                            i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FROM_DASH_BOARD,true);*/
+                i.putExtra("ObjectZReport",zReportList.get(position-1));
                 i.putExtra(COM_LEADPOS_ZREPORT_HISTORY, true);
                 startActivity(i);
 

@@ -226,7 +226,7 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT,2, font);
 
         insertCell(dataTable, Util.makePrice( zReport.getCreditInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,creditCardCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,CreditInvoiceCount + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
 
         insertCell(dataTable,  Util.makePrice(zReport.getTotalSales() ), Element.ALIGN_RIGHT, 1, font);
