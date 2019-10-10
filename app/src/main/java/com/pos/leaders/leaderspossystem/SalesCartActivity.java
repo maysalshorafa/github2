@@ -1069,8 +1069,6 @@ public class SalesCartActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String word = etSearch.getText().toString();
                 if (!word.equals("")) {
-                    productCountLoad = 80;
-                    productLoadItemOffset = 0;
                     // Database query can be a time consuming task ..
                     // so its safe to call database query in another thread
                     // Handler, will handle this stuff
@@ -1090,7 +1088,6 @@ public class SalesCartActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     productList.addAll(productDBAdapter.getAllProductsByHint(params[0], productList.size()-1, 20));
-
                                     // Stuff that updates the UI
                                     productCatalogGridViewAdapter.notifyDataSetChanged();
                                 }
@@ -1102,11 +1099,16 @@ public class SalesCartActivity extends AppCompatActivity {
                         @Override
                         protected void onPostExecute(Void aVoid) {
                             super.onPostExecute(aVoid);
+                            Log.d("tttttttt",productList.toString());
+                            Log.d("tttttttt",productList.size()+"");
 
+                        /*    if(productList.size()==1){
+                                productList.remove(1);
+                            }*/
                             //if(productCatalogGridViewAdapter==null){
                             productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
-                            lvProducts.setAdapter(productCatalogGridViewAdapter);
-                            gvProducts.setAdapter(productCatalogGridViewAdapter);
+                        lvProducts.setAdapter(productCatalogGridViewAdapter);
+                           gvProducts.setAdapter(productCatalogGridViewAdapter);
                             //    }
                         }
                     }.execute(word);
@@ -2540,7 +2542,7 @@ public class SalesCartActivity extends AppCompatActivity {
          }*/
      }else {
 
-        if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
+      if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
             CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
          SESSION._Rest();
          clearCart();
@@ -3153,11 +3155,11 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     private void enterKeyPressed(String barcodeScanned) throws JSONException {
-        Log.d("tttttt",barcodeScanned.toString());
         Product product = new Product();
         char firstChar = barcodeScanned.charAt(0);
-        if(firstChar=='2'&&barcodeScanned.length()>6){
+        if(firstChar=='2'&&barcodeScanned.length()==13){
             String productNum = barcodeScanned.substring(1,7);
+            Log.d("tttttt",productNum);
             Double newPrice = Double.parseDouble(barcodeScanned.substring(7))/1000;
             product = productDBAdapter.getProductByBarCode(productNum);
             if(product!=null){
@@ -3245,11 +3247,11 @@ public class SalesCartActivity extends AppCompatActivity {
             @Override
             protected Void doInBackground(Void... params) {
                 if (!searchWord.equals("")) {
-                    productList.addAll(productDBAdapter.getAllProductsByHint(searchWord, productList.size()-1, 20));
                     runOnUiThread(new Runnable() {
 
                         @Override
                         public void run() {
+                           // productList.addAll(productDBAdapter.getAllProductsByHint(searchWord, productList.size()-1, 20));
 
                             // Stuff that updates the UI
                             productCatalogGridViewAdapter.notifyDataSetChanged();
@@ -3257,11 +3259,11 @@ public class SalesCartActivity extends AppCompatActivity {
                         }
                     });
                 } else if (id == 0) {
-                    productList.addAll(productDBAdapter.getTopProducts( productList.size()-1, 20));
                     runOnUiThread(new Runnable() {
 
                         @Override
                         public void run() {
+                            productList.addAll(productDBAdapter.getTopProducts( productList.size()-1, 20));
 
                             // Stuff that updates the UI
                             productCatalogGridViewAdapter.notifyDataSetChanged();
@@ -3269,11 +3271,11 @@ public class SalesCartActivity extends AppCompatActivity {
                         }
                     });
                 } else {
-                    productList.addAll(productDBAdapter.getAllProductsByCategory(id, productList.size()-1, 20));
                     runOnUiThread(new Runnable() {
 
                         @Override
                         public void run() {
+                            productList.addAll(productDBAdapter.getAllProductsByCategory(id, productList.size()-1, 20));
 
                             // Stuff that updates the UI
                             productCatalogGridViewAdapter.notifyDataSetChanged();

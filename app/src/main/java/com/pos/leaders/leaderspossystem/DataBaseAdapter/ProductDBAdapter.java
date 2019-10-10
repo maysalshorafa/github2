@@ -268,6 +268,7 @@ public class ProductDBAdapter {
     }
 
     public int deleteEntry(long id) {
+        open();
         ProductDBAdapter productDBAdapter=new ProductDBAdapter(context);
         productDBAdapter.open();
         // Define the updated row content.

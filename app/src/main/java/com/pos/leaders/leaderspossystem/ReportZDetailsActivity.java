@@ -156,7 +156,7 @@ public class ReportZDetailsActivity extends Activity {
             if (x==true) {
                 Intent i = getIntent();
                 xReport = (XReport) i.getSerializableExtra("ObjectXReport");
-                Log.d("zReportObject",xReport.toString());
+                Log.d("xReportObject",xReport.toString());
             } else {
                /* id = (long) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_ID);
                 from = (long) extras.get(ZReportActivity.COM_LEADPOS_ZREPORT_FORM);
@@ -166,7 +166,7 @@ public class ReportZDetailsActivity extends Activity {
 */
                 Intent i = getIntent();
                  zReport = (ZReport) i.getSerializableExtra("ObjectZReport");
-                Log.d("zReportObject",zReport.toString());
+             //   Log.d("zReportObject",zReport.toString());
 
             }
             if (extras.containsKey(ZReportActivity.COM_LEADPOS_ZREPORT_HISTORY)) {
@@ -410,12 +410,12 @@ public class ReportZDetailsActivity extends Activity {
                 }else {
                     if(fromDashBoard){
                         pt.PrintReport(newBitmap);
-                       finish();
+                    //   finish();
                         Intent intent = new Intent(ReportZDetailsActivity.this,LogInActivity.class);
                         startActivity(intent);
                     }else {
                         pt.PrintReport(newBitmap);
-                        onBackPressed();
+                     //   onBackPressed();
                     }
 
                 }
