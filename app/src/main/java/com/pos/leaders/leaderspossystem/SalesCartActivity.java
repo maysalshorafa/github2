@@ -652,6 +652,55 @@ public class SalesCartActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 1:
+                               /* Order copyOrder = orderDBAdapter.getLast();
+                                OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
+                                orderDetailsDBAdapter.open();
+                                cashPaymentDBAdapter=new CashPaymentDBAdapter(SalesCartActivity.this);
+                                cashPaymentDBAdapter.open();
+                                PaymentDBAdapter paymentDBAdapter =new PaymentDBAdapter(SalesCartActivity.this);
+                                paymentDBAdapter.open();
+                                currencyOperationDBAdapter=new CurrencyOperationDBAdapter(SalesCartActivity.this);
+                                currencyOperationDBAdapter.open();
+                                currencyReturnsDBAdapter=new CurrencyReturnsDBAdapter(SalesCartActivity.this);
+                                currencyReturnsDBAdapter.open();
+                                List<OrderDetails>orderDetailsList=orderDetailsDBAdapter.getOrderBySaleID(copyOrder.getOrderId());
+
+                                List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(copyOrder.getOrderId());
+                                List<Payment> paymentList =paymentDBAdapter.getPaymentBySaleID(copyOrder.getOrderId());
+                                List<CurrencyOperation>currencyOperationList=currencyOperationDBAdapter.getCurrencyOperationByOrderID(copyOrder.getOrderId());
+                                List<CurrencyReturns>currencyReturnsList=currencyReturnsDBAdapter.getCurencyReturnBySaleID(copyOrder.getOrderId());
+                                copyOrder.setOrderId(copyOrder.getOrderId()+1);
+                                Log.d("copyOrder",copyOrder.toString());
+                                orderDBAdapter.insertEntry(copyOrder);
+                                for (int i=0;i<orderDetailsList.size();i++){
+                                    OrderDetails o =orderDetailsList.get(i);
+                                    o.setOrderId(copyOrder.getOrderId());
+                                    orderDetailsDBAdapter.insertEntry(o);
+                                }
+                                for (int i=0;i<cashPaymentList.size();i++){
+                                    CashPayment cashPayment=cashPaymentList.get(i);
+                                    cashPayment.setOrderId(copyOrder.getOrderId());
+                                    cashPaymentDBAdapter.insertEntry(cashPayment);
+                                }
+                                for (int i=0;i<paymentList.size();i++){
+                                    Payment payment=paymentList.get(i);
+                                    payment.setOrderId(copyOrder.getOrderId());
+                                    paymentDBAdapter.insertEntry(payment);
+                                }
+                                for (int i=0;i<currencyOperationList.size();i++){
+                                    CurrencyOperation currencyOperation=currencyOperationList.get(i);
+                                    currencyOperation.setOperationId(copyOrder.getOrderId());
+                                    currencyOperationDBAdapter.insertEntry(currencyOperation);
+                                }
+                                for (int i=0;i<currencyReturnsList.size();i++){
+                                    CurrencyReturns currencyReturns=currencyReturnsList.get(i);
+                                    currencyReturns.setOrderId(copyOrder.getOrderId());
+                                    currencyReturnsDBAdapter.insertEntry(currencyReturns);
+                                }
+                                SESSION._TEMP_ORDERS=copyOrder;
+                                SESSION._TEMP_ORDER_DETAILES=orderDetailsList;
+                                Activity a=getParent();
+                                PrinterTools.printAndOpenCashBox("", "", "", 600,SalesCartActivity.this,a);
                                /* AlertDialog.Builder alertDialog = new AlertDialog.Builder(SalesCartActivity.this);
                                 alertDialog.setTitle(context.getString(R.string.copyinvoice));
                                 alertDialog.setMessage("Enter Count Of invoice ");
@@ -726,6 +775,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                         sendLogFile();
                                     }
                                 }*/
+
                                 break;
                             case 2:
                                 OrderDBAdapter saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);

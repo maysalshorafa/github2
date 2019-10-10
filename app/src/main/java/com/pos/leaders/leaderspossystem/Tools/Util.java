@@ -447,7 +447,9 @@ public class Util {
         try {
             ZReport zReport1 = zReportDBAdapter.getLastRow();
             ZReport zReport =zReportDBAdapter.getByID(zReport1.getzReportId()-1);
-            totalZReportAmount=zReport.getTotalPosSales()+amount;
+            if(zReport!=null) {
+                totalZReportAmount = zReport.getTotalPosSales() + amount;
+            }
         } catch (Exception e) {
             totalZReportAmount=amount;
             e.printStackTrace();
