@@ -466,7 +466,6 @@
     <string name="insert_product_barcode">תכניס את הבארקוד</string>
     <string name="insert_product_name">תכניס שם מוצר</string>
     <string name="insert_product_price">תכניס מחיר מכירה</string>
-    <string name="pinpad">Pin-Pad</string>
     <string name="please_insert_club_description">נא להכניס תיאור</string>
     <string name="please_insert_club_name">נא להכניס שם מעדון</string>
     <string name="please_insert_club_percentage">נא להכניס אחוז הנחה</string>
@@ -630,7 +629,46 @@
     <string name="start">החל</string>
     <string name="inventory">ניהול מחסנים</string>
     <string name="inventory_price">מחיר קניה אחרון</string>
-
+    <string name="serial_no">מס\' סיריאלי</string>
+    <string name="title_credit_card_activity">Credit Card Activity</string>
+    <string name="with_serial_no">With Serial No</string>
+    <string name="pinpad">פין פאד</string>
+    <string name="price_before_tax">מחיר לפני מע\"מ</string>
+    <string name="provider">ספקים</string>
+    <string name="view_provider">הצגת ספקים</string>
+    <string name="add_new_provider">הוספת ספק חדש</string>
+    <string name="provider_id">ח.פ. ספק</string>
+    <string name="pull_report">הפקדה לקופה</string>
+    <string name="view_pull_report">הצגת הפקדות לקופה</string>
+    <string name="add_pull_report">הוספת הפקדה חדשה לקופה</string>
+    <string name="Pull">משיכה</string>
+    <string name="Deposit">הפקדה</string>
+    <string name="add_deposit_report">הפקת משיכה מקופה חדשה</string>
+    <string name="view_deposit_report">הצגת משיכות מקופה</string>
+    <string name="deposit_report">משיכה מקופה</string>
+    <string name="pin_pad">פין פאד</string>
+    <string name="inventory_doc">תעודת כניסה למחסן</string>
+    <string name="inventory_in">דוחות מחסן</string>
+    <string name="inventory_management_activity">ניהול מחסנים</string>
+    <string name="inventory_out">הוצאת מוצרים ממחסן</string>
+    <string name="please_choose_your_provider">בחירת ספק</string>
+    <string name="please_enable_credit_card">נא לעדכן הגדרות ספק אשראי</string>
+    <string name="please_insert_customer_id">נא להכניס מס\' לקוח</string>
+    <string name="please_insert_provider_id">נא להכניס מס\' ספק</string>
+    <string name="pos_branch">מס\' סניף</string>
+    <string name="provider_club">מועדון ספק</string>
+    <string name="provider_code_in_another_programme">מס\' ספק במערכת חיצונית</string>
+    <string name="provider_code">מס\' ספק</string>
+    <string name="provider_management_activity">ניהול ספקים</string>
+    <string name="this_product_not_in_your_permission">מוצר זה לא קיים, ואין לך הרשאה להוסיף מוצרים</string>
+    <string name="success_edit_provider">עודכן נתוני ספק בהצלחה</string>
+    <string name="success_adding_new_provider">ספק הוסף בהצלחה</string>
+    <string name="multi_count_price">נא הכנס כמות מוצר</string>
+    <string name="in_inventory_doc">תעודת כניסה למחסן</string>
+    <string name="can_not_add_provider_please_try_again">לא הצליח להוסיף ספק, נא נסה שנית</string>
+    <string name="can_not_edit_provider_please_try_again">לא הצליח לעדכן נתוני ספק</string>
+    <string name="create_offer_category_activity">הקמת קבוצת מבצע</string>
+    <string name="deposit_and_pull_reportView">דוחות משיכה והפקדה לקופה</string>
 
 
 </resources>

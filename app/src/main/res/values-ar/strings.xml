@@ -428,7 +428,7 @@
     <string name="please_remember_your_password">الرجاء تذكر كلمة السر</string>
     <string name="please_add_item">الرجاء اضف منتوجات لسلةالمبيعات</string>
     <string name="pinpad_wait_for_finish">استمر بعمليةالدفع باستخدام ال pin-pad</string>
-    <string name="pinpad">Pin-Pad</string>
+    <string name="pinpad">Pin Pad</string>
     <string name="phone">التلفون</string>
     <string name="pay_cash">الدفع نقدا</string>
     <string name="pay_by_credit_card">الدفع بواسطة بطاقة الائتمان</string>
@@ -610,7 +610,48 @@
     <string name="inventory">المخزن</string>
     <string name="serial_no">الرقم التسلسلي</string>
     <string name="inventory_price">سعر الشراء الاخير</string>
-
+    <string name="success_adding_new_provider">تم اضافة مزود بنجاح .</string>
+    <string name="add_deposit_report">اضافة على الصندوق</string>
+    <string name="add_new_provider">اضافة مزود جديد</string>
+    <string name="add_pull_report">سحب من الصندوق</string>
+    <string name="can_not_add_provider_please_try_again">لم يتم اضافة مزود يرجى المحاولة مرة اخرى</string>
+    <string name="can_not_edit_provider_please_try_again">"لم يتم تعديل معلومات المزود يرجى المحاولة مرة اخرى "</string>
+    <string name="category_offer_name">قسم العروض</string>
+    <string name="categorys_offer">اقسام العروض</string>
+    <string name="create_offer_category_activity">انشاء اقسام العروض</string>
+    <string name="create_order_document">انشاء طلبية شراء</string>
+    <string name="deposit_and_pull_reportView">عرض تقرير سحب وايداع من الصندوق</string>
+    <string name="deposit_report">تقرير السحب</string>
+    <string name="in_inventory_doc">وثيقة ادخال للمخزن</string>
+    <string name="inventory_doc">تقرير المخزن</string>
+    <string name="inventory_in">ادخال الى المخزن</string>
+    <string name="inventory_management_activity">ادارة المخازن</string>
+    <string name="inventory_out">اخراج من المخزن</string>
+    <string name="multi_count_price">الرجاء ادخال عدد المنتجات</string>
+    <string name="pause_invoice">توقيف البيعه</string>
+    <string name="please_choose_your_provider">الرجاء اختيار المزود</string>
+    <string name="please_enable_credit_card">الرجاء تفعيل البطاقة</string>
+    <string name="please_insert_customer_id">الرجاء ادخال رقم الزبون</string>
+    <string name="please_insert_provider_id">الرجاء ادخال رقم المزود</string>
+    <string name="pos_branch">رقم الفرع</string>
+    <string name="price_before_tax">السعر قبل الضريبة</string>
+    <string name="provider">المزود</string>
+    <string name="provider_club">نادي المزود</string>
+    <string name="provider_code">Provider Code</string>
+    <string name="provider_code_in_another_programme">رقم المزود في برنامج اخر</string>
+    <string name="provider_id">رقم المشغل المرخص للمزود</string>
+    <string name="provider_management_activity">ادارة المزودين</string>
+    <string name="pull_report">تقرير السحب</string>
+    <string name="success_edit_provider">تم تعديل المعلومات بنجاح</string>
+    <string name="title_credit_card_activity">Credit Card Activity</string>
+    <string name="view_deposit_report">عرض تقرير السحب</string>
+    <string name="view_order_document">عرض طلبيات البيع</string>
+    <string name="view_provider">عرض معلومات المزود</string>
+    <string name="view_pull_report">عرض تقرير السحب</string>
+    <string name="with_serial_no">With Serial No</string>
+    <string name="pin_pad">Pin Pad</string>
+    <string name="Pull">سحب</string>
+    <string name="Deposit">ايداع</string>
 
 
 </resources>

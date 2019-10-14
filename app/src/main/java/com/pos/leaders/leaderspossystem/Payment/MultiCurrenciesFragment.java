@@ -67,10 +67,10 @@ public class MultiCurrenciesFragment extends Fragment {
         for (int i = 0; i < currencyTypesList.size(); i++) {
             currenciesNames.add(currencyTypesList.get(i).getType());
         }
-        paymentMethod.add(0,PaymentMethod.CASH);
-        paymentMethod.add(1,PaymentMethod.CHECK);
-        paymentMethod.add(2,PaymentMethod.CREDIT_CARD);
-        paymentMethod.add(3,PaymentMethod.PIN_PAD);
+        paymentMethod.add(0,getString(R.string.cash));
+        paymentMethod.add(1,getString(R.string.checks));
+        paymentMethod.add(2,getString(R.string.credit_card));
+        paymentMethod.add(3,getString(R.string.pinpad));
         // Creating adapter for spinner
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, currenciesNames);
         final ArrayAdapter<String> dataAdapter1 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, paymentMethod);

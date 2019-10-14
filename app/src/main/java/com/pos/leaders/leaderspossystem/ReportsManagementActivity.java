@@ -632,7 +632,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                                 long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, "Pull", z.getzReportId());
 
                                             }else {
-                                                long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, "Pull", -1);
+                                                long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, getString(R.string.Pull), -1);
 
                                             }
                                             DepositAndPullReport pullReport = null;
@@ -675,7 +675,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                             hintForCurrencyAmount.add(secondCurrencyInDefaultValue);
                                             hintForCurrencyAmount.add(thirdCurrencyInDefaultValue);
                                             hintForCurrencyAmount.add(forthCurrencyInDefaultValue);
-                                            Util.pullAndDepositReport(ReportsManagementActivity.this,pullReport,hintForCurrencyType,hintForCurrencyAmount,"Pull");
+                                            Util.pullAndDepositReport(ReportsManagementActivity.this,pullReport,hintForCurrencyType,hintForCurrencyAmount,getString(R.string.Pull));
 
                                         }
                                     }
@@ -959,10 +959,10 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                             DrawerDepositAndPullReportDbAdapter pullReportDBAdapter = new DrawerDepositAndPullReportDbAdapter(ReportsManagementActivity.this);
                                             pullReportDBAdapter.open();
                                             if(z.getzReportId()>0) {
-                                                long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, "Deposit", z.getzReportId());
+                                                long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, getString(R.string.Deposit), z.getzReportId());
 
                                             }else {
-                                                long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, "Deposit", -1);
+                                                long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, getString(R.string.Deposit), -1);
 
                                             }                                            DepositAndPullReport pullReport = null;
                                             try {
@@ -1004,7 +1004,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                             hintForCurrencyAmount.add(secondCurrencyInDefaultValue);
                                             hintForCurrencyAmount.add(thirdCurrencyInDefaultValue);
                                             hintForCurrencyAmount.add(forthCurrencyInDefaultValue);
-                                            Util.pullAndDepositReport(ReportsManagementActivity.this,pullReport,hintForCurrencyType,hintForCurrencyAmount,"Deposit");
+                                            Util.pullAndDepositReport(ReportsManagementActivity.this,pullReport,hintForCurrencyType,hintForCurrencyAmount, getString(R.string.Deposit));
 
                                         }
                                     }
