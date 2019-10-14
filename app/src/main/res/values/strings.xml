@@ -42,7 +42,7 @@
     <string name="pay_cash">Pay Cash</string>
     <string name="_cash">Cash</string>
 
-    <string name="checks">Checks</string>
+    <string name="checks">Check</string>
     <string name="pay_by_credit_card">Pay By Credit Card</string>
     <string name="integrated_payment">Integrated Payment</string>
     <string name="sales_management">Sales Management</string>
@@ -132,7 +132,7 @@
     <string name="close">Close</string>
     <string name="credit_card">Credit Card</string>
     <string name="other_ways">Other Ways</string>
-    <string name="cash">Cash Payment</string>
+    <string name="cash">Cash</string>
     <string name="done">Done</string>
     <string name="total">Total</string>
     <string name="given">Given</string>
@@ -668,7 +668,7 @@
 
     <string name="pref_title_about_company_name" translatable="false">Company Name</string>
 
-    <string name="pinpad">Pin-Pad</string>
+    <string name="pinpad">Pin Pad</string>
     <string name="insert_product_name">Please insert Product Name.</string>
     <string name="insert_product_barcode">Please insert Product Barcode.</string>
     <string name="insert_product_price">Please insert Product Price.</string>
@@ -739,7 +739,9 @@
     <string name="in_inventory_doc">In Inventory</string>
     <string name="deposit_and_pull_reportView">Deposit And Pull Report View</string>
     <string name="this_product_not_in_your_permission">This Product not found but Not on your Permission To Add Product !!</string>
-
+    <string name="Pull">Pull</string>
+    <string name="Deposit">Deposit</string>
+    <string name="pin_pad">Pin Pad</string>
 
 </resources>
 
