@@ -81,6 +81,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.BoInventory;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
@@ -107,6 +108,7 @@ import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductInventory;
 import com.pos.leaders.leaderspossystem.Models.ProductUnit;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.Offers.OfferController;
 import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
 import com.pos.leaders.leaderspossystem.Payment.PaymentTable;
@@ -4471,6 +4473,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
                     zReportDBAdapter.open();
+                    ZReportCountDbAdapter zReportCountDbAdapter =new ZReportCountDbAdapter(SalesCartActivity.this);
+                    zReportCountDbAdapter.open();
                     boolean trueCreditCard=false;
                 if(orderDocumentFlag){
                     try {
@@ -4484,6 +4488,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 JSONArray jsonArray = null;
                 try {
                     ZReport zReport =zReportDBAdapter.getLastRow();
+                    ZReportCount zReportCount =zReportCountDbAdapter.getLastRow();
+                    Log.d("testZreportCount2222222222",zReportCount.toString());
                     CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(this);
                     currencyOperationDBAdapter.open();
                     ArrayList<PaymentTable>paymentTableArrayList=new ArrayList<>();
@@ -4530,11 +4536,14 @@ public class SalesCartActivity extends AppCompatActivity {
                         currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,paymentTableArrayList.get(i).getTendered(),paymentTableArrayList.get(i).getPaymentMethod(),paymentTableArrayList.get(i).getCurrency().getType());
                       if(paymentTableArrayList.get(i).getCurrency().getType().equalsIgnoreCase("USD")) {
                             zReport.setUsdAmount(zReport.getUsdAmount() + paymentTableArrayList.get(i).getTendered());
+                          zReportCount.setUsdCount(zReportCount.getUsdCount()+1);
                         }else if(paymentTableArrayList.get(i).getCurrency().getType().equalsIgnoreCase("EUR")) {
                             zReport.setEurAmount(zReport.getEurAmount() + paymentTableArrayList.get(i).getTendered());
+                          zReportCount.setEurCount(zReportCount.getEurCount()+1);
                         }
                         else if(paymentTableArrayList.get(i).getCurrency().getType().equalsIgnoreCase("GBP")) {
                             zReport.setGbpAmount(zReport.getGbpAmount() + paymentTableArrayList.get(i).getTendered());
+                          zReportCount.setGbpCount(zReportCount.getGbpCount()+1);
                         }
                     }
                     }
@@ -4552,6 +4561,10 @@ public class SalesCartActivity extends AppCompatActivity {
                             cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()), getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")), jsonObject.getDouble("actualCurrencyRate"));
                         zReport.setShekelAmount(zReport.getShekelAmount()+ jsonObject.getDouble("tendered"));
                             zReport.setCashTotal(zReport.getCashTotal()+jsonObject.getDouble("tendered"));
+                            zReportCount.setShekelCount(zReportCount.getShekelCount()+1);
+                            int x= zReportCount.getCashCount()+1;
+                            Log.d("ssssssssssssss",x+"");
+                            zReportCount.setCashCount(zReportCount.getCashCount()+1);
                         }else if(jsonObject.getString("paymentMethod").equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
                             trueCreditCard=true;
                             CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
@@ -4562,6 +4575,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                             creditCardPaymentDBAdapter.close();
                             zReport.setCreditTotal(zReport.getCreditTotal()+ccp.getAmount());
+                            zReportCount.setCreditCount(zReportCount.getCreditCount()+1);
                         }
                     }
                     if(SESSION._CHECKS_HOLDER.size()>0){
@@ -4572,12 +4586,15 @@ public class SalesCartActivity extends AppCompatActivity {
                             if( check.getAmount()>0){
                             checksDBAdapter.insertEntry(check.getCheckNum(), check.getBankNum(), check.getBranchNum(), check.getAccountNum(), check.getAmount(), check.getCreatedAt(), saleIDforCash);
                                 zReport.setCheckTotal(zReport.getCheckTotal()+check.getAmount());
+                                zReportCount.setCheckCount(zReportCount.getCheckCount()+1);
                         }
                         }
                         checksDBAdapter.close();
                     }
                     }
                     zReportDBAdapter.updateEntry(zReport);
+                    Log.d("testZreportCount",zReportCount.toString());
+                    zReportCountDbAdapter.updateEntry(zReportCount);
                     cashPaymentDBAdapter.close();
                     // Club with point and amount
                     if (clubType == 2) {
@@ -4684,6 +4701,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                     currencyReturnsCustomDialogActivity.show();
                     Log.d("finelTestSalsCart",zReport.toString());
+                    Log.d("testZreportCount888888",zReportCount.toString());
 
                     SESSION._Rest();
                     clearCart();

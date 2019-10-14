@@ -27,6 +27,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
@@ -40,6 +41,7 @@ import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.XReport;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -248,29 +250,33 @@ public class ReportZDetailsActivity extends Activity {
             }
 
         } else {
-            getCountForZReport(ReportZDetailsActivity.this,zReport);
+            ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(ReportZDetailsActivity.this);
+            zReportCountDbAdapter.open();
+            final ZReportCount zReportCount = zReportCountDbAdapter.getByID(zReport.getzReportId());
+            Log.d("testZreportCountfffff",zReportCount.toString());
+            //getCountForZReport(ReportZDetailsActivity.this,zReport);
 
             try {
-                invoiceReceiptCountText.setText(invoiceReceiptCount+"");
+                invoiceReceiptCountText.setText(zReportCount.getInvoiceReceiptCount()+"");
                 zReportTotalInvoiceReceipt.setText(Util.makePrice(zReport.getInvoiceReceiptAmount()));
-                invoiceCountText.setText(invoiceCount+"");
+                invoiceCountText.setText(zReportCount.getInvoiceCount()+"");
                 zReportInvoice.setText(Util.makePrice(zReport.getInvoiceAmount()));
-                creditInvoiceCount.setText(CreditInvoiceCount+"");
+                creditInvoiceCount.setText(zReportCount.getCreditInvoiceCount()+"");
                 zReportCreditInvoice.setText(Util.makePrice(zReport.getCreditInvoiceAmount()));
                 zReportTotalSales.setText(Util.makePrice(zReport.getTotalSales()));
-                zReportCashPaymentCount.setText(cashCount+"");
+                zReportCashPaymentCount.setText(zReportCount.getCashCount()+"");
                 zReportTotalCashPayment.setText(Util.makePrice(cashAmount));
-                zReportShekelCount.setText(ShekelCount+"");
+                zReportShekelCount.setText(zReportCount.getShekelCount()+"");
                 zReportTotalShekel.setText(Util.makePrice(zReport.getShekelAmount()));
-                zReportUsdCount.setText(UsdCount+"");
+                zReportUsdCount.setText(zReportCount.getUsdCount()+"");
                 zReportTotalUsd.setText(Util.makePrice(zReport.getUsdAmount()));
-                zReportEurCount.setText(EurCount+"");
+                zReportEurCount.setText(zReportCount.getEurCount()+"");
                 zReportTotalEur.setText(Util.makePrice(zReport.getEurAmount()));
-                zReportGbpCount.setText(GbpCount+"");
+                zReportGbpCount.setText(zReportCount.getGbpCount()+"");
                 zReportTotalGbp.setText(Util.makePrice(zReport.getGbpAmount()));
-                zReportCreditCardCount.setText(creditCardCount+"");
+                zReportCreditCardCount.setText(zReportCount.getCreditCount()+"");
                 zReportTotalCreditCard.setText(Util.makePrice(zReport.getCreditTotal()));
-                zReportCheckCount.setText(checkCount+"");
+                zReportCheckCount.setText(zReportCount.getCheckCount()+"");
                 zReportTotalCheck.setText(Util.makePrice(zReport.getCheckTotal()));
                 zReportTotalAmount.setText(Util.makePrice(zReport.getTotalAmount()));
                 zReportOpiningReportAmount.setText(Util.makePrice(aReportAmount));
@@ -324,7 +330,7 @@ public class ReportZDetailsActivity extends Activity {
                         PdfUA pdfUA = new PdfUA();
 
                         try {
-                            pdfUA.createZReport(ReportZDetailsActivity.this,zReport,false);
+                            pdfUA.createZReport(ReportZDetailsActivity.this,zReport,zReportCount,false);
                         } catch (DocumentException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
@@ -374,7 +380,7 @@ public class ReportZDetailsActivity extends Activity {
                         PdfUA pdfUA = new PdfUA();
 
                         try {
-                            pdfUA.createZReport(ReportZDetailsActivity.this,zReport,true);
+                            pdfUA.createZReport(ReportZDetailsActivity.this,zReport,zReportCount,true);
                         } catch (DocumentException e) {
                             e.printStackTrace();
                         } catch (IOException e) {

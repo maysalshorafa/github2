@@ -61,6 +61,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Feedback.ClearSync;
 import com.pos.leaders.leaderspossystem.Tools.BufferDbEmail;
@@ -160,6 +161,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(ClosingReportDetailsDBAdapter.DATABASE_CREATE);
         db.execSQL(InvoiceDBAdapter.DATABASE_CREATE);
         db.execSQL(PosInvoiceDBAdapter.DATABASE_CREATE);
+        db.execSQL(ZReportCountDbAdapter.DATABASE_CREATE);
         db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0',0);");
         db.execSQL(EmployeeDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (1,'user1','user','user','"+new Timestamp(System.currentTimeMillis())+"','1234',0,046316969,20,35,0);");

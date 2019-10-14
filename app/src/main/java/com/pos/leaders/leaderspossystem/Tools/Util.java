@@ -1209,12 +1209,14 @@ public class Util {
     public static List<CurrencyOperation> currencyOperationPaymentList(List<Order> sales,Context context) {
         List<CurrencyOperation> pl = new ArrayList<CurrencyOperation>();
         CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(context);
-        currencyOperationDBAdapter.open();
         for (Order s : sales) {
+            currencyOperationDBAdapter.open();
+
             List<CurrencyOperation> payments = currencyOperationDBAdapter.getCurrencyOperationByOrderID(s.getOrderId());
             pl.addAll(payments);
+            currencyOperationDBAdapter.close();
+
         }
-        currencyOperationDBAdapter.close();
         return pl;
     }
     static List<Bitmap> bitmapList=new ArrayList<Bitmap>();
@@ -1244,19 +1246,7 @@ public class Util {
             @Override
             protected Void doInBackground(Void... voids) {
                 MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
-                try {
-                    PdfUA pdfUA = new PdfUA();
 
-                    try {
-                        pdfUA.createZReport(context,zReport,source);
-                    } catch (DocumentException e) {
-                        e.printStackTrace();
-                    }
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 return null;
             }
         }.execute();

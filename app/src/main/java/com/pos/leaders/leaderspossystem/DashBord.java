@@ -45,6 +45,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAd
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Elements.IButton;
 import com.pos.leaders.leaderspossystem.Models.ClosingReport;
@@ -55,6 +56,7 @@ import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Settings.SettingsActivity;
@@ -839,6 +841,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                     ZReport zReport1 = null;
                     ZReportDBAdapter zReportDBAdapter=new ZReportDBAdapter(DashBord.this);
                     zReportDBAdapter.open();
+                    ZReportCountDbAdapter zReportCountDbAdapter=new ZReportCountDbAdapter(DashBord.this);
+                    zReportCountDbAdapter.open();
                     try {
                         zReport1 = zReportDBAdapter.getLastRow();
                     } catch (Exception e) {
@@ -865,8 +869,15 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                             z.setShekelAmount(aReport.getAmount());
                             z.setCloseOpenReport("open");
                             zReportDBAdapter.insertEntry(z);
-
-
+                            ZReport Tz=null;
+                            try {
+                           Tz=zReportDBAdapter.getLastRow();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            ZReportCount zReportCount=new ZReportCount();
+                            zReportCount.setzReportCountZReportId(Tz.getzReportId());
+                            zReportCountDbAdapter.insertEntry(zReportCount);
 
                         }
                         else if(zReport.getCloseOpenReport().equalsIgnoreCase("close")){
@@ -878,11 +889,21 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                             z.setShekelAmount(opiningReport.getAmount());
                             z.setCloseOpenReport("open");
                             zReportDBAdapter.insertEntry(z);
+                            ZReport Tz=null;
+                            try {
+                                Tz=zReportDBAdapter.getLastRow();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            ZReportCount zReportCount=new ZReportCount();
+                            zReportCount.setzReportCountZReportId(Tz.getzReportId());
+                            zReportCountDbAdapter.insertEntry(zReportCount);
                         }
                         else if(zReport.getCloseOpenReport().equalsIgnoreCase("open")){
                             zReport.setTotalAmount(zReport.getTotalAmount()+opiningReport.getAmount());
                             zReport.setShekelAmount(zReport.getShekelAmount()+opiningReport.getAmount());
                             zReportDBAdapter.updateEntry(zReport);
+
                         }
                         final ArrayList<String> hintForCurrencyType = new ArrayList<String>();
                         final ArrayList<Double> hintForCurrencyAmount = new ArrayList<Double>();
@@ -1136,6 +1157,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             {
                 @Override
                 public void onClick(View v) {
+                    ZReportCountDbAdapter zReportCountDbAdapter=new ZReportCountDbAdapter(DashBord.this);
+                    zReportCountDbAdapter.open();
                     String str = ETFirstCurrencyAmount.getText().toString();
                     if (!str.equals("")) {
                         aReportTotalAmount = firstCurrencyInDefaultValue * fCurrency.getRate() + secondCurrencyInDefaultValue * sCurrency.getRate() + thirdCurrencyInDefaultValue * tCurrency.getRate() + forthCurrencyInDefaultValue * forthCurrency.getRate();
@@ -1171,6 +1194,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                 z.setEurAmount(forthCurrencyInDefaultValue);
                                 z.setCloseOpenReport("open");
                                 zReportDBAdapter.insertEntry(z);
+                                ZReportCount zReportCount=new ZReportCount();
                                 try {
                                     zReport1 = zReportDBAdapter.getLastRow();
                                     opiningReport.setLastZReportID(zReport1.getzReportId());
@@ -1181,6 +1205,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
+                                Log.d("testZreportCount",zReportCount.toString());
+                                zReportCount.setzReportCountZReportId(zReport1.getzReportId());
+                                zReportCountDbAdapter.insertEntry(zReportCount);
+
 
                             }
                             else if(zReport.getCloseOpenReport().equalsIgnoreCase("close")){
@@ -1195,6 +1223,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                 z.setEurAmount(forthCurrencyInDefaultValue);
                                 z.setCloseOpenReport("open");
                                 zReportDBAdapter.insertEntry(z);
+                                ZReportCount zReportCount=new ZReportCount();
                                 try {
                                     zReport1 = zReportDBAdapter.getLastRow();
                                     opiningReport.setLastZReportID(zReport1.getzReportId());
@@ -1202,6 +1231,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
+                                Log.d("testZreportCount",zReportCount.toString());
+                                zReportCount.setzReportCountZReportId(zReport1.getzReportId());
+                                zReportCountDbAdapter.insertEntry(zReportCount);
+
 
                             }
                             else if(zReport.getCloseOpenReport().equalsIgnoreCase("open")){
