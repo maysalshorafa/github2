@@ -186,30 +186,40 @@ public class ReportZDetailsActivity extends Activity {
         xReportDBAdapter.open();
         pt = new PrintTools(ReportZDetailsActivity.this);
         if (x==true) {
+            ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(ReportZDetailsActivity.this);
+            zReportCountDbAdapter.open();
+            ZReportCount zReportCount=null;
+            ZReport zReport=null;
+            try {
+                zReportCount = zReportCountDbAdapter.getLastRow();
+                 zReport = zReportDBAdapter.getLastRow();
 
-            getCountForXReport(ReportZDetailsActivity.this,xReport);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            getCountForZReport(ReportZDetailsActivity.this,zReport);
 
             try {
-                invoiceReceiptCountText.setText(invoiceReceiptCount+"");
+                invoiceReceiptCountText.setText(zReportCount.getInvoiceReceiptCount()+"");
                 zReportTotalInvoiceReceipt.setText(Util.makePrice(xReport.getInvoiceReceiptAmount()));
-                invoiceCountText.setText(invoiceCount+"");
+                invoiceCountText.setText(zReportCount.getInvoiceCount()+"");
                 zReportInvoice.setText(Util.makePrice(xReport.getInvoiceAmount()));
-                creditInvoiceCount.setText(CreditInvoiceCount+"");
+                creditInvoiceCount.setText(zReportCount.getCreditInvoiceCount()+"");
                 zReportCreditInvoice.setText(Util.makePrice(xReport.getCreditInvoiceAmount()));
                 zReportTotalSales.setText(Util.makePrice(xReport.getTotalSales()));
-                zReportCashPaymentCount.setText(cashCount+"");
-                zReportTotalCashPayment.setText(Util.makePrice(cashAmount));
-                zReportShekelCount.setText(ShekelCount+"");
+                zReportCashPaymentCount.setText(zReportCount.getCashCount()+"");
+                zReportTotalCashPayment.setText(Util.makePrice(xReport.getCashTotal()));
+                zReportShekelCount.setText(zReportCount.getShekelCount()+"");
                 zReportTotalShekel.setText(Util.makePrice(xReport.getShekelAmount()));
-                zReportUsdCount.setText(UsdCount+"");
+                zReportUsdCount.setText(zReportCount.getUsdCount()+"");
                 zReportTotalUsd.setText(Util.makePrice(xReport.getUsdAmount()));
-                zReportEurCount.setText(EurCount+"");
+                zReportEurCount.setText(zReportCount.getEurCount()+"");
                 zReportTotalEur.setText(Util.makePrice(xReport.getEurAmount()));
-                zReportGbpCount.setText(GbpCount+"");
+                zReportGbpCount.setText(zReportCount.getGbpCount()+"");
                 zReportTotalGbp.setText(Util.makePrice(xReport.getGbpAmount()));
-                zReportCreditCardCount.setText(creditCardCount+"");
+                zReportCreditCardCount.setText(zReportCount.getCreditCount()+"");
                 zReportTotalCreditCard.setText(Util.makePrice(xReport.getCreditTotal()));
-                zReportCheckCount.setText(checkCount+"");
+                zReportCheckCount.setText(zReportCount.getCheckCount()+"");
                 zReportTotalCheck.setText(Util.makePrice(xReport.getCheckTotal()));
                 zReportTotalAmount.setText(Util.makePrice(xReport.getTotalAmount()));
                 zReportOpiningReportAmount.setText(Util.makePrice(aReportAmount));
@@ -254,7 +264,7 @@ public class ReportZDetailsActivity extends Activity {
             zReportCountDbAdapter.open();
             final ZReportCount zReportCount = zReportCountDbAdapter.getByID(zReport.getzReportId());
             Log.d("testZreportCountfffff",zReportCount.toString());
-            //getCountForZReport(ReportZDetailsActivity.this,zReport);
+            getCountForZReport(ReportZDetailsActivity.this,zReport);
 
             try {
                 invoiceReceiptCountText.setText(zReportCount.getInvoiceReceiptCount()+"");
@@ -265,7 +275,7 @@ public class ReportZDetailsActivity extends Activity {
                 zReportCreditInvoice.setText(Util.makePrice(zReport.getCreditInvoiceAmount()));
                 zReportTotalSales.setText(Util.makePrice(zReport.getTotalSales()));
                 zReportCashPaymentCount.setText(zReportCount.getCashCount()+"");
-                zReportTotalCashPayment.setText(Util.makePrice(cashAmount));
+                zReportTotalCashPayment.setText(Util.makePrice(zReport.getCashTotal()));
                 zReportShekelCount.setText(zReportCount.getShekelCount()+"");
                 zReportTotalShekel.setText(Util.makePrice(zReport.getShekelAmount()));
                 zReportUsdCount.setText(zReportCount.getUsdCount()+"");
@@ -548,7 +558,7 @@ public class ReportZDetailsActivity extends Activity {
         }
         return temp;
     }
-    public JSONObject getCountForZReport(Context context, ZReport z) {
+    public void getCountForZReport(Context context, ZReport z) {
         ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
         zReportDBAdapter.open();
         JSONObject res = new JSONObject();
@@ -584,7 +594,7 @@ public class ReportZDetailsActivity extends Activity {
             }
 
         }
-        checkList=new ArrayList<>();
+       /* checkList=new ArrayList<>();
         cashAmount=0;
         invoiceReceiptCount=0 ;invoiceCount=0; CreditInvoiceCount=0 ; ShekelCount=0 ;UsdCount=0 ;EurCount=0; GbpCount=0 ;checkCount=0 ; creditCardCount=0 ;receiptInvoiceAmountCheck=0 ; cashCount=0;receiptInvoiceAmount=0;
         OrderDBAdapter orderDb = new OrderDBAdapter(context);
@@ -620,8 +630,8 @@ public class ReportZDetailsActivity extends Activity {
             CreditInvoiceCount+=posCreditInvoiceList.size();
             List<PosInvoice>posReceiptListCheck = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
             receiptInvoiceAmountCheck+=posReceiptListCheck.size();
-        }
-        List<Long>orderIds= new ArrayList<>();
+        }*/
+      /*  List<Long>orderIds= new ArrayList<>();
         List<Payment> payments = paymentList(orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()),context);
         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
         cashPaymentDBAdapter.open();
@@ -694,9 +704,8 @@ public class ReportZDetailsActivity extends Activity {
 
         }
         ShekelCount+=receiptInvoiceAmount;
-        checkCount+=receiptInvoiceAmountCheck;
+        checkCount+=receiptInvoiceAmountCheck;*/
 
-      return res;
     }
     public  void getCountForXReport(Context context, XReport x) {
         aReportAmount=0;
@@ -725,7 +734,7 @@ public class ReportZDetailsActivity extends Activity {
             }
 
         }
-        checkList=new ArrayList<>();
+       /* checkList=new ArrayList<>();
         cashAmount=0;
         invoiceReceiptCount=0 ;invoiceCount=0; CreditInvoiceCount=0 ; ShekelCount=0 ;UsdCount=0 ;EurCount=0; GbpCount=0 ;checkCount=0 ; creditCardCount=0 ;receiptInvoiceAmountCheck=0 ; cashCount=0;receiptInvoiceAmount=0;
         OrderDBAdapter orderDb = new OrderDBAdapter(context);
@@ -762,8 +771,8 @@ public class ReportZDetailsActivity extends Activity {
 
             List<PosInvoice>posReceiptListCheck = posInvoiceDBAdapter.getPosInvoiceListByType(xReport1.getxReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
             receiptInvoiceAmountCheck+=posReceiptListCheck.size();
-        }
-        List<Long>orderIds= new ArrayList<>();
+        }*/
+       /* List<Long>orderIds= new ArrayList<>();
         List<Payment> payments = paymentList(orderDb.getBetween(x.getStartOrderId(),x.getEndOrderId()),context);
         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
         cashPaymentDBAdapter.open();
@@ -785,7 +794,7 @@ public class ReportZDetailsActivity extends Activity {
             List<CreditCardPayment>creditCardPayments=creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
             for(int i=0;i<creditCardPayments.size();i++){
                 creditCardCount+=1;            }
-            /*int i = 0;
+            *//*int i = 0;
             switch (p.getPaymentWay()) {
 
                 case CONSTANT.CASH:
@@ -799,7 +808,7 @@ public class ReportZDetailsActivity extends Activity {
                   checkCount+=1;
                     orderIds.add(p.getOrderId());
                     break;
-            }*/
+            }*//*
         }
         if(orderIds.size()>0){
             for (int id = 0;id<orderIds.size();id++){
@@ -852,6 +861,6 @@ public class ReportZDetailsActivity extends Activity {
         }
         ShekelCount+=receiptInvoiceAmount;
         checkCount+=receiptInvoiceAmountCheck;
-
+*/
     }
 }
