@@ -126,7 +126,6 @@ public class ZReportActivity extends AppCompatActivity {
     private void setDate() {
         zReportDBAdapter.open();
         zReportList = zReportDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime()+ DAY_MINUS_ONE_SECOND);
-        zReportList.remove(zReportList.get(zReportList.size()-1));
         adapter = new ZReportListViewAdapter(this, R.layout.list_view_z_report, zReportList);
         lvReports.setAdapter(adapter);
         lvReports.setOnItemClickListener(new AdapterView.OnItemClickListener() {

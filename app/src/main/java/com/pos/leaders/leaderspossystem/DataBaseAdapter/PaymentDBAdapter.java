@@ -95,7 +95,23 @@ public class PaymentDBAdapter {
 			return -1;
 		}
 	}
+	public long insertEntryDuplicate(Payment payment){
+		ContentValues val = new ContentValues();
+		//Assign values for each row.
 
+		val.put(PAYMENT_COLUMN_ID, Util.idHealth(this.db, PAYMENT_TABLE_NAME, PAYMENT_COLUMN_ID));
+		val.put(PAYMENT_COLUMN_AMOUNT,payment.getAmount() );
+		val.put(PAYMENT_COLUMN_ORDERID, payment.getOrderId());
+		val.put(PAYMENT_COLUMN_KEY,payment.getOrderKey());
+
+		try {
+			sendToBroker(MessageType.ADD_PAYMENT, payment, this.context);
+			return db.insert(PAYMENT_TABLE_NAME, null, val);
+		} catch (SQLException ex) {
+			Log.e("Payment DB insert", "inserting Entry at " + PAYMENT_TABLE_NAME + ": " + ex.getMessage());
+			return -1;
+		}
+	}
 	public List<Payment> getAllPayments() {
 		List<Payment> paymentsList = new ArrayList<Payment>();
 

@@ -42,6 +42,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Customer;
@@ -49,6 +51,8 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.PrinterTools;
@@ -393,6 +397,21 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     btnCan.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(OrdersManagementActivity.this);
+                            zReportDBAdapter.open();
+                            ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(OrdersManagementActivity.this);
+                            zReportCountDbAdapter.open();
+                            ZReportCount zReportCount=null;
+                            ZReport zReport1=null;
+                            try {
+                                 zReportCount = zReportCountDbAdapter.getLastRow();
+                                 zReport1 = zReportDBAdapter.getLastRow();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            Log.d("zReportCountfffff",zReportCount.toString());
+
                             OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
                             saleDBAdapter.open();
                             sale.setPayment(new Payment(payments.get(0)));
@@ -407,6 +426,18 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(OrdersManagementActivity.this);
                             cashPaymentDBAdapter.open();
                             cashPaymentDBAdapter.insertEntry(sID,sale.getTotalPrice() * -1,0,new Timestamp(System.currentTimeMillis()),1,1);
+                            zReport1.setCashTotal(zReport1.getCashTotal()-sale.getTotalPrice());
+                            zReport1.setInvoiceReceiptAmount(zReport1.getInvoiceReceiptAmount()-sale.getTotalPrice());
+                            double x= zReport1.getShekelAmount();
+                            double z = zReport1.getShekelAmount()-sale.getTotalPrice();
+                            Log.d("yyyyyyyyyyyy",x+"  "+z);
+                            zReport1.setShekelAmount(zReport1.getShekelAmount()-sale.getTotalPrice());
+                            zReportCount.setCashCount(zReportCount.getCashCount()-1);
+                            zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()-1);
+                            zReportCount.setShekelCount(zReportCount.getShekelCount()-1);
+                            zReportDBAdapter.updateEntry(zReport1);
+                            Log.d("zReportCount",zReportCount.toString());
+                            zReportCountDbAdapter.updateEntry(zReportCount);
                             CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(OrdersManagementActivity.this);
                             currencyOperationDBAdapter.open();
                             CurrencyReturnsDBAdapter currencyReturnsDBAdapter =new CurrencyReturnsDBAdapter(OrdersManagementActivity.this);
@@ -418,6 +449,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             if (checks.size() > 0)
                                 try {
                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                    sale.setOrderId(sID);
                                     SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(sale,false,checks);
                                     startActivity(i);
                                 }catch (Exception e){
@@ -428,6 +460,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             else
                                 try {
                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                    sale.setOrderId(sID);
                                     SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(sale,false,null);
                                     startActivity(i);
                                 }catch (Exception e){

@@ -12,21 +12,32 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.DrawerDepositAndPullReportDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.ClosingReport;
+import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
+import com.pos.leaders.leaderspossystem.Models.DepositAndPullReport;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
+import com.pos.leaders.leaderspossystem.Models.OpiningReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
+import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
@@ -199,10 +210,10 @@ public class ClosingReportActivity extends AppCompatActivity {
         double aReportAmount = 0;
         double pullReportAmount=0;
         double depositReportAmount=0;
-        ZReport lastZReport=null;
+       ZReport lastZReport=null;
 
         try {
-            double totalZReportAmount=0;
+          /*   double totalZReportAmount=0;
             ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(ClosingReportActivity.this);
             zReportDBAdapter.open();
              lastZReport = Util.getLastZReport(ClosingReportActivity.this);
@@ -230,9 +241,9 @@ public class ClosingReportActivity extends AppCompatActivity {
             lastZReport.setTotalSales(amount);
             lastZReport.setInvoiceReceiptAmount(amount);
             lastZReport.setTotalPosSales(totalZReportAmount);
-            zReportDBAdapter.close();
+            zReportDBAdapter.close();*/
 
-           /* OrderDBAdapter orderDb = new OrderDBAdapter(getApplicationContext());
+           OrderDBAdapter orderDb = new OrderDBAdapter(getApplicationContext());
             orderDb.open();
             ClosingReportDBAdapter closingReportDBAdapter = new ClosingReportDBAdapter(getApplicationContext());
             closingReportDBAdapter.open();
@@ -314,7 +325,7 @@ public class ClosingReportActivity extends AppCompatActivity {
 
 
 //with Currency
-          /*  if (SETTINGS.enableCurrencies) {
+            if (SETTINGS.enableCurrencies) {
 
                 for (CurrencyOperation cp : currencyOperationList) {
                     switch (cp.getCurrencyType()) {
@@ -352,9 +363,9 @@ public class ClosingReportActivity extends AppCompatActivity {
                     }
                 }
 
-            }*/
+            }
             //calculate receipt Amount
-         /*   ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(ClosingReportActivity.this);
+            ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(ClosingReportActivity.this);
             zReportDBAdapter.open();
             PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(ClosingReportActivity.this);
             posInvoiceDBAdapter.open();
@@ -464,7 +475,7 @@ public class ClosingReportActivity extends AppCompatActivity {
 
                     }
                 }
-            }*/
+            }}
             expectedTotal+=cashReceipt;
             expectedCheck=lastZReport.getCheckTotal();
             expectedCredit=lastZReport.getCreditTotal();
@@ -480,7 +491,8 @@ public class ClosingReportActivity extends AppCompatActivity {
             usdExpectedValue.setText(Util.makePrice(expectedUsd));
             eurAExpectedValue.setText(Util.makePrice(expectedEur));
             gbpExpectedValue.setText(Util.makePrice(expectedGbp));
-        } catch (Exception e) {
+
+    } catch (Exception e) {
             Log.d("exceeeption",e.toString());
             e.printStackTrace();
             sendLogFile();

@@ -601,9 +601,17 @@ public class MainCreditCardActivity extends AppCompatActivity {
             }
         }
         else{
-            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
-            setResult(RESULT_CANCELED);
-            finish();
+            if(totalPrice<0){
+                if(SESSION._EMPLOYEE.getEmployeeId()!=2) {
+                    Toast.makeText(this, "This Operation just for master employee !!", Toast.LENGTH_LONG).show();
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
+            }else {
+                Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_CANCELED);
+                finish();
+            }
         }
     }
     private void close() {

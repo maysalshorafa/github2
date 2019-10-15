@@ -95,6 +95,29 @@ public class OrderDetailsDBAdapter {
             return 0;
         }
 	}
+	public long insertEntryDuplicate(OrderDetails o){
+		ContentValues val = new ContentValues();
+		val.put(ORDER_DETAILS_COLUMN_ID, Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID));
+		val.put(ORDER_DETAILES_COLUMN_PRODUCTID, o.getProductId());
+		val.put(ORDER_DETAILS_COLUMN_QUANTITY, o.getQuantity());
+		val.put(ORDER_DETAILES_COLUMN_USEROFFER, o.getUserOffer());
+		val.put(ORDER_DETAILS_COLUMN_ORDER_ID, o.getOrderId());
+		val.put(ORDER_DETAILS_COLUMN_PAID_AMOUNT, o.getPaidAmount());
+		val.put(ORDER_DETAILS_COLUMN_UNIT_PRICE, o.getUnitPrice());
+		val.put(ORDER_DETAILES_COLUMN_DISCOUNT, o.getDiscount());
+		val.put(ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID,o.getCustomer_assistance_id());
+		val.put(ORDER_DETAILES_COLUMN_KEY,o.getOrderKey());
+		val.put(ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER,o.getProductSerialNumber());
+		val.put(ORDER_DETAILS_COLUMN_PRODUCT_PRICE_AFTER_TAX,o.getPaidAmountAfterTax());
+
+		try {
+			sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
+			return db.insert(ORDER_DETAILS_TABLE_NAME, null, val);
+		} catch (SQLException ex) {
+			Log.e("ORDER_DETAILS DB insert", "inserting Entry at " + ORDER_DETAILS_TABLE_NAME + ": " + ex.getMessage());
+			return 0;
+		}
+	}
 
 	public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID , String orderDetailsKey,long offerId,long productSerialNumber,double paidAmountAfterTax) {
 		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey,offerId,productSerialNumber,paidAmountAfterTax);

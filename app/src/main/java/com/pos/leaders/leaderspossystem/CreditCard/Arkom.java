@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.CreditCard;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 
 import org.ksoap2.SoapEnvelope;
@@ -279,22 +280,59 @@ public class Arkom {
                             Arkom.CCTransaction(SETTINGS.ccNumber,SETTINGS.ccPassword,transID,CreditCardNumber,CardExpiry,TransSum,
                                     TransPoints,Last4Digits,CVV2,ID,TransCurrency,ISO_Currency,CreditType,ApprovalCode,FirstPayment,
                                     FixedPayment,NumOfFixedPayments,TransRef,J_Prm,Z_Prm,Q_Prm,R_Prm);*/
-
         double totalPrice = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", sumPrice));
-        double fixedPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", totalPrice / numberOfPay));
-        double firstPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", totalPrice - (fixedPayment * (numberOfPay - 1))));
+        double fixedPayment=0;
+        double firstPayment=0;
+        if(totalPrice<0){
+        if(SESSION._EMPLOYEE.getFirstName().equalsIgnoreCase("master")&&SESSION._EMPLOYEE.getEmployeeId()==2){
+            int mult=1;
+            if(totalPrice <0 ){
+                mult=-1;
+            }
+             fixedPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", (totalPrice*mult) / numberOfPay));
+             firstPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", (totalPrice*mult) - (fixedPayment * (numberOfPay - 1))));
+            try{
+                SoapObject soap=CCTransaction(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID,cardNumber,"",totalPrice,
+                        0,"","","",1,"ILS",CreditType,ApprovalCode,firstPayment,fixedPayment,numberOfPay,"",0,"","","");
+
+                transactionAcknowledge=PutTransactionAcknowledge(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID);
+                soap.addProperty("TransactionID", TransactionID);
+                return  soap;}
+            catch (Exception ex){
+                //  Log.e("error",ex.getMessage());
+            }
+        }else {
+            fixedPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", totalPrice / numberOfPay));
+            firstPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", totalPrice - (fixedPayment * (numberOfPay - 1))));
+            try{
+                SoapObject soap=CCTransaction(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID,cardNumber,"",totalPrice,
+                        0,"","","",1,"ILS",CreditType,ApprovalCode,firstPayment,fixedPayment,numberOfPay,"",0,"","","");
+
+                transactionAcknowledge=PutTransactionAcknowledge(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID);
+                soap.addProperty("TransactionID", TransactionID);
+                return  soap;
+            }
+            catch (Exception ex){
+                //  Log.e("error",ex.getMessage());
+            }
+        }
+        }else {
+             fixedPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", totalPrice / numberOfPay));
+             firstPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", totalPrice - (fixedPayment * (numberOfPay - 1))));
+            try{
+                SoapObject soap=CCTransaction(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID,cardNumber,"",totalPrice,
+                        0,"","","",1,"ILS",CreditType,ApprovalCode,firstPayment,fixedPayment,numberOfPay,"",0,"","","");
+
+                transactionAcknowledge=PutTransactionAcknowledge(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID);
+                soap.addProperty("TransactionID", TransactionID);
+                return  soap;}
+            catch (Exception ex){
+                //  Log.e("error",ex.getMessage());
+            }
+        }
 //                SoapObject soap = Arkom.PassCard(cardNumber, paymentsNumber, totalPrice, "", creditType);
 
-        try{
-                SoapObject soap=CCTransaction(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID,cardNumber,"",totalPrice,
-                0,"","","",1,"ILS",CreditType,ApprovalCode,firstPayment,fixedPayment,numberOfPay,"",0,"","","");
 
-            transactionAcknowledge=PutTransactionAcknowledge(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID);
-            soap.addProperty("TransactionID", TransactionID);
-        return  soap;}
-        catch (Exception ex){
-          //  Log.e("error",ex.getMessage());
-        }
         return null;
     }
 

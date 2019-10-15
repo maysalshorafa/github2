@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -89,7 +90,10 @@ import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.CustomerType;
@@ -116,6 +120,7 @@ import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
+import com.pos.leaders.leaderspossystem.Printer.PrinterTools;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
@@ -654,7 +659,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 1:
-                               /* Order copyOrder = orderDBAdapter.getLast();
+                               Order copyOrder = orderDBAdapter.getLast();
                                 OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
                                 orderDetailsDBAdapter.open();
                                 cashPaymentDBAdapter=new CashPaymentDBAdapter(SalesCartActivity.this);
@@ -671,36 +676,69 @@ public class SalesCartActivity extends AppCompatActivity {
                                 List<Payment> paymentList =paymentDBAdapter.getPaymentBySaleID(copyOrder.getOrderId());
                                 List<CurrencyOperation>currencyOperationList=currencyOperationDBAdapter.getCurrencyOperationByOrderID(copyOrder.getOrderId());
                                 List<CurrencyReturns>currencyReturnsList=currencyReturnsDBAdapter.getCurencyReturnBySaleID(copyOrder.getOrderId());
-                                copyOrder.setOrderId(copyOrder.getOrderId()+1);
                                 Log.d("copyOrder",copyOrder.toString());
-                                orderDBAdapter.insertEntry(copyOrder);
+                                long orderId= orderDBAdapter.insertEntryDuplicate(copyOrder);
                                 for (int i=0;i<orderDetailsList.size();i++){
+                                    orderDetailsDBAdapter.open();
                                     OrderDetails o =orderDetailsList.get(i);
-                                    o.setOrderId(copyOrder.getOrderId());
-                                    orderDetailsDBAdapter.insertEntry(o);
+                                    o.setOrderId(orderId);
+                                    orderDetailsDBAdapter.insertEntryDuplicate(o);
+                                    orderDetailsDBAdapter.close();
                                 }
                                 for (int i=0;i<cashPaymentList.size();i++){
+                                    cashPaymentDBAdapter.open();
                                     CashPayment cashPayment=cashPaymentList.get(i);
-                                    cashPayment.setOrderId(copyOrder.getOrderId());
-                                    cashPaymentDBAdapter.insertEntry(cashPayment);
+                                    cashPayment.setOrderId(orderId);
+                                    cashPaymentDBAdapter.insertEntryDuplicate(cashPayment);
+                                    cashPaymentDBAdapter.close();
                                 }
                                 for (int i=0;i<paymentList.size();i++){
+                                    paymentDBAdapter.open();
                                     Payment payment=paymentList.get(i);
-                                    payment.setOrderId(copyOrder.getOrderId());
-                                    paymentDBAdapter.insertEntry(payment);
+                                    payment.setOrderId(orderId);
+                                    paymentDBAdapter.insertEntryDuplicate(payment);
+                                    paymentDBAdapter.close();
                                 }
                                 for (int i=0;i<currencyOperationList.size();i++){
+                                    currencyOperationDBAdapter.open();
                                     CurrencyOperation currencyOperation=currencyOperationList.get(i);
-                                    currencyOperation.setOperationId(copyOrder.getOrderId());
-                                    currencyOperationDBAdapter.insertEntry(currencyOperation);
+                                    currencyOperation.setOperationId(orderId);
+                                  currencyOperationDBAdapter.insertEntryDuplicate(currencyOperation);
+                                    currencyOperationDBAdapter.close();
                                 }
                                 for (int i=0;i<currencyReturnsList.size();i++){
+                                    currencyReturnsDBAdapter.open();
                                     CurrencyReturns currencyReturns=currencyReturnsList.get(i);
-                                    currencyReturns.setOrderId(copyOrder.getOrderId());
-                                    currencyReturnsDBAdapter.insertEntry(currencyReturns);
+                                    currencyReturns.setOrderId(orderId);
+                                    currencyReturnsDBAdapter.insertEntryDuplicate(currencyReturns);
+                                    currencyReturnsDBAdapter.close();
                                 }
-                                SESSION._TEMP_ORDERS=copyOrder;
-                                SESSION._TEMP_ORDER_DETAILES=orderDetailsList;
+                                orderDBAdapter.open();
+                                orderDetailsDBAdapter.open();
+                                Order order1 = orderDBAdapter.getOrderById(orderId);
+                                SESSION._TEMP_ORDERS=order1;
+                                SESSION._TEMP_ORDER_DETAILES=orderDetailsDBAdapter.getOrderBySaleID(order1.getOrderId());
+                                ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(SalesCartActivity.this);
+                                zReportDBAdapter.open();
+                                ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(SalesCartActivity.this);
+                                zReportCountDbAdapter.open();
+                                ZReportCount zReportCount=null;
+                                ZReport zReport1=null;
+                                try {
+                                    zReportCount = zReportCountDbAdapter.getLastRow();
+                                    zReport1 = zReportDBAdapter.getLastRow();
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                zReport1.setCashTotal(zReport1.getCashTotal()-copyOrder.getTotalPrice());
+                                zReport1.setInvoiceReceiptAmount(zReport1.getInvoiceReceiptAmount()-copyOrder.getTotalPrice());
+                                zReport1.setShekelAmount(zReport1.getShekelAmount()-copyOrder.getTotalPrice());
+                                zReportCount.setCashCount(zReportCount.getCashCount()-1);
+                                zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()-1);
+                                zReportCount.setShekelCount(zReportCount.getShekelCount()-1);
+                                zReportDBAdapter.updateEntry(zReport1);
+                                zReportCountDbAdapter.updateEntry(zReportCount);
                                 Activity a=getParent();
                                 PrinterTools.printAndOpenCashBox("", "", "", 600,SalesCartActivity.this,a);
                                /* AlertDialog.Builder alertDialog = new AlertDialog.Builder(SalesCartActivity.this);
@@ -735,7 +773,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                 alertDialog.show();
                         }
 
-                    }));*/
+                    }));
 
 
 
@@ -2024,8 +2062,13 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     if(status.equals("200")){
                                                     ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(SalesCartActivity.this);
                                                     zReportDBAdapter.open();
+                                                        ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(SalesCartActivity.this);
+                                                        zReportCountDbAdapter.open();
                                                     ZReport zReport =null;
-                                                    try {
+                                                        ZReportCount zReportCount =null;
+
+                                                        try {
+                                                            zReportCount=zReportCountDbAdapter.getLastRow();
                                                          zReport = zReportDBAdapter.getLastRow();
                                                         PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(SalesCartActivity.this);
                                                         posInvoiceDBAdapter.open();
@@ -2033,7 +2076,9 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         zReport.setInvoiceAmount(zReport.getInvoiceAmount()+SESSION._ORDERS.getTotalPrice());
                                                         zReport.setTotalSales(zReport.getTotalSales()+SESSION._ORDERS.getTotalPrice());
                                                         zReport.setTotalPosSales(zReport.getTotalPosSales()+SESSION._ORDERS.getTotalPrice());
+                                                            zReportCount.setInvoiceCount(zReportCount.getInvoiceCount()+1);
                                                         zReportDBAdapter.updateEntry(zReport);
+                                                            zReportCountDbAdapter.updateEntry(zReportCount);
 
                                                     } catch (Exception e) {
                                                         PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(SalesCartActivity.this);
@@ -2042,8 +2087,10 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         zReport.setInvoiceAmount(zReport.getInvoiceAmount()+SESSION._ORDERS.getTotalPrice());
                                                         zReport.setTotalSales(zReport.getTotalSales()+SESSION._ORDERS.getTotalPrice());
                                                         zReport.setTotalPosSales(zReport.getTotalPosSales()+SESSION._ORDERS.getTotalPrice());
-                                                        zReportDBAdapter.updateEntry(zReport);
-                                                       e.printStackTrace();
+                                                            zReportCount.setInvoiceCount(zReportCount.getInvoiceCount()+1);
+                                                            zReportDBAdapter.updateEntry(zReport);
+                                                            zReportCountDbAdapter.updateEntry(zReportCount);
+                                                            e.printStackTrace();
                                                     }
 
                                                     try {
@@ -4562,8 +4609,6 @@ public class SalesCartActivity extends AppCompatActivity {
                         zReport.setShekelAmount(zReport.getShekelAmount()+ jsonObject.getDouble("tendered"));
                             zReport.setCashTotal(zReport.getCashTotal()+jsonObject.getDouble("tendered"));
                             zReportCount.setShekelCount(zReportCount.getShekelCount()+1);
-                            int x= zReportCount.getCashCount()+1;
-                            Log.d("ssssssssssssss",x+"");
                             zReportCount.setCashCount(zReportCount.getCashCount()+1);
                         }else if(jsonObject.getString("paymentMethod").equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
                             trueCreditCard=true;
@@ -4594,6 +4639,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     }
                     zReportDBAdapter.updateEntry(zReport);
                     Log.d("testZreportCount",zReportCount.toString());
+                    zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()+1);
                     zReportCountDbAdapter.updateEntry(zReportCount);
                     cashPaymentDBAdapter.close();
                     // Club with point and amount
@@ -4701,7 +4747,6 @@ public class SalesCartActivity extends AppCompatActivity {
 
                     currencyReturnsCustomDialogActivity.show();
                     Log.d("finelTestSalsCart",zReport.toString());
-                    Log.d("testZreportCount888888",zReportCount.toString());
 
                     SESSION._Rest();
                     clearCart();

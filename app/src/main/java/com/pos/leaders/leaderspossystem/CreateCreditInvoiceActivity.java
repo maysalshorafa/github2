@@ -32,6 +32,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductInventoryDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.BoInventory;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
@@ -42,6 +43,7 @@ import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductInventory;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CreditInvoiceProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CreditInvoiceStatus;
@@ -405,16 +407,22 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                             newCartDetails=new JSONArray();
                                             ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
                                             zReportDBAdapter.open();
+                                            ZReportCountDbAdapter zReportCountDbAdapter=new ZReportCountDbAdapter(context);
+                                            zReportCountDbAdapter.open();
                                             ZReport zReport =null;
+                                            ZReportCount zReportCount=null;
                                             JSONObject r = jsonObject.getJSONObject(MessageKey.responseBody);
                                             try {
                                                 zReport = zReportDBAdapter.getLastRow();
+                                                zReportCount=zReportCountDbAdapter.getLastRow();
                                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
                                                 posInvoiceDBAdapter.open();
                                                 posInvoiceDBAdapter.insertEntry(creditAmount*-1,zReport.getzReportId()-1,DocumentType.CREDIT_INVOICE.getValue(),"",r.getString("docNum"), CONSTANT.CASH);
                                                 zReport.setCreditInvoiceAmount(zReport.getCreditInvoiceAmount()+creditAmount*-1);
                                                 zReport.setTotalSales(zReport.getTotalSales()+creditAmount*-1);
+                                                zReportCount.setCreditInvoiceCount(zReportCount.getCreditInvoiceCount()+1);
                                                     zReportDBAdapter.updateEntry(zReport);
+                                                zReportCountDbAdapter.updateEntry(zReportCount);
 
                                             } catch (Exception e) {
                                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
@@ -422,6 +430,8 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                                 posInvoiceDBAdapter.insertEntry(creditAmount*-1,-1,DocumentType.CREDIT_INVOICE.getValue(),"",r.getString("docNum"), CONSTANT.CASH);
                                                 zReport.setCreditInvoiceAmount(zReport.getCreditInvoiceAmount()+creditAmount*-1);
                                                 zReport.setTotalSales(zReport.getTotalSales()+creditAmount*-1);
+                                                zReportCount.setCreditInvoiceCount(zReportCount.getCreditInvoiceCount()+1);
+                                                zReportCountDbAdapter.updateEntry(zReportCount);
                                                 zReportDBAdapter.updateEntry(zReport);
 
                                                 e.printStackTrace();

@@ -470,11 +470,9 @@ public class ProductDBAdapter {
             open();
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
-            Log.d("teeest1",SETTINGS.enableAllBranch+"   "+SETTINGS.branchId);
 
             cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null);
         }else {
-            Log.d("teeest",SETTINGS.enableAllBranch+"   "+SETTINGS.branchId);
             cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED+"=0 order by id desc limit "+from+","+count, null);
 
         }

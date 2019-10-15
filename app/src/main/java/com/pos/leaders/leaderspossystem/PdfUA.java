@@ -174,6 +174,7 @@ public class PdfUA {
         //end :)
     }
     public static void createZReport(Context context, ZReport zReport, ZReportCount zReportCount, boolean source) throws IOException, DocumentException {
+        getCountForZReport(context,zReport);
         Document document = new Document();
         String fileName = "zreport.pdf";
         final String APPLICATION_PACKAGE_NAME = context.getPackageName();
@@ -1670,6 +1671,7 @@ public class PdfUA {
     public static void createNormalInvoice(Context context  , List<OrderDetails>orderDetailsList, Order order,boolean isCopy,String mainMer) throws IOException, DocumentException {
         order=SESSION._TEMP_ORDERS;
         orderDetailsList=SESSION._TEMP_ORDER_DETAILES;
+
         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
         cashPaymentDBAdapter.open();
         ChecksDBAdapter checksDBAdapter =new ChecksDBAdapter(context);
@@ -1707,18 +1709,23 @@ public class PdfUA {
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, urFontName1);
-        if (order.getCustomer_name() == null) {
-            customerName = context.getString(R.string.general_customer);
-        } else if (order.getCustomer_name().equals("")) {
-            customerName = context.getString(R.string.general_customer);
-        } else {
-            if(order.getCustomer().getFirstName()!=null&&order.getCustomer().getLastName()!=null){
-            customerName = order.getCustomer().getFirstName()+" "+order.getCustomer().getLastName();
-            }else {
-                customerName = order.getCustomer_name();
+        try {
+            if (order.getCustomer_name() == null) {
+                customerName = context.getString(R.string.general_customer);
+            } else if (order.getCustomer_name().equals("")) {
+                customerName = context.getString(R.string.general_customer);
+            } else {
+                if(order.getCustomer().getFirstName()!=null&&order.getCustomer().getLastName()!=null){
+                    customerName = order.getCustomer().getFirstName()+" "+order.getCustomer().getLastName();
+                }else {
+                    customerName = order.getCustomer_name();
 
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         insertCell(headingTable, context.getString(R.string.customer_name)+":  " + customerName, Element.ALIGN_CENTER, 1, urFontName1);
         if(isCopy) {
             insertCell(headingTable, context.getString(R.string.copyinvoice), Element.ALIGN_CENTER, 1, urFontName1);
@@ -1752,12 +1759,17 @@ public class PdfUA {
         insertCell(table, context.getString(R.string.product), Element.ALIGN_CENTER, 3, urFontName1);
 
         double price_before_tax=0;
+        ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
         for (int i=0;i<orderDetailsList.size();i++){
+            productDBAdapter.open();
             price_before_tax+=orderDetailsList.get(i).getPaidAmountAfterTax();
             insertCell(table, "  " + orderDetailsList.get(i).getDiscount(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
             insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_CENTER, 2, urFontName); // insert date value
             insertCell(table,"  "+ orderDetailsList.get(i).getUnitPrice(), Element.ALIGN_CENTER, 2, urFontName); // insert date value
             insertCell(table, orderDetailsList.get(i).getQuantity()+"", Element.ALIGN_CENTER, 1, urFontName); // insert date value
+
+            Product product =productDBAdapter.getProductByID(orderDetailsList.get(i).getProductId());
+            orderDetailsList.get(i).setProduct(product);
             if (orderDetailsList.get(i).getProduct().getDisplayName().equals("General"))
                 orderDetailsList.get(i).getProduct().setProductCode(context.getString(R.string.general));
             insertCell(table, orderDetailsList.get(i).getProduct().getDisplayName(), Element.ALIGN_CENTER, 3, urFontName); // insert date value
@@ -1766,6 +1778,7 @@ public class PdfUA {
             if (orderDetailsList.get(i).getProductSerialNumber()>0) {
                 insertCell(table, context.getString(R.string.serial_no) + " : " + orderDetailsList.get(i).getProductSerialNumber(), Element.ALIGN_LEFT, 9, urFontName); // insert date value
             }
+            productDBAdapter.close();
         }
 
         insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 9, urFontName);

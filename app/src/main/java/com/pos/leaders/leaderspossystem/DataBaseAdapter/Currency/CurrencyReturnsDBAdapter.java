@@ -74,7 +74,7 @@ public class CurrencyReturnsDBAdapter {
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(CurrencyReturns_COLUMN_ID, returns.getCurrencyReturnsId());
+        val.put(CurrencyReturns_COLUMN_ID,returns.getCurrencyReturnsId());
 
 
         val.put(CurrencyReturns_COLUMN_SALEID, returns.getOrderId());
@@ -83,6 +83,28 @@ public class CurrencyReturnsDBAdapter {
 
         val.put(CurrencyReturns_COLUMN_CurencyType, returns.getCurrency_type());
         try {
+            return db.insert(CurrencyReturnsDBAdapterTabelName, null, val);
+        } catch (SQLException ex) {
+            Log.e("CurrencyREturns DB insert", "inserting Entry at " + CurrencyReturnsDBAdapterTabelName + ": " + ex.getMessage());
+            return -1;
+        }
+    }
+
+    public long insertEntryDuplicate(CurrencyReturns returns){
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+
+        val.put(CurrencyReturns_COLUMN_ID,  Util.idHealth(this.db, CurrencyReturnsDBAdapterTabelName, CurrencyReturns_COLUMN_ID));
+
+
+        val.put(CurrencyReturns_COLUMN_SALEID, returns.getOrderId());
+        val.put(CurrencyReturns_COLUMN_AMOUNT,returns.getAmount() );
+        val.put(CurrencyReturns_COLUMN_CREATEDATE, String.valueOf(returns.getCreatedAt()));
+
+        val.put(CurrencyReturns_COLUMN_CurencyType, returns.getCurrency_type());
+        try {
+            sendToBroker(MessageType.ADD_CURRENCY_RETURN, returns, this.context);
+
             return db.insert(CurrencyReturnsDBAdapterTabelName, null, val);
         } catch (SQLException ex) {
             Log.e("CurrencyREturns DB insert", "inserting Entry at " + CurrencyReturnsDBAdapterTabelName + ": " + ex.getMessage());

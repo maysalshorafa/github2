@@ -85,13 +85,12 @@ public class CurrencyOperationDBAdapter {
         }
 
     }
-
     public long insertEntry(CurrencyOperation currency) {
 
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
-        val.put(CurrencyOperation_COLUMN_ID, currency.getCurrencyOperationId());
+        val.put(CurrencyOperation_COLUMN_ID,currency.getCurrencyOperationId());
         val.put(CurrencyOperation_COLUMN_CREATEDATE, String.valueOf(currency.getCreatedAt()));
         val.put(CurrencyOperation_COLUMN_Operation_ID, currency.getOperationId());
         val.put(CurrencyOperation_COLUMN_Operation_Type,currency.getOperationType());
@@ -100,6 +99,27 @@ public class CurrencyOperationDBAdapter {
         val.put(CurrencyOperation_COLUMN_PAYMENT_WAY, currency.getPaymentWay());
 
         try {
+            return db.insert(CurrencyOperation_TABLE_NAME, null, val);
+        } catch (SQLException ex) {
+            Log.e(CurrencyOperation_TABLE_NAME, "inserting Entry at " + CurrencyOperation_TABLE_NAME + ": " + ex.getMessage());
+            return -1;
+        }
+    }
+    public long insertEntryDuplicate(CurrencyOperation currency) {
+
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+
+        val.put(CurrencyOperation_COLUMN_ID, Util.idHealth(this.db, CurrencyOperation_TABLE_NAME, CurrencyOperation_COLUMN_ID));
+        val.put(CurrencyOperation_COLUMN_CREATEDATE, String.valueOf(currency.getCreatedAt()));
+        val.put(CurrencyOperation_COLUMN_Operation_ID, currency.getOperationId());
+        val.put(CurrencyOperation_COLUMN_Operation_Type,currency.getOperationType());
+        val.put(CurrencyOperationCOLUMN_AMOUNT, currency.getAmount());
+        val.put(CurrencyOperation_COLUMN_Currency_Type, currency.getCurrencyType());
+        val.put(CurrencyOperation_COLUMN_PAYMENT_WAY, currency.getPaymentWay());
+
+        try {
+            sendToBroker(MessageType.ADD_CURRENCY_OPERATION, currency, this.context);
             return db.insert(CurrencyOperation_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e(CurrencyOperation_TABLE_NAME, "inserting Entry at " + CurrencyOperation_TABLE_NAME + ": " + ex.getMessage());

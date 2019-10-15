@@ -85,7 +85,24 @@ public class CashPaymentDBAdapter {
         }
     }
 
+    public long insertEntryDuplicate(CashPayment payment){
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
 
+        val.put(CashPAYMENT_COLUMN_ID, Util.idHealth(this.db, CashPAYMENT_TABLE_NAME, CashPAYMENT_COLUMN_ID));
+        val.put(CashPAYMENT_COLUMN_OrderID, payment.getOrderId());
+        val.put(CashPAYMENT_COLUMN_AMOUNT,payment.getAmount() );
+        val.put(CashPAYMENT_COLUMN_CurrencyType, payment.getCurrency_type());
+        val.put(CashPAYMENT_COLUMN_CurrencyRATE,payment.getCurrencyRate());
+        val.put(CashPAYMENT_COLUMN_ActualCurrencyRATE,payment.getActualCurrencyRate());
+
+        try {
+            return db.insert(CashPAYMENT_TABLE_NAME, null, val);
+        } catch (SQLException ex) {
+            Log.e("Payment DB insert", "inserting Entry at " + CashPAYMENT_TABLE_NAME + ": " + ex.getMessage());
+            return -1;
+        }
+    }
 
     public List<CashPayment> getAllPayments() {
         List<CashPayment> paymentsList = new ArrayList<CashPayment>();

@@ -16,6 +16,7 @@ import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
@@ -27,6 +28,7 @@ import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.ReceiptDocuments;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.PdfUA;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.R;
@@ -417,9 +419,13 @@ public class DocumentControl {
                         if(receiptJsonObject.get("status").equals("200")){
                             ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
                             zReportDBAdapter.open();
+                            ZReportCountDbAdapter zReportCountDbAdapter =new ZReportCountDbAdapter(context);
+                            zReportCountDbAdapter.open();
+                            ZReportCount zReportCount=null;
                             ZReport zReport =null;
                             try {
                                 zReport = zReportDBAdapter.getLastRow();
+                                zReportCount=zReportCountDbAdapter.getLastRow();
                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
                                 posInvoiceDBAdapter.open();
                                 if (paymentWays.equals(CASH)) {
@@ -430,10 +436,14 @@ public class DocumentControl {
                                 if (paymentWays.equals(CASH)){
                                     zReport.setShekelAmount(zReport.getShekelAmount() + totalPaid);
                                 zReport.setTotalAmount(zReport.getTotalAmount() + totalPaid);
+                                    zReportCount.setShekelCount(zReportCount.getShekelCount()+1);
                                 zReportDBAdapter.updateEntry(zReport);
+
                             }else {
+                                    zReportCount.setCheckCount(zReportCount.getCheckCount()+1);
                                     zReport.setCheckTotal(zReport.getCheckTotal()+totalPaid);
                                     zReportDBAdapter.updateEntry(zReport);
+                                    zReportCountDbAdapter.updateEntry(zReportCount);
                                 }
                             } catch (Exception e) {
                                 PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
@@ -447,10 +457,14 @@ public class DocumentControl {
                                 if (paymentWays.equals(CASH)){
                                     zReport.setShekelAmount(zReport.getShekelAmount() + totalPaid);
                                     zReport.setTotalAmount(zReport.getTotalAmount() + totalPaid);
+                                    zReportCount.setShekelCount(zReportCount.getShekelCount()+1);
+                                    zReportCountDbAdapter.updateEntry(zReportCount);
                                     zReportDBAdapter.updateEntry(zReport);
                                 }else {
                                     zReport.setCheckTotal(zReport.getCheckTotal()+totalPaid);
+                                    zReport.setCheckTotal(zReport.getCheckTotal()+totalPaid);
                                     zReportDBAdapter.updateEntry(zReport);
+                                    zReportCountDbAdapter.updateEntry(zReportCount);
                                 }
 
                                 e.printStackTrace();

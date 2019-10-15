@@ -136,7 +136,31 @@ public class OrderDBAdapter {
 			return 0;
 		}
 	}
+	public long insertEntryDuplicate(Order order){
+		ContentValues val = new ContentValues();
+		val.put(ORDER_COLUMN_ID,Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID));
+		//Assign values for each row.
+		val.put(ORDER_COLUMN_BYUSER, order.getByUser());
+		val.put(ORDER_COLUMN_REPLACEMENTNOTE, order.getReplacementNote());
+		val.put(ORDER_COLUMN_STATUS, order.isStatus()?1:0);
+		val.put(ORDER_COLUMN_TOTALPRICE, order.getTotalPrice());
+		val.put(ORDER_COLUMN_TOTALPAID, order.getTotalPaidAmount());
+		val.put(ORDER_COLUMN_CUSTOMER_ID, order.getCustomerId());
+		val.put(ORDER_COLUMN_CUSTOMER_NAME, order.getCustomer_name());
+		val.put(ORDER_COLUMN_ORDER_DISCOUNT,order.getCartDiscount());
+		val.put(ORDER_COLUMN_ORDER_KEY,order.getOrderKey());
+		val.put(ORDER_COLUMN_ORDER_NUMBER_DISCOUNT,order.getNumberDiscount());
+		val.put(ORDER_COLUMN_CANCELING_ORDER_ID,order.getCancellingOrderId());
 
+
+		try {
+			sendToBroker(MessageType.ADD_ORDER, order, this.context);
+			return db.insert(ORDER_TABLE_NAME, null, val);
+		} catch (SQLException ex) {
+			Log.e("Order DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
+			return 0;
+		}
+	}
 	public Order getOrderById(long id) {
 		Order order = null;
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where id='" + id + "'", null);

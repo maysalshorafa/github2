@@ -322,8 +322,12 @@ public class ZReportDBAdapter {
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
+            ZReport zReport1 =makeZReport(cursor);
+            if(zReport1.getCloseOpenReport().equalsIgnoreCase("close")) {
                 zReportList.add(makeZReport(cursor));
+            }
             cursor.moveToNext();
+
         }
         return zReportList;
     }
