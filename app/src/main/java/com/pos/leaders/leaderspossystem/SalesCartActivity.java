@@ -616,7 +616,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         switch (item) {
                             case 0:
                                 if(SESSION._EMPLOYEE.getEmployeeId()!=2) {
-                                    Toast.makeText(SalesCartActivity.this, "This Operation just for master employee !!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SalesCartActivity.this, getString(R.string.this_Operation_just_for_master_employee), Toast.LENGTH_LONG).show();
 
                                 }else {
                                 new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this)
@@ -4658,7 +4658,6 @@ public class SalesCartActivity extends AppCompatActivity {
                 try {
                     ZReport zReport =zReportDBAdapter.getLastRow();
                     ZReportCount zReportCount =zReportCountDbAdapter.getLastRow();
-                    Log.d("testZreportCount2222222222",zReportCount.toString());
                     CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(this);
                     currencyOperationDBAdapter.open();
                     ArrayList<PaymentTable>paymentTableArrayList=new ArrayList<>();

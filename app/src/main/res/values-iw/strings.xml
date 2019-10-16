@@ -669,6 +669,8 @@
     <string name="can_not_edit_provider_please_try_again">לא הצליח לעדכן נתוני ספק</string>
     <string name="create_offer_category_activity">הקמת קבוצת מבצע</string>
     <string name="deposit_and_pull_reportView">דוחות משיכה והפקדה לקופה</string>
+    <string name="print_cancel_invoice">אתה עומד לבטל חשבונית אחרונה האם אתה מסכים?</string>
+    <string name="this_Operation_just_for_master_employee">פעולה זו אינה בגדר ההרשאות שלך</string>
 
 
 </resources>

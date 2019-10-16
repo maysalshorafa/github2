@@ -652,6 +652,8 @@
     <string name="pin_pad">Pin Pad</string>
     <string name="Pull">سحب</string>
     <string name="Deposit">ايداع</string>
+    <string name="print_cancel_invoice">هل تريد الغاء الفاتور؟</string>
+    <string name="this_Operation_just_for_master_employee">هذه العملية ليست من صلاحياتك</string>
 
 
 </resources>

@@ -744,6 +744,7 @@
     <string name="Pull">Pull</string>
     <string name="Deposit">Deposit</string>
     <string name="pin_pad">Pin Pad</string>
+    <string name="this_Operation_just_for_master_employee">This Operation just for master employee !!</string>
 
 </resources>
 
