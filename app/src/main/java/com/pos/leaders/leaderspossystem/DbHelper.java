@@ -177,7 +177,9 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (8 , 'settings');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (9 , 'user club');");
         db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (10 , 'sales man');");
-        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (11 , 'inventoryManagement');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (11 , 'offers');");
+        db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (12 , 'inventoryManagement');");
+
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(1,1,1);");
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(2,2,1);");
         db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(3,2,3);");
@@ -389,6 +391,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(ZReportDBAdapter.addColumnReal("depositReportAmount"));
                     db.execSQL(ZReportDBAdapter.addColumnText("closeOpenReport"));
                     db.execSQL(ZReportCountDbAdapter.DATABASE_CREATE);
+                    db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (12 , 'inventoryManagement');");
                     Util.addPosSetting(context);
                     break;
 
