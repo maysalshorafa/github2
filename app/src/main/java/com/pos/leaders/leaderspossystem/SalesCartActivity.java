@@ -3935,11 +3935,13 @@ public class SalesCartActivity extends AppCompatActivity {
         HashMap<String,Integer>productHashMap=new HashMap<String, Integer>();
         for(OrderDetails o :SESSION._ORDER_DETAILES){
             ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(o.getProduct().getProductId());
+            if(productInventory!=null){
             if(o.getProduct().getProductId()!=-1){
                 Log.d("ttttt",productInventory.getQty()+ "   "+o.getQuantity());
             productInventoryDbAdapter.updateEntry(o.getProduct().getProductId(),productInventory.getQty()-o.getQuantity());
             productHashMap.put(String.valueOf(o.getProduct().getProductId()),productInventory.getQty()-o.getQuantity());
             }
+        }
         }
         try {
             in = inventoryDbAdapter.getLastRow();
