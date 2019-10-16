@@ -14,6 +14,8 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
@@ -181,4 +183,23 @@ public class ClosingReportDBAdapter {
 
         }
     }
+    public List<ClosingReport> getClosingReportByOpiningID(long opiningId) {
+        List<ClosingReport> closingReportList = new ArrayList<ClosingReport>();
+        try {
+            open();
+            Cursor cursor = db.rawQuery("select * from " + CLOSING_REPORT_TABLE_NAME +" where "+CLOSING_REPORT_COLUMN_OPINING_REPORT_ID+">="+opiningId, null);
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                closingReportList.add(makeCReport(cursor));
+                cursor.moveToNext();
+            }
+            close();
+
+        } catch (Exception e) {
+
+        }
+        return closingReportList;
+    }
+
 }

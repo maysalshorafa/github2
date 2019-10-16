@@ -597,7 +597,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 final String[] items = {
                         getString(R.string.cancel_invoice),
                         getString(R.string.copyinvoice),
-                        getString(R.string.replacement_invoice)
+                        getString(R.string.replacement_invoice),getString(R.string.print)
 
                 };;
                 final OrderDBAdapter orderDBAdapter =new OrderDBAdapter(context);
@@ -615,6 +615,15 @@ public class SalesCartActivity extends AppCompatActivity {
                         Intent intent;
                         switch (item) {
                             case 0:
+                                if(SESSION._EMPLOYEE.getEmployeeId()!=2) {
+                                    Toast.makeText(SalesCartActivity.this, "This Operation just for master employee !!", Toast.LENGTH_LONG).show();
+
+                                }else {
+                                new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this)
+                                        .setTitle(getString(R.string.cancel_invoice))
+                                        .setMessage(getString(R.string.print_cancel_invoice))
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
 
                                 long sID = orderDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), lastOrder.getReplacementNote(), true, lastOrder.getTotalPrice() * -1, lastOrder.getTotalPaidAmount() * -1, lastOrder.getCustomerId(), lastOrder.getCustomer_name(),lastOrder.getCartDiscount(),lastOrder.getNumberDiscount(),lastOrder.getOrderId());
                                 Order order = orderDBAdapter.getOrderById(sID);
@@ -635,20 +644,21 @@ public class SalesCartActivity extends AppCompatActivity {
                                     currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),sID,CONSTANT.DEBIT,lastOrder.getTotalPaidAmount() * -1,"ILS",CONSTANT.CASH);
                                     currencyReturnsDBAdapter.insertEntry(lastOrder.getOrderId(),(lastOrder.getTotalPaidAmount()-lastOrder.getTotalPrice())*-1,new Timestamp(System.currentTimeMillis()),0);
                                 }
+                                Log.d("CncelInvoice",order.toString());
                                 if (checks.size() > 0) {
                                     try {
                                         Intent i = new Intent(SalesCartActivity.this, SalesHistoryCopySales.class);
-                                        SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(sale, false, checks);
+                                        SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(order, false, checks);
                                         startActivity(i);
                                     } catch (Exception e) {
-                                        Log.d("exception", lastOrder.toString());
+                                        Log.d("exception", order.toString());
                                         Log.d("exception", e.toString());
                                         sendLogFile();
                                     }
                                 }else {
                                     try {
                                         Intent i = new Intent(SalesCartActivity.this, SalesHistoryCopySales.class);
-                                        SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(lastOrder, false, null);
+                                        SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(order, false, null);
                                         startActivity(i);
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -657,8 +667,51 @@ public class SalesCartActivity extends AppCompatActivity {
                                         sendLogFile();
                                     }
                                 }
+                                ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(SalesCartActivity.this);
+                                zReportDBAdapter.open();
+                                ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(SalesCartActivity.this);
+                                zReportCountDbAdapter.open();
+                                ZReportCount zReportCount=null;
+                                ZReport zReport1=null;
+                                try {
+                                    zReportCount = zReportCountDbAdapter.getLastRow();
+                                    zReport1 = zReportDBAdapter.getLastRow();
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                zReport1.setCashTotal(zReport1.getCashTotal()-lastOrder.getTotalPrice());
+                                zReport1.setInvoiceReceiptAmount(zReport1.getInvoiceReceiptAmount()-lastOrder.getTotalPrice());
+                                zReport1.setShekelAmount(zReport1.getShekelAmount()-lastOrder.getTotalPrice());
+                                zReportCount.setCashCount(zReportCount.getCashCount()-1);
+                                zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()-1);
+                                zReportCount.setShekelCount(zReportCount.getShekelCount()-1);
+                                zReportDBAdapter.updateEntry(zReport1);
+                                zReportCountDbAdapter.updateEntry(zReportCount);
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // do nothing
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                                }
                                 break;
                             case 1:
+                                new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this)
+                                        .setTitle(getString(R.string.copyinvoice))
+                                        .setMessage(getString(R.string.print_copy_invoice))
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(SalesCartActivity.this);
+                                cashPaymentDBAdapter.open();
+                                CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(SalesCartActivity.this);
+                                currencyOperationDBAdapter.open();
+                                CurrencyReturnsDBAdapter currencyReturnsDBAdapter =new CurrencyReturnsDBAdapter(SalesCartActivity.this);
+                                currencyReturnsDBAdapter.open();
                                Order copyOrder = orderDBAdapter.getLast();
                                 OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
                                 orderDetailsDBAdapter.open();
@@ -718,27 +771,27 @@ public class SalesCartActivity extends AppCompatActivity {
                                 Order order1 = orderDBAdapter.getOrderById(orderId);
                                 SESSION._TEMP_ORDERS=order1;
                                 SESSION._TEMP_ORDER_DETAILES=orderDetailsDBAdapter.getOrderBySaleID(order1.getOrderId());
-                                ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(SalesCartActivity.this);
-                                zReportDBAdapter.open();
-                                ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(SalesCartActivity.this);
-                                zReportCountDbAdapter.open();
-                                ZReportCount zReportCount=null;
-                                ZReport zReport1=null;
+                                ZReportDBAdapter zReportDBAdapter1 = new ZReportDBAdapter(SalesCartActivity.this);
+                                zReportDBAdapter1.open();
+                                ZReportCountDbAdapter zReportCountDbAdapter1 = new ZReportCountDbAdapter(SalesCartActivity.this);
+                                zReportCountDbAdapter1.open();
+                                ZReportCount zReportCount1=null;
+                                ZReport z=null;
                                 try {
-                                    zReportCount = zReportCountDbAdapter.getLastRow();
-                                    zReport1 = zReportDBAdapter.getLastRow();
+                                    zReportCount1 = zReportCountDbAdapter1.getLastRow();
+                                    z= zReportDBAdapter1.getLastRow();
 
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                zReport1.setCashTotal(zReport1.getCashTotal()-copyOrder.getTotalPrice());
-                                zReport1.setInvoiceReceiptAmount(zReport1.getInvoiceReceiptAmount()-copyOrder.getTotalPrice());
-                                zReport1.setShekelAmount(zReport1.getShekelAmount()-copyOrder.getTotalPrice());
-                                zReportCount.setCashCount(zReportCount.getCashCount()-1);
-                                zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()-1);
-                                zReportCount.setShekelCount(zReportCount.getShekelCount()-1);
-                                zReportDBAdapter.updateEntry(zReport1);
-                                zReportCountDbAdapter.updateEntry(zReportCount);
+                                z.setCashTotal(z.getCashTotal()+copyOrder.getTotalPrice());
+                                z.setInvoiceReceiptAmount(z.getInvoiceReceiptAmount()+copyOrder.getTotalPrice());
+                                z.setShekelAmount(z.getShekelAmount()+copyOrder.getTotalPrice());
+                                zReportCount1.setCashCount(zReportCount1.getCashCount()+1);
+                                zReportCount1.setInvoiceReceiptCount(zReportCount1.getInvoiceReceiptCount()+1);
+                                zReportCount1.setShekelCount(zReportCount1.getShekelCount()+1);
+                                zReportDBAdapter1.updateEntry(z);
+                                zReportCountDbAdapter1.updateEntry(zReportCount1);
                                 Activity a=getParent();
                                 PrinterTools.printAndOpenCashBox("", "", "", 600,SalesCartActivity.this,a);
                                /* AlertDialog.Builder alertDialog = new AlertDialog.Builder(SalesCartActivity.this);
@@ -815,7 +868,15 @@ public class SalesCartActivity extends AppCompatActivity {
                                         sendLogFile();
                                     }
                                 }*/
-
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // do nothing
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
                                 break;
                             case 2:
                                 OrderDBAdapter saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
@@ -833,6 +894,62 @@ public class SalesCartActivity extends AppCompatActivity {
                                     Log.d("exception",e.toString());
                                     sendLogFile();
                                 }
+                                break;
+                            case 3:
+                                OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
+                                orderDetailsDBAdapter.open();
+                                final List<OrderDetails>orderDetailsList=orderDetailsDBAdapter.getOrderBySaleID(lastOrder.getOrderId());
+
+                                new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this)
+                                        .setTitle(getString(R.string.copyinvoice))
+                                        .setMessage(getString(R.string.print_copy_invoice))
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                if (checks.size() > 0){
+                                                    try {
+
+                                                        Intent i = new Intent(SalesCartActivity.this, SalesHistoryCopySales.class);
+                                                        SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(lastOrder.getOrderId(), orderDetailsList, lastOrder, true, SESSION._EMPLOYEE, checks);
+                                                        startActivity(i);
+                                                    }catch (Exception e){
+                                                        Log.d("exception",sale.toString());
+
+                                                        Log.d("exception",sale.toString());
+                                                        sendLogFile();
+
+                                                    }
+
+                                                    // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._EMPLOYEE, checks));
+                                                }
+                                                else{
+                                                    try {
+                                                        SESSION._ORDER_DETAILES=orderDetailsList;
+                                                        SESSION._ORDERS=lastOrder;
+                                                        PrinterTools.printAndOpenCashBox("", "", "", 600,SalesCartActivity.this,getParent());
+                                                        /**Customer customer1 =sale.getCustomer();
+                                                         Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                                         SETTINGS.copyInvoiceBitMap =invoiceImg.copyInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, null);
+                                                         startActivity(i);**/
+                                                    }catch (Exception e){
+                                                        Log.d("exception",lastOrder.toString());
+                                                        Log.d("exception",e.toString());
+                                                        e.printStackTrace();
+                                                        sendLogFile();
+                                                    }
+
+                                                    // print(invoiceImg.normalInvoice(sale.getCashPaymentId(), orders, sale, true, SESSION._EMPLOYEE, null));
+
+                                                }
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // do nothing
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
                                 break;
 
 
@@ -2701,9 +2818,14 @@ public class SalesCartActivity extends AppCompatActivity {
                     touchPadPressed += ".";
                 break;
             case R.id.touchPadFragment_btCredit:
+                if(SESSION._EMPLOYEE.getEmployeeId()!=2) {
+                    Toast.makeText(this, "This Operation just for master employee !!", Toast.LENGTH_LONG).show();
+
+                }else {
                 if (!touchPadPressed.equals("")) {
                     double newValue = Util.convertSign(Double.parseDouble(touchPadPressed));
                     touchPadPressed = String.valueOf(newValue);
+                }
                 }
                 break;
         }

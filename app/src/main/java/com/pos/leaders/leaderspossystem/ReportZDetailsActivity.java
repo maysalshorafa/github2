@@ -18,27 +18,16 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.itextpdf.text.DocumentException;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Check;
-import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
-import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
-import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
-import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
-import com.pos.leaders.leaderspossystem.Models.Payment;
-import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.XReport;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Models.ZReportCount;
@@ -62,9 +51,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import POSSDK.POSSDK;
-
-import static com.pos.leaders.leaderspossystem.Tools.Util.currencyOperationPaymentList;
-import static com.pos.leaders.leaderspossystem.Tools.Util.paymentList;
 
 public class ReportZDetailsActivity extends Activity {
     Button btCancel,btPrint;
@@ -238,7 +224,7 @@ public class ReportZDetailsActivity extends Activity {
             PdfUA pdfUA = new PdfUA();
 
             try {
-                pdfUA.createXReport(ReportZDetailsActivity.this,xReport);
+                pdfUA.createXReport(ReportZDetailsActivity.this,xReport,zReportCount);
             } catch (DocumentException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -426,12 +412,11 @@ public class ReportZDetailsActivity extends Activity {
                 }else {
                     if(fromDashBoard){
                         pt.PrintReport(newBitmap);
-                    //   finish();
-                        Intent intent = new Intent(ReportZDetailsActivity.this,LogInActivity.class);
-                        startActivity(intent);
+                        onBackPressed();
+
                     }else {
                         pt.PrintReport(newBitmap);
-                     //   onBackPressed();
+                onBackPressed();
                     }
 
                 }

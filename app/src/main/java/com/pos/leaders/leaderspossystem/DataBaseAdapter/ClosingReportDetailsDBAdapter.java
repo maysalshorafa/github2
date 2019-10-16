@@ -12,6 +12,9 @@ import com.pos.leaders.leaderspossystem.Models.ClosingReportDetails;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
@@ -117,4 +120,27 @@ public class ClosingReportDetailsDBAdapter {
 
         return closingReportDetails;
     }
+    public List<ClosingReportDetails> getClosingReportByClosingID(long closingId) {
+        List<ClosingReportDetails> closingReportList = new ArrayList<ClosingReportDetails>();
+        try {
+            open();
+            Cursor cursor = db.rawQuery("select * from " + CLOSING_REPORT_DETAILS_TABLE_NAME +" where "+CLOSING_REPORT_DETAILS_COLUMN_CLOSING_REPORT_ID+"="+closingId, null);
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                closingReportList.add( new ClosingReportDetails(cursor.getLong(cursor.getColumnIndex(CLOSING_REPORT_DETAILS_COLUMN_ID)),  cursor.getLong(cursor.getColumnIndex(CLOSING_REPORT_DETAILS_COLUMN_CLOSING_REPORT_ID)), Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_DETAILS_COLUMN_ACTUAL_VALUE))),
+                        Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_DETAILS_COLUMN_EXPECTED_VALUE))),
+                        Double.parseDouble(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_DETAILS_COLUMN_DIFFERENT_VALUE))),
+                        cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_DETAILS_COLUMN_TYPE)),
+                        cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_DETAILS_COLUMN_CURRENCY_TYPE))));
+                cursor.moveToNext();
+            }
+            close();
+
+        } catch (Exception e) {
+
+        }
+        return closingReportList;
+    }
+
 }

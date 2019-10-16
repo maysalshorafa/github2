@@ -192,7 +192,7 @@ public class ScheduleWorkersDBAdapter {
         List<ScheduleWorkers> userScheduleWorkerstList=new ArrayList<ScheduleWorkers>();
         List<ScheduleWorkers> scheduleWorkersList=getAllScheduleWorkers();
         for (ScheduleWorkers item:scheduleWorkersList) {
-            if(item.getUserId()==userId && item.getExitTime()<=to.getTime() )
+            if(item.getUserId()==userId && item.getExitTime()<=to.getTime()&& item.getStartTime()>=from.getTime() )
                 userScheduleWorkerstList.add(item);
         }
         return userScheduleWorkerstList;

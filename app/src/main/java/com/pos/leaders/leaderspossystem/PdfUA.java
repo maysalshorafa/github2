@@ -509,6 +509,155 @@ public class PdfUA {
         checkCount+=receiptInvoiceAmountCheck;*/
 
     }
+    public static  void getCountMounthForZReport(Context context, ZReport z) {
+        ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
+        zReportDBAdapter.open();
+        JSONObject res = new JSONObject();
+        aReportAmount=0;
+        opiningReportList=new ArrayList<>();
+        aReportDetailsForFirstCurrency=0;
+        aReportDetailsForSecondCurrency=0;
+        aReportDetailsForThirdCurrency=0;
+        aReportDetailsForForthCurrency=0;
+
+        OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(context);
+        opiningReportDBAdapter.open();
+        if(zReportDBAdapter.getProfilesCount()==1) {
+            opiningReportList = opiningReportDBAdapter.getListByLastZReport(-1);
+
+        }else {
+
+            opiningReportList = opiningReportDBAdapter.getListByLastZReport(z.getzReportId());
+        }
+        for (int i=0;i<opiningReportList.size();i++){
+            aReportAmount+=opiningReportList.get(i).getAmount();
+        }
+        if (SETTINGS.enableCurrencies) {
+            OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
+            aReportDetailsDBAdapter.open();
+            for (int a=0 ;a<opiningReportList.size();a++) {
+                //aReportAmount+=opiningReportList.get(a).getAmount();
+                OpiningReport opiningReport = opiningReportList.get(a);
+                aReportDetailsForFirstCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, opiningReport.getOpiningReportId());
+                aReportDetailsForSecondCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, opiningReport.getOpiningReportId());
+                aReportDetailsForThirdCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, opiningReport.getOpiningReportId());
+                aReportDetailsForForthCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, opiningReport.getOpiningReportId());
+            }
+
+        }
+       checkList=new ArrayList<>();
+        cashAmount=0;
+        invoiceReceiptCount=0 ;invoiceCount=0; CreditInvoiceCount=0 ; ShekelCount=0 ;UsdCount=0 ;EurCount=0; GbpCount=0 ;checkCount=0 ; creditCardCount=0 ;receiptInvoiceAmountCheck=0 ; cashCount=0;receiptInvoiceAmount=0;
+        OrderDBAdapter orderDb = new OrderDBAdapter(context);
+        orderDb.open();
+        invoiceReceiptCount = orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()).size();
+
+        if(zReportDBAdapter.getProfilesCount()==0){
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(-1, InvoiceStatus.UNPAID.getValue());
+            invoiceCount+=posInvoiceList.size();
+
+            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.CREDIT_INVOICE.getValue(),CONSTANT.CASH);
+            CreditInvoiceCount+=posCreditInvoiceList.size();
+
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
+            receiptInvoiceAmountCheck+=posReceiptList.size();
+
+        }else {
+            ZReport zReport1=null;
+            try {
+                zReport1 = zReportDBAdapter.getLastRow();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(zReport1.getzReportId(), InvoiceStatus.UNPAID.getValue());
+            invoiceCount+=posInvoiceList.size();
+
+
+            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.CREDIT_INVOICE.getValue(),CONSTANT.CASH);
+            CreditInvoiceCount+=posCreditInvoiceList.size();
+            List<PosInvoice>posReceiptListCheck = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
+            receiptInvoiceAmountCheck+=posReceiptListCheck.size();
+        }
+        List<Long>orderIds= new ArrayList<>();
+        List<Payment> payments = paymentList(orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()),context);
+        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
+        cashPaymentDBAdapter.open();
+        ChecksDBAdapter checksDBAdapter =new ChecksDBAdapter(context);
+        checksDBAdapter.open();
+        CreditCardPaymentDBAdapter creditCardPaymentDBAdapter =new CreditCardPaymentDBAdapter(context);
+        creditCardPaymentDBAdapter.open();
+        for (Payment p : payments) {
+            long orderId = p.getOrderId();
+            List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(orderId);
+            for(int i=0;i<cashPaymentList.size();i++){
+                cashCount+=1;
+                cashAmount+=p.getAmount();
+            }
+            List<Check>checkList=checksDBAdapter.getPaymentBySaleID(orderId);
+            for(int i=0;i<checkList.size();i++){
+                checkCount+=1;
+            }
+            List<CreditCardPayment>creditCardPayments=creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
+            for(int i=0;i<creditCardPayments.size();i++){
+                creditCardCount+=1;            }
+        }
+        if(orderIds.size()>0){
+            for (int id = 0;id<orderIds.size();id++){
+                ChecksDBAdapter checkDb= new ChecksDBAdapter(context);
+                checkDb.open();
+                List<Check> c = checkDb.getPaymentBySaleID(orderIds.get(id));
+                checkList.add(c);
+            }
+        }
+        //with Currency
+        if (SETTINGS.enableCurrencies) {
+            List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()),context);
+            for (CurrencyOperation cp : currencyOperationList) {
+                switch (cp.getCurrencyType()) {
+                    case "ILS":
+                        ShekelCount+=1;
+                        break;
+                    case "USD":
+                        UsdCount+=1;
+                        break;
+                    case "EUR":
+                        EurCount+=1;
+
+                        break;
+                    case "GBP":
+                        GbpCount+=1;
+                        break;
+                }
+            }
+
+        }
+        if(zReportDBAdapter.getProfilesCount()==0){
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
+            receiptInvoiceAmount+=posReceiptList.size();
+
+        }else {
+            ZReport zReport1=null;
+            try {
+                zReport1 = zReportDBAdapter.getLastRow();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
+            posInvoiceDBAdapter.open();
+            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
+            receiptInvoiceAmount+=posReceiptList.size();
+
+        }
+        ShekelCount+=receiptInvoiceAmount;
+        checkCount+=receiptInvoiceAmountCheck;
+
+    }
     public static void createUserReport(Context context ,PdfPTable table , List<ScheduleWorkers>scheduleWorkersList) throws IOException, DocumentException {
         Date date , startAt=null , endAt =null;
         table.setRunDirection(0);
@@ -1167,7 +1316,7 @@ public class PdfUA {
         table.addCell(cell);
 
     }
-    public static void createXReport(Context context, XReport xReport) throws IOException, DocumentException {
+    public static void createXReport(Context context, XReport xReport,ZReportCount zReportCount) throws IOException, DocumentException {
         Document document = new Document();
         String fileName = "xreport.pdf";
         final String APPLICATION_PACKAGE_NAME = context.getPackageName();
@@ -1216,15 +1365,15 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.details), Element.ALIGN_RIGHT, 2, font);
 
         insertCell(dataTable, Util.makePrice(xReport.getInvoiceReceiptAmount()), Element.ALIGN_RIGHT,1, font);
-        insertCell(dataTable,invoiceReceiptCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getInvoiceReceiptCount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);
 
         insertCell(dataTable,  Util.makePrice(xReport.getInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,invoiceCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT,2, font);
 
         insertCell(dataTable, Util.makePrice( xReport.getCreditInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,creditCardCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getCreditCount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
 
         insertCell(dataTable, Util.makePrice( xReport.getTotalSales() ), Element.ALIGN_RIGHT, 1, font);
@@ -1238,30 +1387,30 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
 
         insertCell(dataTable,  Util.makePrice(xReport.getCashTotal() ), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,cashCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getCashCount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT,2, font);
 
         ///// shekel region
         insertCell(dataTable, Util.makePrice(xReport.getShekelAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,ShekelCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getShekelCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.shekel), Element.ALIGN_RIGHT, 2, font);
 
         ///// usd region
         insertCell(dataTable, Util.makePrice(xReport.getUsdAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,UsdCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getUsdCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.usd), Element.ALIGN_RIGHT, 2, font);
 
         ///// eur region
         insertCell(dataTable, Util.makePrice(xReport.getEurAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,EurCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getEurCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 2, font);
         ///// Gbp region
         insertCell(dataTable, Util.makePrice(xReport.getGbpAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,GbpCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getGbpCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.gbp), Element.ALIGN_RIGHT, 2, font);
         ///// CreditCard region
         insertCell(dataTable, Util.makePrice(xReport.getCreditTotal()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,creditCardCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getCreditCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.credit_card), Element.ALIGN_RIGHT, 2, font);
         insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
@@ -1271,7 +1420,7 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
 
         insertCell(dataTable, Util.makePrice(xReport.getCheckTotal()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,checkCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getCheckCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
         if(checkList.size()>0){
             insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
@@ -1358,6 +1507,8 @@ public class PdfUA {
 
 
     }
+
+
     public static void getCountForXReport(Context context, XReport x) {
         aReportAmount=0;
         opiningReportList=new ArrayList<>();
@@ -1530,7 +1681,7 @@ public class PdfUA {
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
         document.open();        //end region
         //end region
-        getCountForZReport(context,zReport);
+        getCountMounthForZReport(context,zReport);
         BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 24);
         PdfPTable headingTable = new PdfPTable(1);
@@ -1552,7 +1703,7 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.details), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, zReport.getInvoiceReceiptAmount() + " ", Element.ALIGN_RIGHT,1, font);
+        insertCell(dataTable, zReport.getInvoiceReceiptAmount()-aReportAmount + " ", Element.ALIGN_RIGHT,1, font);
         insertCell(dataTable,invoiceReceiptCount + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);
 
@@ -1646,7 +1797,7 @@ public class PdfUA {
         insertCell(opiningReportTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
         insertCell(opiningReportTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
-      /**  PdfPTable opiningReportDetailsTable = new PdfPTable(2);
+ PdfPTable opiningReportDetailsTable = new PdfPTable(2);
         opiningReportDetailsTable.deleteBodyRows();
         opiningReportDetailsTable.setRunDirection(0);
         if(SETTINGS.enableCurrencies) {
@@ -1661,7 +1812,7 @@ public class PdfUA {
             insertCell(opiningReportDetailsTable, aReportDetailsForForthCurrency + " ", Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, "----------------------------", Element.ALIGN_CENTER, 2, font);
-        }*/
+        }
         PdfPTable posSalesTable = new PdfPTable(2);
         posSalesTable.deleteBodyRows();
         posSalesTable.setRunDirection(0);

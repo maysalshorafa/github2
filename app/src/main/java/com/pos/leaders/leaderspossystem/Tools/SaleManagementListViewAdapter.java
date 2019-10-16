@@ -68,7 +68,9 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			holder.FL = (LinearLayout) convertView.findViewById(R.id.listSaleManagement_FLMore);
 			holder.btCancel = (Button) convertView.findViewById(R.id.listSaleManagement_BTCancel);
 			holder.btReturn = (Button) convertView.findViewById(R.id.listSaleManagement_BTReturn);
-			holder.btView = (Button) convertView.findViewById(R.id.listSaleManagement_BTView);
+			holder.btView = (Button) convertView.findViewById(R.id.listSaleManagement_BTPrint);
+			holder.btDublicte = (Button) convertView.findViewById(R.id.listSaleManagement_BTDuplicate);
+
 			holder.tvDiscount = (TextView) convertView.findViewById(R.id.listSaleManagement_TVDiscount);
 			holder.cancelingOrderId = (TextView) convertView.findViewById(R.id.listSaleManagement_TVCancelOrderId);
 
@@ -174,6 +176,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		private Button btCancel;
 		private Button btReturn;
 		private Button btView;
+		private Button btDublicte;
 		private TextView tvDiscount;
 		private TextView cancelingOrderId;
 	}

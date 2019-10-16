@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -46,6 +47,9 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
@@ -306,7 +310,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     sale.setOrders(orders);
                     sale.setUser(SESSION._EMPLOYEE);
                     //region Print Button
-                    final Button print = (Button) view.findViewById(R.id.listSaleManagement_BTView);
+                    final Button print = (Button) view.findViewById(R.id.listSaleManagement_BTPrint);
                     print.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -397,82 +401,93 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     btnCan.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(OrdersManagementActivity.this);
-                            zReportDBAdapter.open();
-                            ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(OrdersManagementActivity.this);
-                            zReportCountDbAdapter.open();
-                            ZReportCount zReportCount=null;
-                            ZReport zReport1=null;
-                            try {
-                                 zReportCount = zReportCountDbAdapter.getLastRow();
-                                 zReport1 = zReportDBAdapter.getLastRow();
+                            if(SESSION._EMPLOYEE.getEmployeeId()!=2) {
+                                new AlertDialog.Builder(OrdersManagementActivity.this)
+                                        .setTitle(getString(R.string.cancel_invoice))
+                                        .setMessage(getString(R.string.print_cancel_invoice))
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(OrdersManagementActivity.this);
+                                                zReportDBAdapter.open();
+                                                ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(OrdersManagementActivity.this);
+                                                zReportCountDbAdapter.open();
+                                                ZReportCount zReportCount = null;
+                                                ZReport zReport1 = null;
+                                                try {
+                                                    zReportCount = zReportCountDbAdapter.getLastRow();
+                                                    zReport1 = zReportDBAdapter.getLastRow();
 
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                                OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
+                                                saleDBAdapter.open();
+                                                sale.setPayment(new Payment(payments.get(0)));
+                                                long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(), sale.getCartDiscount(), sale.getNumberDiscount(), sale.getOrderId());
+                                                Order order = saleDBAdapter.getOrderById(sID);
+                                                sale.setCancellingOrderId(sID);
+                                                saleDBAdapter.updateEntry(sale);
+                                                PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(OrdersManagementActivity.this);
+                                                paymentDBAdapter1.open();
+                                                paymentDBAdapter1.insertEntry(sale.getTotalPrice() * -1, sID, order.getOrderKey());
+                                                paymentDBAdapter1.close();
+                                                CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(OrdersManagementActivity.this);
+                                                cashPaymentDBAdapter.open();
+                                                cashPaymentDBAdapter.insertEntry(sID, sale.getTotalPrice() * -1, 0, new Timestamp(System.currentTimeMillis()), 1, 1);
+                                                CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(OrdersManagementActivity.this);
+                                                currencyOperationDBAdapter.open();
+                                                CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(OrdersManagementActivity.this);
+                                                currencyReturnsDBAdapter.open();
+                                                if (SETTINGS.enableCurrencies) {
+                                                    currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), sID, CONSTANT.DEBIT, sale.getTotalPaidAmount() * -1, "ILS", CONSTANT.CASH);
+                                                    currencyReturnsDBAdapter.insertEntry(sale.getOrderId(), (sale.getTotalPaidAmount() - sale.getTotalPrice()) * -1, new Timestamp(System.currentTimeMillis()), 0);
+                                                }
+                                                if (checks.size() > 0)
+                                                    try {
+                                                        Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                                        sale.setOrderId(sID);
+                                                        SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(order, false, checks);
+                                                        startActivity(i);
+                                                    } catch (Exception e) {
+                                                        Log.d("exception", order.toString());
+                                                        Log.d("exception", e.toString());
+                                                        sendLogFile();
+                                                    }
+                                                else
+                                                    try {
+                                                        Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
+                                                        sale.setOrderId(sID);
+                                                        SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(order, false, null);
+                                                        startActivity(i);
+                                                    } catch (Exception e) {
+                                                        Log.d("exception", order.toString());
+                                                        Log.d("exception", e.toString());
+                                                        sendLogFile();
+                                                    }
+
+                                                zReport1.setCashTotal(zReport1.getCashTotal() - sale.getTotalPrice());
+                                                zReport1.setInvoiceReceiptAmount(zReport1.getInvoiceReceiptAmount() - sale.getTotalPrice());
+                                                zReport1.setShekelAmount(zReport1.getShekelAmount() - sale.getTotalPrice());
+                                                zReportCount.setCashCount(zReportCount.getCashCount() - 1);
+                                                zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount() - 1);
+                                                zReportCount.setShekelCount(zReportCount.getShekelCount() - 1);
+                                                zReportDBAdapter.updateEntry(zReport1);
+                                                zReportCountDbAdapter.updateEntry(zReportCount);
+                                                //// TODO: 19/01/2017 cancel this sale and print return note and mony back by the payment way
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // do nothing
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
                             }
-                            Log.d("zReportCountfffff",zReportCount.toString());
-
-                            OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
-                            saleDBAdapter.open();
-                            sale.setPayment(new Payment(payments.get(0)));
-                            long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(),sale.getCartDiscount(),sale.getNumberDiscount(),sale.getOrderId());
-                            Order order = saleDBAdapter.getOrderById(sID);
-                            sale.setCancellingOrderId(sID);
-                            saleDBAdapter.updateEntry(sale);
-                            PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(OrdersManagementActivity.this);
-                            paymentDBAdapter1.open();
-                            paymentDBAdapter1.insertEntry( sale.getTotalPrice() * -1, sID,order.getOrderKey());
-                            paymentDBAdapter1.close();
-                            CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(OrdersManagementActivity.this);
-                            cashPaymentDBAdapter.open();
-                            cashPaymentDBAdapter.insertEntry(sID,sale.getTotalPrice() * -1,0,new Timestamp(System.currentTimeMillis()),1,1);
-                            zReport1.setCashTotal(zReport1.getCashTotal()-sale.getTotalPrice());
-                            zReport1.setInvoiceReceiptAmount(zReport1.getInvoiceReceiptAmount()-sale.getTotalPrice());
-                            double x= zReport1.getShekelAmount();
-                            double z = zReport1.getShekelAmount()-sale.getTotalPrice();
-                            Log.d("yyyyyyyyyyyy",x+"  "+z);
-                            zReport1.setShekelAmount(zReport1.getShekelAmount()-sale.getTotalPrice());
-                            zReportCount.setCashCount(zReportCount.getCashCount()-1);
-                            zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()-1);
-                            zReportCount.setShekelCount(zReportCount.getShekelCount()-1);
-                            zReportDBAdapter.updateEntry(zReport1);
-                            Log.d("zReportCount",zReportCount.toString());
-                            zReportCountDbAdapter.updateEntry(zReportCount);
-                            CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(OrdersManagementActivity.this);
-                            currencyOperationDBAdapter.open();
-                            CurrencyReturnsDBAdapter currencyReturnsDBAdapter =new CurrencyReturnsDBAdapter(OrdersManagementActivity.this);
-                            currencyReturnsDBAdapter.open();
-                            if(SETTINGS.enableCurrencies){
-                                currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),sID,CONSTANT.DEBIT,sale.getTotalPaidAmount() * -1,"ILS",CONSTANT.CASH);
-                                currencyReturnsDBAdapter.insertEntry(sale.getOrderId(),(sale.getTotalPaidAmount()-sale.getTotalPrice())*-1,new Timestamp(System.currentTimeMillis()),0);
-                            }
-                            if (checks.size() > 0)
-                                try {
-                                    Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                                    sale.setOrderId(sID);
-                                    SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(sale,false,checks);
-                                    startActivity(i);
-                                }catch (Exception e){
-                                    Log.d("exception",sale.toString());
-                                    Log.d("exception",e.toString());
-                                    sendLogFile();
-                                }
-                            else
-                                try {
-                                    Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                                    sale.setOrderId(sID);
-                                    SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(sale,false,null);
-                                    startActivity(i);
-                                }catch (Exception e){
-                                    Log.d("exception",sale.toString());
-                                    Log.d("exception",e.toString());
-                                    sendLogFile();
-                                }
-
-
-                            //// TODO: 19/01/2017 cancel this sale and print return note and mony back by the payment way
                         }
                     });
+
                     //endregion Cancellation ORDER Button
 
                     previousView.setBackgroundColor(getResources().getColor(R.color.list_background_color));
@@ -488,7 +503,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                         customer =customerDBAdapter.getCustomerByID(sale.getCustomerId());
                     }
                     sale.setCustomer(customer);
-                    OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(OrdersManagementActivity.this);
+                    final OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(OrdersManagementActivity.this);
                     orderDBAdapter.open();
                     orders = orderDBAdapter.getOrderBySaleID(sale.getOrderId());
                     orderDBAdapter.close();
@@ -547,8 +562,113 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                     sale.setOrders(orders);
                     sale.setUser(SESSION._EMPLOYEE);
+
+                    final Button duplicate = (Button) view.findViewById(R.id.listSaleManagement_BTDuplicate);
+                    duplicate.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //send customerName copy from the in voice
+                            new AlertDialog.Builder(OrdersManagementActivity.this)
+                                    .setTitle(getString(R.string.copyinvoice))
+                                    .setMessage(getString(R.string.print_copy_invoice))
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            OrderDBAdapter oDb = new OrderDBAdapter(OrdersManagementActivity.this);
+                                            oDb.open();
+                                            OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(OrdersManagementActivity.this);
+                                            orderDetailsDBAdapter.open();
+                                           CashPaymentDBAdapter cashPaymentDBAdapter=new CashPaymentDBAdapter(OrdersManagementActivity.this);
+                                            cashPaymentDBAdapter.open();
+                                            PaymentDBAdapter paymentDBAdapter =new PaymentDBAdapter(OrdersManagementActivity.this);
+                                            paymentDBAdapter.open();
+                                          CurrencyOperationDBAdapter  currencyOperationDBAdapter=new CurrencyOperationDBAdapter(OrdersManagementActivity.this);
+                                            currencyOperationDBAdapter.open();
+                                          CurrencyReturnsDBAdapter  currencyReturnsDBAdapter=new CurrencyReturnsDBAdapter(OrdersManagementActivity.this);
+                                            currencyReturnsDBAdapter.open();
+                                            List<OrderDetails>orderDetailsList=orderDetailsDBAdapter.getOrderBySaleID(sale.getOrderId());
+
+                                            List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(sale.getOrderId());
+                                            List<Payment> paymentList =paymentDBAdapter.getPaymentBySaleID(sale.getOrderId());
+                                            List<CurrencyOperation>currencyOperationList=currencyOperationDBAdapter.getCurrencyOperationByOrderID(sale.getOrderId());
+                                            List<CurrencyReturns>currencyReturnsList=currencyReturnsDBAdapter.getCurencyReturnBySaleID(sale.getOrderId());
+                                            Log.d("copyOrder",sale.toString());
+                                            long orderId= oDb.insertEntryDuplicate(sale);
+                                            for (int i=0;i<orderDetailsList.size();i++){
+                                                orderDetailsDBAdapter.open();
+                                                OrderDetails o =orderDetailsList.get(i);
+                                                o.setOrderId(orderId);
+                                                orderDetailsDBAdapter.insertEntryDuplicate(o);
+                                                orderDetailsDBAdapter.close();
+                                            }
+                                            for (int i=0;i<cashPaymentList.size();i++){
+                                                cashPaymentDBAdapter.open();
+                                                CashPayment cashPayment=cashPaymentList.get(i);
+                                                cashPayment.setOrderId(orderId);
+                                                cashPaymentDBAdapter.insertEntryDuplicate(cashPayment);
+                                                cashPaymentDBAdapter.close();
+                                            }
+                                            for (int i=0;i<paymentList.size();i++){
+                                                paymentDBAdapter.open();
+                                                Payment payment=paymentList.get(i);
+                                                payment.setOrderId(orderId);
+                                                paymentDBAdapter.insertEntryDuplicate(payment);
+                                                paymentDBAdapter.close();
+                                            }
+                                            for (int i=0;i<currencyOperationList.size();i++){
+                                                currencyOperationDBAdapter.open();
+                                                CurrencyOperation currencyOperation=currencyOperationList.get(i);
+                                                currencyOperation.setOperationId(orderId);
+                                                currencyOperationDBAdapter.insertEntryDuplicate(currencyOperation);
+                                                currencyOperationDBAdapter.close();
+                                            }
+                                            for (int i=0;i<currencyReturnsList.size();i++){
+                                                currencyReturnsDBAdapter.open();
+                                                CurrencyReturns currencyReturns=currencyReturnsList.get(i);
+                                                currencyReturns.setOrderId(orderId);
+                                                currencyReturnsDBAdapter.insertEntryDuplicate(currencyReturns);
+                                                currencyReturnsDBAdapter.close();
+                                            }
+                                            oDb.open();
+                                            orderDetailsDBAdapter.open();
+                                            Order order1 = oDb.getOrderById(orderId);
+                                            SESSION._TEMP_ORDERS=order1;
+                                            SESSION._TEMP_ORDER_DETAILES=orderDetailsDBAdapter.getOrderBySaleID(order1.getOrderId());
+                                            ZReportDBAdapter zReportDBAdapter1 = new ZReportDBAdapter(OrdersManagementActivity.this);
+                                            zReportDBAdapter1.open();
+                                            ZReportCountDbAdapter zReportCountDbAdapter1 = new ZReportCountDbAdapter(OrdersManagementActivity.this);
+                                            zReportCountDbAdapter1.open();
+                                            ZReportCount zReportCount1=null;
+                                            ZReport z=null;
+                                            try {
+                                                zReportCount1 = zReportCountDbAdapter1.getLastRow();
+                                                z= zReportDBAdapter1.getLastRow();
+
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            z.setCashTotal(z.getCashTotal()+sale.getTotalPrice());
+                                            z.setInvoiceReceiptAmount(z.getInvoiceReceiptAmount()+sale.getTotalPrice());
+                                            z.setShekelAmount(z.getShekelAmount()+sale.getTotalPrice());
+                                            zReportCount1.setCashCount(zReportCount1.getCashCount()+1);
+                                            zReportCount1.setInvoiceReceiptCount(zReportCount1.getInvoiceReceiptCount()+1);
+                                            zReportCount1.setShekelCount(zReportCount1.getShekelCount()+1);
+                                            zReportDBAdapter1.updateEntry(z);
+                                            zReportCountDbAdapter1.updateEntry(zReportCount1);
+                                            Activity a=getParent();
+                                            PrinterTools.printAndOpenCashBox("", "", "", 600,OrdersManagementActivity.this,a);
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // do nothing
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                        }
+                    });
                     //region Print Button
-                    final Button print = (Button) view.findViewById(R.id.listSaleManagement_BTView);
+                    final Button print = (Button) view.findViewById(R.id.listSaleManagement_BTPrint);
                     print.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -642,6 +762,19 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     btnCan.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(OrdersManagementActivity.this);
+                            zReportDBAdapter.open();
+                            ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(OrdersManagementActivity.this);
+                            zReportCountDbAdapter.open();
+                            ZReportCount zReportCount=null;
+                            ZReport zReport1=null;
+                            try {
+                                zReportCount = zReportCountDbAdapter.getLastRow();
+                                zReport1 = zReportDBAdapter.getLastRow();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
                             saleDBAdapter.open();
                             sale.setPayment(new Payment(payments.get(0)));
@@ -667,25 +800,32 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             if (checks.size() > 0)
                                 try {
                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                                    SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(sale,false,checks);
+                                    SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(order,false,checks);
                                     startActivity(i);
                                 }catch (Exception e){
-                                    Log.d("exception",sale.toString());
+                                    Log.d("exception",order.toString());
                                     Log.d("exception",e.toString());
                                     sendLogFile();
                                 }
                             else
                                 try {
                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                                    SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(sale,false,null);
+                                    SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(order,false,null);
                                     startActivity(i);
                                 }catch (Exception e){
-                                    Log.d("exception",sale.toString());
+                                    Log.d("exception",order.toString());
                                     Log.d("exception",e.toString());
                                     sendLogFile();
                                 }
 
-
+                            zReport1.setCashTotal(zReport1.getCashTotal()-sale.getTotalPrice());
+                            zReport1.setInvoiceReceiptAmount(zReport1.getInvoiceReceiptAmount()-sale.getTotalPrice());
+                            zReport1.setShekelAmount(zReport1.getShekelAmount()-sale.getTotalPrice());
+                            zReportCount.setCashCount(zReportCount.getCashCount()-1);
+                            zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()-1);
+                            zReportCount.setShekelCount(zReportCount.getShekelCount()-1);
+                            zReportDBAdapter.updateEntry(zReport1);
+                            zReportCountDbAdapter.updateEntry(zReportCount);
                             //// TODO: 19/01/2017 cancel this sale and print return note and mony back by the payment way
                         }
                     });
@@ -706,7 +846,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     final InvoiceImg invoiceImg = new InvoiceImg(OrdersManagementActivity.this);
 
                     //  Log.d("testInvoice",objectList.get(position).toString());
-                    final Button print = (Button) view.findViewById(R.id.listSaleManagement_BTView);
+                    final Button print = (Button) view.findViewById(R.id.listSaleManagement_BTPrint);
                     print.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -757,6 +897,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     });
                     Button btnCan = (Button) view.findViewById(R.id.listSaleManagement_BTCancel);
                     btnCan.setVisibility(View.INVISIBLE);
+                    Button btnDublicate= (Button) view.findViewById(R.id.listSaleManagement_BTDuplicate);
+                    btnDublicate.setVisibility(View.INVISIBLE);
 
                 }
             }

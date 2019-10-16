@@ -594,6 +594,8 @@
     <string name="customer_have_money_from_point_equal_total_price"> Customer Have Money From Point Equal Total Price</string>
     <string name="customer_have_money_from_point_less_then_total_price"> Customer Have Money From Point Less Than Total Price</string>
     <string name="print_copy_invoice"> Are you want to Print Copy For this Invoice?</string>
+    <string name="print_cancel_invoice"> Are you want to Cancel this Invoice?</string>
+
     <string name="source_date">Source Date</string>
     <string name="copy_date">Copy Date</string>
 

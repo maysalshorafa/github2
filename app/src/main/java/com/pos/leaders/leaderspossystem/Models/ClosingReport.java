@@ -93,4 +93,18 @@ public class ClosingReport{
     public void setByUser(long byUser) {
         this.byUser = byUser;
     }
+
+    @Override
+    public String toString() {
+        return "ClosingReport{" +
+                "closingReportId=" + closingReportId +
+                ", actualTotalValue=" + actualTotalValue +
+                ", expectedTotalValue=" + expectedTotalValue +
+                ", differentTotalValue=" + differentTotalValue +
+                ", createdAt=" + createdAt +
+                ", opiningReportId=" + opiningReportId +
+                ", lastOrderId=" + lastOrderId +
+                ", byUser=" + byUser +
+                '}';
+    }
 }
