@@ -40,7 +40,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAda
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
@@ -473,6 +472,7 @@ public class SyncMessage extends Service {
 
                 //region CHECK
                 case MessageType.ADD_CHECK:
+                    /*
                     Check check = null;
                     check = objectMapper.readValue(msgData, Check.class);
 
@@ -480,6 +480,8 @@ public class SyncMessage extends Service {
                     checksDBAdapter.open();
                     rID = checksDBAdapter.insertEntry(check);
                     checksDBAdapter.close();
+                    */
+                    rID=1;
                     break;
                 case MessageType.UPDATE_CHECK:
                     break;
@@ -622,6 +624,7 @@ public class SyncMessage extends Service {
 
                 //region PAYMENT
                 case MessageType.ADD_PAYMENT:
+                    /*
                     Payment payment = null;
                     payment = objectMapper.readValue(msgData, Payment.class);
 
@@ -629,6 +632,8 @@ public class SyncMessage extends Service {
                     paymentDBAdapter.open();
                     rID = paymentDBAdapter.insertEntry(payment);
                     paymentDBAdapter.close();
+                    */
+                    rID=1;
                     break;
                 case MessageType.UPDATE_PAYMENT:
                     break;
@@ -944,6 +949,7 @@ public class SyncMessage extends Service {
 
                 //region CashPayment
                 case MessageType.ADD_CASH_PAYMENT:
+                    /*
                     CashPayment cashPayment = null;
                     cashPayment = objectMapper.readValue(msgData, CashPayment.class);
 
@@ -951,6 +957,8 @@ public class SyncMessage extends Service {
                     cashPaymentDBAdapter.open();
                     rID = cashPaymentDBAdapter.insertEntry(cashPayment);
                     cashPaymentDBAdapter.close();
+                    */
+                    rID=1;
 
                     break;
                 case MessageType.UPDATE_CASH_PAYMENT:
@@ -962,6 +970,7 @@ public class SyncMessage extends Service {
 
                 //region Credit Card Payment
                 case MessageType.ADD_CREDIT_CARD_PAYMENT:
+                    /*
                     CreditCardPayment creditCardPayment = null;
                     creditCardPayment = objectMapper.readValue(msgData, CreditCardPayment.class);
 
@@ -969,6 +978,8 @@ public class SyncMessage extends Service {
                     creditCardPaymentDBAdapter.open();
                     rID = creditCardPaymentDBAdapter.insertEntry(creditCardPayment);
                     creditCardPaymentDBAdapter.close();
+                    */
+                    rID=1;
 
                     break;
                 case MessageType.UPDATE_CREDIT_CARD_PAYMENT:

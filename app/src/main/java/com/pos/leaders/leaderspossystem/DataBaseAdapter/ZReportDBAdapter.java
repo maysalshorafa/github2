@@ -360,5 +360,14 @@ public class ZReportDBAdapter {
             updateEntry(zReport1);
         }
     }
-
+    public static String addColumnReal(String columnName) {
+        String dbc = "ALTER TABLE " + Z_REPORT_TABLE_NAME
+                + " add column " + columnName + " REAL default 0.0;";
+        return dbc;
+    }
+    public static String addColumnText(String columnName) {
+        String dbc = "ALTER TABLE " + Z_REPORT_TABLE_NAME
+                + " add column " + columnName + " TEXT  DEFAULT '' ;";
+        return dbc;
+    }
 }

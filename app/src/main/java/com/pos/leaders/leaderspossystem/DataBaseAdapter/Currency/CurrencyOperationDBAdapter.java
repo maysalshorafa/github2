@@ -154,6 +154,10 @@ public class CurrencyOperationDBAdapter {
                 cursor.getString(cursor.getColumnIndex(CurrencyOperation_COLUMN_Currency_Type)));
     }
 
-
+    public static String addColumnText(String columnName) {
+        String dbc = "ALTER TABLE " + CurrencyOperation_TABLE_NAME
+                + " add column " + columnName + " TEXT  DEFAULT '' ;";
+        return dbc;
+    }
 
 }

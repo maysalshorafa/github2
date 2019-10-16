@@ -273,4 +273,9 @@ public class XReportDBAdapter {
 
         return amount;
     }
+    public static String addColumnReal(String columnName) {
+        String dbc = "ALTER TABLE " + X_REPORT_TABLE_NAME
+                + " add column " + columnName + " REAL default 0.0;";
+        return dbc;
+    }
 }

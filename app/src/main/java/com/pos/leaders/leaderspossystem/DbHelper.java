@@ -371,11 +371,24 @@ public class DbHelper extends SQLiteOpenHelper {
 
                     break;
                 case 5:
+
                     db.execSQL(ProviderDbAdapter.DATABASE_CREATE);
                     db.execSQL(PosSettingDbAdapter.DATABASE_CREATE);
                     db.execSQL(InventoryDbAdapter.DATABASE_CREATE);
                     db.execSQL(ProductInventoryDbAdapter.DATABASE_CREATE);
                     db.execSQL(ProductDBAdapter.addColumnReal("lastCostPriceInventory"));
+                    db.execSQL(ProductDBAdapter.addColumnInteger("with_serial_number"));
+                    db.execSQL(CurrencyOperationDBAdapter.addColumnText("payment_way"));
+                    db.execSQL(DrawerDepositAndPullReportDbAdapter.DATABASE_CREATE);
+                    db.execSQL(DepositAndPullReportDetailsDbAdapter.DATABASE_CREATE);
+                    db.execSQL(OrderDetailsDBAdapter.addColumnLong("productSerialNo"));
+                    db.execSQL(OrderDetailsDBAdapter.addColumnReal("paid_amount_after_tax"));
+                    db.execSQL(XReportDBAdapter.addColumnReal("pullReportAmount"));
+                    db.execSQL(XReportDBAdapter.addColumnReal("depositReportAmount"));
+                    db.execSQL(ZReportDBAdapter.addColumnReal("pullReportAmount"));
+                    db.execSQL(ZReportDBAdapter.addColumnReal("depositReportAmount"));
+                    db.execSQL(ZReportDBAdapter.addColumnText("closeOpenReport"));
+                    db.execSQL(ZReportCountDbAdapter.DATABASE_CREATE);
                     Util.addPosSetting(context);
                     break;
 
