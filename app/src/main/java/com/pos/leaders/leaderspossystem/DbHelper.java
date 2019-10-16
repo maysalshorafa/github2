@@ -66,7 +66,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Feedback.ClearSync;
 import com.pos.leaders.leaderspossystem.Tools.BufferDbEmail;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
-import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -373,7 +372,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
                     break;
                 case 5:
-
+                    db.execSQL(IdsCounterDBAdapter.addColumn("Provider"));
+                    db.execSQL(IdsCounterDBAdapter.addColumn("PosSetting"));
+                    db.execSQL(IdsCounterDBAdapter.addColumn("Inventory"));
+                    db.execSQL(IdsCounterDBAdapter.addColumn("product_inventory"));
+                    db.execSQL(IdsCounterDBAdapter.addColumn("z_report_count"));
+                    db.execSQL(ZReportCountDbAdapter.DATABASE_CREATE);
                     db.execSQL(ProviderDbAdapter.DATABASE_CREATE);
                     db.execSQL(PosSettingDbAdapter.DATABASE_CREATE);
                     db.execSQL(InventoryDbAdapter.DATABASE_CREATE);
@@ -390,9 +394,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(ZReportDBAdapter.addColumnReal("pullReportAmount"));
                     db.execSQL(ZReportDBAdapter.addColumnReal("depositReportAmount"));
                     db.execSQL(ZReportDBAdapter.addColumnText("closeOpenReport"));
-                    db.execSQL(ZReportCountDbAdapter.DATABASE_CREATE);
                     db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (12 , 'inventoryManagement');");
-                    Util.addPosSetting(context);
+                 //  Util.addPosSetting(context);
                     break;
 
 
