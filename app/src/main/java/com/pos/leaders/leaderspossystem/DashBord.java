@@ -163,7 +163,9 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         zReportDBAdapter.open();
         if(DbHelper.DATABASE_ENABEL_ALTER_COLUMN){
             Log.d("pooos",SESSION.POS_ID_NUMBER+"");
-            zReportDBAdapter.upDatePosSalesV3();
+            zReportDBAdapter.upDatePosSalesV4();
+            Util.addPosSetting(DashBord.this);
+
             DbHelper.DATABASE_ENABEL_ALTER_COLUMN=false;
         }
         //sendable.run();

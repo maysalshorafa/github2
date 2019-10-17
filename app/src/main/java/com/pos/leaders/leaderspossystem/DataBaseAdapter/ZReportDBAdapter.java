@@ -339,25 +339,16 @@ public class ZReportDBAdapter {
         cursor.close();
         return count;
     }
-    public void  upDatePosSalesV3(){
+    public void  upDatePosSalesV4(){
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
         zReportDBAdapter.open();
-        List<ZReport>zReportList = new ArrayList<ZReport>();
-         zReportList = getAll();
-        double totalAmount =0;
-        for (int  i= 0 ; i<zReportList.size();i++){
-            ZReport zReport1 = zReportList.get(i);
-            if(i==0){
-                totalAmount=zReport1.getInvoiceReceiptAmount();
-            }else {
-                totalAmount+=zReport1.getInvoiceReceiptAmount();
-            }
-             zReport1 =new ZReport(zReport1.getzReportId(),zReport1.getCreatedAt(),zReport1.getByUser(),zReport1.getStartOrderId(),zReport1.getEndOrderId(),zReport1.getTotalAmount(),
-                   zReport1.getTotalSales(),zReport1.getCashTotal(),zReport1.getCheckTotal(),zReport1.getCreditTotal(),totalAmount,zReport1.getTax(),
-                    zReport1.getInvoiceAmount(),zReport1.getCreditInvoiceAmount(),zReport1.getShekelAmount(),zReport1.getUsdAmount(),zReport1.getEurAmount(),zReport1.getGbpAmount(),
-                   zReport1.getInvoiceReceiptAmount(),zReport1.getPullReportAmount(),zReport1.getDepositReportAmount(),zReport1.getCloseOpenReport());
-            Log.d("testZRRR",zReport1.toString());
-            updateEntry(zReport1);
+        List<ZReport>zReportList=new ArrayList<>();
+        zReportList=zReportDBAdapter.getAll();
+        for (int a=0;a<zReportList.size();a++){
+            zReportDBAdapter.open();
+            zReportList.get(a).setCloseOpenReport("close");
+            zReportDBAdapter.updateEntry(zReportList.get(a));
+            zReportDBAdapter.close();
         }
     }
     public static String addColumnReal(String columnName) {
