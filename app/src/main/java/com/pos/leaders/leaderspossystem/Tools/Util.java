@@ -1260,71 +1260,95 @@ public class Util {
     }
 
 
-    public static void addPosSetting(Context context) {
-        MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
-        try {
-            String res = messageTransmit.authGet(ApiURL.INVENTORY+"/forPos", SESSION.token);
-            Log.e("CCC", res);
-            JSONObject jsonObject;
-            try {
-                jsonObject = new JSONObject(res);
-            }
-            catch (JSONException e){
-                JSONArray jsonArray = new JSONArray(res);
-                jsonObject = jsonArray.getJSONObject(0);
-            }
-            if(jsonObject.getString(MessageKey.status).equals("200")) {
-                //03-11 16:18:47.482 20608-20721/com.pos.leaders.leaderspossystem E/CCC: {"logTag":"CompanyCredentials Resource","status":"200","responseType":"All objects are successfully returned","responseBody":[{"companyName":"LeadTest","companyID":1,"tax":17.0,"returnNote":"thanks","endOfReturnNote":14,"ccun":"null","ccpw":"null"},{"companyName":"LeadTest","companyID":2,"tax":17.0,"returnNote":"thanks","endOfReturnNote":14,"ccun":"null","ccpw":"null"}]}
+    public static void addPosSetting(final Context context) {
+        new AsyncTask<Void, Void, String>() {
 
-                JSONObject respnse;
+            // create and show a progress dialog
 
+            ProgressDialog progressDialog = ProgressDialog.show(context, "", "Opening...");
+            JSONObject jsonObject=new JSONObject();
+            @Override
+            protected void onPostExecute(String html) {
                 try {
-                    respnse = jsonObject.getJSONObject(MessageKey.responseBody);
-                }
-                catch (JSONException e){
-                    JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.responseBody);
-                    respnse = jsonArray.getJSONObject(0);
-                }
+                    if(jsonObject.getString(MessageKey.status).equals("200")) {
+                        //03-11 16:18:47.482 20608-20721/com.pos.leaders.leaderspossystem E/CCC: {"logTag":"CompanyCredentials Resource","status":"200","responseType":"All objects are successfully returned","responseBody":[{"companyName":"LeadTest","companyID":1,"tax":17.0,"returnNote":"thanks","endOfReturnNote":14,"ccun":"null","ccpw":"null"},{"companyName":"LeadTest","companyID":2,"tax":17.0,"returnNote":"thanks","endOfReturnNote":14,"ccun":"null","ccpw":"null"}]}
 
-                InventoryDbAdapter inventoryDbAdapter = new InventoryDbAdapter(context);
-                inventoryDbAdapter.open();
-                long i = inventoryDbAdapter.insertEntry(respnse.getString("name"), respnse.getLong("inventoryId"), respnse.getString("productsIdWithQuantityList"),
-                        respnse.getInt("branchId"), 0);
-                inventoryDbAdapter.close();
+                        JSONObject respnse;
 
-                if (i>= 1) {
-                    SharedPreferences cSharedPreferences = context.getSharedPreferences("POS_Management", MODE_PRIVATE);
-                    boolean creditCardEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, false);
-                    boolean pinPadEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD, false);
-                    boolean currencyEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, false);
-                    boolean customerMeasurementEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, false);
-                    int floatP = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, "2"));
-                    String printerType = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, PrinterType.HPRT_TP805.name());
-                    int branchI = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, "0"));
-                    PackageInfo pInfo = null;
-                    try {
-                        pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
+                        try {
+                            respnse = jsonObject.getJSONObject(MessageKey.responseBody);
+                        }
+                        catch (JSONException e){
+                            JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.responseBody);
+                            respnse = jsonArray.getJSONObject(0);
+                        }
+
+                        InventoryDbAdapter inventoryDbAdapter = new InventoryDbAdapter(context);
+                        inventoryDbAdapter.open();
+                        long i = inventoryDbAdapter.insertEntry(respnse.getString("name"), respnse.getLong("inventoryId"), respnse.getString("productsIdWithQuantityList"),
+                                respnse.getInt("branchId"), 0);
+                        inventoryDbAdapter.close();
+
+                        if (i>= 1) {
+                            SharedPreferences cSharedPreferences = context.getSharedPreferences("POS_Management", MODE_PRIVATE);
+                            boolean creditCardEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, false);
+                            boolean pinPadEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD, false);
+                            boolean currencyEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, false);
+                            boolean customerMeasurementEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, false);
+                            int floatP = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, "2"));
+                            String printerType = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, PrinterType.HPRT_TP805.name());
+                            int branchI = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, "0"));
+                            PackageInfo pInfo = null;
+                            try {
+                                pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+                            } catch (PackageManager.NameNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            String verCode = pInfo.versionName;
+                            PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
+                            posSettingDbAdapter.open();
+                            posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,verCode, DbHelper.DATABASE_VERSION+"",branchI);
+                            //finish();
+                        } else {
+                            Log.e("setup",jsonObject.getString(MessageKey.responseType));
+                            //Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again), Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    String verCode = pInfo.versionName;
-                    PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
-                    posSettingDbAdapter.open();
-                    posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,verCode, DbHelper.DATABASE_VERSION+"",branchI);
-                    //finish();
-                } else {
-                    Log.e("setup",jsonObject.getString(MessageKey.responseType));
-                    //Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again), Toast.LENGTH_SHORT).show();
+                    else {
+                        Log.e("setup",jsonObject.getString(MessageKey.responseType));
+                        //Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again)+": ", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            }
-            else {
-                Log.e("setup",jsonObject.getString(MessageKey.responseType));
-                //Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again)+": ", Toast.LENGTH_SHORT).show();
+
+
+                //after async close progress dialog
+                progressDialog.dismiss();
             }
 
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
+            @Override
+            protected String doInBackground(Void... params) {
+                MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                try {
+                    String res = messageTransmit.authGet(ApiURL.INVENTORY + "/forPos", SESSION.token);
+                    Log.e("CCC", res);
+
+                    try {
+                        jsonObject = new JSONObject(res);
+                    } catch (JSONException e) {
+                        JSONArray jsonArray = new JSONArray(res);
+                        jsonObject = jsonArray.getJSONObject(0);
+                    }
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+            }.execute();
+
+
+
     }
 }
 

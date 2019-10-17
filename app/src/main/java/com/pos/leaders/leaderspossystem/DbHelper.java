@@ -66,7 +66,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Feedback.ClearSync;
 import com.pos.leaders.leaderspossystem.Tools.BufferDbEmail;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
-import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -398,6 +397,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(ZReportDBAdapter.addColumnReal("depositReportAmount"));
                     db.execSQL(ZReportDBAdapter.addColumnText("closeOpenReport"));
                     db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (12 , 'inventoryManagement');");
+                    db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(13,2,12);");
+
                     break;
 
 
