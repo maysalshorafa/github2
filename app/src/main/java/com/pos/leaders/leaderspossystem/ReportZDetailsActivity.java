@@ -412,11 +412,11 @@ public class ReportZDetailsActivity extends Activity {
                 }else {
                     if(fromDashBoard){
                         pt.PrintReport(newBitmap);
-                        onBackPressed();
+                   //     onBackPressed();
 
                     }else {
                         pt.PrintReport(newBitmap);
-                onBackPressed();
+              // onBackPressed();
                     }
 
                 }
