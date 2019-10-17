@@ -31,7 +31,7 @@ public class ClearSync extends AsyncTask<Context, Void, String> {
     ProgressDialog progressDialog;
 
     public ClearSync(Context context){
-        messageTransmitV1 = new MessageTransmit(SETTINGS.BO_SERVER_URL_V2);
+        messageTransmitV1 = new MessageTransmit(SETTINGS.BO_SERVER_URLV3);
         messageTransmitFeedback = new MessageTransmit(SETTINGS.FEEDBACK_SERVER);
 
         this.context = context;
@@ -87,8 +87,8 @@ public class ClearSync extends AsyncTask<Context, Void, String> {
             }
 
             JSONObject notificationJson = new JSONObject();
-            notificationJson.put("oldVersion", 2);
-            notificationJson.put("newVersion", 3);
+            notificationJson.put("oldVersion", 3);
+            notificationJson.put("newVersion", 4);
             notificationJson.put("companyName", SETTINGS.companyName);
             notificationJson.put("companyId", SETTINGS.companyID);
             notificationJson.put("deviceId", SESSION.POS_ID_NUMBER);
