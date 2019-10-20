@@ -2709,6 +2709,7 @@ public class SalesCartActivity extends AppCompatActivity {
      }else {
 
       if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
+          Log.d("REQUEST_CURRENCY_RETURN_ACTIVITY_CODE",CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE+"");
             CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
          SESSION._Rest();
          clearCart();

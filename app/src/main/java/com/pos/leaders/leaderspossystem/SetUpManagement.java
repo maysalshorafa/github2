@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,6 +24,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.Models.PosSetting;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.ServerUrl;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ import java.util.List;
 
 public class SetUpManagement extends AppCompatActivity {
     CheckBox currencyCheckBox, creditCardCheckBox,cbPinpad, customerMeasurementCheckBox;
-    Spinner printerTypeSpinner, floatPointSpinner , branchSpinner;
+    Spinner printerTypeSpinner, floatPointSpinner , branchSpinner,SelectServer;
     Button saveButton, editButton;
     ImageView currencyImage, customerMeasurementImage, creditCardImage,ivPinpad;
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY";
@@ -52,7 +54,7 @@ public class SetUpManagement extends AppCompatActivity {
     public static Context context = null;
     int branchId;
     final List<String> branch = new ArrayList<String>();
-
+    final List<String> ServerUrL = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +75,7 @@ public class SetUpManagement extends AppCompatActivity {
         customerMeasurementCheckBox = (CheckBox) findViewById(R.id.setUpManagementCustomerMeasurementCheckBox);
         floatPointSpinner = (Spinner) findViewById(R.id.setUpManagementFloatPointSpinner);
         printerTypeSpinner = (Spinner) findViewById(R.id.setUpManagementPrinterTypeSpinner);
+        SelectServer=(Spinner) findViewById(R.id.setUpServer);
         branchSpinner = (Spinner) findViewById(R.id.setUpManagementBranchSpinner);
         saveButton = (Button) findViewById(R.id.setUpManagementSaveButton);
         editButton = (Button) findViewById(R.id.setUpManagementEditButton);
@@ -92,11 +95,20 @@ public class SetUpManagement extends AppCompatActivity {
 
         printerTypeSpinner.setAdapter(spinnerArrayAdapter);
         floatPointSpinner.setAdapter(floatPointSpinnerArrayAdapter);
+        ServerUrL.add(ServerUrl.BO_SERVER_URL.getItem());
         branch.add(getString(R.string.all));
         branch.add(getString(R.string.pos_branch));
         final ArrayAdapter<String> dataAdapterBranch = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, branch);
         dataAdapterBranch.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         branchSpinner.setAdapter(dataAdapterBranch);
+
+        final ArrayAdapter<String> dataAdapterURlServer = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,ServerUrL );
+        dataAdapterURlServer.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        SelectServer.setAdapter(dataAdapterURlServer);
+
+
+
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             saveButton.setVisibility(View.GONE);
@@ -189,6 +201,26 @@ public class SetUpManagement extends AppCompatActivity {
 
             }
         });
+
+
+
+        SelectServer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+               String ServerUrlChoose=SelectServer.getSelectedItem().toString();
+                SharedPreferences preferences = getSharedPreferences(POS_Management, MODE_PRIVATE);
+                final SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("UrlServer",ServerUrlChoose);
+                Log.d("UrlServer",ServerUrlChoose);
+                editor.apply();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
