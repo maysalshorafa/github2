@@ -398,6 +398,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(ZReportDBAdapter.addColumnText("closeOpenReport"));
                     db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (12 , 'inventoryManagement');");
                     db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(13,2,12);");
+                    ClearSync clearSync3 = new ClearSync(context);
+                    clearSync3.execute(context);
 
                     break;
 
