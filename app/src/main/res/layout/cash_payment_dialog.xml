@@ -26,7 +26,7 @@
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@drawable/catalogproduct_item_bg"
-            android:inputType="numberDecimal"
+            android:inputType="number"
             android:textAlignment="center"
              />
 

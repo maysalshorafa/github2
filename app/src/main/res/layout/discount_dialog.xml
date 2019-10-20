@@ -85,7 +85,7 @@
             android:layout_margin="5dp"
             android:layout_weight=".5"
             android:background="@drawable/catalogproduct_item_bg"
-            android:inputType="numberSigned"
+            android:inputType="numberDecimal"
             android:textAlignment="center" />
 
 
