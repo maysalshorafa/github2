@@ -22,10 +22,8 @@
     <!--main-->
     <string name="open">פתח</string>
     <string name="close">סגור</string>
-    <string name="credit_card">אשראי</string>
     <string name="other_ways">אחר</string>
-    <string name="cash">מזומן</string>
-    <string name="_cash">מזומן</string>
+
 
     <string-array name="credit_card_type">
         <!--<item>רגיל</item>
@@ -81,7 +79,6 @@
     <string name="card_expiry">תאריך הכרטיס</string>
     <string name="check_number">מס\' צ\'ק</string>
     <string name="tax">מע\'\'מ</string>
-    <string name="checks">המחאות</string>
     <string name="general">כללי</string>
     <string name="extracting_files">הפקת קבצים</string>
     <string name="credit">זיכוי</string>

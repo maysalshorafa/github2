@@ -65,7 +65,7 @@ public class InventoryProductDetailsListViewAdapter extends ArrayAdapter impleme
         String currencyType="";
         ProductInventoryDbAdapter productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
         productInventoryDbAdapter.open();
-        holder.tvCount.setText(productList.get(position).getQty()+"");
+        holder.tvCount.setText(productList.get(position).getTempCount()+"");
         if (selected == position && selected != -1) {
             holder.llMethods.setVisibility(View.VISIBLE);
 

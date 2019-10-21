@@ -41,7 +41,7 @@ public class SplashScreenActivity extends Activity {
     private ZReport lastZReport = null;
     public static boolean  currencyEnable , creditCardEnable , pinpadEnable , customerMeasurementEnable ;
     public static int floatPoint , branchId;
-    public static String printerType ;
+    public static String printerType , serverUrl ;
     public static final String LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_VERSION = "LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_VERSION";
     public static final String LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_DB_VERSION = "LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_DB_VERSION";
     public static final String LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_FE_VERSION = "LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_FE_VERSION";
@@ -536,6 +536,15 @@ public class SplashScreenActivity extends Activity {
                 Intent i = new Intent(context, SetUpManagement.class);
                 context.startActivity(i);
             }
+            //SERVER
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL)) {
+                serverUrl = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL, SETTINGS.BO_SERVER_URL);
+                SETTINGS.BO_SERVER_URL = serverUrl;
+            } else {
+                Intent i = new Intent(context, SetUpManagement.class);
+                context.startActivity(i);
+            }
+
             //BranchId
             if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID)) {
                 branchId = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, "0"));

@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,11 +24,13 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
 import java.util.Random;
 
+import static com.pos.leaders.leaderspossystem.SetUpManagement.POS_Management;
 import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 
 /**
@@ -224,6 +227,16 @@ public class LogInActivity extends Activity implements View.OnClickListener {
 
                 SESSION._EMPLOYEE = new Employee(user);
                 Toast.makeText(getApplicationContext(), "Hello " + user.getFullName() + " !!", Toast.LENGTH_SHORT).show();
+
+                SharedPreferences cSharedPreferences = getApplicationContext().getSharedPreferences(POS_Management, MODE_PRIVATE);
+                final SharedPreferences.Editor editor = cSharedPreferences.edit();
+                if (cSharedPreferences != null) {
+                    //CreditCard
+                    if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL)) {
+                        SETTINGS.BO_SERVER_URL = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL,"");
+                    }
+                }
+
                 //open main screen
                 //// TODO: 01/06/2017 open dashboard screen
 

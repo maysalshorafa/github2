@@ -452,7 +452,7 @@ public class Util {
             ZReport zReport1 = zReportDBAdapter.getLastRow();
             ZReport zReport =zReportDBAdapter.getByID(zReport1.getzReportId()-1);
             if(zReport!=null) {
-                totalZReportAmount = zReport.getTotalPosSales() + amount;
+                totalZReportAmount = zReport.getTotalPosSales() + amount+lastZReport.getInvoiceAmount()+lastZReport.getCreditInvoiceAmount();
             }
         } catch (Exception e) {
             totalZReportAmount=amount;
@@ -460,8 +460,8 @@ public class Util {
         }
         //sales Amount
         lastZReport.setTotalAmount(amount);
-        lastZReport.setTotalSales(amount);
         lastZReport.setInvoiceReceiptAmount(amount);
+        lastZReport.setTotalSales(amount+lastZReport.getInvoiceAmount()+lastZReport.getCreditInvoiceAmount());
         lastZReport.setTotalPosSales(totalZReportAmount);
         lastZReport.setCloseOpenReport("close");
         zReportDBAdapter.updateEntry(lastZReport);

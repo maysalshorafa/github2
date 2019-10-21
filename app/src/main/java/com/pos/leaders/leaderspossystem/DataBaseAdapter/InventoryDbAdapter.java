@@ -14,6 +14,7 @@ import com.pos.leaders.leaderspossystem.Models.ProductInventory;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 
@@ -110,11 +111,14 @@ public class InventoryDbAdapter {
         val.put(INVENTORY_COLUMN_BRANCH_ID,inventory.getBranchId());
         val.put(INVENTORY_COLUMN_HIDE,inventory.getHide());
         HashMap<String,Integer> productHashMap=inventory.getProductsIdWithQuantityList();
-        for (int i=0;i<productHashMap.size();i++){
-            Map.Entry<String, Integer> entry = productHashMap.entrySet().iterator().next();
-            String key = entry.getKey();
-            Integer value = entry.getValue();
+        Iterator itr = productHashMap.entrySet().iterator();
+        while(itr.hasNext()){
+            Map.Entry entry = (Map.Entry) itr.next();
+            productInventoryDbAdapter.open();
+            String key = (String) entry.getKey();
+            Integer value = (Integer) entry.getValue();
            ProductInventory productInventory= productInventoryDbAdapter.getProductInventoryByID(Long.parseLong(key));
+            Log.d("pppppp",productInventory.toString());
             productInventoryDbAdapter.updateEntry(Long.parseLong(key),value);
             productInventoryDbAdapter.close();
         }

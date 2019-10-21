@@ -144,6 +144,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                     final JSONObject docDocument = invoice.getDocumentsData();
                     String reference=invoice.getDocNum();
                     final JSONArray cartDetailsList = docDocument.getJSONArray("cartDetailsList");
+                    Log.d("ttttt",cartDetailsList.toString());
                     for (int i=0;i<cartDetailsList.length();i++){
                         JSONObject cartDetailsObject =cartDetailsList.getJSONObject(i);
                         productSkuList.add(cartDetailsObject.getString("sku"));
@@ -163,7 +164,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
 
                             productList.add(product);
                         }else {
-                            Product product = productDBAdapter.getProductByBarCode(sku);
+                            Product product = productDBAdapter.getProductByID(Long.parseLong(pId));
                             if(cartDetailsObject.getDouble("discount")>0){
                                 if(docDocument.getDouble("cartDiscount")>0){
                                     product.setPrice((cartDetailsObject.getDouble("unitPrice"))*(100-(cartDetailsObject.getDouble("discount")+docDocument.getDouble("cartDiscount")))/100);

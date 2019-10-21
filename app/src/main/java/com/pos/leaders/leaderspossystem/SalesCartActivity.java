@@ -2660,8 +2660,9 @@ public class SalesCartActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
      if (extras != null) {
          if (extras.containsKey("orderJson")) {
-         if(!extras.getString("orderJson").equals("")){
+             if(!extras.getString("orderJson").equals("")){
              try {
+
                  orderDocumentFlag=true;
                  clearCart();
                  Log.d("orderJson",extras.getString("orderJson"));
@@ -2678,13 +2679,14 @@ public class SalesCartActivity extends AppCompatActivity {
                  Customer customer = customerDBAdapter.getCustomerByID(Long.parseLong(orderDocJsonObj.getJSONObject("documentsData").getJSONObject("customer").getString("customerId")));
                  order.setCustomer(customer);
                  SESSION._ORDERS=order;
+                 Log.d("iiitems",items.toString());
                  for (int i=0;i<items.length();i++){
                      Product p = null;
                      JSONObject orderDetailsJson =items.getJSONObject(i);
                      if(Long.parseLong(orderDetailsJson.getString("productId"))==-1){
                          p=new Product(Long.parseLong(String.valueOf(-1)),"General","General",orderDetailsJson.getDouble("unitPrice"),"0","0",Long.parseLong(String.valueOf(1)),Long.parseLong(String.valueOf(1)));
                      }else {
-                         p = productDBAdapter.getProductByBarCode(orderDetailsJson.getString("sku"));
+                         p = productDBAdapter.getProductByID(Long.parseLong(orderDetailsJson.getString("productId")));
                      }
                      OrderDetails orderDetails= new OrderDetails(orderDetailsJson.getInt("quantity"),orderDetailsJson.getDouble("userOffer"),p,orderDetailsJson.getDouble("amount"),orderDetailsJson.getDouble("unitPrice"),orderDetailsJson.getDouble("discount"));
                         SESSION._ORDER_DETAILES.add(orderDetails);
@@ -2694,10 +2696,12 @@ public class SalesCartActivity extends AppCompatActivity {
                  if (SESSION._ORDERS.getCustomer() != null)
                      setCustomer(SESSION._ORDERS.getCustomer());
                  refreshCart();
+                 getIntent().removeExtra("orderJson");
              } catch (JSONException e) {
                  e.printStackTrace();
              }
          }}
+
         /* else  if (extras.containsKey("FROM_ACTIVITY")) {
 
              if (!extras.get("FROM_ACTIVITY").equals("")) {
@@ -2708,7 +2712,7 @@ public class SalesCartActivity extends AppCompatActivity {
          }*/
      }else {
 
-      if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
+         if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
           Log.d("REQUEST_CURRENCY_RETURN_ACTIVITY_CODE",CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE+"");
             CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
          SESSION._Rest();
@@ -3932,7 +3936,7 @@ public class SalesCartActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Inventory in=null;
+       /* Inventory in=null;
         HashMap<String,Integer>productHashMap=new HashMap<String, Integer>();
         for(OrderDetails o :SESSION._ORDER_DETAILES){
             ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(o.getProduct().getProductId());
@@ -3950,7 +3954,7 @@ public class SalesCartActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         BoInventory inventory = new BoInventory(in.getName(),in.getInventoryId(),productHashMap,in.getBranchId(),in.getHide());
-        sendToBroker(MessageType.UPDATE_INVENTORY, inventory, this.context);
+        sendToBroker(MessageType.UPDATE_INVENTORY, inventory, this.context);*/
         if (Long.valueOf(SESSION._ORDERS.getCustomerId()) == 0) {
             if (SESSION._ORDERS.getCustomer_name() == null) {
 

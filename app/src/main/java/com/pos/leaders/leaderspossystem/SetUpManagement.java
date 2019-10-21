@@ -7,7 +7,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -42,10 +41,11 @@ public class SetUpManagement extends AppCompatActivity {
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT_2";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL= "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL";
 
     boolean currencyEnable, creditCardEnable,pinpadEnable, customerMeasurementEnable = false;
     int noOfPoint;
-    String printerType;
+    String printerType , serverUrl;
     ArrayAdapter<String> spinnerArrayAdapter;
     ArrayAdapter<Integer> floatPointSpinnerArrayAdapter;
     Integer floatPoint[];
@@ -96,6 +96,7 @@ public class SetUpManagement extends AppCompatActivity {
         printerTypeSpinner.setAdapter(spinnerArrayAdapter);
         floatPointSpinner.setAdapter(floatPointSpinnerArrayAdapter);
         ServerUrL.add(ServerUrl.BO_SERVER_URL.getItem());
+        ServerUrL.add(ServerUrl.BO_ALNAJAH_SERVER_URL.getItem());
         branch.add(getString(R.string.all));
         branch.add(getString(R.string.pos_branch));
         final ArrayAdapter<String> dataAdapterBranch = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, branch);
@@ -207,12 +208,7 @@ public class SetUpManagement extends AppCompatActivity {
         SelectServer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-               String ServerUrlChoose=SelectServer.getSelectedItem().toString();
-                SharedPreferences preferences = getSharedPreferences(POS_Management, MODE_PRIVATE);
-                final SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("UrlServer",ServerUrlChoose);
-                Log.d("UrlServer",ServerUrlChoose);
-                editor.apply();
+               serverUrl=SelectServer.getSelectedItem().toString();
             }
 
             @Override
@@ -234,6 +230,8 @@ public class SetUpManagement extends AppCompatActivity {
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, noOfPoint+"");
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, printerType);
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, branchId+"");
+                editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL, serverUrl);
+                SETTINGS.BO_SERVER_URL=serverUrl;
 
                 editor.apply();
 

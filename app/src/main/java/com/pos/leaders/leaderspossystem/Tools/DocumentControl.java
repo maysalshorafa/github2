@@ -160,6 +160,7 @@ public class DocumentControl {
 
                     //after async close progress dialog
                     progressDialog.dismiss();
+                    ((Activity)context).finish();
                 }
 
                 @Override

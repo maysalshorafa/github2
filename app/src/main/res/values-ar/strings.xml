@@ -19,8 +19,6 @@
     <string name="by_phone">بواسطة الهاتف</string>
     <string name="cancel">إلغاء</string>
     <string name="cant_do_this_function_discount">لا يمكنك منح هذا التخفيض</string>
-    <string name="cash">دفع نقدًا</string>
-    <string name="_cash">دفع نقدًا</string>
     <string name="cashier">امين الصندوق</string>
     <string name="change_password">تغير كلمة المرور</string>
     <string name="product">منتج</string>
@@ -45,7 +43,6 @@
     <string name="done">تم</string>
     <string name="amount">المبلغ</string>
     <string name="tax">ضريبة القيمة المضافة</string>
-    <string name="checks">شيكات</string>
     <string name="z_number">تقرير Z:</string>
     <string name="general">عام</string>
     <string name="extracting_files">استخراج الملفات</string>
@@ -75,7 +72,6 @@
     <string name="discount">خصم</string>
     <string name="resume">استعادة</string>
     <string name="pause">توقف</string>
-    <string name="credit_card">بطاقة الائتمان</string>
     <string name="count">العدد</string>
     <string name="search">بحث</string>
     <string name="create_new_product">منتج جديد</string>
@@ -654,6 +650,7 @@
     <string name="Deposit">ايداع</string>
     <string name="print_cancel_invoice">هل تريد الغاء الفاتور؟</string>
     <string name="this_Operation_just_for_master_employee">هذه العملية ليست من صلاحياتك</string>
+    <string name="SelectServer">اختر السيرفر</string>
 
 
 </resources>

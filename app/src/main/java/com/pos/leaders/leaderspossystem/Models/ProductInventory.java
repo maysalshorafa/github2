@@ -14,7 +14,7 @@ public class ProductInventory {
     private int branchId;
     private String name;
     private  double price;
-
+    private  int tempCount;
     public long getProductInventoryId() {
         return productInventoryId;
     }
@@ -87,6 +87,14 @@ public class ProductInventory {
         this.price = price;
     }
 
+    public int getTempCount() {
+        return tempCount;
+    }
+
+    public void setTempCount(int tempCount) {
+        this.tempCount = tempCount;
+    }
+
     public ProductInventory() {
     }
 
@@ -114,6 +122,7 @@ public class ProductInventory {
                 ", branchId=" + branchId +
                 ", name='" + name + '\'' +
                 ", price=" + price +
+                ", tempCount=" + tempCount +
                 '}';
     }
 }
