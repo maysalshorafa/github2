@@ -169,6 +169,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             OpiningReport aReport = getLastAReport();
             ZReport zReport = getLastZReport();
             OrderDBAdapter orderDBAdapter = new OrderDBAdapter(getApplicationContext());
+            orderDBAdapter.open();
             Order order = orderDBAdapter.getLast();
            ClosingReport closingReport = getLastClosingReport();
             if(closingReport.getOpiningReportId()==aReport.getOpiningReportId()&&aReport.getLastZReportID()==zReport.getzReportId()){
