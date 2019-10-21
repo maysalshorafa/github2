@@ -37,6 +37,7 @@ import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
@@ -61,6 +62,7 @@ import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Settings.SettingsActivity;
 import com.pos.leaders.leaderspossystem.SettingsTab.SettingsTab;
+import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -164,6 +166,39 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         if(DbHelper.DATABASE_ENABEL_ALTER_COLUMN){
             Log.d("pooos",SESSION.POS_ID_NUMBER+"");
             zReportDBAdapter.upDatePosSalesV4();
+            OpiningReport aReport = getLastAReport();
+            ZReport zReport = getLastZReport();
+            OrderDBAdapter orderDBAdapter = new OrderDBAdapter(getApplicationContext());
+            Order order = orderDBAdapter.getLast();
+           ClosingReport closingReport = getLastClosingReport();
+            if(closingReport.getOpiningReportId()==aReport.getOpiningReportId()&&aReport.getLastZReportID()==zReport.getzReportId()){
+                //insertZReport
+                ZReport z = new ZReport();
+                z.setCreatedAt( new Timestamp(System.currentTimeMillis()));
+                z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
+                z.setStartOrderId(zReport.getEndOrderId()+1);
+                Util.tempinsertZReport(z,getApplicationContext());
+            }else if(closingReport.getOpiningReportId()!=aReport.getOpiningReportId()&&aReport.getLastZReportID()==zReport.getzReportId()){
+                //insertZ and closing
+                //insertZReport
+                ZReport z = new ZReport();
+                z.setCreatedAt( new Timestamp(System.currentTimeMillis()));
+                z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
+                z.setStartOrderId(zReport.getEndOrderId()+1);
+               ZReport zReport1 = Util.tempinsertZReport(z,getApplicationContext());
+                ClosingReportDBAdapter closingReportDBAdapter= new ClosingReportDBAdapter(getApplicationContext());
+                closingReportDBAdapter.open();
+               long i =closingReportDBAdapter.insertEntry(0,0,0,new Timestamp(System.currentTimeMillis()),aReport.getOpiningReportId(),order.getOrderId(), SESSION._EMPLOYEE.getEmployeeId());
+                ClosingReportDetailsDBAdapter closingReportDetailsDBAdapter = new ClosingReportDetailsDBAdapter(getApplicationContext());
+                closingReportDetailsDBAdapter.open();
+                if(zReport1.getCheckTotal()>0) {
+                    closingReportDetailsDBAdapter.insertEntry(i, 0, zReport1.getCheckTotal(), 0 - zReport1.getCheckTotal(), CONSTANT.CHECKS, "Shekel");
+                }else if(zReport1.getCreditTotal()>0) {
+                    closingReportDetailsDBAdapter.insertEntry(i, 0, zReport1.getCreditTotal(), 0 - zReport1.getCreditTotal(), CONSTANT.CREDIT_CARD, "Shekel");
+                }
+                closingReportDetailsDBAdapter.insertEntry(i,0,zReport1.getShekelAmount(),0-zReport1.getShekelAmount(),CONSTANT.CASH,"Shekel");
+            }
+
             Util.addPosSetting(DashBord.this);
 
             DbHelper.DATABASE_ENABEL_ALTER_COLUMN=false;
@@ -789,7 +824,21 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         aReportDBAdapter.close();
         return aReport;
     }
+    private ClosingReport getLastClosingReport() {
+        ClosingReportDBAdapter closingReportDBAdapter = new ClosingReportDBAdapter(this);
+        closingReportDBAdapter.open();
+        ClosingReport closingReport = null;
 
+        try {
+            closingReport = closingReportDBAdapter.getLastRow();
+
+        } catch (Exception e) {
+            Log.w("A Report ", e.getMessage());
+        }
+
+        closingReportDBAdapter.close();
+        return closingReport;
+    }
     private void ShowAReportDialog(final OpiningReport aReport) {
 
         //there is no customerName report after z report
