@@ -174,7 +174,11 @@ public class PdfUA {
         //end :)
     }
     public static void createZReport(Context context, ZReport zReport, ZReportCount zReportCount, boolean source) throws IOException, DocumentException {
-        getCountForZReport(context,zReport);
+        if(zReportCount!=null) {
+            getCountForZReport(context, zReport);
+        }else {
+            zReportCount=new ZReportCount();
+        }
         Document document = new Document();
         String fileName = "zreport.pdf";
         final String APPLICATION_PACKAGE_NAME = context.getPackageName();

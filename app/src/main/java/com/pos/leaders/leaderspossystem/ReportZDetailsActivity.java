@@ -249,9 +249,10 @@ public class ReportZDetailsActivity extends Activity {
             ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(ReportZDetailsActivity.this);
             zReportCountDbAdapter.open();
             final ZReportCount zReportCount = zReportCountDbAdapter.getByID(zReport.getzReportId());
-            Log.d("testZreportCountfffff",zReportCount.toString());
-            getCountForZReport(ReportZDetailsActivity.this,zReport);
-
+            if(zReportCount!=null) {
+                Log.d("testZreportCountfffff", zReportCount.toString());
+                getCountForZReport(ReportZDetailsActivity.this, zReport);
+            }
             try {
                 invoiceReceiptCountText.setText(zReportCount.getInvoiceReceiptCount()+"");
                 zReportTotalInvoiceReceipt.setText(Util.makePrice(zReport.getInvoiceReceiptAmount()));
