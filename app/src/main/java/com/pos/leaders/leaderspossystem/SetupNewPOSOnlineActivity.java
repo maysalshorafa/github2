@@ -331,6 +331,10 @@ class StartConnection extends AsyncTask<String,Void,String> {
                 inventoryDbAdapter.close();
 
                 if (i>= 1) {
+                    SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(SetupNewPOSOnlineActivity.context);
+                    settingsDBAdapter.open();
+                    settingsDBAdapter.updateEntry( SETTINGS.companyID,SETTINGS.companyName,  SETTINGS.posID, (float) SETTINGS.tax, SETTINGS.returnNote,SETTINGS.endOfInvoice,SETTINGS.ccNumber,SETTINGS.ccPassword,
+                            respnse.getInt("branchId"));
                     SharedPreferences cSharedPreferences = SetupNewPOSOnlineActivity.context.getSharedPreferences("POS_Management", MODE_PRIVATE);
                     boolean creditCardEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD, false);
                     boolean pinPadEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD, false);
