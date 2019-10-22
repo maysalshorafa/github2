@@ -48,7 +48,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     private static Employee DEFAULT_USER = null;
 
     private SQLiteDatabase db;
-
+    public boolean branchIdProblem=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,6 +187,11 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     }
 
     private void login() {
+        if(!branchIdProblem){
+            branchIdProblem=true;
+            //get branchId from inventory
+            Util.getInventoryForBranchId(getApplicationContext());
+        }
         sendLogFile();
         MakeDefaultUser();
         String str = et.getText().toString();
