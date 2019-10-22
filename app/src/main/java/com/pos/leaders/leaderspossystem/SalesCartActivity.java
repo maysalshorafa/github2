@@ -603,6 +603,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 final OrderDBAdapter orderDBAdapter =new OrderDBAdapter(context);
                 orderDBAdapter.open();
                 final Order lastOrder=orderDBAdapter.getLast();
+                if(lastOrder!=null){
                 ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(SalesCartActivity.this);
                 checksDBAdapter.open();
                 final ArrayList<Check>checks=new ArrayList<Check>();
@@ -963,6 +964,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
 
     }
+            }
         });
         //endregion
 
