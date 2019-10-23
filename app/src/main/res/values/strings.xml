@@ -130,7 +130,7 @@
     <!--Main Activity-->
     <string name="open">Open</string>
     <string name="close">Close</string>
-    <string name="credit_card">Credit Card</string>
+    <string name="credit_card">credit_card</string>
     <string name="other_ways">Other Ways</string>
     <string name="cash">Cash</string>
     <string name="done">Done</string>
@@ -417,7 +417,7 @@
 
     <string name="create_report">Create Report</string>
     <string name="title_activity_notify_service">NotifyService</string>
-    <string name="credit">Credit</string>
+    <string name="credit">-</string>
     <string name="confirmation">Confirmation</string>
 
     <string name="search">Search</string>

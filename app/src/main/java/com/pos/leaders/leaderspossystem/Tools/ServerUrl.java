@@ -6,7 +6,7 @@ package com.pos.leaders.leaderspossystem.Tools;
 
 public enum ServerUrl {
     BO_SERVER_URL("http://apiv4.leadpos.net/"),
-    BO_ALNAJAH_SERVER_URL("http://wbapiv4.leadpos.net/");
+    BO_ALNAJAH_SERVER_URL("http://wbapiv4.leadpos.net/"),BO_LOCAL_SERVER_URL("http://10.0.0.23:8000/");
 
     private final String url;
 

@@ -117,7 +117,6 @@ import com.pos.leaders.leaderspossystem.Offers.OfferController;
 import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
 import com.pos.leaders.leaderspossystem.Payment.PaymentTable;
 import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
-import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.PrinterTools;
@@ -156,7 +155,6 @@ import java.io.RandomAccessFile;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -3516,11 +3514,11 @@ public class SalesCartActivity extends AppCompatActivity {
         }
     */
     private void printAndOpenCashBoxBTP880(final String mainAns, final String mainMer, final String mainCli) {
-        final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(SalesCartActivity.this);
+        final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
 
-        final ProgressDialog dialog = new ProgressDialog(SalesCartActivity.this);
-        dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
+        final ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
 
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -3540,60 +3538,40 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 posInterfaceAPI.CloseDevice();
                 dialog.cancel();
-                clearCart();
+
             }
 
             @Override
             protected Void doInBackground(Void... params) {
-                InvoiceImg invoiceImg = new InvoiceImg(SalesCartActivity.this);
-                if (mainAns.equals("PINPAD")) {
-                    HashMap<String, String> clientNote = new HashMap<String, String>();
-                    HashMap<String, String> sellerNote = new HashMap<String, String>();
+                PdfUA pdfUA = new PdfUA();
 
-                    JSONObject jsonObject = null;
-                    try {
-                        jsonObject = new JSONObject(mainMer);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    Iterator<String> itr = null;
-                    try {
-                        itr = jsonObject.getJSONObject("receipt").keys();
+                try {
+                    pdfUA.createNormalInvoice(context,SESSION._ORDER_DETAILES,SESSION._ORDERS,false,mainMer);
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try
+                {
+                    File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                    File file = new File(path,"normalInvoice.pdf");
+                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                    byte[] data = new byte[(int)f.length()];
+                    f.readFully(data);
+                    Log.d("bitmapsize",context.toString()+"");
 
-                        while (itr.hasNext()) {
-                            String key = itr.next();
-                            if (printedRows.contains(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"))) {
-                                if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("BOTH")) {
-                                    clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                    sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("CLIENT")) {
-                                    clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("SELLER")) {
-                                    sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                }
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    Bitmap seller = invoiceImg.pinPadInvoice(SESSION._ORDERS, false, sellerNote);
-                    pos.imageStandardModeRasterPrint(seller, CONSTANT.PRINTER_PAGE_WIDTH);
-                    pos.systemFeedLine(2);
-                    pos.systemCutPaper(66, 0);
-                    Bitmap client = invoiceImg.pinPadInvoice(SESSION._ORDERS, false, clientNote);
-                    pos.imageStandardModeRasterPrint(client, CONSTANT.PRINTER_PAGE_WIDTH);
+                    PrinterTools.pdfLoadImages(data,context);
+                }
+                catch(Exception ignored)
+                {
 
                 }
-                /**else if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
-                    pos.imageStandardModeRasterPrint(invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainMer), CONSTANT.PRINTER_PAGE_WIDTH);
-                    pos.systemFeedLine(2);
-                    pos.systemCutPaper(66, 0);
-                    pos.imageStandardModeRasterPrint(invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainCli), CONSTANT.PRINTER_PAGE_WIDTH);
-                } */else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                    pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER), CONSTANT.PRINTER_PAGE_WIDTH);
-                }   else  {
-                    pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null), CONSTANT.PRINTER_PAGE_WIDTH);
-                }
+                InvoiceImg invoiceImg = new InvoiceImg(context);
+                Log.d("payyyyy",SESSION._ORDERS.getPayment().toString());
+
+                //  pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null), CONSTANT.PRINTER_PAGE_WIDTH);
+
                 return null;
             }
         }.execute();
@@ -3602,249 +3580,116 @@ public class SalesCartActivity extends AppCompatActivity {
     private static HPRTPrinterHelper HPRTPrinter = new HPRTPrinterHelper();
 
     private void printAndOpenCashBoxHPRT_TP805(final String mainAns, final String mainMer, final String mainCli) {
-        if (HPRT_TP805.connect(this)) {
-            final ProgressDialog dialog = new ProgressDialog(SalesCartActivity.this);
-            dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
+        final ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
 
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected void onPreExecute() {
-                    dialog.show();
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                dialog.show();
 
-                }
+            }
 
-                @Override
-                protected void onPostExecute(Void aVoid) {
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                try {
+                    HPRTPrinterHelper.OpenCashdrawer(0);
+                } catch (Exception e) {
+                    e.printStackTrace();
                     try {
-                        HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        HPRTPrinterHelper.OpenCashdrawer(0);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        HPRTPrinterHelper.OpenCashdrawer(1);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
                         try {
-                            HPRTPrinterHelper.OpenCashdrawer(1);
-                        } catch (Exception e1) {
-                            e1.printStackTrace();
-                            try {
-                                HPRTPrinterHelper.OpenCashdrawer(2);
-                            } catch (Exception e2) {
-                                e2.printStackTrace();
-                            }
+                            HPRTPrinterHelper.OpenCashdrawer(2);
+                        } catch (Exception e2) {
+                            e2.printStackTrace();
                         }
                     }
-
-                    dialog.cancel();
-                    clearCart();
                 }
 
-                @Override
-                protected Void doInBackground(Void... params) {
-                    byte b = 0;
-                    PdfUA pdfUA = new PdfUA();
 
-                    try {
-                        pdfUA.createNormalInvoice(SalesCartActivity.this,SESSION._ORDER_DETAILES,SESSION._ORDERS,false,mainMer);
-                    } catch (DocumentException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try
-                    {
-                        File path = new File( Environment.getExternalStorageDirectory(), getApplicationContext().getPackageName());
-                        File file = new File(path,"normalInvoice.pdf");
-                        RandomAccessFile f = new RandomAccessFile(file, "r");
-                        byte[] data = new byte[(int)f.length()];
-                        f.readFully(data);
-                        pdfLoadImages(data);
-                        Log.d("bitmapsize",bitmapList.size()+"");
+                dialog.cancel();
 
-                        HPRTPrinterHelper.PrintBitmap(newBitmap, b, b, 300);
-                    }
-                    catch(Exception ignored)
-                    {
+            }
 
-                    }
-                    /*
-                    InvoiceImg invoiceImg = new InvoiceImg(SalesCartActivity.this);
-                    byte b = 0;
-                    try {
-                        if (mainAns.equals("PINPAD")) {
-                            HashMap<String, String> clientNote = new HashMap<String, String>();
-                            HashMap<String, String> sellerNote = new HashMap<String, String>();
+            @Override
+            protected Void doInBackground(Void... params) {
 
-                            JSONObject jsonObject = new JSONObject(mainMer);
-                            Iterator<String> itr = null;
-                            try {
-                                itr = jsonObject.getJSONObject("receipt").keys();
+                PdfUA pdfUA = new PdfUA();
 
-                                while (itr.hasNext()) {
-                                    String key = itr.next();
-                                    if (printedRows.contains(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"))) {
-                                        if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("BOTH")) {
-                                            clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                            sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                        } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("CLIENT")) {
-                                            clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                        } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("SELLER")) {
-                                            sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                        }
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                try {
+                    Log.d("teeesdr",SESSION._ORDER_DETAILES.toString()+"");
 
-                            Bitmap seller = invoiceImg.pinPadInvoice(SESSION._ORDERS, false, sellerNote);
-
-                            HPRTPrinterHelper.PrintBitmap(seller, b, b, 300);
-                            try {
-                                HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            Bitmap client = invoiceImg.pinPadInvoice(SESSION._ORDERS, false, clientNote);
-                            HPRTPrinterHelper.PrintBitmap(client, b, b, 300);
-
-
-                        } /*else if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
-                            Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainMer);
-
-                            HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
-
-                            try {
-                                HPRTPrinterHelper.CutPaper(HPRTPrinterHelper.HPRT_PARTIAL_CUT_FEED, 240);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainCli);
-                            HPRTPrinterHelper.PrintBitmap(bitmap2, b, b, 300);
-                        } else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER);
-                            HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
-                        }  else {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null);
-                            HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }*/
-                    return null;
+                    pdfUA.createNormalInvoice(context,SESSION._ORDER_DETAILES,SESSION._ORDERS,false,mainMer);
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            }.execute();
-        } else {
-            new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
-                    .setTitle(getString(R.string.printer))
-                    .setMessage(getString(R.string.please_connect_the_printer))
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-            //Toast.makeText(this, "Please connect the printer", Toast.LENGTH_SHORT).show();
-        }
+                try
+                {
+                    File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                    File file = new File(path,"normalInvoice.pdf");
+                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                    byte[] data = new byte[(int)f.length()];
+                    f.readFully(data);
+                    Log.d("bitmapsize",context.toString()+"");
+
+                    PrinterTools.pdfLoadImages(data,context);
+
+                }
+                catch(Exception ignored)
+                {
+
+                }
+
+                return null;
+            }
+        }.execute();
     }
 
     private void printAndOpenCashBoxSUNMI_T1(String mainAns, final String mainMer, final String mainCli) {
         //AidlUtil.getInstance().connectPrinterService(this);
         if (AidlUtil.getInstance().isConnect()) {
-            final ProgressDialog dialog = new ProgressDialog(SalesCartActivity.this);
-            dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
+            final ProgressDialog dialog = new ProgressDialog(context);
+            dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
 
             dialog.show();
-            InvoiceImg invoiceImg = new InvoiceImg(SalesCartActivity.this);
-            byte b = 0;
-            try {
-                if (mainAns.equals("PINPAD")) {
-                    HashMap<String, String> clientNote = new HashMap<String, String>();
-                    HashMap<String, String> sellerNote = new HashMap<String, String>();
-
-                    JSONObject jsonObject = new JSONObject(mainMer);
-                    Iterator<String> itr = null;
-                    try {
-                        itr = jsonObject.getJSONObject("receipt").keys();
-
-                        while (itr.hasNext()) {
-                            String key = itr.next();
-                            if (printedRows.contains(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"))) {
-                                if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("BOTH")) {
-                                    clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                    sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("CLIENT")) {
-                                    clientNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                } else if (jsonObject.getJSONObject("receipt").getJSONObject(key).getString("category").equals("SELLER")) {
-                                    sellerNote.put(jsonObject.getJSONObject("receipt").getJSONObject(key).getString("name"), jsonObject.getJSONObject("receipt").getJSONObject(key).getString("value"));
-                                }
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    Bitmap seller = invoiceImg.pinPadInvoice(SESSION._ORDERS, false, sellerNote);
-                    AidlUtil.getInstance().printBitmap(seller);
-
-                    //Thread.sleep(100);
-
-                    AidlUtil.getInstance().feed();
-                    AidlUtil.getInstance().cut();
-
-
-                    Bitmap client = invoiceImg.pinPadInvoice(SESSION._ORDERS, false, clientNote);
-                    AidlUtil.getInstance().printBitmap(client);
-
-                }/* else if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
-                    Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainMer);
-
-                    AidlUtil.getInstance().printBitmap(bitmap);
-
-                    //Thread.sleep(100);
-
-                    AidlUtil.getInstance().feed();
-                    AidlUtil.getInstance().cut();
-                    //Thread.sleep(100);
-
-                    Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainCli);
-                    AidlUtil.getInstance().printBitmap(bitmap2);
-                    //Thread.sleep(100);
-                }*/ else if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                    Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER);
-                    AidlUtil.getInstance().printBitmap(bitmap);
-                } else  {
-                    Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null);
-                    AidlUtil.getInstance().printBitmap(bitmap);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                //cut
-                AidlUtil.getInstance().print3Line();
-                AidlUtil.getInstance().cut();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            PdfUA pdfUA = new PdfUA();
 
             try {
-                AidlUtil.getInstance().openCashBox();
-            } catch (Exception e) {
+                pdfUA.createNormalInvoice(context,SESSION._ORDER_DETAILES,SESSION._ORDERS,false,mainMer);
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
+            try
+            {
+                File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                File file = new File(path,"normalInvoice.pdf");
+                RandomAccessFile f = new RandomAccessFile(file, "r");
+                byte[] data = new byte[(int)f.length()];
+                f.readFully(data);
+                Log.d("bitmapsize",context.toString()+"");
+
+                PrinterTools.pdfLoadImages(data,context);
+            }
+            catch(Exception ignored)
+            {
+
+            }
+
 
             dialog.cancel();
-            clearCart();
         } else {
-            new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
-                    .setTitle(getString(R.string.printer))
-                    .setMessage(getString(R.string.please_connect_the_printer))
+            new android.support.v7.app.AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                    .setTitle(context.getString(R.string.printer))
+                    .setMessage(context.getString(R.string.please_connect_the_printer))
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            finish();
+                            // finish();
                         }
                     })
                     .setIcon(android.R.drawable.ic_dialog_alert)
@@ -3866,8 +3711,8 @@ public class SalesCartActivity extends AppCompatActivity {
 
     private void printAndOpenCashBoxSM_S230I(String mainAns, final String mainMer, final String mainCli) {
         if (true) {
-            final ProgressDialog dialog = new ProgressDialog(SalesCartActivity.this);
-            dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish_printing));
+            final ProgressDialog dialog = new ProgressDialog(context);
+            dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
 
             new AsyncTask<Void, Void, Void>() {
                 @Override
@@ -3880,28 +3725,40 @@ public class SalesCartActivity extends AppCompatActivity {
                     //feed paper
 
                     dialog.cancel();
-                    clearCart();
                 }
 
                 @Override
                 protected Void doInBackground(Void... params) {
-                    InvoiceImg invoiceImg = new InvoiceImg(SalesCartActivity.this);
+                    InvoiceImg invoiceImg = new InvoiceImg(context);
                     byte b = 0;
                     try {
                         //// TODO: 13/06/2018 adding pinpad support
-                     /*   if (SESSION._ORDERS.getPayment().getPaymentWay().equals(CREDIT_CARD)) {
-                            Bitmap bitmap = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainMer);
-                            printSMS230(bitmap);
-                            //cut
-                            Bitmap bitmap2 = invoiceImg.creditCardInvoice(SESSION._ORDERS, false, mainCli);
-                            printSMS230(bitmap2);
-                        } else */if (SESSION._CHECKS_HOLDER != null && SESSION._CHECKS_HOLDER.size() > 0) {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER);
-                            printSMS230(bitmap);
-                        } else {
-                            Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null);
-                            printSMS230(bitmap);
+                        PdfUA pdfUA = new PdfUA();
+
+                        try {
+                            pdfUA.createNormalInvoice(context,SESSION._ORDER_DETAILES,SESSION._ORDERS,false,mainMer);
+                        } catch (DocumentException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
+                        try
+                        {
+                            File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                            File file = new File(path,"normalInvoice.pdf");
+                            RandomAccessFile f = new RandomAccessFile(file, "r");
+                            byte[] data = new byte[(int)f.length()];
+                            f.readFully(data);
+                            Log.d("bitmapsize",context.toString()+"");
+
+                            PrinterTools.pdfLoadImages(data,context);
+                        }
+                        catch(Exception ignored)
+                        {
+
+                        }
+                        Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -4864,18 +4721,21 @@ public class SalesCartActivity extends AppCompatActivity {
 
                     }else {
                         if(!trueCreditCard) {
-                            currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1,"","","");
+                            Log.d("teeesdr",trueCreditCard+"");
+                          printAndOpenCashBox("", "", "", 0);
+
+                          //  currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1,"","","");
                         }
                         else {
-                            currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1,CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY,
-                                    data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote),
-                                    data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
+                           printAndOpenCashBox(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY,  data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote)
+                                    , data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote),0);
+
 
 
                         }
                     }
 
-                    currencyReturnsCustomDialogActivity.show();
+                 //   currencyReturnsCustomDialogActivity.show();
                     Log.d("finelTestSalsCart",zReport.toString());
 
                     SESSION._Rest();

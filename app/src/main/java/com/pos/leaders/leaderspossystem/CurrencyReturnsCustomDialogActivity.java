@@ -42,9 +42,9 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
     private double excess = 0;
     Currency rCurrency;
     private Order sale;
-    private  String firstCredit="";
-    private String secondCredit="" ;
-    private String thirdCredit="";
+    public static String firstCredit="";
+    public static String secondCredit="" ;
+    public static String thirdCredit="";
     public static boolean REQUEST_CURRENCY_RETURN_ACTIVITY_CODE = true;
 
 
@@ -115,7 +115,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
                     }
                     REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=true;
                     currencyReturnsDBAdapter.close();
-                    if (firstCredit != "" && secondCredit != "" && thirdCredit != "") {
+                    if (secondCredit != "" ) {
                         PrinterTools.printAndOpenCashBox(firstCredit, secondCredit,thirdCredit, 600,getContext(),c);
 
                     }else {

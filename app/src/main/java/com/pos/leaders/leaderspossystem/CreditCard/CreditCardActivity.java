@@ -384,11 +384,13 @@ public class CreditCardActivity extends AppCompatActivity {
 
     public void returnTo(SoapObject soap) {
         if (soap != null) {
+            Log.d("teeestAnswer",soap.getProperty("Answer").toString());
             Intent i = new Intent();
             i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
             i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY, soap.getProperty("Answer").toString());
             i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote, soap.getProperty("MerchantNote").toString());
             i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote, soap.getProperty("ClientNote").toString());
+
             setResult(RESULT_OK, i);
             finish();
         }

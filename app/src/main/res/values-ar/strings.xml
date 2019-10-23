@@ -93,7 +93,7 @@
     <string name="z_report">Z تقرير</string>
     <string name="log_in">تسجيل الدخول</string>
     <string name="confirmation">تأكيد</string>
-    <string name="credit">ائتمان</string>
+    <string name="credit">-</string>
     <string name="save">حفظ</string>
     <string name="_continue">استمر</string>
     <string name="document">المستندات</string>
@@ -607,7 +607,7 @@
     <string name="serial_no">الرقم التسلسلي</string>
     <string name="inventory_price">سعر الشراء الاخير</string>
     <string name="success_adding_new_provider">تم اضافة مزود بنجاح .</string>
-    <string name="add_deposit_report">اضافة على الصندوق</string>
+    <string name="add_deposit_report">اضافه على الصندوق</string>
     <string name="add_new_provider">اضافة مزود جديد</string>
     <string name="add_pull_report">سحب من الصندوق</string>
     <string name="can_not_add_provider_please_try_again">لم يتم اضافة مزود يرجى المحاولة مرة اخرى</string>
@@ -617,7 +617,7 @@
     <string name="create_offer_category_activity">انشاء اقسام العروض</string>
     <string name="create_order_document">انشاء طلبية شراء</string>
     <string name="deposit_and_pull_reportView">عرض تقرير سحب وايداع من الصندوق</string>
-    <string name="deposit_report">تقرير السحب</string>
+    <string name="deposit_report">تقرير الاضافه</string>
     <string name="in_inventory_doc">وثيقة ادخال للمخزن</string>
     <string name="inventory_doc">تقرير المخزن</string>
     <string name="inventory_in">ادخال الى المخزن</string>
@@ -640,7 +640,7 @@
     <string name="pull_report">تقرير السحب</string>
     <string name="success_edit_provider">تم تعديل المعلومات بنجاح</string>
     <string name="title_credit_card_activity">Credit Card Activity</string>
-    <string name="view_deposit_report">عرض تقرير السحب</string>
+    <string name="view_deposit_report">عرض تقرير الاضافه</string>
     <string name="view_order_document">عرض طلبيات البيع</string>
     <string name="view_provider">عرض معلومات المزود</string>
     <string name="view_pull_report">عرض تقرير السحب</string>

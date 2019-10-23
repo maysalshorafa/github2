@@ -141,11 +141,6 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
 
         TitleBar.setTitleBar(this);
-        if(!LogInActivity.branchIdProblem){
-            LogInActivity.branchIdProblem=true;
-            //get branchId from inventory
-            Util.getInventoryForBranchId(DashBord.this);
-        }
         //run MSR Service
         Intent intent = new Intent();
         intent.setPackage("com.sunmi.mscardservice");

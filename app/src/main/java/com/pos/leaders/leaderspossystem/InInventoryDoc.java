@@ -677,7 +677,7 @@ public class InInventoryDoc extends AppCompatActivity {
                             RandomAccessFile f = new RandomAccessFile(file, "r");
                             byte[] data = new byte[(int) f.length()];
                             f.readFully(data);
-                            DocumentControl.pdfLoadImagesOpiningReport(data, context);
+                            DocumentControl.pdfLoadImagesInventoryReport(data, context);
                             finalListViewProduct=new ArrayList<ProductInventory>();
                             adapter1= new InventoryProductDetailsListViewAdapter(getApplicationContext(),R.layout.list_adapter_row_nventory_product_details,finalListViewProduct);
                             finalProductListView.setAdapter(adapter1);
