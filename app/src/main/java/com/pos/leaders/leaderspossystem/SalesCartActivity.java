@@ -4721,21 +4721,18 @@ public class SalesCartActivity extends AppCompatActivity {
 
                     }else {
                         if(!trueCreditCard) {
-                            Log.d("teeesdr",trueCreditCard+"");
-                          printAndOpenCashBox("", "", "", 0);
-
-                          //  currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1,"","","");
+                           currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1,"","","");
                         }
                         else {
-                           printAndOpenCashBox(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY,  data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote)
-                                    , data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote),0);
-
+                            currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1,CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY,
+                                    data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote),
+                                    data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
 
 
                         }
                     }
 
-                 //   currencyReturnsCustomDialogActivity.show();
+                currencyReturnsCustomDialogActivity.show();
                     Log.d("finelTestSalsCart",zReport.toString());
 
                     SESSION._Rest();
