@@ -595,11 +595,13 @@ public class ProductsActivity  extends AppCompatActivity  {
                         editableProduct.setWeight(weight);
                     }
                     try {
+                        productDBAdapter.open();
                         productDBAdapter.updateEntry(editableProduct);
                         Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.success_to_update_product), Toast.LENGTH_SHORT);
                         onBackPressed();
                         return true;
                     } catch (Exception ex) {
+                        ex.printStackTrace();
                         Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.error_to_update_product), Toast.LENGTH_SHORT);
                     }
                 }

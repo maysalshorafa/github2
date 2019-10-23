@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductStatus;
 import com.pos.leaders.leaderspossystem.Models.ProductUnit;
@@ -27,7 +28,7 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 
 public class ProductDBAdapter {
 
-      //Table name
+    //Table name
     public static final String PRODUCTS_TABLE_NAME = "products";
     //column names
     protected static final String PRODUCTS_COLUMN_ID = "id";
@@ -130,11 +131,11 @@ public class ProductDBAdapter {
 
     public long insertEntry(Product p) {
         Product product = getProductByBarCode(p.getSku());
-            if (p.getStockQuantity() > 0) {
-                p.setStatus(ProductStatus.ACTIVE);
-            } else if (p.getStockQuantity() == 0) {
-                p.setStatus(ProductStatus.OUT_OF_STOCKS);
-            }
+        if (p.getStockQuantity() > 0) {
+            p.setStatus(ProductStatus.ACTIVE);
+        } else if (p.getStockQuantity() == 0) {
+            p.setStatus(ProductStatus.OUT_OF_STOCKS);
+        }
 
 
         if (product != null) {
@@ -215,15 +216,15 @@ public class ProductDBAdapter {
         Product product = null;
         try {
             open();
-        Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where id='" + id + "'", null);
-        if (cursor.getCount() < 1) // UserName Not Exist
-        {
+            Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where id='" + id + "'", null);
+            if (cursor.getCount() < 1) // UserName Not Exist
+            {
+                cursor.close();
+                return product;
+            }
+            cursor.moveToFirst();
+            product = makeProduct(cursor);
             cursor.close();
-            return product;
-        }
-        cursor.moveToFirst();
-        product = makeProduct(cursor);
-        cursor.close();
             close();
 
         } catch (Exception e) {
@@ -250,20 +251,20 @@ public class ProductDBAdapter {
         Product product = null;
         try {
             open();
-        Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where barcode='" + barcode + "' or sku='" + barcode + "'", null);
-        if (cursor.getCount() < 1) // UserName Not Exist
-        {
+            Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where barcode='" + barcode + "' or sku='" + barcode + "'", null);
+            if (cursor.getCount() < 1) // UserName Not Exist
+            {
+                cursor.close();
+                return product;
+            }
+            cursor.moveToFirst();
+            product = makeProduct(cursor);
             cursor.close();
-            return product;
+            close();
+
+        } catch (Exception e) {
+
         }
-        cursor.moveToFirst();
-        product = makeProduct(cursor);
-        cursor.close();
-        close();
-
-    } catch (Exception e) {
-
-    }
         return product;
     }
 
@@ -281,7 +282,7 @@ public class ProductDBAdapter {
         try {
             db.update(PRODUCTS_TABLE_NAME, updatedValues, where, new String[]{id + ""});
             //delete all offers for this product
-          //  new OfferDBAdapter(context).deleteEntryByResourceId(id);
+            //  new OfferDBAdapter(context).deleteEntryByResourceId(id);
             Product product=productDBAdapter.getProductByID(id);
             sendToBroker(MessageType.DELETE_PRODUCT, product, this.context);
             return 1;
@@ -300,7 +301,7 @@ public class ProductDBAdapter {
         try {
             db.update(PRODUCTS_TABLE_NAME, updatedValues, where, new String[]{product.getProductId() + ""});
             //delete all offers for this product
-           // new OfferDBAdapter(context).deleteEntryByResourceId(product.getProductId());
+            // new OfferDBAdapter(context).deleteEntryByResourceId(product.getProductId());
             return 1;
         } catch (SQLException ex) {
             Log.e("Product deleteEntry", "enable hide Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
@@ -386,23 +387,33 @@ public class ProductDBAdapter {
     }
 
     public List<Product> getAllProducts(){
+        CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(context);
         List<Product> productsList =new ArrayList<Product>();
         try {
             open();
-        Cursor cursor=null;
-        if(SETTINGS.enableAllBranch) {
-             cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
-        }else {
-            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
+            Cursor cursor=null;
+            if(SETTINGS.enableAllBranch) {
+                cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
+            }else {
+                cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
 
-        }
-        cursor.moveToFirst();
+            }
+            cursor.moveToFirst();
 
 
-        while(!cursor.isAfterLast()){
-            productsList.add(makeProduct(cursor));
-            cursor.moveToNext();
-        }
+            while(!cursor.isAfterLast()){
+                Product product = makeProduct(cursor);
+                categoryDBAdapter.open();
+                Category category =categoryDBAdapter.getDepartmentByID(product.getCategoryId());
+                if(category!=null) {
+                    productsList.add(makeProduct(cursor));
+                    cursor.moveToNext();
+
+                }else {
+                    cursor.moveToNext();
+
+                }
+            }
             close();
 
         } catch (Exception e) {
@@ -411,23 +422,33 @@ public class ProductDBAdapter {
         return productsList;
     }
 
-	public List<Product> getAllProductsByCategory(long categoryId){
-		List<Product> productsList =new ArrayList<Product>();
+    public List<Product> getAllProductsByCategory(long categoryId){
+        List<Product> productsList =new ArrayList<Product>();
+        CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(context);
         try {
             open();
-        Cursor cursor=null;
-        if(SETTINGS.enableAllBranch) {
-            cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +" = 0 order by id desc", null );
-        }else {
-            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
+            Cursor cursor=null;
+            if(SETTINGS.enableAllBranch) {
+                cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +" = 0 order by id desc", null );
+            }else {
+                cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
 
-        }
-		cursor.moveToFirst();
+            }
+            cursor.moveToFirst();
 
-		while(!cursor.isAfterLast()){
-            productsList.add(makeProduct(cursor));
-            cursor.moveToNext();
-		}
+            while(!cursor.isAfterLast()){
+                Product product = makeProduct(cursor);
+                categoryDBAdapter.open();
+                Category category =categoryDBAdapter.getDepartmentByID(product.getCategoryId());
+                if(category!=null) {
+                    productsList.add(makeProduct(cursor));
+                    cursor.moveToNext();
+
+                }else {
+                    cursor.moveToNext();
+
+                }
+            }
             close();
 
         } catch (Exception e) {
@@ -436,52 +457,73 @@ public class ProductDBAdapter {
 
 
         return productsList;
-	}
+    }
 
     public List<Product> getAllProductsByCategory(long categoryId, int from , int count){
         List<Product> productsList =new ArrayList<Product>();
+        CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(context);
         try {
             open();
-        Cursor cursor=null;
-        if(SETTINGS.enableAllBranch) {
-            cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
-        }else {
-            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc limit "+from+","+count, null);
+            Cursor cursor=null;
+            if(SETTINGS.enableAllBranch) {
+                cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
+            }else {
+                cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc limit "+from+","+count, null);
+
+            }
+            cursor.moveToFirst();
+
+            while(!cursor.isAfterLast()){
+                Product product = makeProduct(cursor);
+                categoryDBAdapter.open();
+                Category category =categoryDBAdapter.getDepartmentByID(product.getCategoryId());
+                if(category!=null) {
+                    productsList.add(makeProduct(cursor));
+                    cursor.moveToNext();
+
+                }else {
+                    cursor.moveToNext();
+
+                }
+            }
+            close();
+
+        } catch (Exception e) {
 
         }
-        cursor.moveToFirst();
-
-        while(!cursor.isAfterLast()){
-            productsList.add(makeProduct(cursor));
-            cursor.moveToNext();
-        }
-        close();
-
-    } catch (Exception e) {
-
-    }
         return productsList;
     }
 
     public List<Product> getTopProducts(int from ,int count){
         List<Product> productsList =new ArrayList<Product>();
+        CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(context);
+
         //SELECT * FROM table limit 100, 200
         try {
             open();
-        Cursor cursor=null;
-        if(SETTINGS.enableAllBranch) {
+            Cursor cursor=null;
+            if(SETTINGS.enableAllBranch) {
 
-            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null);
-        }else {
-            cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED+"=0 order by id desc limit "+from+","+count, null);
+                cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null);
+            }else {
+                cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED+"=0 order by id desc limit "+from+","+count, null);
 
-        }
-        cursor.moveToFirst();
+            }
+            cursor.moveToFirst();
 
-        while(!cursor.isAfterLast()){
-            productsList.add(makeProduct(cursor));
-            cursor.moveToNext();
-        }
+            while(!cursor.isAfterLast()){
+                Product product = makeProduct(cursor);
+                categoryDBAdapter.open();
+                Category category =categoryDBAdapter.getDepartmentByID(product.getCategoryId());
+                if(category!=null) {
+                    productsList.add(makeProduct(cursor));
+                    cursor.moveToNext();
+
+                }else {
+                    cursor.moveToNext();
+
+                }
+            }
             close();
 
         } catch (Exception e) {
@@ -574,26 +616,36 @@ public class ProductDBAdapter {
     }
 
     public List<Product> getAllProductsByHint(String hint , int from , int count ){
+        CategoryDBAdapter categoryDBAdapter= new CategoryDBAdapter(context);
         List<Product> productsList =new ArrayList<Product>();
         try {
             open();
-        Cursor cursor=null;
-        if(SETTINGS.enableAllBranch) {
-            cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
-                    hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+ hint+"%' OR "+PRODUCTS_COLUMN_DISPLAY_NAME+" like '%"+ hint+"%'"+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
-        }else {
-            cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
-                    hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+
-                    hint+"%' OR "+PRODUCTS_COLUMN_DISPLAY_NAME+" like '%"+ hint+"%'"+" and " + PRODUCTS_COLUMN_BRANCH_ID +
-                    " = "+ SETTINGS.branchId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
-        }
+            Cursor cursor=null;
+            if(SETTINGS.enableAllBranch) {
+                cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
+                        hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+ hint+"%' OR "+PRODUCTS_COLUMN_DISPLAY_NAME+" like '%"+ hint+"%'"+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
+            }else {
+                cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
+                        hint+"%' OR " + PRODUCTS_COLUMN_DESCRIPTION+" like '%"+ hint +"%' OR "+PRODUCTS_COLUMN_NAME+" like '%"+
+                        hint+"%' OR "+PRODUCTS_COLUMN_DISPLAY_NAME+" like '%"+ hint+"%'"+" and " + PRODUCTS_COLUMN_BRANCH_ID +
+                        " = "+ SETTINGS.branchId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
+            }
 
-        cursor.moveToFirst();
+            cursor.moveToFirst();
 
-        while(!cursor.isAfterLast()){
-            productsList.add(makeProduct(cursor));
-            cursor.moveToNext();
-        }
+            while(!cursor.isAfterLast()){
+                Product product = makeProduct(cursor);
+                categoryDBAdapter.open();
+                Category category =categoryDBAdapter.getDepartmentByID(product.getCategoryId());
+                if(category!=null) {
+                    productsList.add(makeProduct(cursor));
+                    cursor.moveToNext();
+
+                }else {
+                    cursor.moveToNext();
+
+                }
+            }
             close();
 
         } catch (Exception e) {

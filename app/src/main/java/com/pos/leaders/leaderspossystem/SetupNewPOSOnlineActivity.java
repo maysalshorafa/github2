@@ -330,6 +330,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
                         respnse.getInt("branchId"), 0);
                 inventoryDbAdapter.close();
 
+
                 if (i>= 1) {
                     SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(SetupNewPOSOnlineActivity.context);
                     settingsDBAdapter.open();

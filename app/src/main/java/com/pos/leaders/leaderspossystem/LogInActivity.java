@@ -48,7 +48,7 @@ public class LogInActivity extends Activity implements View.OnClickListener {
     private static Employee DEFAULT_USER = null;
 
     private SQLiteDatabase db;
-
+    public static boolean branchIdProblem=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

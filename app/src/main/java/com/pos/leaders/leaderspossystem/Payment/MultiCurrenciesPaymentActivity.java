@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.ChecksActivity;
+import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
 import com.pos.leaders.leaderspossystem.CurrencyReturnsCustomDialogActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
@@ -88,6 +89,11 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     Intent i = new Intent();
                     i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE, paymentTables.toString());
                     i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
+                    if(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote!="") {
+                        i.putExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY, CurrencyReturnsCustomDialogActivity.firstCredit);
+                        i.putExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote, CurrencyReturnsCustomDialogActivity.secondCredit);
+                        i.putExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote, CurrencyReturnsCustomDialogActivity.thirdCredit);
+                    }
                     setResult(RESULT_OK, i);
                     finish();
                 }
@@ -397,6 +403,9 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         }
         if (requestCode == REQUEST_CREDIT_CARD_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
+          CurrencyReturnsCustomDialogActivity.firstCredit =data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY);
+                CurrencyReturnsCustomDialogActivity.secondCredit=    data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote);
+                CurrencyReturnsCustomDialogActivity.thirdCredit=   data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote);
                 //get currency rate
                 totalPaid += valRow * actualCurrencyRate;
                 double beforeChangeExcess = excess;

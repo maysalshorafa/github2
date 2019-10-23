@@ -141,7 +141,6 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
 
         TitleBar.setTitleBar(this);
-
         //run MSR Service
         Intent intent = new Intent();
         intent.setPackage("com.sunmi.mscardservice");

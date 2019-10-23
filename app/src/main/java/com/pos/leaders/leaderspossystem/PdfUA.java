@@ -13,7 +13,6 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.BaseFont;
@@ -1909,7 +1908,7 @@ public class PdfUA {
         PdfPTable currencyTable = new PdfPTable(3);
         PdfPTable paidByTable = new PdfPTable(4);
         PdfPTable checkTable = new PdfPTable(3);
-
+        PdfPTable creditCard = new PdfPTable(4);
         Font urFontName = new Font(urName1, 24);
 
         table.deleteBodyRows();
@@ -1918,6 +1917,8 @@ public class PdfUA {
         currencyTable.setRunDirection(0);
         paidByTable.deleteBodyRows();
         paidByTable.setRunDirection(0);
+        creditCard.deleteBodyRows();
+        creditCard.setRunDirection(0);
         checkTable.deleteBodyRows();
         checkTable.setRunDirection(0);
         //insert column headings;
@@ -2091,6 +2092,7 @@ public class PdfUA {
             }
 
         }
+
         String str = "";
         for (String s : mainMer.split("\n")) {
             if(!s.replaceAll(" ","").equals("")) {
@@ -2114,7 +2116,10 @@ public class PdfUA {
             }
             Log.i("cc row", s);
         }
-        Paragraph p =new Paragraph();
+        if(str!=""){
+            insertCell(creditCard,str, Element.ALIGN_CENTER, 4, urFontName);
+
+        }
 
         PdfPTable endOfInvoice = new PdfPTable(2);
         endOfInvoice.deleteBodyRows();
@@ -2165,11 +2170,10 @@ public class PdfUA {
             document.add(checkTable);
         }
         if(str.length()>0)
-        {    p.setFont(font);
-            p.add( "\n\n\n---------------------------");
-            p.add(str);
-            document.add(p);
+        {
+            document.add(creditCard);
         }
+
         document.add(endOfInvoice);
 
         document.close();

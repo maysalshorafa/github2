@@ -18,6 +18,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.itextpdf.text.DocumentException;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
@@ -29,10 +30,13 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.DocumentType;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
@@ -42,6 +46,7 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.PosInvoice;
+import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.XReport;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.PdfUA;
@@ -1548,6 +1553,87 @@ public class Util {
         }
         paymentDBAdapter.close();
         return pl;
+    }
+    public static void getInventoryForBranchId(final Context context) {
+        new AsyncTask<Void, Void, String>() {
+
+            // create and show a progress dialog
+
+            ProgressDialog progressDialog = ProgressDialog.show(context, "", "Opening...");
+            JSONObject jsonObject=new JSONObject();
+            @Override
+            protected void onPostExecute(String html) {
+                try {
+                    if(jsonObject.getString(MessageKey.status).equals("200")) {
+                        //03-11 16:18:47.482 20608-20721/com.pos.leaders.leaderspossystem E/CCC: {"logTag":"CompanyCredentials Resource","status":"200","responseType":"All objects are successfully returned","responseBody":[{"companyName":"LeadTest","companyID":1,"tax":17.0,"returnNote":"thanks","endOfReturnNote":14,"ccun":"null","ccpw":"null"},{"companyName":"LeadTest","companyID":2,"tax":17.0,"returnNote":"thanks","endOfReturnNote":14,"ccun":"null","ccpw":"null"}]}
+
+                        JSONObject respnse;
+
+                        try {
+                            respnse = jsonObject.getJSONObject(MessageKey.responseBody);
+                        }
+                        catch (JSONException e){
+                            JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.responseBody);
+                            respnse = jsonArray.getJSONObject(0);
+                        }
+
+                        SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(context);
+                        settingsDBAdapter.open();
+                        settingsDBAdapter.updateEntry( SETTINGS.companyID,SETTINGS.companyName,  SETTINGS.posID, (float) SETTINGS.tax, SETTINGS.returnNote,SETTINGS.endOfInvoice,SETTINGS.ccNumber,SETTINGS.ccPassword,
+                                respnse.getInt("branchId"));
+                        ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
+                        List<Product>productList=productDBAdapter.getAllProducts();
+                        CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(context);
+                        for(int i= 0;i<productList.size();i++){
+                            categoryDBAdapter.open();
+                            productDBAdapter.open();
+                            Product product = productList.get(i);
+                            Category category = categoryDBAdapter.getDepartmentByID(product.getCategoryId());
+                            if(category.getBranchId()==0||category.getBranchId()==SETTINGS.branchId){
+
+                            }else {
+                                productDBAdapter.deleteEntry(product.getProductId());
+                            }
+                            productDBAdapter.close();
+                            categoryDBAdapter.close();
+
+                        }
+                }
+                    else {
+                        Log.e("setup",jsonObject.getString(MessageKey.responseType));
+                        //Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again)+": ", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+                //after async close progress dialog
+                progressDialog.dismiss();
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+                MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+                try {
+                    String res = messageTransmit.authGet(ApiURL.INVENTORY + "/forPos", SESSION.token);
+                    Log.e("CCC", res);
+
+                    try {
+                        jsonObject = new JSONObject(res);
+                    } catch (JSONException e) {
+                        JSONArray jsonArray = new JSONArray(res);
+                        jsonObject = jsonArray.getJSONObject(0);
+                    }
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
+
+
+
     }
 }
 

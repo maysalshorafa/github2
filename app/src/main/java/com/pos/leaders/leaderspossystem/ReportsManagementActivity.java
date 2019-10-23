@@ -629,7 +629,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                             DrawerDepositAndPullReportDbAdapter pullReportDBAdapter = new DrawerDepositAndPullReportDbAdapter(ReportsManagementActivity.this);
                                             pullReportDBAdapter.open();
                                             if(z.getzReportId()>0) {
-                                                long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, "Pull", z.getzReportId());
+                                                long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, getString(R.string.Pull), z.getzReportId());
 
                                             }else {
                                                 long id = pullReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), pullReportTotalAmount, getString(R.string.Pull), -1);
@@ -655,11 +655,11 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                             if (forthCurrencyInDefaultValue > 0) {
                                                 depositAndPullReportDetailsDbAdapter.insertEntry(pullReportId, forthCurrencyInDefaultValue, forthCurrency.getName());
                                             }
-                                            z.setPullReportAmount(z.getPullReportAmount()+pullReport.getAmount());
-                                            z.setShekelAmount(z.getShekelAmount()+firstCurrencyInDefaultValue);
-                                            z.setUsdAmount(z.getUsdAmount()+secondCurrencyInDefaultValue);
-                                            z.setGbpAmount(z.getGbpAmount()+thirdCurrencyInDefaultValue);
-                                            z.setEurAmount(z.getEurAmount()+forthCurrencyInDefaultValue);
+                                            z.setPullReportAmount(z.getPullReportAmount()-pullReport.getAmount());
+                                            z.setShekelAmount(z.getShekelAmount()-firstCurrencyInDefaultValue);
+                                            z.setUsdAmount(z.getUsdAmount()-secondCurrencyInDefaultValue);
+                                            z.setGbpAmount(z.getGbpAmount()-thirdCurrencyInDefaultValue);
+                                            z.setEurAmount(z.getEurAmount()-forthCurrencyInDefaultValue);
                                             zreportDbAdapter.updateEntry(z);
 
                                             pullReportDialog.cancel();
@@ -989,10 +989,10 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                             pullReportDBAdapter.close();
                                             depositAndPullReportDetailsDbAdapter.close();
                                             z.setDepositReportAmount(z.getDepositReportAmount()+pullReport.getAmount());
-                                            z.setShekelAmount(z.getShekelAmount()-firstCurrencyInDefaultValue);
-                                            z.setUsdAmount(z.getUsdAmount()-secondCurrencyInDefaultValue);
-                                            z.setGbpAmount(z.getGbpAmount()-thirdCurrencyInDefaultValue);
-                                            z.setEurAmount(z.getEurAmount()-forthCurrencyInDefaultValue);
+                                            z.setShekelAmount(z.getShekelAmount()+firstCurrencyInDefaultValue);
+                                            z.setUsdAmount(z.getUsdAmount()+secondCurrencyInDefaultValue);
+                                            z.setGbpAmount(z.getGbpAmount()+thirdCurrencyInDefaultValue);
+                                            z.setEurAmount(z.getEurAmount()+forthCurrencyInDefaultValue);
                                             zreportDbAdapter.updateEntry(z);
                                             final ArrayList<String> hintForCurrencyType = new ArrayList<String>();
                                             final ArrayList<Double> hintForCurrencyAmount = new ArrayList<Double>();

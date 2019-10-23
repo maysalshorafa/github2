@@ -160,7 +160,81 @@ public class DocumentControl {
 
                     //after async close progress dialog
                     progressDialog.dismiss();
-                    ((Activity)context).finish();
+              //      ((Activity)context).finish();
+                }
+
+                @Override
+                protected String doInBackground(Void... params) {
+                    try {
+                        //create pdf document object from bytes
+                        ByteBuffer bb = ByteBuffer.NEW(data);
+                        PDFFile pdf = new PDFFile(bb);
+                        //Get the first page from the pdf doc
+                        PDFPage PDFpage = pdf.getPage(1, true);
+                        //create a scaling value according to the WebView Width
+                        final float scale = 800 / PDFpage.getWidth() * 0.80f;
+                        //convert the page into a bitmap with a scaling value
+                        page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
+                        //save the bitmap to a byte array
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        stream.reset();
+                        //convert the byte array to a base64 string
+                        String base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                        //create the html + add the first image to the html
+                        String html = "<!DOCTYPE html><html><body bgcolor=\"#ffffff\"><img src=\"data:image/png;base64," + base64 + "\" hspace=328 vspace=4><br>";
+                        //loop though the rest of the pages and repeat the above
+                        for (int i = 0; i <= pdf.getNumPages(); i++) {
+                            PDFpage = pdf.getPage(i, true);
+                            page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
+                            page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            bitmapList.add(page);
+                            byteArray = stream.toByteArray();
+                            stream.reset();
+                            base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                            html += "<img src=\"data:image/png;base64," + base64 + "\" hspace=10 vspace=10><br>";
+
+                        }
+
+                        stream.close();
+                        html += "</body></html>";
+                        return html;
+                    } catch (Exception e) {
+                        Log.d("error", e.toString());
+                    }
+                    return null;
+                }
+            }.execute();
+            System.gc();// run GC
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void pdfLoadImagesInventoryReport(final byte[] data, final Context context) {
+
+        final ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
+        newBitmap=null;
+        try {
+            // run async
+            new AsyncTask<Void, Void, String>() {
+                Bitmap page;
+                Context a =context;
+
+                // create and show a progress dialog
+
+                ProgressDialog progressDialog = ProgressDialog.show(a, "", "Opening...");
+
+                @Override
+                protected void onPostExecute(String html) {
+
+                    PrintTools pt=new PrintTools(context);
+                    newBitmap=bitmapList.get(0);
+                    pt.PrintReport(newBitmap);
+
+                    //after async close progress dialog
+                    progressDialog.dismiss();
+                        ((Activity)context).finish();
                 }
 
                 @Override

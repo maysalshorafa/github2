@@ -213,6 +213,8 @@ public class PrinterTools {
                     PdfUA pdfUA = new PdfUA();
 
                     try {
+                        Log.d("teeesdr",SESSION._ORDER_DETAILES.toString()+"");
+
                         pdfUA.createNormalInvoice(context,SESSION._ORDER_DETAILES,SESSION._ORDERS,false,mainMer);
                     } catch (DocumentException e) {
                         e.printStackTrace();
@@ -242,7 +244,7 @@ public class PrinterTools {
     }
     public static ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
     static Bitmap newBitmap =null;
-    private static void pdfLoadImages(final byte[] data, final Context context)
+    public static void pdfLoadImages(final byte[] data, final Context context)
     {
         bitmapList=new ArrayList<>();
         try

@@ -417,7 +417,7 @@
 
     <string name="create_report">Create Report</string>
     <string name="title_activity_notify_service">NotifyService</string>
-    <string name="credit">Credit</string>
+    <string name="credit">-</string>
     <string name="confirmation">Confirmation</string>
 
     <string name="search">Search</string>
