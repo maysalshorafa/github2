@@ -368,6 +368,7 @@
     <string name="total_discount">مجموع التخفيضات</string>
     <string name="title_zreports_activity">تقرير z</string>
     <string name="title_user_attendance_report_activity">تقارير الموظفين</string>
+    <string name="title_user_number_sale_report_activity">تقارير عدد البيعات للمنتج</string>
     <string name="title_sales_management_activity">ادارة الطلبيات</string>
     <string name="title_sales_man_management_activity">ادارة رجال المبيعات</string>
     <string name="title_reports_management_activity">ادارة التقارير</string>

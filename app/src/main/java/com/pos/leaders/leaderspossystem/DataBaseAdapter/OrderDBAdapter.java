@@ -17,6 +17,7 @@ import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
@@ -258,6 +259,30 @@ public class OrderDBAdapter {
 		} catch (Exception e) {
 
 		}
+		return saleList;
+	}
+
+	public List<Order> getBetweenByOrder(Date from, Date to, List<Long> idOrder){
+		List<Order> saleList = new ArrayList<Order>();
+
+       for (int i=0; i<idOrder.size();i++){
+		try {
+			open();
+
+			Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +"="+idOrder.get(i)+" and "+ ORDER_COLUMN_ORDERDATE +" between "+to+","+from,null);
+			//Cursor cursor = db.rawQuery("select * from "+ORDER_DETAILS_TABLE_NAME+" where "+ORDER_COLUMN_ORDERDATE+" <= "+to+" and "+ORDER_COLUMN_ORDERDATE +" >= "+from,null);
+
+			Log.d("iii", "jjj");
+			while (cursor.moveToNext()){
+				saleList.add(makeSale(cursor));
+				Log.d("Ddddd", String.valueOf(makeSale(cursor)));
+			}
+
+			close();
+
+		} catch (Exception e) {
+e.printStackTrace();
+		}}
 		return saleList;
 	}
 	public List<Order> getBetweenTwoSalesForClosingReport(long from, long to){

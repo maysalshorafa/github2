@@ -75,6 +75,7 @@ public class OrderDetails {
 		hash = hash * prime + (product == null ? 0 : (product.getProductCode()==null?0:product.getProductCode().hashCode()));
 		hash = hash * prime + (int) rowDiscount;
 		hash = hash * prime + (int) (new Date().getTime() % 10000);
+		hash = prime * hash + ((int) (orderId % 10000));
 		hash = hash * prime + hashCode();
 
 		objectID = hash;

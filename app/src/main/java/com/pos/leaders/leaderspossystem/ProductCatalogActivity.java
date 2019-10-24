@@ -26,6 +26,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Reports.NumberOfSaleProductReport;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 
@@ -249,7 +250,9 @@ public class ProductCatalogActivity extends AppCompatActivity {
                 final String[] items = {
                         getString(R.string.edit_product),
                         getString(R.string.delete),
-                        getString(R.string.view)  };
+                        getString(R.string.view) ,
+                        getString(R.string.report)
+                };
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProductCatalogActivity.this);
                 builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
                 builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -285,6 +288,13 @@ public class ProductCatalogActivity extends AppCompatActivity {
                             case 2:
                                 Product_Management_View=9;
                                 intent = new Intent(ProductCatalogActivity.this, ProductsActivity.class);
+                                intent.putExtra("productID", filter_productsList.get(position).getProductId());
+                                startActivity(intent);
+                                break;
+
+
+                            case 3:
+                                intent = new Intent(ProductCatalogActivity.this, NumberOfSaleProductReport.class);
                                 intent.putExtra("productID", filter_productsList.get(position).getProductId());
                                 startActivity(intent);
                                 break;

@@ -437,6 +437,7 @@
     <string name="total_discount">סה\'\'כ הנחה</string>
     <string name="title_zreports_activity">דוח Z</string>
     <string name="title_user_attendance_report_activity">שעון נוכחות</string>
+    <string name="title_user_number_sale_report_activity">דוח ספירת מכירות</string>
     <string name="title_sales_management_activity">ניהול מכירות</string>
     <string name="title_sales_man_management_activity">ניהול אנשי מכירות</string>
     <string name="title_reports_management_activity">ניהול דוחות</string>
