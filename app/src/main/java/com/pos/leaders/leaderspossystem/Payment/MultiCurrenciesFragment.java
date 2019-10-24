@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem.Payment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
@@ -27,7 +30,7 @@ import java.util.List;
 
 public class MultiCurrenciesFragment extends Fragment {
     String touchPadPressed ="";
-    Button bt1 , bt2 , bt3 , bt4 , bt5 , bt6 ,bt7, bt8 , bt9  , btClear , btConfirmation , btDot , bt0 ;
+    Button bt1 , bt2 , bt3 , bt4 , bt5 , bt6 ,bt7, bt8 , bt9  , btClear , btConfirmation , btDot , bt0,btCredit ;
     ImageButton btCE;
     TextView amount;
     Spinner currencySpinner , paymentMethodSpinner;
@@ -50,6 +53,8 @@ public class MultiCurrenciesFragment extends Fragment {
         btCE=(ImageButton) v.findViewById(R.id.multiCurrenciesFragment_btCE);
         btClear=(Button)v.findViewById(R.id.multiCurrenciesFragment_btClear);
         btDot=(Button)v.findViewById(R.id.multiCurrenciesFragment_btDot);
+        btCredit=(Button)v.findViewById(R.id.multiCurrenciesFragment_btCredit);
+
         btConfirmation=(Button)v.findViewById(R.id.multiCurrenciesFragment_btAddPayment);
         amount=(TextView)v.findViewById(R.id.multiCurrenciesFragment_amount);
         currencySpinner=(Spinner)v.findViewById(R.id.multiCurrenciesFragment_currenciesSpinner);
@@ -177,6 +182,24 @@ public class MultiCurrenciesFragment extends Fragment {
                 if (touchPadPressed.indexOf(".") < 0)
                     touchPadPressed += ".";
                 amount.setText(touchPadPressed);
+            }
+        });
+
+        btCredit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SESSION._EMPLOYEE.getEmployeeId()!=2) {
+                    Toast.makeText(getContext(), "This Operation just for master employee !!", Toast.LENGTH_LONG).show();
+
+                }else {
+                    if (!touchPadPressed.equals("")) {
+                        double newValue = Util.convertSign(Double.parseDouble(touchPadPressed));
+                        touchPadPressed = String.valueOf(newValue);
+                        amount.setText(touchPadPressed);
+
+                    }
+                }
+
             }
         });
         return v;

@@ -98,12 +98,19 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     finish();
                 }
                 if(excess<=0 && totalPrice<0){
-                    paymentTables.add(new PaymentTable(spCurrency.getSelectedItem().toString(),Double.parseDouble(Util.makePrice(totalPrice)),0, 0, "", new CurrencyType(1l, defaultCurrency + ""),1));
-                    insertNewRow(totalPrice*-1, spCurrency.getSelectedItem().toString(),getCurrencyRate(spCurrency.getSelectedItem().toString()),PaymentMethod.CASH);
-                    Log.d("PaymentTables",paymentTables.toString());
+                 if( CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote=="") {
+                     paymentTables.add(new PaymentTable(spCurrency.getSelectedItem().toString(), Double.parseDouble(Util.makePrice(totalPrice)), 0, 0, "", new CurrencyType(1l, defaultCurrency + ""), 1));
+                     insertNewRow(totalPrice * -1, spCurrency.getSelectedItem().toString(), getCurrencyRate(spCurrency.getSelectedItem().toString()), PaymentMethod.CASH);
+                     Log.d("PaymentTables", paymentTables.toString());
+                 }
                     Intent i = new Intent();
                     i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE, paymentTables.toString());
                     i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
+                    if(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote!="") {
+                        i.putExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY, CurrencyReturnsCustomDialogActivity.firstCredit);
+                        i.putExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote, CurrencyReturnsCustomDialogActivity.secondCredit);
+                        i.putExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote, CurrencyReturnsCustomDialogActivity.thirdCredit);
+                    }
                     setResult(RESULT_OK, i);
                     finish();
                 }
@@ -244,8 +251,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
     private void insertNewRow(double val, String currency,double currencyRate,String paymentMethod) {
      //   if(val>0&&val<=10000){
-            if(excess<=0)
-                return;
+
         if(paymentMethod.equals(PaymentMethod.CASH)) {
             //get currency rate
             totalPaid += val * currencyRate;
@@ -292,7 +298,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     }
 
     private void updateView() {
-        if (excess <= 0) {
+        if (excess == 0) {
             llTotalPriceBackground.setBackgroundColor(getResources().getColor(R.color.light_green1));
             btCheckOut.setBackground(getResources().getDrawable(R.drawable.bt_green_enabled));
 
