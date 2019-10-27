@@ -4583,13 +4583,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     }
                     long paymentID = paymentDBAdapter.insertEntry(saleTotalPrice, saleIDforCash,order.getOrderKey());
 
-                    if(saleTotalPrice<0){
-                        cashPaymentDBAdapter.insertEntry(saleIDforCash, 0,0, new Timestamp(System.currentTimeMillis()),1,1);
-                        zReport.setCashTotal(zReport.getCashTotal()+saleTotalPrice);
-                        zReportCount.setShekelCount(zReportCount.getShekelCount()+1);
-                        zReportCount.setCashCount(zReportCount.getCashCount()+1);
-                    }
-                    else {
+
                     for (int i = 0; i < jsonArray.length() - 1; i++) {
 
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -4626,7 +4620,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         }
                         checksDBAdapter.close();
                     }
-                    }
+
                     zReportDBAdapter.updateEntry(zReport);
                     Log.d("testZreportCount",zReportCount.toString());
                     zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()+1);

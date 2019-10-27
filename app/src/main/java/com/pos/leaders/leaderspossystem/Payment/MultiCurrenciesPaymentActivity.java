@@ -84,7 +84,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         btCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (excess <= 0 && totalPrice>0) {
+                if (excess <= 0 ) {
                     Log.d("PaymentTables",paymentTables.toString());
                     Intent i = new Intent();
                     i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE, paymentTables.toString());
@@ -97,7 +97,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     setResult(RESULT_OK, i);
                     finish();
                 }
-                if(excess<=0 && totalPrice<0){
+              /*  if(excess<=0 && totalPrice<0){
                  if( CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote=="") {
                      paymentTables.add(new PaymentTable(spCurrency.getSelectedItem().toString(), Double.parseDouble(Util.makePrice(totalPrice)), 0, 0, "", new CurrencyType(1l, defaultCurrency + ""), 1));
                      insertNewRow(totalPrice * -1, spCurrency.getSelectedItem().toString(), getCurrencyRate(spCurrency.getSelectedItem().toString()), PaymentMethod.CASH);
@@ -113,7 +113,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     }
                     setResult(RESULT_OK, i);
                     finish();
-                }
+                }*/
             }
         });
         //endregion title bar
