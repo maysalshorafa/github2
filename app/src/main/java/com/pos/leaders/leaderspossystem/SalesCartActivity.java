@@ -4585,6 +4585,9 @@ public class SalesCartActivity extends AppCompatActivity {
 
                     if(saleTotalPrice<0){
                         cashPaymentDBAdapter.insertEntry(saleIDforCash, 0,0, new Timestamp(System.currentTimeMillis()),1,1);
+                        zReport.setCashTotal(zReport.getCashTotal()+saleTotalPrice);
+                        zReportCount.setShekelCount(zReportCount.getShekelCount()+1);
+                        zReportCount.setCashCount(zReportCount.getCashCount()+1);
                     }
                     else {
                     for (int i = 0; i < jsonArray.length() - 1; i++) {
