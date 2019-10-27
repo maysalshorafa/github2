@@ -226,16 +226,23 @@
         <activity
             android:name=".CategoryOfferActivity"
             android:label="@string/create_offer_category_activity" />
-        <activity android:name=".AddNewProvider"
-            android:label="@string/add_new_provider"/>
-        <activity android:name=".InventoryManagementActivity"
-            android:label="@string/inventory_management_activity"/>
-        <activity android:name=".ProviderManagementActivity"
-            android:label="@string/provider_management_activity"/>
-        <activity android:name=".InInventoryDoc"
-           android:label="@string/in_inventory_doc" />
-        <activity android:name=".DepositAndPullReportView"
-           android:label="@string/deposit_and_pull_reportView" ></activity>
+        <activity
+            android:name=".AddNewProvider"
+            android:label="@string/add_new_provider" />
+        <activity
+            android:name=".InventoryManagementActivity"
+            android:label="@string/inventory_management_activity" />
+        <activity
+            android:name=".ProviderManagementActivity"
+            android:label="@string/provider_management_activity" />
+        <activity
+            android:name=".InInventoryDoc"
+            android:label="@string/in_inventory_doc" />
+        <activity
+            android:name=".DepositAndPullReportView"
+            android:label="@string/deposit_and_pull_reportView" />
+        <activity android:name=".Reports.NumberOfSaleProductReport"
+            android:label="@string/title_user_number_sale_report_activity"></activity>
     </application>
 
 </manifest>

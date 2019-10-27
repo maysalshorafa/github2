@@ -54,13 +54,14 @@
 
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="1"
+        android:orientation="horizontal"
         android:weightSum="4">
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
@@ -76,8 +77,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            ibutton:button_text="@string/users"
-            ibutton:button_icon="@drawable/dash_user"/>
+            ibutton:button_icon="@drawable/dash_user"
+            ibutton:button_text="@string/users" />
 
         <!--  <Button
               android:id="@+id/users"
@@ -106,7 +107,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             ibutton:button_icon="@drawable/product"
-            ibutton:button_text="@string/products"/>
+            ibutton:button_text="@string/products" />
     </LinearLayout>
 
     <LinearLayout

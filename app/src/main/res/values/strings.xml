@@ -622,6 +622,7 @@
     <string name="title_sales_management_activity">Order Management Activity</string>
     <string name="title_sales_man_management_activity">SalesMan Management Activity</string>
     <string name="title_user_attendance_report_activity">User Attendance Report</string>
+    <string name="title_user_number_sale_report_activity">Count of Sales Report</string>
     <string name="title_main_sales_activity">Sales Screen</string>
     <string name="title_import_product_activity">Import Product Activity</string>
     <string name="title_reports_activity">Reports Activity</string>

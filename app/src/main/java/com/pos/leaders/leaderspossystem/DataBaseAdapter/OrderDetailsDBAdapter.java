@@ -169,7 +169,25 @@ public class OrderDetailsDBAdapter {
 
 		return orderDetails;
 	}
+	public List<Long> getOrderDetailsByIDproduct(long product){
+		OrderDetails orderDetails=new OrderDetails();
+      List<Long> orderId =new ArrayList<>();
+		Cursor cursor =  db.rawQuery( "select "+ORDER_DETAILS_COLUMN_ORDER_ID+" from "+ ORDER_DETAILS_TABLE_NAME +" where "+ ORDER_DETAILES_COLUMN_PRODUCTID +"="+product, null );
+		if (cursor.getCount() < 1) // UserName Not Exist
+		{
+			cursor.close();
+			Log.d("OrderDetials", "yuy");
+			return orderId;
+		}
+		//cursor.moveToFirst();
+		while (cursor.moveToNext()){
+			orderId.add((long) cursor.getLong(0));
+			Log.d("Ddddd", String.valueOf(cursor.getLong(0)));
+		}
+		cursor.close();
 
+		return orderId;
+	}
 	private OrderDetails make(Cursor cursor){
 		return new OrderDetails(Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_ID))),
 				cursor.getLong(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_PRODUCTID)),
