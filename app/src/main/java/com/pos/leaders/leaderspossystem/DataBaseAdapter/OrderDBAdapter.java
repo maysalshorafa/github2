@@ -269,13 +269,13 @@ public class OrderDBAdapter {
 		try {
 			open();
 
-			Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +"="+idOrder.get(i)+" and "+ ORDER_COLUMN_ORDERDATE +" between "+to+","+from,null);
+			Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +"="+idOrder.get(i),null);
 			//Cursor cursor = db.rawQuery("select * from "+ORDER_DETAILS_TABLE_NAME+" where "+ORDER_COLUMN_ORDERDATE+" <= "+to+" and "+ORDER_COLUMN_ORDERDATE +" >= "+from,null);
 
 			Log.d("iii", "jjj");
 			while (cursor.moveToNext()){
 				saleList.add(makeSale(cursor));
-				Log.d("Ddddd", String.valueOf(makeSale(cursor)));
+				Log.d("Ddddfffd", String.valueOf(makeSale(cursor)));
 			}
 
 			close();

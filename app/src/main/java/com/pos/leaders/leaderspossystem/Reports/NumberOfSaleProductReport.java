@@ -2,12 +2,14 @@ package com.pos.leaders.leaderspossystem.Reports;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
@@ -17,8 +19,11 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.ReportZDetailsActivity;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.ZReportListViewAdapter;
+import com.pos.leaders.leaderspossystem.ZReportActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +44,7 @@ public class NumberOfSaleProductReport extends AppCompatActivity {
     List<Long> order;
     private static final int DIALOG_FROM_DATE = 825;
     private static final int DIALOG_TO_DATE = 324;
+    OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(NumberOfSaleProductReport.this);
 
     List<Order> OrderList=new ArrayList<>();
     @Override
@@ -90,7 +96,6 @@ public class NumberOfSaleProductReport extends AppCompatActivity {
         if (extras != null) {
             productID = extras.getLong("productID");
             Log.d("productID", String.valueOf(productID));
-            OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(NumberOfSaleProductReport.this);
             orderDBAdapter.open();
             order = orderDBAdapter.getOrderDetailsByIDproduct(productID);
             Log.d("orderDetialsAdapter", String.valueOf(order));
@@ -98,6 +103,7 @@ public class NumberOfSaleProductReport extends AppCompatActivity {
             orderDBAdapter1.open();
             OrderList=orderDBAdapter1.getBetweenByOrder(from,to,order);
             Log.d("OrderList",OrderList.toString() );
+
         }
 
 
@@ -122,34 +128,47 @@ public class NumberOfSaleProductReport extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener onFromDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            mYear = view.getYear();
-            mMonth = view.getMonth()+1;
-            mDay = view.getDayOfMonth();
-            String s = mYear + "-" + mMonth+ "-" + mDay;
-            etFromDate.setText(s);
-            SimpleDateFormat df2 = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
-
-         //   setReportDate();
+            etFromDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
+            from = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
+            view.setMaxDate(to.getTime());
+            setDate();
         }
     };
+
     private DatePickerDialog.OnDateSetListener onToDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            mYear = view.getYear();
-            mMonth = view.getMonth()+1;
-            mDay = view.getDayOfMonth();
-            String s = mYear + "-" + mMonth+ "-" + mDay;
-            etToDate.setText(s);
-            SimpleDateFormat df2 = new SimpleDateFormat("HH:mm:ss");
-            String currentDateTimeString = df2.format(new Date());
-            to = DateConverter.stringToDate(s + " "+currentDateTimeString);
-          setReportDate();
+
+            etToDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
+            to = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
+            view.setMinDate(from.getTime());
+            setDate();
         }
     };
 
-   private void setReportDate() {
+    private void setDate() {
+        orderDBAdapter.open();
+        zReportList = zReportDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime()+ DAY_MINUS_ONE_SECOND);
+        adapter = new ZReportListViewAdapter(this, R.layout.list_view_z_report, zReportList);
+        lvReports.setAdapter(adapter);
+        lvReports.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(ZReportActivity.this, ReportZDetailsActivity.class);
+//                                                            /* i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
+//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
+//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
+//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReport.getTotalSales());
+//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,zReport.getTotalAmount());
+//                                                            i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FROM_DASH_BOARD,true);*/
+                i.putExtra("ObjectZReport",zReportList.get(position-1));
+                i.putExtra(COM_LEADPOS_ZREPORT_HISTORY, true);
+                startActivity(i);
 
+                //finish();
 
+            }
+        });
 
     }
 }
