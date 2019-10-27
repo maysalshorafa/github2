@@ -1453,6 +1453,7 @@ public class Util {
             @Override
             protected void onPostExecute(String html) {
                 try {
+                    Log.d("ttttttttttttt",jsonObject.toString());
                     if(jsonObject.getString(MessageKey.status).equals("200")) {
                         //03-11 16:18:47.482 20608-20721/com.pos.leaders.leaderspossystem E/CCC: {"logTag":"CompanyCredentials Resource","status":"200","responseType":"All objects are successfully returned","responseBody":[{"companyName":"LeadTest","companyID":1,"tax":17.0,"returnNote":"thanks","endOfReturnNote":14,"ccun":"null","ccpw":"null"},{"companyName":"LeadTest","companyID":2,"tax":17.0,"returnNote":"thanks","endOfReturnNote":14,"ccun":"null","ccpw":"null"}]}
 
@@ -1516,6 +1517,7 @@ public class Util {
                 try {
                     String res = messageTransmit.authGet(ApiURL.INVENTORY + "/forPos", SESSION.token);
                     Log.e("CCC", res);
+                    Log.e("CCC",SETTINGS.BO_SERVER_URL.toString());
 
                     try {
                         jsonObject = new JSONObject(res);
