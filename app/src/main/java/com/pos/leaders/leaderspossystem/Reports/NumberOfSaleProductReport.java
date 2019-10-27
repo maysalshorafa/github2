@@ -2,7 +2,6 @@ package com.pos.leaders.leaderspossystem.Reports;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
@@ -21,14 +19,10 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.R;
-import com.pos.leaders.leaderspossystem.ReportZDetailsActivity;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
-import com.pos.leaders.leaderspossystem.Tools.ZReportListViewAdapter;
-import com.pos.leaders.leaderspossystem.ZReportActivity;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -178,7 +172,10 @@ public class NumberOfSaleProductReport extends AppCompatActivity {
             Log.d("orderDetialsAdapter", String.valueOf(order));
             OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(NumberOfSaleProductReport.this);
             orderDBAdapter1.open();
-            OrderList = orderDBAdapter1.getBetweenByOrder(from.getTime(), to.getTime(), order);
+        Log.d("OrderList",from.toString());
+        Log.d("OrderList", to.toString());
+
+        OrderList = orderDBAdapter1.getBetweenByOrder(from.getTime(), to.getTime(), order);
             Log.d("OrderList", OrderList.toString());
         for (int i=0; i<OrderList.size();i++){
             amountReport=amountReport+OrderList.get(i).getTotalPrice();
@@ -189,8 +186,9 @@ public class NumberOfSaleProductReport extends AppCompatActivity {
           /* LayoutInflater inflater = getLayoutInflater();
            ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvReport, false);
            lvReport.addHeaderView(header, null, false);*/
+
            objectList.addAll(OrderList);
-          // adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, objectList);
+        adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, objectList);
            lvReport.setAdapter(adapter);
     }
 }
