@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -21,6 +23,7 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.ReportZDetailsActivity;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.ZReportListViewAdapter;
 import com.pos.leaders.leaderspossystem.ZReportActivity;
@@ -31,10 +34,9 @@ import java.util.Date;
 import java.util.List;
 
 public class NumberOfSaleProductReport extends AppCompatActivity {
-    TextView etFromDate, etToDate;
-    TextView tvCountSale;
+    TextView etFromDate, etToDate,amount,tvCountSale;
     ListView lvReport;
-    Button print;
+    Button cancleReport;
 
     Date from, to;
     int mYear, mMonth, mDay;
@@ -42,11 +44,16 @@ public class NumberOfSaleProductReport extends AppCompatActivity {
     long productID;
 
     List<Long> order;
+    LayoutInflater inflater;
+
+    SaleManagementListViewAdapter adapter;
     private static final int DIALOG_FROM_DATE = 825;
     private static final int DIALOG_TO_DATE = 324;
     OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(NumberOfSaleProductReport.this);
 
     List<Order> OrderList=new ArrayList<>();
+    List<Object>objectList = new ArrayList<Object>();
+    double amountReport=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,36 +66,38 @@ public class NumberOfSaleProductReport extends AppCompatActivity {
         etToDate = (TextView) findViewById(R.id.ucountOfSaleReport_ETTo);
         tvCountSale = (TextView) findViewById(R.id.countOfSaleReport_Count);
         lvReport = (ListView) findViewById(R.id.countOfSaleReport_LVReport);
-        print=(Button)findViewById(R.id.countOfSaleReport_print);
-
-        //region Date
-        Date d = new Date();
-        Log.i("current date", d.toString());
-        //Mon Oct 24 08:45:01 GMT 2016
-        //("yyyy-mm-dd hh:mm:ss")
-        mYear = Integer.parseInt(d.toString().split(" ")[5]);
-        mMonth = d.getMonth();
-        mDay = Integer.parseInt(d.toString().split(" ")[2]);
+        amount=(TextView) findViewById(R.id.amountOfSaleReport_amount);
+        cancleReport=(Button)findViewById(R.id.countOfSaleReport_cancle);
+        cancleReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
 
+        etFromDate.setFocusable(false);
         etFromDate.setText(DateConverter.getBeforeMonth().split(" ")[0]);
         from = DateConverter.stringToDate(DateConverter.getBeforeMonth());
-        etFromDate.setFocusable(false);
+        etToDate.setFocusable(false);
+        etToDate.setText(DateConverter.currentDateTime().split(" ")[0]);
+        to = DateConverter.stringToDate(DateConverter.currentDateTime());
+
         etFromDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDialog(DIALOG_FROM_DATE);
             }
         });
-        etToDate.setText(DateConverter.currentDateTime().split(" ")[0]);
-        to = DateConverter.stringToDate(DateConverter.currentDateTime());
-        etToDate.setFocusable(false);
+
         etToDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog(DIALOG_TO_DATE);
+                   showDialog(DIALOG_TO_DATE);
             }
         });
+
+
 
 
 
@@ -99,10 +108,23 @@ public class NumberOfSaleProductReport extends AppCompatActivity {
             orderDBAdapter.open();
             order = orderDBAdapter.getOrderDetailsByIDproduct(productID);
             Log.d("orderDetialsAdapter", String.valueOf(order));
-            OrderDBAdapter orderDBAdapter1=new OrderDBAdapter(NumberOfSaleProductReport.this);
+            OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(NumberOfSaleProductReport.this);
             orderDBAdapter1.open();
-            OrderList=orderDBAdapter1.getBetweenByOrder(from,to,order);
-            Log.d("OrderList",OrderList.toString() );
+            OrderList = orderDBAdapter1.getBetweenByOrder(from.getTime(), to.getTime(), order);
+            Log.d("OrderList", OrderList.toString());
+            for (int i=0; i<OrderList.size();i++){
+                amountReport=amountReport+OrderList.get(i).getTotalPrice();
+            }
+            amount.setText( amountReport+"");
+            tvCountSale.setText(OrderList.size()+"");
+
+            inflater = getLayoutInflater();
+            ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvReport, false);
+            lvReport.addHeaderView(header, null, false);
+            objectList.addAll(OrderList);
+
+            adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, objectList);
+            lvReport.setAdapter(adapter);
 
         }
 
@@ -111,12 +133,12 @@ public class NumberOfSaleProductReport extends AppCompatActivity {
     @Override
     protected Dialog onCreateDialog(int id) {
         if (id == DIALOG_FROM_DATE) {
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this, onFromDateSetListener, Integer.parseInt(from.toString().split(" ")[5]), from.getMonth(),  Integer.parseInt(from.toString().split(" ")[2]));
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, onFromDateSetListener, Integer.parseInt(from.toString().split(" ")[5]), from.getMonth(), Integer.parseInt(from.toString().split(" ")[2]));
             //datePickerDialog.getDatePicker().setMaxDate(to.getTime());
             datePickerDialog.getDatePicker().setCalendarViewShown(false);
             return datePickerDialog;
         } else if (id == DIALOG_TO_DATE) {
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this, onToDateSetListener, Integer.parseInt(to.toString().split(" ")[5]), to.getMonth(),  Integer.parseInt(to.toString().split(" ")[2]));
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, onToDateSetListener, Integer.parseInt(to.toString().split(" ")[5]), to.getMonth(), Integer.parseInt(to.toString().split(" ")[2]));
             //datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
             //datePickerDialog.getDatePicker().setMinDate(from.getTime());
             datePickerDialog.getDatePicker().setCalendarViewShown(false);
@@ -130,7 +152,7 @@ public class NumberOfSaleProductReport extends AppCompatActivity {
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             etFromDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
             from = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
-            view.setMaxDate(to.getTime());
+            view.setMaxDate(from.getTime());
             setDate();
         }
     };
@@ -141,34 +163,34 @@ public class NumberOfSaleProductReport extends AppCompatActivity {
 
             etToDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
             to = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
-            view.setMinDate(from.getTime());
+            view.setMinDate(to.getTime());
             setDate();
         }
     };
 
+
     private void setDate() {
-        orderDBAdapter.open();
-        zReportList = zReportDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime()+ DAY_MINUS_ONE_SECOND);
-        adapter = new ZReportListViewAdapter(this, R.layout.list_view_z_report, zReportList);
-        lvReports.setAdapter(adapter);
-        lvReports.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(ZReportActivity.this, ReportZDetailsActivity.class);
-//                                                            /* i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_ID, zReport.getzReportId());
-//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FORM, zReport.getStartOrderId());
-//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TO, zReport.getEndOrderId());
-//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_TOTAL_AMOUNT,zReport.getTotalSales());
-//                                                             i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_AMOUNT,zReport.getTotalAmount());
-//                                                            i.putExtra(ZReportActivity.COM_LEADPOS_ZREPORT_FROM_DASH_BOARD,true);*/
-                i.putExtra("ObjectZReport",zReportList.get(position-1));
-                i.putExtra(COM_LEADPOS_ZREPORT_HISTORY, true);
-                startActivity(i);
+            orderDBAdapter.open();
+             OrderList=new ArrayList<>();
+             order=new ArrayList<>();
+            objectList=new ArrayList<>();
+            order = orderDBAdapter.getOrderDetailsByIDproduct(productID);
+            Log.d("orderDetialsAdapter", String.valueOf(order));
+            OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(NumberOfSaleProductReport.this);
+            orderDBAdapter1.open();
+            OrderList = orderDBAdapter1.getBetweenByOrder(from.getTime(), to.getTime(), order);
+            Log.d("OrderList", OrderList.toString());
+        for (int i=0; i<OrderList.size();i++){
+            amountReport=amountReport+OrderList.get(i).getTotalPrice();
+        }
+        amount.setText( amountReport+"");
+        tvCountSale.setText(OrderList.size()+"");
 
-                //finish();
-
-            }
-        });
-
+          /* LayoutInflater inflater = getLayoutInflater();
+           ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvReport, false);
+           lvReport.addHeaderView(header, null, false);*/
+           objectList.addAll(OrderList);
+          // adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, objectList);
+           lvReport.setAdapter(adapter);
     }
 }

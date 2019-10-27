@@ -262,14 +262,15 @@ public class OrderDBAdapter {
 		return saleList;
 	}
 
-	public List<Order> getBetweenByOrder(Date from, Date to, List<Long> idOrder){
+	public List<Order> getBetweenByOrder(long from, long to, List<Long> idOrder){
 		List<Order> saleList = new ArrayList<Order>();
 
        for (int i=0; i<idOrder.size();i++){
 		try {
 			open();
 
-			Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +"="+idOrder.get(i),null);
+			Cursor cursor =db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +"="+idOrder.get(i)+" and "+ ORDER_COLUMN_ORDERDATE +" between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')",null);
+			//Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +"="+idOrder.get(i),null);
 			//Cursor cursor = db.rawQuery("select * from "+ORDER_DETAILS_TABLE_NAME+" where "+ORDER_COLUMN_ORDERDATE+" <= "+to+" and "+ORDER_COLUMN_ORDERDATE +" >= "+from,null);
 
 			Log.d("iii", "jjj");
