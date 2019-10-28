@@ -379,6 +379,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(IdsCounterDBAdapter.addColumn("Inventory"));
                     db.execSQL(IdsCounterDBAdapter.addColumn("product_inventory"));
                     db.execSQL(IdsCounterDBAdapter.addColumn("z_report_count"));
+                    db.execSQL(IdsCounterDBAdapter.addColumn("depositAndPull"));
+                    db.execSQL(IdsCounterDBAdapter.addColumn("depositAndPullDetails"));
                     db.execSQL(ZReportCountDbAdapter.DATABASE_CREATE);
                     db.execSQL(ProviderDbAdapter.DATABASE_CREATE);
                     db.execSQL(PosSettingDbAdapter.DATABASE_CREATE);
@@ -402,6 +404,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     clearSync3.execute(context);
 
                     break;
+
 
 
 
