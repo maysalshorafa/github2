@@ -189,6 +189,13 @@ public class OrderDetailsDBAdapter {
 		return orderId;
 	}
 	private OrderDetails make(Cursor cursor){
+		long offerId=0;
+		if(cursor.getString(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_OFFER_ID)).equals("")){
+			offerId=0;
+		}else {
+			offerId=Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_OFFER_ID)));
+
+		}
 		return new OrderDetails(Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_ID))),
 				cursor.getLong(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_PRODUCTID)),
 				Integer.parseInt(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_QUANTITY))),
@@ -199,7 +206,7 @@ public class OrderDetailsDBAdapter {
 				cursor.getDouble(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_DISCOUNT)),
 				cursor.getLong(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID)),
 				cursor.getString(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_KEY)),
-				Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_OFFER_ID))),
+				offerId,
 				Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER))),
 				Double.parseDouble(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_PRODUCT_PRICE_AFTER_TAX))));
 	}

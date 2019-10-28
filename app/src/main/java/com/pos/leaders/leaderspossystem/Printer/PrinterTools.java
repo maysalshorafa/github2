@@ -62,6 +62,53 @@ public class PrinterTools {
         }
 
     }
+    private static void Print_BTB880(Bitmap _bitmap,Context context) {
+        final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
+        // final UsbPrinter printer = new UsbPrinter(1155, 30016);
+        final ProgressDialog dialog = new ProgressDialog(context);
+        final Bitmap bitmap = _bitmap;
+        dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                dialog.show();
+                ////Hebrew 15 Windows-1255
+
+                int i = posInterfaceAPI.OpenDevice();
+                pos = new POSSDK(posInterfaceAPI);
+
+                pos.textSelectCharSetAndCodePage(POSSDK.CharacterSetUSA, 15);
+
+                pos.systemSelectPrintMode(0);
+
+                pos.systemFeedLine(1);
+                //printer.PRN_Init();
+                //printer.PRN_PrintAndFeedLine(11);
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                //printer.PRN_PrintAndFeedLine(11);
+                //printer.PRN_HalfCutPaper();
+                pos.systemFeedLine(2);
+                pos.systemCutPaper(66, 0);
+
+                // pos.cashdrawerOpen(0,20,20);
+
+                posInterfaceAPI.CloseDevice();
+                dialog.cancel();
+
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                pos.imageStandardModeRasterPrint(bitmap, CONSTANT.PRINTER_PAGE_WIDTH);
+                //printer.PRN_PrintDotBitmap(bitmap, 0);
+                return null;
+            }
+        }.execute();
+    }
+
     private static void printAndOpenCashBoxBTP880(final String mainAns, final String mainMer, final String mainCli, final Context context, final Activity activity) {
         final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
@@ -81,26 +128,6 @@ public class PrinterTools {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                pos.systemFeedLine(2);
-                pos.systemCutPaper(66, 0);
-                pos.cashdrawerOpen(0, 20, 20);
-
-                posInterfaceAPI.CloseDevice();
-                dialog.cancel();
-
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                PdfUA pdfUA = new PdfUA();
-
-                try {
-                    pdfUA.createNormalInvoice(context,SESSION._ORDER_DETAILES,SESSION._ORDERS,false,mainMer);
-                } catch (DocumentException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 try
                 {
                     File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
@@ -116,10 +143,21 @@ public class PrinterTools {
                 {
 
                 }
-                InvoiceImg invoiceImg = new InvoiceImg(context);
-                Log.d("payyyyy",SESSION._ORDERS.getPayment().toString());
 
-              //  pos.imageStandardModeRasterPrint(invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null), CONSTANT.PRINTER_PAGE_WIDTH);
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                PdfUA pdfUA = new PdfUA();
+
+                try {
+                    pdfUA.createNormalInvoice(context,SESSION._ORDER_DETAILES,SESSION._ORDERS,false,mainMer);
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
 
                 return null;
             }
@@ -297,7 +335,7 @@ public class PrinterTools {
                         }
                     }
                     else if(SETTINGS.printer.equals(PrinterType.BTP880)){
-                        pos.imageStandardModeRasterPrint(newBitmap, CONSTANT.PRINTER_PAGE_WIDTH);
+                   Print_BTB880(newBitmap,context);
 
                     }else if(SETTINGS.printer.equals(PrinterType.SM_S230I)){
                         printSMS230(newBitmap,context);

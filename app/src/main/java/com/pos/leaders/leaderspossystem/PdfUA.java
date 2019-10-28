@@ -198,7 +198,7 @@ public class PdfUA {
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
         headingTable.setRunDirection(0);
-        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable,  SETTINGS.companyName+"" , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         if(source) {
             insertCell(headingTable, context.getString(R.string.source_invoice), Element.ALIGN_CENTER, 1, font);
