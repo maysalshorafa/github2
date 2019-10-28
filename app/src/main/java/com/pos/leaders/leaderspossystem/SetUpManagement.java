@@ -96,7 +96,6 @@ public class SetUpManagement extends AppCompatActivity {
         printerTypeSpinner.setAdapter(spinnerArrayAdapter);
         floatPointSpinner.setAdapter(floatPointSpinnerArrayAdapter);
         ServerUrL.add(ServerUrl.BO_SERVER_URL.getItem());
-        ServerUrL.add(ServerUrl.BO_ALNAJAH_SERVER_URL.getItem());
         branch.add(getString(R.string.all));
         branch.add(getString(R.string.pos_branch));
         final ArrayAdapter<String> dataAdapterBranch = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, branch);
