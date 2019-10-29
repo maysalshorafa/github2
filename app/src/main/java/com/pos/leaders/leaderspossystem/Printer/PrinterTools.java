@@ -137,7 +137,7 @@ public class PrinterTools {
                     f.readFully(data);
                     Log.d("bitmapsize",context.toString()+"");
 
-                    pdfLoadImages(data,context);
+                    pdfLoadImages(data,context,mainMer);
                 }
                 catch(Exception ignored)
                 {
@@ -188,7 +188,7 @@ public class PrinterTools {
                 f.readFully(data);
                 Log.d("bitmapsize",context.toString()+"");
 
-                pdfLoadImages(data,context);
+                pdfLoadImages(data,context,mainMer);
             }
             catch(Exception ignored)
             {
@@ -268,21 +268,19 @@ public class PrinterTools {
                         f.readFully(data);
                         Log.d("bitmapsize",context.toString()+"");
 
-                        pdfLoadImages(data,context);
-
+                        pdfLoadImages(data,context,mainMer);
                     }
                     catch(Exception ignored)
                     {
 
                     }
-
                     return null;
                 }
             }.execute();
     }
     public static ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
     static Bitmap newBitmap =null;
-    public static void pdfLoadImages(final byte[] data, final Context context)
+    public static void pdfLoadImages(final byte[] data, final Context context, final String mainMer)
     {
         bitmapList=new ArrayList<>();
         try
@@ -312,6 +310,20 @@ public class PrinterTools {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    if(!mainMer.equals("")) {
+                        newBitmap = combineImageIntoOne(bitmapList);
+                        try {
+                            Bitmap bitmap = newBitmap;
+                            HPRTPrinterHelper.PrintBitmap(bitmap, b, b, 300);
+
+                        } catch (Exception e) {
+                        }
+                        try {
+                            HPRTPrinterHelper.CutPaper(0, 300);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                     }else if(SETTINGS.printer.equals(PrinterType.SUNMI_T1)){
                         try {
                             Bitmap bitmap = newBitmap;
@@ -322,7 +334,29 @@ public class PrinterTools {
                         }
                         try {
                             //cut
-                            AidlUtil.getInstance().print3Line();
+                            AidlUtil.getInstance().cut();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            AidlUtil.getInstance().openCashBox();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                        newBitmap = combineImageIntoOne(bitmapList);
+
+                        try {
+                            Bitmap bitmap = newBitmap;
+                            AidlUtil.getInstance().printBitmap(bitmap);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            //cut
                             AidlUtil.getInstance().cut();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -336,10 +370,19 @@ public class PrinterTools {
                     }
                     else if(SETTINGS.printer.equals(PrinterType.BTP880)){
                    Print_BTB880(newBitmap,context);
+                        if(!mainMer.equals("")) {
+                            newBitmap = combineImageIntoOne(bitmapList);
+                            Print_BTB880(newBitmap, context);
+                        }
 
                     }else if(SETTINGS.printer.equals(PrinterType.SM_S230I)){
-                        printSMS230(newBitmap,context);
 
+                        printSMS230(newBitmap,context);
+                        if(!mainMer.equals("")) {
+                            newBitmap = combineImageIntoOne(bitmapList);
+                            printSMS230(newBitmap,context);
+
+                        }
                     }
                     //    pt.PrintReport(newBitmap);
                     //after async close progress dialog
@@ -471,7 +514,7 @@ public class PrinterTools {
                             f.readFully(data);
                             Log.d("bitmapsize",context.toString()+"");
 
-                            pdfLoadImages(data,context);
+                            pdfLoadImages(data,context,mainMer);
                         }
                         catch(Exception ignored)
                         {

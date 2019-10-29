@@ -84,7 +84,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 7;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -404,6 +404,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     clearSync3.execute(context);
 
                     break;
+
 
 
 

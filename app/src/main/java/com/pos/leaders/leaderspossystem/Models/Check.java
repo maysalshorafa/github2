@@ -12,10 +12,10 @@ import java.util.Date;
 
 public class Check {
 	private long checkId;
-	private int checkNum;
-	private int bankNum;
-	private int branchNum;
-	private int accountNum;
+	private long checkNum;
+	private long bankNum;
+	private long branchNum;
+	private long accountNum;
 	private double amount;
 	private Timestamp createdAt;
 	private boolean deleted;
@@ -25,7 +25,7 @@ public class Check {
 
 
 
-	public Check(long checkId, int checkNum, int bankNum, int branchNum, int accountNum, double amount, Timestamp date, boolean deleted, long orderId) {
+	public Check(long checkId, long checkNum, long bankNum, long branchNum, long accountNum, double amount, Timestamp date, boolean deleted, long orderId) {
 		this.accountNum = accountNum;
 		this.amount = amount;
 		this.bankNum = bankNum;
@@ -37,7 +37,7 @@ public class Check {
 		this.orderId = orderId;
 	}
 
-	public Check(int checkNum, int bankNum, int branchNum, int accountNum, double amount, Timestamp date, boolean deleted) {
+	public Check(long checkNum, long bankNum, long branchNum, long accountNum, double amount, Timestamp date, boolean deleted) {
 		this.accountNum = accountNum;
 		this.amount = amount;
 		this.bankNum = bankNum;
@@ -59,7 +59,7 @@ public class Check {
 
 	//region Getters
 
-	public int getAccountNum() {
+	public long getAccountNum() {
 		return accountNum;
 	}
 
@@ -67,15 +67,15 @@ public class Check {
 		return amount;
 	}
 
-	public int getBankNum() {
+	public long getBankNum() {
 		return bankNum;
 	}
 
-	public int getBranchNum() {
+	public long getBranchNum() {
 		return branchNum;
 	}
 
-	public int getCheckNum() {
+	public long getCheckNum() {
 		return checkNum;
 	}
 
@@ -103,7 +103,7 @@ public class Check {
 		this.orderId = orderId;
 	}
 
-	public void setAccountNum(int accountNum) {
+	public void setAccountNum(long accountNum) {
 		this.accountNum = accountNum;
 	}
 
@@ -111,15 +111,15 @@ public class Check {
 		this.amount = amount;
 	}
 
-	public void setBankNum(int bankNum) {
+	public void setBankNum(long bankNum) {
 		this.bankNum = bankNum;
 	}
 
-	public void setBranchNum(int branchNum) {
+	public void setBranchNum(long branchNum) {
 		this.branchNum = branchNum;
 	}
 
-	public void setCheckNum(int checkNum) {
+	public void setCheckNum(long checkNum) {
 		this.checkNum = checkNum;
 	}
 

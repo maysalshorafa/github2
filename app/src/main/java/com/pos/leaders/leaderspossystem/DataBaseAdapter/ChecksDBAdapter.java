@@ -65,7 +65,7 @@ public class ChecksDBAdapter {
 
 
 
-	public long insertEntry(int checkNum, int bankNum, int branchNum, int accountNum, double amount, Timestamp date, long saleId) {
+	public long insertEntry(long checkNum, long bankNum, long branchNum, long accountNum, double amount, Timestamp date, long saleId) {
         Check check = new Check(Util.idHealth(this.db, CHECKS_TABLE_NAME, CHECKS_COLUMN_ID), checkNum, bankNum, branchNum, accountNum, amount, date, false, saleId);
         //sendToBroker(MessageType.ADD_CHECK, check, this.context);
 

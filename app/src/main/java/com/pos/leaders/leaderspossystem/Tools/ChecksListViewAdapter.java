@@ -142,13 +142,13 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		private EditText etCheckNum;
 		private ImageView btnDelete;
 
-		public int getEtAccountNum() {
+		public long getEtAccountNum() {
 			if(etAccountNum.getText().toString().equals("")){
 				String s= "0";
 				etAccountNum.setText(s);
-				return Integer.parseInt(etAccountNum.getText().toString());
+				return Long.parseLong(etAccountNum.getText().toString());
 			}
-			return Integer.parseInt(etAccountNum.getText().toString());
+			return Long.parseLong(etAccountNum.getText().toString());
 		}
 
 		public Double getEtAmount() {
@@ -167,31 +167,31 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 			etAmount.setText(Util.makePrice(amount));
 		}
 
-		public int getEtBankNum() {
+		public long getEtBankNum() {
 			if(etBankNum.getText().toString().equals("")){
 				String s= "0";
 				etBankNum.setText(s);
-				return Integer.parseInt(etBankNum.getText().toString());
+				return Long.parseLong(etBankNum.getText().toString());
 			}
-			return Integer.parseInt(etBankNum.getText().toString());
+			return Long.parseLong(etBankNum.getText().toString());
 		}
 
-		public int getEtBenchNum() {
+		public long getEtBenchNum() {
 			if(etBenchNum.getText().toString().equals("")){
 				String s= "0";
 				etBenchNum.setText(s);
-				return Integer.parseInt(etBenchNum.getText().toString());
+				return Long.parseLong(etBenchNum.getText().toString());
 			}
-			return Integer.parseInt(etBenchNum.getText().toString());
+			return Long.parseLong(etBenchNum.getText().toString());
 		}
 
-		public int getEtCheckNum() {
+		public long getEtCheckNum() {
 			if(etCheckNum.getText().toString().equals("")){
 				String s= "0";
 				etCheckNum.setText(s);
-				return Integer.parseInt(etCheckNum.getText().toString());
+				return Long.parseLong(etCheckNum.getText().toString());
 			}
-			return Integer.parseInt(etCheckNum.getText().toString());
+			return Long.parseLong(etCheckNum.getText().toString());
 		}
 
 		public String getEtDate() {
@@ -214,31 +214,31 @@ public class ChecksListViewAdapter extends ArrayAdapter {
             }
             return Double.parseDouble(etAmount.getHint().toString());
         }
-        public int getEtBankNumHint() {
+        public long getEtBankNumHint() {
             if(etBankNum.getHint().toString().equals("")){
                 String s= "0";
                 etBankNum.setHint(s);
-                return Integer.parseInt(etBankNum.getHint().toString());
+                return Long.parseLong(etBankNum.getHint().toString());
             }
-            return Integer.parseInt(etBankNum.getHint().toString());
+            return Long.parseLong(etBankNum.getHint().toString());
         }
 
-        public int getEtBenchNumHint() {
+        public long getEtBenchNumHint() {
             if(etBenchNum.getHint().toString().equals("")){
                 String s= "0";
                 etBenchNum.setHint(s);
                 return Integer.parseInt(etBenchNum.getHint().toString());
             }
-            return Integer.parseInt(etBenchNum.getHint().toString());
+            return Long.parseLong(etBenchNum.getHint().toString());
         }
 
-        public int getEtCheckNumHint() {
+        public long getEtCheckNumHint() {
             if(etCheckNum == null || etCheckNum.getHint().equals("")){
                 String s= "0";
                 etCheckNum.setHint(s);
-                return Integer.parseInt(etCheckNum.getHint().toString());
+                return Long.parseLong(etCheckNum.getHint().toString());
             }
-            return Integer.parseInt(etCheckNum.getHint().toString());
+            return Long.parseLong(etCheckNum.getHint().toString());
         }
 
         public String getEtDateHint() {
@@ -249,13 +249,13 @@ public class ChecksListViewAdapter extends ArrayAdapter {
             }
             return etDate.getHint().toString();
         }
-        public int getEtAccountNumHint() {
+        public long getEtAccountNumHint() {
             if(etAccountNum.getHint().toString().equals("")){
                 String s= "0";
                 etAccountNum.setHint(s);
-                return Integer.parseInt(etAccountNum.getHint().toString());
+                return Long.parseLong(etAccountNum.getHint().toString());
             }
-            return Integer.parseInt(etAccountNum.getHint().toString());
+            return Long.parseLong(etAccountNum.getHint().toString());
         }
 	}
 }
