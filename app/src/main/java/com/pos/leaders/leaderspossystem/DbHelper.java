@@ -403,8 +403,11 @@ public class DbHelper extends SQLiteOpenHelper {
                     ClearSync clearSync3 = new ClearSync(context);
                     clearSync3.execute(context);
 
+                break;
+                case 6:
+                    db.execSQL(IdsCounterDBAdapter.addColumn("depositAndPull"));
+                    db.execSQL(IdsCounterDBAdapter.addColumn("depositAndPullDetails"));
                     break;
-
 
 
 
