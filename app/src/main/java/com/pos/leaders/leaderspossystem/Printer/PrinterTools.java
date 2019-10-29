@@ -334,6 +334,7 @@ public class PrinterTools {
                         }
                         try {
                             //cut
+                            AidlUtil.getInstance().print3Line();
                             AidlUtil.getInstance().cut();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -345,7 +346,7 @@ public class PrinterTools {
                             e.printStackTrace();
                         }
 
-
+                        if(!mainMer.equals("")) {
                         newBitmap = combineImageIntoOne(bitmapList);
 
                         try {
@@ -357,6 +358,7 @@ public class PrinterTools {
                         }
                         try {
                             //cut
+                            AidlUtil.getInstance().print3Line();
                             AidlUtil.getInstance().cut();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -366,6 +368,7 @@ public class PrinterTools {
                             AidlUtil.getInstance().openCashBox();
                         } catch (Exception e) {
                             e.printStackTrace();
+                        }
                         }
                     }
                     else if(SETTINGS.printer.equals(PrinterType.BTP880)){
