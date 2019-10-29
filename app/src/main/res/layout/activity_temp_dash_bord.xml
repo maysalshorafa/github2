@@ -125,7 +125,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             ibutton:button_icon="@drawable/custmer_club"
-            ibutton:button_text="@string/customer_club"/>
+            ibutton:button_text="@string/customer_club" />
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/report"
@@ -149,9 +149,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             ibutton:button_icon="@drawable/home"
-            ibutton:button_text="@string/inventory"/>
-
-
+            ibutton:button_text="@string/inventory" />
 
 
     </LinearLayout>

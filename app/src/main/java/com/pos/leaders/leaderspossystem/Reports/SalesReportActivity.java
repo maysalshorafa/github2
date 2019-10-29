@@ -10,9 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -25,11 +28,12 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.Tools.CategoryGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SalesReportListViweAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
-import android.widget.RadioGroup.OnCheckedChangeListener;
+import com.pos.leaders.leaderspossystem.Tools.CategoryGridViewAdapter;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -40,92 +44,77 @@ import java.util.zip.Inflater;
 public class SalesReportActivity extends AppCompatActivity {
 
     TextView etFromDate, etToDate,amount,tvCountSale;
-    ListView lvReport,CatSLVReport;
     Button btncancleReport;
-    RadioGroup radioGroup;
-    RadioButton rbProduct,rdGategory;
+
+    GridView gvCategory;
+    CategoryDBAdapter categoryDBAdapter;
+    List<Category> listCategory;
+    List<Long> order;
+    List<Order> OrderList=new ArrayList<>();
+    ListView lvReport;
     Date from, to;
     double amountReport=0;
+    Long CategoryId;
+    ViewGroup  headerProduct;
+    LinearLayout LAmountRepot;
     private static final int DIALOG_FROM_DATE = 825;
     private static final int DIALOG_TO_DATE = 324;
-    OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(SalesReportActivity.this);
-
-    List<Order> OrderList=new ArrayList<>();
-    List<Order> OrderListFilter=new ArrayList<>();
+    CategoryGridViewAdapter adapter;
+    SaleManagementListViewAdapter adapterOrderList;
     List<Object>objectList = new ArrayList<Object>();
-    List<Category> CategoryList=new ArrayList<>();
-    List<Long>CategoryID=new ArrayList<>();
     List<Long>productID=new ArrayList<>();
-    List<Long> order;
-    ViewGroup headerCategory;
-    ViewGroup headerProduct;
-    SaleManagementListViewAdapter adapter;
-    SalesReportListViweAdapter adapterCategory;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sales_report);
         TitleBar.setTitleBar(this);
-
+        LayoutInflater inflater = getLayoutInflater();
+         headerProduct = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvReport, false);
 
         etFromDate = (TextView) findViewById(R.id.SaleReport_ETFrom);
         etToDate = (TextView) findViewById(R.id.SaleReport_ETTo);
         tvCountSale = (TextView) findViewById(R.id.SaleReport_Count);
-        lvReport = (ListView) findViewById(R.id.SaleReport_LVReport);
-        CatSLVReport= (ListView) findViewById(R.id.CatSaleReport_LVReport);
         amount=(TextView) findViewById(R.id.SaleReport_amount);
         btncancleReport=(Button)findViewById(R.id.SaleReport_cancle);
-        rbProduct=(RadioButton) findViewById(R.id.product_RadioButton);
-        rdGategory=(RadioButton) findViewById(R.id.category_RadioButton);
-
+        gvCategory = (GridView) findViewById(R.id.Category_Report);
+        lvReport = (ListView) findViewById(R.id.SaleReport_LVReport);
+        LAmountRepot=(LinearLayout) findViewById(R.id.Linear_AmountReport);
+        makeList();
         etFromDate.setFocusable(false);
         etFromDate.setText(DateConverter.getBeforeMonth().split(" ")[0]);
         from = DateConverter.stringToDate(DateConverter.getBeforeMonth());
         etToDate.setFocusable(false);
         etToDate.setText(DateConverter.currentDateTime().split(" ")[0]);
         to = DateConverter.stringToDate(DateConverter.currentDateTime());
-        LayoutInflater inflaterCategory = getLayoutInflater();
-        headerCategory = (ViewGroup)inflaterCategory.inflate(R.layout.list_adapter_head_sales_report, lvReport, false);
-        LayoutInflater inflater = getLayoutInflater();
-         headerProduct = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvReport, false);
         etFromDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDialog(DIALOG_FROM_DATE);
             }
         });
-
         etToDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDialog(DIALOG_TO_DATE);
             }
         });
-
-
         btncancleReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-        radioGroup = (RadioGroup)findViewById(R.id.radGroup);
 
-        radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
+        gvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-                if(rbProduct.isChecked())
-                {
-                    setProduct();
-                }
-                else {
-                    setGategory();
-                }
-
-
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                gvCategory.setVisibility(View.GONE);
+                lvReport.setVisibility(View.VISIBLE);
+                CategoryId=listCategory.get(position).getCategoryId();
+                Log.d("CategoryId",CategoryId+"cat");
+                setOrder();
             }
         });
 
@@ -154,7 +143,8 @@ public class SalesReportActivity extends AppCompatActivity {
             etFromDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
             from = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
             view.setMaxDate(from.getTime());
-           // setDate();
+            setOrder();
+            Log.d("rr","from");
         }
     };
 
@@ -165,12 +155,10 @@ public class SalesReportActivity extends AppCompatActivity {
             etToDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
             to = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
             view.setMinDate(to.getTime());
-        //    setDate();
+           setOrder();
         }
     };
-    private void setProduct() {
-        CatSLVReport.setVisibility(View.GONE);
-        lvReport.setVisibility(View.VISIBLE);
+    /*private void setProduct() {
         orderDBAdapter.open();
         OrderList.clear();
         objectList.clear();
@@ -187,15 +175,11 @@ public class SalesReportActivity extends AppCompatActivity {
         amount.setText( amountReport+"");
         tvCountSale.setText(OrderList.size()+"");
 
-        lvReport.addHeaderView( headerProduct, null, false);
         objectList.addAll(OrderList);
         adapter = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
-        lvReport.setAdapter(adapter);
-    }
+    }*/
 
-    private void setGategory() {
-        lvReport.setVisibility(View.GONE);
-        CatSLVReport.setVisibility(View.VISIBLE);
+    /*private void setGategory() {
         CategoryList=new ArrayList<>();
         order=new ArrayList<>();
         OrderList=new ArrayList<>();
@@ -223,9 +207,51 @@ public class SalesReportActivity extends AppCompatActivity {
               OrderListFilter.add(OrderList.get(i+1));
           }
         }
-        CatSLVReport.addHeaderView(headerCategory, null, false);
 
         adapterCategory = new SalesReportListViweAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_report ,objectList);
-        CatSLVReport.setAdapter(adapterCategory);
 
-}}
+}*/
+
+    private void makeList() {
+        // Category Data adapter
+        categoryDBAdapter = new CategoryDBAdapter(this);
+        categoryDBAdapter.open();
+
+        listCategory = categoryDBAdapter.getAllDepartments();
+        adapter = new CategoryGridViewAdapter(SalesReportActivity.this, listCategory);
+        gvCategory.setAdapter(adapter);
+    }
+
+    private void setOrder() {
+        objectList=new ArrayList<>();
+        OrderList=new ArrayList<>();
+        order=new ArrayList<>();
+        productID=new ArrayList<>();
+        ProductDBAdapter productDBAdapter =new ProductDBAdapter(SalesReportActivity.this);
+        productDBAdapter.open();
+        productID=productDBAdapter.getProductByCategory(CategoryId);
+        OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(SalesReportActivity.this);
+        orderDBAdapter.open();
+        order = orderDBAdapter.getOrderDetailsByListIDproduct(productID);
+        OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
+        orderDBAdapter1.open();
+        OrderList = orderDBAdapter1.getBetweenByOrder(from.getTime(), to.getTime(), order);
+        if (OrderList.size()>0){
+            lvReport.setVisibility(View.VISIBLE);
+            LAmountRepot.setVisibility(View.VISIBLE);
+            for (int i=0; i<OrderList.size();i++){
+                amountReport=amountReport+OrderList.get(i).getTotalPrice();
+            }
+            amount.setText( amountReport+"");
+            tvCountSale.setText(OrderList.size()+"");
+        lvReport.addHeaderView( headerProduct, null, false);
+        objectList.addAll(OrderList);
+        adapterOrderList = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
+        lvReport.setAdapter(adapterOrderList);}
+        else {
+            LAmountRepot.setVisibility(View.GONE);
+            lvReport.setVisibility(View.GONE);
+        }
+    }
+
+}

@@ -232,12 +232,11 @@ public class ProductDBAdapter {
         }
         return product;
     }
-    public List<Long> getProductByCategory(List<Long> idCategory) {
+    public List<Long> getProductByCategory(Long idCategory) {
         List<Long> productID =new ArrayList<>();
-        for (int i=0; i<idCategory.size();i++){
             try {
             open();
-            Cursor cursor = db.rawQuery("select "+PRODUCTS_COLUMN_ID+" from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_CATEGORYID +"="+idCategory.get(i), null);
+            Cursor cursor = db.rawQuery("select "+PRODUCTS_COLUMN_ID+" from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_CATEGORYID +"="+idCategory, null);
          /*   if (cursor.getCount() < 1) // UserName Not Exist
             {
                 cursor.close();
@@ -250,7 +249,7 @@ public class ProductDBAdapter {
             }
             } catch (Exception e) {
                 e.printStackTrace();
-            }}
+            }
 
             return productID;
     }

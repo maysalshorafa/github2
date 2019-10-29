@@ -1,8 +1,8 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="30dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
@@ -22,40 +22,6 @@
             android:orientation="vertical"
             android:weightSum="2">
 
-            <RadioGroup
-                android:id="@+id/radGroup"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <RadioButton
-                    android:id="@+id/product_RadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:text="@string/product"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/black"
-                    android:textSize="20dp" />
-
-                <RadioButton
-                    android:id="@+id/category_RadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:text="@string/categorys"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/black"
-                    android:textSize="20dp" />
-            </RadioGroup>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -135,6 +101,8 @@
 
 
             <LinearLayout
+                android:id="@+id/Linear_AmountReport"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -198,6 +166,29 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
+        <GridView
+
+            android:id="@+id/Category_Report"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:horizontalSpacing="16dp"
+            android:numColumns="6"
+            android:verticalSpacing="16dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/BTAddDepartment"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ETdepartmentName"
+            app:layout_constraintVertical_bias="1.0" />
+
         <ListView
             android:id="@+id/SaleReport_LVReport"
             android:layout_width="match_parent"
@@ -209,21 +200,8 @@
             android:nestedScrollingEnabled="true"
             android:numColumns="1"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp" />
-        <ListView
-            android:id="@+id/CatSaleReport_LVReport"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:columnWidth="90dp"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="10px"
-            android:nestedScrollingEnabled="true"
-            android:numColumns="1"
-            android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:visibility="gone"
-           />
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout

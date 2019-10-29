@@ -160,8 +160,25 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         btnSalesReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(ReportsManagementActivity.this, SalesReportActivity.class);
-                startActivity(i);
+               /* Intent i = new Intent(ReportsManagementActivity.this, SalesReportActivity.class);
+                startActivity(i);*/
+               Dialog dialog = new Dialog(ReportsManagementActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.customreport_dialog);
+                Window window = dialog.getWindow();
+                window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                Button bt_product = (Button)dialog.findViewById(R.id.btnproduct);
+                Button bt_Category = (Button)dialog.findViewById(R.id.btnCategory);
+
+                bt_Category.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(ReportsManagementActivity.this, SalesReportActivity.class);
+                        startActivity(i);
+                    }
+                });
+                dialog.show();
+
             }
         });
         btnZ.setOnClickListener(new View.OnClickListener() {
