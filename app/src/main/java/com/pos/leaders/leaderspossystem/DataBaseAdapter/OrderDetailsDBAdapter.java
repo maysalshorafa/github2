@@ -169,6 +169,20 @@ public class OrderDetailsDBAdapter {
 
 		return orderDetails;
 	}
+	public Long getIdProductByIDOrder(long IdOrder){
+		Long productId = null;
+		Cursor cursor = db.rawQuery("select " + ORDER_DETAILES_COLUMN_PRODUCTID + " from " + ORDER_DETAILS_TABLE_NAME + " where " + ORDER_DETAILS_COLUMN_ORDER_ID + "=" + IdOrder, null); 
+		if (cursor.getCount() < 1) // UserName Not Exist
+		{
+			cursor.close();
+			return productId;
+		}
+		cursor.moveToFirst();
+		productId =cursor.getLong(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_PRODUCTID)) ;
+		cursor.close();
+
+		return productId;
+	}
 	public List<Long> getOrderDetailsByIDproduct(long product){
 		OrderDetails orderDetails=new OrderDetails();
       List<Long> orderId =new ArrayList<>();
@@ -183,6 +197,45 @@ public class OrderDetailsDBAdapter {
 		while (cursor.moveToNext()){
 			orderId.add((long) cursor.getLong(0));
 			Log.d("Ddddd", String.valueOf(cursor.getLong(0)));
+		}
+		cursor.close();
+
+		return orderId;
+	}
+	public List<Long> getOrderDetailsByListIDproduct(List<Long> product){
+		OrderDetails orderDetails=new OrderDetails();
+		List<Long> orderId =new ArrayList<>();
+		for (int i=0; i<product.size();i++) {
+			Cursor cursor = db.rawQuery("select " + ORDER_DETAILS_COLUMN_ORDER_ID + " from " + ORDER_DETAILS_TABLE_NAME + " where " + ORDER_DETAILES_COLUMN_PRODUCTID + "=" + product.get(i), null);
+			if (cursor.getCount() < 1) // UserName Not Exist
+			{
+				cursor.close();
+				Log.d("OrderId", "yuy");
+				return orderId;
+			}
+			//cursor.moveToFirst();
+			while (cursor.moveToNext()) {
+				orderId.add((long) cursor.getLong(0));
+				Log.d("NextOrderId", String.valueOf(cursor.getLong(0)));
+			}
+			cursor.close();
+		}
+		return orderId;
+	}
+	public List<Long> getOrderID(){
+		OrderDetails orderDetails=new OrderDetails();
+		List<Long> orderId =new ArrayList<>();
+		Cursor cursor =  db.rawQuery( "select "+ORDER_DETAILS_COLUMN_ORDER_ID+" from "+ ORDER_DETAILS_TABLE_NAME, null );
+		if (cursor.getCount() < 1) // UserName Not Exist
+		{
+			cursor.close();
+			Log.d("OrderId", "yuy");
+			return orderId;
+		}
+		//cursor.moveToFirst();
+		while (cursor.moveToNext()){
+			orderId.add((long) cursor.getLong(0));
+			Log.d("OderIdWithoutProuductId", String.valueOf(cursor.getLong(0)));
 		}
 		cursor.close();
 
