@@ -3608,7 +3608,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     f.readFully(data);
                     Log.d("bitmapsize",context.toString()+"");
 
-                    PrinterTools.pdfLoadImages(data,context,mainMer);
+                    PrinterTools.pdfLoadImages(data,context,"");
                 }
                 catch(Exception ignored)
                 {
@@ -3683,7 +3683,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     f.readFully(data);
                     Log.d("bitmapsize",context.toString()+"");
 
-                    PrinterTools.pdfLoadImages(data,context,mainMer);
+                    PrinterTools.pdfLoadImages(data,context,"");
 
                 }
                 catch(Exception ignored)
@@ -3721,7 +3721,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 f.readFully(data);
                 Log.d("bitmapsize",context.toString()+"");
 
-                PrinterTools.pdfLoadImages(data,context,mainMer);
+                PrinterTools.pdfLoadImages(data,context,"");
             }
             catch(Exception ignored)
             {
@@ -3798,7 +3798,7 @@ public class SalesCartActivity extends AppCompatActivity {
                             f.readFully(data);
                             Log.d("bitmapsize",context.toString()+"");
 
-                            PrinterTools.pdfLoadImages(data,context,mainMer);
+                            PrinterTools.pdfLoadImages(data,context,"");
                         }
                         catch(Exception ignored)
                         {
