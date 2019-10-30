@@ -160,9 +160,9 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         btnSalesReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* Intent i = new Intent(ReportsManagementActivity.this, SalesReportActivity.class);
-                startActivity(i);*/
-               Dialog dialog = new Dialog(ReportsManagementActivity.this);
+               Intent i = new Intent(ReportsManagementActivity.this, SalesReportActivity.class);
+                startActivity(i);
+               /*Dialog dialog = new Dialog(ReportsManagementActivity.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.customreport_dialog);
                 Window window = dialog.getWindow();
@@ -177,7 +177,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                         startActivity(i);
                     }
                 });
-                dialog.show();
+                dialog.show();*/
 
             }
         });
