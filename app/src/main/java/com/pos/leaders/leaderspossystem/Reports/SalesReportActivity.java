@@ -98,10 +98,8 @@ public class SalesReportActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sales_report);
         TitleBar.setTitleBar(this);
-        LayoutInflater inflater = getLayoutInflater();
-         headerCategory = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvReport, false);
-        LayoutInflater  inflaterProduct = getLayoutInflater();
-        headerProduct = (ViewGroup)inflaterProduct.inflate(R.layout.list_adapter_head_row_order, lvReport, false);
+
+
 
         etFromDate = (TextView) findViewById(R.id.SaleReport_ETFrom);
         etToDate = (TextView) findViewById(R.id.SaleReport_ETTo);
@@ -122,7 +120,12 @@ public class SalesReportActivity extends AppCompatActivity {
         etToDate.setFocusable(false);
         etToDate.setText(DateConverter.currentDateTime().split(" ")[0]);
         to = DateConverter.stringToDate(DateConverter.currentDateTime());
-
+        LayoutInflater inflater = getLayoutInflater();
+        headerCategory = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvReport, false);
+        lvReport.addHeaderView(headerCategory, null, false);
+        /*LayoutInflater  inflaterProduct = getLayoutInflater();
+        headerProduct = (ViewGroup)inflaterProduct.inflate(R.layout.list_adapter_head_row_order, lvReport, false);
+        lvReport.addHeaderView(headerProduct, null, false);*/
         etFromDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -284,7 +287,7 @@ public class SalesReportActivity extends AppCompatActivity {
                 if (userScrolled && firstVisibleItem + visibleItemCount == totalItemCount) {
 
                     userScrolled = false;
-                  //  LoadMoreProducts();
+                    LoadMoreProducts();
                 }
             }
         });
@@ -359,13 +362,14 @@ public class SalesReportActivity extends AppCompatActivity {
             }
             amount.setText(amountReport + "");
             tvCountSale.setText(OrderList.size() + "");
-            lvReport.addHeaderView(headerCategory, null, false);
             objectList.addAll(OrderList);
             adapterOrderList = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
             lvReport.setAdapter(adapterOrderList);
         } else {
             LAmountRepot.setVisibility(View.GONE);
             lvReport.setVisibility(View.GONE);
+            Toast.makeText(SalesReportActivity.this, "لا يوجد بيعات!",
+                    Toast.LENGTH_LONG).show();
         }
     }
     private void SetOrderProduct() {
@@ -394,7 +398,7 @@ public class SalesReportActivity extends AppCompatActivity {
         }
         amount.setText( amountReport+"");
         tvCountSale.setText(OrderList.size()+"");
-        lvReport.addHeaderView(headerProduct, null, false);
+
         objectList.addAll(OrderList);
         adapterListProduct = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
         lvReport.setAdapter(adapterListProduct);
@@ -402,6 +406,8 @@ public class SalesReportActivity extends AppCompatActivity {
         else {
             LAmountRepot.setVisibility(View.GONE);
             lvReport.setVisibility(View.GONE);
+            Toast.makeText(SalesReportActivity.this, "لا يوجد بيعات!",
+                    Toast.LENGTH_LONG).show();
         }
     }
     protected void LoadMoreProducts(){
