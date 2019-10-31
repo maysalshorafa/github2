@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,6 +27,7 @@ import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.sun.pdfview.PDFFile;
 import com.sun.pdfview.PDFPage;
 
@@ -145,7 +147,9 @@ public class MonthZReportView extends AppCompatActivity {
         zReportDBAdapter.open();
         zReportList=new ArrayList<>();
         zReportList = zReportDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime()+ DAY_MINUS_ONE_SECOND);
-        zReportList.remove(zReportList.get(0));
+        if(zReportList.size()>1) {
+            zReportList.remove(zReportList.get(0));
+        }
         if(zReportList.size()>0){
             imageView.setVisibility(View.VISIBLE);
             ZReport zReport = null;
@@ -255,6 +259,9 @@ public class MonthZReportView extends AppCompatActivity {
                 protected void onPostExecute(String html)
                 {
                     Log.d("bitmapsize2222",bitmapList.size()+"");
+                    if(newBitmap!=null){
+                    newBitmap= Util.removeMargins2(newBitmap, Color.WHITE);
+                    }
                     newBitmap= combineImageIntoOne(bitmapList);
                     try {
                         Thread.sleep(1000);
