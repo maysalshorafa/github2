@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Base64;
@@ -21,6 +22,7 @@ import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.sun.pdfview.PDFFile;
 import com.sun.pdfview.PDFPage;
 
@@ -297,6 +299,7 @@ public class PrinterTools {
                 {
                     Log.d("bitmapsize2222",bitmapList.size()+"");
                         newBitmap = combineImageIntoOne(bitmapList);
+                    newBitmap= Util.removeMargins2(newBitmap, Color.WHITE);
                     byte b = 0;
                     if(SETTINGS.printer.equals(PrinterType.HPRT_TP805)){
                     try {

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -408,14 +409,17 @@ public class ReportZDetailsActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(x==true) {
+                    newBitmap= Util.removeMargins2(newBitmap, Color.WHITE);
                     pt.PrintReport(newBitmap);
                     onBackPressed();
                 }else {
                     if(fromDashBoard){
+                        newBitmap= Util.removeMargins2(newBitmap, Color.WHITE);
                         pt.PrintReport(newBitmap);
                    //     onBackPressed();
 
                     }else {
+                        newBitmap= Util.removeMargins2(newBitmap, Color.WHITE);
                         pt.PrintReport(newBitmap);
               // onBackPressed();
                     }
