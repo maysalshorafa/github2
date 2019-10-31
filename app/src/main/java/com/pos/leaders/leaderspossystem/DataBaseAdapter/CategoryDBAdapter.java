@@ -79,7 +79,24 @@ public class CategoryDBAdapter {
             return -1;
         }
     }
-
+    public String getNameByIDCategory(long IdCategory){
+        Category department = null;
+        Cursor cursor = db.rawQuery("select * from " + CATEGORY_TABLE_NAME + " where id='" + IdCategory + "'", null);
+        if (cursor.getCount() < 1) // UserName Not Exist
+        {
+            cursor.close();
+            return "";
+        }
+        cursor.moveToFirst();
+        department = new Category(Long.parseLong(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_ID))), cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_NAME)),
+                Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_CREATINGDATE))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_BYUSER))),
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_DISENABLED))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_BRANCH_ID))));
+        cursor.close();
+        Log.d("category",department.toString());
+        return department.getName();
+    }
     public long insertEntry(Category department) {
         ContentValues val = new ContentValues();
         //Assign values for each row.

@@ -465,6 +465,8 @@
     <string name="not_selected_products">الرجاء اختيار منتوج</string>
     <string name="receipt_numbers">ارقام الوصول</string>
     <string name="reference_invoice">رقم الفاتورة الخاص بها</string>
+    <string name="sale_report">تقرير المبيعات</string>
+    <string name="title_sales_report_activity">تقرير المبيعات</string>
 
 
     <string-array name="credit_card_type">

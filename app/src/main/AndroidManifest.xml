@@ -241,8 +241,11 @@
         <activity
             android:name=".DepositAndPullReportView"
             android:label="@string/deposit_and_pull_reportView" />
-        <activity android:name=".Reports.NumberOfSaleProductReport"
-            android:label="@string/title_user_number_sale_report_activity"></activity>
+        <activity
+            android:name=".Reports.NumberOfSaleProductReport"
+            android:label="@string/title_user_number_sale_report_activity" />
+        <activity android:name=".Reports.SalesReportActivity"
+            android:label= "@string/title_sales_report_activity"></activity>
     </application>
 
 </manifest>

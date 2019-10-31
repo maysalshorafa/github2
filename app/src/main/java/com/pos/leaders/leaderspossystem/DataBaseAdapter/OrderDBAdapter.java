@@ -286,6 +286,31 @@ e.printStackTrace();
 		}}
 		return saleList;
 	}
+
+	public List<Order> getBetweenOrder(long from, long to){
+		List<Order> saleList = new ArrayList<Order>();
+
+
+			try {
+				open();
+
+				Cursor cursor =db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ORDERDATE +" between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')",null);
+				//Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +"="+idOrder.get(i),null);
+				//Cursor cursor = db.rawQuery("select * from "+ORDER_DETAILS_TABLE_NAME+" where "+ORDER_COLUMN_ORDERDATE+" <= "+to+" and "+ORDER_COLUMN_ORDERDATE +" >= "+from,null);
+
+				Log.d("iii", "jjj");
+				while (cursor.moveToNext()){
+					saleList.add(makeSale(cursor));
+					Log.d("Ddddfffd", String.valueOf(makeSale(cursor)));
+				}
+
+				close();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		return saleList;
+	}
 	public List<Order> getBetweenTwoSalesForClosingReport(long from, long to){
 		List<Order> saleList = new ArrayList<Order>();
 		try {

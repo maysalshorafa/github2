@@ -232,7 +232,27 @@ public class ProductDBAdapter {
         }
         return product;
     }
+    public List<Long> getProductByCategory(Long idCategory) {
+        List<Long> productID =new ArrayList<>();
+            try {
+            open();
+            Cursor cursor = db.rawQuery("select "+PRODUCTS_COLUMN_ID+" from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_CATEGORYID +"="+idCategory, null);
+         /*   if (cursor.getCount() < 1) // UserName Not Exist
+            {
+                cursor.close();
+                Log.d("productID", "yuy");
+                return productID;
+            }*/
+            while (cursor.moveToNext()){
+                productID.add((long) cursor.getLong(0));
+                Log.d("NextProductId", String.valueOf(cursor.getLong(0)));
+            }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
+            return productID;
+    }
     public int getProductsCount() {
         String countQuery="";
         if(!SETTINGS.enableAllBranch){
@@ -531,7 +551,20 @@ public class ProductDBAdapter {
         }
         return productsList;
     }
+    public Long getIdProductByIDOrder(long productId){
+        Long categoryId = null;
+        Cursor cursor = db.rawQuery("select " + PRODUCTS_COLUMN_CATEGORYID + " from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_ID + "=" + productId, null);
+        if (cursor.getCount() < 1) // UserName Not Exist
+        {
+            cursor.close();
+            return categoryId;
+        }
+        cursor.moveToFirst();
+        categoryId =cursor.getLong(cursor.getColumnIndex(PRODUCTS_COLUMN_CATEGORYID)) ;
+        cursor.close();
 
+        return categoryId;
+    }
     private Product makeProduct(Cursor cursor){
         int withTaxValue = cursor.getInt(cursor.getColumnIndex(PRODUCTS_COLUMN_WITHTAX));
 

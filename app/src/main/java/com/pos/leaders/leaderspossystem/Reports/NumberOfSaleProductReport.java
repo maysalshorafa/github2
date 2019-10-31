@@ -33,7 +33,6 @@ public class NumberOfSaleProductReport extends AppCompatActivity {
     Button cancleReport;
 
     Date from, to;
-    int mYear, mMonth, mDay;
 
     long productID;
 
@@ -116,7 +115,6 @@ public class NumberOfSaleProductReport extends AppCompatActivity {
             ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvReport, false);
             lvReport.addHeaderView(header, null, false);
             objectList.addAll(OrderList);
-
             adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, objectList);
             lvReport.setAdapter(adapter);
 

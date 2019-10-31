@@ -747,6 +747,8 @@
     <string name="pin_pad">Pin Pad</string>
     <string name="this_Operation_just_for_master_employee">This Operation just for master employee !!</string>
     <string name="SelectServer">Select Server</string>
+    <string name="sale_report">Sales Report</string>
+    <string name="title_sales_report_activity">Sales Report</string>
 
 </resources>
 

@@ -39,6 +39,7 @@ import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.XReport;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Reports.SalesReportActivity;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -55,7 +56,8 @@ public class ReportsManagementActivity  extends AppCompatActivity {
     public static final String COM_LEADPOS_XREPORT_TOTAL_AMOUNT = "COM_LEADPOS_XREPORT_TOTAL_AMOUNT";
     public static final String COM_LEADPOS_XREPORT_AMOUNT = "COM_LEADPOS_XREPORT_AMOUNT";
 
-    Button btnZ, btnZView,btnX, btnOrder,btnExFiles ,btnSalesMan , btnInvoice , btnClosingReport , btnMonthZReportView,btnOffers,btnPullReport,btnDepositReport;
+    Button btnZ, btnZView,btnX, btnOrder,btnExFiles ,btnSalesMan , btnInvoice , btnClosingReport ,
+            btnMonthZReportView,btnOffers,btnPullReport,btnDepositReport, btnSalesReport;
     double pullReportTotalAmount=0;
     ZReportDBAdapter zReportDBAdapter;
     OrderDBAdapter saleDBAdapter;
@@ -101,6 +103,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         btnMonthZReportView = (Button)findViewById(R.id.reportManagementActivity_btnMonthZReportView);
         btnPullReport = (Button)findViewById(R.id.reportManagementActivity_btnPullReport);
         btnDepositReport=(Button)findViewById(R.id.reportManagementActivity_btnDepositReport);
+        btnSalesReport=(Button)findViewById(R.id.reportSalestActivity_btnSaleReport);
         zReportDBAdapter = new ZReportDBAdapter(this);
         saleDBAdapter = new OrderDBAdapter(this);
         btnOffers = (Button)findViewById(R.id.reportManagementActivity_btnOffers);
@@ -154,6 +157,30 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                 btnClosingReport.setEnabled(true);
             }
         }
+        btnSalesReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Intent i = new Intent(ReportsManagementActivity.this, SalesReportActivity.class);
+                startActivity(i);
+               /*Dialog dialog = new Dialog(ReportsManagementActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.customreport_dialog);
+                Window window = dialog.getWindow();
+                window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                Button bt_product = (Button)dialog.findViewById(R.id.btnproduct);
+                Button bt_Category = (Button)dialog.findViewById(R.id.btnCategory);
+
+                bt_Category.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(ReportsManagementActivity.this, SalesReportActivity.class);
+                        startActivity(i);
+                    }
+                });
+                dialog.show();*/
+
+            }
+        });
         btnZ.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
