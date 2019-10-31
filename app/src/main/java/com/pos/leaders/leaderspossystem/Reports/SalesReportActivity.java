@@ -1,14 +1,11 @@
 package com.pos.leaders.leaderspossystem.Reports;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,15 +17,13 @@ import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
@@ -37,22 +32,18 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.ProductCatalogActivity;
-import com.pos.leaders.leaderspossystem.ProductsActivity;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.CategoryGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.SalesReportListViweAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
-import com.pos.leaders.leaderspossystem.Tools.CategoryGridViewAdapter;
-import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.zip.Inflater;
 
 public class SalesReportActivity extends AppCompatActivity {
 
@@ -90,6 +81,7 @@ public class SalesReportActivity extends AppCompatActivity {
     List<Product> productsList;
     ProductCatalogGridViewAdapter adapterProduct;
     SaleManagementListViewAdapter adapterListProduct;
+    String flageGridOnClick="";
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,6 +191,7 @@ public class SalesReportActivity extends AppCompatActivity {
         gvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                flageGridOnClick="gvCategory";
                 gvProducts.setVisibility(View.GONE);
                 etSearch.setVisibility(View.GONE);
                 gvCategory.setVisibility(View.GONE);
@@ -270,7 +263,8 @@ public class SalesReportActivity extends AppCompatActivity {
 
 
                 productIdSelect= filter_productsList.get(position).getProductId();
-                SetOrderProduct();
+                flageGridOnClick="gvProducts";
+                setOrder();
 
             }
         });
@@ -293,7 +287,6 @@ public class SalesReportActivity extends AppCompatActivity {
         });
     }
 
-    @Override
     protected Dialog onCreateDialog(int id) {
         if (id == DIALOG_FROM_DATE) {
             DatePickerDialog datePickerDialog = new DatePickerDialog(this, onFromDateSetListener, Integer.parseInt(from.toString().split(" ")[5]), from.getMonth(), Integer.parseInt(from.toString().split(" ")[2]));
@@ -315,9 +308,8 @@ public class SalesReportActivity extends AppCompatActivity {
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             etFromDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
             from = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
-            view.setMaxDate(from.getTime());
+            view.setMaxDate(to.getTime());
             setOrder();
-            Log.d("rr","from");
         }
     };
 
@@ -327,8 +319,8 @@ public class SalesReportActivity extends AppCompatActivity {
 
             etToDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
             to = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
-            view.setMinDate(to.getTime());
-           setOrder();
+            view.setMinDate(from.getTime());
+            setOrder();
         }
     };
     private void makeList() {
@@ -341,6 +333,10 @@ public class SalesReportActivity extends AppCompatActivity {
     }
 
     private void setOrder() {
+        amountReport=0;
+
+
+        if (flageGridOnClick.equals("gvCategory")){
         objectList = new ArrayList<>();
         OrderList = new ArrayList<>();
         order = new ArrayList<>();
@@ -353,7 +349,10 @@ public class SalesReportActivity extends AppCompatActivity {
         order = orderDBAdapter.getOrderDetailsByListIDproduct(productID);
         OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
         orderDBAdapter1.open();
+            Log.d("fromProduct",from.toString()+to.toString()+" "+CategoryId);
+            Log.d("order",order.toString());
         OrderList = orderDBAdapter1.getBetweenByOrder(from.getTime(), to.getTime(), order);
+            Log.d("OrderList",OrderList.toString());
         if (OrderList.size() > 0) {
             lvReport.setVisibility(View.VISIBLE);
             LAmountRepot.setVisibility(View.VISIBLE);
@@ -370,46 +369,72 @@ public class SalesReportActivity extends AppCompatActivity {
             lvReport.setVisibility(View.GONE);
             Toast.makeText(SalesReportActivity.this, "لا يوجد بيعات!",
                     Toast.LENGTH_LONG).show();
-        }
-    }
-    private void SetOrderProduct() {
-        objectList = new ArrayList<>();
-        OrderList = new ArrayList<>();
-        orderProduct = new ArrayList<>();
-        Log.d("jjp",productIdSelect+"");
-        OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(SalesReportActivity.this);
-        orderDBAdapter.open();
-        orderProduct = orderDBAdapter.getOrderDetailsByIDproduct(productIdSelect);
-        Log.d("orderDetialsAdapter", String.valueOf(order));
-        OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
-        orderDBAdapter1.open();
-        OrderList = orderDBAdapter1.getBetweenByOrder(from.getTime(), to.getTime(), orderProduct);
-        Log.d("OrderList", OrderList.toString());
-        if (OrderList.size() > 0) {
-            gvCategory.setVisibility(View.GONE);
-            gvProducts.setVisibility(View.GONE);
-            etSearch.setVisibility(View.GONE);
-            lvReport.setVisibility(View.VISIBLE);
-            LAmountRepot.setVisibility(View.VISIBLE);
+        }}
+        else if (flageGridOnClick.equals("gvProducts")){
+            objectList = new ArrayList<>();
+            OrderList = new ArrayList<>();
+            orderProduct = new ArrayList<>();
+            Log.d("jjp",productIdSelect+"");
+            OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(SalesReportActivity.this);
+            orderDBAdapter.open();
+            orderProduct = orderDBAdapter.getOrderDetailsByIDproduct(productIdSelect);
+            Log.d("fromCa",from.toString()+to.toString()+" "+orderProduct.toString());
+            OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
+            orderDBAdapter1.open();
+
+            for(int i=0;i<orderProduct.size();i++) {
+                Order o = orderDBAdapter1.getOrderById(orderProduct.get(i));
+                Date date = new Date(o.getCreatedAt().getTime());
+               String date1 = new SimpleDateFormat("dd/MM/yyyy").format(date);
+
+                Date date2 = new Date(from.getTime());
+                String date3 = new SimpleDateFormat("dd/MM/yyyy").format(date2);
+
+                Date date4 = new Date(to.getTime());
+                String date5 = new SimpleDateFormat("dd/MM/yyyy").format(date4);
+                try {
+                    Date d1=new SimpleDateFormat("dd/MM/yyyy").parse(date1);
+                    Date d2=new SimpleDateFormat("dd/MM/yyyy").parse(date3);
+                    Date d3=new SimpleDateFormat("dd/MM/yyyy").parse(date5);
+                    Log.d("testdate",d1+ ""+d2+"  "+d3);
+                    if(d1.before(d2)&&d1.after(d3)){
+                        //&&new Date(DateConverter.toDate(o.getCreatedAt())).compareTo(new Date(DateConverter.toDate(to.getDate())))<0
+                        OrderList.add(o);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
 
-        for (int i=0; i<OrderList.size();i++){
-            amountReport=amountReport+OrderList.get(i).getTotalPrice();
-        }
-        amount.setText( amountReport+"");
-        tvCountSale.setText(OrderList.size()+"");
 
-        objectList.addAll(OrderList);
-        adapterListProduct = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
-        lvReport.setAdapter(adapterListProduct);
-    }
-        else {
-            LAmountRepot.setVisibility(View.GONE);
-            lvReport.setVisibility(View.GONE);
-            Toast.makeText(SalesReportActivity.this, "لا يوجد بيعات!",
-                    Toast.LENGTH_LONG).show();
-        }
-    }
+          //  OrderList = orderDBAdapter1.getBetweenByOrder(from.getTime(), to.getTime(), orderProduct);
+            Log.d("OrderList", OrderList.toString());
+            if (OrderList.size() > 0) {
+                gvCategory.setVisibility(View.GONE);
+                gvProducts.setVisibility(View.GONE);
+                etSearch.setVisibility(View.GONE);
+                lvReport.setVisibility(View.VISIBLE);
+                LAmountRepot.setVisibility(View.VISIBLE);
+
+
+                for (int i1=0; i1<OrderList.size();i1++){
+                    amountReport=amountReport+OrderList.get(i1).getTotalPrice();
+                }
+                amount.setText( amountReport+"");
+                tvCountSale.setText(OrderList.size()+"");
+
+                objectList.addAll(OrderList);
+                adapterListProduct = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
+                lvReport.setAdapter(adapterListProduct);
+            }
+            else {
+                LAmountRepot.setVisibility(View.GONE);
+                lvReport.setVisibility(View.GONE);
+                Toast.makeText(SalesReportActivity.this, "لا يوجد بيعات!",
+                        Toast.LENGTH_LONG).show();
+            }
+        }}}
+
     protected void LoadMoreProducts(){
         final ProgressDialog dialog=new ProgressDialog(SalesReportActivity.this);
         dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish));

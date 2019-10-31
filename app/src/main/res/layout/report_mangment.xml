@@ -221,6 +221,7 @@
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="normal|bold"
+            android:visibility="gone"
             />
 
 

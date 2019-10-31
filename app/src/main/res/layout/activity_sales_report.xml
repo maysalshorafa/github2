@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:weightSum="2">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,7 +30,6 @@
                 android:weightSum="2">
 
 
-
                 <Button
 
                     android:id="@+id/btn_product"
@@ -41,9 +41,9 @@
                     android:background="@drawable/bubble"
                     android:gravity="center"
                     android:paddingLeft="5dp"
+                    android:text="@string/product"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:text="منتج"
                     android:textSize="20dp" />
 
 
@@ -57,14 +57,15 @@
                     android:background="@drawable/bubble"
                     android:gravity="center"
                     android:paddingLeft="5dp"
+                    android:text="@string/categorys"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:text="اقسام"
                     android:textSize="20dp" />
             </LinearLayout>
 
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -150,11 +151,11 @@
 
             <LinearLayout
                 android:id="@+id/Linear_AmountReport"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:weightSum="4">
 
                 <TextView
@@ -204,13 +205,14 @@
                     android:textColor="@color/black"
                     android:textSize="20dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/Linear_AmountReport"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:weightSum="4">
 
                 <TextView
@@ -261,6 +263,7 @@
                     android:textSize="20dp" />
             </LinearLayout>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -269,11 +272,11 @@
 
             <LinearLayout
                 android:id="@+id/Linear_AmountReport"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:weightSum="4">
 
                 <TextView
@@ -338,17 +341,18 @@
             android:drawableLeft="@drawable/search_icon"
             android:hint="@android:string/search_go"
             android:inputType="textPersonName"
+            android:textAlignment="textEnd"
+            android:visibility="gone"
             app:drawableLeftCompat="@drawable/ic_icons_leaders_search"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_constraintLeft_creator="1"
-            tools:layout_constraintRight_creator="1"
-            android:textAlignment="textEnd"
-            android:visibility="gone"/>
+            tools:layout_constraintRight_creator="1" />
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
