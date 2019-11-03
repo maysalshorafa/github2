@@ -308,7 +308,7 @@ public class SalesReportActivity extends AppCompatActivity {
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             etFromDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
             from = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
-            view.setMaxDate(to.getTime());
+          //  view.setMaxDate(to.getTime());
             setOrder();
         }
     };
@@ -319,7 +319,7 @@ public class SalesReportActivity extends AppCompatActivity {
 
             etToDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
             to = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
-            view.setMinDate(from.getTime());
+          //  view.setMinDate(from.getTime());
             setOrder();
         }
     };
@@ -347,29 +347,57 @@ public class SalesReportActivity extends AppCompatActivity {
         OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(SalesReportActivity.this);
         orderDBAdapter.open();
         order = orderDBAdapter.getOrderDetailsByListIDproduct(productID);
-        OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
-        orderDBAdapter1.open();
-            Log.d("fromProduct",from.toString()+to.toString()+" "+CategoryId);
+           /* Log.d("fromProduct",from.toString()+to.toString()+" "+CategoryId);
             Log.d("order",order.toString());
-        OrderList = orderDBAdapter1.getBetweenByOrder(from.getTime(), to.getTime(), order);
-            Log.d("OrderList",OrderList.toString());
-        if (OrderList.size() > 0) {
-            lvReport.setVisibility(View.VISIBLE);
-            LAmountRepot.setVisibility(View.VISIBLE);
-            for (int i = 0; i < OrderList.size(); i++) {
-                amountReport = amountReport + OrderList.get(i).getTotalPrice();
+        OrderList = orderDBAdapter1.getBetweenByOrder(from.getTime(), to.getTime(), order);*/
+
+
+            OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
+            orderDBAdapter1.open();
+
+            for(int i=0;i<order.size();i++) {
+                Order o = orderDBAdapter1.getOrderById(order.get(i));
+                Date date = new Date(o.getCreatedAt().getTime());
+                String date1 = new SimpleDateFormat("dd/MM/yyyy").format(date);
+
+                Date date2 = new Date(from.getTime());
+                String date3 = new SimpleDateFormat("dd/MM/yyyy").format(date2);
+
+                Date date4 = new Date(to.getTime());
+                String date5 = new SimpleDateFormat("dd/MM/yyyy").format(date4);
+                try {
+                    Date d1 = new SimpleDateFormat("dd/MM/yyyy").parse(date1);
+                    Date d2 = new SimpleDateFormat("dd/MM/yyyy").parse(date3);
+                    Date d3 = new SimpleDateFormat("dd/MM/yyyy").parse(date5);
+                    Log.d("testdate", d1.compareTo(d2) + "" + d2 + "  " + d3);
+                    if ((d1.compareTo(d2) > 0 || d1.compareTo(d2) == 0) && (d1.compareTo(d3) < 0 || d1.compareTo(d3) == 0)) {
+                        //&&new Date(DateConverter.toDate(o.getCreatedAt())).compareTo(new Date(DateConverter.toDate(to.getDate())))<0
+                        OrderList.add(o);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("OrderList", OrderList.toString());
+                if (OrderList.size() > 0) {
+                    lvReport.setVisibility(View.VISIBLE);
+                    LAmountRepot.setVisibility(View.VISIBLE);
+                    for (int i2 = 0; i2 < OrderList.size(); i2++) {
+                        amountReport = amountReport + OrderList.get(i2).getTotalPrice();
+                    }
+                    amount.setText(amountReport + "");
+                    tvCountSale.setText(OrderList.size() + "");
+                    objectList.addAll(OrderList);
+                    adapterOrderList = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
+                    lvReport.setAdapter(adapterOrderList);
+                } else {
+                    LAmountRepot.setVisibility(View.GONE);
+                    lvReport.setVisibility(View.GONE);
+                    Toast.makeText(SalesReportActivity.this, "لا يوجد بيعات!",
+                            Toast.LENGTH_LONG).show();
+                }
             }
-            amount.setText(amountReport + "");
-            tvCountSale.setText(OrderList.size() + "");
-            objectList.addAll(OrderList);
-            adapterOrderList = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
-            lvReport.setAdapter(adapterOrderList);
-        } else {
-            LAmountRepot.setVisibility(View.GONE);
-            lvReport.setVisibility(View.GONE);
-            Toast.makeText(SalesReportActivity.this, "لا يوجد بيعات!",
-                    Toast.LENGTH_LONG).show();
-        }}
+        }
         else if (flageGridOnClick.equals("gvProducts")){
             objectList = new ArrayList<>();
             OrderList = new ArrayList<>();
@@ -396,8 +424,8 @@ public class SalesReportActivity extends AppCompatActivity {
                     Date d1=new SimpleDateFormat("dd/MM/yyyy").parse(date1);
                     Date d2=new SimpleDateFormat("dd/MM/yyyy").parse(date3);
                     Date d3=new SimpleDateFormat("dd/MM/yyyy").parse(date5);
-                    Log.d("testdate",d1+ ""+d2+"  "+d3);
-                    if(d1.before(d2)&&d1.after(d3)){
+                    Log.d("testdate",d1.compareTo(d2)+ ""+d2+"  "+d3);
+                    if((d1.compareTo(d2)>0 || d1.compareTo(d2)==0)&&(d1.compareTo(d3)<0 || d1.compareTo(d3)==0) ){
                         //&&new Date(DateConverter.toDate(o.getCreatedAt())).compareTo(new Date(DateConverter.toDate(to.getDate())))<0
                         OrderList.add(o);
                     }
@@ -433,7 +461,9 @@ public class SalesReportActivity extends AppCompatActivity {
                 Toast.makeText(SalesReportActivity.this, "لا يوجد بيعات!",
                         Toast.LENGTH_LONG).show();
             }
-        }}}
+        }
+        }
+        }
 
     protected void LoadMoreProducts(){
         final ProgressDialog dialog=new ProgressDialog(SalesReportActivity.this);
