@@ -749,6 +749,7 @@
     <string name="SelectServer">Select Server</string>
     <string name="sale_report">Sales Report</string>
     <string name="title_sales_report_activity">Sales Report</string>
+    <string name="there_are_no_sales">There are no sales</string>
 
 </resources>
 

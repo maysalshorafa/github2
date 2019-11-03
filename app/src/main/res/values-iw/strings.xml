@@ -671,5 +671,7 @@
     <string name="this_Operation_just_for_master_employee">פעולה זו אינה בגדר ההרשאות שלך</string>
     <string name="sale_report">דוח מכירות</string>
     <string name="title_sales_report_activity">דוח מכירות</string>
+    <string name="there_are_no_sales">אין מכירות</string>
+
 
 </resources>

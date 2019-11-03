@@ -393,7 +393,7 @@ public class SalesReportActivity extends AppCompatActivity {
                 } else {
                     LAmountRepot.setVisibility(View.GONE);
                     lvReport.setVisibility(View.GONE);
-                    Toast.makeText(SalesReportActivity.this, "لا يوجد بيعات!",
+                    Toast.makeText(SalesReportActivity.this, R.string.there_are_no_sales,
                             Toast.LENGTH_LONG).show();
                 }
             }
@@ -458,7 +458,7 @@ public class SalesReportActivity extends AppCompatActivity {
             else {
                 LAmountRepot.setVisibility(View.GONE);
                 lvReport.setVisibility(View.GONE);
-                Toast.makeText(SalesReportActivity.this, "لا يوجد بيعات!",
+                Toast.makeText(SalesReportActivity.this, R.string.there_are_no_sales,
                         Toast.LENGTH_LONG).show();
             }
         }
