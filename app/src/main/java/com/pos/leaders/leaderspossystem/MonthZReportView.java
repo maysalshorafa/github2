@@ -120,8 +120,9 @@ public class MonthZReportView extends AppCompatActivity {
         btPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (newBitmap!=null){
                 pt.PrintReport(newBitmap);
-                onBackPressed();
+                onBackPressed();}
             }
         });
     }
@@ -214,6 +215,7 @@ public class MonthZReportView extends AppCompatActivity {
 
                 zReportCount=new ZReportCount(0,cashTotalC,checkTotalC,creditTotalC,invoiceAmountC,creditInvoiceAmountC,shekelAmountC,usdAmountC,eurAmountC,gbpAmountC,invoiceReceiptAmountC,0);
                 zReport=new ZReport(0,new Timestamp(System.currentTimeMillis()),zReportList.get(0).getByUser(),0,0,totalAmount,totalSales,cashTotal,checkTotal,creditTotal,zReportList.get(zReportList.size()-1).getTotalPosSales(),zReportList.get(0).getTax(),invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,0,0,"close");
+
             PdfUA pdfUA = new PdfUA();
 
             try {
@@ -311,7 +313,8 @@ public class MonthZReportView extends AppCompatActivity {
                     //after async close progress dialog
                     progressDialog.dismiss();
                     //load the html in the webview
-                    //  wv.loadDataWithBaseURL("", html, "text/html","UTF-8", "");
+                    //  wv.loadDataW
+                    // ithBaseURL("", html, "text/html","UTF-8", "");
                 }
 
                 @Override

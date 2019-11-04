@@ -43,7 +43,7 @@
     <string name="invoice_with_tax">חש\' מס-קבלה</string>
     <string name="credit_invoice">חש\' זיכוי</string>
     <string name="replacement_invoice">פתק החלפה</string>
-    <string name="copyinvoice">הפקת עותק</string>
+    <string name="copyinvoice">שכפול חשבונית</string>
     <string name="cancel_invoice">ביטול עסקה</string>
 
     <!--Z Report-->
@@ -365,7 +365,7 @@
     <string name="pref_header_general">כללי</string>
     <string name="price_after_discount">מחיר אחר הנחה</string>
     <string name="price_before_discount">מחיר לפני הנחה</string>
-    <string name="print">הדפסה</string>
+    <string name="print">הדפסת העתק</string>
     <string name="print_copy_invoice">האם תרצה להדפיס עותק?</string>
     <string name="printer_type">סוג המדפסת</string>
     <string name="product_barcode_not_available">באר-קוד קיים במערכת</string>
@@ -646,7 +646,7 @@
     <string name="deposit_report">"הפקדה לקופה "</string>
     <string name="pin_pad">פין פאד</string>
     <string name="inventory_doc">תעודת כניסה למחסן</string>
-    <string name="inventory_in">דוחות מחסן</string>
+    <string name="inventory_in">הכנסת מוצרים למחסן</string>
     <string name="inventory_management_activity">ניהול מחסנים</string>
     <string name="inventory_out">הוצאת מוצרים ממחסן</string>
     <string name="please_choose_your_provider">בחירת ספק</string>
@@ -662,7 +662,7 @@
     <string name="success_edit_provider">עודכן נתוני ספק בהצלחה</string>
     <string name="success_adding_new_provider">ספק הוסף בהצלחה</string>
     <string name="multi_count_price">נא הכנס כמות מוצר</string>
-    <string name="in_inventory_doc">תעודת כניסה למחסן</string>
+    <string name="in_inventory_doc">תעודות מלאי</string>
     <string name="can_not_add_provider_please_try_again">לא הצליח להוסיף ספק, נא נסה שנית</string>
     <string name="can_not_edit_provider_please_try_again">לא הצליח לעדכן נתוני ספק</string>
     <string name="create_offer_category_activity">הקמת קבוצת מבצע</string>
@@ -672,6 +672,7 @@
     <string name="sale_report">דוח מכירות</string>
     <string name="title_sales_report_activity">דוח מכירות</string>
     <string name="there_are_no_sales">אין מכירות</string>
+    <string name="product_count">כמות מוצרים</string>
 
 
 </resources>

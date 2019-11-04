@@ -279,7 +279,7 @@
 
     <!--Z Report-->
     <string name="z_number">Z Number</string>
-    <string name="print">Print</string>
+    <string name="print">Print Copy</string>
     <string name="calculate">Calculate</string>
 
     <!--Backup-->
@@ -302,6 +302,7 @@
     <string name="pref_title_social_recommendations" translatable="false">Enable social recommendations</string>
     <string name="please_enable_credit_card">Please Enable Credit Card</string>
     <string name="fail_to_make_internet_connection">Fail to Make Internet Connection.</string>
+    <string name="product_count">Product Count</string>
 
 
     <string name="pref_title_display_name" translatable="false">Display name</string>
@@ -739,7 +740,7 @@
 
     <string name="inventory_management_activity">Inventory Management</string>
     <string name="provider_management_activity">Provider Management</string>
-    <string name="in_inventory_doc">In Inventory</string>
+    <string name="in_inventory_doc">Doucment Inventory</string>
     <string name="deposit_and_pull_reportView">Deposit And Pull Report View</string>
     <string name="this_product_not_in_your_permission">This Product not found but Not on your Permission To Add Product !!</string>
     <string name="Pull">Pull</string>

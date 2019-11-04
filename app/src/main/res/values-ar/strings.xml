@@ -81,7 +81,7 @@
     <string name="barcode">الباركود</string>
     <string name="cost_price">سعر التكلفة</string>
     <string name="weight">الوزن</string>
-    <string name="print">طباعة</string>
+    <string name="print"> طباعة نسخة</string>
     <string name="x_report_view">X عرض تقرير</string>
     <string name="sales_history">سجل الطلبيات</string>
     <string name="report">تقارير</string>
@@ -621,7 +621,7 @@
     <string name="create_order_document">انشاء طلبية شراء</string>
     <string name="deposit_and_pull_reportView">عرض تقرير سحب وايداع من الصندوق</string>
     <string name="deposit_report">تقرير الاضافه</string>
-    <string name="in_inventory_doc">وثيقة ادخال للمخزن</string>
+    <string name="in_inventory_doc">وثيقة للمخزن</string>
     <string name="inventory_doc">تقرير المخزن</string>
     <string name="inventory_in">ادخال الى المخزن</string>
     <string name="inventory_management_activity">ادارة المخازن</string>
@@ -654,6 +654,7 @@
     <string name="print_cancel_invoice">هل تريد الغاء الفاتور؟</string>
     <string name="this_Operation_just_for_master_employee">هذه العملية ليست من صلاحياتك</string>
     <string name="SelectServer">اختر السيرفر</string>
+    <string name="product_count">  كمية المنتجات : </string>
 
 
 </resources>

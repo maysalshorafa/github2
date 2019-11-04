@@ -172,7 +172,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
         productDBAdapter = new ProductDBAdapter(this);
         productDBAdapter.open();
 
-        tvCount.setText("Product Count " + productDBAdapter.getProductsCount());
+        tvCount.setText(getString(R.string.product_count) + productDBAdapter.getProductsCount());
 
         productsList = productDBAdapter.getTopProducts(productLoadItemOffset,productCountLoad);
         filter_productsList = productsList;
