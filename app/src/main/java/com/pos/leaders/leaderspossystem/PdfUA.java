@@ -1668,7 +1668,7 @@ public class PdfUA {
         checkCount+=receiptInvoiceAmountCheck;
 
     }
-    public static void createMonthZReport( Context context,ZReport zReport,Date from ,Date to) throws IOException, DocumentException {
+    public static void createMonthZReport( Context context,ZReport zReport,Date from ,Date to,ZReportCount zReportCount) throws IOException, DocumentException {
         Document document = new Document();
         String fileName = "mounthzreport.pdf";
         final String APPLICATION_PACKAGE_NAME = context.getPackageName();
@@ -1684,7 +1684,7 @@ public class PdfUA {
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
         document.open();        //end region
         //end region
-        getCountMounthForZReport(context,zReport);
+        getCountForZReport(context,zReport);
         BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
         Font font = new Font(urName, 24);
         PdfPTable headingTable = new PdfPTable(1);
@@ -1706,16 +1706,16 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.details), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, zReport.getInvoiceReceiptAmount()-aReportAmount + " ", Element.ALIGN_RIGHT,1, font);
-        insertCell(dataTable,invoiceReceiptCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, zReport.getInvoiceReceiptAmount() + " ", Element.ALIGN_RIGHT,1, font);
+        insertCell(dataTable,zReportCount.getInvoiceReceiptCount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);
 
         insertCell(dataTable, zReport.getInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,invoiceCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT,2, font);
 
         insertCell(dataTable, zReport.getCreditInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,creditCardCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getCreditInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
 
         insertCell(dataTable, zReport.getTotalSales() + " ", Element.ALIGN_RIGHT, 1, font);
@@ -1728,31 +1728,31 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, cashAmount + " ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,cashCount + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, zReport.getCashTotal() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getCashCount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT,2, font);
 
         ///// shekel region
-        insertCell(dataTable, Util.makePrice(zReport.getShekelAmount()-aReportDetailsForFirstCurrency), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,ShekelCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, Util.makePrice(zReport.getCashTotal()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getShekelCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.shekel), Element.ALIGN_RIGHT, 2, font);
 
         ///// usd region
         insertCell(dataTable, Util.makePrice(zReport.getUsdAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,UsdCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getUsdCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.usd), Element.ALIGN_RIGHT, 2, font);
 
         ///// eur region
         insertCell(dataTable, Util.makePrice(zReport.getEurAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,EurCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getEurCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 2, font);
         ///// Gbp region
         insertCell(dataTable, Util.makePrice(zReport.getGbpAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,GbpCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getGbpCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.gbp), Element.ALIGN_RIGHT, 2, font);
         ///// CreditCard region
         insertCell(dataTable, Util.makePrice(zReport.getCreditTotal()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,creditCardCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getCreditCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.credit_card), Element.ALIGN_RIGHT, 2, font);
         insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
@@ -1762,7 +1762,7 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
 
         insertCell(dataTable, Util.makePrice(zReport.getCheckTotal()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,checkCount+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getCheckCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
         if(checkList.size()>0){
             insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);

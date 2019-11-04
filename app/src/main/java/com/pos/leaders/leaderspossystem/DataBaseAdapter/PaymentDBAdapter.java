@@ -30,8 +30,7 @@ public class PaymentDBAdapter {
 	protected static final String PAYMENT_COLUMN_AMOUNT = "amount";
 	protected static final String PAYMENT_COLUMN_KEY = "key";
 
-	public static final String DATABASE_CREATE = "CREATE TABLE `payment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `amount` REAL NOT NULL,`orderId` INTEGER ,`key` TEXT, FOREIGN KEY(`orderId`) REFERENCES `_Order.id`)";
-	// Variable to hold the database instance
+	public static final String DATABASE_CREATE = "CREATE TABLE `payment` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `paymentWay` TEXT NOT NULL, `amount` REAL NOT NULL,`orderId` INTEGER ,`key` TEXT, FOREIGN KEY(`orderId`) REFERENCES `_Order.id`)";
 	private SQLiteDatabase db;
 	// Context of the application using the database.
 	private final Context context;
