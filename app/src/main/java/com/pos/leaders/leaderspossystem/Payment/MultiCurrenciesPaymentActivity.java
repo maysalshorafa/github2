@@ -68,6 +68,10 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     Button btCheckOut;
     String currentMethod="",currencyRow="";
     private static android.support.v7.app.ActionBar actionBar;
+    boolean multiCurrencyFromCredit=false;
+    boolean multiCurrencyFromCheck=false;
+    boolean multiCurrencyFromCreditCurrentlyInsert=false;
+    boolean multiCurrencyFromCheckCurrentlyInsert=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,8 +140,21 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         tvTotalPrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(),getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), mcf.paymentMethodSpinner.getSelectedItem().toString());
-                btCheckOut.performClick();
+                if(mcf.paymentMethodSpinner.getSelectedItem().toString().equals(getString(R.string.cash))) {
+                    insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), mcf.paymentMethodSpinner.getSelectedItem().toString());
+                    btCheckOut.performClick();
+
+                }
+                if(mcf.paymentMethodSpinner.getSelectedItem().toString().equals(getString(R.string.credit_card))) {
+                    multiCurrencyFromCreditCurrentlyInsert=true;
+                    insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), mcf.paymentMethodSpinner.getSelectedItem().toString());
+
+                }
+                if(mcf.paymentMethodSpinner.getSelectedItem().toString().equals(getString(R.string.checks))) {
+                    multiCurrencyFromCheckCurrentlyInsert=true;
+                    insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), mcf.paymentMethodSpinner.getSelectedItem().toString());
+
+                }
 
             }
         });
@@ -262,35 +279,69 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             updateLastRow();
             lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         }else if(paymentMethod.equals(PaymentMethod.CHECK)) {
-            currentMethod= CONSTANT.CHECKS;
-            valRow=val;
-            currencyRow=currency;
-            Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ChecksActivity.class);
-            intent.putExtra("_CurrencyType", currencyType);
-            intent.putExtra("_Price", val);
-            intent.putExtra("_custmer", "general");
+            if(multiCurrencyFromCheckCurrentlyInsert){
+                totalPaid += val * currencyRate;
+                double beforeChangeExcess = excess;
+                setExcess();
+                updateView();
+                paymentTables.add(paymentTables.size() - 1, new PaymentTable(spCurrency.getSelectedItem().toString(),beforeChangeExcess, val, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, currency + ""), actualCurrencyRate));
+                updateLastRow();
+                lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+                Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ChecksActivity.class);
+                intent.putExtra("_CurrencyType", currencyType);
+                intent.putExtra("_Price", val);
+                intent.putExtra("_custmer", "general");
+                intent.putExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY,true);
+                startActivityForResult(intent, REQUEST_CHECKS_ACTIVITY_CODE);
 
+            }else {
+
+                currentMethod = CONSTANT.CHECKS;
+                valRow = val;
+                currencyRow = currency;
+                Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ChecksActivity.class);
+                intent.putExtra("_CurrencyType", currencyType);
+                intent.putExtra("_Price", val);
+                intent.putExtra("_custmer", "general");
             startActivityForResult(intent, REQUEST_CHECKS_ACTIVITY_CODE);
+            }
 
         }
         else if(paymentMethod.equals(PaymentMethod.CREDIT_CARD)) {
-            currentMethod= CONSTANT.CREDIT_CARD;
-            valRow=val;
-            currencyRow=currency;
-            if(SETTINGS.creditCardEnable) {
-                Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, MainCreditCardActivity.class);
-                intent.putExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, val * currencyRate);
-                startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
-            }else {
-                Toast.makeText(MultiCurrenciesPaymentActivity.this,R.string.please_enable_credit_card,Toast.LENGTH_LONG).show();
+            if(multiCurrencyFromCheckCurrentlyInsert){
+                if (SETTINGS.creditCardEnable) {
+                    totalPaid += valRow * actualCurrencyRate;
+                    double beforeChangeExcess = excess;
+                    setExcess();
+                    updateView();
+                    paymentTables.add(paymentTables.size() - 1, new PaymentTable(spCurrency.getSelectedItem().toString(), beforeChangeExcess, valRow, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CREDIT_CARD, new CurrencyType(1, currencyRow + ""), actualCurrencyRate));
+                    updateLastRow();
+                    lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+                    Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, MainCreditCardActivity.class);
+                    intent.putExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, val * currencyRate);
+                    startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
+                }  else {
+                Toast.makeText(MultiCurrenciesPaymentActivity.this, R.string.please_enable_credit_card, Toast.LENGTH_LONG).show();
             }
-
+            }else {
+                currentMethod = CONSTANT.CREDIT_CARD;
+                valRow = val;
+                currencyRow = currency;
+                if (SETTINGS.creditCardEnable) {
+                    Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, MainCreditCardActivity.class);
+                    intent.putExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, val * currencyRate);
+                    startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
+                } else {
+                    Toast.makeText(MultiCurrenciesPaymentActivity.this, R.string.please_enable_credit_card, Toast.LENGTH_LONG).show();
+                }
+            }
+            }
         }
       /*  }
         else {
             Toast.makeText(MultiCurrenciesPaymentActivity.this,getString(R.string.please_insert_correct_value_in_multi_currency_activity),Toast.LENGTH_LONG).show();
         }*/
-    }
+
 
     private void setExcess() {
         excess = Double.parseDouble(Util.makePrice(totalPrice/actualCurrencyRate)) - Double.parseDouble(Util.makePrice(totalPaid/actualCurrencyRate)) ;
@@ -397,7 +448,13 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_CHECKS_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
-                //get currency rate
+                multiCurrencyFromCheck=data.getBooleanExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY,false);
+                if(multiCurrencyFromCheck){
+
+                    btCheckOut.performClick();
+                }else {
+
+                    //get currency rate
                 totalPaid += valRow * actualCurrencyRate;
                 double beforeChangeExcess = excess;
                 setExcess();
@@ -406,13 +463,18 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 updateLastRow();
                 lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
             }
+            }
         }
         if (requestCode == REQUEST_CREDIT_CARD_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
           CurrencyReturnsCustomDialogActivity.firstCredit =data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY);
                 CurrencyReturnsCustomDialogActivity.secondCredit=    data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote);
                 CurrencyReturnsCustomDialogActivity.thirdCredit=   data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote);
+                multiCurrencyFromCredit= data.getBooleanExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_FROM_MULTI_CURRENCY,false);
                 //get currency rate
+                if(multiCurrencyFromCredit){
+                    btCheckOut.performClick();
+                }else {
                 totalPaid += valRow * actualCurrencyRate;
                 double beforeChangeExcess = excess;
                 setExcess();
@@ -420,6 +482,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 paymentTables.add(paymentTables.size() - 1, new PaymentTable(spCurrency.getSelectedItem().toString(),beforeChangeExcess, valRow, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CREDIT_CARD, new CurrencyType(1, currencyRow + ""), actualCurrencyRate));
                 updateLastRow();
                 lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+            }
             }
         }
     }

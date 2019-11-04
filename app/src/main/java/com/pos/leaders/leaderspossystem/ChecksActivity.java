@@ -49,6 +49,8 @@ import java.util.List;
 public class ChecksActivity extends AppCompatActivity {
 
 	public static final String LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY = "LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY";
+	public static final String LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY = "LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY";
+
 	Button btAdd;
 	Button btDone,btCancel;
     TextView tv , tvCheckCustomer , tvChecksRequired;
@@ -68,6 +70,7 @@ public class ChecksActivity extends AppCompatActivity {
     Bundle extras;
 	JSONObject invoiceJson=new JSONObject();
 	BoInvoice invoice ;
+	boolean fromMultiCurrency=false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -108,6 +111,8 @@ public class ChecksActivity extends AppCompatActivity {
 
 			totalPrice = (double) extras.get("_Price");
 			customer_name =(String)extras.get("_custmer");
+			fromMultiCurrency=extras.getBoolean(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY);
+
 			if(currencyType.equalsIgnoreCase("ILS")){
             tv.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
 			}else if(currencyType.equalsIgnoreCase(getString(R.string.usd))){
@@ -285,7 +290,8 @@ public class ChecksActivity extends AppCompatActivity {
 							Log.d("SESSION._CHECKS_HOLDER",SESSION._CHECKS_HOLDER.toString());
 							Intent i = new Intent();
 							i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
-							i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
+							i.putExtra(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, totalPrice);
+							i.putExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY,fromMultiCurrency);
 							setResult(RESULT_OK, i);
 							finish();
 						}
@@ -353,6 +359,7 @@ public class ChecksActivity extends AppCompatActivity {
 						Intent i = new Intent();
 						i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
 						i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
+						i.putExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY,fromMultiCurrency);
 						setResult(RESULT_OK, i);
 						finish();
 
