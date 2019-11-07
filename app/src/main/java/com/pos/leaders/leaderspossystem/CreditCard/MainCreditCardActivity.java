@@ -58,6 +58,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
     private static final String LOG_TAG = "Credit Card T";
 
     public static final String LEADERS_POS_CREDIT_CARD_TOTAL_PRICE = "LEADERS_POS_CREDIT_CARD_TOTAL_PRICE";
+    public static final String LEADERS_POS_CREDIT_CARD_FROM_MULTI_CURRENCY = "LEADERS_POS_CREDIT_CARD_FROM_MULTI_CURRENCY";
 
     public static final String LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY = "LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY";
     public static final String LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote = "LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote";
@@ -79,6 +80,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
     int creditType = CreditCardTransactionType.NORMAL;
     int numberOfPayments = 1;
     boolean creditReceipt=false;
+    boolean fromMultiCurrency=false;
     JSONObject invoiceJson=new JSONObject();
     BoInvoice invoice ;
     int NumOfFixedPayments=1;
@@ -167,6 +169,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 }
             }else {
                 creditReceipt=false;
+                fromMultiCurrency=extras.getBoolean(LEADERS_POS_CREDIT_CARD_FROM_MULTI_CURRENCY);
                 totalPrice = (double) extras.get(LEADERS_POS_CREDIT_CARD_TOTAL_PRICE);
                 tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
             }
@@ -568,6 +571,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 }
                 else {
                     Intent i = new Intent();
+                    i.putExtra(LEADERS_POS_CREDIT_CARD_FROM_MULTI_CURRENCY, fromMultiCurrency);
                     i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY, answer);
                     i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote, soap.getProperty("MerchantNote").toString());
                     i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote, soap.getProperty("ClientNote").toString());

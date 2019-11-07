@@ -22,8 +22,10 @@ import android.widget.ImageView;
 
 import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -44,7 +46,9 @@ import java.util.List;
 
 public class MonthZReportView extends AppCompatActivity {
     private List<ZReport> zReportList;
+    private List<ZReportCount> zReportCountList;
     private ZReportDBAdapter zReportDBAdapter;
+    ZReportCountDbAdapter zReportCountDbAdapter;
     private EmployeeDBAdapter userDBAdapter;
     Button btCancel,btPrint;
     Bitmap p;
@@ -99,10 +103,13 @@ public class MonthZReportView extends AppCompatActivity {
 
         //region Init
         zReportDBAdapter = new ZReportDBAdapter(this);
+        zReportCountDbAdapter=new ZReportCountDbAdapter(this);
         userDBAdapter = new EmployeeDBAdapter(this);
         userDBAdapter.open();
         zReportDBAdapter.open();
+        zReportCountDbAdapter.open();
         zReportList = new ArrayList<ZReport>();
+        zReportCountList=new ArrayList<>();
         setDate();
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +131,7 @@ public class MonthZReportView extends AppCompatActivity {
     protected void onDestroy() {
         zReportDBAdapter.close();
         userDBAdapter.close();
+        zReportCountDbAdapter.close();
         super.onDestroy();
     }
     @Override
@@ -132,6 +140,7 @@ public class MonthZReportView extends AppCompatActivity {
 
     }
     private void setDate() {
+        ZReportCount zReportCount=null;
         double totalAmount=0;
         double totalSales=0;
         double cashTotal=0;
@@ -145,15 +154,50 @@ public class MonthZReportView extends AppCompatActivity {
         double eurAmount=0;
         double gbpAmount=0;
         double invoiceReceiptAmount=0;
+
         double salesBeforeTax=0;
         double salesWithTax=0;
         double totalTax=0;
+
+        int cashTotalC=0;
+        int checkTotalC=0;
+        int creditTotalC=0;
+        int totalPosSalesC=0;
+        int invoiceAmountC=0;
+        int creditInvoiceAmountC=0;
+        int shekelAmountC=0;
+        int usdAmountC=0;
+        int eurAmountC=0;
+        int gbpAmountC=0;
+        int invoiceReceiptAmountC=0;
+
         zReportDBAdapter.open();
         zReportList=new ArrayList<>();
         zReportList = zReportDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime()+ DAY_MINUS_ONE_SECOND);
-        if(zReportList.size()>1) {
-            zReportList.remove(zReportList.get(0));
+        zReportCountList=new ArrayList<>();
+        for(int i=0;i<zReportList.size();i++){
+           ZReportCount zReportCt=zReportCountDbAdapter.getByID(zReportList.get(i).getzReportId());
+            zReportCountList.add(zReportCt);
         }
+
+        if(zReportCountList.size()>0){
+
+        for (int i=0;i<zReportCountList.size();i++){
+
+            cashTotalC+=zReportCountList.get(i).getCashCount();
+            checkTotalC+=zReportCountList.get(i).getCheckCount();
+            creditTotalC+=zReportCountList.get(i).getCreditCount();
+            invoiceAmountC+=zReportCountList.get(i).getInvoiceCount();
+            creditInvoiceAmountC+=zReportCountList.get(i).getCreditInvoiceCount();
+            shekelAmountC+=zReportCountList.get(i).getShekelCount();
+            usdAmountC+=zReportCountList.get(i).getUsdCount();
+            eurAmountC+=zReportCountList.get(i).getEurCount();
+            gbpAmountC+=zReportCountList.get(i).getGbpCount();
+            invoiceReceiptAmountC+=zReportCountList.get(i).getInvoiceReceiptCount();
+        }
+        }
+        Log.d("ZreportList",zReportList.toString());
+
         if(zReportList.size()>0){
             imageView.setVisibility(View.VISIBLE);
             ZReport zReport = null;
@@ -178,13 +222,19 @@ public class MonthZReportView extends AppCompatActivity {
 
             }
             totalSales=invoiceReceiptAmount+invoiceAmount+creditInvoiceAmount;
+
         zReport=new ZReport(0,new Timestamp(System.currentTimeMillis()),zReportList.get(0).getByUser(),0,0,totalAmount,totalSales,cashTotal,checkTotal,creditTotal,totalPosSales,zReportList.get(0).getTax(),invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,0,0,"close",salesBeforeTax,salesWithTax,totalTax);
             Log.d("zReportList",zReport.toString());
+
+
+                zReportCount=new ZReportCount(0,cashTotalC,checkTotalC,creditTotalC,invoiceAmountC,creditInvoiceAmountC,shekelAmountC,usdAmountC,eurAmountC,gbpAmountC,invoiceReceiptAmountC,0);
+                zReport=new ZReport(0,new Timestamp(System.currentTimeMillis()),zReportList.get(0).getByUser(),0,0,totalAmount,totalSales,cashTotal,checkTotal,creditTotal,zReportList.get(zReportList.size()-1).getTotalPosSales(),zReportList.get(0).getTax(),invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,0,0,"close",salesBeforeTax,salesWithTax,totalTax);
+
 
             PdfUA pdfUA = new PdfUA();
 
             try {
-                pdfUA.createMonthZReport(MonthZReportView.this,zReport,from,to);
+                pdfUA.createMonthZReport(MonthZReportView.this,zReport,from,to,zReportCount);
             } catch (DocumentException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -273,11 +323,6 @@ public class MonthZReportView extends AppCompatActivity {
                     newBitmap= Util.removeMargins2(newBitmap, Color.WHITE);
                     }
                     newBitmap= combineImageIntoOne(bitmapList);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                     imageView.setImageBitmap(newBitmap);
 
                     //after async close progress dialog

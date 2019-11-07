@@ -462,6 +462,8 @@ public class Util {
             ZReport zReport =zReportDBAdapter.getByID(zReport1.getzReportId()-1);
             if(zReport!=null) {
                 totalZReportAmount = zReport.getTotalPosSales() + amount+lastZReport.getInvoiceAmount()+lastZReport.getCreditInvoiceAmount();
+            }else {
+                totalZReportAmount=zReport.getInvoiceReceiptAmount();
             }
         } catch (Exception e) {
             totalZReportAmount=amount;
