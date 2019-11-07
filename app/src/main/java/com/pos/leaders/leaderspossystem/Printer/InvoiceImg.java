@@ -231,6 +231,8 @@ public class InvoiceImg {
     }
 
     public Bitmap normalInvoice(long id, List<OrderDetails> orders, Order sale, boolean isCopy, Employee user, List<Check> checks) {
+        sale=SESSION._TEMP_ORDERS;
+        orders=SESSION._TEMP_ORDER_DETAILES;
         int count =0;
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(sale));
@@ -267,6 +269,7 @@ public class InvoiceImg {
             SaleOriginalityPrice += (o.getItemTotalPrice() );
             saleTotalPrice += o.getUnitPrice();
         }
+        sale.setTotalPrice(SaleOriginalityPrice);
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);
         Log.d("testTotalSaved",totalSaved+"");
         blocks.add(discount.Left());
@@ -278,6 +281,8 @@ public class InvoiceImg {
         blocks.add(name);
         Block productCountText = new Block("\u200E" + context.getString(R.string.product_quantity), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block productCount = new Block("\u200E" + String.valueOf(count), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block priceBeforeDiscountText = new Block("\u200E" + context.getString(R.string.price_before_discount), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block priceBeforeDiscount =new Block("\u200E" + Util.makePrice(sale.getTotalPrice()*100/(100-sale.cartDiscount)), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         Block toPidText = new Block("\u200E" + context.getString(R.string.total_price),40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block discountText = new Block("\u200E" + context.getString(R.string.discount), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
 
@@ -288,6 +293,8 @@ public class InvoiceImg {
         Block toPidBeforeDiscount= new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()*100/(100-sale.cartDiscount)), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         productCount.Left();
         productCountText.Left();
+        priceBeforeDiscount.Left();
+        priceBeforeDiscountText.Left();
         toPid.Left();
         toPidText.Left();
 
