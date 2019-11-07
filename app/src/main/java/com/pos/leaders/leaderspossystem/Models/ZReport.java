@@ -39,13 +39,16 @@ public class ZReport implements Serializable {
     private double pullReportAmount;
     private double depositReportAmount;
     private String closeOpenReport;
+    private double salesBeforeTax;
+    private double salesWithTax;
+    private double totalTax;
     public ZReport() {
 
 
     }
 
     public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount,double shekelAmount,double usdAmount, double eurAmount,
-                   double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,String closeOpenReport) {
+                   double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,String closeOpenReport,double salesBeforeTax,double salesWithTax, double totalTax  ) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -68,6 +71,10 @@ public class ZReport implements Serializable {
         this.pullReportAmount=pullReportAmount;
         this.depositReportAmount=depositReportAmount;
         this.closeOpenReport=closeOpenReport;
+        this.salesBeforeTax=salesBeforeTax;
+        this.salesWithTax=salesWithTax;
+        this.totalTax=totalTax;
+
     }
 
     public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount) {
@@ -240,7 +247,6 @@ public class ZReport implements Serializable {
     public double getInvoiceAmount() {
         return invoiceAmount;
     }
-
     public void setInvoiceAmount(double invoiceAmount) {
         this.invoiceAmount = invoiceAmount;
     }
@@ -327,6 +333,30 @@ public class ZReport implements Serializable {
         return "Z900" + String.format(Util.locale,"%09d", rowNumber) + pc + String.format(Util.locale,"%015d", 1) + "&OF1.31&" + String.format(Util.locale,"%015d", totalRows) + spaces;
     }
 
+    public double getSalesBeforeTax() {
+        return salesBeforeTax;
+    }
+
+    public void setSalesBeforeTax(double salesBeforeTax) {
+        this.salesBeforeTax = salesBeforeTax;
+    }
+
+    public double getSalesWithTax() {
+        return salesWithTax;
+    }
+
+    public void setSalesWithTax(double salesWithTax) {
+        this.salesWithTax = salesWithTax;
+    }
+
+    public double getTotalTax() {
+        return totalTax;
+    }
+
+    public void setTotalTax(double totalTax) {
+        this.totalTax = totalTax;
+    }
+
     @Override
     public String toString() {
         return "ZReport{" +
@@ -354,8 +384,12 @@ public class ZReport implements Serializable {
                 ", invoiceReceiptAmount=" + invoiceReceiptAmount +
                 ", pullReportAmount=" + pullReportAmount +
                 ", depositReportAmount=" + depositReportAmount +
-                ", closeOpenReport=" + closeOpenReport +
+                ", closeOpenReport='" + closeOpenReport + '\'' +
+                ", salesBeforeTax=" + salesBeforeTax +
+                ", salesWithTax=" + salesWithTax +
+                ", totalTax=" + totalTax +
                 '}';
     }
-//endregion OpenFormat
+
+    //endregion OpenFormat
 }

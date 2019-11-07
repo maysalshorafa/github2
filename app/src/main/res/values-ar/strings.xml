@@ -655,7 +655,9 @@
     <string name="this_Operation_just_for_master_employee">هذه العملية ليست من صلاحياتك</string>
     <string name="SelectServer">اختر السيرفر</string>
     <string name="product_count">  كمية المنتجات : </string>
-
+    <string name="accounting_information">المعلومات المحاسبية</string>
+    <string name="Sales_With_tax">اسعار المنتوجات شامل الضريبة</string>
+    <string name="Sales_Without_tax">اسعار المنتوجات الغير شاملة الضريبة</string>
 
 </resources>
 

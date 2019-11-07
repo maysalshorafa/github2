@@ -64,7 +64,7 @@ public class ReportZDetailsActivity extends Activity {
             zReportGbpCount,zReportTotalGbp,zReportCreditCardCount,zReportTotalCreditCard,zReportCheckCount,
             zReportTotalCheck,zReportTotalAmount,zReportOpiningReportAmount,zReportOpiningReportCount,zReportPullReportAmount
             ,zReportDepositReportAmount,zReportShekelAmount,zReportUsdAmount,zReportGbpAmount,zReportEurAmount
-            ,zReportPosSales;
+            ,zReportPosSales,zReportSalesWithTax,zReportSalesBeforeTax,zReportTotalPrice,zReportTotalTax;
     POSSDK pos;
     public static  Bitmap p;
     PrintTools pt;
@@ -88,6 +88,7 @@ public class ReportZDetailsActivity extends Activity {
     static double aReportDetailsForThirdCurrency=0;
     static double aReportDetailsForForthCurrency=0;
     static double aReportAmount = 0;
+    Bitmap newBitmap2=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,7 +139,10 @@ public class ReportZDetailsActivity extends Activity {
         zReportGbpAmount=(TextView)findViewById(R.id.zReportGbpAmount);
         zReportEurAmount=(TextView)findViewById(R.id.zReportEurAmount);
         zReportPosSales=(TextView)findViewById(R.id.zReportPosSales);
-
+        zReportSalesWithTax=(TextView)findViewById(R.id.zReportSalesWithTax);
+        zReportSalesBeforeTax=(TextView)findViewById(R.id.zReportSalesBeforeTax);
+        zReportTotalTax=(TextView)findViewById(R.id.Tax);
+        zReportTotalPrice=(TextView)findViewById(R.id.TotalPrice);
         final Bundle extras = getIntent().getExtras();
         if (extras != null) {
             x= getIntent().getExtras().getBoolean(ReportsManagementActivity.COM_LEADPOS_XREPORT_FLAG);
@@ -217,7 +221,11 @@ public class ReportZDetailsActivity extends Activity {
                 zReportUsdAmount.setText(Util.makePrice(aReportDetailsForSecondCurrency));
                 zReportGbpAmount.setText(Util.makePrice(aReportDetailsForThirdCurrency));;
                 zReportEurAmount.setText(Util.makePrice(aReportDetailsForForthCurrency));;
-                zReportPosSales.setText(Util.makePrice(xReport.getTotalPosSales()));;
+                zReportPosSales.setText(Util.makePrice(xReport.getTotalPosSales()));
+                zReportTotalTax.setText(Util.makePrice(xReport.getTotalTax()));
+                zReportSalesBeforeTax.setText(Util.makePrice(xReport.getSalesBeforeTax()));
+                zReportSalesWithTax.setText(Util.makePrice(xReport.getSalesWithTax()));
+                zReportTotalPrice.setText(Util.makePrice(xReport.getSalesBeforeTax()+xReport.getSalesWithTax()+zReport.getTotalTax()));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -285,7 +293,11 @@ public class ReportZDetailsActivity extends Activity {
                 zReportUsdAmount.setText(Util.makePrice(aReportDetailsForSecondCurrency));
                 zReportGbpAmount.setText(Util.makePrice(aReportDetailsForThirdCurrency));;
                 zReportEurAmount.setText(Util.makePrice(aReportDetailsForForthCurrency));;
-                zReportPosSales.setText(Util.makePrice(zReport.getTotalPosSales()));;
+                zReportPosSales.setText(Util.makePrice(zReport.getTotalPosSales()));
+                zReportTotalTax.setText(Util.makePrice(zReport.getTotalTax()));
+                zReportSalesBeforeTax.setText(Util.makePrice(zReport.getSalesBeforeTax()));
+                zReportSalesWithTax.setText(Util.makePrice(zReport.getSalesWithTax()));
+                zReportTotalPrice.setText(Util.makePrice(zReport.getSalesBeforeTax()+zReport.getSalesWithTax()+zReport.getTotalTax()));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -380,8 +392,11 @@ public class ReportZDetailsActivity extends Activity {
                         try {
                             pdfUA.createZReport(ReportZDetailsActivity.this,zReport,zReportCount,true);
                         } catch (DocumentException e) {
+                            Log.d("testPdf","iiiii");
                             e.printStackTrace();
                         } catch (IOException e) {
+                            Log.d("testPdf","iiiii");
+
                             e.printStackTrace();
                         }
                         return null;
@@ -409,18 +424,21 @@ public class ReportZDetailsActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(x==true) {
-                    newBitmap= Util.removeMargins2(newBitmap, Color.WHITE);
-                    pt.PrintReport(newBitmap);
+                    newBitmap2= Util.removeMargins2(newBitmap, Color.WHITE);
+                    pt.PrintReport(newBitmap2);
+                    newBitmap2=null;
                     onBackPressed();
                 }else {
                     if(fromDashBoard){
-                        newBitmap= Util.removeMargins2(newBitmap, Color.WHITE);
-                        pt.PrintReport(newBitmap);
+                        newBitmap2= Util.removeMargins2(newBitmap, Color.WHITE);
+                        pt.PrintReport(newBitmap2);
+                        newBitmap2=null;
                    //     onBackPressed();
 
                     }else {
-                        newBitmap= Util.removeMargins2(newBitmap, Color.WHITE);
-                        pt.PrintReport(newBitmap);
+                        newBitmap2= Util.removeMargins2(newBitmap, Color.WHITE);
+                        pt.PrintReport(newBitmap2);
+                        newBitmap2=null;
               // onBackPressed();
                     }
 

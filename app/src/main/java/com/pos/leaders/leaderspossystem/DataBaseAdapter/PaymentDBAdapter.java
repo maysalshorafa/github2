@@ -87,7 +87,7 @@ public class PaymentDBAdapter {
 		val.put(PAYMENT_COLUMN_AMOUNT,payment.getAmount() );
 		val.put(PAYMENT_COLUMN_ORDERID, payment.getOrderId());
 		val.put(PAYMENT_COLUMN_KEY,payment.getOrderKey());
-		val.put("paymentWay","p");
+		//val.put("paymentWay","p");
 
 		try {
 			return db.insert(PAYMENT_TABLE_NAME, null, val);
@@ -104,7 +104,7 @@ public class PaymentDBAdapter {
 		val.put(PAYMENT_COLUMN_AMOUNT,payment.getAmount() );
 		val.put(PAYMENT_COLUMN_ORDERID, payment.getOrderId());
 		val.put(PAYMENT_COLUMN_KEY,payment.getOrderKey());
-		val.put("paymentWay","p");
+		//val.put("paymentWay","p");
 
 		try {
 			sendToBroker(MessageType.ADD_PAYMENT, payment, this.context);

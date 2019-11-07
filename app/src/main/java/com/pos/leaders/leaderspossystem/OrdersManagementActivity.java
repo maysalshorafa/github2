@@ -424,7 +424,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                 OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
                                                 saleDBAdapter.open();
                                                 sale.setPayment(new Payment(payments.get(0)));
-                                                long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(), sale.getCartDiscount(), sale.getNumberDiscount(), sale.getOrderId());
+                                                long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(), sale.getCartDiscount(), sale.getNumberDiscount(), sale.getOrderId(),0,0);
                                                 Order order = saleDBAdapter.getOrderById(sID);
                                                 sale.setCancellingOrderId(sID);
                                                 saleDBAdapter.updateEntry(sale);
@@ -681,6 +681,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                                             if (checks.size() > 0){
                                                 try {
+                                                //  Log.d("ItemId",sale.getOrderId()+"");
                                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
                                                     SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, checks);
                                                     startActivity(i);
@@ -696,8 +697,10 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                             }
                                             else{
                                                 try {
+
                                                     SESSION._ORDER_DETAILES=orders;
                                                     SESSION._ORDERS=sale;
+                                                 //   Log.d("ItemId",sale.getOrderId()+"");
                                                     PrinterTools.printAndOpenCashBox("", "", "", 600,OrdersManagementActivity.this,getParent());
                                                     /**Customer customer1 =sale.getCustomer();
                                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
@@ -778,7 +781,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
                             saleDBAdapter.open();
                             sale.setPayment(new Payment(payments.get(0)));
-                            long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(),sale.getCartDiscount(),sale.getNumberDiscount(),sale.getOrderId());
+                            long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(),sale.getCartDiscount(),sale.getNumberDiscount(),sale.getOrderId(),0,0);
                             Order order = saleDBAdapter.getOrderById(sID);
                             sale.setCancellingOrderId(sID);
                             saleDBAdapter.updateEntry(sale);

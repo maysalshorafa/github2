@@ -38,13 +38,16 @@ public class XReport  implements Serializable {
     private double invoiceReceiptAmount;
     private double pullReportAmount;
     private double depositReportAmount;
+    private double salesBeforeTax;
+    private double salesWithTax;
+    private double totalTax;
     public XReport() {
 
 
     }
 
     public XReport(long xReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount,double shekelAmount,double usdAmount, double eurAmount,
-                   double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount) {
+                   double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,double salesBeforeTax,double salesWithTax,double totalTax) {
         this.xReportId = xReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -66,6 +69,9 @@ public class XReport  implements Serializable {
         this.invoiceReceiptAmount=invoiceReceiptAmount;
         this.pullReportAmount=pullReportAmount;
         this.depositReportAmount=depositReportAmount;
+        this.salesBeforeTax=salesBeforeTax;
+        this.salesWithTax=salesWithTax;
+        this.totalTax=totalTax;
     }
 
     public XReport(long xReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount) {
@@ -114,6 +120,21 @@ public class XReport  implements Serializable {
         this.totalAmount =xReport.totalAmount;
     }
 
+    public double getSalesBeforeTax() {
+        return salesBeforeTax;
+    }
+
+    public void setSalesBeforeTax(double salesBeforeTax) {
+        this.salesBeforeTax = salesBeforeTax;
+    }
+
+    public double getSalesWithTax() {
+        return salesWithTax;
+    }
+
+    public void setSalesWithTax(double salesWithTax) {
+        this.salesWithTax = salesWithTax;
+    }
 
     public long getxReportId() {
         return xReportId;
@@ -316,6 +337,14 @@ public class XReport  implements Serializable {
         return "Z900" + String.format(Util.locale,"%09d", rowNumber) + pc + String.format(Util.locale,"%015d", 1) + "&OF1.31&" + String.format(Util.locale,"%015d", totalRows) + spaces;
     }
 
+    public double getTotalTax() {
+        return totalTax;
+    }
+
+    public void setTotalTax(double totalTax) {
+        this.totalTax = totalTax;
+    }
+
     @Override
     public String toString() {
         return "XReport{" +
@@ -341,8 +370,11 @@ public class XReport  implements Serializable {
                 ", eurAmount=" + eurAmount +
                 ", gbpAmount=" + gbpAmount +
                 ", invoiceReceiptAmount=" + invoiceReceiptAmount +
-                        ", pullReportAmount=" + pullReportAmount +
+                ", pullReportAmount=" + pullReportAmount +
                 ", depositReportAmount=" + depositReportAmount +
+                ", salesBeforeTax=" + salesBeforeTax +
+                ", salesWithTax=" + salesWithTax +
+                ", totalTax=" + totalTax +
                 '}';
     }
 }

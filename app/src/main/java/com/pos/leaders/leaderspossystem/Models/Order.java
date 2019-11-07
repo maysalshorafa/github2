@@ -34,6 +34,8 @@ public class Order {
 	private Payment payment;
 	@JsonIgnore
 	private Customer customer=null;
+	private double salesBeforeTax=0;
+	private double salesWithTax=0;
 
 	@JsonIgnore
 	private Locale locale = new Locale("en");
@@ -44,10 +46,11 @@ public class Order {
 	public static double CustomerLedger;
 	public long cancellingOrderId;
 
+
 	public Order() {
 	}
 
-	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name,double cartDiscount , String orderKey,double numberDiscount,long cancellingOrderId) {
+	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name,double cartDiscount , String orderKey,double numberDiscount,long cancellingOrderId,double salesBeforeTax,double salesWithTax) {
 		this.orderId = orderId;
 		this.byUser = byUser;
 		this.createdAt = createdAt;
@@ -61,6 +64,8 @@ public class Order {
 		this.orderKey = orderKey;
 		this.numberDiscount=numberDiscount;
 		this.cancellingOrderId=cancellingOrderId;
+		this.salesBeforeTax=salesBeforeTax;
+		this.salesWithTax=salesWithTax;
 	}
 	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name,double cartDiscount , String orderKey,double numberDiscount) {
 		this.orderId = orderId;
@@ -117,7 +122,7 @@ public class Order {
 	}
 
 	public static Order newInstance(Order s) {
-		return new Order(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name(),s.getCartDiscount(),s.getOrderKey(),s.getNumberDiscount(),s.getCancellingOrderId());
+		return new Order(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name(),s.getCartDiscount(),s.getOrderKey(),s.getNumberDiscount(),s.getCancellingOrderId(),s.getSalesBeforeTax(),s.getSalesWithTax());
 	}
 
 	@JsonIgnore
@@ -280,6 +285,22 @@ public class Order {
 	}
 	//endregion
 
+	public double getSalesBeforeTax() {
+		return salesBeforeTax;
+	}
+
+	public void setSalesBeforeTax(double salesBeforeTax) {
+		this.salesBeforeTax = salesBeforeTax;
+	}
+
+	public double getSalesWithTax() {
+		return salesWithTax;
+	}
+
+	public void setSalesWithTax(double salesWithTax) {
+		this.salesWithTax = salesWithTax;
+	}
+
 	@Override
 	public String toString() {
 		return "Order{" +
@@ -293,10 +314,17 @@ public class Order {
 				", customerId=" + customerId +
 				", cartDiscount=" + cartDiscount +
 				", customer_name='" + customer_name + '\'' +
+				", orders=" + orders +
+				", user=" + user +
+				", payment=" + payment +
+				", customer=" + customer +
+				", salesBeforeTax=" + salesBeforeTax +
+				", salesWithTax=" + salesWithTax +
+				", locale=" + locale +
 				", orderKey='" + orderKey + '\'' +
-				'\'' +
-				", numberDiscount='" + numberDiscount +
-						", cancellingOrderId=" + cancellingOrderId  +
+				", numberDiscount=" + numberDiscount +
+				", totalSaved=" + totalSaved +
+				", cancellingOrderId=" + cancellingOrderId +
 				'}';
 	}
 
