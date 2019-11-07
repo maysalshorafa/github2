@@ -39,12 +39,13 @@ public class OrderDetailsDBAdapter {
 	protected static final String ORDER_DETAILES_COLUMN_OFFER_ID = "offerId";
 	protected static final String ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER = "productSerialNo";
 	protected static final String ORDER_DETAILS_COLUMN_PRODUCT_PRICE_AFTER_TAX = "paid_amount_after_tax";
+	protected static final String ORDER_DETAILS_COLUMN_SERIAL_NUMBER = "SerialNo";
 
 
 	public static final String DATABASE_CREATE = "CREATE TABLE `OrderDetails` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL , `product_id` INTEGER," +
 			" `quantity` INTEGER, `order_id` INTEGER, " +
 			" '" + ORDER_DETAILS_COLUMN_PAID_AMOUNT + "' REAL , '" + ORDER_DETAILS_COLUMN_UNIT_PRICE + "' REAL, '" + ORDER_DETAILES_COLUMN_DISCOUNT + "' REAL , '" + ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID + "' INTEGER , " +
-			ORDER_DETAILES_COLUMN_KEY + " TEXT , " +	ORDER_DETAILES_COLUMN_PRICE_AFTER_DISCOUNT + " REAL DEFAULT 0.0, " +ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER + " INTEGER DEFAULT 0, " +ORDER_DETAILES_COLUMN_OFFER_ID + " INTEGER DEFAULT 0, '" +ORDER_DETAILS_COLUMN_PRODUCT_PRICE_AFTER_TAX + "' REAL, " +
+			ORDER_DETAILES_COLUMN_KEY + " TEXT , " +	ORDER_DETAILES_COLUMN_PRICE_AFTER_DISCOUNT + " REAL DEFAULT 0.0, " +ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER + " INTEGER DEFAULT 0, " +ORDER_DETAILS_COLUMN_SERIAL_NUMBER + " TEXT DEFAULT 0, " +ORDER_DETAILES_COLUMN_OFFER_ID + " INTEGER DEFAULT 0, '" +ORDER_DETAILS_COLUMN_PRODUCT_PRICE_AFTER_TAX + "' REAL, " +
 			"FOREIGN KEY(`product_id`) REFERENCES `products.id`, FOREIGN KEY(`order_id`) REFERENCES `_Order.id` )";
     // Variable to hold the database instance
 	private SQLiteDatabase db;
@@ -86,6 +87,8 @@ public class OrderDetailsDBAdapter {
 		val.put(ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID,o.getCustomer_assistance_id());
 		val.put(ORDER_DETAILES_COLUMN_KEY,o.getOrderKey());
 		val.put(ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER,o.getProductSerialNumber());
+		val.put(ORDER_DETAILS_COLUMN_SERIAL_NUMBER,o.getSerialNumber());
+
 		val.put(ORDER_DETAILS_COLUMN_PRODUCT_PRICE_AFTER_TAX,o.getPaidAmountAfterTax());
 
 		try {
@@ -109,6 +112,7 @@ public class OrderDetailsDBAdapter {
 		val.put(ORDER_DETAILES_COLUMN_KEY,o.getOrderKey());
 		val.put(ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER,o.getProductSerialNumber());
 		val.put(ORDER_DETAILS_COLUMN_PRODUCT_PRICE_AFTER_TAX,o.getPaidAmountAfterTax());
+		val.put(ORDER_DETAILS_COLUMN_SERIAL_NUMBER,o.getSerialNumber());
 
 		try {
 			sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
@@ -119,8 +123,8 @@ public class OrderDetailsDBAdapter {
 		}
 	}
 
-	public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID , String orderDetailsKey,long offerId,long productSerialNumber,double paidAmountAfterTax) {
-		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey,offerId,productSerialNumber,paidAmountAfterTax);
+	public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID , String orderDetailsKey,long offerId,long productSerialNumber,double paidAmountAfterTax,String serialNo) {
+		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey,offerId,productSerialNumber,paidAmountAfterTax,serialNo);
 		sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
 
 		try {
@@ -131,8 +135,8 @@ public class OrderDetailsDBAdapter {
 			return 0;
 		}
 	}
-	public long insertEntryFromInvoice(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID  , String orderDetailsKey,long offerId,long productSerialNumber,double paidAmountAfterTax) {
-		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey,offerId,productSerialNumber,paidAmountAfterTax);
+	public long insertEntryFromInvoice(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID  , String orderDetailsKey,long offerId,long productSerialNumber,double paidAmountAfterTax,String serialNo) {
+		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey,offerId,productSerialNumber,paidAmountAfterTax,serialNo);
 		// sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
 
 		try {
@@ -261,7 +265,7 @@ public class OrderDetailsDBAdapter {
 				cursor.getString(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_KEY)),
 				offerId,
 				Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER))),
-				Double.parseDouble(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_PRODUCT_PRICE_AFTER_TAX))));
+				Double.parseDouble(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_PRODUCT_PRICE_AFTER_TAX))),cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_SERIAL_NUMBER)));
 	}
 	public static String addColumnReal(String columnName) {
 		String dbc = "ALTER TABLE " + ORDER_DETAILS_TABLE_NAME

@@ -87,7 +87,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.BoInventory;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Check;
@@ -103,7 +102,6 @@ import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Models.Documents;
 import com.pos.leaders.leaderspossystem.Models.Employee;
-import com.pos.leaders.leaderspossystem.Models.Inventory;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.Offer;
 import com.pos.leaders.leaderspossystem.Models.OfferCategory;
@@ -114,7 +112,6 @@ import com.pos.leaders.leaderspossystem.Models.OrderDocumentStatus;
 import com.pos.leaders.leaderspossystem.Models.OrderDocuments;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.Models.ProductInventory;
 import com.pos.leaders.leaderspossystem.Models.ProductUnit;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Models.ZReportCount;
@@ -141,7 +138,6 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 import com.sun.pdfview.PDFFile;
@@ -170,7 +166,6 @@ import POSAPI.POSUSBAPI;
 import POSSDK.POSSDK;
 
 import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
-import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by Karam on 21/11/2016.
@@ -2119,21 +2114,6 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     HashMap<String,Integer>productHashMap=new HashMap<String, Integer>();
                                                     if(invoiceJsonObject.getString("status").equals("200")) {
                                                         Log.d("testOrder",SESSION._ORDER_DETAILES.toString());
-                                                        for(OrderDetails o :SESSION._ORDER_DETAILES){
-                                                            if(o.getProduct().getProductId()!=-1) {
-                                                                ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(o.getProduct().getProductId());
-                                                                productInventoryDbAdapter.updateEntry(o.getProduct().getProductId(), productInventory.getQty() - o.getQuantity());
-                                                                productHashMap.put(String.valueOf(o.getProduct().getProductId()),productInventory.getQty()-o.getQuantity());
-                                                            }
-                                                        }
-                                                        Inventory in=null;
-                                                        try {
-                                                            in = inventoryDbAdapter.getLastRow();
-                                                        } catch (Exception e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        BoInventory inventory = new BoInventory(in.getName(),in.getInventoryId(),productHashMap,in.getBranchId(),in.getHide());
-                                                        sendToBroker(MessageType.UPDATE_INVENTORY, inventory, SalesCartActivity.this);
                                                         String s =(tvTotalSaved.getText().toString());
 
                                                         if (s != null && s.length() > 0 && s.charAt(s.length() - 1) == '₪') {
@@ -2184,7 +2164,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         orderDetails.setPaidAmount(0.0);
                                                     }
                                                     ObjectMapper mapper = new ObjectMapper();
-                                                    customerData.put("customerId", SESSION._ORDERS.getCustomer().getCustomerId());
+                                                        customerData.put("customerId", SESSION._ORDERS.getCustomerId());
                                                     userData.put("employeeId",SESSION._EMPLOYEE.getEmployeeId());
                                                     userData.put("name",SESSION._EMPLOYEE.getEmployeeName());
                                                     Log.d("customer",customerData.toString());
@@ -3160,22 +3140,26 @@ public class SalesCartActivity extends AppCompatActivity {
 
         for (OrderDetails o : SESSION._ORDER_DETAILES) {
             String currencyType="";
-            if(o.getProduct().getCurrencyType()==0) {
-                currencyType="ILS";
-            }
-            if(o.getProduct().getCurrencyType()==1) {
-                currencyType="USD";
-            }
-            if(o.getProduct().getCurrencyType()==2) {
-                currencyType="GBP";
-            }
-            if(o.getProduct().getCurrencyType()==3) {
-                currencyType="EUR";
-            }
+            if(o.getProduct()==null) {
+                clearCart();
+            }else {
+                if (o.getProduct().getCurrencyType() == 0) {
+                    currencyType = "ILS";
+                }
+                if (o.getProduct().getCurrencyType() == 1) {
+                    currencyType = "USD";
+                }
+                if (o.getProduct().getCurrencyType() == 2) {
+                    currencyType = "GBP";
+                }
+                if (o.getProduct().getCurrencyType() == 3) {
+                    currencyType = "EUR";
+                }
 
-            Currency currency = currencyDBAdapter.getCurrencyByCode(currencyType);
-            saleTotalPrice += o.getItemTotalPrice()*currency.getRate();
-            SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity()*currency.getRate());
+                Currency currency = currencyDBAdapter.getCurrencyByCode(currencyType);
+                saleTotalPrice += o.getItemTotalPrice() * currency.getRate();
+                SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity() * currency.getRate());
+            }
         }
 
         if (SESSION._ORDERS.cartDiscount != 0&& SESSION._ORDER_DETAILES.size()>0) {
@@ -3318,13 +3302,14 @@ public class SalesCartActivity extends AppCompatActivity {
 
                             @TargetApi(Build.VERSION_CODES.GINGERBREAD)
                             public void onClick(View arg0) {
-                                long productSerialNumber=0;
+                                String productSerialNumber="";
                                 if (serialNumber.getText().toString().matches("")) {
-                                    productSerialNumber=0;
-                                }else if(Long.parseLong(serialNumber.getText().toString())>0){
-                                productSerialNumber=Long.parseLong(serialNumber.getText().toString());
+                                    productSerialNumber="";
+                                }else {
+                                productSerialNumber=serialNumber.getText().toString();
                                 }
-                                o.setProductSerialNumber(productSerialNumber);
+                                o.setProductSerialNumber(0);
+                                o.setSerialNumber(productSerialNumber);
                                 productSerialNumberDialog.dismiss();
                                 isWithSerialNo=false;
                             }
@@ -3949,10 +3934,10 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid=0;
                     if(o.getProduct().isWithTax()){
-                         orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount());
+                         orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
 
                     }else {
-                         orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)));
+                         orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
 
                     }
                     orderId.add(orderid);
@@ -4107,10 +4092,10 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid=0;
                     if(o.getProduct().isWithTax()){
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount());
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
 
                     }else {
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)));
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
 
                     }                    orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
@@ -4235,10 +4220,10 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid=0;
                     if(o.getProduct().isWithTax()){
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount());
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
 
                     }else {
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)));
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
 
                     }                    orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
@@ -4365,10 +4350,10 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid=0;
                     if(o.getProduct().isWithTax()){
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount());
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
 
                     }else {
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)));
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
 
                     }                    orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
@@ -4499,10 +4484,10 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid=0;
                     if(o.getProduct().isWithTax()){
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount());
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
 
                     }else {
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)));
+                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
 
                     }                    orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
@@ -4707,10 +4692,10 @@ public class SalesCartActivity extends AppCompatActivity {
                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
                         long orderid=0;
                         if(o.getProduct().isWithTax()){
-                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount());
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
 
                         }else {
-                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)));
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
 
                         }
                         orderId.add(orderid);
@@ -4936,6 +4921,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 setCustomer(customerList.get(position));
                 SESSION._ORDERS.setCustomer_name(customerList.get(position).getFirstName());
                 SESSION._ORDERS.setCustomer(customerList.get(position));
+                SESSION._ORDERS.setCustomerId(customerList.get(position).getCustomerId());
                 customerDialog.dismiss();
             }
         });

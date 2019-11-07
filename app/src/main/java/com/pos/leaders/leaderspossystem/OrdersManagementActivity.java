@@ -696,8 +696,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                             }
                                             else{
                                                 try {
-                                                    SESSION._ORDER_DETAILES=orders;
-                                                    SESSION._ORDERS=sale;
+                                                    SESSION._TEMP_ORDER_DETAILES=orders;
+                                                    SESSION._TEMP_ORDERS=sale;
                                                     PrinterTools.printAndOpenCashBox("", "", "", 600,OrdersManagementActivity.this,getParent());
                                                     /**Customer customer1 =sale.getCustomer();
                                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
@@ -987,7 +987,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                         Order order = nerOrderWithSerialNo.get(i);
                                         List<OrderDetails>orderDetailsList = orderDetailsDBAdapter.getOrderBySaleID(order.getOrderId());
                                         for(int a=0;a<orderDetailsList.size();a++){
-                                            if(orderDetailsList.get(a).getProductSerialNumber()==Long.parseLong(word)){
+                                            if(orderDetailsList.get(a).getSerialNumber()==word){
                                                 filterOrderList.add(nerOrderWithSerialNo.get(i));
                                             }
                                         }

@@ -52,6 +52,7 @@ public class OrderDetails {
 	private int objectID = 0;
     private long offerId;
 	private long productSerialNumber;
+	private String serialNumber;
 
 	public long getProductSerialNumber() {
 		return productSerialNumber;
@@ -59,6 +60,14 @@ public class OrderDetails {
 
 	public void setProductSerialNumber(long productSerialNumber) {
 		this.productSerialNumber = productSerialNumber;
+	}
+
+	public String getSerialNumber() {
+		return serialNumber;
+	}
+
+	public void setSerialNumber(String serialNumber) {
+		this.serialNumber = serialNumber;
 	}
 
 	@JsonIgnore
@@ -107,7 +116,7 @@ public class OrderDetails {
 		initObjectID();
 	}
 
-	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id , String key , long offerId,long productSerialNumber ,double paidAmountAfterTax) {
+	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id , String key , long offerId,long productSerialNumber ,double paidAmountAfterTax,String serialNumber) {
 		this.orderDetailsId = orderDetailsId;
 		this.productId = productId;
 		this.quantity = quantity;
@@ -121,6 +130,7 @@ public class OrderDetails {
         this.offerId=offerId;
 		this.productSerialNumber=productSerialNumber;
 		this.paidAmountAfterTax=paidAmountAfterTax;
+		this.serialNumber=serialNumber;
 		initObjectID();
 	}
 
@@ -166,7 +176,7 @@ public class OrderDetails {
 	}
 
 	public OrderDetails(OrderDetails o) {
-		this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id(),o.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmountAfterTax());
+		this(o.getOrderDetailsId(), o.getProductId(), o.getQuantity(), o.getUserOffer(), o.getOrderId(), o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id(),o.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmountAfterTax(),o.getSerialNumber());
 		this.product = o.getProduct();
 	}
 
@@ -352,6 +362,7 @@ public class OrderDetails {
 				", \"orderKey\":" + "\""+orderKey +"\""+
 				", \"offerCategory\":" + "\""+offerCategory +"\""+
 				", \"productSerialNumber\":" + "\""+productSerialNumber +"\""+
+				", \"serialNumber\":" + "\""+serialNumber +"\""+
 				", \"paid_amount_amount_after_tax\":" + "\""+paidAmountAfterTax +"\""+
 				'}';
 	}

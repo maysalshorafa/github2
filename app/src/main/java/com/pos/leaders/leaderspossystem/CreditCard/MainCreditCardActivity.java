@@ -556,6 +556,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
 
             String answer = soap.getProperty("Answer").toString();
             try {
+
                 CreditCardPayment creditCardPayment = Result.read(answer);
 
                 creditCardPayment.setAnswer(answer);
@@ -585,6 +586,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
 
 
             } catch (CreditCardResultException e) {
+                if(!isFinishing()){
 
                 AlertDialog.Builder builder;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -603,6 +605,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                         .setCancelable(false)
                         .show();
             }
+            }
         }
         else{
             if(totalPrice<0){
@@ -617,6 +620,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 finish();
             }
         }
+
     }
     private void close() {
         MainCreditCardActivity.this.onBackPressed();
