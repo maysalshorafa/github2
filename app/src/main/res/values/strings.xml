@@ -751,7 +751,9 @@
     <string name="sale_report">Sales Report</string>
     <string name="title_sales_report_activity">Sales Report</string>
     <string name="there_are_no_sales">There are no sales</string>
-
+    <string name="accounting_information">Accounting Information</string>
+    <string name="Sales_Without_tax">Sales Without Tax</string>
+    <string name="Sales_With_tax">Sales Whit Tax</string>
 </resources>
 
 

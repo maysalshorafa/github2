@@ -891,7 +891,124 @@
                 </LinearLayout>
 
             </LinearLayout>
-        <LinearLayout
+
+                          <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:padding="5dp"
+                android:layout_weight="1"
+                android:weightSum="2">
+
+                              <TextView
+                                  android:id="@+id/textView29"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="match_parent"
+                                  android:layout_weight="1"
+                                  android:text="@string/accounting_information"
+                                  android:textSize="26dp" />
+
+                          </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:layout_weight="1"
+                android:weightSum="2">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/Sales_Without_tax"
+                    android:gravity="center"
+                    android:textSize="26dp"/>
+                <TextView
+                    android:id="@+id/zReportSalesBeforeTax"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="26dp"/>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:padding="5dp"
+                android:layout_weight="1"
+                android:weightSum="2">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/tax"
+                    android:gravity="center"
+                    android:textSize="26dp"/>
+                <TextView
+                    android:id="@+id/Tax"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="26dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:padding="5dp"
+                android:layout_weight="1"
+                android:weightSum="2">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/Sales_With_tax"
+                    android:gravity="center"
+                    android:textSize="26dp"/>
+                <TextView
+                    android:id="@+id/zReportSalesWithTax"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="26dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:padding="5dp"
+                android:layout_weight="1"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/textView41"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/total_price"
+                    android:textSize="26dp" />
+
+                <TextView
+                    android:id="@+id/TotalPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="26dp"/>
+
+            </LinearLayout>
+            <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/bubble"
@@ -922,6 +1039,7 @@
                     android:gravity="center"
                     android:textSize="25dp" />
 </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

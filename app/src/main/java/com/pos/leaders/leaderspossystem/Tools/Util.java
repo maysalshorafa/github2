@@ -474,6 +474,7 @@ public class Util {
         lastZReport.setInvoiceReceiptAmount(amount);
         lastZReport.setTotalSales(amount+lastZReport.getInvoiceAmount()+lastZReport.getCreditInvoiceAmount());
         lastZReport.setTotalPosSales(totalZReportAmount);
+        Log.d("getTotalPosuTITL1",lastZReport.getTotalPosSales()+"poss");
         lastZReport.setCloseOpenReport("close");
         zReportDBAdapter.updateEntry(lastZReport);
         zReportDBAdapter.close();
@@ -908,7 +909,7 @@ public class Util {
             long zID = zReportDBAdapter.insertEntry(zReport.getCreatedAt(), zReport.getByUser(), zReport.getStartOrderId(), zReport.getEndOrderId(),
                     zReport.getTotalAmount(),zReport.getTotalSales(),cash_plus,check_plus+receiptInvoiceAmountCheck,creditCard_plus
                     ,Double.parseDouble(Util.makePrice(zReport.getTotalPosSales())),(zReport.getTotalAmount()/(1+SETTINGS.tax/100))*(SETTINGS.tax/100),invoiceAmount,
-                    creditInvoiceAmount,sheqle_plus,(usd_plus-usd_minus)+aReportDetailsForSecondCurrency,(eur_plus-eur_minus)+aReportDetailsForThirdCurrency,(gbp_plus-gbp_minus)+aReportDetailsForForthCurrency,zReport.getInvoiceReceiptAmount(),0,0,"close");
+                    creditInvoiceAmount,sheqle_plus,(usd_plus-usd_minus)+aReportDetailsForSecondCurrency,(eur_plus-eur_minus)+aReportDetailsForThirdCurrency,(gbp_plus-gbp_minus)+aReportDetailsForForthCurrency,zReport.getInvoiceReceiptAmount(),0,0,"close",zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax());
             zReport.setzReportId(zID);
             zReport.setInvoiceAmount(invoiceAmount);
             zReport.setCreditInvoiceAmount(creditInvoiceAmount);
@@ -1373,12 +1374,13 @@ public class Util {
         zReport.setTotalSales(amount);
         zReport.setInvoiceReceiptAmount(amount);
         zReport.setTotalPosSales(totalZReportAmount);
+        Log.d("getTotalPosuTIL",zReport.getTotalPosSales()+"poss");
         XReportDBAdapter xReportDBAdapter=new XReportDBAdapter(context);
         xReportDBAdapter.open();
         long xID = xReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), zReport.getStartOrderId(), zReport.getEndOrderId(),
                 zReport.getTotalAmount(),zReport.getTotalSales(),zReport.getCashTotal(),zReport.getCheckTotal(),zReport.getCreditTotal()
                 ,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax/100,zReport.getInvoiceAmount(),
-                zReport.getCreditInvoiceAmount(),zReport.getShekelAmount(),zReport.getUsdAmount(),zReport.getEurAmount(),zReport.getGbpAmount(),zReport.getInvoiceReceiptAmount(),zReport.getPullReportAmount(),zReport.getDepositReportAmount());
+                zReport.getCreditInvoiceAmount(),zReport.getShekelAmount(),zReport.getUsdAmount(),zReport.getEurAmount(),zReport.getGbpAmount(),zReport.getInvoiceReceiptAmount(),zReport.getPullReportAmount(),zReport.getDepositReportAmount(),zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax());
         XReport finalX = xReportDBAdapter.getByID(xID);
 
         return finalX;

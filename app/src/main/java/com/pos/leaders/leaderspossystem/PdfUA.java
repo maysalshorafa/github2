@@ -173,6 +173,7 @@ public class PdfUA {
         //end :)
     }
     public static void createZReport(Context context, ZReport zReport, ZReportCount zReportCount, boolean source) throws IOException, DocumentException {
+        Order  order=SESSION._TEMP_ORDERS;
         if(zReportCount!=null) {
             getCountForZReport(context, zReport);
         }else {
@@ -343,6 +344,32 @@ public class PdfUA {
             insertCell(opiningReportDetailsTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, "----------------------------", Element.ALIGN_CENTER, 2, font);
         }
+        double salesaftertax=0;
+        for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
+            if(SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
+
+        }else {
+            salesaftertax+=SESSION._ORDER_DETAILES.get(i).getPaidAmount();
+        }
+    }
+        PdfPTable accountInformation = new PdfPTable(4);
+        accountInformation.deleteBodyRows();
+        accountInformation.setRunDirection(0);
+        insertCell(accountInformation, context.getString(R.string.accounting_information), Element.ALIGN_RIGHT, 4, font);
+
+        insertCell(accountInformation,Util.makePrice(zReport.getSalesBeforeTax()) + " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.Sales_Without_tax), Element.ALIGN_RIGHT,2, font);
+
+        insertCell(accountInformation,Util.makePrice(zReport.getTotalTax())+ " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.tax), Element.ALIGN_RIGHT,2, font);
+
+        insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax()) + " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.Sales_With_tax), Element.ALIGN_RIGHT,2, font);
+        insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax()+zReport.getSalesBeforeTax()+zReport.getTotalTax()) + " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.total_price), Element.ALIGN_RIGHT,2, font);
+        insertCell(accountInformation, "----------------------------", Element.ALIGN_CENTER, 4, font);
+
+
         PdfPTable posSalesTable = new PdfPTable(2);
         posSalesTable.deleteBodyRows();
         posSalesTable.setRunDirection(0);
@@ -353,6 +380,7 @@ public class PdfUA {
         document.add(dataTable);
         document.add(opiningReportTable);
         document.add(pullAndDepositAmount);
+        document.add(accountInformation);
         if(SETTINGS.enableCurrencies){
             document.add(opiningReportDetailsTable);
 
@@ -1490,6 +1518,22 @@ public class PdfUA {
             insertCell(opiningReportDetailsTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, "----------------------------", Element.ALIGN_CENTER, 2, font);
         }
+        PdfPTable accountInformation = new PdfPTable(4);
+        accountInformation.deleteBodyRows();
+        accountInformation.setRunDirection(0);
+        insertCell(accountInformation, context.getString(R.string.accounting_information), Element.ALIGN_RIGHT, 4, font);
+        insertCell(accountInformation,Util.makePrice(xReport.getTotalTax())+ " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.tax), Element.ALIGN_RIGHT,2, font);
+        insertCell(accountInformation,Util.makePrice(xReport.getSalesBeforeTax())+ " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.Sales_Without_tax), Element.ALIGN_RIGHT,2, font);
+        insertCell(accountInformation,Util.makePrice(xReport.getSalesWithTax())+ " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.Sales_With_tax), Element.ALIGN_RIGHT,2, font);
+        insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax()+zReport.getSalesBeforeTax()) + " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.total_price), Element.ALIGN_RIGHT,2, font);
+        insertCell(accountInformation, "----------------------------", Element.ALIGN_CENTER, 4, font);
+
+
+
         PdfPTable posSalesTable = new PdfPTable(2);
         posSalesTable.deleteBodyRows();
         posSalesTable.setRunDirection(0);
@@ -1500,6 +1544,7 @@ public class PdfUA {
         document.add(dataTable);
         document.add(opiningReportTable);
         document.add(pullAndDepositAmount);
+        document.add(accountInformation);
         if(SETTINGS.enableCurrencies){
             document.add(opiningReportDetailsTable);
 
@@ -1816,6 +1861,21 @@ public class PdfUA {
             insertCell(opiningReportDetailsTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, "----------------------------", Element.ALIGN_CENTER, 2, font);
         }
+
+        PdfPTable accountInformation = new PdfPTable(4);
+        accountInformation.deleteBodyRows();
+        accountInformation.setRunDirection(0);
+        insertCell(accountInformation, context.getString(R.string.accounting_information), Element.ALIGN_RIGHT, 4, font);
+        insertCell(accountInformation,Util.makePrice(zReport.getTotalTax())+ " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.tax), Element.ALIGN_RIGHT,2, font);
+        insertCell(accountInformation,Util.makePrice(zReport.getSalesBeforeTax())+ " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.Sales_Without_tax), Element.ALIGN_RIGHT,2, font);
+        insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax())+ " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.Sales_With_tax), Element.ALIGN_RIGHT,2, font);
+        insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax()+zReport.getSalesBeforeTax()) + " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.total_price), Element.ALIGN_RIGHT,2, font);
+        insertCell(accountInformation, "----------------------------", Element.ALIGN_CENTER, 4, font);
+
         PdfPTable posSalesTable = new PdfPTable(2);
         posSalesTable.deleteBodyRows();
         posSalesTable.setRunDirection(0);
@@ -1825,6 +1885,7 @@ public class PdfUA {
         document.add(headingTable);
         document.add(dataTable);
         document.add(opiningReportTable);
+        document.add(accountInformation);
       /*  if(SETTINGS.enableCurrencies){
             document.add(opiningReportDetailsTable);
 
@@ -1963,10 +2024,12 @@ public class PdfUA {
         insertCell(table,Util.makePrice(order.cartDiscount)  , Element.ALIGN_CENTER, 4, urFontName);
 
         double totalPriceAfterDiscount= totalPrice- (totalPrice * (order.cartDiscount/100));
+        Log.d("order.cartDiscount",totalPrice+"");
         insertCell(table, context.getString(R.string.total_price)  , Element.ALIGN_CENTER, 5, urFontName);
         insertCell(table,Util.makePrice(totalPriceAfterDiscount)  , Element.ALIGN_CENTER, 4, urFontName);
 
         double noTax =price_before_tax - (price_before_tax * (order.cartDiscount/100));
+        Log.d("order.cartDiscount",noTax+"");
         insertCell(table, context.getString(R.string.tax) +" : "+Util.makePrice(SETTINGS.tax)+" "+"%" , Element.ALIGN_CENTER, 5, urFontName);
         insertCell(table,Util.makePrice(totalPriceAfterDiscount - noTax) , Element.ALIGN_CENTER, 4, urFontName);
 

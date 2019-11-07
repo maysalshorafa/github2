@@ -666,7 +666,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
 
-                                long sID = orderDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), lastOrder.getReplacementNote(), true, lastOrder.getTotalPrice() * -1, lastOrder.getTotalPaidAmount() * -1, lastOrder.getCustomerId(), lastOrder.getCustomer_name(),lastOrder.getCartDiscount(),lastOrder.getNumberDiscount(),lastOrder.getOrderId());
+                                long sID = orderDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), lastOrder.getReplacementNote(), true, lastOrder.getTotalPrice() * -1, lastOrder.getTotalPaidAmount() * -1, lastOrder.getCustomerId(), lastOrder.getCustomer_name(),lastOrder.getCartDiscount(),lastOrder.getNumberDiscount(),lastOrder.getOrderId(),0,0);
                                 Order order = orderDBAdapter.getOrderById(sID);
                                 lastOrder.setCancellingOrderId(sID);
                                 orderDBAdapter.updateEntry(lastOrder);
@@ -2220,6 +2220,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         zReport.setInvoiceAmount(zReport.getInvoiceAmount()+SESSION._ORDERS.getTotalPrice());
                                                         zReport.setTotalSales(zReport.getTotalSales()+SESSION._ORDERS.getTotalPrice());
                                                         zReport.setTotalPosSales(zReport.getTotalPosSales()+SESSION._ORDERS.getTotalPrice());
+                                                            Log.d("getTotalPos",zReport.getTotalPosSales()+"poss");
                                                             zReportCount.setInvoiceCount(zReportCount.getInvoiceCount()+1);
                                                         zReportDBAdapter.updateEntry(zReport);
                                                             zReportCountDbAdapter.updateEntry(zReportCount);
@@ -2231,6 +2232,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         zReport.setInvoiceAmount(zReport.getInvoiceAmount()+SESSION._ORDERS.getTotalPrice());
                                                         zReport.setTotalSales(zReport.getTotalSales()+SESSION._ORDERS.getTotalPrice());
                                                         zReport.setTotalPosSales(zReport.getTotalPosSales()+SESSION._ORDERS.getTotalPrice());
+                                                            Log.d("getTotalPos1",zReport.getTotalPosSales()+"poss");
                                                             zReportCount.setInvoiceCount(zReportCount.getInvoiceCount()+1);
                                                             zReportDBAdapter.updateEntry(zReport);
                                                             zReportCountDbAdapter.updateEntry(zReportCount);
@@ -2740,7 +2742,7 @@ public class SalesCartActivity extends AppCompatActivity {
      }else {
 
          if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
-          Log.d("REQUEST_CURRENCY_RETURN_ACTIVITY_CODE",CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE+"");
+          //Log.d("REQUEST_CURRENCY_RETURN_ACTIVITY_CODE",CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE+"");
             CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
          SESSION._Rest();
          clearCart();
@@ -3882,7 +3884,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
-                long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
+                long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false,0,0);
                 Order order = saleDBAdapter.getOrderById(saleID);
                 long tempSaleId = 0;
                 // Club with point and amount
@@ -4068,7 +4070,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
-                long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
+                long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false,0,0);
                 Order order = saleDBAdapter.getOrderById(saleID);
                 saleDBAdapter.close();
 
@@ -4177,7 +4179,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 saleDBAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
-                long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
+                long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false,0,0);
                 Order order = saleDBAdapter.getOrderById(saleID);
                 // Club with point and amount
                 if (clubType == 2 && clubAmount!=0) {
@@ -4308,7 +4310,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 SESSION._ORDERS.setTotalPaidAmount(totalPaidWithOutCurrency);
 
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
-                saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
+                saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false,0,0);
                 Order order = saleDBAdapter.getOrderById(saleIDforCash);
                 SESSION._ORDERS.setOrderId(saleIDforCash);
 
@@ -4436,7 +4438,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 long secondCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_SECOND_CURRENCY_ID, 0);
                 long firstCurrencyId = data.getLongExtra(CashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_FIRST_CURRENCY_ID, 0);
 
-                saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
+                saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false,0,0);
                 Order order = saleDBAdapter.getOrderById(saleIDforCash);
                 SESSION._ORDERS.setOrderId(saleIDforCash);
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess, new Order(SESSION._ORDERS),"","","");
@@ -4585,10 +4587,44 @@ public class SalesCartActivity extends AppCompatActivity {
                         TotalPaidAmount += jsonObject.getDouble("tendered") * getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
                         change = Math.abs(jsonObject.getDouble("change"));
                     }
+                    double SalesWitheTax=0,SalesWithoutTax=0,salesaftertax=0;
+                    for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
+                        if(SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
+                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(SESSION._ORDER_DETAILES.get(i).getPaidAmount());
+                            SalesWithoutTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
 
+                        }else {
 
+                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)));
+                            salesaftertax+=SESSION._ORDER_DETAILES.get(i).getPaidAmount();
+                            Log.d("salesaftertax",salesaftertax+"ko");
+                            SalesWitheTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                        }
+                    }
+                   /* for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
+                        price_before_tax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+
+                    }
+                    double noTax =price_before_tax - (price_before_tax * (SESSION._ORDERS.cartDiscount/100));
+                    double totalPriceAfterDiscount= totalPrice- (totalPrice * (SESSION._ORDERS.cartDiscount/100));
+                    Log.d("totalPriceAfterDiscount",totalPriceAfterDiscount+"");
+                    Log.d("noTax",noTax+"");*/
+                    SESSION._ORDERS.setSalesWithTax(SalesWitheTax);
+                    SESSION._ORDERS.setSalesBeforeTax(SalesWithoutTax);
                     SESSION._ORDERS.setTotalPaidAmount(TotalPaidAmount);
-                    saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false);
+                    saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false,SalesWithoutTax,SalesWitheTax);
+                    zReport.setSalesBeforeTax(zReport.getSalesBeforeTax() + (SalesWithoutTax));
+                    zReport.setSalesWithTax(zReport.getSalesWithTax() + (SalesWitheTax));
+                    Log.d("setSalesWithTaxReport",zReport.getSalesWithTax()+"");
+                    zReport.setTotalTax(zReport.getTotalTax()+Math.abs(salesaftertax - SalesWitheTax));
+                    Log.d("salesaftertax",salesaftertax+"");
+                    Log.d("SalesWitheTax",zReport.getSalesWithTax()+"tax1"+"");
+                    Log.d("TotalTax",zReport.getTotalTax()+"tax2");
+                    Log.d("setSalesBeforeTaxReport",zReport.getSalesBeforeTax()+"");
+
+
+
+
                     Order order = saleDBAdapter.getOrderById(saleIDforCash);
                     Log.d("oooo",order.toString());
 
@@ -4701,14 +4737,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         orderId.add(orderid);
                         //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                     }
-                    for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
-                        if(SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
-                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(  SESSION._ORDER_DETAILES.get(i).getPaidAmount());
 
-                        }else {
-                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)));
-                        }
-                    }
                     // ORDER_DETAILS Sales man Region
                     for (int i = 0; i < orderIdList.size(); i++) {
                         OrderDetails orderDetails = orderIdList.get(i);

@@ -154,6 +154,11 @@ public class MonthZReportView extends AppCompatActivity {
         double eurAmount=0;
         double gbpAmount=0;
         double invoiceReceiptAmount=0;
+
+        double salesBeforeTax=0;
+        double salesWithTax=0;
+        double totalTax=0;
+
         int cashTotalC=0;
         int checkTotalC=0;
         int creditTotalC=0;
@@ -208,13 +213,23 @@ public class MonthZReportView extends AppCompatActivity {
             usdAmount+=zReportList.get(i).getUsdAmount();
             eurAmount+=zReportList.get(i).getEurAmount();
             gbpAmount+=zReportList.get(i).getGbpAmount();
+            salesBeforeTax+=zReportList.get(i).getSalesBeforeTax();
+            salesWithTax+=zReportList.get(i).getSalesWithTax();
+            totalTax+=zReportList.get(i).getTotalTax();
+
+
             invoiceReceiptAmount+=zReportList.get(i).getInvoiceReceiptAmount();
 
             }
             totalSales=invoiceReceiptAmount+invoiceAmount+creditInvoiceAmount;
 
+        zReport=new ZReport(0,new Timestamp(System.currentTimeMillis()),zReportList.get(0).getByUser(),0,0,totalAmount,totalSales,cashTotal,checkTotal,creditTotal,totalPosSales,zReportList.get(0).getTax(),invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,0,0,"close",salesBeforeTax,salesWithTax,totalTax);
+            Log.d("zReportList",zReport.toString());
+
+
                 zReportCount=new ZReportCount(0,cashTotalC,checkTotalC,creditTotalC,invoiceAmountC,creditInvoiceAmountC,shekelAmountC,usdAmountC,eurAmountC,gbpAmountC,invoiceReceiptAmountC,0);
-                zReport=new ZReport(0,new Timestamp(System.currentTimeMillis()),zReportList.get(0).getByUser(),0,0,totalAmount,totalSales,cashTotal,checkTotal,creditTotal,zReportList.get(zReportList.size()-1).getTotalPosSales(),zReportList.get(0).getTax(),invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,0,0,"close");
+                zReport=new ZReport(0,new Timestamp(System.currentTimeMillis()),zReportList.get(0).getByUser(),0,0,totalAmount,totalSales,cashTotal,checkTotal,creditTotal,zReportList.get(zReportList.size()-1).getTotalPosSales(),zReportList.get(0).getTax(),invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,0,0,"close",salesBeforeTax,salesWithTax,totalTax);
+
 
             PdfUA pdfUA = new PdfUA();
 
