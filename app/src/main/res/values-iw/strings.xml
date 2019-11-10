@@ -674,7 +674,7 @@
     <string name="there_are_no_sales">אין מכירות</string>
     <string name="product_count">כמות מוצרים</string>
     <string name="accounting_information">מידע חשבונאי</string>
-    <string name="Sales_Without_tax">מכירות ללא מס</string>
-    <string name="Sales_With_tax">מכירות עם מס</string>
+    <string name="Sales_Without_tax">מכירות ללא מע"מ</string>
+    <string name="Sales_With_tax">מכירות עם מע"מ</string>
 
 </resources>

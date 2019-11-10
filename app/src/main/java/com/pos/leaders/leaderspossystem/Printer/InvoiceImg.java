@@ -253,6 +253,7 @@ public class InvoiceImg {
         Block discount = new Block("\u200E" + "%" + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
 
         double SaleOriginalityPrice = 0, saleTotalPrice = 0;
+        double price_before_tax=0;
         double totalSaved = 0.0;
         for (OrderDetails o : orders) {
             count+=o.getQuantity();
@@ -268,9 +269,15 @@ public class InvoiceImg {
             discount.text += String.format(new Locale("en"), "%.2f", o.getDiscount()) + "\n";
             SaleOriginalityPrice += (o.getItemTotalPrice() );
             saleTotalPrice += o.getUnitPrice();
+            price_before_tax+=o.getPaidAmountAfterTax();
+
         }
         sale.setTotalPrice(SaleOriginalityPrice);
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);
+        double totalPriceAfterDiscount= sale.getTotalPrice()- (sale.getTotalPrice() * (sale.cartDiscount/100));
+        double noTax =price_before_tax - (price_before_tax * (sale.cartDiscount/100));
+
+
         Log.d("testTotalSaved",totalSaved+"");
         blocks.add(discount.Left());
         blocks.add(price.Left());
@@ -281,41 +288,58 @@ public class InvoiceImg {
         blocks.add(name);
         Block productCountText = new Block("\u200E" + context.getString(R.string.product_quantity), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block productCount = new Block("\u200E" + String.valueOf(count), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+
+
         Block priceBeforeDiscountText = new Block("\u200E" + context.getString(R.string.price_before_discount), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block priceBeforeDiscount =new Block("\u200E" + Util.makePrice(sale.getTotalPrice()*100/(100-sale.cartDiscount)), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+
         Block toPidText = new Block("\u200E" + context.getString(R.string.total_price),40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block toPid = new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+
+
+
+        Block toPidTextBeforeDiscount = new Block("\u200E" + context.getString(R.string.price_before_tax),40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block toPidBeforeDiscount= new Block(String.format(new Locale("en"), "%.2f", Util.makePrice(noTax)), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+
+
+        Block discountAmount = new Block("\u200E" + String.valueOf(sale.cartDiscount)+ "%", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         Block discountText = new Block("\u200E" + context.getString(R.string.discount), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
 
-        Block toPidTextBeforeDiscount = new Block("\u200E" + context.getString(R.string.price_before_discount),40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
-        Block toPid = new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
-        Block discountAmount = new Block("\u200E" + String.valueOf(sale.cartDiscount)+ "%", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
 
-        Block toPidBeforeDiscount= new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()*100/(100-sale.cartDiscount)), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         productCount.Left();
         productCountText.Left();
         priceBeforeDiscount.Left();
         priceBeforeDiscountText.Left();
         toPid.Left();
         toPidText.Left();
-
         discountText.Left();
         discountAmount.Left();
+
         toPidBeforeDiscount.Left();
         toPidTextBeforeDiscount.Left();
+
+
+
         toPid.Bold();
         toPidText.Bold();
         blocks.add(lineR);
+
         blocks.add(productCount);
         blocks.add(productCountText);
         blocks.add(clear.Left());
-        if(sale.cartDiscount>0) {
+
+        blocks.add(priceBeforeDiscount);
+        blocks.add(priceBeforeDiscountText);
+        blocks.add(clear.Left());
+
             blocks.add(discountAmount);
             blocks.add(discountText);
             blocks.add(clear.Left());
+
             blocks.add(toPidBeforeDiscount);
             blocks.add(toPidTextBeforeDiscount);
             blocks.add(clear.Left());
-        }
+
         blocks.add(toPid);
         blocks.add(toPidText);
         blocks.add(clear.Left());

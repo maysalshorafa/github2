@@ -298,7 +298,7 @@ public class ReportZDetailsActivity extends Activity {
                 zReportSalesBeforeTax.setText(Util.makePrice(zReport.getSalesBeforeTax()));
                 zReportSalesWithTax.setText(Util.makePrice(zReport.getSalesWithTax()));
                 zReportTotalPrice.setText(Util.makePrice(zReport.getSalesBeforeTax()+zReport.getSalesWithTax()+zReport.getTotalTax()));
-
+              Log.d("zReportDetials",zReport.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }

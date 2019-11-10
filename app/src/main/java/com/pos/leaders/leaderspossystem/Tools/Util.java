@@ -457,6 +457,7 @@ public class Util {
         }
 
         double amount = zReportDBAdapter.getZReportAmount(lastZReport.getStartOrderId(), lastZReport.getEndOrderId());
+        Log.d("amount",amount+"amount");
         try {
             ZReport zReport1 = zReportDBAdapter.getLastRow();
             ZReport zReport =zReportDBAdapter.getByID(zReport1.getzReportId()-1);
