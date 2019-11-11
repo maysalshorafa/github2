@@ -164,9 +164,10 @@ public class SalesReportActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 if (btnisclickedProduct) {
+                    flageGridOnClick="onclickProduct";
+                    LAmountRepot.setVisibility(View.VISIBLE);
                     gvCategory.setVisibility(View.GONE);
                     lvReport.setVisibility(View.GONE);
-                    LAmountRepot.setVisibility(View.GONE);
                     productDBAdapter = new ProductDBAdapter(SalesReportActivity.this);
                     productDBAdapter.open();
                     productsList = productDBAdapter.getTopProducts(productLoadItemOffset, productCountLoad);
@@ -176,6 +177,7 @@ public class SalesReportActivity extends AppCompatActivity {
                     etSearch.setVisibility(View.VISIBLE);
                     gvProducts.setVisibility(View.VISIBLE);
                     btnisclickedProduct=false;
+                    setOrder();
                 }
                 else {
                     gvCategory.setVisibility(View.GONE);
@@ -285,6 +287,10 @@ public class SalesReportActivity extends AppCompatActivity {
                 }
             }
         });
+
+        flageGridOnClick="onCreate";
+        setOrder();
+
     }
 
     protected Dialog onCreateDialog(int id) {
@@ -334,9 +340,58 @@ public class SalesReportActivity extends AppCompatActivity {
 
     private void setOrder() {
         amountReport=0;
+        if (flageGridOnClick.equals("onclickProduct")){
+            amountReport=0;
+            OrderList=new ArrayList<Order>();
+            OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
+            orderDBAdapter1.open();
+            OrderList = orderDBAdapter1.getBetweenOrder(from.getTime(),to.getTime());
 
+            Log.d("from",from.getTime()+"");
+            Log.d("to",to.getTime()+"");
+            tvCountSale.setText(OrderList.size() + "");
+            for (int i2 = 0; i2 < OrderList.size(); i2++) {
+                amountReport = amountReport + OrderList.get(i2).getTotalPrice();
+            }
+            Log.d("OrderList",OrderList.size()+"");
+            amount.setText(amountReport + "");
+        }
+      else  if (flageGridOnClick.equals("onCreate")){
+            Log.d("OnCreate","OnCreate");
+            amountReport=0;
+            OrderList=new ArrayList<Order>();
+            objectList=new ArrayList<>();
+            OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
+            orderDBAdapter1.open();
+            OrderList = orderDBAdapter1.getBetweenOrder(from.getTime(),to.getTime());
+            gvProducts.setVisibility(View.GONE);
+            etSearch.setVisibility(View.GONE);
+            gvCategory.setVisibility(View.GONE);
+            lvReport.setVisibility(View.VISIBLE);
+            LAmountRepot.setVisibility(View.GONE);
+            if (OrderList.size() > 0) {
+                lvReport.setVisibility(View.VISIBLE);
+                LAmountRepot.setVisibility(View.VISIBLE);
+                Log.d("OrderListOnCreate",OrderList.size()+"");
+            for (int i2 = 0; i2 < OrderList.size(); i2++) {
+                amountReport = amountReport + OrderList.get(i2).getTotalPrice();
+                Log.d("i2",i2+"");
+            }
+                tvCountSale.setText(OrderList.size() + "");
+                amount.setText(amountReport + "");
+                objectList.addAll(OrderList);
+                adapterOrderList = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
+                lvReport.setAdapter(adapterOrderList);
 
-        if (flageGridOnClick.equals("gvCategory")){
+        }
+            else {
+                LAmountRepot.setVisibility(View.GONE);
+                lvReport.setVisibility(View.GONE);
+                Toast.makeText(SalesReportActivity.this, R.string.there_are_no_sales,
+                        Toast.LENGTH_LONG).show();
+            }
+      }
+       else if (flageGridOnClick.equals("gvCategory")){
         objectList = new ArrayList<>();
         OrderList = new ArrayList<>();
         order = new ArrayList<>();

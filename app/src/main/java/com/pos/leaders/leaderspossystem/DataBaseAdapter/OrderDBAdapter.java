@@ -261,7 +261,9 @@ public class OrderDBAdapter {
 		while (!cursor.isAfterLast()) {
 			saleList.add(makeSale(cursor));
 			cursor.moveToNext();
+			Log.d("test","test");
 		}
+		Log.d("test2",saleList.toString()+"list");
 			close();
 
 		} catch (Exception e) {
