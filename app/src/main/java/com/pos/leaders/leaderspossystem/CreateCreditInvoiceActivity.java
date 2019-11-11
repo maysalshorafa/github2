@@ -34,11 +34,9 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductInventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.BoInventory;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.CreditInvoiceDocument;
 import com.pos.leaders.leaderspossystem.Models.Customer;
-import com.pos.leaders.leaderspossystem.Models.Inventory;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductInventory;
@@ -55,7 +53,6 @@ import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 
 import org.json.JSONArray;
@@ -71,7 +68,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImages;
-import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 public class CreateCreditInvoiceActivity extends AppCompatActivity {
 
@@ -96,6 +92,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
     JSONObject jsonObject = new JSONObject();
     ProductInventoryDbAdapter productInventoryDbAdapter;
     InventoryDbAdapter inventoryDbAdapter ;
+    double SalesWitheTax=0,SalesWithoutTax=0,salesaftertax=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -218,9 +215,11 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
 
                                     if(cartDetailsList.getJSONObject(a).getLong("productId")==product.getProductId()){
                                         newCartJson=cartDetailsList.getJSONObject(a);
+
                                     }
                                 }
                                 for(int p=0;p<newCartDetails.length();p++){
+
                                     if(newCartDetails.getJSONObject(p).getLong("productId")==newCartJson.getLong("productId")){
                                         int c=newCartDetails.getJSONObject(p).getInt("quantity");
                                         newCartDetails.getJSONObject(p).remove("quantity");
@@ -228,6 +227,16 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         newCartDetails.getJSONObject(p).remove("unitPrice");
                                         newCartDetails.getJSONObject(p).put("unitPrice", product.getPrice());
                                         haveCart=true;
+                                        if(product.isWithTax()){
+                                            SalesWithoutTax+=product.getPrice()*(c+1);
+
+                                        }else {
+
+                                            salesaftertax+=product.getPrice()*(c+1);
+                                            Log.d("salesaftertax",salesaftertax+"k6666666666");
+                                            SalesWitheTax+=product.getPrice()*(c+1)/ (1 + (SETTINGS.tax / 100));
+                                        }
+                                        Log.d("teeee888888s",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
 
                                     }
                                 }
@@ -238,6 +247,16 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                     newCartJson.put("quantity", 1);
                                   newCartDetails.put(newCartJson);
                                     Log.d("newCartDeteails111",newCartJson.toString());
+                                    if(product.isWithTax()){
+                                        SalesWithoutTax+=product.getPrice()*1;
+
+                                    }else {
+
+                                        salesaftertax+=product.getPrice()*1;
+                                        Log.d("salesaftertax",salesaftertax+"k6666666666");
+                                        SalesWitheTax+=product.getPrice()*1/ (1 + (SETTINGS.tax / 100));
+                                    }
+                                    Log.d("teeees",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
 
                                 }
                             } catch (JSONException e) {
@@ -335,14 +354,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                                     productHashMap.put(String.valueOf(o.getProduct().getProductId()),productInventory.getQty()-o.getQuantity());
                                                 }
                                             }
-                                            Inventory in=null;
-                                            try {
-                                                in = inventoryDbAdapter.getLastRow();
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                            BoInventory inventory = new BoInventory(in.getName(),in.getInventoryId(),productHashMap,in.getBranchId(),in.getHide());
-                                            sendToBroker(MessageType.UPDATE_INVENTORY, inventory, CreateCreditInvoiceActivity.this);
+
                                                 try
                                             {
                                                 File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
@@ -421,6 +433,11 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                                 posInvoiceDBAdapter.insertEntry(creditAmount*-1,zReport.getzReportId()-1,DocumentType.CREDIT_INVOICE.getValue(),"",r.getString("docNum"), CONSTANT.CASH);
                                                 zReport.setCreditInvoiceAmount(zReport.getCreditInvoiceAmount()+creditAmount*-1);
                                                 zReport.setTotalSales(zReport.getTotalSales()+creditAmount*-1);
+                                                zReport.setSalesBeforeTax(zReport.getSalesBeforeTax() + (SalesWithoutTax));
+                                                zReport.setSalesWithTax(zReport.getSalesWithTax() + (SalesWitheTax));
+                                                Log.d("setSalesWithTaxReport",zReport.getSalesWithTax()+"");
+                                                zReport.setTotalTax(zReport.getTotalTax()+Math.abs(salesaftertax - SalesWitheTax));
+
                                                 zReportCount.setCreditInvoiceCount(zReportCount.getCreditInvoiceCount()+1);
                                                     zReportDBAdapter.updateEntry(zReport);
                                                 zReportCountDbAdapter.updateEntry(zReportCount);
@@ -431,6 +448,10 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                                 posInvoiceDBAdapter.insertEntry(creditAmount*-1,-1,DocumentType.CREDIT_INVOICE.getValue(),"",r.getString("docNum"), CONSTANT.CASH);
                                                 zReport.setCreditInvoiceAmount(zReport.getCreditInvoiceAmount()+creditAmount*-1);
                                                 zReport.setTotalSales(zReport.getTotalSales()+creditAmount*-1);
+                                                zReport.setSalesBeforeTax(zReport.getSalesBeforeTax() + (SalesWithoutTax));
+                                                zReport.setSalesWithTax(zReport.getSalesWithTax() + (SalesWitheTax));
+                                                Log.d("setSalesWithTaxReport",zReport.getSalesWithTax()+"");
+                                                zReport.setTotalTax(zReport.getTotalTax()+Math.abs(salesaftertax - SalesWitheTax));
                                                 zReportCount.setCreditInvoiceCount(zReportCount.getCreditInvoiceCount()+1);
                                                 zReportCountDbAdapter.updateEntry(zReportCount);
                                                 zReportDBAdapter.updateEntry(zReport);
