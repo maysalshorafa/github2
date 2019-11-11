@@ -1528,7 +1528,7 @@ public class PdfUA {
         insertCell(accountInformation, context.getString(R.string.Sales_Without_tax), Element.ALIGN_RIGHT,2, font);
         insertCell(accountInformation,Util.makePrice(xReport.getSalesWithTax())+ " ", Element.ALIGN_RIGHT, 2, font);
         insertCell(accountInformation, context.getString(R.string.Sales_With_tax), Element.ALIGN_RIGHT,2, font);
-        insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax()+zReport.getSalesBeforeTax()) + " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax()+zReport.getSalesBeforeTax() +zReport.getTotalTax())+ " ", Element.ALIGN_RIGHT, 2, font);
         insertCell(accountInformation, context.getString(R.string.total_price), Element.ALIGN_RIGHT,2, font);
         insertCell(accountInformation, "----------------------------", Element.ALIGN_CENTER, 4, font);
 
