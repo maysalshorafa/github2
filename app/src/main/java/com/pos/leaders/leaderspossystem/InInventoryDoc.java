@@ -47,6 +47,7 @@ import com.pos.leaders.leaderspossystem.Tools.ProviderCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
@@ -136,6 +137,9 @@ public class InInventoryDoc extends AppCompatActivity {
                     Inventory in=null;
                     try {
                         in = inventoryDbAdapter.getLastRow();
+                        if(in==null){
+                            Util.addPosSetting(InInventoryDoc.this);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

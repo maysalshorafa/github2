@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Base64;
@@ -155,7 +156,7 @@ public class DocumentControl {
                 protected void onPostExecute(String html) {
 
                    PrintTools pt=new PrintTools(context);
-                        newBitmap=bitmapList.get(0);
+                        newBitmap=Util.removeMargins2(bitmapList.get(0),Color.WHITE);
                     pt.PrintReport(newBitmap);
 
                     //after async close progress dialog
@@ -365,7 +366,7 @@ public class DocumentControl {
         PrintTools pt=new PrintTools(context);
         for (int i= 1;i<bitmapList.size(); i++) {
             Log.d("bitmapsize",bitmapList.size()+"");
-            pt.PrintReport(bitmapList.get(i));
+            pt.PrintReport(Util.removeMargins2(bitmapList.get(i), Color.WHITE));
 
         }
 

@@ -120,9 +120,14 @@ public class MonthZReportView extends AppCompatActivity {
         btPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (newBitmap!=null){
-                pt.PrintReport(newBitmap);
-                onBackPressed();}
+                if(zReportList.size()>0) {
+                    if (newBitmap != null) {
+                        pt.PrintReport(newBitmap);
+                        onBackPressed();
+                    }
+                }else {
+
+                }
             }
         });
     }
@@ -140,129 +145,133 @@ public class MonthZReportView extends AppCompatActivity {
 
     }
     private void setDate() {
-        ZReportCount zReportCount=null;
-        double totalAmount=0;
-        double totalSales=0;
-        double cashTotal=0;
-        double checkTotal=0;
-        double creditTotal=0;
-        double totalPosSales=0;
-        double invoiceAmount=0;
-        double creditInvoiceAmount=0;
-        double shekelAmount=0;
-        double usdAmount=0;
-        double eurAmount=0;
-        double gbpAmount=0;
-        double invoiceReceiptAmount=0;
-
-        double salesBeforeTax=0;
-        double salesWithTax=0;
-        double totalTax=0;
-
-        int cashTotalC=0;
-        int checkTotalC=0;
-        int creditTotalC=0;
-        int totalPosSalesC=0;
-        int invoiceAmountC=0;
-        int creditInvoiceAmountC=0;
-        int shekelAmountC=0;
-        int usdAmountC=0;
-        int eurAmountC=0;
-        int gbpAmountC=0;
-        int invoiceReceiptAmountC=0;
-
-        zReportDBAdapter.open();
-        zReportList=new ArrayList<>();
-        zReportList = zReportDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime()+ DAY_MINUS_ONE_SECOND);
-        zReportCountList=new ArrayList<>();
-        for(int i=0;i<zReportList.size();i++){
-           ZReportCount zReportCt=zReportCountDbAdapter.getByID(zReportList.get(i).getzReportId());
-            zReportCountList.add(zReportCt);
-        }
-
-        if(zReportCountList.size()>0){
-
-        for (int i=0;i<zReportCountList.size();i++){
-
-            cashTotalC+=zReportCountList.get(i).getCashCount();
-            checkTotalC+=zReportCountList.get(i).getCheckCount();
-            creditTotalC+=zReportCountList.get(i).getCreditCount();
-            invoiceAmountC+=zReportCountList.get(i).getInvoiceCount();
-            creditInvoiceAmountC+=zReportCountList.get(i).getCreditInvoiceCount();
-            shekelAmountC+=zReportCountList.get(i).getShekelCount();
-            usdAmountC+=zReportCountList.get(i).getUsdCount();
-            eurAmountC+=zReportCountList.get(i).getEurCount();
-            gbpAmountC+=zReportCountList.get(i).getGbpCount();
-            invoiceReceiptAmountC+=zReportCountList.get(i).getInvoiceReceiptCount();
-        }
-        }
-        Log.d("ZreportList",zReportList.toString());
-
-        if(zReportList.size()>0){
-            imageView.setVisibility(View.VISIBLE);
-            ZReport zReport = null;
-            for(int i = 0 ; i<zReportList.size();i++){
-            totalAmount+=zReportList.get(i).getTotalAmount();
-            cashTotal+=zReportList.get(i).getCashTotal();
-            checkTotal+=zReportList.get(i).getCheckTotal();
-            creditTotal+=zReportList.get(i).getCreditTotal();
-            totalPosSales+=zReportList.get(i).getTotalPosSales();
-            invoiceAmount+=zReportList.get(i).getInvoiceAmount();
-            creditInvoiceAmount+=zReportList.get(i).getCreditInvoiceAmount();
-            shekelAmount+=zReportList.get(i).getShekelAmount();
-            usdAmount+=zReportList.get(i).getUsdAmount();
-            eurAmount+=zReportList.get(i).getEurAmount();
-            gbpAmount+=zReportList.get(i).getGbpAmount();
-            salesBeforeTax+=zReportList.get(i).getSalesBeforeTax();
-            salesWithTax+=zReportList.get(i).getSalesWithTax();
-            totalTax+=zReportList.get(i).getTotalTax();
+        try {
 
 
-            invoiceReceiptAmount+=zReportList.get(i).getInvoiceReceiptAmount();
+            ZReportCount zReportCount = null;
+            double totalAmount = 0;
+            double totalSales = 0;
+            double cashTotal = 0;
+            double checkTotal = 0;
+            double creditTotal = 0;
+            double totalPosSales = 0;
+            double invoiceAmount = 0;
+            double creditInvoiceAmount = 0;
+            double shekelAmount = 0;
+            double usdAmount = 0;
+            double eurAmount = 0;
+            double gbpAmount = 0;
+            double invoiceReceiptAmount = 0;
 
+            double salesBeforeTax = 0;
+            double salesWithTax = 0;
+            double totalTax = 0;
+
+            int cashTotalC = 0;
+            int checkTotalC = 0;
+            int creditTotalC = 0;
+            int totalPosSalesC = 0;
+            int invoiceAmountC = 0;
+            int creditInvoiceAmountC = 0;
+            int shekelAmountC = 0;
+            int usdAmountC = 0;
+            int eurAmountC = 0;
+            int gbpAmountC = 0;
+            int invoiceReceiptAmountC = 0;
+
+            zReportDBAdapter.open();
+            zReportList = new ArrayList<>();
+            zReportList = zReportDBAdapter.getBetweenTwoDates(from.getTime(), to.getTime() + DAY_MINUS_ONE_SECOND);
+            zReportCountList = new ArrayList<>();
+            for (int i = 0; i < zReportList.size(); i++) {
+                ZReportCount zReportCt = zReportCountDbAdapter.getByID(zReportList.get(i).getzReportId());
+                if(zReportCt!=null){
+                zReportCountList.add(zReportCt);
             }
-            totalSales=invoiceReceiptAmount+invoiceAmount+creditInvoiceAmount;
-
-        zReport=new ZReport(0,new Timestamp(System.currentTimeMillis()),zReportList.get(0).getByUser(),0,0,totalAmount,totalSales,cashTotal,checkTotal,creditTotal,totalPosSales,zReportList.get(0).getTax(),invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,0,0,"close",salesBeforeTax,salesWithTax,totalTax);
-            Log.d("zReportList",zReport.toString());
-
-
-                zReportCount=new ZReportCount(0,cashTotalC,checkTotalC,creditTotalC,invoiceAmountC,creditInvoiceAmountC,shekelAmountC,usdAmountC,eurAmountC,gbpAmountC,invoiceReceiptAmountC,0);
-                zReport=new ZReport(0,new Timestamp(System.currentTimeMillis()),zReportList.get(0).getByUser(),0,0,totalAmount,totalSales,cashTotal,checkTotal,creditTotal,zReportList.get(zReportList.size()-1).getTotalPosSales(),zReportList.get(0).getTax(),invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,0,0,"close",salesBeforeTax,salesWithTax,totalTax);
-
-
-            PdfUA pdfUA = new PdfUA();
-
-            try {
-                pdfUA.createMonthZReport(MonthZReportView.this,zReport,from,to,zReportCount);
-            } catch (DocumentException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-            try
-            {
-                File path = new File( Environment.getExternalStorageDirectory(), getApplicationContext().getPackageName());
-                File file = new File(path,"mounthzreport.pdf");
-                RandomAccessFile f = new RandomAccessFile(file, "r");
-                byte[] data = new byte[(int)f.length()];
-                f.readFully(data);
 
-                pdfLoadImages(data);
+            if (zReportCountList.size() > 0) {
 
-                Log.d("errrrr",bitmapList.size()+"");
+                for (int i = 0; i < zReportCountList.size(); i++) {
 
+                    cashTotalC += zReportCountList.get(i).getCashCount();
+                    checkTotalC += zReportCountList.get(i).getCheckCount();
+                    creditTotalC += zReportCountList.get(i).getCreditCount();
+                    invoiceAmountC += zReportCountList.get(i).getInvoiceCount();
+                    creditInvoiceAmountC += zReportCountList.get(i).getCreditInvoiceCount();
+                    shekelAmountC += zReportCountList.get(i).getShekelCount();
+                    usdAmountC += zReportCountList.get(i).getUsdCount();
+                    eurAmountC += zReportCountList.get(i).getEurCount();
+                    gbpAmountC += zReportCountList.get(i).getGbpCount();
+                    invoiceReceiptAmountC += zReportCountList.get(i).getInvoiceReceiptCount();
+                }
             }
-            catch(Exception ignored)
-            {
-                Log.d("errrrr",ignored.toString());
+            Log.d("ZreportList", zReportList.toString());
+
+            if (zReportList.size() > 0) {
+                imageView.setVisibility(View.VISIBLE);
+                ZReport zReport = null;
+                for (int i = 0; i < zReportList.size(); i++) {
+                    totalAmount += zReportList.get(i).getTotalAmount();
+                    cashTotal += zReportList.get(i).getCashTotal();
+                    checkTotal += zReportList.get(i).getCheckTotal();
+                    creditTotal += zReportList.get(i).getCreditTotal();
+                    totalPosSales += zReportList.get(i).getTotalPosSales();
+                    invoiceAmount += zReportList.get(i).getInvoiceAmount();
+                    creditInvoiceAmount += zReportList.get(i).getCreditInvoiceAmount();
+                    shekelAmount += zReportList.get(i).getShekelAmount();
+                    usdAmount += zReportList.get(i).getUsdAmount();
+                    eurAmount += zReportList.get(i).getEurAmount();
+                    gbpAmount += zReportList.get(i).getGbpAmount();
+                    salesBeforeTax += zReportList.get(i).getSalesBeforeTax();
+                    salesWithTax += zReportList.get(i).getSalesWithTax();
+                    totalTax += zReportList.get(i).getTotalTax();
+
+
+                    invoiceReceiptAmount += zReportList.get(i).getInvoiceReceiptAmount();
+
+                }
+                totalSales = invoiceReceiptAmount + invoiceAmount + creditInvoiceAmount;
+
+                zReport = new ZReport(0, new Timestamp(System.currentTimeMillis()), zReportList.get(0).getByUser(), 0, 0, totalAmount, totalSales, cashTotal, checkTotal, creditTotal, totalPosSales, zReportList.get(0).getTax(), invoiceAmount, creditInvoiceAmount, shekelAmount, usdAmount, eurAmount, gbpAmount, invoiceReceiptAmount, 0, 0, "close", salesBeforeTax, salesWithTax, totalTax);
+                Log.d("zReportList", zReport.toString());
+
+
+                zReportCount = new ZReportCount(0, cashTotalC, checkTotalC, creditTotalC, invoiceAmountC, creditInvoiceAmountC, shekelAmountC, usdAmountC, eurAmountC, gbpAmountC, invoiceReceiptAmountC, 0);
+                zReport = new ZReport(0, new Timestamp(System.currentTimeMillis()), zReportList.get(0).getByUser(), 0, 0, totalAmount, totalSales, cashTotal, checkTotal, creditTotal, zReportList.get(zReportList.size() - 1).getTotalPosSales(), zReportList.get(0).getTax(), invoiceAmount, creditInvoiceAmount, shekelAmount, usdAmount, eurAmount, gbpAmount, invoiceReceiptAmount, 0, 0, "close", salesBeforeTax, salesWithTax, totalTax);
+
+
+                PdfUA pdfUA = new PdfUA();
+
+                try {
+                    pdfUA.createMonthZReport(MonthZReportView.this, zReport, from, to, zReportCount);
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    File path = new File(Environment.getExternalStorageDirectory(), getApplicationContext().getPackageName());
+                    File file = new File(path, "mounthzreport.pdf");
+                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                    byte[] data = new byte[(int) f.length()];
+                    f.readFully(data);
+
+                    pdfLoadImages(data);
+
+                    Log.d("errrrr", bitmapList.size() + "");
+
+                } catch (Exception ignored) {
+                    Log.d("errrrr", ignored.toString());
+                }
+                pt = new PrintTools(MonthZReportView.this);
+            } else {
+                imageView.setVisibility(View.INVISIBLE);
             }
-        pt=new PrintTools(MonthZReportView.this);
-        }else {
-            imageView.setVisibility(View.INVISIBLE);
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
-
     }
 
 

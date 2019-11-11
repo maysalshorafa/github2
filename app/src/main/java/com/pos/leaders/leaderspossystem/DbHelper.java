@@ -84,7 +84,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 8;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -386,18 +386,28 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(PosSettingDbAdapter.DATABASE_CREATE);
                     db.execSQL(InventoryDbAdapter.DATABASE_CREATE);
                     db.execSQL(ProductInventoryDbAdapter.DATABASE_CREATE);
+                    db.execSQL(OrderDBAdapter.addColumnReal("salesBeforeTax"));
+                    db.execSQL(OrderDBAdapter.addColumnReal("salesWithTax"));
+
                     db.execSQL(ProductDBAdapter.addColumnReal("lastCostPriceInventory"));
                     db.execSQL(ProductDBAdapter.addColumnInteger("with_serial_number"));
                     db.execSQL(CurrencyOperationDBAdapter.addColumnText("payment_way"));
                     db.execSQL(DrawerDepositAndPullReportDbAdapter.DATABASE_CREATE);
                     db.execSQL(DepositAndPullReportDetailsDbAdapter.DATABASE_CREATE);
                     db.execSQL(OrderDetailsDBAdapter.addColumnLong("productSerialNo"));
+                    db.execSQL(OrderDetailsDBAdapter.addColumnText("SerialNo"));
                     db.execSQL(OrderDetailsDBAdapter.addColumnReal("paid_amount_after_tax"));
                     db.execSQL(XReportDBAdapter.addColumnReal("pullReportAmount"));
                     db.execSQL(XReportDBAdapter.addColumnReal("depositReportAmount"));
+                    db.execSQL(XReportDBAdapter.addColumnReal("salesBeforeTaxReport"));
+                    db.execSQL(XReportDBAdapter.addColumnReal("salesWithTaxReport"));
+                    db.execSQL(XReportDBAdapter.addColumnReal("totalTaxReport"));
                     db.execSQL(ZReportDBAdapter.addColumnReal("pullReportAmount"));
                     db.execSQL(ZReportDBAdapter.addColumnReal("depositReportAmount"));
                     db.execSQL(ZReportDBAdapter.addColumnText("closeOpenReport"));
+                    db.execSQL(ZReportDBAdapter.addColumnReal("salesBeforeTaxReport"));
+                    db.execSQL(ZReportDBAdapter.addColumnReal("salesWithTaxReport"));
+                    db.execSQL(ZReportDBAdapter.addColumnReal("totalTaxReport"));
                     db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (12 , 'inventoryManagement');");
                     db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(13,2,12);");
                     ClearSync clearSync3 = new ClearSync(context);
@@ -407,6 +417,26 @@ public class DbHelper extends SQLiteOpenHelper {
                 case 6:
                     db.execSQL(IdsCounterDBAdapter.addColumn("depositAndPull"));
                     db.execSQL(IdsCounterDBAdapter.addColumn("depositAndPullDetails"));
+                    db.execSQL(OrderDBAdapter.addColumnReal("salesBeforeTax"));
+                    db.execSQL(OrderDBAdapter.addColumnReal("salesWithTax"));
+                    db.execSQL(ZReportDBAdapter.addColumnReal("salesBeforeTaxReport"));
+                    db.execSQL(ZReportDBAdapter.addColumnReal("salesWithTaxReport"));
+                    db.execSQL(ZReportDBAdapter.addColumnReal("totalTaxReport"));
+                    db.execSQL(XReportDBAdapter.addColumnReal("salesBeforeTaxReport"));
+                    db.execSQL(XReportDBAdapter.addColumnReal("salesWithTaxReport"));
+                    db.execSQL(XReportDBAdapter.addColumnReal("totalTaxReport"));
+                    db.execSQL(OrderDetailsDBAdapter.addColumnText("SerialNo"));
+                    break;
+                case 7:
+                    db.execSQL(OrderDBAdapter.addColumnReal("salesBeforeTax"));
+                    db.execSQL(OrderDBAdapter.addColumnReal("salesWithTax"));
+                    db.execSQL(ZReportDBAdapter.addColumnReal("salesBeforeTaxReport"));
+                    db.execSQL(ZReportDBAdapter.addColumnReal("salesWithTaxReport"));
+                    db.execSQL(ZReportDBAdapter.addColumnReal("totalTaxReport"));
+                    db.execSQL(XReportDBAdapter.addColumnReal("salesBeforeTaxReport"));
+                    db.execSQL(XReportDBAdapter.addColumnReal("salesWithTaxReport"));
+                    db.execSQL(XReportDBAdapter.addColumnReal("totalTaxReport"));
+                    db.execSQL(OrderDetailsDBAdapter.addColumnText("SerialNo"));
                     break;
 
 

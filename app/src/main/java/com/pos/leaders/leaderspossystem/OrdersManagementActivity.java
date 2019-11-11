@@ -324,7 +324,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                             if (checks.size() > 0){
                                                 try {
                                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                                                    SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, checks);
+                                                    SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, checks,"");
                                                     startActivity(i);
                                                 }catch (Exception e){
                                                     Log.d("exception",sale.toString());
@@ -683,7 +683,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                 try {
                                                 //  Log.d("ItemId",sale.getOrderId()+"");
                                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                                                    SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, checks);
+                                                    SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, checks,"");
                                                     startActivity(i);
                                                 }catch (Exception e){
                                                     Log.d("exception",sale.toString());

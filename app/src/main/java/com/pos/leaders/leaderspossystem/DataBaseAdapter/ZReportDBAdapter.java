@@ -333,6 +333,39 @@ public class ZReportDBAdapter {
             sendToBroker(MessageType.ADD_Z_REPORT, zReport, this.context);
         }
     }
+    public int updateEntryBo(ZReport zReport) {
+        ContentValues val = new ContentValues();
+        val.put(Z_REPORT_COLUMN_ID, zReport.getzReportId());
+        val.put(Z_REPORT_COLUMN_CREATEDATE, String.valueOf(zReport.getCreatedAt()));
+        val.put(Z_REPORT_COLUMN_BYUSER, zReport.getByUser());
+        val.put(Z_REPORT_COLUMN_STARTORDERID, zReport.getStartOrderId());
+        val.put(Z_REPORT_COLUMN_ENDORDERID, zReport.getEndOrderId());
+        val.put(Z_REPORT_COLUMN_TOTAL_SALES_AMOUNT, zReport.getTotalSales());
+        val.put(Z_REPORT_COLUMN_TOTAL_AMOUNT, zReport.getTotalAmount());
+        val.put(Z_REPORT_COLUMN_CASH_AMOUNT,zReport.getCashTotal());
+        val.put(Z_REPORT_COLUMN_CHECK_AMOUNT,zReport.getCheckTotal());
+        val.put(Z_REPORT_COLUMN_CREDIT_AMOUNT,zReport.getCreditTotal());
+        val.put(Z_REPORT_COLUMN_TAX,zReport.getTax());
+        val.put(Z_REPORT_COLUMN_TOTAL_POS_SALES,zReport.getTotalPosSales());
+        val.put(Z_REPORT_COLUMN_INVOICE_AMOUNT,zReport.getInvoiceAmount());
+        val.put(Z_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT,zReport.getCreditInvoiceAmount());
+        val.put(Z_REPORT_COLUMN_SHEKEL_AMOUNT,zReport.getShekelAmount());
+        val.put(Z_REPORT_COLUMN_USD_AMOUNT,zReport.getUsdAmount());
+        val.put(Z_REPORT_COLUMN_EUR_AMOUNT,zReport.getEurAmount());
+        val.put(Z_REPORT_COLUMN_INVOICE_RECEIPT_AMOUNT,zReport.getInvoiceReceiptAmount());
+        val.put(Z_REPORT_COLUMN_PULL_REPORT_AMOUNT,zReport.getPullReportAmount());
+        val.put(Z_REPORT_COLUMN_DEPOSIT_REPORT_AMOUNT,zReport.getDepositReportAmount());
+        val.put(Z_REPORT_COLUMN_CLOSE_OPEN_REPORT,zReport.getCloseOpenReport());
+        val.put(Z_REPORT_COLUMN_SALES_BEFORE_TAX_REPORT,zReport.getSalesBeforeTax());
+        val.put(Z_REPORT_COLUMN_SALES_WITH_TAX_REPORT,zReport.getSalesWithTax());
+        val.put(Z_REPORT_COLUMN_TOTAL_TAX_REPORT,zReport.getTotalTax());
+        val.put(Z_REPORT_COLUMN_CLOSE_OPEN_REPORT,zReport.getCloseOpenReport());
+        Log.d("testZReport",zReport.toString());
+
+        String where = Z_REPORT_COLUMN_ID + " = ?";
+       return db.update(Z_REPORT_TABLE_NAME, val, where, new String[]{zReport.getzReportId() + ""});
+
+    }
     public List<ZReport> getBetweenTwoDates(long from, long to){
         List<ZReport> zReportList = new ArrayList<ZReport>();
 

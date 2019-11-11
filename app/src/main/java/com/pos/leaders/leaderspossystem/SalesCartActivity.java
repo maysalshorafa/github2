@@ -951,7 +951,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     try {
 
                                                         Intent i = new Intent(SalesCartActivity.this, SalesHistoryCopySales.class);
-                                                        SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(lastOrder.getOrderId(), orderDetailsList, lastOrder, true, SESSION._EMPLOYEE, checks);
+                                                        SETTINGS.copyInvoiceBitMap = invoiceImg.normalInvoice(lastOrder.getOrderId(), orderDetailsList, lastOrder, true, SESSION._EMPLOYEE, checks,"");
                                                         startActivity(i);
                                                     }catch (Exception e){
                                                         Log.d("exception",sale.toString());
@@ -3791,7 +3791,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         {
 
                         }
-                        Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null);
+                        Bitmap bitmap = invoiceImg.normalInvoice(SESSION._ORDERS.getOrderId(), SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, null,"");
 
                     } catch (Exception e) {
                         e.printStackTrace();

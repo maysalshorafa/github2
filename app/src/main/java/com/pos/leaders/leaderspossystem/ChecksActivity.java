@@ -314,7 +314,7 @@ public class ChecksActivity extends AppCompatActivity {
 							//ChecksListViewAdapter.ViewHolder item = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(i).getTag();
 							if (i == 0) {
 								_check = new Check(checkList.get(i).getCheckNum(), checkList.get(i).getBankNum(), checkList.get(i).getBranchNum(), checkList.get(i).getAccountNum(),
-										checkList.get(i).getAmount(), new Timestamp(System.currentTimeMillis()), false);
+										checkList.get(i).getAmount(),checkList.get(i).getCreatedAt(), false);
 							} else {
 								//Date utilDate = DateConverter.stringToDate(item.getEtDate());
 								_check = new Check(checkList.get(i).getCheckNum(), checkList.get(i).getBankNum(), checkList.get(i).getBranchNum(), checkList.get(i).getAccountNum(),
@@ -338,7 +338,7 @@ public class ChecksActivity extends AppCompatActivity {
 							//ChecksListViewAdapter.ViewHolder item = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(i).getTag();
 							if (i == 0) {
 								_check = new Check(checkList.get(i).getCheckNum(), checkList.get(i).getBankNum(), checkList.get(i).getBranchNum(), checkList.get(i).getAccountNum(),
-										checkList.get(i).getAmount(), new Timestamp(System.currentTimeMillis()), false);
+										checkList.get(i).getAmount(),checkList.get(i).getCreatedAt(), false);
 							} else {
 								//Date utilDate = DateConverter.stringToDate(item.getEtDate());
 								_check = new Check(checkList.get(i).getCheckNum(), checkList.get(i).getBankNum(), checkList.get(i).getBranchNum(), checkList.get(i).getAccountNum(),
