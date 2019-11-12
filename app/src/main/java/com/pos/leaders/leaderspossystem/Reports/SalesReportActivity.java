@@ -46,7 +46,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SalesReportActivity extends AppCompatActivity {
 
@@ -172,6 +174,7 @@ public class SalesReportActivity extends AppCompatActivity {
              gvCategory.setVisibility(View.VISIBLE);
              lvReport.setVisibility(View.VISIBLE);
              LAmountRepot.setVisibility(View.GONE);
+             lvAllSallesList.setVisibility(View.GONE);
              btnisclickedCategory=false;
          }
          else {
@@ -180,6 +183,7 @@ public class SalesReportActivity extends AppCompatActivity {
              gvCategory.setVisibility(View.GONE);
              lvReport.setVisibility(View.GONE);
              LAmountRepot.setVisibility(View.GONE);
+             lvAllSallesList.setVisibility(View.GONE);
              btnisclickedCategory=true;
          }
       }
@@ -202,6 +206,7 @@ public class SalesReportActivity extends AppCompatActivity {
                     gvProducts.setAdapter(adapterProduct);
                     etSearch.setVisibility(View.VISIBLE);
                     gvProducts.setVisibility(View.VISIBLE);
+                    lvAllSallesList.setVisibility(View.GONE);
                     btnisclickedProduct=false;
                     setOrder();
                 }
@@ -225,6 +230,7 @@ public class SalesReportActivity extends AppCompatActivity {
                 gvCategory.setVisibility(View.GONE);
                 lvReport.setVisibility(View.VISIBLE);
                 LAmountRepot.setVisibility(View.GONE);
+                lvAllSallesList.setVisibility(View.GONE);
                 CategoryId=listCategory.get(position).getCategoryId();
                 Log.d("CategoryId",CategoryId+"cat");
                 setOrder();
@@ -366,19 +372,22 @@ public class SalesReportActivity extends AppCompatActivity {
     private void setOrder() {
         amountReport=0;
         if (flageGridOnClick.equals("onclickProduct")){
+            lvAllSallesList.setVisibility(View.GONE);
             amountReport=0;
             OrderList=new ArrayList<Order>();
             OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
             orderDBAdapter1.open();
+            Log.d("OrderListProduct",OrderList.size()+"");
             OrderList = orderDBAdapter1.getBetweenOrder(from.getTime(),to.getTime());
 
             Log.d("from",from.getTime()+"");
             Log.d("to",to.getTime()+"");
-            tvCountSale.setText(OrderList.size() + "");
+
             for (int i2 = 0; i2 < OrderList.size(); i2++) {
                 amountReport = amountReport + OrderList.get(i2).getTotalPrice();
             }
-            Log.d("OrderList",OrderList.size()+"");
+            Log.d("OrderListProduct",OrderList.size()+"");
+            tvCountSale.setText(OrderList.size() + "");
             amount.setText(amountReport + "");
         }
       else  if (flageGridOnClick.equals("onCreate")){
@@ -394,6 +403,7 @@ public class SalesReportActivity extends AppCompatActivity {
             gvCategory.setVisibility(View.GONE);
             lvReport.setVisibility(View.GONE);
             LAmountRepot.setVisibility(View.GONE);
+            Log.d("testOrderList1",OrderList.toString());
             if (OrderList.size() > 0) {
                 List<OrderDetails>orderDetailsList=new ArrayList<>();
                 OrderDetailsDBAdapter orderDetailsDBAdapter =new OrderDetailsDBAdapter(getApplicationContext());
@@ -402,6 +412,8 @@ public class SalesReportActivity extends AppCompatActivity {
                     orderDetailsList.addAll(orderDetailsDBAdapter.getOrderBySaleID(OrderList.get(x).getOrderId()));
                     orderDetailsDBAdapter.close();
                 }
+                Log.d("testOrderList2",orderDetailsList.toString());
+
                 ProductDBAdapter productDBAdapter = new ProductDBAdapter(getApplicationContext());
                 productDBAdapter.open();
                 List<Product>productList=productDBAdapter.getAllProducts();
@@ -412,8 +424,11 @@ public class SalesReportActivity extends AppCompatActivity {
                     productSale.setProduct(p);
                     for(int x=0;x<orderDetailsList.size();x++){
                         if(p.getProductId()==orderDetailsList.get(x).getProductId()){
-                            productSale.setCount(productSale.getCount()+1);
-                            productSale.setPrice(productSale.getPrice()+(p.getCostPrice()*productSale.getCount()));
+                            int i = orderDetailsList.get(x).getQuantity();
+                            productSale.setCount(productSale.getCount()+i);
+                            productSale.setPrice(productSale.getPrice()+(p.getPrice()*i));
+                            Log.d("testOrderList3",productSale.toString());
+
                         }
 
 
@@ -456,6 +471,9 @@ public class SalesReportActivity extends AppCompatActivity {
         OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(SalesReportActivity.this);
         orderDBAdapter.open();
         order = orderDBAdapter.getOrderDetailsByListIDproduct(productID);
+            Set<Long> set = new HashSet<>(order);
+            order.clear();
+            order.addAll(set);
            /* Log.d("fromProduct",from.toString()+to.toString()+" "+CategoryId);
             Log.d("order",order.toString());
         OrderList = orderDBAdapter1.getBetweenByOrder(from.getTime(), to.getTime(), order);*/
@@ -463,6 +481,8 @@ public class SalesReportActivity extends AppCompatActivity {
 
             OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
             orderDBAdapter1.open();
+            Log.d("OrderListCategory", order.toString());
+
 
             for(int i=0;i<order.size();i++) {
                 Order o = orderDBAdapter1.getOrderById(order.get(i));
@@ -487,34 +507,41 @@ public class SalesReportActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                Log.d("OrderList", OrderList.toString());
-                if (OrderList.size() > 0) {
-                    lvReport.setVisibility(View.VISIBLE);
-                    LAmountRepot.setVisibility(View.VISIBLE);
-                    for (int i2 = 0; i2 < OrderList.size(); i2++) {
-                        amountReport = amountReport + OrderList.get(i2).getTotalPrice();
-                    }
-                    amount.setText(amountReport + "");
-                    tvCountSale.setText(OrderList.size() + "");
-                    objectList.addAll(OrderList);
-                    adapterOrderList = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
-                    lvReport.setAdapter(adapterOrderList);
-                } else {
-                    LAmountRepot.setVisibility(View.GONE);
-                    lvReport.setVisibility(View.GONE);
-                    Toast.makeText(SalesReportActivity.this, R.string.there_are_no_sales,
-                            Toast.LENGTH_LONG).show();
-                }
+
             }
+            Log.d("OrderListCategory", OrderList.toString());
+
+            if (OrderList.size() > 0) {
+                lvReport.setVisibility(View.VISIBLE);
+                LAmountRepot.setVisibility(View.VISIBLE);
+                for (int i2 = 0; i2 < OrderList.size(); i2++) {
+                    amountReport = amountReport + OrderList.get(i2).getTotalPrice();
+                }
+
+
+            } else {
+                LAmountRepot.setVisibility(View.GONE);
+                lvReport.setVisibility(View.GONE);
+                Toast.makeText(SalesReportActivity.this, R.string.there_are_no_sales,
+                        Toast.LENGTH_LONG).show();
+            }
+            amount.setText(amountReport + "");
+            tvCountSale.setText(OrderList.size() + "");
+            objectList.addAll(OrderList);
+            adapterOrderList = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
+            lvReport.setAdapter(adapterOrderList);
         }
         else if (flageGridOnClick.equals("gvProducts")){
             objectList = new ArrayList<>();
             OrderList = new ArrayList<>();
             orderProduct = new ArrayList<>();
-            Log.d("jjp",productIdSelect+"");
             OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(SalesReportActivity.this);
             orderDBAdapter.open();
             orderProduct = orderDBAdapter.getOrderDetailsByIDproduct(productIdSelect);
+            Log.d("orderProduct",orderProduct.toString());
+            Set<Long> set = new HashSet<>(orderProduct);
+            orderProduct.clear();
+            orderProduct.addAll(set);
             Log.d("fromCa",from.toString()+to.toString()+" "+orderProduct.toString());
             OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
             orderDBAdapter1.open();
@@ -538,6 +565,7 @@ public class SalesReportActivity extends AppCompatActivity {
                         //&&new Date(DateConverter.toDate(o.getCreatedAt())).compareTo(new Date(DateConverter.toDate(to.getDate())))<0
                         OrderList.add(o);
                     }
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -545,8 +573,19 @@ public class SalesReportActivity extends AppCompatActivity {
 
 
           //  OrderList = orderDBAdapter1.getBetweenByOrder(from.getTime(), to.getTime(), orderProduct);
-            Log.d("OrderList", OrderList.toString());
-            if (OrderList.size() > 0) {
+
+
+        } Log.d("OrderListOn",OrderList.toString()+"");
+            List<OrderDetails>orderDetailsListForProduct=new ArrayList<>();
+            for (int i1=0; i1<OrderList.size();i1++){
+                orderDetailsListForProduct=orderDBAdapter.getOrderBySaleIDAndProductId(OrderList.get(i1).getOrderId(),productIdSelect);
+                for (int a=0;a<orderDetailsListForProduct.size();a++){
+                    amountReport=amountReport+orderDetailsListForProduct.get(a).getItemTotalPrice();
+
+                }
+            }
+
+            if (orderProduct.size() > 0) {
                 gvCategory.setVisibility(View.GONE);
                 gvProducts.setVisibility(View.GONE);
                 etSearch.setVisibility(View.GONE);
@@ -554,15 +593,6 @@ public class SalesReportActivity extends AppCompatActivity {
                 LAmountRepot.setVisibility(View.VISIBLE);
 
 
-                for (int i1=0; i1<OrderList.size();i1++){
-                    amountReport=amountReport+OrderList.get(i1).getTotalPrice();
-                }
-                amount.setText( amountReport+"");
-                tvCountSale.setText(OrderList.size()+"");
-
-                objectList.addAll(OrderList);
-                adapterListProduct = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
-                lvReport.setAdapter(adapterListProduct);
             }
             else {
                 LAmountRepot.setVisibility(View.GONE);
@@ -570,7 +600,12 @@ public class SalesReportActivity extends AppCompatActivity {
                 Toast.makeText(SalesReportActivity.this, R.string.there_are_no_sales,
                         Toast.LENGTH_LONG).show();
             }
-        }
+            amount.setText( amountReport+"");
+            tvCountSale.setText(OrderList.size()+"");
+            objectList.addAll(OrderList);
+
+            adapterListProduct = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
+            lvReport.setAdapter(adapterListProduct);
         }
         }
 

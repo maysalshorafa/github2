@@ -159,6 +159,17 @@ public class OrderDetailsDBAdapter {
 		}
 		return saleOrderList;
 	}
+	public List<OrderDetails> getOrderBySaleIDAndProductId(long saleID,long productId){
+		List<OrderDetails> saleOrderList=new ArrayList<OrderDetails>();
+		Cursor cursor =  db.rawQuery( "select * from "+ ORDER_DETAILS_TABLE_NAME +" where "+ ORDER_DETAILS_COLUMN_ORDER_ID +"="+saleID+ " and product_id = "+productId, null );
+		cursor.moveToFirst();
+
+		while(!cursor.isAfterLast()){
+			saleOrderList.add(make(cursor));
+			cursor.moveToNext();
+		}
+		return saleOrderList;
+	}
 	public OrderDetails getOrderDetailsByID(long saleID){
 		OrderDetails orderDetails=new OrderDetails();
 		Cursor cursor =  db.rawQuery( "select * from "+ ORDER_DETAILS_TABLE_NAME +" where "+ ORDER_DETAILS_COLUMN_ID +"="+saleID, null );

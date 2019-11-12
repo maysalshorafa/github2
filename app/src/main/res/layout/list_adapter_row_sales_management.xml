@@ -24,7 +24,6 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_weight=".90"
-            android:maxLines="1"
             android:text="ID"
             android:textColor="@color/Gray"
             android:textSize="20sp" />
