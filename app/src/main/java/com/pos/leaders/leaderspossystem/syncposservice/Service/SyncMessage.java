@@ -1294,46 +1294,51 @@ public class SyncMessage extends Service {
 
             //region PAYMENT
             case MessageType.ADD_PAYMENT:
-                JSONObject newJsonObject = new JSONObject(jsonObject.getString(MessageKey.Data));
-                Log.d("ppppppppp11",newJsonObject.toString());
+                try {
+                    JSONObject newJsonObject = new JSONObject(jsonObject.getString(MessageKey.Data));
+                    Log.d("ppppppppp11",newJsonObject.toString());
 
-                long orderId = newJsonObject.getLong("orderId");
-                List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
-                List<String> jsonList = new ArrayList<>();
-                List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
-                List<Check> checkList = new ArrayList<Check>();
+                    long orderId = newJsonObject.getLong("orderId");
+                    List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
+                    List<String> jsonList = new ArrayList<>();
+                    List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
+                    List<Check> checkList = new ArrayList<Check>();
                     CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(getApplicationContext());
                     cashPaymentDBAdapter.open();
                     cashPaymentList = cashPaymentDBAdapter.getPaymentBySaleID(orderId);
-                if(cashPaymentList.size()>0){
-                    for(int i=0;i<cashPaymentList.size();i++){
-                        jsonList.add(cashPaymentList.get(i).toString());
+                    if(cashPaymentList.size()>0){
+                        for(int i=0;i<cashPaymentList.size();i++){
+                            jsonList.add(cashPaymentList.get(i).toString());
+                        }
                     }
-        }
                     CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(getApplicationContext());
                     creditCardPaymentDBAdapter.open();
-                creditCardPaymentList = creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
-                if(creditCardPaymentList.size()>0) {
-                    for(int i=0;i<creditCardPaymentList.size();i++){
-                        jsonList.add(creditCardPaymentList.get(i).toString());
-                    }
+                    creditCardPaymentList = creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
+                    if(creditCardPaymentList.size()>0) {
+                        for(int i=0;i<creditCardPaymentList.size();i++){
+                            jsonList.add(creditCardPaymentList.get(i).toString());
+                        }
 
-                }
+                    }
 
                     ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(getApplicationContext());
                     checksDBAdapter.open();
-                checkList = checksDBAdapter.getPaymentBySaleID(orderId);
-                if(checkList.size()>0) {
-                    for(int i=0;i<checkList.size();i++){
-                        jsonList.add(checkList.get(i).toString());
+                    checkList = checksDBAdapter.getPaymentBySaleID(orderId);
+                    if(checkList.size()>0) {
+                        for(int i=0;i<checkList.size();i++){
+                            jsonList.add(checkList.get(i).toString());
+                        }
                     }
+
+
+                    JSONArray jsonArray = new JSONArray(jsonList.toString());
+                    newJsonObject.put("paymentDetails", jsonArray);
+                    Log.d("paymentJson",newJsonObject.toString());
+                    res = messageTransmit.authPost(ApiURL.Payment, newJsonObject.toString(), token);
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
 
-
-                JSONArray jsonArray = new JSONArray(jsonList.toString());
-                newJsonObject.put("paymentDetails", jsonArray);
-                Log.d("paymentJson",newJsonObject.toString());
-                res = messageTransmit.authPost(ApiURL.Payment, newJsonObject.toString(), token);
 
                 break;
             case MessageType.UPDATE_PAYMENT:

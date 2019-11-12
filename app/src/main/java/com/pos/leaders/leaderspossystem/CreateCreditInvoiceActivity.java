@@ -433,10 +433,10 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                                 posInvoiceDBAdapter.insertEntry(creditAmount*-1,zReport.getzReportId()-1,DocumentType.CREDIT_INVOICE.getValue(),"",r.getString("docNum"), CONSTANT.CASH);
                                                 zReport.setCreditInvoiceAmount(zReport.getCreditInvoiceAmount()+creditAmount*-1);
                                                 zReport.setTotalSales(zReport.getTotalSales()+creditAmount*-1);
-                                                zReport.setSalesBeforeTax(zReport.getSalesBeforeTax() + (SalesWithoutTax));
-                                                zReport.setSalesWithTax(zReport.getSalesWithTax() + (SalesWitheTax));
+                                                zReport.setSalesBeforeTax(zReport.getSalesBeforeTax() - (SalesWithoutTax));
+                                                zReport.setSalesWithTax(zReport.getSalesWithTax() - (SalesWitheTax));
                                                 Log.d("setSalesWithTaxReport",zReport.getSalesWithTax()+"");
-                                                zReport.setTotalTax(zReport.getTotalTax()+Math.abs(salesaftertax - SalesWitheTax));
+                                                zReport.setTotalTax(zReport.getTotalTax()-Math.abs(salesaftertax - SalesWitheTax));
 
                                                 zReportCount.setCreditInvoiceCount(zReportCount.getCreditInvoiceCount()+1);
                                                     zReportDBAdapter.updateEntry(zReport);
@@ -448,10 +448,10 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                                 posInvoiceDBAdapter.insertEntry(creditAmount*-1,-1,DocumentType.CREDIT_INVOICE.getValue(),"",r.getString("docNum"), CONSTANT.CASH);
                                                 zReport.setCreditInvoiceAmount(zReport.getCreditInvoiceAmount()+creditAmount*-1);
                                                 zReport.setTotalSales(zReport.getTotalSales()+creditAmount*-1);
-                                                zReport.setSalesBeforeTax(zReport.getSalesBeforeTax() + (SalesWithoutTax));
-                                                zReport.setSalesWithTax(zReport.getSalesWithTax() + (SalesWitheTax));
+                                                zReport.setSalesBeforeTax(zReport.getSalesBeforeTax() - (SalesWithoutTax));
+                                                zReport.setSalesWithTax(zReport.getSalesWithTax() - (SalesWitheTax));
                                                 Log.d("setSalesWithTaxReport",zReport.getSalesWithTax()+"");
-                                                zReport.setTotalTax(zReport.getTotalTax()+Math.abs(salesaftertax - SalesWitheTax));
+                                                zReport.setTotalTax(zReport.getTotalTax()-Math.abs(salesaftertax - SalesWitheTax));
                                                 zReportCount.setCreditInvoiceCount(zReportCount.getCreditInvoiceCount()+1);
                                                 zReportCountDbAdapter.updateEntry(zReportCount);
                                                 zReportDBAdapter.updateEntry(zReport);

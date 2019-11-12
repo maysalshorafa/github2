@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:paddingStart="@dimen/default_margin_padding"
-        android:text="@string/how_mutch_to_return"
+        android:text="@string/_return"
         android:textSize="18sp"
         android:textStyle="bold" />
 

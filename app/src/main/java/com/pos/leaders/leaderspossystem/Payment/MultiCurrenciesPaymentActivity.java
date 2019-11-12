@@ -72,6 +72,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     boolean multiCurrencyFromCheck=false;
     boolean multiCurrencyFromCreditCurrentlyInsert=false;
     boolean multiCurrencyFromCheckCurrentlyInsert=false;
+    Button cashButton , checkButton , creditCardButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,6 +137,9 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         llMultiCurrencyHeaderLayout = (LinearLayout) findViewById(R.id.MultiCurrenciesPaymentActivity_llHeader);
         lvPaymentTable = (ListView) findViewById(R.id.MultiCurrenciesPaymentActivity_lvPaymentList);
         spCurrency = (Spinner) findViewById(R.id.MultiCurrenciesPaymentActivity_spCurrency);
+        cashButton = (Button)findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickCash);
+        checkButton=(Button)findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickCheck);
+        creditCardButton=(Button)findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickCreditCard);
         tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + defaultCurrency);
         tvTotalPrice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,7 +162,34 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
             }
         });
+        cashButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.cash));
+                    btCheckOut.performClick();
 
+
+            }
+        });
+
+        checkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    multiCurrencyFromCheckCurrentlyInsert=true;
+                    insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.checks));
+
+            }
+        });
+
+        creditCardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    multiCurrencyFromCreditCurrentlyInsert=true;
+                    insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.credit_card));
+
+            }
+        });
         tvActualCurrencyRate=(TextView)findViewById(R.id.MultiCurrenciesPaymentActivity_tvActualCurrencyRate);
         paymentTables.add(new PaymentTable("₪",Double.parseDouble(Util.makePrice(totalPrice)), Double.NaN, Double.NaN, "", new CurrencyType(1l, defaultCurrency + ""),1));
 
@@ -308,9 +339,9 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
         }
         else if(paymentMethod.equals(PaymentMethod.CREDIT_CARD)) {
-            if(multiCurrencyFromCheckCurrentlyInsert){
+            if(multiCurrencyFromCreditCurrentlyInsert){
                 if (SETTINGS.creditCardEnable) {
-                    totalPaid += valRow * actualCurrencyRate;
+                    totalPaid += val * currencyRate;
                     double beforeChangeExcess = excess;
                     setExcess();
                     updateView();
@@ -319,6 +350,8 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
                     Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, MainCreditCardActivity.class);
                     intent.putExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_TOTAL_PRICE, val * currencyRate);
+                    intent.putExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_FROM_MULTI_CURRENCY,true);
+
                     startActivityForResult(intent, REQUEST_CREDIT_CARD_ACTIVITY_CODE);
                 }  else {
                 Toast.makeText(MultiCurrenciesPaymentActivity.this, R.string.please_enable_credit_card, Toast.LENGTH_LONG).show();

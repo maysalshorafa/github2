@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="5"
+        android:layout_weight="4"
         android:orientation="vertical">
 
         <LinearLayout
@@ -149,11 +149,75 @@
         </LinearLayout>
 
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight="5"
+        android:orientation="vertical">
+
+        <Button
+        android:id="@+id/MultiCurrenciesPaymentActivity_btQuickCash"
+        style="@style/AppTheme.bt_normal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cash"
+            />
+        <Button
+            android:id="@+id/MultiCurrenciesPaymentActivity_btQuickCheck"
+            style="@style/AppTheme.bt_normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/checks" />
+        <Button
+        android:id="@+id/MultiCurrenciesPaymentActivity_btQuickCreditCard"
+        style="@style/AppTheme.bt_normal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/credit_card" />
+        <Button
+        android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPinPad"
+        style="@style/AppTheme.bt_normal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/pin_pad" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+        <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+        <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+        <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+        <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+        <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2.5"
         android:background="@color/backgroundColor"
         android:orientation="vertical"
         android:padding="8dp"
