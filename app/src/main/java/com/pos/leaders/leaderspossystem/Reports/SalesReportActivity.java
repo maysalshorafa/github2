@@ -31,8 +31,11 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Models.ProductSale;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.Tools.AllSalesManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CategoryGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
@@ -48,7 +51,7 @@ import java.util.List;
 public class SalesReportActivity extends AppCompatActivity {
 
     TextView etFromDate, etToDate,amount,tvCountSale;
-    Button btncancleReport,btnCategory,btnproduct;
+    Button btncancleReport,btnCategory,btnproduct,btnAllSales;
 
     GridView gvCategory,gvProducts;
     CategoryDBAdapter categoryDBAdapter;
@@ -56,14 +59,14 @@ public class SalesReportActivity extends AppCompatActivity {
     List<Long> order;
     List<Long> orderProduct;
     List<Order> OrderList=new ArrayList<>();
-    ListView lvReport;
+    ListView lvReport,lvAllSallesList;
     Date from, to;
     double amountReport=0;
     Long CategoryId;
     long productIdSelect;
-    ViewGroup  headerCategory,headerProduct;
+    ViewGroup  headerCategory,headerAllSales;
     LinearLayout LAmountRepot;
-    boolean btnisclickedCategory = true,btnisclickedProduct=true;
+    boolean btnisclickedCategory = true,btnisclickedProduct=true,btnisclickedAll=true;
 
     View prseedButtonDepartments;
     List<Product> filter_productsList;
@@ -71,6 +74,7 @@ public class SalesReportActivity extends AppCompatActivity {
     private static final int DIALOG_TO_DATE = 324;
     CategoryGridViewAdapter adapterCategory;
     SaleManagementListViewAdapter adapterOrderList;
+    AllSalesManagementListViewAdapter adapterAllOrderList;
     List<Object>objectList = new ArrayList<Object>();
     List<Long>productID=new ArrayList<>();
     EditText etSearch;
@@ -102,9 +106,11 @@ public class SalesReportActivity extends AppCompatActivity {
         btnCategory=(Button) findViewById(R.id.btn_Category);
         btnproduct=(Button) findViewById(R.id.btn_product);
         lvReport = (ListView) findViewById(R.id.SaleReport_LVReport);
+        lvAllSallesList=(ListView) findViewById(R.id.AllSaleReport_LVReport);
         LAmountRepot=(LinearLayout) findViewById(R.id.Linear_AmountReport);
         etSearch = (EditText) findViewById(R.id.productCatalog_ETSearch);
         gvProducts = (GridView) findViewById(R.id.productCatalog_GVProducts);
+        btnAllSales=(Button) findViewById(R.id.btn_ALL);
 
         etFromDate.setFocusable(false);
         etFromDate.setText(DateConverter.getBeforeMonth().split(" ")[0]);
@@ -115,6 +121,10 @@ public class SalesReportActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         headerCategory = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvReport, false);
         lvReport.addHeaderView(headerCategory, null, false);
+
+        headerAllSales=(ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_all_sales, lvReport, false);
+        lvAllSallesList.addHeaderView(headerAllSales,null,false);
+
         /*LayoutInflater  inflaterProduct = getLayoutInflater();
         headerProduct = (ViewGroup)inflaterProduct.inflate(R.layout.list_adapter_head_row_order, lvReport, false);
         lvReport.addHeaderView(headerProduct, null, false);*/
@@ -134,6 +144,22 @@ public class SalesReportActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+
+        btnAllSales.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (btnisclickedAll){
+                    btnisclickedAll=false;
+                    flageGridOnClick="onCreate";
+                    setOrder();
+                }
+                else{
+                    btnisclickedAll=true;
+                }
+
             }
         });
 
@@ -288,8 +314,7 @@ public class SalesReportActivity extends AppCompatActivity {
             }
         });
 
-        flageGridOnClick="onCreate";
-        setOrder();
+
 
     }
 
@@ -367,10 +392,39 @@ public class SalesReportActivity extends AppCompatActivity {
             gvProducts.setVisibility(View.GONE);
             etSearch.setVisibility(View.GONE);
             gvCategory.setVisibility(View.GONE);
-            lvReport.setVisibility(View.VISIBLE);
+            lvReport.setVisibility(View.GONE);
             LAmountRepot.setVisibility(View.GONE);
             if (OrderList.size() > 0) {
-                lvReport.setVisibility(View.VISIBLE);
+                List<OrderDetails>orderDetailsList=new ArrayList<>();
+                OrderDetailsDBAdapter orderDetailsDBAdapter =new OrderDetailsDBAdapter(getApplicationContext());
+                for(int x=0;x<OrderList.size();x++){
+                    orderDetailsDBAdapter.open();
+                    orderDetailsList.addAll(orderDetailsDBAdapter.getOrderBySaleID(OrderList.get(x).getOrderId()));
+                    orderDetailsDBAdapter.close();
+                }
+                ProductDBAdapter productDBAdapter = new ProductDBAdapter(getApplicationContext());
+                productDBAdapter.open();
+                List<Product>productList=productDBAdapter.getAllProducts();
+                List<ProductSale>finalListProduct=new ArrayList<>();
+                for(int a=0;a<productList.size();a++){
+                    Product p =productList.get(a);
+                    ProductSale productSale=new ProductSale();
+                    productSale.setProduct(p);
+                    for(int x=0;x<orderDetailsList.size();x++){
+                        if(p.getProductId()==orderDetailsList.get(x).getProductId()){
+                            productSale.setCount(productSale.getCount()+1);
+                            productSale.setPrice(productSale.getPrice()+(p.getCostPrice()*productSale.getCount()));
+                        }
+
+
+                    }
+
+                    if(productSale.getCount()>0){
+                    finalListProduct.add(productSale);
+                }
+                }
+
+                lvAllSallesList.setVisibility(View.VISIBLE);
                 LAmountRepot.setVisibility(View.VISIBLE);
                 Log.d("OrderListOnCreate",OrderList.size()+"");
             for (int i2 = 0; i2 < OrderList.size(); i2++) {
@@ -379,9 +433,9 @@ public class SalesReportActivity extends AppCompatActivity {
             }
                 tvCountSale.setText(OrderList.size() + "");
                 amount.setText(amountReport + "");
-                objectList.addAll(OrderList);
-                adapterOrderList = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
-                lvReport.setAdapter(adapterOrderList);
+                objectList.addAll(finalListProduct);
+                adapterAllOrderList = new AllSalesManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_all_sales, objectList);
+                lvAllSallesList.setAdapter(adapterAllOrderList);
 
         }
             else {

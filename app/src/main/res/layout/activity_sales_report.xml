@@ -27,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:weightSum="3">
 
 
                 <Button
@@ -58,6 +58,22 @@
                     android:gravity="center"
                     android:paddingLeft="5dp"
                     android:text="@string/categorys"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+
+                <Button
+                    android:id="@+id/btn_ALL"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bubble"
+                    android:gravity="center"
+                    android:paddingLeft="5dp"
+                    android:text="@string/all_sales"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="20dp" />
@@ -404,6 +420,20 @@
 
         <ListView
             android:id="@+id/SaleReport_LVReport"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:columnWidth="90dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10px"
+            android:nestedScrollingEnabled="true"
+            android:numColumns="1"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:visibility="gone" />
+
+        <ListView
+            android:id="@+id/AllSaleReport_LVReport"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

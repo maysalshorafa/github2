@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="*"
+    android:layoutDirection="ltr"
+    >
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView42"
+            android:layout_column="0"
+            android:background="#A9A9A9"
+            android:padding="8dp"
+            android:text="@string/category_name"
+
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_column="1"
+            android:background="#A9A9A9"
+            android:padding="8dp"
+            android:text="@string/count"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"></TextView>
+
+
+        <TextView
+            android:background="#A9A9A9"
+            android:padding="8dp"
+            android:text="@string/price"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"></TextView>
+    </TableRow>
+</TableLayout>

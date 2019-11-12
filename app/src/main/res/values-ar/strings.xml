@@ -468,6 +468,7 @@
     <string name="sale_report">تقرير المبيعات</string>
     <string name="title_sales_report_activity">تقرير المبيعات</string>
     <string name="there_are_no_sales">لا يوجد بيعات</string>
+    <string name="all_sales">كل البيعات</string>
 
     <string-array name="credit_card_type">
         <!--  <item>רגיל</item>

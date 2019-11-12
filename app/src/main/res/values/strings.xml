@@ -754,6 +754,7 @@
     <string name="accounting_information">Accounting Information</string>
     <string name="Sales_Without_tax">Sales Without Tax</string>
     <string name="Sales_With_tax">Sales Whit Tax</string>
+    <string name="all_sales">All Sales</string>
 </resources>
 
 

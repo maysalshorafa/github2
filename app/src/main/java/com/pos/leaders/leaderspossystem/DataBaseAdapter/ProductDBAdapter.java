@@ -201,14 +201,24 @@ public class ProductDBAdapter {
     }
 
     public double getProductPrice(long id){
-        Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where id='" + id + "'", null);
-        if (cursor.getCount() < 1) // UserName Not Exist
-        {
+        double price=0;
+        try {
+            open();
+            Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where id='" + id + "'", null);
+            if (cursor.getCount() < 1) // UserName Not Exist
+            {
+                cursor.close();
+                return -1.0;
+            }
+            cursor.moveToFirst();
+            price=Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE)));
             cursor.close();
-            return -1.0;
+            close();
         }
-        cursor.moveToFirst();
-        return Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE)));
+        catch (Exception e) {
+
+        }
+        return price;
     }
 
 
