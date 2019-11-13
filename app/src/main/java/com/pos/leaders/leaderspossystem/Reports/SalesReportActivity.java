@@ -69,7 +69,7 @@ public class SalesReportActivity extends AppCompatActivity {
     ViewGroup  headerCategory,headerAllSales;
     LinearLayout LAmountRepot;
     boolean btnisclickedCategory = true,btnisclickedProduct=true,btnisclickedAll=true;
-
+    AsyncTask<?, ?, ?> runningTask;
     View prseedButtonDepartments;
     List<Product> filter_productsList;
     private static final int DIALOG_FROM_DATE = 825;
@@ -88,7 +88,8 @@ public class SalesReportActivity extends AppCompatActivity {
     ProductCatalogGridViewAdapter adapterProduct;
     SaleManagementListViewAdapter adapterListProduct;
     String flageGridOnClick="";
-
+    List<Product>productList;
+    ProductDBAdapter productDBAdapterALlSale;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +128,7 @@ public class SalesReportActivity extends AppCompatActivity {
         headerAllSales=(ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_all_sales, lvReport, false);
         lvAllSallesList.addHeaderView(headerAllSales,null,false);
 
+
         /*LayoutInflater  inflaterProduct = getLayoutInflater();
         headerProduct = (ViewGroup)inflaterProduct.inflate(R.layout.list_adapter_head_row_order, lvReport, false);
         lvReport.addHeaderView(headerProduct, null, false);*/
@@ -156,6 +158,9 @@ public class SalesReportActivity extends AppCompatActivity {
                 if (btnisclickedAll){
                     btnisclickedAll=false;
                     flageGridOnClick="onCreate";
+                    if (runningTask != null) runningTask.cancel(true);
+                    runningTask = new LongOperation();
+                    runningTask.execute();
                     setOrder();
                 }
                 else{
@@ -321,9 +326,25 @@ public class SalesReportActivity extends AppCompatActivity {
         });
 
 
-
     }
 
+    private final class LongOperation extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            productDBAdapterALlSale = new ProductDBAdapter(SalesReportActivity.this);
+            productDBAdapterALlSale.open();
+
+            return "Executed";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            productList=productDBAdapterALlSale.getAllProducts();
+       Log.d("productList",productList.toString()+"p");
+
+        }
+    }
     protected Dialog onCreateDialog(int id) {
         if (id == DIALOG_FROM_DATE) {
             DatePickerDialog datePickerDialog = new DatePickerDialog(this, onFromDateSetListener, Integer.parseInt(from.toString().split(" ")[5]), from.getMonth(), Integer.parseInt(from.toString().split(" ")[2]));
@@ -414,9 +435,7 @@ public class SalesReportActivity extends AppCompatActivity {
                 }
                 Log.d("testOrderList2",orderDetailsList.toString());
 
-                ProductDBAdapter productDBAdapter = new ProductDBAdapter(getApplicationContext());
-                productDBAdapter.open();
-                List<Product>productList=productDBAdapter.getAllProducts();
+
                 List<ProductSale>finalListProduct=new ArrayList<>();
                 for(int a=0;a<productList.size();a++){
                     Product p =productList.get(a);
@@ -427,10 +446,7 @@ public class SalesReportActivity extends AppCompatActivity {
                             int i = orderDetailsList.get(x).getQuantity();
                             productSale.setCount(productSale.getCount()+i);
                             productSale.setPrice(productSale.getPrice()+(p.getPrice()*i));
-                            Log.d("testOrderList3",productSale.toString());
-
                         }
-
 
                     }
 
