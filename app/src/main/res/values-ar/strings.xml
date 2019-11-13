@@ -659,6 +659,7 @@
     <string name="accounting_information">المعلومات المحاسبية</string>
     <string name="Sales_With_tax">اسعار المنتوجات شامل الضريبة</string>
     <string name="Sales_Without_tax">اسعار المنتوجات الغير شاملة الضريبة</string>
-
+    <string name="plzwait"> الرجاء الانتظار</string>
+    <string name="loadingdata">جاري تحميل البيانات</string>
 </resources>
 

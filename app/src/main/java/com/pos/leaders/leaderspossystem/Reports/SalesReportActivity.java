@@ -3,12 +3,14 @@ package com.pos.leaders.leaderspossystem.Reports;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,7 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -69,8 +72,6 @@ public class SalesReportActivity extends AppCompatActivity {
     ViewGroup  headerCategory,headerAllSales;
     LinearLayout LAmountRepot;
     boolean btnisclickedCategory = true,btnisclickedProduct=true,btnisclickedAll=true;
-    AsyncTask<?, ?, ?> runningTask;
-    View prseedButtonDepartments;
     List<Product> filter_productsList;
     private static final int DIALOG_FROM_DATE = 825;
     private static final int DIALOG_TO_DATE = 324;
@@ -90,6 +91,7 @@ public class SalesReportActivity extends AppCompatActivity {
     String flageGridOnClick="";
     List<Product>productList;
     ProductDBAdapter productDBAdapterALlSale;
+    ProgressDialog progressDialog;
     AsyncTask<String, String, String> sendTask;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,10 +131,6 @@ public class SalesReportActivity extends AppCompatActivity {
         headerAllSales=(ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_all_sales, lvReport, false);
         lvAllSallesList.addHeaderView(headerAllSales,null,false);
 
-
-        /*LayoutInflater  inflaterProduct = getLayoutInflater();
-        headerProduct = (ViewGroup)inflaterProduct.inflate(R.layout.list_adapter_head_row_order, lvReport, false);
-        lvReport.addHeaderView(headerProduct, null, false);*/
         etFromDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -322,52 +320,17 @@ public class SalesReportActivity extends AppCompatActivity {
                 }
             }
         });
-        /*if (runningTask != null) runningTask.cancel(true);
-        runningTask = new LongOperation();
-        runningTask.execute();*/
-        sendTask = new AsyncTask<String, String, String>() {
-            protected String doInBackground(String... title) {
-                productDBAdapterALlSale = new ProductDBAdapter(SalesReportActivity.this);
-                productDBAdapterALlSale.open();
-                productList=productDBAdapterALlSale.getAllProducts();
-                Log.d("productList",productList.toString()+"p");
-                return "Sent message.";
-        }
-            protected void onPostExecute(String result) {
-                sendTask = null;
-                // tosat about the success in return
-            }
-        };
-
-        sendTask.execute(null, null, null);
 
     }
 
-   /* private final class LongOperation extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            return "Executed";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-     //
-            super.onPostExecute(result);
-            Log.d("productList",productList.toString()+result);
-        }
-    }*/
     protected Dialog onCreateDialog(int id) {
         if (id == DIALOG_FROM_DATE) {
             DatePickerDialog datePickerDialog = new DatePickerDialog(this, onFromDateSetListener, Integer.parseInt(from.toString().split(" ")[5]), from.getMonth(), Integer.parseInt(from.toString().split(" ")[2]));
-            //datePickerDialog.getDatePicker().setMaxDate(to.getTime());
             datePickerDialog.getDatePicker().setCalendarViewShown(false);
             return datePickerDialog;
         } else if (id == DIALOG_TO_DATE) {
             DatePickerDialog datePickerDialog = new DatePickerDialog(this, onToDateSetListener, Integer.parseInt(to.toString().split(" ")[5]), to.getMonth(), Integer.parseInt(to.toString().split(" ")[2]));
-            //datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
-            //datePickerDialog.getDatePicker().setMinDate(from.getTime());
+
             datePickerDialog.getDatePicker().setCalendarViewShown(false);
             return datePickerDialog;
         }
@@ -379,7 +342,6 @@ public class SalesReportActivity extends AppCompatActivity {
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             etFromDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
             from = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
-          //  view.setMaxDate(to.getTime());
             setOrder();
         }
     };
@@ -387,10 +349,8 @@ public class SalesReportActivity extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener onToDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
             etToDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
             to = DateConverter.stringToDate(year + "-" + (month + 1) + "-" + dayOfMonth + " 00:00:00");
-          //  view.setMinDate(from.getTime());
             setOrder();
         }
     };
@@ -409,93 +369,129 @@ public class SalesReportActivity extends AppCompatActivity {
             lvAllSallesList.setVisibility(View.GONE);
             amountReport=0;
             OrderList=new ArrayList<Order>();
-            OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
-            orderDBAdapter1.open();
-            Log.d("OrderListProduct",OrderList.size()+"");
-            OrderList = orderDBAdapter1.getBetweenOrder(from.getTime(),to.getTime());
+            sendTask = new AsyncTask<String, String, String>() {
 
-            Log.d("from",from.getTime()+"");
-            Log.d("to",to.getTime()+"");
+                protected String doInBackground(String... title) {
+                    OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
+                    orderDBAdapter1.open();
+                    Log.d("OrderListProduct", OrderList.size() + "");
+                    OrderList = orderDBAdapter1.getBetweenOrder(from.getTime(), to.getTime());
 
-            for (int i2 = 0; i2 < OrderList.size(); i2++) {
-                amountReport = amountReport + OrderList.get(i2).getTotalPrice();
+                return "Sent message.";
             }
+                protected void onPostExecute(String result) {
+               for (int i2 = 0; i2 < OrderList.size(); i2++) {
+                amountReport = amountReport + OrderList.get(i2).getTotalPrice();
+               }
             Log.d("OrderListProduct",OrderList.size()+"");
-            tvCountSale.setText(OrderList.size() + "");
-            amount.setText(amountReport + "");
-        }
+               tvCountSale.setText(OrderList.size() + "");
+              amount.setText(Util.makePrice(amountReport));}
+            };
+
+            sendTask.execute(null, null, null);}
+
+
+
       else  if (flageGridOnClick.equals("onCreate")){
-            Log.d("OnCreate","OnCreate");
+
             amountReport=0;
             OrderList=new ArrayList<Order>();
             objectList=new ArrayList<>();
-            OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
-            orderDBAdapter1.open();
-            OrderList = orderDBAdapter1.getBetweenOrder(from.getTime(),to.getTime());
             gvProducts.setVisibility(View.GONE);
             etSearch.setVisibility(View.GONE);
             gvCategory.setVisibility(View.GONE);
             lvReport.setVisibility(View.GONE);
             LAmountRepot.setVisibility(View.GONE);
-            Log.d("testOrderList1",OrderList.toString());
-            if (OrderList.size() > 0) {
-                List<OrderDetails>orderDetailsList=new ArrayList<>();
-                OrderDetailsDBAdapter orderDetailsDBAdapter =new OrderDetailsDBAdapter(getApplicationContext());
-                for(int x=0;x<OrderList.size();x++){
-                    orderDetailsDBAdapter.open();
-                    orderDetailsList.addAll(orderDetailsDBAdapter.getOrderBySaleID(OrderList.get(x).getOrderId()));
-                    orderDetailsDBAdapter.close();
+         final  List<ProductSale>finalListProduct=new ArrayList<>();
+            sendTask = new AsyncTask<String, String, String>() {
+
+                @Override
+                protected  void onPreExecute()
+                {
+                    progressDialog = ProgressDialog.show(SalesReportActivity.this, getString(R.string.plzwait), getString(R.string.loadingdata), true);
+
                 }
-                Log.d("testOrderList2",orderDetailsList.toString());
+                protected String doInBackground(String... title) {
 
-
-                List<ProductSale>finalListProduct=new ArrayList<>();
-                Log.d("productList",productList.size()+"size");
-                if (productList!=null){
-                for(int a=0;a<productList.size();a++){
-                    Product p =productList.get(a);
-                    ProductSale productSale=new ProductSale();
-                    productSale.setProduct(p);
-                    for(int x=0;x<orderDetailsList.size();x++){
-                        if(p.getProductId()==orderDetailsList.get(x).getProductId()){
-                            int i = orderDetailsList.get(x).getQuantity();
-                            productSale.setCount(productSale.getCount()+i);
-                            productSale.setPrice(productSale.getPrice()+(p.getPrice()*i));
+                    OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
+                    orderDBAdapter1.open();
+                    OrderList = orderDBAdapter1.getBetweenOrder(from.getTime(),to.getTime());
+                    Set<Order> set = new HashSet<>(OrderList);
+                    OrderList.clear();
+                    OrderList.addAll(set);
+                    if (OrderList.size() > 0) {
+                        List<OrderDetails> orderDetailsList = new ArrayList<>();
+                        OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(getApplicationContext());
+                        for (int x = 0; x < OrderList.size(); x++) {
+                            orderDetailsDBAdapter.open();
+                            orderDetailsList.addAll(orderDetailsDBAdapter.getOrderBySaleID(OrderList.get(x).getOrderId()));
+                            orderDetailsDBAdapter.close();
                         }
+                        Log.d("testOrderList2", orderDetailsList.toString());
+
+
+                        productDBAdapterALlSale = new ProductDBAdapter(SalesReportActivity.this);
+                        productDBAdapterALlSale.open();
+                        productList = productDBAdapterALlSale.getAllProducts();
+                        Log.d("productList", productList.size() + "size");
+
+                        for(int a=0;a<productList.size();a++){
+                            Product p =productList.get(a);
+                            ProductSale productSale=new ProductSale();
+                            productSale.setProduct(p);
+                            for(int x=0;x<orderDetailsList.size();x++){
+                                if(p.getProductId()==orderDetailsList.get(x).getProductId()){
+                                    int i = orderDetailsList.get(x).getQuantity();
+                                    productSale.setCount(productSale.getCount()+i);
+                                    productSale.setPrice(productSale.getPrice()+(p.getPrice()*i));
+
+                            if (productSale.getCount() > 0) {
+                                finalListProduct.add(productSale);
+                            }}}}}
+
+                        return "Sent message.";
+                    }
+                protected void onPostExecute(String result) {
+                    if (progressDialog.isShowing()) progressDialog.dismiss();
+                    sendTask = null;
+                        if (finalListProduct.size()!=0){
+                        lvAllSallesList.setVisibility(View.VISIBLE);
+                        LAmountRepot.setVisibility(View.VISIBLE);
+                        Log.d("OrderListOnCreate",OrderList.size()+"");
+                        for (int i2 = 0; i2 < OrderList.size(); i2++) {
+                            amountReport = amountReport + OrderList.get(i2).getTotalPrice();
+                            Log.d("i2",i2+"");
+                        }
+                        tvCountSale.setText(OrderList.size() + "");
+                        amount.setText(Util.makePrice(amountReport));
+                            Set<ProductSale> set2 = new HashSet<>(finalListProduct);
+                            finalListProduct.clear();
+                            finalListProduct.addAll(set2);
+                        objectList.addAll(finalListProduct);
+
+                        adapterAllOrderList = new AllSalesManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_all_sales, objectList);
+                        lvAllSallesList.setAdapter(adapterAllOrderList);
 
                     }
-
-                    if(productSale.getCount()>0){
-                    finalListProduct.add(productSale);
+                    else {
+                        LAmountRepot.setVisibility(View.GONE);
+                        lvReport.setVisibility(View.GONE);
+                        Toast.makeText(SalesReportActivity.this, R.string.there_are_no_sales,
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
-                }
+            };
 
-                lvAllSallesList.setVisibility(View.VISIBLE);
-                LAmountRepot.setVisibility(View.VISIBLE);
-                Log.d("OrderListOnCreate",OrderList.size()+"");
-            for (int i2 = 0; i2 < OrderList.size(); i2++) {
-                amountReport = amountReport + OrderList.get(i2).getTotalPrice();
-                Log.d("i2",i2+"");
-            }
-                tvCountSale.setText(OrderList.size() + "");
-                amount.setText(amountReport + "");
-                objectList.addAll(finalListProduct);
-                adapterAllOrderList = new AllSalesManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_all_sales, objectList);
-                lvAllSallesList.setAdapter(adapterAllOrderList);
-
-        }}
-            else {
-                LAmountRepot.setVisibility(View.GONE);
-                lvReport.setVisibility(View.GONE);
-                Toast.makeText(SalesReportActivity.this, R.string.there_are_no_sales,
-                        Toast.LENGTH_LONG).show();
-            }
+            sendTask.execute(null, null, null);
       }
        else if (flageGridOnClick.equals("gvCategory")){
         objectList = new ArrayList<>();
         OrderList = new ArrayList<>();
         order = new ArrayList<>();
         productID = new ArrayList<>();
+            sendTask = new AsyncTask<String, String, String>() {
+                protected String doInBackground(String... title) {
+
         ProductDBAdapter productDBAdapter = new ProductDBAdapter(SalesReportActivity.this);
         productDBAdapter.open();
         productID = productDBAdapter.getProductByCategory(CategoryId);
@@ -505,15 +501,8 @@ public class SalesReportActivity extends AppCompatActivity {
             Set<Long> set = new HashSet<>(order);
             order.clear();
             order.addAll(set);
-           /* Log.d("fromProduct",from.toString()+to.toString()+" "+CategoryId);
-            Log.d("order",order.toString());
-        OrderList = orderDBAdapter1.getBetweenByOrder(from.getTime(), to.getTime(), order);*/
-
-
             OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
             orderDBAdapter1.open();
-            Log.d("OrderListCategory", order.toString());
-
 
             for(int i=0;i<order.size();i++) {
                 Order o = orderDBAdapter1.getOrderById(order.get(i));
@@ -529,9 +518,7 @@ public class SalesReportActivity extends AppCompatActivity {
                     Date d1 = new SimpleDateFormat("dd/MM/yyyy").parse(date1);
                     Date d2 = new SimpleDateFormat("dd/MM/yyyy").parse(date3);
                     Date d3 = new SimpleDateFormat("dd/MM/yyyy").parse(date5);
-                    Log.d("testdate", d1.compareTo(d2) + "" + d2 + "  " + d3);
                     if ((d1.compareTo(d2) > 0 || d1.compareTo(d2) == 0) && (d1.compareTo(d3) < 0 || d1.compareTo(d3) == 0)) {
-                        //&&new Date(DateConverter.toDate(o.getCreatedAt())).compareTo(new Date(DateConverter.toDate(to.getDate())))<0
                         OrderList.add(o);
                     }
                 } catch (ParseException e) {
@@ -540,15 +527,16 @@ public class SalesReportActivity extends AppCompatActivity {
 
 
             }
-            Log.d("OrderListCategory", OrderList.toString());
+                    return "Sent message.";
+                }
+                protected void onPostExecute(String result) {
 
-            if (OrderList.size() > 0) {
+              if (OrderList.size() > 0) {
                 lvReport.setVisibility(View.VISIBLE);
                 LAmountRepot.setVisibility(View.VISIBLE);
                 for (int i2 = 0; i2 < OrderList.size(); i2++) {
                     amountReport = amountReport + OrderList.get(i2).getTotalPrice();
                 }
-
 
             } else {
                 LAmountRepot.setVisibility(View.GONE);
@@ -556,12 +544,18 @@ public class SalesReportActivity extends AppCompatActivity {
                 Toast.makeText(SalesReportActivity.this, R.string.there_are_no_sales,
                         Toast.LENGTH_LONG).show();
             }
-            amount.setText(amountReport + "");
+            amount.setText(Util.makePrice(amountReport));
             tvCountSale.setText(OrderList.size() + "");
             objectList.addAll(OrderList);
             adapterOrderList = new SaleManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_sales_management, objectList);
             lvReport.setAdapter(adapterOrderList);
-        }
+                }
+            };
+
+            sendTask.execute(null, null, null);}
+
+
+
         else if (flageGridOnClick.equals("gvProducts")){
             objectList = new ArrayList<>();
             OrderList = new ArrayList<>();
@@ -569,11 +563,9 @@ public class SalesReportActivity extends AppCompatActivity {
             OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(SalesReportActivity.this);
             orderDBAdapter.open();
             orderProduct = orderDBAdapter.getOrderDetailsByIDproduct(productIdSelect);
-            Log.d("orderProduct",orderProduct.toString());
             Set<Long> set = new HashSet<>(orderProduct);
             orderProduct.clear();
             orderProduct.addAll(set);
-            Log.d("fromCa",from.toString()+to.toString()+" "+orderProduct.toString());
             OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
             orderDBAdapter1.open();
 
@@ -591,9 +583,7 @@ public class SalesReportActivity extends AppCompatActivity {
                     Date d1=new SimpleDateFormat("dd/MM/yyyy").parse(date1);
                     Date d2=new SimpleDateFormat("dd/MM/yyyy").parse(date3);
                     Date d3=new SimpleDateFormat("dd/MM/yyyy").parse(date5);
-                    Log.d("testdate",d1.compareTo(d2)+ ""+d2+"  "+d3);
                     if((d1.compareTo(d2)>0 || d1.compareTo(d2)==0)&&(d1.compareTo(d3)<0 || d1.compareTo(d3)==0) ){
-                        //&&new Date(DateConverter.toDate(o.getCreatedAt())).compareTo(new Date(DateConverter.toDate(to.getDate())))<0
                         OrderList.add(o);
                     }
 
@@ -603,10 +593,7 @@ public class SalesReportActivity extends AppCompatActivity {
 
 
 
-          //  OrderList = orderDBAdapter1.getBetweenByOrder(from.getTime(), to.getTime(), orderProduct);
-
-
-        } Log.d("OrderListOn",OrderList.toString()+"");
+        }
             List<OrderDetails>orderDetailsListForProduct=new ArrayList<>();
             for (int i1=0; i1<OrderList.size();i1++){
                 orderDetailsListForProduct=orderDBAdapter.getOrderBySaleIDAndProductId(OrderList.get(i1).getOrderId(),productIdSelect);
@@ -631,7 +618,7 @@ public class SalesReportActivity extends AppCompatActivity {
                 Toast.makeText(SalesReportActivity.this, R.string.there_are_no_sales,
                         Toast.LENGTH_LONG).show();
             }
-            amount.setText( amountReport+"");
+            amount.setText(Util.makePrice(amountReport));
             tvCountSale.setText(OrderList.size()+"");
             objectList.addAll(OrderList);
 
@@ -641,6 +628,7 @@ public class SalesReportActivity extends AppCompatActivity {
         }
 
     protected void LoadMoreProducts(){
+        productLoadItemOffset+=productCountLoad;
         final ProgressDialog dialog=new ProgressDialog(SalesReportActivity.this);
         dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish));
 
@@ -670,7 +658,6 @@ public class SalesReportActivity extends AppCompatActivity {
 
 
     }
-
 }
 
 

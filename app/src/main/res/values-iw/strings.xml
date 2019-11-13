@@ -677,6 +677,8 @@
     <string name="Sales_Without_tax">מכירות ללא מע"מ</string>
     <string name="Sales_With_tax">מכירות עם מע"מ</string>
     <string name="all_sales">כל המכירות</string>
+    <string name="plzwait">אנא המתן</string>
+    <string name="loadingdata">טוען נתונים</string>
 
 
 </resources>

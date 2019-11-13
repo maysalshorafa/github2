@@ -755,6 +755,8 @@
     <string name="Sales_Without_tax">Sales Without Tax</string>
     <string name="Sales_With_tax">Sales Whit Tax</string>
     <string name="all_sales">All Sales</string>
+    <string name="plzwait">Please Wait</string>
+    <string name="loadingdata">Loading Data</string>
 </resources>
 
 
