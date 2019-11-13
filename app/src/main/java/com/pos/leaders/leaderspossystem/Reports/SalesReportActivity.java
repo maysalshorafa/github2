@@ -90,6 +90,7 @@ public class SalesReportActivity extends AppCompatActivity {
     String flageGridOnClick="";
     List<Product>productList;
     ProductDBAdapter productDBAdapterALlSale;
+    AsyncTask<String, String, String> sendTask;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,9 +159,6 @@ public class SalesReportActivity extends AppCompatActivity {
                 if (btnisclickedAll){
                     btnisclickedAll=false;
                     flageGridOnClick="onCreate";
-                    if (runningTask != null) runningTask.cancel(true);
-                    runningTask = new LongOperation();
-                    runningTask.execute();
                     setOrder();
                 }
                 else{
@@ -324,27 +322,42 @@ public class SalesReportActivity extends AppCompatActivity {
                 }
             }
         });
+        /*if (runningTask != null) runningTask.cancel(true);
+        runningTask = new LongOperation();
+        runningTask.execute();*/
+        sendTask = new AsyncTask<String, String, String>() {
+            protected String doInBackground(String... title) {
+                productDBAdapterALlSale = new ProductDBAdapter(SalesReportActivity.this);
+                productDBAdapterALlSale.open();
+                productList=productDBAdapterALlSale.getAllProducts();
+                Log.d("productList",productList.toString()+"p");
+                return "Sent message.";
+        }
+            protected void onPostExecute(String result) {
+                sendTask = null;
+                // tosat about the success in return
+            }
+        };
 
+        sendTask.execute(null, null, null);
 
     }
 
-    private final class LongOperation extends AsyncTask<Void, Void, String> {
+   /* private final class LongOperation extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {
-            productDBAdapterALlSale = new ProductDBAdapter(SalesReportActivity.this);
-            productDBAdapterALlSale.open();
 
             return "Executed";
         }
 
         @Override
         protected void onPostExecute(String result) {
-            productList=productDBAdapterALlSale.getAllProducts();
-       Log.d("productList",productList.toString()+"p");
-
+     //
+            super.onPostExecute(result);
+            Log.d("productList",productList.toString()+result);
         }
-    }
+    }*/
     protected Dialog onCreateDialog(int id) {
         if (id == DIALOG_FROM_DATE) {
             DatePickerDialog datePickerDialog = new DatePickerDialog(this, onFromDateSetListener, Integer.parseInt(from.toString().split(" ")[5]), from.getMonth(), Integer.parseInt(from.toString().split(" ")[2]));
@@ -437,6 +450,8 @@ public class SalesReportActivity extends AppCompatActivity {
 
 
                 List<ProductSale>finalListProduct=new ArrayList<>();
+                Log.d("productList",productList.size()+"size");
+                if (productList!=null){
                 for(int a=0;a<productList.size();a++){
                     Product p =productList.get(a);
                     ProductSale productSale=new ProductSale();
@@ -468,7 +483,7 @@ public class SalesReportActivity extends AppCompatActivity {
                 adapterAllOrderList = new AllSalesManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_all_sales, objectList);
                 lvAllSallesList.setAdapter(adapterAllOrderList);
 
-        }
+        }}
             else {
                 LAmountRepot.setVisibility(View.GONE);
                 lvReport.setVisibility(View.GONE);
