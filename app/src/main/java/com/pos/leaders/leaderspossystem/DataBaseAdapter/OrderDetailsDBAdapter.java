@@ -225,13 +225,11 @@ public class OrderDetailsDBAdapter {
 			if (cursor.getCount() < 1) // UserName Not Exist
 			{
 				cursor.close();
-				Log.d("OrderId", "yuy");
 				return orderId;
 			}
 			//cursor.moveToFirst();
 			while (cursor.moveToNext()) {
 				orderId.add((long) cursor.getLong(0));
-				Log.d("NextOrderId", String.valueOf(cursor.getLong(0)));
 			}
 			cursor.close();
 		}
@@ -244,13 +242,11 @@ public class OrderDetailsDBAdapter {
 		if (cursor.getCount() < 1) // UserName Not Exist
 		{
 			cursor.close();
-			Log.d("OrderId", "yuy");
 			return orderId;
 		}
 		//cursor.moveToFirst();
 		while (cursor.moveToNext()){
 			orderId.add((long) cursor.getLong(0));
-			Log.d("OderIdWithoutProuductId", String.valueOf(cursor.getLong(0)));
 		}
 		cursor.close();
 
@@ -258,10 +254,17 @@ public class OrderDetailsDBAdapter {
 	}
 	private OrderDetails make(Cursor cursor){
 		long offerId=0;
+		long serialNo=0;
 		if(cursor.getString(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_OFFER_ID)).equals("")){
 			offerId=0;
 		}else {
 			offerId=Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_OFFER_ID)));
+
+		}
+		if(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER)).equals("")){
+			serialNo=0;
+		}else {
+			serialNo=Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER)));
 
 		}
 		return new OrderDetails(Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_ID))),
@@ -275,7 +278,7 @@ public class OrderDetailsDBAdapter {
 				cursor.getLong(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID)),
 				cursor.getString(cursor.getColumnIndex(ORDER_DETAILES_COLUMN_KEY)),
 				offerId,
-				Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER))),
+				serialNo,
 				Double.parseDouble(cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_PRODUCT_PRICE_AFTER_TAX))),cursor.getString(cursor.getColumnIndex(ORDER_DETAILS_COLUMN_SERIAL_NUMBER)));
 	}
 	public static String addColumnReal(String columnName) {

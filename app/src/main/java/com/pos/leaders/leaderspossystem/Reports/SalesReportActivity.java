@@ -196,9 +196,10 @@ public class SalesReportActivity extends AppCompatActivity {
 
                 if (btnisclickedProduct) {
                     flageGridOnClick="onclickProduct";
-                    LAmountRepot.setVisibility(View.VISIBLE);
                     gvCategory.setVisibility(View.GONE);
                     lvReport.setVisibility(View.GONE);
+                    lvAllSallesList.setVisibility(View.GONE);
+                    lvAllSallesList.setVisibility(View.GONE);
                     productDBAdapter = new ProductDBAdapter(SalesReportActivity.this);
                     productDBAdapter.open();
                     productsList = productDBAdapter.getTopProducts(productLoadItemOffset, productCountLoad);
@@ -207,7 +208,7 @@ public class SalesReportActivity extends AppCompatActivity {
                     gvProducts.setAdapter(adapterProduct);
                     etSearch.setVisibility(View.VISIBLE);
                     gvProducts.setVisibility(View.VISIBLE);
-                    lvAllSallesList.setVisibility(View.GONE);
+
                     btnisclickedProduct=false;
                     setOrder();
                 }
@@ -366,12 +367,11 @@ public class SalesReportActivity extends AppCompatActivity {
     private void setOrder() {
         amountReport=0;
         if (flageGridOnClick.equals("onclickProduct")){
-            lvAllSallesList.setVisibility(View.GONE);
             amountReport=0;
             OrderList=new ArrayList<Order>();
             sendTask = new AsyncTask<String, String, String>() {
 
-                protected String doInBackground(String... title) {
+                   protected String doInBackground(String... title) {
                     OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
                     orderDBAdapter1.open();
                     Log.d("OrderListProduct", OrderList.size() + "");
@@ -383,9 +383,9 @@ public class SalesReportActivity extends AppCompatActivity {
                for (int i2 = 0; i2 < OrderList.size(); i2++) {
                 amountReport = amountReport + OrderList.get(i2).getTotalPrice();
                }
-            Log.d("OrderListProduct",OrderList.size()+"");
-               tvCountSale.setText(OrderList.size() + "");
-              amount.setText(Util.makePrice(amountReport));}
+                    LAmountRepot.setVisibility(View.VISIBLE);
+                   tvCountSale.setText(OrderList.size() + "");
+                    amount.setText(Util.makePrice(amountReport));}
             };
 
             sendTask.execute(null, null, null);}
@@ -419,7 +419,7 @@ public class SalesReportActivity extends AppCompatActivity {
                     Set<Order> set = new HashSet<>(OrderList);
                     OrderList.clear();
                     OrderList.addAll(set);
-                    if (OrderList.size() > 0) {
+                    if (OrderList.size()!= 0) {
                         List<OrderDetails> orderDetailsList = new ArrayList<>();
                         OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(getApplicationContext());
                         for (int x = 0; x < OrderList.size(); x++) {
@@ -433,8 +433,7 @@ public class SalesReportActivity extends AppCompatActivity {
                         productDBAdapterALlSale = new ProductDBAdapter(SalesReportActivity.this);
                         productDBAdapterALlSale.open();
                         productList = productDBAdapterALlSale.getAllProducts();
-                        Log.d("productList", productList.size() + "size");
-
+                        if(productList.size()!= 0){
                         for(int a=0;a<productList.size();a++){
                             Product p =productList.get(a);
                             ProductSale productSale=new ProductSale();
@@ -447,7 +446,7 @@ public class SalesReportActivity extends AppCompatActivity {
 
                             if (productSale.getCount() > 0) {
                                 finalListProduct.add(productSale);
-                            }}}}}
+                            }}}}}}
 
                         return "Sent message.";
                     }
