@@ -24,11 +24,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="2">
 
 
                 <Button
-
                     android:id="@+id/btn_product"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -49,6 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:background="@drawable/bubble"
@@ -70,6 +70,7 @@
                     android:background="@drawable/bubble"
                     android:gravity="center"
                     android:paddingLeft="5dp"
+                    android:visibility="gone"
                     android:text="@string/all_sales"
                     android:textAlignment="center"
                     android:textColor="@color/black"

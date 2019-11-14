@@ -172,8 +172,6 @@ public class SalesReportActivity extends AppCompatActivity {
          if (btnisclickedCategory){
              makeList();
              etSearch.setVisibility(View.GONE);
-             gvCategory.setVisibility(View.VISIBLE);
-             lvReport.setVisibility(View.VISIBLE);
              LAmountRepot.setVisibility(View.GONE);
              lvAllSallesList.setVisibility(View.GONE);
              btnisclickedCategory=false;
@@ -200,6 +198,7 @@ public class SalesReportActivity extends AppCompatActivity {
                     lvReport.setVisibility(View.GONE);
                     lvAllSallesList.setVisibility(View.GONE);
                     lvAllSallesList.setVisibility(View.GONE);
+                    LAmountRepot.setVisibility(View.GONE);
                     productDBAdapter = new ProductDBAdapter(SalesReportActivity.this);
                     productDBAdapter.open();
                     productsList = productDBAdapter.getTopProducts(productLoadItemOffset, productCountLoad);
@@ -208,7 +207,6 @@ public class SalesReportActivity extends AppCompatActivity {
                     gvProducts.setAdapter(adapterProduct);
                     etSearch.setVisibility(View.VISIBLE);
                     gvProducts.setVisibility(View.VISIBLE);
-
                     btnisclickedProduct=false;
                     setOrder();
                 }
@@ -230,7 +228,6 @@ public class SalesReportActivity extends AppCompatActivity {
                 gvProducts.setVisibility(View.GONE);
                 etSearch.setVisibility(View.GONE);
                 gvCategory.setVisibility(View.GONE);
-                lvReport.setVisibility(View.VISIBLE);
                 LAmountRepot.setVisibility(View.GONE);
                 lvAllSallesList.setVisibility(View.GONE);
                 CategoryId=listCategory.get(position).getCategoryId();
@@ -362,6 +359,8 @@ public class SalesReportActivity extends AppCompatActivity {
         listCategory = categoryDBAdapter.getAllDepartments();
         adapterCategory = new CategoryGridViewAdapter(SalesReportActivity.this, listCategory);
         gvCategory.setAdapter(adapterCategory);
+        gvCategory.setVisibility(View.VISIBLE);
+       // lvReport.setVisibility(View.VISIBLE);
     }
 
     private void setOrder() {
