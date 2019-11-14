@@ -1336,7 +1336,7 @@ public class SyncMessage extends Service {
                     Log.d("paymentJson",newJsonObject.toString());
                     res = messageTransmit.authPost(ApiURL.Payment, newJsonObject.toString(), token);
                 }catch (Exception e){
-                    e.printStackTrace();
+                   Log.d("testPayment",e.toString()+"");
                 }
 
 
