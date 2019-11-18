@@ -379,12 +379,13 @@ public class PdfUA {
         document.add(headingTable);
         document.add(dataTable);
         document.add(opiningReportTable);
-        document.add(pullAndDepositAmount);
-        document.add(accountInformation);
         if(SETTINGS.enableCurrencies){
             document.add(opiningReportDetailsTable);
 
         }
+        document.add(pullAndDepositAmount);
+        document.add(accountInformation);
+
         document.add(posSalesTable);
         document.close();
         //end :)
@@ -1547,12 +1548,13 @@ public class PdfUA {
         document.add(headingTable);
         document.add(dataTable);
         document.add(opiningReportTable);
-        document.add(pullAndDepositAmount);
-        document.add(accountInformation);
         if(SETTINGS.enableCurrencies){
             document.add(opiningReportDetailsTable);
 
         }
+        document.add(pullAndDepositAmount);
+        document.add(accountInformation);
+
         document.add(posSalesTable);
         document.close();
         //end :)

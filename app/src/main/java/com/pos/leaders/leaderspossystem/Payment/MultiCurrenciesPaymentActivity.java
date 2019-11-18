@@ -530,7 +530,9 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
             }
             }else {
+                if(paymentTables.size()>1){
                 deleteRow(paymentTables.size()-1);
+            }
             }
         }
     }
