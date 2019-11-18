@@ -366,7 +366,7 @@ public class InvoiceImg {
                 calcReturned = 0;
             }
         }
-        Block b_returned = new Block("\u200E" + context.getString(R.string.returned), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block b_returned = new Block("\u200E" + context.getString(R.string.rest), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         blocks.add(lineR.Left());
         blocks.add(paidByText.Bold().Left());
         blocks.add(paidBy.Bold().Left());

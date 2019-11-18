@@ -413,6 +413,8 @@
     <string name="title_activity_product_catalog">קטלוג מוצרים</string>
     <string name="title_activity_products_activity">חלון מוצרים</string>
     <string name="paid_by">שולם ב</string>
+    <string name="rest">עודף</string>
+
     <string name="product_quantity">כמות פריטים</string>
     <string name="z_report">דוח Z</string>
     <string name="z_report_view">הצגת דוחות Z</string>

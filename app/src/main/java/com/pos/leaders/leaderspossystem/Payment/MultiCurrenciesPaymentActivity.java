@@ -52,6 +52,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     private String defaultCurrency = "ILS";//ILS
 //'\u20aa'
     private String excessCurrency = "ILS";//ILS
+    String haveCreditCard="";
 
     private TextView tvTotalPrice,tvExcess,tvTotalPriceWithMultiCurrency,tvActualCurrencyRate;
     private Spinner spCurrency;
@@ -73,6 +74,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     boolean multiCurrencyFromCreditCurrentlyInsert=false;
     boolean multiCurrencyFromCheckCurrentlyInsert=false;
     Button cashButton , checkButton , creditCardButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -426,6 +428,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 insertNewRow(val, currencyType + "", getCurrencyRate(currencyType), mcf.paymentMethodSpinner.getSelectedItem().toString());
                 mcf.clearScreen();
             }
+
         }
         if (v.getId() ==R.id.list_header_multi_currencies_payment_delete) {
             paymentTables.clear();
@@ -436,6 +439,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             updateView();
             paymentTableAdapter.notifyDataSetChanged();
         }
+
     }
     public double getCurrencyRate(String currencyType){
         for (int i=0;i<currenciesList.size();i++){
@@ -449,24 +453,29 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) // Press Back Icon
         {
-            new AlertDialog.Builder(MultiCurrenciesPaymentActivity.this)
-                    .setTitle(getString(R.string.cancel_invoice))
-                    .setMessage(getString(R.string.are_you_want_to_cancel_payment_activity))
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
+            if( haveCreditCard.equalsIgnoreCase("haveCreditCard")){
+                Toast.makeText(MultiCurrenciesPaymentActivity.this,"Cant Stop this Payment",Toast.LENGTH_LONG).show();
 
-                            finish();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-        }
+
+        }else {
+                new AlertDialog.Builder(MultiCurrenciesPaymentActivity.this)
+                        .setTitle(getString(R.string.cancel_invoice))
+                        .setMessage(getString(R.string.are_you_want_to_cancel_payment_activity))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
+
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }}
 
         return super.onOptionsItemSelected(item);
     }
@@ -500,14 +509,18 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         }
         if (requestCode == REQUEST_CREDIT_CARD_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
+                haveCreditCard="haveCreditCard";
           CurrencyReturnsCustomDialogActivity.firstCredit =data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY);
-                CurrencyReturnsCustomDialogActivity.secondCredit=    data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote);
-                CurrencyReturnsCustomDialogActivity.thirdCredit=   data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote);
+                CurrencyReturnsCustomDialogActivity.secondCredit=  data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote);
+                CurrencyReturnsCustomDialogActivity.thirdCredit= data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote);
                 multiCurrencyFromCredit= data.getBooleanExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_FROM_MULTI_CURRENCY,false);
+
                 //get currency rate
                 if(multiCurrencyFromCredit){
-                    btCheckOut.performClick();
-                }else {
+                        btCheckOut.performClick();
+
+                }
+                else {
                 totalPaid += valRow * actualCurrencyRate;
                 double beforeChangeExcess = excess;
                 setExcess();
@@ -516,6 +529,8 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 updateLastRow();
                 lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
             }
+            }else {
+                deleteRow(paymentTables.size()-1);
             }
         }
     }
