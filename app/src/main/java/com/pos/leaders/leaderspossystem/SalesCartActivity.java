@@ -4641,19 +4641,8 @@ public class SalesCartActivity extends AppCompatActivity {
                     saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false,SalesWithoutTax,SalesWitheTax);
                     zReport.setSalesBeforeTax(zReport.getSalesBeforeTax() + (SalesWithoutTax));
                     zReport.setSalesWithTax(zReport.getSalesWithTax() + (SalesWitheTax));
-                    Log.d("setSalesWithTaxReport",zReport.getSalesWithTax()+"");
                     zReport.setTotalTax(zReport.getTotalTax()+Math.abs(salesaftertax - SalesWitheTax));
-                    Log.d("salesaftertax",salesaftertax+"");
-                    Log.d("SalesWitheTax",zReport.getSalesWithTax()+"tax1"+"");
-                    Log.d("TotalTax",zReport.getTotalTax()+"tax2");
-                    Log.d("setSalesBeforeTaxReport",zReport.getSalesBeforeTax()+"");
-
-
-
-
                     Order order = saleDBAdapter.getOrderById(saleIDforCash);
-                    Log.d("oooo",order.toString());
-
                     SESSION._ORDERS.setOrderId(saleIDforCash);
                     SESSION._ORDERS.setNumberDiscount(order.getNumberDiscount());
                     if(saleTotalPrice<0){
@@ -4679,14 +4668,17 @@ public class SalesCartActivity extends AppCompatActivity {
 
 
                     for (int i = 0; i < jsonArray.length() - 1; i++) {
+                        double totPay=0;
 
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         if(jsonObject.getString("paymentMethod").equalsIgnoreCase(CONSTANT.CASH)) {
-
                             cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()), getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")), jsonObject.getDouble("actualCurrencyRate"));
-                        zReport.setShekelAmount(zReport.getShekelAmount()+ jsonObject.getDouble("tendered"));
-                            zReport.setCashTotal(zReport.getCashTotal()+jsonObject.getDouble("tendered"));
-                            zReportCount.setShekelCount(zReportCount.getShekelCount()+1);
+                         if( getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type"))==0){
+                             zReport.setShekelAmount(zReport.getShekelAmount()+ jsonObject.getDouble("tendered"));
+                             zReportCount.setShekelCount(zReportCount.getShekelCount()+1);
+
+                         }
+                            zReport.setCashTotal(zReport.getCashTotal()+jsonObject.getDouble("tendered")* getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")));
                             zReportCount.setCashCount(zReportCount.getCashCount()+1);
                         }else if(jsonObject.getString("paymentMethod").equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
                             trueCreditCard=true;

@@ -3,6 +3,8 @@ package com.pos.leaders.leaderspossystem.syncposservice;
 
 import android.util.Log;
 
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -89,14 +91,22 @@ public class MessageTransmit {
     }
 
     public String authPost(String url, String json,String token) throws IOException {
-        RequestBody body = RequestBody.create(JSON, json);
+        if(token==null){
+            token= SESSION.token;
+        }
+        try {
+            RequestBody body = RequestBody.create(JSON, json);
 
-        Request request = new Request.Builder().url(domainURL + url).post(body).addHeader(AUTHORIZATION, token).addHeader(CONTENT_LENGTH,String.valueOf(body.contentLength()+body.contentType().toString().length())).build();
-        Log.i("Message req", request.toString());
-        Response response = client.newCall(request).execute();
+            Request request = new Request.Builder().url(domainURL + url).post(body).addHeader(AUTHORIZATION, token).addHeader(CONTENT_LENGTH,String.valueOf(body.contentLength()+body.contentType().toString().length())).build();
+            Log.d("Message req", request.toString());
+            Response response = client.newCall(request).execute();
 
-        Log.w("Response Code", response.code()+"");
-        return response.body().string();
+            Log.d("Response Code", response.code()+"");
+            return response.body().string();
+        }catch (Exception e){
+            Log.d("Toooken",token.toString());
+        }
+       return "";
     }
 
     /**   public String authPut(String url, String json,String token) throws IOException {

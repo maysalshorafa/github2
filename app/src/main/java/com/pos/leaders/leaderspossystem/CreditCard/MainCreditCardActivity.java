@@ -598,6 +598,8 @@ public class MainCreditCardActivity extends AppCompatActivity {
                         .setMessage(e.getMessage())
                         .setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                setResult(RESULT_CANCELED);
+                                finish();
                                 close();
                             }
                         })

@@ -347,6 +347,8 @@
     <string name="balance">ميزانيه</string>
 
     <string name="paid_by">دفع بواسطة</string>
+    <string name="rest">الباقي</string>
+
     <string name="product_quantity">كمية المنتوجات</string>
 
     <string name="clear">حذف</string>

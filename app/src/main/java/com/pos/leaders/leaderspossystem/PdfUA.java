@@ -242,12 +242,25 @@ public class PdfUA {
 
         insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
+        insertCell(dataTable, context.getString(R.string.method), Element.ALIGN_RIGHT, 2, font);
 
         insertCell(dataTable,  Util.makePrice(zReport.getCashTotal() ), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCashCount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT,2, font);
+        ///// CreditCard region
+        insertCell(dataTable, Util.makePrice(zReport.getCreditTotal()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getCreditCount()+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.credit_card), Element.ALIGN_RIGHT, 2, font);
 
+        ///check region
+        insertCell(dataTable, Util.makePrice(zReport.getCheckTotal()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getCheckCount()+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
+        insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+
+        insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
         ///// shekel region
         insertCell(dataTable, Util.makePrice(zReport.getShekelAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,ShekelCount+" ", Element.ALIGN_RIGHT, 1, font);
@@ -266,20 +279,12 @@ public class PdfUA {
         insertCell(dataTable, Util.makePrice(zReport.getGbpAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getGbpCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.gbp), Element.ALIGN_RIGHT, 2, font);
-        ///// CreditCard region
-        insertCell(dataTable, Util.makePrice(zReport.getCreditTotal()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,zReportCount.getCreditCount()+" ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.credit_card), Element.ALIGN_RIGHT, 2, font);
-        insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
-        ///check region
-        insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, Util.makePrice(zReport.getCheckTotal()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,zReportCount.getCheckCount()+" ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
+        insertCell(dataTable,  Util.makePrice(zReport.getTotalAmount()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, "~", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.total_amount), Element.ALIGN_RIGHT, 2, font);
+
         if(checkList.size()>0){
             insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
             insertCell(dataTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
@@ -297,11 +302,6 @@ public class PdfUA {
             insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
         }
-        insertCell(dataTable,  Util.makePrice(zReport.getTotalAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, "~", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.total_amount), Element.ALIGN_RIGHT, 2, font);
-
-
 
         ////
         PdfPTable opiningReportTable = new PdfPTable(4);
@@ -1421,6 +1421,22 @@ public class PdfUA {
         insertCell(dataTable,zReportCount.getCashCount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT,2, font);
 
+        insertCell(dataTable, Util.makePrice(xReport.getCheckTotal()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getCheckCount()+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
+
+        ///// CreditCard region
+        insertCell(dataTable, Util.makePrice(xReport.getCreditTotal()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getCreditCount()+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.credit_card), Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
+
+        ///check region
+        insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
+
         ///// shekel region
         insertCell(dataTable, Util.makePrice(xReport.getShekelAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getShekelCount()+" ", Element.ALIGN_RIGHT, 1, font);
@@ -1439,20 +1455,8 @@ public class PdfUA {
         insertCell(dataTable, Util.makePrice(xReport.getGbpAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getGbpCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.gbp), Element.ALIGN_RIGHT, 2, font);
-        ///// CreditCard region
-        insertCell(dataTable, Util.makePrice(xReport.getCreditTotal()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,zReportCount.getCreditCount()+" ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.credit_card), Element.ALIGN_RIGHT, 2, font);
-        insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
-        ///check region
-        insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.currency), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, Util.makePrice(xReport.getCheckTotal()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable,zReportCount.getCheckCount()+" ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
         if(checkList.size()>0){
             insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
             insertCell(dataTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
@@ -2043,7 +2047,7 @@ public class PdfUA {
         insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 9, urFontName);
 
         insertCell(paidByTable,context.getString(R.string.paid_by), Element.ALIGN_RIGHT, 4, urFontName);
-        insertCell(paidByTable,context.getString(R.string.returned), Element.ALIGN_CENTER, 1, urFontName);
+        insertCell(paidByTable,context.getString(R.string.rest), Element.ALIGN_CENTER, 1, urFontName);
         insertCell(paidByTable,context.getString(R.string.given), Element.ALIGN_CENTER, 1, urFontName);
         insertCell(paidByTable,context.getString(R.string.total), Element.ALIGN_CENTER, 1, urFontName);
         insertCell(paidByTable,context.getString(R.string.payment), Element.ALIGN_CENTER, 1, urFontName);

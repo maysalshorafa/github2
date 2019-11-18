@@ -185,14 +185,16 @@
                     android:orientation="vertical"
                     android:padding="5dp"
                     android:layout_weight="1"
-                    android:weightSum="7">
+                    android:weightSum="4">
+
                     <TextView
+                        android:id="@+id/textView17"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="@string/currency"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:textSize="30dp"/>
+                        android:text="@string/method"
+                        android:textSize="30dp" />
 
                     <TextView
                         android:id="@+id/textView16"
@@ -202,6 +204,127 @@
                         android:gravity="center"
                         android:text="@string/cash"
                         android:textSize="25dp" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/credit_card"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textSize="25dp"/>
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/checks"
+                        android:textSize="25dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="5dp"
+                    android:layout_weight="1"
+                    android:weightSum="4">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/count"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textSize="30dp"/>
+
+                    <TextView
+                        android:id="@+id/zReportCashPaymentCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+
+                    <TextView
+                    android:id="@+id/zReportCreditCardCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    />
+                    <TextView
+                        android:id="@+id/zReportCheckCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="5dp"
+                    android:layout_weight="1"
+                    android:weightSum="4">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/total"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textSize="30dp"/>
+                    <TextView
+                        android:id="@+id/zReportTotalCashPayment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+
+                    <TextView
+                    android:id="@+id/zReportTotalCreditCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/zReportTotalCheck"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:layout_weight="1"
+                android:weightSum="3"
+                android:background="@drawable/bubble">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="5dp"
+                    android:layout_weight="1"
+                    android:weightSum="6"
+                    >
+
+                    <TextView
+                        android:id="@+id/textView27"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/currency"
+                        android:textSize="30dp" />
+
 
                     <TextView
                         android:layout_width="match_parent"
@@ -231,10 +354,11 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:textSize="25dp"/>
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="@string/credit_card"
+                        android:text="@string/total_amount"
                         android:layout_weight="1"
                         android:gravity="center"
                         android:textSize="25dp"/>
@@ -244,11 +368,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
                     android:orientation="vertical"
                     android:padding="5dp"
                     android:layout_weight="1"
-                    android:weightSum="7">
+                    android:weightSum="6">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -256,13 +379,6 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:textSize="30dp"/>
-
-                    <TextView
-                        android:id="@+id/zReportCashPaymentCount"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"/>
                     <TextView
                         android:id="@+id/zReportShekelCount"
                         android:layout_width="match_parent"
@@ -281,7 +397,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                       />
+                        />
                     <TextView
                         android:id="@+id/zReportGbpCount"
                         android:layout_width="match_parent"
@@ -289,135 +405,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         />
-                    <TextView
-                    android:id="@+id/zReportCreditCardCount"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    />
 
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:padding="5dp"
-                    android:layout_weight="1"
-                    android:weightSum="7">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="@string/total"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textSize="30dp"/>
-                    <TextView
-                        android:id="@+id/zReportTotalCashPayment"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"/>
-                    <TextView
-                        android:id="@+id/zReportTotalShekel"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"/>
-                    <TextView
-                        android:id="@+id/zReportTotalUsd"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_weight="1"/>
-                    <TextView
-                    android:id="@+id/zReportTotalEur"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"/>
-                    <TextView
-                        android:id="@+id/zReportTotalGbp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"/>
-                    <TextView
-                    android:id="@+id/zReportTotalCreditCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"/>
-
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:padding="5dp"
-                android:layout_weight="1"
-                android:weightSum="3"
-                android:background="@drawable/bubble">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="5dp"
-                    android:layout_weight="1"
-                    android:weightSum="3"
-                    >
-
-                    <TextView
-                        android:id="@+id/textView27"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/currency"
-                        android:textSize="30dp" />
-
-                    <TextView
-                        android:id="@+id/textView17"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/checks"
-                        android:textSize="25dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="@string/total_amount"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textSize="25dp"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="5dp"
-                    android:layout_weight="1"
-                    android:weightSum="3">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="@string/count"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textSize="30dp"/>
-
-                    <TextView
-                        android:id="@+id/zReportCheckCount"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"/>
                     <TextView
                         android:id="@+id/zReportTotalAmountCount"
                         android:layout_width="match_parent"
@@ -433,7 +421,7 @@
                     android:orientation="vertical"
                     android:padding="5dp"
                     android:layout_weight="1"
-                    android:weightSum="3">
+                    android:weightSum="6">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -442,11 +430,30 @@
                         android:gravity="center"
                         android:textSize="30dp"/>
                     <TextView
-                        android:id="@+id/zReportTotalCheck"
+                        android:id="@+id/zReportTotalShekel"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/zReportTotalUsd"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_weight="1"/>
+                    <TextView
+                        android:id="@+id/zReportTotalEur"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/zReportTotalGbp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+
                     <TextView
                         android:id="@+id/zReportTotalAmount"
                         android:layout_width="match_parent"
