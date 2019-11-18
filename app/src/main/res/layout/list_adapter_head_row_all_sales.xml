@@ -15,7 +15,7 @@
             android:layout_column="0"
             android:background="#A9A9A9"
             android:padding="8dp"
-            android:text="@string/category_name"
+            android:text="@string/product"
 
             android:textColor="@android:color/white"
             android:textSize="18sp"

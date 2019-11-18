@@ -874,8 +874,14 @@ class GetALLProductSalesConnection extends AsyncTask<String,Void,String> {
                     if (SalesReportActivity.finalListProduct.size()>0){
                         SalesReportActivity.lvAllSallesList.setVisibility(View.VISIBLE);
                   AllSalesManagementListViewAdapter  adapterAllOrderList = new AllSalesManagementListViewAdapter(SalesReportActivity.context, R.layout.list_adapter_row_all_sales, SalesReportActivity.finalListProduct);
-                   SalesReportActivity.lvAllSallesList.setAdapter(adapterAllOrderList);}
+                   SalesReportActivity.lvAllSallesList.setAdapter(adapterAllOrderList);
+                    }
+                    else {
+                        SalesReportActivity.lvAllSallesList.setVisibility(View.GONE);
+                        Toast.makeText(SalesReportActivity.context, R.string.there_are_no_sales,
+                                Toast.LENGTH_LONG).show();}
                 }
+
 
                 @Override
                 protected Void doInBackground(Void... params) {
