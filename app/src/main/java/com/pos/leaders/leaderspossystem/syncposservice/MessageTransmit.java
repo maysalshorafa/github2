@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -24,9 +26,11 @@ public class MessageTransmit {
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final String AUTHORIZATION = "Authorization";
     private static final String CONTENT_LENGTH = "content-length";
-
+    private static  OkHttpClient.Builder defaultHttpClient;
     private String domainURL;
+    private String domainURLQuery;
     private OkHttpClient client;
+    OkHttpClient eagerClient;
 
     public MessageTransmit(String domainURL){
         if(domainURL.length()>0){
@@ -35,6 +39,40 @@ public class MessageTransmit {
                 domainURL += "/";}
         this.domainURL = domainURL;
         client = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+    }
+    public MessageTransmit(String domainURLQuery, final String from,  final String to){
+        if(domainURLQuery.length()>0){
+            char c = domainURLQuery.charAt(domainURLQuery.length() - 1);
+            if(c!='/')
+                domainURLQuery += "/";}
+        this.domainURLQuery=domainURLQuery;
+        defaultHttpClient =
+                new OkHttpClient.Builder()
+        .addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                HttpUrl originalHttpUrl = original.url();
+
+                HttpUrl url = originalHttpUrl.newBuilder()
+                        .addQueryParameter("fromDate", from)
+                        .addQueryParameter("toDate", to)
+                        .build();
+
+                // Request customization: add request headers
+                Request.Builder requestBuilder = original.newBuilder()
+                        .url(url);
+
+                Request request = requestBuilder.build();
+                return chain.proceed(request);
+            }
+        });
+
+        eagerClient = defaultHttpClient
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
@@ -96,6 +134,11 @@ public class MessageTransmit {
         Request request = new Request.Builder().url(domainURL + url + "/" + id).delete().addHeader(AUTHORIZATION, token).build();
         Response response = client.newCall(request).execute();
 
+        return response.body().string();
+    }
+    public String getALLSalesProduct(String url,String token) throws IOException {
+        Request request = new Request.Builder().url(domainURLQuery + url).addHeader(AUTHORIZATION, token).build();
+        Response response =eagerClient.newCall(request).execute();
         return response.body().string();
     }
 

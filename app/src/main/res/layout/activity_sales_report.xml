@@ -24,14 +24,16 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:weightSum="3">
 
 
                 <Button
+
                     android:id="@+id/btn_product"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:background="@drawable/bubble"
@@ -65,12 +67,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:background="@drawable/bubble"
                     android:gravity="center"
                     android:paddingLeft="5dp"
-                    android:visibility="gone"
                     android:text="@string/all_sales"
                     android:textAlignment="center"
                     android:textColor="@color/black"
@@ -98,6 +100,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
@@ -132,6 +136,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:layout_marginRight="10dp"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
@@ -440,6 +445,7 @@
             android:dividerHeight="10px"
             android:nestedScrollingEnabled="true"
             android:numColumns="1"
+            android:paddingTop="20dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:visibility="gone" />

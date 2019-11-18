@@ -150,6 +150,8 @@ public class OrderDetailsDBAdapter {
 
 	public List<OrderDetails> getOrderBySaleID(long saleID){
 		List<OrderDetails> saleOrderList=new ArrayList<OrderDetails>();
+        try {
+            open();
 		Cursor cursor =  db.rawQuery( "select * from "+ ORDER_DETAILS_TABLE_NAME +" where "+ ORDER_DETAILS_COLUMN_ORDER_ID +"="+saleID, null );
 		cursor.moveToFirst();
 
@@ -157,6 +159,10 @@ public class OrderDetailsDBAdapter {
 			saleOrderList.add(make(cursor));
 			cursor.moveToNext();
 		}
+            close();
+        } catch (Exception e) {
+
+        }
 		return saleOrderList;
 	}
 	public List<OrderDetails> getOrderBySaleIDAndProductId(long saleID,long productId){

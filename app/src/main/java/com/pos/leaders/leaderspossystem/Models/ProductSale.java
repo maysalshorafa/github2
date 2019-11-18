@@ -8,11 +8,18 @@ public class ProductSale {
     public Product product;
     public double price;
     public int count;
+    public String productName;
 
     public ProductSale(Product product, double price, int count) {
         this.product = product;
         this.price = price;
         this.count = count;
+    }
+
+    public ProductSale(double price, int count, String productName) {
+        this.price = price;
+        this.count = count;
+        this.productName = productName;
     }
 
     public ProductSale() {
@@ -42,12 +49,21 @@ public class ProductSale {
         this.count = count;
     }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
     @Override
     public String toString() {
         return "ProductSale{" +
                 "product=" + product +
                 ", price=" + price +
                 ", count=" + count +
+                ", productName='" + productName + '\'' +
                 '}';
     }
 }

@@ -3,14 +3,13 @@ package com.pos.leaders.leaderspossystem.Reports;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.graphics.Point;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,21 +35,34 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductSale;
+import com.pos.leaders.leaderspossystem.Models.SumOfSalesPerProduct;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.AllSalesManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CategoryGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class SalesReportActivity extends AppCompatActivity {
@@ -64,8 +76,9 @@ public class SalesReportActivity extends AppCompatActivity {
     List<Long> order;
     List<Long> orderProduct;
     List<Order> OrderList=new ArrayList<>();
-    ListView lvReport,lvAllSallesList;
-    Date from, to;
+    ListView lvReport;
+    public static ListView lvAllSallesList;
+    public  static Date from, to;
     double amountReport=0;
     Long CategoryId;
     long productIdSelect;
@@ -77,23 +90,21 @@ public class SalesReportActivity extends AppCompatActivity {
     private static final int DIALOG_TO_DATE = 324;
     CategoryGridViewAdapter adapterCategory;
     SaleManagementListViewAdapter adapterOrderList;
-    AllSalesManagementListViewAdapter adapterAllOrderList;
     List<Object>objectList = new ArrayList<Object>();
+    public static  List<Object>objectListSalesAllProduct = new ArrayList<Object>();
     List<Long>productID=new ArrayList<>();
     EditText etSearch;
     ProductDBAdapter productDBAdapter;
     int productLoadItemOffset=0;
     int productCountLoad=80;
+    public static   List<SumOfSalesPerProduct>finalListProduct=new ArrayList<>();
     boolean userScrolled=false;
     List<Product> productsList;
     ProductCatalogGridViewAdapter adapterProduct;
     SaleManagementListViewAdapter adapterListProduct;
     String flageGridOnClick="";
-    List<Product>productList;
-    ProductDBAdapter productDBAdapterALlSale;
-    ProgressDialog progressDialog;
     AsyncTask<String, String, String> sendTask;
-
+    public static Context context = null;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -149,7 +160,7 @@ public class SalesReportActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        context=this;
 
         btnAllSales.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -319,6 +330,23 @@ public class SalesReportActivity extends AppCompatActivity {
             }
         });
 
+       /*lvAllSallesList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    userScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (userScrolled && firstVisibleItem + visibleItemCount == totalItemCount) {
+
+                    userScrolled = false;
+                    LoadMoreProductsAllSales();
+                }
+            }
+        });*/
     }
 
     protected Dialog onCreateDialog(int id) {
@@ -360,7 +388,6 @@ public class SalesReportActivity extends AppCompatActivity {
         adapterCategory = new CategoryGridViewAdapter(SalesReportActivity.this, listCategory);
         gvCategory.setAdapter(adapterCategory);
         gvCategory.setVisibility(View.VISIBLE);
-       // lvReport.setVisibility(View.VISIBLE);
     }
 
     private void setOrder() {
@@ -392,7 +419,7 @@ public class SalesReportActivity extends AppCompatActivity {
 
 
       else  if (flageGridOnClick.equals("onCreate")){
-
+            finalListProduct.clear();
             amountReport=0;
             OrderList=new ArrayList<Order>();
             objectList=new ArrayList<>();
@@ -401,8 +428,9 @@ public class SalesReportActivity extends AppCompatActivity {
             gvCategory.setVisibility(View.GONE);
             lvReport.setVisibility(View.GONE);
             LAmountRepot.setVisibility(View.GONE);
-         final  List<ProductSale>finalListProduct=new ArrayList<>();
-            sendTask = new AsyncTask<String, String, String>() {
+            GetALLProductSalesConnection getALLProductSalesConnection = new GetALLProductSalesConnection();
+            getALLProductSalesConnection.execute(String.valueOf(from),String.valueOf(to));
+         /*   sendTask = new AsyncTask<String, String, String>() {
 
                 @Override
                 protected  void onPreExecute()
@@ -426,26 +454,27 @@ public class SalesReportActivity extends AppCompatActivity {
                             orderDetailsList.addAll(orderDetailsDBAdapter.getOrderBySaleID(OrderList.get(x).getOrderId()));
                             orderDetailsDBAdapter.close();
                         }
-                        Log.d("testOrderList2", orderDetailsList.toString());
-
 
                         productDBAdapterALlSale = new ProductDBAdapter(SalesReportActivity.this);
                         productDBAdapterALlSale.open();
-                        productList = productDBAdapterALlSale.getAllProducts();
+                        productList = productDBAdapterALlSale.getTopProducts(productLoadItemOffsetAllSales,productCountLoadAllSales);
                         if(productList.size()!= 0){
+                            Log.d("productListSize",productList.size()+"size");
+                            Log.d("orderDetailsListsize",orderDetailsList.size()+"size");
                         for(int a=0;a<productList.size();a++){
                             Product p =productList.get(a);
                             ProductSale productSale=new ProductSale();
                             productSale.setProduct(p);
                             for(int x=0;x<orderDetailsList.size();x++){
-                                if(p.getProductId()==orderDetailsList.get(x).getProductId()){
+                                if(p.getProductId()==orderDetailsList.get(x).getProductId()) {
                                     int i = orderDetailsList.get(x).getQuantity();
-                                    productSale.setCount(productSale.getCount()+i);
-                                    productSale.setPrice(productSale.getPrice()+(p.getPrice()*i));
+                                    productSale.setCount(productSale.getCount() + i);
+                                    productSale.setPrice(productSale.getPrice() + (p.getPrice() * i));
 
-                            if (productSale.getCount() > 0) {
-                                finalListProduct.add(productSale);
-                            }}}}}}
+                                }}
+                            finalListProduct.add(productSale);
+                            }
+                            Log.d("finalListProductSize",finalListProduct.size()+"Size");}}
 
                         return "Sent message.";
                     }
@@ -453,6 +482,8 @@ public class SalesReportActivity extends AppCompatActivity {
                     if (progressDialog.isShowing()) progressDialog.dismiss();
                     sendTask = null;
                         if (finalListProduct.size()!=0){
+                            Log.d("finalListProduct",finalListProduct.toString());
+
                         lvAllSallesList.setVisibility(View.VISIBLE);
                         LAmountRepot.setVisibility(View.VISIBLE);
                         Log.d("OrderListOnCreate",OrderList.size()+"");
@@ -465,7 +496,8 @@ public class SalesReportActivity extends AppCompatActivity {
                             Set<ProductSale> set2 = new HashSet<>(finalListProduct);
                             finalListProduct.clear();
                             finalListProduct.addAll(set2);
-                        objectList.addAll(finalListProduct);
+                            Collections.sort(finalListProduct, new CustomComparator());
+                          objectList.addAll(finalListProduct);
 
                         adapterAllOrderList = new AllSalesManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_all_sales, objectList);
                         lvAllSallesList.setAdapter(adapterAllOrderList);
@@ -480,7 +512,7 @@ public class SalesReportActivity extends AppCompatActivity {
                 }
             };
 
-            sendTask.execute(null, null, null);
+            sendTask.execute(null, null, null);*/
       }
        else if (flageGridOnClick.equals("gvCategory")){
         objectList = new ArrayList<>();
@@ -656,6 +688,216 @@ public class SalesReportActivity extends AppCompatActivity {
 
 
     }
+
+ /*   protected void LoadMoreProductsAllSales(){
+        productLoadItemOffsetAllSales+=productCountLoadAllSales;
+
+        final ProgressDialog dialog=new ProgressDialog(SalesReportActivity.this);
+        dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish));
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected void onPreExecute() {
+                dialog.show();
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (finalListProduct.size()!=0){
+                    lvAllSallesList.setVisibility(View.VISIBLE);
+                    LAmountRepot.setVisibility(View.VISIBLE);
+                    Log.d("OrderListOnCreate",OrderList.size()+"");
+                    for (int i2 = 0; i2 < OrderList.size(); i2++) {
+                        amountReport = amountReport + OrderList.get(i2).getTotalPrice();
+                        Log.d("i2",i2+"");
+                    }
+                    tvCountSale.setText(OrderList.size() + "");
+                    amount.setText(Util.makePrice(amountReport));
+                    Set<ProductSale> set2 = new HashSet<>(finalListProduct);
+                    finalListProduct.clear();
+                    finalListProduct.addAll(set2);
+                    Collections.sort(finalListProduct, new CustomComparator());
+                    objectList.addAll(finalListProduct);
+
+                    adapterAllOrderList = new AllSalesManagementListViewAdapter(SalesReportActivity.this, R.layout.list_adapter_row_all_sales, objectList);
+                    lvAllSallesList.setAdapter(adapterAllOrderList);
+                    Log.d("finalListProduct",finalListProduct.toString());
+                    Log.d("finalListProductSize2",finalListProduct.size()+"Size2");
+                }
+               *//* else {
+                    LAmountRepot.setVisibility(View.GONE);
+                    lvReport.setVisibility(View.GONE);
+                    Toast.makeText(SalesReportActivity.this, R.string.there_are_no_sales,
+                            Toast.LENGTH_LONG).show();
+                }*//*
+//                adapterAllOrderList.notifyDataSetChanged();
+                dialog.cancel();
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
+                orderDBAdapter1.open();
+                OrderList = orderDBAdapter1.getBetweenOrder(from.getTime(),to.getTime());
+                Set<Order> set = new HashSet<>(OrderList);
+                OrderList.clear();
+                OrderList.addAll(set);
+                if (OrderList.size()!= 0) {
+                    List<OrderDetails> orderDetailsList = new ArrayList<>();
+                    OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(getApplicationContext());
+                    for (int x = 0; x < OrderList.size(); x++) {
+                        orderDetailsDBAdapter.open();
+                        orderDetailsList.addAll(orderDetailsDBAdapter.getOrderBySaleID(OrderList.get(x).getOrderId()));
+                        orderDetailsDBAdapter.close();
+                    }
+                    Log.d("testOrderList2", orderDetailsList.toString());
+
+
+                    productDBAdapterALlSale = new ProductDBAdapter(SalesReportActivity.this);
+                    productDBAdapterALlSale.open();
+                    productList = productDBAdapterALlSale.getTopProducts(productLoadItemOffsetAllSales,productCountLoadAllSales);
+                    if(productList.size()!= 0){
+                        Log.d("productListSize2",productList.size()+"size");
+                        for(int a=0;a<productList.size();a++){
+                            Product p =productList.get(a);
+                            ProductSale productSale=new ProductSale();
+                            productSale.setProduct(p);
+                            for(int x=0;x<orderDetailsList.size();x++){
+                                if(p.getProductId()==orderDetailsList.get(x).getProductId()){
+                                    int i = orderDetailsList.get(x).getQuantity();
+                                    productSale.setCount(productSale.getCount()+i);
+                                    productSale.setPrice(productSale.getPrice()+(p.getPrice()*i));
+
+                                }
+                            }
+                            finalListProduct.add(productSale);
+                        }}}
+
+                return null;
+            }
+        }.execute();
+
+
+
+    }*/
+}
+class GetALLProductSalesConnection extends AsyncTask<String,Void,String> {
+    private MessageTransmit messageTransmit;
+    ProductSale productSale;
+    JSONObject jsonObject;
+    JSONArray jsonArray;
+    JSONArray jsonArray1;
+    SumOfSalesPerProduct sumOfSalesPerProduct;
+    GetALLProductSalesConnection() {
+        Date date2 = new Date(SalesReportActivity.from.getTime());
+
+        String date3 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.000", Locale.ENGLISH).format(date2);
+        Log.d("date2",date2+"");
+
+        Date date4 = new Date(SalesReportActivity.to.getTime());
+        Log.d("date3",date4+"");
+        String date5 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.000", Locale.ENGLISH).format(date4);
+        Log.d("date5",date5);
+        Log.d("date3",date3);
+
+        messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL,date3,date5);
+    }
+
+    final ProgressDialog progressDialog = new ProgressDialog(SalesReportActivity.context);
+    final ProgressDialog progressDialog2 =new ProgressDialog(SalesReportActivity.context);
+
+    @Override
+    protected void onPreExecute() {
+        progressDialog.setTitle("Please Wait");
+        progressDialog2.setTitle("Please Wait");
+        progressDialog.show();
+    }
+
+    @Override
+    protected String doInBackground(String... args) {//args{key,uuid}
+
+            try {
+
+                String url = "DashBoard/perProductForPos";
+                String AllSalesProduct = messageTransmit.getALLSalesProduct(url,SESSION.token);
+                Log.d("AllSalesProduct",AllSalesProduct);
+                JSONObject jsonObject = null;
+                jsonObject = new JSONObject(AllSalesProduct);
+
+            String idProduct;
+                double countSalesProduct,total;
+            try {
+                String msgData = jsonObject.getString(MessageKey.responseBody);
+                jsonObject = new JSONObject(msgData);
+                jsonArray = jsonObject.getJSONArray("sumOfSalesPerProduct");
+                jsonArray1 = jsonObject.getJSONArray("countOfSalesPerProduct");
+
+                Log.d("jsonArray",jsonArray.toString()+"djjj");
+                Log.d("jsonArray1",jsonArray1.toString()+"djjj");
+
+                for (int i = 0; i <= jsonArray.length() ; i++) {
+                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                    JSONObject jsonObject2 = jsonArray1.getJSONObject(i);
+                    idProduct = jsonObject1.getString("_id");
+                    Log.d("idProduct",jsonObject1.getLong("_id")+"");
+                    total = jsonObject1.getDouble("total");
+                    countSalesProduct = jsonObject2.getDouble("count");
+                    sumOfSalesPerProduct=new SumOfSalesPerProduct(idProduct,total,countSalesProduct);
+                    Log.d("finalListProductfinal",sumOfSalesPerProduct.toString()+"final");
+                    SalesReportActivity.finalListProduct.add(sumOfSalesPerProduct);
+                }
+
+
+            } catch (Exception e) {
+                Log.d("exception1", e.toString());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+    @Override
+    protected void onPostExecute(final String s) {
+        Log.d("s1",s);
+        if (s != null) {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    progressDialog2.setTitle("Success.");
+                    progressDialog2.show();
+                    Log.d("final",  SalesReportActivity.finalListProduct.toString());
+                    if (SalesReportActivity.finalListProduct.size()>0){
+                        SalesReportActivity.lvAllSallesList.setVisibility(View.VISIBLE);
+                  AllSalesManagementListViewAdapter  adapterAllOrderList = new AllSalesManagementListViewAdapter(SalesReportActivity.context, R.layout.list_adapter_row_all_sales, SalesReportActivity.finalListProduct);
+                   SalesReportActivity.lvAllSallesList.setAdapter(adapterAllOrderList);}
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    progressDialog2.cancel();
+                    super.onPostExecute(aVoid);
+                }
+            }.execute();
+        } else {
+            //fail
+            Toast.makeText(SalesReportActivity.context, "Try Again.", Toast.LENGTH_SHORT).show();
+        }
+        progressDialog.cancel();
+        super.onPostExecute(s);
+
+        //endregion
+    }
+
 }
 
 

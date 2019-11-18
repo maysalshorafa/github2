@@ -12,7 +12,6 @@ public class BoInvoice {
     private DocumentType type;
     private JSONObject documentsData;
     private String docNum;
-
     public BoInvoice() {
     }
 

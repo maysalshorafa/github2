@@ -5,7 +5,7 @@ package com.pos.leaders.leaderspossystem.Tools;
  */
 
 public enum ServerUrl {
-    BO_SERVER_URL("http://apiv4.leadpos.net/");
+    BO_SERVER_URL("http://10.0.0.15:8000/");
 
     private final String url;
 
