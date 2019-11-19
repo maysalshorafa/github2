@@ -47,6 +47,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProviderDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.LogInActivity;
 import com.pos.leaders.leaderspossystem.Models.BoInventory;
 import com.pos.leaders.leaderspossystem.Models.Category;
@@ -905,6 +906,14 @@ public class SyncMessage extends Service {
 
                     break;
                 case MessageType.UPDATE_Z_REPORT:
+                    ZReport updateZreport;
+                    updateZreport = objectMapper.readValue(msgData, ZReport.class);
+
+                    ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(this);
+                    zReportDBAdapter.open();
+                    rID = zReportDBAdapter.updateEntryBo(updateZreport);
+                    zReportDBAdapter.close();
+
                     break;
                 case MessageType.DELETE_Z_REPORT:
                     break;
