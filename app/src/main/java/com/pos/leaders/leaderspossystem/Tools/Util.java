@@ -1371,10 +1371,10 @@ public class Util {
             e.printStackTrace();
         }
         //sales Amount
-        zReport.setTotalAmount(amount);
-        zReport.setTotalSales(amount);
-        zReport.setInvoiceReceiptAmount(amount);
-        zReport.setTotalPosSales(totalZReportAmount);
+        zReport.setTotalAmount(Double.parseDouble(Util.makePrice(amount)));
+        zReport.setTotalSales(Double.parseDouble(Util.makePrice(amount)));
+        zReport.setInvoiceReceiptAmount(Double.parseDouble(Util.makePrice(amount)));
+        zReport.setTotalPosSales(Double.parseDouble(Util.makePrice(totalZReportAmount)));
         Log.d("getTotalPosuTIL",zReport.getTotalPosSales()+"poss");
         XReportDBAdapter xReportDBAdapter=new XReportDBAdapter(context);
         xReportDBAdapter.open();
