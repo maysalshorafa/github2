@@ -832,14 +832,11 @@ class GetALLProductSalesConnection extends AsyncTask<String,Void,String> {
                 jsonArray = jsonObject.getJSONArray("sumOfSalesPerProduct");
                 jsonArray1 = jsonObject.getJSONArray("countOfSalesPerProduct");
 
-                Log.d("jsonArray",jsonArray.toString()+"djjj");
-                Log.d("jsonArray1",jsonArray1.toString()+"djjj");
 
                 for (int i = 0; i <= jsonArray.length() ; i++) {
                     JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                     JSONObject jsonObject2 = jsonArray1.getJSONObject(i);
                     idProduct = jsonObject1.getString("_id");
-                    Log.d("idProduct",jsonObject1.getLong("_id")+"");
                     total = jsonObject1.getDouble("total");
                     countSalesProduct = jsonObject2.getDouble("count");
                     sumOfSalesPerProduct=new SumOfSalesPerProduct(idProduct,total,countSalesProduct);
@@ -870,11 +867,10 @@ class GetALLProductSalesConnection extends AsyncTask<String,Void,String> {
                     super.onPreExecute();
                     progressDialog2.setTitle("Success.");
                     progressDialog2.show();
-                    Log.d("final",  SalesReportActivity.finalListProduct.toString());
                     if (SalesReportActivity.finalListProduct.size()>0){
                         SalesReportActivity.lvAllSallesList.setVisibility(View.VISIBLE);
-                  AllSalesManagementListViewAdapter  adapterAllOrderList = new AllSalesManagementListViewAdapter(SalesReportActivity.context, R.layout.list_adapter_row_all_sales, SalesReportActivity.finalListProduct);
-                   SalesReportActivity.lvAllSallesList.setAdapter(adapterAllOrderList);
+                        AllSalesManagementListViewAdapter  adapterAllOrderList = new AllSalesManagementListViewAdapter(SalesReportActivity.context, R.layout.list_adapter_row_all_sales, SalesReportActivity.finalListProduct);
+                       SalesReportActivity.lvAllSallesList.setAdapter(adapterAllOrderList);
                     }
                     else {
                         SalesReportActivity.lvAllSallesList.setVisibility(View.GONE);

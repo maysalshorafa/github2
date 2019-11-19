@@ -471,10 +471,10 @@ public class Util {
             e.printStackTrace();
         }
         //sales Amount
-        lastZReport.setTotalAmount(amount);
-        lastZReport.setInvoiceReceiptAmount(amount);
-        lastZReport.setTotalSales(amount+lastZReport.getInvoiceAmount()+lastZReport.getCreditInvoiceAmount());
-        lastZReport.setTotalPosSales(totalZReportAmount);
+        lastZReport.setTotalAmount(Double.parseDouble(Util.makePrice(amount)));
+        lastZReport.setInvoiceReceiptAmount(Double.parseDouble(Util.makePrice(amount)));
+        lastZReport.setTotalSales(Double.parseDouble(Util.makePrice(amount+lastZReport.getInvoiceAmount()+lastZReport.getCreditInvoiceAmount())));
+        lastZReport.setTotalPosSales(Double.parseDouble(Util.makePrice(totalZReportAmount)));
         Log.d("getTotalPosuTITL1",lastZReport.getTotalPosSales()+"poss");
         lastZReport.setCloseOpenReport("close");
         zReportDBAdapter.updateEntry(lastZReport);
