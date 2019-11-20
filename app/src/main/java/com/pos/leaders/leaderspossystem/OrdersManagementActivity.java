@@ -191,16 +191,17 @@ public class OrdersManagementActivity extends AppCompatActivity {
             userDBAdapter.close();
 
             paymentDBAdapter.open();
-            try {
-                s.setPayment(paymentDBAdapter.getPaymentBySaleID(s.getOrderId()).get(0));
+            if (paymentDBAdapter.getPaymentBySaleID(s.getOrderId()).size() > 0) {
+                try {
+                    s.setPayment(paymentDBAdapter.getPaymentBySaleID(s.getOrderId()).get(0));
+                } catch (Exception ex) {
+                    //_saleList.remove(s);
+                    ex.printStackTrace();
+                }
+                paymentDBAdapter.close();
             }
-            catch (Exception ex){
-                //_saleList.remove(s);
-                ex.printStackTrace();
-            }
-            paymentDBAdapter.close();
+            Log.i("log", _saleList.toString());
         }
-        Log.i("log", _saleList.toString());
         /*for (ORDER s : saleList) {
 			if(DateConverter.dateBetweenTwoDates(from, to, s.getOrder_date())) {
 				_saleList.add(s);
@@ -269,9 +270,10 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     paymentDBAdapter.open();
                     final List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(sale.getOrderId());
 
+                    if(payments.size()>0) {
 
-                    sale.setPayment(payments.get(0));
-
+                        sale.setPayment(payments.get(0));
+                    }
                     paymentDBAdapter.close();
 
                     checks = new ArrayList<Check>();
@@ -423,7 +425,9 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                                                 OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
                                                 saleDBAdapter.open();
-                                                sale.setPayment(new Payment(payments.get(0)));
+                                                if(payments.size()>0) {
+                                                    sale.setPayment(new Payment(payments.get(0)));
+                                                }
                                                 long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(), sale.getCartDiscount(), sale.getNumberDiscount(), sale.getOrderId(),0,0);
                                                 Order order = saleDBAdapter.getOrderById(sID);
                                                 sale.setCancellingOrderId(sID);
@@ -522,9 +526,9 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     paymentDBAdapter.open();
                     final List<Payment> payments = paymentDBAdapter.getPaymentBySaleID(sale.getOrderId());
 
-
-                    sale.setPayment(payments.get(0));
-
+                    if(payments.size()>0) {
+                        sale.setPayment(payments.get(0));
+                    }
                     paymentDBAdapter.close();
 
                     checks = new ArrayList<Check>();
@@ -784,7 +788,9 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             }
                             OrderDBAdapter saleDBAdapter = new OrderDBAdapter(OrdersManagementActivity.this);
                             saleDBAdapter.open();
-                            sale.setPayment(new Payment(payments.get(0)));
+                            if(payments.size()>0) {
+                                sale.setPayment(new Payment(payments.get(0)));
+                            }
                             long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(),sale.getCartDiscount(),sale.getNumberDiscount(),sale.getOrderId(),0,0);
                             Order order = saleDBAdapter.getOrderById(sID);
                             sale.setCancellingOrderId(sID);
