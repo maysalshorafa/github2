@@ -2022,13 +2022,14 @@ public class PdfUA {
         insertCell(table, context.getString(R.string.product_quantity)  , Element.ALIGN_CENTER, 5, urFontName);
         insertCell(table,Util.makePrice(count)  , Element.ALIGN_CENTER, 4, urFontName);
 
-        insertCell(table, context.getString(R.string.price_before_discount)  , Element.ALIGN_CENTER, 5, urFontName);
-        insertCell(table,Util.makePrice(order.getTotalPrice()*100/(100-order.cartDiscount))  , Element.ALIGN_CENTER, 4, urFontName);
 
+        if (order.cartDiscount !=0) {
+            insertCell(table, context.getString(R.string.price_before_discount), Element.ALIGN_CENTER, 5, urFontName);
+            insertCell(table, Util.makePrice(order.getTotalPrice() * 100 / (100 - order.cartDiscount)), Element.ALIGN_CENTER, 4, urFontName);
 
-        insertCell(table, context.getString(R.string.discount)  , Element.ALIGN_CENTER, 5, urFontName);
-        insertCell(table,Util.makePrice(order.cartDiscount)  , Element.ALIGN_CENTER, 4, urFontName);
-
+            insertCell(table, context.getString(R.string.discount), Element.ALIGN_CENTER, 5, urFontName);
+            insertCell(table, Util.makePrice(order.cartDiscount), Element.ALIGN_CENTER, 4, urFontName);
+        }
         double totalPriceAfterDiscount= totalPrice- (totalPrice * (order.cartDiscount/100));
         Log.d("order.cartDiscount",totalPrice+"");
         insertCell(table, context.getString(R.string.total_price)  , Element.ALIGN_CENTER, 5, urFontName);
