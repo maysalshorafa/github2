@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.ProductInventory;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -117,6 +118,8 @@ public class ProductInventoryDbAdapter {
     }
     public ProductInventory getProductInventoryByID(long id) {
         ProductInventory productInventory = null;
+        try {
+            open();
         Cursor cursor = db.rawQuery("select * from " + PRODUCT_INVENTORY_TABLE_NAME + " where productId='" + id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
@@ -133,7 +136,10 @@ public class ProductInventoryDbAdapter {
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_BRANCH_ID))),
                 cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_NAME)), Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_PRICE))));
         cursor.close();
+        }
+        catch (Exception e) {
 
+            }
         return productInventory;
     }
     public List<ProductInventory> getAllProducts(){
@@ -153,6 +159,33 @@ public class ProductInventoryDbAdapter {
             cursor.moveToNext();
         }
 
+        return productsList;
+    }
+    public List<ProductInventory> getTopProducts(int from ,int count){
+        List<ProductInventory> productsList =new ArrayList<ProductInventory>();
+
+        try {
+            open();
+            Cursor cursor=null;
+            if(SETTINGS.enableAllBranch) {
+
+                cursor = db.rawQuery("select * from " + PRODUCT_INVENTORY_TABLE_NAME + " where " + PRODUCT_INVENTORY_COLUMN_HIDE +"=0 order by id desc limit "+from+","+count, null);
+            }else {
+                cursor = db.rawQuery("select * from " + PRODUCT_INVENTORY_TABLE_NAME + " where " + PRODUCT_INVENTORY_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCT_INVENTORY_COLUMN_HIDE+"=0 order by id desc limit "+from+","+count, null);
+
+            }
+            cursor.moveToFirst();
+
+            while(!cursor.isAfterLast()){
+                productsList.add(makeProduct(cursor));
+                cursor.moveToNext();
+            }
+            close();
+
+        } catch (Exception e) {
+
+        }
+        Log.d("productsListInventory",productsList.size()+"size");
         return productsList;
     }
     private ProductInventory makeProduct(Cursor cursor) {

@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -77,7 +78,6 @@ public class InInventoryDoc extends AppCompatActivity {
     GridView gvProduct;
     List<ProductInventory>filter_productList=new ArrayList<>();
     List<ProductInventory>searchFilter_productList=new ArrayList<>();
-
     List<ProductInventory>finalListViewProduct;
     List<Product> productList = new ArrayList();
     int productLoadItemOffset=0;
@@ -122,9 +122,9 @@ public class InInventoryDoc extends AppCompatActivity {
         productInventoryDbAdapter.open();
         productDBAdapter=new ProductDBAdapter(InInventoryDoc.this);
         productDBAdapter.open();
-        searchFilter_productList = productInventoryDbAdapter.getAllProducts();
+        searchFilter_productList = productInventoryDbAdapter.getTopProducts(productLoadItemOffset, productCountLoad);
         filter_productList=searchFilter_productList;
-          finalAdapter = new ProductInventoryCatalogGridViewAdapter(this, searchFilter_productList);
+        finalAdapter = new ProductInventoryCatalogGridViewAdapter(this, searchFilter_productList);
         gvProduct.setAdapter(finalAdapter);
         context=this;
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -297,6 +297,23 @@ public class InInventoryDoc extends AppCompatActivity {
                     addToCart(searchFilter_productList.get(position));
             }
         });
+        gvProduct.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    userScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (userScrolled && firstVisibleItem + visibleItemCount == totalItemCount) {
+
+                    userScrolled = false;
+                    loadMoreProduct();
+                }
+            }
+        });
         chooseProvider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -392,6 +409,8 @@ public class InInventoryDoc extends AppCompatActivity {
 
             }
         });
+
+
 
         finalProductListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -719,6 +738,60 @@ public class InInventoryDoc extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 return null;
+            }
+        }.execute();
+    }
+    private void loadMoreProduct() {
+
+        productLoadItemOffset += productCountLoad;
+        final String searchWord = ETSearch.getText().toString();
+        final ProgressDialog dialog = new ProgressDialog(InInventoryDoc.this);
+        dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish));
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+//                dialog.show();
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                filter_productList = searchFilter_productList;
+                if(finalAdapter==null){
+                    finalAdapter = new ProductInventoryCatalogGridViewAdapter(getApplicationContext(), filter_productList);
+                    gvProduct.setAdapter(finalAdapter);
+                }
+                dialog.cancel();
+                userScrolled=false;
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                if (!searchWord.equals("")) {
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            // Stuff that updates the UI
+                            finalAdapter.notifyDataSetChanged();
+
+                        }
+                    });
+                }
+                 else {
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            searchFilter_productList.addAll(productInventoryDbAdapter.getTopProducts(searchFilter_productList.size()-1, 80));
+                            // Stuff that updates the UI
+                            finalAdapter.notifyDataSetChanged();
+
+                        }
+                    });
+                }
+                return null;
+
             }
         }.execute();
     }
