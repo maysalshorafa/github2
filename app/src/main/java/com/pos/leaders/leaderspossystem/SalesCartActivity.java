@@ -4793,8 +4793,16 @@ public class SalesCartActivity extends AppCompatActivity {
                     SESSION._TEMP_ORDER_DETAILES=SESSION._ORDER_DETAILES;
                     SESSION._TEMP_ORDERS=SESSION._ORDERS;
                     if(saleTotalPrice<0){
-                        currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, saleTotalPrice*-1, order1,"","","");
+                        if(!trueCreditCard) {
+                            currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, saleTotalPrice*-1, order1,"","","");
+                        }
+                        else {
+                            currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, saleTotalPrice*-1, order1,CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY,
+                                    data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote),
+                                    data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
 
+
+                        }
                     }else {
                         if(!trueCreditCard) {
                            currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1,"","","");
